@@ -6511,33 +6511,37 @@
     "unit_sunvault_prism_adepts_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_prism_adepts_veteran.png",
       "frame_size": [
-        221,
-        249
+        260,
+        259
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        86.0,
-        238
+        105.0,
+        251
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_prism_adepts_veteran.png",
+      "painted_extent": 244,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_prism_adepts_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        170,
-        34,
-        391,
-        283
+        91,
+        1,
+        351,
+        260
       ],
-      "source_sha256": "8d741e89446d5f50f477919e0fb0f0edde4266dcc2888f42f43dca7677b56ce4",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_prism_adepts_veteran/provenance.json",
-      "sha256": "4329bde48663a086d58a6629ed18584c1285b1a1830aaac71f50f8768c3872bd"
+      "source_sha256": "eef37332d72f15d0122cb1665642bcb9822af1343503ffb7c5346cc6965baa9e",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_prism_adepts_veteran/provenance.json",
+      "sha256": "d7c72a3de671c0bf51728218a9062610dd405d5b3c30ec40b2dd0198807d10db"
     },
     "unit_aurora_ballista_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_aurora_ballista_veteran.png",
