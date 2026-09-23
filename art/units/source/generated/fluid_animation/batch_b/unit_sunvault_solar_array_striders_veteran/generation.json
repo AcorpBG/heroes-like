@@ -1,0 +1,113 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_v1.png",
+      "sha256": "fc04843420ae852bff6433aba448373be3d6f8908f02d9798516137b999fff16",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "a9493beb6ad1c7d57e48f037465919088e672ec717b067ac9c6386eca55f54d4",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7edfe4a7-f98c-4505-8569-f84df57ec0d2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_v1.png",
+      "sha256": "6c31539a05afb97504ba357df8b8610dd21ce67b8a0e8c9fd2d5638c0edfb248",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "a6bc8e999cb825610fd8d6e88513b2e078f0100110b524725674db15c69955e4",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-34f7b95c-52fb-4594-8398-9ad018e61239.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/reactions_v1.png",
+      "sha256": "1173a4314ec2d816d1f37abcb7f18fbbeadc351479efe52c80763c52d627ed28",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "e9b6612a13dc86a451196c4e3ca6d80530cffa90e86c8b3c9f9bcbc32e7aa1fb",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c29c2b55-779f-4867-9c3c-e6905203c7ca.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/cast_v1.png",
+      "sha256": "b17d5a5c0aaabb29b646d61e75eca14b53ef6f1bb867df5e0867497de9d6efda",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "564df8ab7949aee881ff326eaf2d1b9b1823ba422b749d1556a53d139ef93cce",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b07516d3-843a-43bf-bc6c-34301da2a3e4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_v1.png",
+      "sha256": "db8f63bbd82097fedee0b9ce39b318a308e3633cdf99bebb43637f3345972142",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "7b45d4192845999a62948d4f8e76230f4e397688abd5c28a7a7868209551f180",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f7964dfa-efd2-48ec-8eb5-c51be14081dc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_v1.png",
+      "sha256": "97e236d2f6ec7c30522e56fa60478859bab6e8df8bcef1eca65e7389b7b13a66",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "0266a2ffe190dc0c2791eb7876f54413bc2f48f5738a7f1f0c0617948832a0cd",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-42943f06-3997-472a-a7bb-d951fb773f0c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_tripod_v1.png",
+      "sha256": "041a2757308946050b8ef81b30c18d0d03f82093e9eee6986b1c769db342e0db",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/move_tripod_v1.prompt.txt",
+      "prompt_sha256": "0c436cfe1891c7a21807d0dc596b823499bdba0dc1099b26df8f49cce69da770",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c2a8319e-6fc7-4c2a-91d9-abc41deb708e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_corrected_v1.png",
+      "sha256": "4b0dd4a9a39249c391bf7d410fd8ac988814a8ddb5195d5ce28bcf1c6797e686",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_corrected_v1.prompt.txt",
+      "prompt_sha256": "6aded38e37461a0ef223d1e211c117386749d652f9f42dc3e20b0155ecce8665",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-47ff0062-d3c8-4dcd-82d4-41f3192b17cc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/identity_reference.png",
+          "sha256": "11048c06093f2122aea29ffeadcbe93da544731cf4377e782936846ac7a62285"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders_veteran/death_v1.png",
+          "sha256": "db8f63bbd82097fedee0b9ce39b318a308e3633cdf99bebb43637f3345972142"
+        }
+      ]
+    }
+  ]
+}
