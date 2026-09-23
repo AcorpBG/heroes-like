@@ -8,7 +8,11 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/attack_v1.png": "f5a622bc949dfaf0c48f06c8c4ec47612b2b198b445b72f111634036ff0ad1e0",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/hit_defend_v1.png": "f30a8d4f766262b1a104e28e0ca956c63f4997fac16aad2a1256b6a200971cb7",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.png": "ecc0fba86ef02d8b6ee9482eb26b111a640904b42cfeecc56b198fbd075ae6b9",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/cast_v1.png": "20e1aa0a9f95e164e53f8236d0d3bc0e81f3130b74d1f35f612d4c146e47e4e7"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/cast_v1.png": "20e1aa0a9f95e164e53f8236d0d3bc0e81f3130b74d1f35f612d4c146e47e4e7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v2.png": "cf4f9446d6fae6494e5718d2fb8b72da3aef5009d84736acfed97ba5fbc0d309",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v1.png": "fcf7bec057de906ff3382d9ebb06f5a2a3b9524b6f8609714adab6bbc7d0a688",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_near_half_v3.png": "e45f088464d8fd4859059f6aa4b4af23ccc9fb41ca0f6c46df5e47963c334891",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_support_v4.png": "3da70092dd81ec24ee005e1f1c65c069276d0b428eb8779954500833ab88b26c"
   },
   "accepted_clips": [
     "idle",
@@ -16,14 +20,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: both sword arms articulate in idle, coordinated two-blade slash/recovery, crossed guard, recoil and grounded collapse; support uses a physical crossed-blade salute. Movement remains unfinished."
+    "notes": "Native 128px review accepted eight reciprocal walk poses with opposite contacts, knee lifts and visible sword-arm swing. 120 imported live focused checks passed; previous approved action sources unchanged."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "d9c2a478b4c52a14246c59436266e59bc4ce5203a1f3a096fac26ba0b757801c",
-  "atlas_sha256": "6076dfcdde8358b654584b4927f59fe582a23dc62dd5019c3c11ef401dcfe291",
-  "texture_bytes_rgba": 13418496
+  "atlas_sha256": "bb4f0377296574620f01b254fd938f4efac75c2c2d82fb3ea83ba862f01d9bdb",
+  "texture_bytes_rgba": 16056320
 }
