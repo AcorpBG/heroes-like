@@ -6616,33 +6616,37 @@
     "unit_sunvault_resonant_choristers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_resonant_choristers_veteran.png",
       "frame_size": [
-        213,
-        249
+        217,
+        254
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        90.0,
-        238
+        98.0,
+        246
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_resonant_choristers_veteran.png",
+      "painted_extent": 238,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_resonant_choristers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        166,
-        50,
-        379,
-        299
+        98,
+        18,
+        315,
+        272
       ],
-      "source_sha256": "cbe834e07c58b3cb9192edbe5e9db6bce041886b01889f8ca9af4b3d5dd915b3",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_resonant_choristers_veteran/provenance.json",
-      "sha256": "e7d5c6ee766712756d881adf5f1f7e878668692c614a18de0149f862ed902993"
+      "source_sha256": "0935a6913e2ef3e0c04f57cc814bbde17eed33fdce4bda0eaaf3bb9b5c403ff5",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_resonant_choristers_veteran/provenance.json",
+      "sha256": "d57296d87b9750d8f2ffd061f51a201b89c54f6ddd43bd77e11cee4e1ebec6f1"
     },
     "unit_sunvault_noonfacet_sentinels_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_noonfacet_sentinels_veteran.png",

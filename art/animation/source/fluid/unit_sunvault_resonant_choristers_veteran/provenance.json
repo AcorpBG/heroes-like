@@ -1,0 +1,36 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/idle_v1.png": "6369812bae6704d261c8265b10b8cb3f77e7210b17cfec9af9841147e0721187",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/attack_v1.png": "47356b813f59f0a00aa590d1c7641b5c4d11c68695560fc1b2c34012f7ff8b4c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/corrections_v1.png": "5172c6877ae4535676cfa13fa82d348b393af2b2471d73492f289ce7007c5e64",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/ranged_v1.png": "41d34fe863b3eacbd404410b8ef704afecfcc7a7a1da72d13a814c29f9bfc10c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/ranged_corrections_v1.png": "6d4a3720e3ad0ebd3df54c9ac44ecbe9958b7c118a632a80bee47c3b5c680976",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/reactions_v1.png": "77b87efd593ce305e98bd7efb465cbb409f8662e27263a3feef541a8dba06a3b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/cast_v1.png": "4efdc61e1fb097292c52a93cbb5a4d3f2c953687df8113a9decff528e87c9269",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/death_v1.png": "7be0e7e68d7010e3b675f379a477470f64058f60c08223176805e7c1c914c900",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/move_far_v1.png": "45478fac1fb572f5dab1f41557d47d53bdb9771c166e9ef4277dca5b94e4fceb",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers_veteran/move_near_v1.png": "36447d90e377d5054968df10e1e2130bbce4d01b5f4ef72c928e907efc4f96bb"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Harmonic Precentors: 56 original frames across eight clips reviewed in Godot at 128px. Articulated hands/chimes, complete tuning-fork windup, distinct ranged release/recoil, staff brace, consistent conducting-hand ownership, reciprocal walk and grounded collapse. Malformed fork, switched hand and alpha-joined ranged proposals excluded; original art and provenance preserved."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "cbe834e07c58b3cb9192edbe5e9db6bce041886b01889f8ca9af4b3d5dd915b3",
+  "atlas_sha256": "0935a6913e2ef3e0c04f57cc814bbde17eed33fdce4bda0eaaf3bb9b5c403ff5",
+  "texture_bytes_rgba": 27847680
+}
