@@ -5641,33 +5641,37 @@
     "unit_embercourt_fordhook_cadets_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_fordhook_cadets_veteran.png",
       "frame_size": [
-        289,
-        250
+        252,
+        242
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        105.0,
-        239
+        119.0,
+        234
       ],
-      "painted_extent": 273,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_fordhook_cadets_veteran.png",
+      "painted_extent": 236,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_fordhook_cadets_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        151,
-        49,
-        440,
-        299
+        57,
+        54,
+        309,
+        296
       ],
-      "source_sha256": "28d3c18a08008b86db02303484a4b613c3bc211de43a18e4d19cb38faf0c3e70",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_fordhook_cadets_veteran/provenance.json",
-      "sha256": "14dce235c858b58740bb8248575ee534a8bd0e8c29abe2229c5505ec042f1a73"
+      "source_sha256": "02d4858b1aa4ddc4ca46626703911b561d9592c7dd901543e5256990663c479f",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_fordhook_cadets_veteran/provenance.json",
+      "sha256": "3a2e7e8cd326af7f48372b89b724d4f986cdb70c8141e3c8e654bbee183bcb1e"
     },
     "unit_ember_archer_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_ember_archer_veteran.png",

@@ -1,0 +1,104 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/idle_v1.png",
+      "sha256": "5b91d615ee7779771f539559cd9a96296acab98088d557abb8c0b223a83c3267",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "40591665d2e1a904762b960f070a6b6c004db786478719ef9f06095e6fd4d8e9",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c20c16f6-f051-48c9-8829-13eccb774aa1.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/attack_v1.png",
+      "sha256": "6cc27e3665d88da78d3ffaa86ba0bd01f01257ed83d6b636a38ac6a497097103",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "13bbcdc75e9f153f0179d11e1ab1aaccd9600fbddc6a4bd1385b9756dc7b451d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8cb4df56-fa9e-433b-a3fa-fb8021df9b97.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reactions_v1.png",
+      "sha256": "6391a936fcfa2672d146534dbfe9a630317e6d04cca12631dabefb3e09e00041",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "1eeeebc81ef3d66a434b15c6f48decc7943efa3ec337dd21dfb785db4259b9fc",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ba19c420-81fa-4cd8-bafb-383e69414b0d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/cast_v1.png",
+      "sha256": "804b59f1dbcbf1d3d5687293ba0e9c681485b272478a89169e35f2cc8338906c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "ac748098b16d4357b2458c52408a94cca8a9b1f0d97b0a8073b4b26356aabc8f",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1b307c5b-752f-4aca-9a33-d1d74bd5b828.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/death_v1.png",
+      "sha256": "71b37f7ba841356bd676aaeb2e2f2288df0b9b6df2ee738e00cb2580dbefd54f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "2300f3fad96565cc7dae6f46ba1e51631a0941697a41fec5100b66cbeaee9ef7",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-8d3fb246-cb46-4178-88e5-b98d7772bab7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_far_v1.png",
+      "sha256": "aad3127e501207f326a3c1f1f1ae8f1eaffff862ffbf0b40a48fdf3b9998fcec",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "368dd576b16627747f34e8221b816141e766cd4754b72db9ef3cf8b3d4974f57",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7a6b722f-802c-493a-858c-2e5877c9f0c8.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/far_leg_pose_guide.png",
+          "sha256": "23ab095f3345e6ff7f5ddc8bc5a2bc5769368c879c531b65cb502fac6fd00570"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_near_v1.png",
+      "sha256": "cec27d6260aff5142db6b1df2741df38209d44af58025c5b70c76f71f64e3483",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "c33aa0b14a32b16215d57652877cce1c04dcbf0f4358a5af92275c9d3652df11",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1333def2-c91f-45da-92ab-a40628b8103f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reference.png",
+          "sha256": "a437993f84b6a9ca984daa0ad10a9b8de2f998770fe18d10819d6e4d6a522963"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+          "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db"
+        }
+      ]
+    }
+  ]
+}
