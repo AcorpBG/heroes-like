@@ -1482,7 +1482,31 @@ static func _build_in_enemy_towns(
 	var messages = []
 	var events = []
 	var built_town_ids := {}
+	# Import shortages before scoring affordable construction. Without banking,
+	# a ten-unit dwelling can never pass a five-unit weekly import allowance.
+	var import_targets := {}
+	for entry in town_entries:
+		var index := int(entry.get("index", -1))
+		if index < 0 or index >= towns.size(): continue
+		var import_town: Dictionary = towns[index]
+		if _town_controller_faction_id(import_town) != faction_id or int(import_town.get("last_build_day", 0)) == int(session.day): continue
+		var target := _enemy_rare_import_target(session, import_town, treasury, faction_id, config)
+		if target.is_empty(): continue
+		var imported: Array = OverworldRulesScript.bank_town_rare_imports(import_town, treasury, target.cost, int(session.day))
+		if not imported.is_empty(): messages.append_array(imported)
+		import_targets[String(import_town.get("placement_id", ""))] = String(target.id)
 	var candidates := _enemy_empire_build_candidates(session, town_entries, towns, treasury, faction_id, config)
+	# A funded rare dwelling takes precedence over a lower-value convenience
+	# building in its own town once its last shipment has arrived.
+	candidates.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		var a_target := String(a.get("building_id", "")) == String(import_targets.get(String(a.get("town_placement_id", "")), ""))
+		var b_target := String(b.get("building_id", "")) == String(import_targets.get(String(b.get("town_placement_id", "")), ""))
+		if a_target != b_target: return a_target
+		if is_equal_approx(float(a.get("final_score", 0.0)), float(b.get("final_score", 0.0))):
+			var a_id := String(a.get("town_placement_id", "")) + ":" + String(a.get("building_id", ""))
+			var b_id := String(b.get("town_placement_id", "")) + ":" + String(b.get("building_id", ""))
+			return a_id < b_id
+		return float(a.get("final_score", 0.0)) > float(b.get("final_score", 0.0)))
 	for candidate in candidates:
 		var town_index := int(candidate.get("town_index", -1))
 		if town_index < 0 or town_index >= towns.size():
@@ -1533,6 +1557,33 @@ static func _build_in_enemy_towns(
 		if not build_event.is_empty():
 			events.append(build_event)
 	return {"messages": messages, "events": events}
+
+static func _enemy_rare_import_target(session: SessionStateStoreScript.SessionData, town: Dictionary, treasury: Dictionary, controller: String, config: Dictionary) -> Dictionary:
+	var market: Dictionary = OverworldRulesScript.town_market_state(town)
+	var resources: Array = market.get("import_resources", [])
+	if resources.is_empty(): return {}
+	var best := {}
+	var score_context := _town_build_score_context(session, town, config, controller)
+	for id in OverworldRulesScript.get_town_build_options(town, int(session.day)):
+		var status: Dictionary = OverworldRulesScript.get_town_build_status(town, String(id))
+		if not bool(status.get("buildable", false)) or not _enemy_town_development_pacing_allows_build(session, town, String(id)): continue
+		var building: Dictionary = status.get("building", {})
+		if int(building.get("dwelling_tier", 0)) not in [6, 7]: continue
+		var cost: Dictionary = building.get("cost", {})
+		var needs_import := false
+		for resource in resources:
+			if int(treasury.get(resource, 0)) < int(cost.get(resource, 0)): needs_import = true
+		if not needs_import: continue
+		# A private transaction preview proves budget and weekly usefulness before
+		# choosing the existing governor's highest-scoring legal target.
+		var trial_town := town.duplicate(true)
+		var trial_pool := treasury.duplicate(true)
+		if OverworldRulesScript.bank_town_rare_imports(trial_town, trial_pool, cost, int(session.day)).is_empty(): continue
+		var score := _build_candidate_score_breakdown(session, town, building, cost, config, controller, score_context)
+		var value := float(score.get("final_score", 0.0))
+		if best.is_empty() or value > float(best.score) or (is_equal_approx(value, float(best.score)) and String(id) < String(best.id)):
+			best = {"id": String(id), "cost": cost, "score": value}
+	return best
 
 static func _use_enemy_town_services(session, config: Dictionary, state: Dictionary, treasury: Dictionary, controller: String) -> Dictionary:
 	var messages: Array = []

@@ -2987,6 +2987,8 @@ static func _market_building_summary(building: Dictionary) -> String:
 	match String(building.get("id", "")):
 		"building_market_square":
 			return "Exchange wood or ore against gold"
+		"building_dev_trade_exchange":
+			return "Better common rates; import each town rare resource for 1,200 gold, up to 5 per week"
 		"building_river_granary_exchange":
 			return "Bulk wood lots and stronger river wood rates"
 		"building_resonant_exchange":
