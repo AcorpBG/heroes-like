@@ -75,16 +75,16 @@
       ]
     },
     {
-      "id": "cleared_village",
+      "id": "terraced_village",
       "faction_id": "faction_embercourt",
-      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/cleared_village.png",
-      "source_sha256": "7da8176b780e53a833d11665bfbf949e48f65c805da486ecbf520ebfc51bc574",
-      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/cleared_village.prompt.txt",
-      "generation_output": "exec-83db05a5-149d-4a0b-8c94-e0b314c3a47b.png",
+      "source_path": "art/towns/source/generated/overhaul/faction_embercourt/terraced_village_open_lock.png",
+      "source_sha256": "45571eb94ad0e5b59d44b2168ad3dfb73a7b8d052d2bb09c61df08cf86ee9f58",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_embercourt/terraced_village_open_lock.prompt.txt",
+      "generation_output": "exec-9281735a-0319-483f-a903-0fba62a5b86f.png",
       "generation_date": "2026-09-22",
       "tool": "built_in_image_gen",
       "reference_inputs": [
-        "art/towns/runtime/backdrops/development_scenes/town_embercourt_village.png"
+        "art/towns/source/generated/overhaul/faction_embercourt/terraced_village.png"
       ],
       "kind": "backdrop",
       "stage": "village",
