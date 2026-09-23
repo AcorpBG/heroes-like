@@ -8,7 +8,8 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/reactions_v1.png": "06cd51124a1d46e2b0ce154b9bec261143702516d9fcd2e28f8489c76300c185",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/death_v1.png": "5bd6ad32421e35f77d32dd9f2e0e7f0d89b9a6a267e8f5b3f785d8884dd886cf",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/cast_v1.png": "65db80d0427ffb60116b6f36e57a73c8348f9f58ccbbc1e6e51cfbbce9a79a04",
-    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/cast_hands_v2.png": "d6479306f97d40782ac303fa9221b1f0cd038fd69a91c136dade811bd790af2c"
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/cast_hands_v2.png": "d6479306f97d40782ac303fa9221b1f0cd038fd69a91c136dade811bd790af2c",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers/move_v6.png": "17aa18252b08adc22d0017b656e53358447f4ec44f0e5448bb7f74aa01c06bf1"
   },
   "accepted_clips": [
     "attack",
@@ -16,16 +17,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Solo native-scale review: controlled hook windup, lash contact and retrieval keep one continuous chain; articulated recoil, chain brace and grounded eight-pose collapse. Support now keeps the near hand holding the coil while the far arm signals and returns, using two original replacement paintings. Existing eight-frame chain-lift idle retained. Movement remains unfinished because the submitted walk repeats the same leading leg."
+    "notes": "Solo source and native 128px review: eight original reciprocal walk poses show alternate supporting legs, separate knee-passing phases, planted soles and consistent chain/hook grip. Source v6 separates row bodies without changing alpha thresholds. Fixed .66 source scale matches existing body and retained actions. Previous approved idle, lash, reactions, support and collapse preserved. No duplicate padding or sprite warping."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "97ffd08cb5144a63dd950242b962ac33241a6499ef508b3f18d73188d5000e37",
-  "atlas_sha256": "28f2a7b83d759ee371dfaa9f84b8be391b86d818eda0bc2b84b46eba37bb8c5e",
-  "texture_bytes_rgba": 24330240
+  "atlas_sha256": "aa926d3e60bef4c33c9935ad6c3146adedc8f30900fb4b123ac0e8b02026ea56",
+  "texture_bytes_rgba": 26492928
 }

@@ -9,5 +9,45 @@
     "reference": "cast_v1.png",
     "prompt": "cast_hands_v2.prompt.txt",
     "tool": "builtin_image_gen"
+  },
+  "move_v2": {
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e074eddb-766a-46fc-b516-c4b37a7ed8ee.png",
+    "reference": "move_v1.png",
+    "prompt": "move_v2.prompt.txt",
+    "tool": "builtin_image_gen",
+    "sha256": "1a5f62a2f168f6557638930a7994cfe73179b3a4006a79d1d7045eaddcb1915d",
+    "review": "rejected repeated leading leg"
+  },
+  "move_v3": {
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-59b7d8a8-ba36-4a1a-8d05-810baba08541.png",
+    "reference": "move_v2.png",
+    "prompt": "move_v3.prompt.txt",
+    "tool": "builtin_image_gen",
+    "sha256": "02cf8d47d69830b664f7c6e7235f1d965fa65c7a6028f40ae09e4a702cbe8abe",
+    "review": "rejected repeated leading leg"
+  },
+  "move_opposite_v4": {
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-2a20fc8c-be31-44f2-bec5-bd2b0c6f1957.png",
+    "reference": "art/units/source/curated/unit_mireclaw_ferrychain_lashers.png",
+    "prompt": "move_opposite_v4.prompt.txt",
+    "tool": "builtin_image_gen",
+    "sha256": "9f06409760665b3ea0247d020d19c8c1a808940bde1224081628c9345742ba6e",
+    "review": "identity and gait reference for v5; not directly published"
+  },
+  "move_v5": {
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-473d7e28-8a77-4daa-9ba9-d0c3f345f6d8.png",
+    "reference": "move_opposite_v4.png",
+    "prompt": "move_v5.prompt.txt",
+    "tool": "builtin_image_gen",
+    "sha256": "15b8857bc03344990f30f08710162958434a8a35d65fed5749e25f371c84f6ce",
+    "review": "Corrected alternating gait, superseded by v6 for safe cell spacing"
+  },
+  "move_v6": {
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-52f45b0a-0ebe-4907-894f-170310eae698.png",
+    "reference": "move_v5.png",
+    "prompt": "move_v6.prompt.txt",
+    "tool": "builtin_image_gen",
+    "sha256": "17aa18252b08adc22d0017b656e53358447f4ec44f0e5448bb7f74aa01c06bf1",
+    "review": "Accepted after source and native 128px phase review; alternate contacts and passing legs, intact hands/chain/hook, grounded fixed-scale cycle. 106 candidate and 120 imported live checks passed, zero failures."
   }
 }
