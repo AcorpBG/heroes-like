@@ -1,0 +1,102 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/idle_v1.png",
+      "sha256": "1589f2b6f1ef3c423e6f90ab7883c2bf0e90cd4f8422f7c3d985481fcf72ea43",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "55c0e841a7d9d7fce2e7ba20dafd5b8460a8fb0c96bc793696d040bde826c2c5",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-90f501d2-544e-4842-980d-9ef7f5841535.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/attack_v1.png",
+      "sha256": "d61485b730f686730ab2ba42d869bd2431b36e03dbbaef3e9889d9750cf1610a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "8c7ff8de0d9d18fd960f3bf9ee31e4921c2e8945103328d3e107ca898c990267",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9e7f9cb4-667c-422d-8743-6fb857ddeb3c.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reactions_v1.png",
+      "sha256": "5f8c6f248a5319593997b03ffec7c9ce8c418a841c9b704befe89c5e68239c68",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "08a8d7a517134b31c8ea4201bd79d08d43a54e3d65165e836596775b52a85ce6",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d8e3278b-b267-4a31-aa87-792bfc2cabcc.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/cast_v1.png",
+      "sha256": "ee096565d52d1db0de5c269570fb15bb6189dac05b218efa882731e9639594ec",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "a5c3878abd21731dcf9c0118de7bee4fa1e020de2cdc003c933871985ba41fa9",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-44cb4ac0-6206-473d-8020-e384e4f8efed.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/death_v1.png",
+      "sha256": "65ff942015b94fff3295cd4230d65f3dd6a5ac687414651a82070c5fff03d434",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "2c04565ae9f3a3c3c1f64ee6bd462cbea792f0fbbb56a85de37d63469f6a34af",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6daf1cb2-6e87-4ef6-8d10-6abcb4828af5.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_far_v1.png",
+      "sha256": "49fbc8125dfb2ac74128647118bf884536245821ac1b0fba1ea7d6e2fad4022d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "812d30440791fea50e8084244db315acffe497ee60628d9a2767e85fd7afdb8b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-dc1218ec-d55e-4bf6-8cb7-d1206d157d54.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_near_v1.png",
+      "sha256": "2d296a9f9561a59a1bed6ad40c71d5d81cb958bcde2e88b758e6624a51803284",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "6d489931ff3c38b511a35c3dd1c937113005976d9f815001a65ef0ac8441d9cf",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d7f33a19-3163-4754-a094-575961a79396.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+      "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.prompt.txt",
+      "prompt_sha256": "763a75af062fe8554dc55747012efd1113df8dc37cb9f917cef26207c50b018e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-14e1f126-2a1a-4a13-8b1a-1dcee3fea140.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/reference.png"
+      ],
+      "reference_sha256": "c42f2ac5296f8d5b56918b69eb7c16b64dd1dd2a8add667ee66339f26f46d8f7",
+      "review": "pending native review"
+    }
+  ]
+}

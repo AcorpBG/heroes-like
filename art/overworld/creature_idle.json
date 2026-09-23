@@ -5803,33 +5803,37 @@
     "unit_embercourt_ash_oath_bailiffs_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_ash_oath_bailiffs_veteran.png",
       "frame_size": [
-        206,
-        249
+        200,
+        252
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        115.0,
-        238
+        117.0,
+        244
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_ash_oath_bailiffs_veteran.png",
+      "painted_extent": 236,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_ash_oath_bailiffs_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        141,
-        2,
-        347,
-        251
+        31,
+        52,
+        231,
+        304
       ],
-      "source_sha256": "b6b71a7aa522a177b52e38d60fb2961b28df30e5d2bcf7069eef69fb0fee1ccc",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_ash_oath_bailiffs_veteran/provenance.json",
-      "sha256": "0c3ce4370ad7586dc4a6da5ba4e21de6d2d6c32e41021fe9815aff6871836c5f"
+      "source_sha256": "755dd75c6118b9b7cc86b6e2ce888b03a3353b515084849becdd5129beb555bf",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_ash_oath_bailiffs_veteran/provenance.json",
+      "sha256": "655c675f76a4d3cb93af977fc9f30a95700abbac0a82460c083bd32fe448d28e"
     },
     "unit_embercourt_lockglass_writcasters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_lockglass_writcasters_veteran.png",
