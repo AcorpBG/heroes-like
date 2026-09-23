@@ -5773,32 +5773,37 @@
     "unit_embercourt_bargebow_crews_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_bargebow_crews_veteran.png",
       "frame_size": [
-        231,
-        248
+        253,
+        256
       ],
-      "frames": 3,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        81.0,
-        238
+        84.0,
+        248
       ],
-      "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_bargebow_crews_veteran.png",
+      "painted_extent": 240,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_bargebow_crews_veteran.png",
       "source_indices": [
-        0,
         1,
-        2
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        175,
-        2,
-        406,
-        250
+        152,
+        16,
+        405,
+        272
       ],
-      "source_sha256": "e520ec458b3471155fcd5f8ee65797e28118652ae3a46411a1485442cfb6cfbb",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_bargebow_crews_veteran/provenance.json",
-      "sha256": "df3595b24c0fd5dda06b451a07d785b6b45dde5aa03f70e46a2993a6717fe9cd"
+      "source_sha256": "30cec2c44877013dbfd07649039731214d22b454650e6242d7f1805cdf7311c9",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_bargebow_crews_veteran/provenance.json",
+      "sha256": "9cad6814b8a4d77b1fce2648f0cfa99af86507ca514958f1a08dc4c6518774b2"
     },
     "unit_embercourt_ash_oath_bailiffs_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_ash_oath_bailiffs_veteran.png",
