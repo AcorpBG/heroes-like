@@ -1,0 +1,133 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/idle_v1.png",
+      "sha256": "df260515d888cd5596a95e6f25074988a4ff22f772b3ca0b9b410827a19f2075",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "3e262b472bb79fc14f1b0317c8c31c422104fe7d2362b31a7213b08f3970345d",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-406bfb15-0fcc-4b54-8bf3-b392c372927c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/attack_v1.png",
+      "sha256": "06b6643815e23d77762896186cc3f651992aaefe4ced5d320c72b02134c270a9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "b87351a46c6c2cd370f10b4f84369d3bd6ea01b21a9acc6dad230af5db6bf143",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-0598b8c5-68a8-4edc-ad7f-ba79f575b102.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reactions_v1.png",
+      "sha256": "8071028bf396be7cc18db7728702a8942e8f5fe14d9e613b3a6fdabaf3c8f633",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "a4525a53aa6a56da39db9b79fa3134320002602b9baea496f634dd739a2d65ac",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-795a0fa1-5ec0-4c88-9004-8d6f6ec2be2a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/cast_v1.png",
+      "sha256": "baf40811657b3a615b44ad426fb6db275d396e75dcbb8b431a11f27494a2cb0f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "57142073ddbdf107623eb226ed4d209744ebd72ac36e6cf444f9e72c0f6d55a5",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c4be8475-c25a-4168-b84b-c56789a88de2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/death_v1.png",
+      "sha256": "5445ce4f3bdfdf93e6037a29247be23a43a2f9d400ee9eff931ec8072ab8910e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "103231d6f9bf55fcfe1c789846cafea985e08e95829ba5b5983f4fee2dda8561",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ac2d4f98-981a-4174-b6ec-7e03c237a4a6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_far_v1.png",
+      "sha256": "ae428ae2ee27b49a183261b04b28e9c8f9def0f1bbb12133bcbd63988e96ce24",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "2adc26272e33637859bc99c0c77bad025b76505b60a8be3da3c0320690472530",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-31ff69ab-0d3c-478a-9ed4-c231554290ab.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_missing_v1.png",
+      "sha256": "e7fb8c19703fef742eb20358d440bec29f3de106318b395de3419001b3b55282",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_missing_v1.prompt.txt",
+      "prompt_sha256": "5ecf83efddaf3814337e1165c23019a776b286c1097546a6ebe638e026671e49",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-4434755b-df48-435e-8e11-34389a9e3f25.png",
+      "original_reference": null,
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reference.png",
+          "sha256": "96f7ae3a6a929f9e8e8cec60361719767c4e3dce531cef99584c886b8d033332"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_far_v1.png",
+          "sha256": "ae428ae2ee27b49a183261b04b28e9c8f9def0f1bbb12133bcbd63988e96ce24"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+          "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v1.png",
+      "sha256": "3bab359bd143b87aa427f7f10db5596740332ddff378b3eab143b8826368ce9b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v1.prompt.txt",
+      "prompt_sha256": "cf558447fa78360c503e77dc4f0956565400e37d3304517270a5336f77f1b36e",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-f1ef4c85-130d-4673-9b1f-8bfb6fe41e63.png",
+      "original_reference": null,
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_passing_reference.png",
+          "sha256": "ae4253f099682225ac63733b0d49338d755d3e7ce347ae757d40c6f7460bb7a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v2.png",
+      "sha256": "fb0e6ace963c1aaf8852be958787ca0a29f4d55525283e9d2754847b284de5ca",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v2.prompt.txt",
+      "prompt_sha256": "cfd70d50fa36d85eb130fa559d35968cf4c5d3232d151b9e9092d4a24fe013a8",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-0594a2ec-2ad3-449b-989e-6f69be86c21f.png",
+      "original_reference": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-f1ef4c85-130d-4673-9b1f-8bfb6fe41e63.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v1.png",
+          "sha256": "3bab359bd143b87aa427f7f10db5596740332ddff378b3eab143b8826368ce9b"
+        }
+      ]
+    }
+  ]
+}

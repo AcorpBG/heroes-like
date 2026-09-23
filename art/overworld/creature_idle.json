@@ -5983,33 +5983,37 @@
     "unit_embercourt_charter_colossus_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_charter_colossus_veteran.png",
       "frame_size": [
-        265,
-        249
+        285,
+        250
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        123.0,
-        238
+        150.0,
+        242
       ],
-      "painted_extent": 249,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_charter_colossus_veteran.png",
+      "painted_extent": 269,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_charter_colossus_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        133,
-        2,
-        398,
-        251
+        18,
+        -2,
+        303,
+        248
       ],
-      "source_sha256": "d4e446230f5add1fb92e606b847028c26a00b0c917db9a51d0e048e3f5ef6f36",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_charter_colossus_veteran/provenance.json",
-      "sha256": "939934766fa3b1d401e2450e1b4a2d5ec14854fb9d47247fef4b7887dc8658b7"
+      "source_sha256": "959ed21c8a7f6f13d497ccae57052e57ec82fffaadbd01684cde52b0af549c40",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_charter_colossus_veteran/provenance.json",
+      "sha256": "3959b4cfaece025cbc5cf30311facb5006faf09404e4b538ab7084706e752973"
     },
     "unit_blackbranch_cutthroat_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_blackbranch_cutthroat_veteran.png",

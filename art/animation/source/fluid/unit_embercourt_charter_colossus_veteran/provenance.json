@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/idle_v1.png": "df260515d888cd5596a95e6f25074988a4ff22f772b3ca0b9b410827a19f2075",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/attack_v1.png": "06b6643815e23d77762896186cc3f651992aaefe4ced5d320c72b02134c270a9",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/reactions_v1.png": "8071028bf396be7cc18db7728702a8942e8f5fe14d9e613b3a6fdabaf3c8f633",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/cast_v1.png": "baf40811657b3a615b44ad426fb6db275d396e75dcbb8b431a11f27494a2cb0f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/death_v1.png": "5445ce4f3bdfdf93e6037a29247be23a43a2f9d400ee9eff931ec8072ab8910e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/far_corrections_v2.png": "fb0e6ace963c1aaf8852be958787ca0a29f4d55525283e9d2754847b284de5ca",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_missing_v1.png": "e7fb8c19703fef742eb20358d440bec29f3de106318b395de3419001b3b55282",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_charter_colossus_veteran/move_far_v1.png": "ae428ae2ee27b49a183261b04b28e9c8f9def0f1bbb12133bcbd63988e96ce24"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Covenant Bastion: seven original articulated actions inspected as original paintings and actual Godot 128px phases. Selected opposing gait phases and full lantern caps, retained stocky headless anatomy, grounded collapse and shield ownership. Dedicated hand flexion, punch/recovery, palm support and progressive brace."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "d4e446230f5add1fb92e606b847028c26a00b0c917db9a51d0e048e3f5ef6f36",
+  "atlas_sha256": "959ed21c8a7f6f13d497ccae57052e57ec82fffaadbd01684cde52b0af549c40",
+  "texture_bytes_rgba": 16332288
+}
