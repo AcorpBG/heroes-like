@@ -1,0 +1,16 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v2.png",
+  "source_sha256": "61b213bfcf164eb5654fc33d4afaed8aa9b5bd10344c4bc6d296b3ab0aa61321",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v2.prompt.txt",
+  "prompt_sha256": "046bf4b8052ef675bfe7bc7d3cbbec035c954d0b33d57d72e48156f63638de19",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png",
+      "sha256": "7b4196496fe49d3dd8c578ef111af27d8d8a4e543fe1a0721d5e573b30af2cd9",
+      "derived_from": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/idle_v1.png"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-e8d9f2ce-229e-4bbd-baad-701a4af81a21.png",
+  "review_status": "rejected_abrupt_return"
+}

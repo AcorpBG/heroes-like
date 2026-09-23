@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_neutral_deepforge_vaultwyrms",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png": "c102482b0861da497595ebdced098c03d7d086195e60aa4734fa1f43dc314ae8",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png": "4b6c1688d9897b514cbf45e61d060243581c6f0defea911bfa3e9a2153634d6f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png": "bd025585ea119c94482d8cc97ba4d00c76b746f9a4c4b8a53a473f848552d558",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png": "c4aa5669ee0acac5e7ed5f0c3550ab0f478c7960c46a1828ae9bcc8e163ea44a",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png": "6e3c85d5f3eb70d8b40fbafd194fcc02fa6d8b413d68dba16e4d87fb6f90d8b4",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png": "287a803cbab9a6895663fed4eede099dca2ac4f2b3ee53e5bea12c1e24db42ec"
+  },
+  "accepted_clips": [
+    "death",
+    "move",
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "All seven required clips visually reviewed in Godot at128/64: coherent articulated gait, anticipatory lunge/bite/recovery, leg brace/recoil, head/chest/forelimb physical support cue, quiet idle and continuous grounded death. Facing preserved; all48 unique paintings accepted. Actual-shell timing and simulation checks passed."
+  },
+  "atlas_sha256": "018304990f9c4d95c1f44282601ce4c67be1c19fec255fdf8ec601438543ef07",
+  "texture_bytes_rgba": 12368384,
+  "baseline_atlas_sha256": "eaf6193aea49713e8d1f7de6df86e52558fe3b5a8e32a3cf4b1c79401da5eaa7"
+}

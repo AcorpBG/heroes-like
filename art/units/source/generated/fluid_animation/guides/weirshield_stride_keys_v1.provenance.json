@@ -1,0 +1,14 @@
+{
+  "generator": "built_in_image_gen",
+  "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4a4ea0f8-69e1-4ea9-ad11-d4ba56aceb2a.png",
+  "prompt": "weirshield_stride_keys_v1.prompt.txt",
+  "prompt_sha256": "e7f1784fca6b2b455ceea58a9ed7b48a3b1b4f8af96a31589ed0488ac3df4706",
+  "source": "weirshield_stride_keys_v1.png",
+  "source_sha256": "1f28c7ba102f2cdee3200bcab57cb6a98a4318fe3cf6722a226b1dfe6bdae5e3",
+  "references": {
+    "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_neutral.png": "a0812ff6b0bd6726dc6eef3e1e40793e2a5afdb81a128dd218f800818684e8e0",
+    "art/units/source/generated/fluid_animation/guides/stride_contacts.png": "99e270dbf7289fded28c7bc38e9c558695681955e21dd14644b901c08b27166c"
+  },
+  "status": "rejected",
+  "reason": "Despite explicit near/far pose diagram, both paintings repeat same leading leg; not a reciprocal gait. No live use."
+}

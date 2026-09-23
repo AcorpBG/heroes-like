@@ -1,0 +1,59 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "generator": "built_in_imagegen",
+  "reference": "art/units/source/curated/unit_gorefen_ripper.png",
+  "reference_sha256": "52d9ad6dd10b9b29b0b73447fafd73f07d418128632aa9662ed329e40cf5e7b3",
+  "outputs": {
+    "move": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-dbd9e3c6-66f1-4948-a2ed-a9aa1712d856.png",
+    "idle": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-f3ba22ed-0395-4def-bb8e-002e8729dab1.png",
+    "attack": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-b06eda0b-d9f0-4df0-ab27-a42d2afc15d9.png",
+    "death": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-20920079-596b-4b41-845d-d5777b0c356f.png",
+    "cast": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-fde72cdc-53f1-4a07-9226-744d0b7f27fc.png",
+    "reactions": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-e2f9b374-8266-49a8-8eaa-89eca401d461.png",
+    "idle2": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-1991ada9-bbb6-48c2-8f02-9da926d4c1cb.png",
+    "cast2": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-40480b54-c7e0-4f62-9376-a8a5b22b85e9.png"
+  },
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/idle_v2.png",
+      "sha256": "82109128bfb84b4ed75599f326392306431afc3a92e547338edd9cadc25c2d11",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/idle_v2.prompt.txt",
+      "prompt_sha256": "b12b870a0b0a03d127fc0663ce2d7b2a0004dae458b3c275064eed1820864882"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/move_v1.png",
+      "sha256": "43817b2e1b4090321a5199e8eff980de4ec8db71e6c33ccd59b6c2e45399c192",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/move_v1.prompt.txt",
+      "prompt_sha256": "3181bf9e34d25685218d2839a45dff7528ecad0e2b13cf405faf797e49ec9054"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/attack_v1.png",
+      "sha256": "88ae77bd45ba20bde46196dfe034b88daecaa6ccb2d8dbf44cce98d4f2d85690",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/attack_v1.prompt.txt",
+      "prompt_sha256": "4c0efb5ce286eed5025d963ca53cdb7eee4caae6227c458a20d5401cd5da5ef9"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/reactions_v1.png",
+      "sha256": "7ad4d5d2b9569cd5b9b0876437008801dc60a8f1ea165575d537fa01f2cf2e9f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/reactions_v1.prompt.txt",
+      "prompt_sha256": "06e21fa35769daabf2fb6175a5f2e5d13fdf214d800072d6ce9c3046f1a74931"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/death_v1.png",
+      "sha256": "94c815dea29a812b788b9f6b0fd4ad84c79ef2b5d53bb28514e4a19a92905606",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/death_v1.prompt.txt",
+      "prompt_sha256": "b134c70d66c84ce16ede39e0e2706065738137ffaf1dbb84d578a40735c56c84"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/cast_v2.png",
+      "sha256": "7848102a23de609567296b8c57078db8e818f98419b4060f1b29a5eb1720275d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/cast_v2.prompt.txt",
+      "prompt_sha256": "4567cb705247aa8a71956d6c26b3b3b4f631517cc8a1062a17e8e2df44383bc5"
+    }
+  ],
+  "rejected_sources": [
+    "idle_v1.png",
+    "cast_v1.png"
+  ],
+  "extraction": "Original alpha greater than 8 connected silhouette spans; no pixel repainting, deformations or pose duplication. Corpse uses final death pose."
+}

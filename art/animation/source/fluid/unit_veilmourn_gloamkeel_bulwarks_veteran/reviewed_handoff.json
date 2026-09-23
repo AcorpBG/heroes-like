@@ -1,0 +1,886 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "idle_00",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            302,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            787,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            302,
+            762
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            787,
+            762
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            302,
+            1144
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            787,
+            1144
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            302,
+            1526
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            787,
+            1526
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            280,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            800,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              770
+            ]
+          ],
+          "anchor": [
+            280,
+            764
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              770
+            ]
+          ],
+          "anchor": [
+            800,
+            764
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              770,
+              590,
+              1135
+            ]
+          ],
+          "anchor": [
+            285,
+            1130
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              590,
+              770,
+              1024,
+              1135
+            ]
+          ],
+          "anchor": [
+            805,
+            1130
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              1135,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            280,
+            1510
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+          "rects": [
+            [
+              512,
+              1135,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            800,
+            1510
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              380
+            ]
+          ],
+          "anchor": [
+            310,
+            375
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              380
+            ]
+          ],
+          "anchor": [
+            795,
+            375
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              380,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            310,
+            757
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              512,
+              380,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            795,
+            757
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1144
+            ]
+          ],
+          "anchor": [
+            310,
+            1139
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1144
+            ]
+          ],
+          "anchor": [
+            795,
+            1139
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              1144,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            310,
+            1521
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+          "rects": [
+            [
+              512,
+              1144,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            795,
+            1521
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              480
+            ]
+          ],
+          "anchor": [
+            290,
+            440
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              480
+            ]
+          ],
+          "anchor": [
+            800,
+            440
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              480,
+              512,
+              895
+            ]
+          ],
+          "anchor": [
+            300,
+            865
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              480,
+              1024,
+              895
+            ]
+          ],
+          "anchor": [
+            800,
+            865
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              895,
+              512,
+              1250
+            ]
+          ],
+          "anchor": [
+            290,
+            1205
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              895,
+              1024,
+              1250
+            ]
+          ],
+          "anchor": [
+            795,
+            1205
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              1250,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            285,
+            1505
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              1250,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            800,
+            1505
+          ],
+          "scale": 0.542,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              380
+            ]
+          ],
+          "anchor": [
+            302,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              380
+            ]
+          ],
+          "anchor": [
+            787,
+            380
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              0,
+              380,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            302,
+            762
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              512,
+              380,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            787,
+            762
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            302,
+            1144
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            787,
+            1144
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            302,
+            1526
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            787,
+            1526
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frames": 8,
+          "frame_msec": 125,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frames": 8,
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frames": 4,
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frames": 4,
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frames": 8,
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frames": 8,
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [
+        "idle",
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast"
+      ],
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Godot128 overview reviewed: articulated sword/shield idle and sweep, dedicated shield guard, recoil, sword salute and continuous collapse to prone corpse. Move remains explicitly unfinished and old fallback is not claimed accepted."
+      },
+      "provenance": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/provenance.json",
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png": 0.542
+      },
+      "source_scale_reason": "Original standing knight is 233px tall in runtime. Idle, attack, hit/defend and salute originals have approximately370px standing anatomy, uniformly scaled0.63. Death sheet standing anatomy is approximately430px and uniformly scaled0.542; all eight collapse poses retain that source-wide scale without per-pose normalization."
+    }
+  ]
+}

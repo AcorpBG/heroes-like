@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/idle_v1.png": "43feb89f756d12301d1512db80c4a53519617719542b04a379daebaca5f3e8fd",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_v2.png": "a2ea0931c6a3f31c2db69f38b08dd6fed6751aa2c749ba1b065d75ac87e5d801",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/move_farstep_v3.png": "262225fc06628fe7a5d53b373392a6da06e2f8cc540471629a936aff738e3755",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/attack_v1.png": "58ad2842925b66095b10701da1b909ca2357adb3c465ec3727d800f56383aac8",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/reactions_v1.png": "45ced50ca291c3b26df4aa30cbdf62d630ba6fc48554f5d3a2aeebe9c28748b5",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_v1.png": "82397cb0c92a8b1ec366579844fc2e7adec058a3a8137266a114c7cd018ca656",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/death_landing_v3.png": "1710d6f1f55206d9364b5917da8efca3e1606ede36df9c414fe56c3fc8a1dc74",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint_veteran/support_v1.png": "70ce767bff35d0b70145cd07b14862005989528d02cf85003a41eb39428b64cc"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Godot128 overview reviewed: articulated arms, alternating near/far boot gait, punch anticipation/contact/recovery, held forearm guard, recoil, physical hand signal and seated-to-side collapse with extinguished final corpse. Seven clips accepted."
+  },
+  "atlas_sha256": "428f4685c01de19c3688d769f3cc3cd03cfc256ab90308dd4c47eadfbc526090",
+  "texture_bytes_rgba": 15943424,
+  "baseline_atlas_sha256": "16227a0219b52078bf7555f9bc395d306d41f4216ca8bf78334c02f08b620766"
+}

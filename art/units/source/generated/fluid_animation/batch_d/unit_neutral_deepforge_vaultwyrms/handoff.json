@@ -1,0 +1,1131 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_deepforge_vaultwyrms",
+      "reference_height": 256,
+      "source_facing": "left",
+      "frames": [
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            437
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            437
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            437
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            437
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            828
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            828
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            828
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "death_08",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            828
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates; anatomical ground support center, foreclaw contact baseline. Fixed shared scale."
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "move_08",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates. Fixed anatomical footprint center and ground plane for in-place gait; do not independently bottom-align airborne limbs."
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            425
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            425
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            425
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            425
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            843
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            843
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            843
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "attack_08",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            843
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            405
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            846
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            846
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            846
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "idle_08",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            846
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            417
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            417
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            417
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_04",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            417
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            838
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            838
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            838
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "hit_defend_08",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            838
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              443
+            ]
+          ],
+          "anchor": [
+            221,
+            412
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              443
+            ]
+          ],
+          "anchor": [
+            664,
+            412
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              443
+            ]
+          ],
+          "anchor": [
+            1108,
+            412
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              443
+            ]
+          ],
+          "anchor": [
+            1551,
+            412
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              0,
+              443,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              443,
+              443,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            664,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              887,
+              443,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1108,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        },
+        {
+          "name": "support_08",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+          "rects": [
+            [
+              1330,
+              443,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551,
+            848
+          ],
+          "scale": 0.5,
+          "anchor_notes": "Absolute source coordinates, fixed body-ground reference per row; no individual silhouette stretching."
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 140,
+          "loop": false
+        },
+        "dead": {
+          "indices": [
+            7
+          ],
+          "frame_msec": 140,
+          "loop": false
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 115,
+          "loop": true
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "idle": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": true,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "frame_msec": 110,
+          "loop": false
+        },
+        "defend": {
+          "indices": [
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 130,
+          "loop": false,
+          "hold_last": true
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false
+        }
+      },
+      "accepted_clips": [
+        "death",
+        "dead"
+      ],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "partial",
+        "accepted": [
+          "death",
+          "dead"
+        ],
+        "pending": [
+          "move",
+          "attack",
+          "idle",
+          "hit",
+          "defend",
+          "cast"
+        ],
+        "notes": "Root approved death/corpse after Godot playback at128/64. Other clips original generated poses, awaiting engine acceptance. Cast is physical support roar, not invented magic."
+      },
+      "provenance": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.png",
+        "source_sha256": "c102482b0861da497595ebdced098c03d7d086195e60aa4734fa1f43dc314ae8",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/death_v1.prompt.txt",
+        "prompt_sha256": "3d652999b028c9fe04e5a6887c881e45a912c99dfa1cbaaecab6b70e73a9644f",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-b9747ced-c41d-4489-82ce-fe19029b2e79.png",
+        "frame_order": "left-to-right top-to-bottom",
+        "output_size": [
+          1774,
+          887
+        ]
+      },
+      "provenance_move": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.png",
+        "source_sha256": "4b6c1688d9897b514cbf45e61d060243581c6f0defea911bfa3e9a2153634d6f",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/move_v1.prompt.txt",
+        "prompt_sha256": "548fb694b38068971ee08c97a110ded6c552c80b2ec255cbf0a2ef36a058a2a6",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-bde8ff6f-6f20-4d58-a223-e6bb7351d387.png",
+        "output_size": [
+          1774,
+          887
+        ]
+      },
+      "provenance_attack": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.png",
+        "source_sha256": "c4aa5669ee0acac5e7ed5f0c3550ab0f478c7960c46a1828ae9bcc8e163ea44a",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/attack_v1.prompt.txt",
+        "prompt_sha256": "613dc4e3409ce3b10be4d2bbbbd28488a61d23540c516af243add5116222b945",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-aefa78f6-eb66-4470-8051-004728890436.png",
+        "output_size": [
+          1774,
+          887
+        ]
+      },
+      "provenance_idle": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.png",
+        "source_sha256": "bd025585ea119c94482d8cc97ba4d00c76b746f9a4c4b8a53a473f848552d558",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/idle_v1.prompt.txt",
+        "prompt_sha256": "dee7f0a29d7047a9816c30a2d8382036cbf0ca4c2f82bd9b9e62f40c9196fdf3",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-cc04d163-5a35-4da4-86b8-8438601c13fb.png",
+        "output_size": [
+          1774,
+          887
+        ]
+      },
+      "provenance_hit_defend": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.png",
+        "source_sha256": "6e3c85d5f3eb70d8b40fbafd194fcc02fa6d8b413d68dba16e4d87fb6f90d8b4",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/hit_defend_v1.prompt.txt",
+        "prompt_sha256": "3ff5b27a4e802d7e2ddde9c6f08e924ec071a05b0fb4a41b09a7f93ab86077d6",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-72205c50-f134-4bbc-a268-9837b214ed0c.png",
+        "output_size": [
+          1774,
+          887
+        ]
+      },
+      "provenance_support": {
+        "generator": "built_in_image_gen",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.png",
+        "source_sha256": "287a803cbab9a6895663fed4eede099dca2ac4f2b3ee53e5bea12c1e24db42ec",
+        "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_deepforge_vaultwyrms/support_v1.prompt.txt",
+        "prompt_sha256": "2a1b06142cd28796659a14435dafa85208001ed8855cbd06156322d1c7addd99",
+        "reference": "art/units/source/curated/unit_neutral_deepforge_vaultwyrms.png",
+        "reference_sha256": "c68fd1d8dc8b2786db643264ec8183d4de912f7d32b95a822241c7517eaafbbc",
+        "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-da46326d-2699-4815-9929-a9b956eabe73.png",
+        "output_size": [
+          1774,
+          887
+        ]
+      }
+    }
+  ]
+}

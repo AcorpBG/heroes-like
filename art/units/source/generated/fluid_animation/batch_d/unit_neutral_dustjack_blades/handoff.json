@@ -1,0 +1,1149 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_dustjack_blades",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_v1_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              12,
+              0,
+              389,
+              550
+            ]
+          ],
+          "anchor": [
+            221.0,
+            471
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              465,
+              0,
+              793,
+              550
+            ]
+          ],
+          "anchor": [
+            664.5,
+            471
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              892,
+              0,
+              1270,
+              550
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            471
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              1329,
+              0,
+              1700,
+              550
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            471
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              4,
+              550,
+              442,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            827
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              450,
+              550,
+              883,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            827
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              889,
+              550,
+              1327,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            827
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "death_v1_08",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "rects": [
+            [
+              1332,
+              550,
+              1771,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            827
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              54,
+              0,
+              372,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              498,
+              0,
+              821,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              923,
+              0,
+              1250,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              1387,
+              0,
+              1699,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              34,
+              450,
+              386,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              497,
+              450,
+              820,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              940,
+              450,
+              1255,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "move_v1_08",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "rects": [
+            [
+              1382,
+              450,
+              1707,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              40,
+              0,
+              353,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              497,
+              0,
+              873,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              965,
+              0,
+              1265,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              1436,
+              0,
+              1742,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              62,
+              450,
+              467,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              495,
+              450,
+              902,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              1006,
+              450,
+              1255,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "attack_v1_08",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "rects": [
+            [
+              1370,
+              450,
+              1683,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              54,
+              0,
+              357,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              488,
+              0,
+              797,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              911,
+              0,
+              1330,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              1431,
+              0,
+              1722,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              53,
+              450,
+              363,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              494,
+              450,
+              807,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              938,
+              450,
+              1257,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "idle_v1_08",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "rects": [
+            [
+              1368,
+              450,
+              1693,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              11,
+              0,
+              431,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              452,
+              0,
+              890,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              899,
+              0,
+              1275,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              1366,
+              0,
+              1728,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              52,
+              450,
+              385,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              514,
+              450,
+              826,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              973,
+              450,
+              1264,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "hit_defend_v1_08",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "rects": [
+            [
+              1418,
+              450,
+              1713,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              76,
+              0,
+              314,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              463,
+              0,
+              841,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              875,
+              0,
+              1327,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              1335,
+              0,
+              1770,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              5,
+              450,
+              438,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              476,
+              450,
+              839,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              949,
+              450,
+              1224,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        },
+        {
+          "name": "support_v3_08",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "rects": [
+            [
+              1416,
+              450,
+              1664,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            876
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping."
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 120,
+          "loop": false
+        },
+        "dead": {
+          "indices": [
+            7
+          ],
+          "frame_msec": 120,
+          "loop": false
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": true
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "idle": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": true,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "frame_msec": 110,
+          "loop": false
+        },
+        "defend": {
+          "indices": [
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "hold_last": true
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "pending",
+        "notes": "All original48poses inspected for coherent identity. Supportv3 preserves both blades, v1/v2 rejected and retained. Root engine motion acceptance pending."
+      },
+      "provenance": [
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
+          "source_sha256": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.prompt.txt",
+          "prompt_sha256": "dc6c7763c9e8aa9197786c671779a98cb09cc1fd76b5477426f64249968cda12",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-0cde7f87-a88f-4b35-ab5a-a7a714994623.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
+          "source_sha256": "80552354149093d26cef1406480fd5a55e0520e4ca8b536338bec59626daacd7",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.prompt.txt",
+          "prompt_sha256": "0cf32269cd8dcd650b6f247857d3225ca7410d0c66b0e99ff5abba3e1cc59380",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-3ad7a490-5762-4ccd-8e3e-dd2a69c104ce.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
+          "source_sha256": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.prompt.txt",
+          "prompt_sha256": "6310726466227a01e20b98fe899e014ad3a5526eeac7b68b4571ea9ad49ca34a",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-52ee9002-4e36-4c99-b53c-bfe9d230a73b.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
+          "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.prompt.txt",
+          "prompt_sha256": "b4fb08adcf268912f7ad43c64f1b7ef9635176017fd4fb9239b54dc1d2d27aab",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-2489fb76-b6c5-4b48-b262-a7dd60d81810.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
+          "source_sha256": "3e90f8531e27c3b21ddc51c41985751b95402ba3af5e5728c18ee9019273a5bb",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.prompt.txt",
+          "prompt_sha256": "08ffbf96301ba0a27e418ad45a63fdd040d1612ee4c0d168d20eb3d443a87315",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-1c7fb338-261c-425f-a8f6-89b31a4b6ee7.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v1.png",
+          "source_sha256": "e8aa11663ecc0dfef6126b1b39827e64c254b489966fe8346b34dbc10d24bc34",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v1.prompt.txt",
+          "prompt_sha256": "05c367e8b312f49dae5e4e8bbfe4847d8dea20600d50f0fdf8383978d36f028e",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-6f2f8741-e246-49f7-8886-10f9d661bbe4.png",
+          "output_size": [
+            1774,
+            887
+          ],
+          "rejected_reason": "Clipped raised blade"
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v2.png",
+          "source_sha256": "4d11adb686bc128085bb7bafd51ccc96ae1101540df16e4d739b1761719af503",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v2.prompt.txt",
+          "prompt_sha256": "242304058f1a867984b14a1452e314f3ad501ba97ac6554beb4e4f59297183f0",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-81f0e4a4-ba4e-436b-b629-4e4973df4d66.png",
+          "output_size": [
+            1774,
+            887
+          ],
+          "rejected_reason": "One blade disappears in intermediate salute"
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
+          "source_sha256": "d2dbbd5b511dcc6998c85d4502b9166e61c9d9542fa4b4b8ec0986ceb973533f",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.prompt.txt",
+          "prompt_sha256": "d4af1fffbe5d4b09bcf9685cf0406a357081f2026968966b500a0312a45c3b05",
+          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
+          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
+          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-3c4d2b30-2504-4301-8fc8-318b38799e8b.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        }
+      ]
+    }
+  ]
+}

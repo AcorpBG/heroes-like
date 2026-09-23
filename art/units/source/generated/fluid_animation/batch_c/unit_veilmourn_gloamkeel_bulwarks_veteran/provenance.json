@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "tool": "builtin image_gen",
+  "reference": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks_veteran/unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png",
+  "reference_sha256": "194bd673de5793cec8cfd50445f379766c52b4639bde3de85eac2f0861fca9b4",
+  "generations": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.png",
+      "source_sha256": "d9c90ba5af6871e0f9669dc6caab988ebd29bbe4a8e576783d77a63355a4a428",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "afda03fbbe3642275d18f8ce98e32fe855073e1ec300a15130390ba110f88b09",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-bd86dbd0-e5aa-4183-9f68-59b837e8f69e.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_v1.png",
+      "source_sha256": "0a1559fa76911b3cbe98a3043bdb7f7e55de093b9a1028bf24cf359174ded90c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "49b5ae52cbe217d420f1f59523c78b36be55d15747c1b176bac68f230c31f9fb",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-fe5a0d23-b1be-4768-941d-7b544d9b04f1.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "rejected_same_leg_leads_both_half_cycles"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.png",
+      "source_sha256": "b5f339b69aac9401983826e91dcb333dd24974dd74db7c987f71ee16389b501c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "5c3631a186d76e9cb70de83182a8ecda234de9e2c9c6aad30292642e64490c29",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-1236b4ab-6bf0-4cf3-b5eb-95789d57c147.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.png",
+      "source_sha256": "b11018c5bd0317616d138b99f1e994aec536f68a65fe79f283d298d8f3cfa03a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "ab06c25b264d6c965d963e94f2b80d9cb3427a312c35c96d22f5fdc791706065",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-f6a247e8-fada-4952-a9ad-e228dae28ba1.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.png",
+      "source_sha256": "f7deb20a80f8a62e08fec5f719f779c25295a0a52b211873e9a44d96916f7a64",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "e4f344f4367d7fc11c07738d88cab43853f8a61ff572530890e591771f1ef484",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-798efc68-3ef7-4946-9d70-3fb5c8407688.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.png",
+      "source_sha256": "a136d11ec63fc38080c906f567065f66381115fd47d672db698f4a205a6ad3b3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "b69cce326e2244545c429bab1dd4a0cd26c9632ea6e799912b3ad674e82fb0d5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-d656ab34-9eb2-4f83-a33a-db7154047ca3.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_v2.png",
+      "source_sha256": "95dc96e42a255f48a9f297e5335d60c501bb525c268cc05643241eb856a70864",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_v2.prompt.txt",
+      "prompt_sha256": "cbe84004a4a3bab49c5106a4263f1faf0ea94462974817ebadfbfb4d9c6f6ef6",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-637ba209-74c1-477e-85dc-72a1b461bff5.png",
+      "size": [
+        1024,
+        1536
+      ],
+      "status": "rejected_same_leg_leads_both_half_cycles"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_opposite_v1.png",
+      "source_sha256": "6451b293f353197507ae99c0427f17624b848635b5c770652fcf1bbad883f218",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_opposite_v1.prompt.txt",
+      "prompt_sha256": "49a356bd815e5c9ca6673b3904d0c15308931eeef0aa78e36740e72e39f2fd1a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-ebb25804-f2e1-422c-bff0-ccdb27e7bdad.png",
+      "size": [
+        1254,
+        1254
+      ],
+      "status": "rejected_same_leg_leads_both_half_cycles"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png",
+      "source_sha256": "d04159c00dad9c23657700d67ad3e049a9d38311840e61a03911e3c1ee4ec351",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "3e3f1a046a4727c65bbd97de4fc17554a1339b5e2ef8b983c5bf6ccc517378f4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-1b0c759f-fbef-4bc5-939e-c1054f337267.png",
+      "status": "pending_coordinator_visual_review",
+      "supporting_pose_reference": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_inbetweens_v1.png",
+      "source_sha256": "de43713d236b102b01019253b2c9b645262adc68ffda069518a212579d01dc93",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_inbetweens_v1.prompt.txt",
+      "prompt_sha256": "75a0f606a61071a34e4216f3d1a9b771cedcab7efa42d91d96123fc4b27609a6",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-1a8047ea-64cf-476d-b534-3532e308695e.png",
+      "status": "pending_coordinator_visual_review",
+      "supporting_pose_reference": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+    }
+  ]
+}

@@ -838,15 +838,51 @@ func set_battle_state(session) -> void:
 		battle = session.battle
 	_apply_battle_dictionary(battle)
 
-func set_battle_presentation_snapshot(battle_snapshot: Dictionary) -> void:
+func set_battle_presentation_snapshot(battle_snapshot: Dictionary, preserve_contact_action: bool = false) -> void:
 	_session = null
-	if battle_snapshot.has("playback_event"):
+	if battle_snapshot.has("playback_event") and not preserve_contact_action:
 		_stack_animation_playback_records.clear()
 		_stack_animation_playback_until_msec.clear()
 		_stack_animation_cue_playback_records.clear()
 		_stack_animation_audio_playback_records.clear()
 		_latest_animation_serial_by_stack.clear()
-	_apply_battle_dictionary(battle_snapshot.duplicate(true))
+	var presentation := battle_snapshot.duplicate(true)
+	# This flag lives only in the transient render snapshot, never in session
+	# state. Contact reactions begin while the attack plays its recovery poses.
+	if preserve_contact_action: presentation["_fluid_contact_reaction"] = true
+	_apply_battle_dictionary(presentation)
+
+func can_overlap_action_contact(next_event: Dictionary) -> bool:
+	var current: Dictionary = _battle.get("playback_event", {})
+	# An attack may damage several targets, or emit hit then death. Keep all
+	# of that contact's reactions together while the attacker recovers.
+	if bool(_battle.get("_fluid_contact_reaction", false)) and String(next_event.get("event_id", "")) in ["battle_unit_hit", "battle_unit_death", "battle_status_applied"]:
+		return String(next_event.get("source_battle_id", "")) == String(current.get("source_battle_id", ""))
+	if String(current.get("event_id", "")) not in ["battle_unit_melee_attack", "battle_unit_ranged_attack", "battle_retaliation", "battle_unit_cast"]:
+		return false
+	if String(next_event.get("event_id", "")) not in ["battle_unit_hit", "battle_unit_death", "battle_status_applied"]:
+		return false
+	if String(next_event.get("source_battle_id", "")) != String(current.get("battle_id", "")):
+		return false
+	var actor := BattleRulesScript._get_stack_by_id(_battle, String(current.get("battle_id", "")))
+	var animation := ContentService.get_unit_animation(String(actor.get("unit_id", "")))
+	var state_name := String(current.get("state", ""))
+	var spec := BattleUnitPose.clip(animation, state_name)
+	return animation.get("pose_clips", {}).has(BattleUnitPose.clip_name(state_name)) and bool(spec.get("authored_timing", false)) and spec.has("contact_frame") and not SettingsService.reduced_motion_enabled()
+
+func action_playback_wait_msec(at_contact: bool = false) -> int:
+	var now := int(Time.get_ticks_msec())
+	if at_contact:
+		if bool(_battle.get("_fluid_contact_reaction", false)): return 1
+		var event: Dictionary = _battle.get("playback_event", {})
+		var record := _animation_playback_record_for_stack(String(event.get("battle_id", "")))
+		var actor := BattleRulesScript._get_stack_by_id(_battle, String(event.get("battle_id", "")))
+		var spec := BattleUnitPose.clip(ContentService.get_unit_animation(String(actor.get("unit_id", ""))), String(event.get("state", "")))
+		return maxi(1, int(record.get("impact_at_msec", int(record.get("started_at_msec", now)) + _presentation_duration_msec(BattleUnitPose.contact_msec(spec)))) - now)
+	var remaining := 1
+	for expires in _stack_animation_playback_until_msec.values():
+		remaining = maxi(remaining, int(expires) - now)
+	return remaining + 16
 
 func finish_action_playback(session) -> void:
 	_stack_animation_playback_records.clear()
@@ -2453,6 +2489,20 @@ func _sync_animation_playback_records() -> void:
 		var cue_record := _animation_cue_playback_record_for_event(event)
 		var sequence_delay_msec := _presentation_sequence_delay_msec(_sequence_delay_msec_for_event(event, cue_record))
 		var base_duration_msec: int = int(cue_record.get("max_duration_ms", STACK_ANIMATION_EVENT_PLAYBACK_MSEC)) if not cue_record.is_empty() else STACK_ANIMATION_EVENT_PLAYBACK_MSEC
+		var actor := BattleRulesScript._get_stack_by_id(_battle, battle_id)
+		var animation := ContentService.get_unit_animation(String(actor.get("unit_id", "")))
+		var pose_name := BattleUnitPose.clip_name(String(event.get("state", "")))
+		var pose_spec := BattleUnitPose.clip(animation, String(event.get("state", "")))
+		# Ready/status events fall back to idle artwork, but are not idle cycles.
+		# Likewise an unupgraded action alias must not acquire an idle duration.
+		var authored_action: bool = pose_name != "idle" and animation.get("pose_clips", {}).has(pose_name) and bool(pose_spec.get("authored_timing", false))
+		if authored_action:
+			base_duration_msec = BattleUnitPose.clip_duration_msec(pose_spec)
+			if String(event.get("event_id", "")) == "battle_unit_move":
+				var walk_path: Array = _battle.get("playback_event", {}).get("walk_path", event.get("walk_path", []))
+				base_duration_msec *= maxi(1, walk_path.size() - 1)
+			if SettingsService.reduced_motion_enabled():
+				base_duration_msec = mini(base_duration_msec, 260)
 		var duration_msec: int = _presentation_duration_msec(base_duration_msec)
 		var started_at_msec := now + sequence_delay_msec
 		var expires_at_msec: int = started_at_msec + max(1, duration_msec)
@@ -2463,7 +2513,25 @@ func _sync_animation_playback_records() -> void:
 		playback_record["sequence_delay_msec"] = sequence_delay_msec
 		playback_record["max_duration_ms"] = duration_msec
 		playback_record["base_duration_ms"] = base_duration_msec
-		_stack_animation_playback_records[battle_id] = playback_record
+		if authored_action and pose_spec.has("contact_frame") and not SettingsService.reduced_motion_enabled():
+			var release_at := started_at_msec + _presentation_duration_msec(BattleUnitPose.contact_msec(pose_spec))
+			var flight := _presentation_duration_msec(int(pose_spec.get("projectile_travel_msec", 180))) if String(event.get("event_id", "")) == "battle_unit_ranged_attack" else 0
+			playback_record["impact_at_msec"] = release_at + flight
+			expires_at_msec = maxi(expires_at_msec, release_at + flight + 16)
+			playback_record["expires_at_msec"] = expires_at_msec
+			cue_record["audio_started_at_msec"] = release_at
+			cue_record["vfx_started_at_msec"] = release_at
+			cue_record["vfx_duration_msec"] = flight if flight > 0 else mini(_presentation_duration_msec(200), maxi(1, expires_at_msec-release_at))
+		var previous_body: Dictionary = _stack_animation_playback_records.get(battle_id, {})
+		var keep_action_body: bool = bool(_battle.get("_fluid_contact_reaction", false)) and String(event.get("event_id", "")) in ["battle_status_applied", "battle_status_expired"] and previous_body.has("impact_at_msec") and int(previous_body.get("expires_at_msec", 0)) > now
+		# A self buff updates effects at contact without replacing the caster's
+		# recovery poses. Real hit/death reactions still interrupt the body.
+		if keep_action_body:
+			var previous_audio: Dictionary = _stack_animation_audio_playback_records.get(battle_id, {})
+			if bool(previous_audio.get("scheduled", false)) and int(previous_audio.get("started_at_msec", now + 1)) <= now:
+				_register_audio_cue_playback(_stack_animation_cue_playback_records.get(battle_id, {}))
+		else:
+			_stack_animation_playback_records[battle_id] = playback_record
 		if not cue_record.is_empty():
 			cue_record["observed_at_msec"] = now
 			cue_record["started_at_msec"] = started_at_msec
@@ -2475,9 +2543,11 @@ func _sync_animation_playback_records() -> void:
 		else:
 			_stack_animation_cue_playback_records.erase(battle_id)
 			_stack_animation_audio_playback_records.erase(battle_id)
-		_stack_animation_playback_until_msec[battle_id] = expires_at_msec
+		_stack_animation_playback_until_msec[battle_id] = maxi(expires_at_msec, int(previous_body.get("expires_at_msec", 0))) if keep_action_body else expires_at_msec
 
 func _sequence_delay_msec_for_event(event: Dictionary, cue_record: Dictionary) -> int:
+	if bool(_battle.get("_fluid_contact_reaction", false)):
+		return 0
 	var event_id := String(event.get("event_id", "")).strip_edges()
 	var policy := String(cue_record.get("selected_playback_policy", "")).strip_edges()
 	if policy.begins_with("queue_after_"):
@@ -3563,6 +3633,11 @@ func _vfx_draw_entries(hex_layout: Dictionary, stack_cells: Dictionary) -> Array
 		var target_center := _hex_center(target_cell, hex_layout)
 		var subject_center := _hex_center(subject_cell, hex_layout)
 		var progress := _cue_playback_progress(record)
+		if record.has("vfx_started_at_msec"):
+			var vfx_elapsed := int(Time.get_ticks_msec()) - int(record.vfx_started_at_msec)
+			var vfx_duration := maxi(1, int(record.get("vfx_duration_msec", 1)))
+			if vfx_elapsed < 0 or vfx_elapsed >= vfx_duration: continue
+			progress = float(vfx_elapsed) / float(vfx_duration)
 		for cue_id_value in cue_ids:
 			var cue_id := String(cue_id_value)
 			var kind := _vfx_kind_for_cue_id(cue_id)
@@ -3859,7 +3934,7 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		_stack_animation_audio_playback_records.erase(battle_id)
 		return
 	var now := int(Time.get_ticks_msec())
-	var started_at := int(cue_record.get("started_at_msec", now))
+	var started_at := int(cue_record.get("audio_started_at_msec", cue_record.get("started_at_msec", now)))
 	if started_at > now:
 		_stack_animation_audio_playback_records[battle_id] = {
 			"battle_id": battle_id,
@@ -3915,7 +3990,7 @@ func _register_audio_cue_playback(cue_record: Dictionary) -> void:
 		"imported_assets": imported_records,
 		"suppressed_cues": suppressed_records,
 		"asset_playbacks": asset_records,
-		"started_at_msec": int(cue_record.get("started_at_msec", Time.get_ticks_msec())),
+		"started_at_msec": started_at,
 		"expires_at_msec": int(cue_record.get("expires_at_msec", Time.get_ticks_msec() + STACK_ANIMATION_EVENT_PLAYBACK_MSEC)),
 		"sequence_delay_msec": int(cue_record.get("sequence_delay_msec", 0)),
 		"audio_bus": BATTLE_AUDIO_BUS,

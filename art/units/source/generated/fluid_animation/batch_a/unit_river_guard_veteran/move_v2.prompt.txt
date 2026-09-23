@@ -1,0 +1,13 @@
+Create a correct eight-frame fullcycle WALK animation sprite sheet ofthissame guard. MOST IMPORTANT: BOTH LEGS MUST ALTERNATE leading, don'tdrawthe SAMElegleading inallframes. Imagine ananimator drawing aright-facing walkcycle: contact,down,passing,up,oppositecontact,down,passing,up. Itmustactuallywalkwhentheseframesareplayed. Keep faithful steel/bronzearmor, burgundytunic,tealsash/plume, steelribbedshield onleftforearm andhookedspear onrighthand. SAME detailedhandpaintedart and3/4 rightfacingview asreference.
+
+Eightindividualchronologicalposes:
+Frame1 NEARLEG fullyforwardtoright footonheel, FARLEG extendedbacktoleft toetouch.
+Frame2 NEARLEG supportsweight bentknee, FARLEG footliftsoffgroundbehind.
+Frame3 NEARLEG plantedverticalunderbody, FARLEG bentkneeswingingpastnearleg towardRIGHT. Feetalmostcross.
+Frame4 NEARLEG goingBACKtoleft heelrising, FARLEG extendedFORWARDtoRIGHT beforeheelcontact.
+Frame5 FARLEGfullyforwardtorightfootonheel, NEARLEG extendedBACKtoleft toetouch.
+Frame6 FARLEGsupportsweight bentknee, NEARLEG footliftsoffgroundbehind.
+Frame7 FARLEGplantedverticalunderbody, NEARLEGbentkneeswingingpast towardRIGHT. Feetalmostcross.
+Frame8 FARLEGgoingbacktoleft heelrising, NEARLEGextendingforwardtoright beforeheelcontact.
+Do not change the legs'identity betweenframes. Nearlegmeanslegcloser toviewer(camera-facing);farlegpartlyhiddenundercloth. Inframes3and7 legsCROSS/passingpose notwideapart. Silhouette MUST visiblydifferbetweenoppositehalves. Keepupperbodyquiettofocusreadablelegaction;rightfacingcamera fixed. Spearandshieldremaininoriginalhands. No battlefield, actioneffects orothercharacters.
+Sheet4columns2rows1536x1024,8equal384x512cells,eachwholebodycontainedwith20pxtransparentmarginabovespeartip andunderboots. TransparentRGBAbackgroundzeroalphaemptyspace,noshadow,haze,ground,textorlabels.

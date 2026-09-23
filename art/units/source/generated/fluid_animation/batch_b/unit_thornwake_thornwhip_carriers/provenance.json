@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_thornwake_thornwhip_carriers",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1.png",
+      "master_sha256": "63a728ffd94476f61c4339d9cb356efe2ed3e1ef9dc73ad8ab2a841ffc315fcd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1.prompt.txt",
+      "prompt_sha256": "f121ba90eaf128eb298a661a0fc5ca1943bcfb355468ad30a0f627904355f31b",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-2a397f6f-6f9e-4073-9c45-ecab6796e83e.png",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1.png",
+      "master_sha256": "fd9f91d953a7fd7b1bf6d686235acf7b35fd39b1b7b65abebc97d4677792ac3b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1.prompt.txt",
+      "prompt_sha256": "40a46ef6f15215f1c027aacfabc1aa6fffd191f97fe716f5282f74266d6b345a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-59deae66-f3bf-4ad7-a6dd-a3a9496df591.png",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/hit_defend_v1.png",
+      "master_sha256": "d75d3366c229efa8dd9843bfce679b83b98ddf2c5c0b98bffb2107e1744c6cac",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "7a0d4e0f24f633ad95e5e0c35aa7993feb77dd85d099726aca9dd1c874f13b35",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-18a4c8dd-2eb4-4665-9fe8-0cff1e2c37a3.png",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/death_v1.png",
+      "master_sha256": "32d057ddc79a63ad8e900c59f77efa1cdd39049f71a24433135ffc9833ba58de",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/death_v1.prompt.txt",
+      "prompt_sha256": "bf980dd139fe58119070ce7c397ce54b718437609b5095a3b5e7a024036eb364",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-502cd263-9008-4ae6-8c2b-472ba80b4e3b.png",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1.png",
+      "master_sha256": "7e87af5f469140f050d3df3537449f0879df2de63b07189515e4b9a186a886ce",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1.prompt.txt",
+      "prompt_sha256": "d8dea0266fe2062f0e083db319c7ceab889c19624ac66d927ae8349bdde3efa4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-7438-70d0-93ac-b743b9008386/exec-a5706fa5-bf38-47f7-ac33-0b27512d8e66.png",
+      "reference": "art/units/source/curated/unit_thornwake_thornwhip_carriers.png",
+      "reference_sha256": "65b539dd7ce63fdf410f3d9ce5466c20753664b3d760d8e91b6da0568eacf98b",
+      "tool": "built-in image_gen",
+      "processing": "Extract original connected alpha component; discard alpha <= 8 background only. No synthesized/interpolated/warped poses."
+    }
+  ]
+}

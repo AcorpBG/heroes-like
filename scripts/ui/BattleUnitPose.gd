@@ -42,8 +42,35 @@ static func idle_elapsed_msec(animation: Dictionary, now_msec: int, instance_key
 	# Presentation-only phase: neighboring stacks must not breathe in unison.
 	# Stable identity avoids a jump when selection changes or the board redraws.
 	var spec := clip(animation, "idle_hold")
-	var cycle := maxi(1, int(spec.get("frames", 1)) * int(spec.get("frame_msec", 150)))
+	var cycle := clip_duration_msec(spec)
 	return maxi(0, now_msec) + posmod(hash(instance_key), cycle)
+
+static func clip_duration_msec(spec: Dictionary) -> int:
+	var durations: Array = spec.get("frame_durations_msec", [])
+	if durations.size() == int(spec.get("frames", 1)):
+		var total := 0
+		for duration in durations: total += maxi(1, int(duration))
+		return maxi(1, total)
+	return maxi(1, int(spec.get("frames", 1)) * int(spec.get("frame_msec", 150)))
+
+static func contact_msec(spec: Dictionary) -> int:
+	var count := maxi(1, int(spec.get("frames", 1)))
+	var contact := clampi(int(spec.get("contact_frame", count / 2)), 0, count - 1)
+	var durations: Array = spec.get("frame_durations_msec", [])
+	var result := 0
+	for i in range(contact):
+		result += maxi(1, int(durations[i] if durations.size() == count else spec.get("frame_msec", 150)))
+	return result
+
+static func timed_frame(spec: Dictionary, elapsed: int) -> int:
+	var count := maxi(1, int(spec.get("frames", 1)))
+	var time := posmod(elapsed, clip_duration_msec(spec)) if bool(spec.get("loop", false)) else maxi(0, elapsed)
+	var durations: Array = spec.get("frame_durations_msec", [])
+	for i in range(count):
+		var duration := maxi(1, int(durations[i] if durations.size() == count else spec.get("frame_msec", 150)))
+		if time < duration: return i
+		time -= duration
+	return count - 1
 
 static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}) -> Rect2:
 	# Expanded transparent action envelopes retain the accepted creature scale.
@@ -79,7 +106,9 @@ static func region(animation: Dictionary, state: String, progress: float, elapse
 	var count := maxi(1, int(spec.get("frames", 1)))
 	var frame := 0
 	if not dead and not reduced_motion:
-		if bool(spec.get("loop", false)):
+		if bool(spec.get("authored_timing", false)):
+			frame = timed_frame(spec, elapsed_msec)
+		elif bool(spec.get("loop", false)):
 			frame = int(elapsed_msec / maxi(1, int(spec.get("frame_msec", 150)))) % count
 		else:
 			frame = clampi(int(progress * count), 0, count - 1)

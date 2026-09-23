@@ -1,0 +1,1377 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              356,
+              303
+            ]
+          ],
+          "anchor": [
+            163.76000000000002,
+            300
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            16,
+            174,
+            372,
+            477
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              349,
+              313
+            ]
+          ],
+          "anchor": [
+            160.54000000000002,
+            310
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            374,
+            171,
+            723,
+            484
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              347,
+              307
+            ]
+          ],
+          "anchor": [
+            159.62,
+            304
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            721,
+            175,
+            1068,
+            482
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              358,
+              312
+            ]
+          ],
+          "anchor": [
+            164.68,
+            309
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            1065,
+            173,
+            1423,
+            485
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              331,
+              295
+            ]
+          ],
+          "anchor": [
+            152.26000000000002,
+            292
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            41,
+            607,
+            372,
+            902
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              351,
+              291
+            ]
+          ],
+          "anchor": [
+            161.46,
+            288
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            373,
+            607,
+            724,
+            898
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              376,
+              301
+            ]
+          ],
+          "anchor": [
+            172.96,
+            298
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            700,
+            604,
+            1076,
+            905
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              365,
+              308
+            ]
+          ],
+          "anchor": [
+            167.9,
+            305
+          ],
+          "scale": 0.78,
+          "source_rect": [
+            1064,
+            605,
+            1429,
+            913
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              464,
+              355
+            ]
+          ],
+          "anchor": [
+            213.44,
+            352
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            26,
+            19,
+            490,
+            374
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              470,
+              356
+            ]
+          ],
+          "anchor": [
+            216.20000000000002,
+            353
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            536,
+            18,
+            1006,
+            374
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              375
+            ]
+          ],
+          "anchor": [
+            219.42000000000002,
+            372
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            25,
+            384,
+            502,
+            759
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              474,
+              376
+            ]
+          ],
+          "anchor": [
+            218.04000000000002,
+            373
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            533,
+            383,
+            1007,
+            759
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              473,
+              371
+            ]
+          ],
+          "anchor": [
+            217.58,
+            368
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            26,
+            768,
+            499,
+            1139
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              472,
+              374
+            ]
+          ],
+          "anchor": [
+            217.12,
+            371
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            535,
+            769,
+            1007,
+            1143
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              480,
+              356
+            ]
+          ],
+          "anchor": [
+            220.8,
+            353
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            26,
+            1157,
+            506,
+            1513
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v2_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              472,
+              372
+            ]
+          ],
+          "anchor": [
+            217.12,
+            369
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            535,
+            1143,
+            1007,
+            1515
+          ],
+          "clip": "idle",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              422,
+              338
+            ]
+          ],
+          "anchor": [
+            194.12,
+            335
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            69,
+            52,
+            491,
+            390
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              429,
+              314
+            ]
+          ],
+          "anchor": [
+            197.34,
+            311
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            550,
+            76,
+            979,
+            390
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              446,
+              275
+            ]
+          ],
+          "anchor": [
+            205.16,
+            272
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            68,
+            469,
+            514,
+            744
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              476,
+              281
+            ]
+          ],
+          "anchor": [
+            218.96,
+            278
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            526,
+            459,
+            1002,
+            740
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              261
+            ]
+          ],
+          "anchor": [
+            235.52,
+            258
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            40,
+            855,
+            552,
+            1116
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              438,
+              329
+            ]
+          ],
+          "anchor": [
+            201.48000000000002,
+            326
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            556,
+            792,
+            994,
+            1121
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              454,
+              339
+            ]
+          ],
+          "anchor": [
+            208.84,
+            336
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            71,
+            1146,
+            525,
+            1485
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v2_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              430,
+              339
+            ]
+          ],
+          "anchor": [
+            197.8,
+            336
+          ],
+          "scale": 0.7,
+          "source_rect": [
+            568,
+            1145,
+            998,
+            1484
+          ],
+          "clip": "attack",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              399,
+              357
+            ]
+          ],
+          "anchor": [
+            183.54000000000002,
+            354
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            57,
+            15,
+            456,
+            372
+          ],
+          "clip": "hit",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              387,
+              360
+            ]
+          ],
+          "anchor": [
+            178.02,
+            357
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            555,
+            16,
+            942,
+            376
+          ],
+          "clip": "hit",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              462,
+              356
+            ]
+          ],
+          "anchor": [
+            212.52,
+            353
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            56,
+            383,
+            518,
+            739
+          ],
+          "clip": "hit",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              451,
+              353
+            ]
+          ],
+          "anchor": [
+            207.46,
+            350
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            558,
+            386,
+            1009,
+            739
+          ],
+          "clip": "hit",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              458,
+              342
+            ]
+          ],
+          "anchor": [
+            210.68,
+            339
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            35,
+            764,
+            493,
+            1106
+          ],
+          "clip": "defend",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              466,
+              325
+            ]
+          ],
+          "anchor": [
+            214.36,
+            322
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            540,
+            780,
+            1006,
+            1105
+          ],
+          "clip": "defend",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              474,
+              342
+            ]
+          ],
+          "anchor": [
+            218.04000000000002,
+            339
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            28,
+            1151,
+            502,
+            1493
+          ],
+          "clip": "defend",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              467,
+              339
+            ]
+          ],
+          "anchor": [
+            214.82000000000002,
+            336
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            538,
+            1154,
+            1005,
+            1493
+          ],
+          "clip": "defend",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              377
+            ]
+          ],
+          "anchor": [
+            204.24,
+            374
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            33,
+            7,
+            477,
+            384
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              468,
+              311
+            ]
+          ],
+          "anchor": [
+            215.28,
+            308
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            529,
+            76,
+            997,
+            387
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              342
+            ]
+          ],
+          "anchor": [
+            219.42000000000002,
+            339
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            16,
+            426,
+            493,
+            768
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              483,
+              309
+            ]
+          ],
+          "anchor": [
+            222.18,
+            306
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            528,
+            467,
+            1011,
+            776
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              495,
+              306
+            ]
+          ],
+          "anchor": [
+            227.70000000000002,
+            303
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            10,
+            815,
+            505,
+            1121
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              499,
+              261
+            ]
+          ],
+          "anchor": [
+            229.54000000000002,
+            258
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            520,
+            851,
+            1019,
+            1112
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              499,
+              262
+            ]
+          ],
+          "anchor": [
+            229.54000000000002,
+            259
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            8,
+            1201,
+            507,
+            1463
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              500,
+              257
+            ]
+          ],
+          "anchor": [
+            230.0,
+            254
+          ],
+          "scale": 0.67,
+          "source_rect": [
+            520,
+            1204,
+            1020,
+            1461
+          ],
+          "clip": "death",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              292
+            ]
+          ],
+          "anchor": [
+            179.4,
+            289
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            40,
+            98,
+            430,
+            390
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              290
+            ]
+          ],
+          "anchor": [
+            177.1,
+            287
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            478,
+            100,
+            863,
+            390
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              383,
+              301
+            ]
+          ],
+          "anchor": [
+            176.18,
+            298
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            41,
+            520,
+            424,
+            821
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              304
+            ]
+          ],
+          "anchor": [
+            170.66,
+            301
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            479,
+            516,
+            850,
+            820
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              296
+            ]
+          ],
+          "anchor": [
+            179.4,
+            293
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            41,
+            941,
+            431,
+            1237
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              294
+            ]
+          ],
+          "anchor": [
+            178.94,
+            291
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            478,
+            943,
+            867,
+            1237
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              295
+            ]
+          ],
+          "anchor": [
+            178.94,
+            292
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            41,
+            1357,
+            430,
+            1652
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "cast_v2_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              388,
+              295
+            ]
+          ],
+          "anchor": [
+            178.48000000000002,
+            292
+          ],
+          "scale": 0.8,
+          "source_rect": [
+            479,
+            1357,
+            867,
+            1652
+          ],
+          "clip": "cast",
+          "alpha_noise_cutoff": 0
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 115,
+          "loop": true,
+          "static_frame": 0
+        },
+        "idle": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 135,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "frame_msec": 90,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 125,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 115,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [
+        "move",
+        "idle",
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast"
+      ],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all Godot128/64 phases: coherent horn-led charge, leg/chest bracing, recoil recovery, head/hoof physical support and progressive folded-leg collapse. Gait previously reviewed. Seven clips accepted with48 original drawings and final grounded corpse."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_00.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_01.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_02.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_03.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_04.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_05.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_06.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/move_v3_frame_07.png": 0.78,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_00.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_01.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_02.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_03.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_04.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_05.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_06.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/idle_v2_frame_07.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_00.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_01.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_02.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_03.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_04.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_05.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_06.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/attack_v2_frame_07.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_00.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_01.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_02.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_03.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_04.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_05.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_06.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/hit_defend_v1_frame_07.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_00.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_01.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_02.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_03.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_04.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_05.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_06.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/death_v1_frame_07.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_00.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_01.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_02.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_03.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_04.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_05.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_06.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams_veteran/cast_v2_frame_07.png": 0.8
+      },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image."
+    }
+  ]
+}

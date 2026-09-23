@@ -1,0 +1,22 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+  "source_sha256": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.prompt.txt",
+  "prompt_sha256": "ff59b52da81b9cc617b4ddd9ac7a24204dc1b2e2439c74ad1ad9ed9d4d515320",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_neutral.png",
+      "sha256": "a0812ff6b0bd6726dc6eef3e1e40793e2a5afdb81a128dd218f800818684e8e0",
+      "role": "identity_or_contact_key"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/pose_reference_foganchor_contacts.png",
+      "sha256": "fc7df9889bab10aa87e0753eaa49bf5d4aeff63e716a475fc9fd131ab5f5a556",
+      "role": "pose_only",
+      "generation_input_path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-5ac1ed47-347b-46de-a56d-1f240823172a.png",
+  "review_status": "pending_motion_review"
+}

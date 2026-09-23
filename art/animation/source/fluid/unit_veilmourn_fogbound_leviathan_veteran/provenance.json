@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_veilmourn_fogbound_leviathan_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/idle_v1.png": "02f5f219fe12db4dbfba0dcc6bb6c57aa49f23a419116871dc94df678a35ccc7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/move_v1.png": "cca5fa7da9a844a43302acfb5bd612d7e1ae635b209bf2d9a9de48eb59f2eea2",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/attack_v2.png": "0d3c861fbbb6c0209843595e0549bff00afd26f1c9b23c27c4db501d60a7271f",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/attack_recovery_v3.png": "f8d9af0b3b0790f15a4c72f010544cc9c858852db1dc41272849bad3b93a7a2a",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/reactions_v1.png": "15d15722be189b75ab05c9bd53d7146e69d6159f933f09a8cb63133f54eef547",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/death_v1.png": "2cb12396a343e0eda6ae939fd9abbe64873703391e836edd883694eee0289de7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/death_corpse_v2.png": "99d43e8d15adcf151cdc1d6a2775346b41f5ecf6108e205fc135bc3d96cb4c44",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan_veteran/support_v1.png": "5b2af0466da173616060ac6c9f83b35925b5fc5ed437963af6044834db21f0b2"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Previously reviewed six primary clips. Additional Godot128/64 support sequence reviewed: chest lift, forelimb raise, nod and grounded recovery; no invented projectile/magic. All seven required clips accepted,48 original poses plus persistent final corpse."
+  },
+  "atlas_sha256": "9ece7f4055c53b613ec89779b76dbad434140ba05029f9f11542c08e043d41c7",
+  "texture_bytes_rgba": 15912064,
+  "baseline_atlas_sha256": "cbb3b1b7db9a0a46dcf2f042b2bcfe3509d050a1299deab7a2102a88527e746c"
+}

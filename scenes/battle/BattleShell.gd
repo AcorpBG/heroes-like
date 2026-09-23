@@ -126,6 +126,7 @@ var _last_action_recap_text := ""
 var _battle_exit_handoff_in_progress := false
 var _action_playback_in_progress := false
 var _action_playback_frames: Array = []
+var _action_playback_overlap_contact := false
 var _action_playback_result := {}
 var _action_playback_feedback := {}
 var _action_playback_speed := BattleRules.PRESENTATION_SPEED_NORMAL
@@ -1566,6 +1567,7 @@ func _begin_action_playback(result: Dictionary, route_target: String = "") -> bo
 		for frame in frames: _record_battle_log_frame(frame)
 		return false
 	_action_playback_frames = frames.duplicate()
+	_action_playback_overlap_contact = false
 	_action_playback_result = result.duplicate()
 	_action_playback_result.erase("playback_frames")
 	_action_playback_result["playback_completed"] = true
@@ -1607,9 +1609,11 @@ func _play_next_action_frame() -> void:
 	_set_battle_status_text("Round %d · %s" % [int(frame.get("round",1)),caption])
 	_pressure_label.text = ""
 	frame["playback_caption"] = caption
-	_battle_board_view.set_battle_presentation_snapshot(frame)
+	_battle_board_view.set_battle_presentation_snapshot(frame, _action_playback_overlap_contact)
 	_battle_board_view.tooltip_text = caption
-	var timer := get_tree().create_timer(float(BattleRules.battle_presentation_playback_msec(frame)) * 1.12 / 1000.0)
+	var next_event: Dictionary = _action_playback_frames[0].get("playback_event", {}) if not _action_playback_frames.is_empty() else {}
+	_action_playback_overlap_contact = _battle_board_view.can_overlap_action_contact(next_event)
+	var timer := get_tree().create_timer(float(_battle_board_view.action_playback_wait_msec(_action_playback_overlap_contact)) / 1000.0)
 	timer.timeout.connect(_play_next_action_frame)
 
 func _record_battle_log_frame(frame: Dictionary) -> String:

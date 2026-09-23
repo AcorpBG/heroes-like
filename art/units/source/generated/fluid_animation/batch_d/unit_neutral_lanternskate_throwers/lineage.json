@@ -1,0 +1,102 @@
+{
+  "move": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-760fe498-10ed-4dff-941b-ff016cca9c0e.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "6cffae2a78a117226e26f5836b18721474b585f9d94e66b91b6278cd41a722f5",
+    "prompt_sha256": "6a7aa1599f01a7ef9d1aaa1a8490055d4a42277c0605f4c420310cf8b74b63ef",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/move_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/move_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818"
+    }
+  },
+  "attack": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-9b96e91d-5b7f-452e-8882-5854a24b8f1b.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png",
+      "art/animation/runtime/poses/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "e4916fd6ce45828afb8cd997bab88b1b7b6cedda73914604b70a473898c2a0ef",
+    "prompt_sha256": "420c87155e8da4a411ccdc115f50d21246ad8cf49e3464bbd7375e0d7a559aea",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/attack_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/attack_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818",
+      "art/animation/runtime/poses/unit_neutral_lanternskate_throwers.png": "c87bb7b95be0e263a4edda0c1e3f286db3ebf57fdd59b1146c9fc9d224fad3a2"
+    }
+  },
+  "ranged": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-3a8b4a0e-55f6-4817-9837-828d6e092ffd.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "a45426ba60e47a11467ceb1ad78fdcbe3adb44d79225050eb98a6bcea9e44cae",
+    "prompt_sha256": "63bad4545d679c178f64be57c0587bf1dcf7289e364773636125c298e1b038fc",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818"
+    }
+  },
+  "reactions": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-12659325-0934-4765-adf7-2ea7b9a91ce2.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "18e0bb455542f1b6bbaa99b4cfcdc367d3e2001591ded64178f5d41740030bec",
+    "prompt_sha256": "d8a547576c67b808f3032185c4624b9be228f3a2dc5b73ce3f8c5f838fbb23fe",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/reactions_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/reactions_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818"
+    }
+  },
+  "death": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-fd3d033d-b055-4836-ae87-03bb890b6545.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "deac1ea32ebc3207875bcfb7d96a20f0ef35bd4b7f88abe225e132e5d3722230",
+    "prompt_sha256": "ae154a2a83fab2b1cbf793c4d5c21dac871b289524cc7e264a42694cc1b76dbc",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/death_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/death_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818"
+    }
+  },
+  "cast": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-5b173216-d735-4e21-a63c-6b36cd711e8a.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png"
+    ],
+    "source_sha256": "74592eac892b35953a08022ed0968779f63fe6704a90a612f9f642ca07a50cb5",
+    "prompt_sha256": "27f70e5f2cb02318a6b7c5a1049faf758a66dc9ec5e62628b9811b6fe985fd06",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_lanternskate_throwers.png": "42288e69ec4f0f41b9bebaa5c5b61ef4c3a4cd34ddcfa689aeb6ea0c484d3818"
+    }
+  },
+  "ranged_v2": {
+    "tool": "built-in image_gen",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd2-7f01-7350-87bd-42078beb90b9/exec-f36655a8-749a-4301-997b-c56ae53bf2d4.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v1.png"
+    ],
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v1.png": "a45426ba60e47a11467ceb1ad78fdcbe3adb44d79225050eb98a6bcea9e44cae"
+    },
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v2.png",
+    "prompt_file": "art\\units\\source\\generated\\fluid_animation\\batch_d\\unit_neutral_lanternskate_throwers\\ranged_v2.prompt.txt",
+    "source_sha256": "36839be4c0df02b4110d536b093ab5db5fb317b2e5eaff1f4c62ed4f173d8dd5",
+    "prompt_sha256": "137f051302cb440cc8d9c21f585f5851bfaf411f95727c97bef24caff6fa38c9"
+  }
+}

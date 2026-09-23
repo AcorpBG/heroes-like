@@ -1,0 +1,21 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+  "source_sha256": "8236ab24c06b12851f5c14f03e4aebf24584f8247376a80f48139f32a44d9f77",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.prompt.txt",
+  "prompt_sha256": "1e7a6eff16d499ab1f029cf9d06c75103aa5c89f8321ce251fb3cd684e38a4de",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_contact_a.png",
+      "sha256": "9f8a26ec2b4f399ac952e4e8e9415bcab95a8349ea110a6f2894ad034f5cc074",
+      "role": "identity_or_contact_key"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_contact_b.png",
+      "sha256": "a2b15ec06dff2a64b10223efc713e7b26f568499f79763faf5402994d6082187",
+      "role": "identity_or_contact_key"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-599b465e-8a09-40a0-b704-8ed0a45ffdf4.png",
+  "review_status": "pending_motion_review"
+}
