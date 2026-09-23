@@ -1,0 +1,135 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/idle_v1.png",
+      "sha256": "de2e69244551055217d3680d72e1d8d1c40d29ee688196b8e802ffcecc2382c1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "3ee37ca7155eae14b46ec7c992ec430a5cf00d17220a0fdb111b431f2ad5ab39",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-23726786-9337-4b0e-819a-7ad764726515.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/attack_v1.png",
+      "sha256": "48012d499d6fa1d1435598ce2473c5e7f05a1c105d3713259bb95b9b8a7fcf96",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "0dddd8475a530f72c027a557e0301ecadfa79a3e9278d363c7522178fa92d021",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d000be14-3cf2-4c08-be56-18500f571954.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/reactions_v1.png",
+      "sha256": "fc8572737dc75c0ff26ffe8448831a1f975c9897ff4f261ce71fb9bc5b193a50",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "23f5b2fa8d2465bdc0d9d055ca9098792432e03e5e832fcbd971b072674fc6cd",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ea977f88-bf88-403f-b368-ed67da9b55ef.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/cast_v1.png",
+      "sha256": "5d0757722fca014a7f2a74b3f183f8c86638bd4d787e7504bb9ca23533fe5c1f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "897aa93e00c048ff37ce4a6b1ebb3f0bbe2a1f1f3880263fa2cdcfe52f150e20",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-423f70f9-f861-45e2-a131-785c783ce7e9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/death_v1.png",
+      "sha256": "f98d1cf8cf187e552861df3eb72c477748dd044c3c74dc0613dae6998d223742",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "671f02214bde659c464c73009abe7a21fe791f96b286751c974eebe2df69e8b5",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-57cf1811-45f8-4a97-8fff-7e85a5471e8d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_v1.png",
+      "sha256": "ea9ab5ee38fe099d555ec4914c979c73cecc954b0e1e86a372da30ac96c18d2b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "9e35cc0e69bf909fdceafc6622c8685a30712a59465d453178336e9b0e3290f8",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-74547957-a574-459c-9702-920d18af419c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_corrected_v1.png",
+      "sha256": "0bdce60126acff7a138e224232f7870299381318a733877522dd05463ce6d69e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_corrected_v1.prompt.txt",
+      "prompt_sha256": "f6057e8e0649f0f002d25c607306d2d14839abfc3600e9ed3ee5563bacc02b13",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-dff4608e-55e9-4cdf-9c7d-1159a61c0187.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_far_v1.png",
+      "sha256": "4caed23f65e479f0493d304036ad85965c28cce59c6dd7d2b3cea1eab20474e5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "4fed6c374298c519bf180e49cbbb33e832b1787391841918e06a0c3b838c83c0",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f6352ff3-f68e-4f1a-ac87-3c9a1c313969.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_lifted_v1.png",
+      "sha256": "8e2b80c8e2d372a530df9a53a030dc86412b47716e78de15d8781847cc9f4ab7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_lifted_v1.prompt.txt",
+      "prompt_sha256": "9c06753d41ad886caa64eb99e3b68f81a7f0a853e8b20ce06eec041952079126",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f86c373a-94db-4f01-8091-8bf4253408b1.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/identity_reference.png",
+          "sha256": "8abc0df514abacf9f05da5f5068418c2662544a2c939560360f4514e53d2bc5a"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_opposite_v1.png",
+      "sha256": "d08f791f4639dd782e78ca46f9f48b46b109ea999bcab0deb956f25271e762bc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_opposite_v1.prompt.txt",
+      "prompt_sha256": "bbbf70d107c8dd7149f9ebfee3cab141f20b17f43e9f60cafba74b3477b550a0",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-2734c890-6309-43fd-8fba-9392ab9e6d30.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_lifted_v1.png",
+          "sha256": "8e2b80c8e2d372a530df9a53a030dc86412b47716e78de15d8781847cc9f4ab7"
+        }
+      ]
+    }
+  ]
+}
