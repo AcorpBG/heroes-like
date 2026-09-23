@@ -1,0 +1,1602 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_00",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              383,
+              380
+            ]
+          ],
+          "anchor": [
+            209,
+            378
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            66,
+            12,
+            449,
+            392
+          ]
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              377
+            ]
+          ],
+          "anchor": [
+            227,
+            375
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            561,
+            14,
+            951,
+            391
+          ]
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              369
+            ]
+          ],
+          "anchor": [
+            223,
+            367
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            52,
+            409,
+            442,
+            778
+          ]
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              411,
+              377
+            ]
+          ],
+          "anchor": [
+            234,
+            375
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            554,
+            401,
+            965,
+            778
+          ]
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              408,
+              362
+            ]
+          ],
+          "anchor": [
+            217,
+            360
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            58,
+            787,
+            466,
+            1149
+          ]
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              392,
+              359
+            ]
+          ],
+          "anchor": [
+            223,
+            357
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            565,
+            791,
+            957,
+            1150
+          ]
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              396,
+              377
+            ]
+          ],
+          "anchor": [
+            222,
+            375
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            53,
+            1152,
+            449,
+            1529
+          ]
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              391,
+              371
+            ]
+          ],
+          "anchor": [
+            224,
+            369
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+          "source_rect": [
+            564,
+            1157,
+            955,
+            1528
+          ]
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              459,
+              390
+            ]
+          ],
+          "anchor": [
+            244,
+            400
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            36,
+            10,
+            495,
+            400
+          ]
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              311
+            ]
+          ],
+          "anchor": [
+            253,
+            321
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            537,
+            89,
+            981,
+            400
+          ]
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              457,
+              310
+            ]
+          ],
+          "anchor": [
+            254,
+            326
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            26,
+            444,
+            483,
+            754
+          ]
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              412,
+              309
+            ]
+          ],
+          "anchor": [
+            221,
+            319
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            569,
+            461,
+            981,
+            770
+          ]
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              418,
+              334
+            ]
+          ],
+          "anchor": [
+            208,
+            353
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            72,
+            787,
+            490,
+            1121
+          ]
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              415,
+              326
+            ]
+          ],
+          "anchor": [
+            225,
+            340
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            565,
+            800,
+            980,
+            1126
+          ]
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              450,
+              357
+            ]
+          ],
+          "anchor": [
+            243,
+            379
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            37,
+            1151,
+            487,
+            1508
+          ]
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              455,
+              383
+            ]
+          ],
+          "anchor": [
+            254,
+            394
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1.png",
+          "source_rect": [
+            536,
+            1136,
+            991,
+            1519
+          ]
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              405,
+              389
+            ]
+          ],
+          "anchor": [
+            223,
+            387
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            52,
+            7,
+            457,
+            396
+          ]
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              374
+            ]
+          ],
+          "anchor": [
+            231,
+            372
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            559,
+            18,
+            944,
+            392
+          ]
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              392,
+              362
+            ]
+          ],
+          "anchor": [
+            242,
+            360
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            33,
+            412,
+            425,
+            774
+          ]
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              461,
+              376
+            ]
+          ],
+          "anchor": [
+            242,
+            374
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            548,
+            398,
+            1009,
+            774
+          ]
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              507,
+              339
+            ]
+          ],
+          "anchor": [
+            211,
+            337
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            64,
+            776,
+            571,
+            1115
+          ]
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              401,
+              338
+            ]
+          ],
+          "anchor": [
+            215,
+            336
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            575,
+            777,
+            976,
+            1115
+          ]
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              407,
+              395
+            ]
+          ],
+          "anchor": [
+            231,
+            393
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            44,
+            1114,
+            451,
+            1509
+          ]
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              410,
+              387
+            ]
+          ],
+          "anchor": [
+            237,
+            385
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1.png",
+          "source_rect": [
+            553,
+            1123,
+            963,
+            1510
+          ]
+        },
+        {
+          "name": "ranged_00",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              388,
+              379
+            ]
+          ],
+          "anchor": [
+            220,
+            377
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            55,
+            8,
+            443,
+            387
+          ]
+        },
+        {
+          "name": "ranged_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              363,
+              380
+            ]
+          ],
+          "anchor": [
+            224,
+            378
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            566,
+            7,
+            929,
+            387
+          ]
+        },
+        {
+          "name": "ranged_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              400,
+              371
+            ]
+          ],
+          "anchor": [
+            220,
+            369
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            55,
+            396,
+            455,
+            767
+          ]
+        },
+        {
+          "name": "ranged_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              426,
+              371
+            ]
+          ],
+          "anchor": [
+            247,
+            369
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            543,
+            396,
+            969,
+            767
+          ]
+        },
+        {
+          "name": "ranged_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              421,
+              359
+            ]
+          ],
+          "anchor": [
+            218,
+            357
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            57,
+            763,
+            478,
+            1122
+          ]
+        },
+        {
+          "name": "ranged_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              408,
+              352
+            ]
+          ],
+          "anchor": [
+            218,
+            350
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            572,
+            768,
+            980,
+            1120
+          ]
+        },
+        {
+          "name": "ranged_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              402,
+              383
+            ]
+          ],
+          "anchor": [
+            219,
+            381
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            56,
+            1127,
+            458,
+            1510
+          ]
+        },
+        {
+          "name": "ranged_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              388,
+              380
+            ]
+          ],
+          "anchor": [
+            225,
+            378
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1.png",
+          "source_rect": [
+            565,
+            1129,
+            953,
+            1509
+          ]
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              475,
+              458
+            ]
+          ],
+          "anchor": [
+            295,
+            456
+          ],
+          "scale": 0.5,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2.png",
+          "source_rect": [
+            80,
+            101,
+            555,
+            559
+          ]
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              344,
+              352
+            ]
+          ],
+          "anchor": [
+            191,
+            350
+          ],
+          "scale": 0.5,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2.png",
+          "source_rect": [
+            759,
+            207,
+            1103,
+            559
+          ]
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              465,
+              456
+            ]
+          ],
+          "anchor": [
+            274,
+            454
+          ],
+          "scale": 0.5,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2.png",
+          "source_rect": [
+            96,
+            690,
+            561,
+            1146
+          ]
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              471,
+              457
+            ]
+          ],
+          "anchor": [
+            270,
+            455
+          ],
+          "scale": 0.5,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2.png",
+          "source_rect": [
+            700,
+            687,
+            1171,
+            1144
+          ]
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              555,
+              574
+            ]
+          ],
+          "anchor": [
+            316,
+            572
+          ],
+          "scale": 0.405,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2.png",
+          "source_rect": [
+            36,
+            37,
+            591,
+            611
+          ]
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              526,
+              532
+            ]
+          ],
+          "anchor": [
+            285,
+            530
+          ],
+          "scale": 0.405,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2.png",
+          "source_rect": [
+            667,
+            78,
+            1193,
+            610
+          ]
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              496,
+              470
+            ]
+          ],
+          "anchor": [
+            260,
+            468
+          ],
+          "scale": 0.405,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2.png",
+          "source_rect": [
+            115,
+            723,
+            611,
+            1193
+          ]
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              475,
+              423
+            ]
+          ],
+          "anchor": [
+            271,
+            421
+          ],
+          "scale": 0.405,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2.png",
+          "source_rect": [
+            714,
+            772,
+            1189,
+            1195
+          ]
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              402,
+              379
+            ]
+          ],
+          "anchor": [
+            222,
+            377
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            58,
+            44,
+            460,
+            423
+          ]
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              342
+            ]
+          ],
+          "anchor": [
+            217,
+            340
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            573,
+            78,
+            958,
+            420
+          ]
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              398,
+              315
+            ]
+          ],
+          "anchor": [
+            216,
+            313
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            64,
+            501,
+            462,
+            816
+          ]
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              445,
+              254
+            ]
+          ],
+          "anchor": [
+            252,
+            252
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            538,
+            563,
+            983,
+            817
+          ]
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              462,
+              269
+            ]
+          ],
+          "anchor": [
+            237,
+            267
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            43,
+            900,
+            505,
+            1169
+          ]
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              470,
+              199
+            ]
+          ],
+          "anchor": [
+            263,
+            197
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            527,
+            978,
+            997,
+            1177
+          ]
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              478,
+              191
+            ]
+          ],
+          "anchor": [
+            255,
+            189
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            25,
+            1281,
+            503,
+            1472
+          ]
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              188
+            ]
+          ],
+          "anchor": [
+            267,
+            186
+          ],
+          "scale": 0.61,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1.png",
+          "source_rect": [
+            523,
+            1284,
+            1000,
+            1472
+          ]
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              360,
+              347
+            ]
+          ],
+          "anchor": [
+            192,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            33,
+            58,
+            393,
+            405
+          ]
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              347
+            ]
+          ],
+          "anchor": [
+            200,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            470,
+            59,
+            836,
+            406
+          ]
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              342,
+              347
+            ]
+          ],
+          "anchor": [
+            201,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            909,
+            59,
+            1251,
+            406
+          ]
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              325,
+              378
+            ]
+          ],
+          "anchor": [
+            189,
+            376
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            1366,
+            28,
+            1691,
+            406
+          ]
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              332,
+              395
+            ]
+          ],
+          "anchor": [
+            192,
+            393
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            33,
+            450,
+            365,
+            845
+          ]
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              353,
+              356
+            ]
+          ],
+          "anchor": [
+            199,
+            354
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            471,
+            489,
+            824,
+            845
+          ]
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              349
+            ]
+          ],
+          "anchor": [
+            201,
+            347
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            909,
+            498,
+            1273,
+            847
+          ]
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              349
+            ]
+          ],
+          "anchor": [
+            196,
+            347
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            1359,
+            499,
+            1723,
+            848
+          ]
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 125,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 3
+        },
+        "death": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 7
+        },
+        "cast": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            47
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "alpha_noise_cutoff": 8,
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_00.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_01.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_02.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_03.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_04.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_05.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_06.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2_frame_07.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_00.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_01.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_02.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_03.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_04.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_05.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_06.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/move_v1_frame_07.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_00.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_01.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_02.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_03.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_04.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_05.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_06.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/attack_v1_frame_07.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_00.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_01.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_02.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_03.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_04.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_05.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_06.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/ranged_v1_frame_07.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_00.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_01.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_02.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/hit_v2_frame_03.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_00.png": 0.405,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_01.png": 0.405,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_02.png": 0.405,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/defend_v2_frame_03.png": 0.405,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_00.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_01.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_02.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_03.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_04.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_05.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_06.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_00.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_01.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_02.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_03.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_04.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_05.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_06.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_07.png": 0.67
+      },
+      "source_scale_reason": "Eight-pose sources use 1024x1536 canvases; hit and defense use 1254px square masters with larger painted bodies. One fixed anatomical scale per source image preserves the existing approximately 231px tall standing body.",
+      "visual_review": {
+        "status": "pending_coordinator_review",
+        "notes": "Original articulated poses inspected as source sheets. Runtime motion and cross-clip grounding require coordinator acceptance."
+      }
+    }
+  ]
+}

@@ -1025,12 +1025,12 @@
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/move_v1.png": 0.59,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/attack_v1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v2.png": 0.59,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/reactions_v1.png": 0.59,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/death_v1.png": 0.46,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/ranged_v2.png": 0.59
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternskate_throwers/cast_v1.png": 0.59
       },
-      "source_scale_reason": "Each image uses one fixed scale calibrated to the old approximately 220-pixel standing body. Death source is drawn larger; no frame-specific resizing. Anchors follow the same ground reference, preserving collapse rather than aligning heads.",
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "preserve_clips": [
         "idle"
       ],
@@ -1041,12 +1041,16 @@
         "hit",
         "defend",
         "death",
-        "cast"
+        "cast",
+        "idle"
       ],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Godot128 overview reviewed: articulated skating push/recovery, punch with arm anticipation and recovery, lantern throw with detached projectile removed, crossed-arm brace, recoil, physical lantern signal and clear prone collapse. Existing idle retention still requires coordinator comparison."
-      }
+        "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
     }
   ]
 }

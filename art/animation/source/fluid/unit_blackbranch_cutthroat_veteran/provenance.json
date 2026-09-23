@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png": "1030bca552143cd9cee7d131a922a98fd4a2ca9da58bf9f374d87ed666e5bf43",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png": "6e1b15b36ecfec4b7d8534596a16d782c898198daa24c16a0d8473a5f5c632a4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png": "44b0bb4c8c6cf35fbc029fcf7a9833817122405abbef5cc1ee19d51e7ecadc91",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png": "669ff3e16a4743c6166693b349b931a92060b25782e5d683ab9c6a7abfcef2c7",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png": "d20c7725150afb284f1829413df13d9177f6cd4fe93a0cf9f0e919ae89fb1ff5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png": "6a231ca2b33c073ccb795d23d2576b7168ff6f4e775dbb7446bd2357e89c90f4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png": "5ca96727cc6e1a3d7953d9bd901dfebd74bf4ee1beb145fa4a19b9d4fcfc246c"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "1c55d02b3ec7e4484e39ee0209d40df98bb7bbd696f4c40236d6b26fe1906765",
+  "atlas_sha256": "12bb1c4e0e050b20eacafce6299c64b265ab87573faf2b89beb29cde9bcb3313",
+  "texture_bytes_rgba": 18464768
+}

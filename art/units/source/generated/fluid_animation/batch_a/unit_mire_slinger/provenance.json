@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "generator": "built_in_imagegen",
+  "reference": "art/units/source/curated/unit_mire_slinger.png",
+  "reference_sha256": "21b98fd2f90d738b168ddb0b1b160dc6c8c731dd7a590d848255175589ac2c55",
+  "outputs": {
+    "move": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-8cefcd77-fe5b-4861-bc04-45a65e32929e.png",
+    "attack": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-f7b2f38b-7c00-4cc2-bdcb-0fb3d9d3594a.png",
+    "ranged": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-3ef0a395-451d-422e-b98a-36ff65dea52b.png",
+    "reactions": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-8e0c0432-8e48-49ef-a021-62399bdb2e4e.png",
+    "death": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-ae52641c-d701-4f44-87b6-37d6f6446ec7.png",
+    "cast": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-d2693cb1-896a-4937-868e-0f19550205d8.png"
+  },
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/move_v1.png",
+      "sha256": "c5a45706008ea42b037f1b2d3f2ba97b6f3aa2cf7ee6b79940ef37fad6deec99",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/move_v1.prompt.txt",
+      "prompt_sha256": "b61c27eae59b3f7a80733afe935d3995015a8341cc616b1ad993937694a5a11c"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/attack_v1.png",
+      "sha256": "548146b7db31e0784c43526dcf295b0b35f68e1183f66bfd3d57d114dc95b23f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/attack_v1.prompt.txt",
+      "prompt_sha256": "907d233e2441caea648cced30a38ad69106447ea9ff8e5cb0542d7f517491111"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/ranged_v1.png",
+      "sha256": "6f052b4ab3d34875fbee1295aedfec6f2b2b5840972292dd5974e2284d8ff108",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/ranged_v1.prompt.txt",
+      "prompt_sha256": "bb3741cab7a5b9c05c8f23a67a703e6e70f824993044d66e2ec20537688e39fa"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/reactions_v1.png",
+      "sha256": "fcf6b2612ecff08e20116a0e7375b2fc5ebafe153b3903ef1edf11854b517e45",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/reactions_v1.prompt.txt",
+      "prompt_sha256": "be076465b3c8dc96b8f31ca0054fcc7351188ee826003c4548ae1a94567ecdd1"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/death_v1.png",
+      "sha256": "6b31c77252cf7da03b4406ec9e3582663f220a648446f4e3c19181683e56463a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/death_v1.prompt.txt",
+      "prompt_sha256": "fe9b95c11ce55b1682bce7c73d80a7c13bdbf6f621ff57a1195d7ff50a1bbd36"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.png",
+      "sha256": "db6c1c29ac386ad25d81cb934b2117bf6b60ac2c1790e7c52cfbdfb93205f31f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.prompt.txt",
+      "prompt_sha256": "782f322ef1834fd0a5adefee331e7cadad8a2a79a1bf48b84b13d43eb5b357f7"
+    }
+  ],
+  "rejected_sources": [],
+  "extraction": "Original alpha greater than 8 connected silhouette spans; no pixel repainting, deformations or pose duplication. Detached released stone not baked into unit body; runtime projectile owns travel. Corpse uses final death pose."
+}

@@ -293,6 +293,23 @@ func run():
 '''
 
 
+def render_fingerprint(packet):
+    """Hash painted input and rendering instructions, never review bookkeeping."""
+    units=[]
+    sources={}
+    for entry in packet['units']:
+        unit={key:entry.get(key) for key in ('unit_id','reference_height','source_facing','alpha_noise_cutoff','clips')}
+        unit['frames']=[{key:frame.get(key) for key in ('source','rects','anchor','scale','alpha_noise_cutoff')} for frame in entry['frames']]
+        units.append(unit)
+        for frame in entry['frames']:
+            source=frame['source']
+            if source not in sources:
+                path=ROOT/source.removeprefix('res://')
+                sources[source]=hashlib.sha256(path.read_bytes()).hexdigest()
+    payload=json.dumps({'units':units,'sources':sources},sort_keys=True,separators=(',',':')).encode()
+    return 'source-v2:'+hashlib.sha256(payload).hexdigest()
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--godot',required=True)
@@ -321,7 +338,7 @@ def main():
                 except (OSError,ValueError):
                     if attempt==2:raise
                     time.sleep(.1)
-            key=path.relative_to(ROOT).as_posix();digest=hashlib.sha256(raw).hexdigest()
+            key=path.relative_to(ROOT).as_posix();digest=render_fingerprint(data)
             if state.get(key)!=digest and (not args.unit or any(e['unit_id'] in args.unit for e in data['units'])):
                 args.handoff.append(path);scanned[key]=digest
         if not args.handoff:

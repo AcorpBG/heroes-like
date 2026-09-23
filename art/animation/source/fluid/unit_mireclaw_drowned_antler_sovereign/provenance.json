@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/move_v1.png": "339649ffd1041ee077ea42a3d4b82c26bffc926c86d2fb67c540dfc654cbc129",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/attack_v1.png": "9bdcc1935ca1f0308b2674d7d1ed2cb899b3b0cd54cebfd4a7ae270a440f197d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/reactions_v1.png": "b756e8021bf4f74a0d9bc40530c7e7720a0731665af52a7fcbd9e02e5aa0ae29",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/death_v1.png": "67685978cd88e94177df77f00b69b064055a713fe6e094932b4a949ebd04ce8d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign/cast_v1.png": "9b0bbe5c454913daccddcf5fc30aedcfb23be4393e37260a81167f0dc19c153d"
+  },
+  "accepted_clips": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "4cae51488dc7608bb11d38901d8e4fca98abfa68346a5c4f7cafd92eb00271ce",
+  "atlas_sha256": "9a836e2dc1793efd776c8c9fa146fd9b81098cb7411ab21458b6492fda988c33",
+  "texture_bytes_rgba": 19361664
+}

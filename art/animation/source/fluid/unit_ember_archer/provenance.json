@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_ember_archer",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/move_v2.png": "02e5863c9d03d273b2a060b0533bce20593c508a204f9506f4c04e211ce5c1f4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/attack_v1.png": "0ce17e1ddc917df64fa79c2258af608d50f3454b2b9ac62f884f3e7fde594438",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/ranged_v1.png": "6596c2e79e16ee0add460ce4be3bf45f51b93741bec29cfc1c18112795cd27d6",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/reactions_v1.png": "92bd62b952998e6243baaca69fb62224e0bff34e1c8745db653f308e02524f37",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/death_v1.png": "1c29c68a2af82dffb890c86548710b28cecc3170303561bcc91b512f3e87cf3d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer/cast_v1.png": "fead6f294e78fdfaf188bf10d606109bbd96a71336f3751ee465a6ca5ac262aa"
+  },
+  "accepted_clips": [
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "cee2cfa5b5b0d33be996d1c75f3547fb55b25a74cb72ff7309541eaa8e74b5d7",
+  "atlas_sha256": "f4aada5ce210087c1abc85bd05eec4fcbb9cf386f2aa1228349d7d6916fe934c",
+  "texture_bytes_rgba": 16473600
+}

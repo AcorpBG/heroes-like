@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_mire_slinger",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/move_v1.png": "c5a45706008ea42b037f1b2d3f2ba97b6f3aa2cf7ee6b79940ef37fad6deec99",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/attack_v1.png": "548146b7db31e0784c43526dcf295b0b35f68e1183f66bfd3d57d114dc95b23f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/ranged_v1.png": "6f052b4ab3d34875fbee1295aedfec6f2b2b5840972292dd5974e2284d8ff108",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/reactions_v1.png": "fcf6b2612ecff08e20116a0e7375b2fc5ebafe153b3903ef1edf11854b517e45",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/death_v1.png": "6b31c77252cf7da03b4406ec9e3582663f220a648446f4e3c19181683e56463a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mire_slinger/cast_v1.png": "db6c1c29ac386ad25d81cb934b2117bf6b60ac2c1790e7c52cfbdfb93205f31f"
+  },
+  "accepted_clips": [
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "46b672baece2391f2ca814b4f8c0879bdb7ff5b1f854fae8eb70c61a1d0d6bb3",
+  "atlas_sha256": "46305b574483845def71298498831dd90fba4821b95fd41ced9adac6e9e7ba47",
+  "texture_bytes_rgba": 18869760
+}

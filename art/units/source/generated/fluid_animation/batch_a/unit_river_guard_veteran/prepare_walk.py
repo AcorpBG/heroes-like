@@ -5,10 +5,15 @@ from PIL import Image
 HERE=Path(__file__).resolve().parent;ROOT=Path(__file__).resolve().parents[7]
 rel=lambda p:p.relative_to(ROOT).as_posix()
 sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-entries=[('move_contacts_v1','812e9340-84d2-4f11-aaa9-c577011d9deb',[HERE/'reference_neutral.png'],'rejected_same_leading_leg'),('move_contacts_v2','5ac1ed47-347b-46de-a56d-1f240823172a',[HERE/'reference_neutral.png',ROOT/'art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png'],'pending_motion_review'),('move_inbetweens_v1','599b465e-8a09-40a0-b704-8ed0a45ffdf4',[HERE/'reference_contact_a.png',HERE/'reference_contact_b.png'],'pending_motion_review')]
+entries=[('move_contacts_v1','812e9340-84d2-4f11-aaa9-c577011d9deb',[HERE/'reference_neutral.png'],'rejected_same_leading_leg'),('move_contacts_v2','5ac1ed47-347b-46de-a56d-1f240823172a',[HERE/'reference_neutral.png',HERE/'pose_reference_foganchor_contacts.png'],'pending_motion_review'),('move_inbetweens_v1','599b465e-8a09-40a0-b704-8ed0a45ffdf4',[HERE/'reference_contact_a.png',HERE/'reference_contact_b.png'],'pending_motion_review')]
 for stem,out,refs,status in entries:
     prompt=HERE/f'{stem}.prompt.txt';prompt.write_bytes(prompt.read_bytes().replace(b'\r\n',b'\n').rstrip(b'\n'))
     data={'generator':'built-in image_gen','source':rel(HERE/f'{stem}.png'),'source_sha256':sha(HERE/f'{stem}.png'),'prompt':rel(prompt),'prompt_sha256':sha(prompt),'references':[{'path':rel(p),'sha256':sha(p),'role':'pose_only' if 'foganchor' in str(p) else 'identity_or_contact_key'} for p in refs],'generation_output':'C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-'+out+'.png','review_status':status}
+    for ref in data['references']:
+        if 'foganchor' in ref['path']:
+            ref['generation_input_path']='art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_foganchor_colossi/move_contacts_v1.png'
+            ref['path']=rel(HERE/'pose_reference_foganchor_contacts.png')
+            assert sha(HERE/'pose_reference_foganchor_contacts.png')==ref['sha256']
     (HERE/f'{stem}.provenance.json').write_text(json.dumps(data,indent=2)+'\n',encoding='utf8')
 h=json.loads((HERE/'handoff.json').read_text());u=h['units'][0]
 u['frames']=[f for f in u['frames'] if f['clip']!='move']

@@ -1,0 +1,634 @@
+{
+  "idle_v2": [
+    {
+      "file": "idle_v2_frame_00.png",
+      "source_rect": [
+        66,
+        12,
+        449,
+        392
+      ],
+      "width": 383,
+      "height": 380
+    },
+    {
+      "file": "idle_v2_frame_01.png",
+      "source_rect": [
+        561,
+        14,
+        951,
+        391
+      ],
+      "width": 390,
+      "height": 377
+    },
+    {
+      "file": "idle_v2_frame_02.png",
+      "source_rect": [
+        52,
+        409,
+        442,
+        778
+      ],
+      "width": 390,
+      "height": 369
+    },
+    {
+      "file": "idle_v2_frame_03.png",
+      "source_rect": [
+        554,
+        401,
+        965,
+        778
+      ],
+      "width": 411,
+      "height": 377
+    },
+    {
+      "file": "idle_v2_frame_04.png",
+      "source_rect": [
+        58,
+        787,
+        466,
+        1149
+      ],
+      "width": 408,
+      "height": 362
+    },
+    {
+      "file": "idle_v2_frame_05.png",
+      "source_rect": [
+        565,
+        791,
+        957,
+        1150
+      ],
+      "width": 392,
+      "height": 359
+    },
+    {
+      "file": "idle_v2_frame_06.png",
+      "source_rect": [
+        53,
+        1152,
+        449,
+        1529
+      ],
+      "width": 396,
+      "height": 377
+    },
+    {
+      "file": "idle_v2_frame_07.png",
+      "source_rect": [
+        564,
+        1157,
+        955,
+        1528
+      ],
+      "width": 391,
+      "height": 371
+    }
+  ],
+  "move_v1": [
+    {
+      "file": "move_v1_frame_00.png",
+      "source_rect": [
+        36,
+        10,
+        495,
+        400
+      ],
+      "width": 459,
+      "height": 390
+    },
+    {
+      "file": "move_v1_frame_01.png",
+      "source_rect": [
+        537,
+        89,
+        981,
+        400
+      ],
+      "width": 444,
+      "height": 311
+    },
+    {
+      "file": "move_v1_frame_02.png",
+      "source_rect": [
+        26,
+        444,
+        483,
+        754
+      ],
+      "width": 457,
+      "height": 310
+    },
+    {
+      "file": "move_v1_frame_03.png",
+      "source_rect": [
+        569,
+        461,
+        981,
+        770
+      ],
+      "width": 412,
+      "height": 309
+    },
+    {
+      "file": "move_v1_frame_04.png",
+      "source_rect": [
+        72,
+        787,
+        490,
+        1121
+      ],
+      "width": 418,
+      "height": 334
+    },
+    {
+      "file": "move_v1_frame_05.png",
+      "source_rect": [
+        565,
+        800,
+        980,
+        1126
+      ],
+      "width": 415,
+      "height": 326
+    },
+    {
+      "file": "move_v1_frame_06.png",
+      "source_rect": [
+        37,
+        1151,
+        487,
+        1508
+      ],
+      "width": 450,
+      "height": 357
+    },
+    {
+      "file": "move_v1_frame_07.png",
+      "source_rect": [
+        536,
+        1136,
+        991,
+        1519
+      ],
+      "width": 455,
+      "height": 383
+    }
+  ],
+  "attack_v1": [
+    {
+      "file": "attack_v1_frame_00.png",
+      "source_rect": [
+        52,
+        7,
+        457,
+        396
+      ],
+      "width": 405,
+      "height": 389
+    },
+    {
+      "file": "attack_v1_frame_01.png",
+      "source_rect": [
+        559,
+        18,
+        944,
+        392
+      ],
+      "width": 385,
+      "height": 374
+    },
+    {
+      "file": "attack_v1_frame_02.png",
+      "source_rect": [
+        33,
+        412,
+        425,
+        774
+      ],
+      "width": 392,
+      "height": 362
+    },
+    {
+      "file": "attack_v1_frame_03.png",
+      "source_rect": [
+        548,
+        398,
+        1009,
+        774
+      ],
+      "width": 461,
+      "height": 376
+    },
+    {
+      "file": "attack_v1_frame_04.png",
+      "source_rect": [
+        64,
+        776,
+        571,
+        1115
+      ],
+      "width": 507,
+      "height": 339
+    },
+    {
+      "file": "attack_v1_frame_05.png",
+      "source_rect": [
+        575,
+        777,
+        976,
+        1115
+      ],
+      "width": 401,
+      "height": 338
+    },
+    {
+      "file": "attack_v1_frame_06.png",
+      "source_rect": [
+        44,
+        1114,
+        451,
+        1509
+      ],
+      "width": 407,
+      "height": 395
+    },
+    {
+      "file": "attack_v1_frame_07.png",
+      "source_rect": [
+        553,
+        1123,
+        963,
+        1510
+      ],
+      "width": 410,
+      "height": 387
+    }
+  ],
+  "ranged_v1": [
+    {
+      "file": "ranged_v1_frame_00.png",
+      "source_rect": [
+        55,
+        8,
+        443,
+        387
+      ],
+      "width": 388,
+      "height": 379
+    },
+    {
+      "file": "ranged_v1_frame_01.png",
+      "source_rect": [
+        566,
+        7,
+        929,
+        387
+      ],
+      "width": 363,
+      "height": 380
+    },
+    {
+      "file": "ranged_v1_frame_02.png",
+      "source_rect": [
+        55,
+        396,
+        455,
+        767
+      ],
+      "width": 400,
+      "height": 371
+    },
+    {
+      "file": "ranged_v1_frame_03.png",
+      "source_rect": [
+        543,
+        396,
+        969,
+        767
+      ],
+      "width": 426,
+      "height": 371
+    },
+    {
+      "file": "ranged_v1_frame_04.png",
+      "source_rect": [
+        57,
+        763,
+        478,
+        1122
+      ],
+      "width": 421,
+      "height": 359
+    },
+    {
+      "file": "ranged_v1_frame_05.png",
+      "source_rect": [
+        572,
+        768,
+        980,
+        1120
+      ],
+      "width": 408,
+      "height": 352
+    },
+    {
+      "file": "ranged_v1_frame_06.png",
+      "source_rect": [
+        56,
+        1127,
+        458,
+        1510
+      ],
+      "width": 402,
+      "height": 383
+    },
+    {
+      "file": "ranged_v1_frame_07.png",
+      "source_rect": [
+        565,
+        1129,
+        953,
+        1509
+      ],
+      "width": 388,
+      "height": 380
+    }
+  ],
+  "hit_v2": [
+    {
+      "file": "hit_v2_frame_00.png",
+      "source_rect": [
+        80,
+        101,
+        555,
+        559
+      ],
+      "width": 475,
+      "height": 458
+    },
+    {
+      "file": "hit_v2_frame_01.png",
+      "source_rect": [
+        759,
+        207,
+        1103,
+        559
+      ],
+      "width": 344,
+      "height": 352
+    },
+    {
+      "file": "hit_v2_frame_02.png",
+      "source_rect": [
+        96,
+        690,
+        561,
+        1146
+      ],
+      "width": 465,
+      "height": 456
+    },
+    {
+      "file": "hit_v2_frame_03.png",
+      "source_rect": [
+        700,
+        687,
+        1171,
+        1144
+      ],
+      "width": 471,
+      "height": 457
+    }
+  ],
+  "defend_v2": [
+    {
+      "file": "defend_v2_frame_00.png",
+      "source_rect": [
+        36,
+        37,
+        591,
+        611
+      ],
+      "width": 555,
+      "height": 574
+    },
+    {
+      "file": "defend_v2_frame_01.png",
+      "source_rect": [
+        667,
+        78,
+        1193,
+        610
+      ],
+      "width": 526,
+      "height": 532
+    },
+    {
+      "file": "defend_v2_frame_02.png",
+      "source_rect": [
+        115,
+        723,
+        611,
+        1193
+      ],
+      "width": 496,
+      "height": 470
+    },
+    {
+      "file": "defend_v2_frame_03.png",
+      "source_rect": [
+        714,
+        772,
+        1189,
+        1195
+      ],
+      "width": 475,
+      "height": 423
+    }
+  ],
+  "death_v1": [
+    {
+      "file": "death_v1_frame_00.png",
+      "source_rect": [
+        58,
+        44,
+        460,
+        423
+      ],
+      "width": 402,
+      "height": 379
+    },
+    {
+      "file": "death_v1_frame_01.png",
+      "source_rect": [
+        573,
+        78,
+        958,
+        420
+      ],
+      "width": 385,
+      "height": 342
+    },
+    {
+      "file": "death_v1_frame_02.png",
+      "source_rect": [
+        64,
+        501,
+        462,
+        816
+      ],
+      "width": 398,
+      "height": 315
+    },
+    {
+      "file": "death_v1_frame_03.png",
+      "source_rect": [
+        538,
+        563,
+        983,
+        817
+      ],
+      "width": 445,
+      "height": 254
+    },
+    {
+      "file": "death_v1_frame_04.png",
+      "source_rect": [
+        43,
+        900,
+        505,
+        1169
+      ],
+      "width": 462,
+      "height": 269
+    },
+    {
+      "file": "death_v1_frame_05.png",
+      "source_rect": [
+        527,
+        978,
+        997,
+        1177
+      ],
+      "width": 470,
+      "height": 199
+    },
+    {
+      "file": "death_v1_frame_06.png",
+      "source_rect": [
+        25,
+        1281,
+        503,
+        1472
+      ],
+      "width": 478,
+      "height": 191
+    },
+    {
+      "file": "death_v1_frame_07.png",
+      "source_rect": [
+        523,
+        1284,
+        1000,
+        1472
+      ],
+      "width": 477,
+      "height": 188
+    }
+  ],
+  "cast_v3": [
+    {
+      "file": "cast_v3_frame_00.png",
+      "source_rect": [
+        33,
+        58,
+        393,
+        405
+      ],
+      "width": 360,
+      "height": 347
+    },
+    {
+      "file": "cast_v3_frame_01.png",
+      "source_rect": [
+        470,
+        59,
+        836,
+        406
+      ],
+      "width": 366,
+      "height": 347
+    },
+    {
+      "file": "cast_v3_frame_02.png",
+      "source_rect": [
+        909,
+        59,
+        1251,
+        406
+      ],
+      "width": 342,
+      "height": 347
+    },
+    {
+      "file": "cast_v3_frame_03.png",
+      "source_rect": [
+        1366,
+        28,
+        1691,
+        406
+      ],
+      "width": 325,
+      "height": 378
+    },
+    {
+      "file": "cast_v3_frame_04.png",
+      "source_rect": [
+        33,
+        450,
+        365,
+        845
+      ],
+      "width": 332,
+      "height": 395
+    },
+    {
+      "file": "cast_v3_frame_05.png",
+      "source_rect": [
+        471,
+        489,
+        824,
+        845
+      ],
+      "width": 353,
+      "height": 356
+    },
+    {
+      "file": "cast_v3_frame_06.png",
+      "source_rect": [
+        909,
+        498,
+        1273,
+        847
+      ],
+      "width": 364,
+      "height": 349
+    },
+    {
+      "file": "cast_v3_frame_07.png",
+      "source_rect": [
+        1359,
+        499,
+        1723,
+        848
+      ],
+      "width": 364,
+      "height": 349
+    }
+  ]
+}

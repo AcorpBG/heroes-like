@@ -35,20 +35,39 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_04.png": "1ae64719c761dff5ec1f66e34b8598f4b4d0119d6f817ab9ad54f6845b02b9b3",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_05.png": "56cc3cc380a8fb1c033ea9c5e6c143657ff404818bc7388a94098cb8d99b7dbc",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_06.png": "f4cedbadeaa9836ac95a9ea0e5c4a635998a01c447f8b2c86ad37475d87480b8",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_07.png": "867089af0f3cf0150e822c68b319378720d90d5296bffec5082f7129e27fc81c"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_07.png": "867089af0f3cf0150e822c68b319378720d90d5296bffec5082f7129e27fc81c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_00.png": "4d1b598896684ce376c7c8e17abe100aed9b2132c0f3b617123a7561208c7feb",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_01.png": "b32a3d3f0ff3028b1f1a1211b3e53547239fdcdf77ed48fbae63999cb5d01de7",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_02.png": "cff089e953adde65a96ee232fc769efeb1556d1f54a26bb9cd7a87e4badaa68f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_03.png": "d966d5091f818884bff79048c6d7a635a6e0b08042b569c6c924d054eb5e9014",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_04.png": "a38b846489c31e864b07741df58673afdfef9f9dc20b18ddf33b00115935c61f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_05.png": "4ddc569168266801885bf4f22dfd8dc7a53d7130b5033bd781d50fad23117ca9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_06.png": "2c2a54f77947d55ce65ca0c7fcc95ef6eeea47d54af00cc7ddc28ec64243dcf2",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_07.png": "752c69be5302eb554ebf455667a50b4ef3bdc37758162b06832c8b7101399074",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_00.png": "f0319b00f87c097f709afd2501e3e692a8b58eac82102e9fa0587321b77958fd",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_00.png": "45b34b6de63a77010c9a4080570b239c9cb85545686707d4e899ab565af91648",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_01.png": "438b7a2598312a2a3707dd19d1f605aa61be130bcfbd30dd13a35ba14da677f0",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_01.png": "d5fd26df335ab2c74740c5feaf75292c712cf44a5a82774a7b5c523d9eb29fbf",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_00.png": "58c6823fcc8135e5447331bfed9e26d6bf96d2f2c8b61d265de3df3715036c35",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_01.png": "18263eff5bd416f269742b8e5c2b9b8bc28239966002a42030565b930cd41213",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_02.png": "e0486237883a0d07e8eef00f7f5d8cda8b5c10fdafb7ad4fedc2f2c9447085e1",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_02.png": "584f9ca8478dd97f3cb08af91215409a9fa0d503c28d65dc852f56c3355da055"
   },
   "accepted_clips": [
     "attack",
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "idle",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Godot128 overview reviewed: broad whip windup/contact/recovery preserving hand ownership, recoil, held-arm guard, physical rally gesture and coherent grounded collapse. Gait withheld because both halves appear to retain the same leading leg. Existing idle retention pending comparison."
+    "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
   },
-  "atlas_sha256": "57e3aba8f5c723ec83cf55f197085352b38d6f8e049de257eeab9fd586690f4a",
-  "texture_bytes_rgba": 22089600,
-  "baseline_atlas_sha256": "b3ffa4e75ac5a526403b6b02c010a6219839846e1f69f7c2e33a16d89c98a27d"
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "b3ffa4e75ac5a526403b6b02c010a6219839846e1f69f7c2e33a16d89c98a27d",
+  "atlas_sha256": "287cddbb01230aa6579892c1f33f7ddd00a47009f0159982bedd46df689068d1",
+  "texture_bytes_rgba": 23683072
 }

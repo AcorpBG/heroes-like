@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "generations": [
+    {
+      "source": "idle_v1.png",
+      "source_sha256": "5e82d1b6b02570f82a744f37d0dc7a60de6f74a2341f4ca1224def18610e6438",
+      "prompt": "idle_v1.prompt.txt",
+      "prompt_sha256": "31a978fbd7469a11572179a4714a004ed862252c27f8051a79bcd10ec93e11b6",
+      "reference": "art/animation/source/poses/unit_thornwake_bramblekite_needlers_veteran/unit_thornwake_bramblekite_needlers_veteran-alpha.png",
+      "reference_sha256": "71dac14ab69a309b0696609c996737001d0ca7d8434ffa15358c1b090d08583e",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-f13f5329-78ff-4876-885f-4091313ec5f8.png",
+      "status": "rejected_spacing_or_anatomy_retained_original"
+    },
+    {
+      "source": "idle_v2.png",
+      "source_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "prompt": "idle_v2.prompt.txt",
+      "prompt_sha256": "f03dcbcac83e80fcabf0bb8393412df052dcb95ee08c0ff1b4d14624dcffd8da",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v1.png",
+      "reference_sha256": "5e82d1b6b02570f82a744f37d0dc7a60de6f74a2341f4ca1224def18610e6438",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-476bc8ab-6938-4d97-a480-5be0c8e99a33.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "move_v1.png",
+      "source_sha256": "f5c2c664d3307420fe03012c15db82b1923a570dc639f62525c29ba778b03605",
+      "prompt": "move_v1.prompt.txt",
+      "prompt_sha256": "538988276391d941ebdcc3678ef8fefa7efb14c8f997211b302c79dd13de8fcd",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-32a4eec3-2484-4c91-8282-84c4caf40950.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "attack_v1.png",
+      "source_sha256": "db1fddd1628c31a2688b8c0acbd10ad4effe1b50b69467e945c86ceece42ec4f",
+      "prompt": "attack_v1.prompt.txt",
+      "prompt_sha256": "0dc92060968e9771ea6046061559ba98243188477bf26a89b14b2a651d74bb35",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-96903ef2-1dba-482f-8c42-c961862ce47f.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "ranged_v1.png",
+      "source_sha256": "0428fc472f848faaf2cf6135d3ffa5f8c1e68c0c32a80669b10cbf333704e38f",
+      "prompt": "ranged_v1.prompt.txt",
+      "prompt_sha256": "6fd15464c66a0e6562c4f83f5655dfd2a30b967fbaabdca02961c884a952be00",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-5dfa149e-df52-4f57-adfc-6f52c733ff0a.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "reaction_v1.png",
+      "source_sha256": "362ca9cf5bf5a99297c032ab37d64d63690d0de741f0729e08f723df4a4ae25e",
+      "prompt": "reaction_v1.prompt.txt",
+      "prompt_sha256": "aacd0ba586c24e2e6a774fbe383d6b0f3f7bf4a8bdaea5848e6f454e141e73aa",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-4c8c2a46-8bc0-4860-b91e-a3c8a61814dc.png",
+      "status": "rejected_spacing_or_anatomy_retained_original"
+    },
+    {
+      "source": "death_v1.png",
+      "source_sha256": "bd62a3d5dfe8fd25123a0af4f1346bdf9c98dbe85dc816a91b423b3e7a28a8ba",
+      "prompt": "death_v1.prompt.txt",
+      "prompt_sha256": "8c79478f02065d046979873a07c63bb40ab4368d9f49d7e1a47d4a552f7848b7",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-6dfe3ec5-eee0-4519-bfbb-c2756aa945fc.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "cast_v1.png",
+      "source_sha256": "eee49d8e71948bd4829e6900b305d2da3938b7113327280315d5510384bf8e26",
+      "prompt": "cast_v1.prompt.txt",
+      "prompt_sha256": "7ffaa8044f5c9ec899bd1649cfefaa1108838bf0472d25ec9b0d792aba4ea5ef",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-0c20e685-8a48-486c-b22a-c0f6cea9e58a.png",
+      "status": "rejected_spacing_or_anatomy_retained_original"
+    },
+    {
+      "source": "hit_v2.png",
+      "source_sha256": "1862c20c457931df81576f2f2090a7ff287588296cd644bdbdefbcdbca64106e",
+      "prompt": "hit_v2.prompt.txt",
+      "prompt_sha256": "81e8e36192ba72624316443df1883f44b83b543123493cfc4df5f5e82554320c",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-771e0821-538d-472b-806e-830dbeb38aff.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "defend_v2.png",
+      "source_sha256": "8e83bf10a7f50ccda454c5c47304f44a2127e5edfa4584fdf7533a396ba6f5a5",
+      "prompt": "defend_v2.prompt.txt",
+      "prompt_sha256": "05f31e86e4505d8ab2829bdca1e3b2cf9bebd7fa59e89045ee7110f88902fc5e",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-1641e715-4fdc-40a1-a702-e6f1999a14da.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "cast_v2.png",
+      "source_sha256": "fa8fffad9a5441a314dce3a3b87690411e4a91145d3b240c4779cf1158e3e483",
+      "prompt": "cast_v2.prompt.txt",
+      "prompt_sha256": "cab3b6e6491446ac3fc9bf4e8f75868c4db9d6fc5f805d2d41f463544f248dc3",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/idle_v2.png",
+      "reference_sha256": "ff2ed32f479ced9e59d5cf09780ca5f428fa86ce55c61d4d04462e9b5dc70ba1",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-6f748bf8-8d91-4683-b2de-68a849c1bc2b.png",
+      "status": "rejected_spacing_or_anatomy_retained_original"
+    },
+    {
+      "source": "cast_v3.png",
+      "source_sha256": "7fc723bb6bddb617f5d997e5f9896f9f0d020625a0f68f37f702a2d98a901a40",
+      "prompt": "cast_v3.prompt.txt",
+      "prompt_sha256": "fcf5a114887e3c652dcef9f3d088e264a80aaf091910c7b2bfb82f2554e1dfa9",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v2.png",
+      "reference_sha256": "fa8fffad9a5441a314dce3a3b87690411e4a91145d3b240c4779cf1158e3e483",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-5c2522b1-b85d-42b8-924f-4228d3a45619.png",
+      "status": "pending_visual_acceptance"
+    }
+  ],
+  "preparation": "Original connected-component pixel extraction; alpha <=8 removed. No pose painting, warp, interpolation or per-frame scaling."
+}

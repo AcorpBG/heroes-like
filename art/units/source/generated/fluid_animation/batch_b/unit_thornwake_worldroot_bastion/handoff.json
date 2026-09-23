@@ -1,0 +1,1156 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_worldroot_bastion",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              361
+            ]
+          ],
+          "anchor": [
+            178,
+            360
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            100,
+            7,
+            466,
+            368
+          ]
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              359
+            ]
+          ],
+          "anchor": [
+            191,
+            358
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            565,
+            9,
+            936,
+            368
+          ]
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              346
+            ]
+          ],
+          "anchor": [
+            196,
+            345
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            92,
+            377,
+            482,
+            723
+          ]
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              387,
+              359
+            ]
+          ],
+          "anchor": [
+            195,
+            358
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            547,
+            377,
+            934,
+            736
+          ]
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              372,
+              360
+            ]
+          ],
+          "anchor": [
+            185,
+            359
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            92,
+            749,
+            464,
+            1109
+          ]
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              368,
+              352
+            ]
+          ],
+          "anchor": [
+            184,
+            351
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            559,
+            745,
+            927,
+            1097
+          ]
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              397,
+              377
+            ]
+          ],
+          "anchor": [
+            196,
+            376
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            86,
+            1118,
+            483,
+            1495
+          ]
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              380
+            ]
+          ],
+          "anchor": [
+            193,
+            379
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1.png",
+          "original_rect": [
+            559,
+            1119,
+            948,
+            1499
+          ]
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              370,
+              341
+            ]
+          ],
+          "anchor": [
+            190,
+            340
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            70,
+            7,
+            440,
+            348
+          ]
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              335
+            ]
+          ],
+          "anchor": [
+            191,
+            334
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            561,
+            17,
+            946,
+            352
+          ]
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              440,
+              364
+            ]
+          ],
+          "anchor": [
+            214,
+            363
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            64,
+            371,
+            504,
+            735
+          ]
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              407,
+              370
+            ]
+          ],
+          "anchor": [
+            195,
+            369
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            577,
+            368,
+            984,
+            738
+          ]
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              421,
+              341
+            ]
+          ],
+          "anchor": [
+            207,
+            340
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            93,
+            764,
+            514,
+            1105
+          ]
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              425,
+              301
+            ]
+          ],
+          "anchor": [
+            216,
+            300
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            557,
+            794,
+            982,
+            1095
+          ]
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              391,
+              366
+            ]
+          ],
+          "anchor": [
+            195,
+            365
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            70,
+            1123,
+            461,
+            1489
+          ]
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              398,
+              367
+            ]
+          ],
+          "anchor": [
+            197,
+            366
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2.png",
+          "original_rect": [
+            569,
+            1120,
+            967,
+            1487
+          ]
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              441,
+              368
+            ]
+          ],
+          "anchor": [
+            217,
+            367
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            63,
+            16,
+            504,
+            384
+          ]
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              489,
+              341
+            ]
+          ],
+          "anchor": [
+            254,
+            340
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            523,
+            43,
+            1012,
+            384
+          ]
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              440,
+              372
+            ]
+          ],
+          "anchor": [
+            215,
+            371
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            65,
+            394,
+            505,
+            766
+          ]
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              397,
+              370
+            ]
+          ],
+          "anchor": [
+            191,
+            369
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            569,
+            396,
+            966,
+            766
+          ]
+        },
+        {
+          "name": "defend_04",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              440,
+              339
+            ]
+          ],
+          "anchor": [
+            218,
+            338
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            67,
+            792,
+            507,
+            1131
+          ]
+        },
+        {
+          "name": "defend_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              392,
+              353
+            ]
+          ],
+          "anchor": [
+            194,
+            352
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            547,
+            777,
+            939,
+            1130
+          ]
+        },
+        {
+          "name": "defend_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              381,
+              359
+            ]
+          ],
+          "anchor": [
+            199,
+            358
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            77,
+            1145,
+            458,
+            1504
+          ]
+        },
+        {
+          "name": "defend_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              455,
+              329
+            ]
+          ],
+          "anchor": [
+            219,
+            328
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1.png",
+          "original_rect": [
+            529,
+            1165,
+            984,
+            1494
+          ]
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              438,
+              415
+            ]
+          ],
+          "anchor": [
+            217,
+            414
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            60,
+            9,
+            498,
+            424
+          ]
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              473,
+              374
+            ]
+          ],
+          "anchor": [
+            250,
+            373
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            539,
+            57,
+            1012,
+            431
+          ]
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              511,
+              364
+            ]
+          ],
+          "anchor": [
+            271,
+            363
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            12,
+            478,
+            523,
+            842
+          ]
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              504,
+              303
+            ]
+          ],
+          "anchor": [
+            265,
+            302
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            517,
+            528,
+            1021,
+            831
+          ]
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              496,
+              284
+            ]
+          ],
+          "anchor": [
+            253,
+            283
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            12,
+            904,
+            508,
+            1188
+          ]
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              510,
+              241
+            ]
+          ],
+          "anchor": [
+            254,
+            240
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            509,
+            943,
+            1019,
+            1184
+          ]
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              515,
+              224
+            ]
+          ],
+          "anchor": [
+            262,
+            223
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            4,
+            1286,
+            519,
+            1510
+          ]
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              499,
+              186
+            ]
+          ],
+          "anchor": [
+            249,
+            185
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1.png",
+          "original_rect": [
+            521,
+            1315,
+            1020,
+            1501
+          ]
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              350
+            ]
+          ],
+          "anchor": [
+            193,
+            349
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            67,
+            7,
+            452,
+            357
+          ]
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              442,
+              350
+            ]
+          ],
+          "anchor": [
+            222,
+            349
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            548,
+            7,
+            990,
+            357
+          ]
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              425,
+              361
+            ]
+          ],
+          "anchor": [
+            218,
+            360
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            50,
+            372,
+            475,
+            733
+          ]
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              462,
+              359
+            ]
+          ],
+          "anchor": [
+            221,
+            358
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            542,
+            375,
+            1004,
+            734
+          ]
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              515,
+              374
+            ]
+          ],
+          "anchor": [
+            247,
+            373
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            18,
+            741,
+            533,
+            1115
+          ]
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              455,
+              354
+            ]
+          ],
+          "anchor": [
+            229,
+            353
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            548,
+            765,
+            1003,
+            1119
+          ]
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              409,
+              356
+            ]
+          ],
+          "anchor": [
+            208,
+            355
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            57,
+            1135,
+            466,
+            1491
+          ]
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              354
+            ]
+          ],
+          "anchor": [
+            200,
+            353
+          ],
+          "scale": 0.6,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1.png",
+          "original_rect": [
+            571,
+            1135,
+            961,
+            1489
+          ]
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 110,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 3
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "frame_msec": 1000,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [
+        "idle"
+      ],
+      "visual_review": {
+        "status": "pending",
+        "artist_observation": "Existing idle inspected: eight articulated shield-arm poses with stable roots. New action draft pending coordinator review at game scale; movement half-cycle leg opposition needs closer review. Attack v1 rejected because striking arm identity switched at contact; v2 uses coherent root stomp. Live idle reference used because old curated portrait differs from current in-game construct silhouette. Support is physical open-arm protection, no added magic."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_00.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_01.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_02.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_03.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_04.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_05.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_06.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/move_v1_07.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_00.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_01.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_02.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_03.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_04.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_05.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_06.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/attack_v2_07.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_00.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_01.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_02.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_03.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_04.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_05.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_06.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/hit_defend_v1_07.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_00.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_01.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_02.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_03.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_04.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_05.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_06.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/death_v1_07.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_00.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_01.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_02.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_03.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_04.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_05.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_06.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion/cast_v1_07.png": 0.6
+      },
+      "source_scale_reason": "One fixed scale per whole source master shared by all eight poses: movement/attack/support .60, hit-defense .57, death .51. Source standing bodies measure roughly 350/370/415px respectively, matching the existing about 212px body at reference_height256. No per-pose sizing or warping; death collapse retains .51 all the way to corpse."
+    }
+  ]
+}

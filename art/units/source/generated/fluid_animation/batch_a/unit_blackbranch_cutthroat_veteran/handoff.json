@@ -1,0 +1,1002 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_blackbranch_cutthroat_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "idle_00",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              384,
+              512
+            ]
+          ],
+          "anchor": [
+            199,
+            500
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              384,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            583,
+            500
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              768,
+              0,
+              1152,
+              512
+            ]
+          ],
+          "anchor": [
+            967,
+            500
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              1152,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1351,
+            500
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              512,
+              384,
+              1024
+            ]
+          ],
+          "anchor": [
+            199,
+            1005
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              384,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            583,
+            1005
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              768,
+              512,
+              1152,
+              1024
+            ]
+          ],
+          "anchor": [
+            967,
+            1005
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png",
+          "rects": [
+            [
+              1152,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1351,
+            1005
+          ],
+          "scale": 0.45
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              445
+            ]
+          ],
+          "anchor": [
+            220,
+            432
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              445
+            ]
+          ],
+          "anchor": [
+            665,
+            432
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1331,
+              445
+            ]
+          ],
+          "anchor": [
+            1104,
+            432
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              1331,
+              0,
+              1774,
+              445
+            ]
+          ],
+          "anchor": [
+            1515,
+            432
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              0,
+              445,
+              500,
+              887
+            ]
+          ],
+          "anchor": [
+            232,
+            862
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              500,
+              445,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            681,
+            862
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              887,
+              445,
+              1331,
+              887
+            ]
+          ],
+          "anchor": [
+            1104,
+            862
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png",
+          "rects": [
+            [
+              1331,
+              445,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1546,
+            862
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              400,
+              512
+            ]
+          ],
+          "anchor": [
+            236,
+            502
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              400,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            596,
+            502
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              768,
+              0,
+              1152,
+              512
+            ]
+          ],
+          "anchor": [
+            956,
+            502
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              1152,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1330,
+            502
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              512,
+              400,
+              1024
+            ]
+          ],
+          "anchor": [
+            190,
+            990
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              400,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            574,
+            990
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              768,
+              512,
+              1152,
+              1024
+            ]
+          ],
+          "anchor": [
+            958,
+            990
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png",
+          "rects": [
+            [
+              1152,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1342,
+            990
+          ],
+          "scale": 0.46
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              500
+            ]
+          ],
+          "anchor": [
+            220,
+            465
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              443,
+              0,
+              887,
+              500
+            ]
+          ],
+          "anchor": [
+            665,
+            465
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1331,
+              500
+            ]
+          ],
+          "anchor": [
+            1104,
+            465
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              1331,
+              0,
+              1774,
+              500
+            ]
+          ],
+          "anchor": [
+            1545,
+            465
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              500,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            225,
+            832
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              443,
+              500,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            840
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              887,
+              500,
+              1331,
+              887
+            ]
+          ],
+          "anchor": [
+            1104,
+            840
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png",
+          "rects": [
+            [
+              1331,
+              500,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1545,
+            840
+          ],
+          "scale": 0.5
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              384,
+              495
+            ]
+          ],
+          "anchor": [
+            184,
+            484
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              384,
+              0,
+              768,
+              495
+            ]
+          ],
+          "anchor": [
+            570,
+            484
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              768,
+              0,
+              1152,
+              495
+            ]
+          ],
+          "anchor": [
+            954,
+            484
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              1152,
+              0,
+              1536,
+              495
+            ]
+          ],
+          "anchor": [
+            1338,
+            484
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              0,
+              495,
+              384,
+              1024
+            ]
+          ],
+          "anchor": [
+            184,
+            994
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              384,
+              495,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            570,
+            994
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              768,
+              495,
+              1152,
+              1024
+            ]
+          ],
+          "anchor": [
+            954,
+            994
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png",
+          "rects": [
+            [
+              1152,
+              495,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1338,
+            994
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png",
+          "rects": [
+            [
+              0,
+              0,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            540,
+            853
+          ],
+          "scale": 0.2825
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              512
+            ]
+          ],
+          "anchor": [
+            284,
+            505
+          ],
+          "scale": 0.445
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              512
+            ]
+          ],
+          "anchor": [
+            735,
+            505
+          ],
+          "scale": 0.445
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              1024,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1230,
+            505
+          ],
+          "scale": 0.445
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png",
+          "rects": [
+            [
+              887,
+              0,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1224,
+            853
+          ],
+          "scale": 0.2825
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              512,
+              512,
+              1024,
+              1024
+            ]
+          ],
+          "anchor": [
+            735,
+            996
+          ],
+          "scale": 0.445
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              0,
+              512,
+              512,
+              1024
+            ]
+          ],
+          "anchor": [
+            284,
+            996
+          ],
+          "scale": 0.445
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png",
+          "rects": [
+            [
+              1024,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1230,
+            996
+          ],
+          "scale": 0.445
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 130,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 90,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 120,
+          "loop": true,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "frame_msec": 1000,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0,
+          "gesture_kind": "nonmagical_blade_salute"
+        },
+        "move": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/idle_v1.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/attack_v1.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reactions_v1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/death_v1.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/support_v1.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v3.png": 0.2825,
+        "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_inbetweens_v1.png": 0.445
+      },
+      "source_scale_reason": "Each complete original sheet has a fixed sourcewide resolution scale to207px hood-to-sole body reference. No individual pose rescaling or invented motion.",
+      "visual_review": {
+        "status": "pending",
+        "notes": "Original idle, slash, recoil, crossed-blade guard, physical salute, collapse/corpse and opposite-contact walking with6 inbetweens. Move reordered finalhalf to preserve knee/foot progression; root motion review required."
+      }
+    }
+  ]
+}

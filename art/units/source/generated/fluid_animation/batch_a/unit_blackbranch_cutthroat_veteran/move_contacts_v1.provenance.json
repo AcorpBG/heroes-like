@@ -1,0 +1,20 @@
+{
+  "stem": "move_contacts_v1",
+  "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb1-654e-7aa2-af06-8bdc2dae09d2\\exec-70f1264b-2842-41ed-abb2-ba16fc681790.png",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v1.png",
+  "source_sha256": "f20357b2fcd4b066d1845398e0937e487ddc5a91132103d2c3f1e81b77dcb1e2",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/move_contacts_v1.prompt.txt",
+  "prompt_sha256": "99b1b2e4bc637ec2c76709038db1259323802b32f38e2be14c9ae74e2287feb0",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_blackbranch_cutthroat_veteran/reference.png",
+      "sha256": "396c2cfbf51ef76ff311d1b17f7ee267ee6259076bf43d62adb83f2eca8a3690"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+      "sha256": "25f6e4d0a73796482718f6523723da7a2290cb74c86ada59ac0f06e684524db4"
+    }
+  ],
+  "review_status": "rejected_same_leading_leg"
+}

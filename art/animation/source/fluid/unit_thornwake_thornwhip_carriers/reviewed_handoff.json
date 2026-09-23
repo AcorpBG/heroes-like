@@ -837,6 +837,422 @@
             1511
           ],
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_00",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              205,
+              363
+            ]
+          ],
+          "anchor": [
+            103,
+            362
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            210,
+            26,
+            415,
+            389
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              219,
+              363
+            ]
+          ],
+          "anchor": [
+            104,
+            362
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            607,
+            26,
+            826,
+            389
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              214,
+              368
+            ]
+          ],
+          "anchor": [
+            106,
+            367
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            207,
+            399,
+            421,
+            767
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              209,
+              367
+            ]
+          ],
+          "anchor": [
+            101,
+            366
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            610,
+            400,
+            819,
+            767
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              235,
+              367
+            ]
+          ],
+          "anchor": [
+            108,
+            366
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            205,
+            776,
+            440,
+            1143
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              213,
+              368
+            ]
+          ],
+          "anchor": [
+            104,
+            367
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            607,
+            775,
+            820,
+            1143
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              211,
+              360
+            ]
+          ],
+          "anchor": [
+            107,
+            359
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            206,
+            1151,
+            417,
+            1511
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              211,
+              359
+            ]
+          ],
+          "anchor": [
+            100,
+            358
+          ],
+          "scale": 0.56,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2.png",
+          "original_rect": [
+            611,
+            1152,
+            822,
+            1511
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_contacts_v1_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              603,
+              832
+            ]
+          ],
+          "anchor": [
+            312,
+            831
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1.png",
+          "original_rect": [
+            203,
+            26,
+            806,
+            858
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_a_v1_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              591,
+              826
+            ]
+          ],
+          "anchor": [
+            336,
+            825
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1.png",
+          "original_rect": [
+            19,
+            2,
+            610,
+            828
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_a_v1_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              595,
+              818
+            ]
+          ],
+          "anchor": [
+            344,
+            817
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1.png",
+          "original_rect": [
+            633,
+            2,
+            1228,
+            820
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_contacts_v1_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              827
+            ]
+          ],
+          "anchor": [
+            310,
+            826
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1.png",
+          "original_rect": [
+            980,
+            27,
+            1581,
+            854
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_b_v1_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              604,
+              814
+            ]
+          ],
+          "anchor": [
+            336,
+            813
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1.png",
+          "original_rect": [
+            19,
+            12,
+            623,
+            826
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_b_v1_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              582,
+              809
+            ]
+          ],
+          "anchor": [
+            344,
+            808
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1.png",
+          "original_rect": [
+            633,
+            12,
+            1215,
+            821
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_b_v1_2",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              609,
+              809
+            ]
+          ],
+          "anchor": [
+            359,
+            808
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1.png",
+          "original_rect": [
+            1241,
+            12,
+            1850,
+            821
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_repaired_move_between_a_v1_2",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              607,
+              826
+            ]
+          ],
+          "anchor": [
+            342,
+            825
+          ],
+          "scale": 0.245,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1.png",
+          "original_rect": [
+            1258,
+            2,
+            1865,
+            828
+          ],
+          "alpha_noise_cutoff": 0
         }
       ],
       "clips": {
@@ -907,6 +1323,36 @@
           "frame_msec": 110,
           "loop": false,
           "static_frame": 0
+        },
+        "idle": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 150,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": true,
+          "static_frame": 0
         }
       },
       "accepted_clips": [
@@ -914,24 +1360,16 @@
         "hit",
         "defend",
         "death",
-        "cast"
+        "cast",
+        "idle",
+        "move"
       ],
-      "preserve_clips": [
-        "idle"
-      ],
+      "preserve_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Godot128 overview reviewed: broad whip windup/contact/recovery preserving hand ownership, recoil, held-arm guard, physical rally gesture and coherent grounded collapse. Gait withheld because both halves appear to retain the same leading leg. Existing idle retention pending comparison."
+        "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
       },
       "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_00.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_01.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_02.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_03.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_04.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_05.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_06.png": 0.56,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_v1_07.png": 0.56,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_00.png": 0.56,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_01.png": 0.56,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/attack_v1_02.png": 0.56,
@@ -957,15 +1395,32 @@
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/death_v1_06.png": 0.49,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/death_v1_07.png": 0.49,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_00.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_01.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_02.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_01.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_03.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_04.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_05.png": 0.58,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_06.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_07.png": 0.58
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/cast_v1_07.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_00.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_01.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_02.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_03.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_04.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_05.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_06.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/idle_v2_07.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_00.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_00.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_01.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_contacts_v1_01.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_00.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_01.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_b_v1_02.png": 0.245,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers/move_between_a_v1_02.png": 0.245
       },
-      "source_scale_reason": "Fixed scale for each complete generated master, shared by every original pose extracted from that master: move/attack/hit-defense .56, death .49, support .58. Masters painted the standing body at different pixel resolutions (about 360, 410, and 348 px); these constants retain the existing about 203 px anatomy at reference_height 256. No per-pose sizing, warping or normalization; all death poses retain the same .49 scale as standing death frame 1, so collapse changes height naturally."
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "preserved_accepted_clips": []
     }
   ]
 }

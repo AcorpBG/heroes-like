@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_prism_adept",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/move_v1.png",
+      "sha256": "7fd43f3d4b868e764fc8cf58648b98b1a2a93e604b4220934c966c60c8fa0eae",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/move_v1.prompt.txt",
+      "prompt_sha256": "b8234666eb9941e820cb46085e3882f225d34f797c576fcbd6e077b9d49d901c",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-9ce790c1-6050-41f1-83ff-26d25af417ba.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+      "sha256": "a7d13aad02b5a4068d25dca4100d44a25f169d4919641f3c283f9723381aabfd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.prompt.txt",
+      "prompt_sha256": "3d274e8cfc8a16f27df32793bb644e1f04922b897ab7cd87a93914c94b00131d",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-8c5ad9fd-7ff0-4f5b-9aaf-8728a3872e97.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.png",
+      "sha256": "2b29a271fd128d3eacc9e025c22266fde3fba2f1407c373291c69035c332b022",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/ranged_v1.prompt.txt",
+      "prompt_sha256": "ba367203e6c4f93a329cd31eb07c3087ae367f3c274c555cf478afec7461ed19",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-df9c3c7c-10ba-4166-8133-bbe18531d028.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v1.png",
+      "sha256": "f4194360344979723c1daa987ae8df4eeef8ad6627be8d590be1d6a9344c46b4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v1.prompt.txt",
+      "prompt_sha256": "2c30d9d5efcda2837f62efafde242008ae9c7de64d87bc7a67c43b4a8d696571",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-668bce11-4b43-4385-bb77-6ba33d3b5cec.png",
+      "tool": "built-in image_gen",
+      "status": "rejected arm continuity"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v2.png",
+      "sha256": "7cb1806910532dd29163f087d0e6962452d71349c2a8bc9a5a2d93a41073c40d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v2.prompt.txt",
+      "prompt_sha256": "afc7bac93e2df47abcbea3f88963c8d246cfee0110e1e779bb13b7d8a0c8968a",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v1.png",
+      "reference_sha256": "f4194360344979723c1daa987ae8df4eeef8ad6627be8d590be1d6a9344c46b4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-a23d013f-44f6-4d33-becb-b1807f5a368d.png",
+      "tool": "built-in image_gen",
+      "status": "rejected arm continuity"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.png",
+      "sha256": "07cca1443b712f3c533cf4d96b4091164b8bd6bd811ea8ea03790f276658d5cb",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/cast_v3.prompt.txt",
+      "prompt_sha256": "94c8559048cbbfecd53d37b35acef9e9d24a3691f7b2bb50f6d2d5e90cb6e9be",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-66333421-beb1-4b85-9716-535ef004c1e8.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.png",
+      "sha256": "1cda969403dbf687218beeb957a71327cece5ec0e38825ebfcc47ad08014eebd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/reactions_v1.prompt.txt",
+      "prompt_sha256": "29c7b73f1354fad2e441fc9bcb4e9c45f3657607f34fd50cbf05b29c363bd1bc",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-6992ad63-e24d-4127-8f6b-538d32e38db5.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v1.png",
+      "sha256": "bbcce0100d1b14a0853c3d030700fd7da9e0536193aa8abfa87d5f23ea427455",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v1.prompt.txt",
+      "prompt_sha256": "cc77ef038b8388f3eb0ae6d7cc0f3ee1b12028582b80cd4e8e991fcf43514729",
+      "reference": "art/units/source/curated/unit_prism_adept.png",
+      "reference_sha256": "78c1bdf762d1dbbd6a2538e38f1e4041f1bf712383e4bd98efb51cd12597b42e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-4c284717-1066-4297-ac34-c4c71555597a.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v2.png",
+      "sha256": "5491385409e677c9a80da8c8c3133e1e3fb3684664ef2d22214bc72663a61204",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v2.prompt.txt",
+      "prompt_sha256": "5a1a868aecab0bdf24aeb53badaed9bb5f6bdd6c4cb2dec698ffa7ff1455d798",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v1.png",
+      "reference_sha256": "bbcce0100d1b14a0853c3d030700fd7da9e0536193aa8abfa87d5f23ea427455",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-95079e2e-af8a-493e-b062-f53d489471f2.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    }
+  ]
+}

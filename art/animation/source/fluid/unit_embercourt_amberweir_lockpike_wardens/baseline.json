@@ -1,0 +1,125 @@
+{
+  "id": "unit_embercourt_amberweir_lockpike_wardens",
+  "unit_id": "unit_embercourt_amberweir_lockpike_wardens",
+  "name": "Lockpike Wardens",
+  "faction_id": "faction_embercourt",
+  "tier": 4,
+  "role": "melee",
+  "motif": "shield",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_embercourt_amberweir_lockpike_wardens.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_embercourt_amberweir_lockpike_wardens.png",
+  "curated_source_sha256": "2972cd9867d42496dd71aab7cf126ec6bf63bf100f2263a1b35b87e6e719e308",
+  "pose_sheet": "res://art/animation/source/fluid/unit_embercourt_amberweir_lockpike_wardens/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        0,
+        2,
+        1,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        4,
+        5,
+        4,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        0,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 350,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        7,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        8,
+        9,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_provenance": "res://art/animation/source/poses/unit_embercourt_amberweir_lockpike_wardens/provenance.json",
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_ground_margin": 22,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}
