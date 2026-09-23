@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_ember_archer_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/idle_v1.png": "86929d54230e83d44e6edc8efe4750cd872c19d965d5065acea44e84cc5ca513",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/attack_v1.png": "1a6cf00cf0ea3232c6470bfe9955ecd4ff4ec61ec9a889ed96086e567c6ec3c4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reactions_v1.png": "dd34d992d893be4578fc5404cf96cee7ad453815b04094e536af6f351d045445",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/ranged_v1.png": "470cd4f26bbd49deb1aa248c187ed8f77aed9d2161a7d8c904f741020ce68f56",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/defend_v2.png": "736f7c3679752eb13c515fefacc58731a016b0aa32875c13b6116a80333bf97d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/cast_v1.png": "af18a8a91e3aae6d9da93f9815e437bef00b9f70295718b6c4a7cfbfac411bcc",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/death_v1.png": "e6823b1d146e92603d7f767108a682fdbeaf6d1070bb8ba5bffe2ef1ea62cd83",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_v1.png": "43f1c3ecb393d13fc6cf187984b04f1e17897541d806443327ba8b1d20fb27aa",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_near_v1.png": "d1d6cf4d43a116f897759e166b9c5342285aa26a14bf63ea9b82d550a95bf9e8"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Eight original clips reviewed at source and native scale: articulated bowstring idle, melee shove with coherent recovery, nock/draw/release at frame 5, reciprocal walking, dedicated physical rally, four hit/defense poses and eight grounded death poses. Repainted defense preserves bow-hand ownership; reaction scale corrected to stable 216px anatomy. No painted projectile after release; source bow and quiver retained."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "d05e9ec3d2025e283a84b207180a9349e8e76697c69e0dfc4f5be2259ac6c53d",
+  "atlas_sha256": "a95427e946542bf9087fa127c284898b0b5ef78a0fcd18138b5b3bde54635bca",
+  "texture_bytes_rgba": 23316480
+}
