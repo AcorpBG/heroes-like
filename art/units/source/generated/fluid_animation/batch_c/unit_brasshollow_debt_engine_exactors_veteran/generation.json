@@ -1,0 +1,109 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/idle_v1.png",
+      "sha256": "6dba44f952d1cb771253fedd0075fcdcc4fed52b8fbf0dc6af0c19b2c0feb0d7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "ee4737c09eb1ab216cb8f7b7a4c2ed9eeb94fcb91829a483dbc5c4610f2e8b63",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-2f31e7c6-4866-4457-bb97-2ce11ae924e5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/attack_v1.png",
+      "sha256": "d3509f32cbfa94fe639a70ae5cf2d0fd6be9d06a05825cc5ee4659ec18348e65",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "acd3a924e64adff0c5ed51ad89f1ee2bda507adaf070ddb00070c35a265e9f8e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-db1f6331-dfc2-4957-a409-8ebbece679f2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/reactions_v1.png",
+      "sha256": "9f36f62b83883497aae6783752c1d65963f0d7194411252b4e3d52fc719ef866",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "89aa0b38d46c4423a19a30e32fafaa54a3bd9e507ad0d3f4de0c98526f457de3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6555b59c-2b67-499c-a09d-ffca65c53b09.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/cast_v1.png",
+      "sha256": "08e37a5fb49523f9109c5830c8f2f770d2867e20f354783ac42459e2e24473f4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "5141a3555c519282fc5353f14d09a30ee83219e884cbdfe8def29c1c64ea4ce5",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e99c143c-b87d-411d-8b4e-85ad5626f6bb.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/death_v1.png",
+      "sha256": "d73db2236ab045e92a6e069052f961ba95ddad598666de8c143e0c779f08352e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "e02e98dd8371f70bc23ed1dc2f9267a3c59876b9b22a87a448517821cafa6a14",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-fd5e27d4-aa7b-4299-827c-37de7cdf36f4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/move_v1.png",
+      "sha256": "6d0168658fa8ca6f3baeef3a5adc08cb65ab4682714045ce024bb824ffcca736",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "9629d812ad77bf354d9072dc15728339c3f08723769ae14a463cc1f08d69345b",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-86631432-06af-43bc-9c53-173aa519075e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/move_far_v1.png",
+      "sha256": "30d709e1ded7694a626bf3e2be9d00e7860fd83bca158a01f758aed2a8dba23c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "1a270d5dd02f10e6e04e038c9c43fda11ba192a1f3227de789907d085cc935da",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9dded540-fc87-4719-ac99-b1d5367ea948.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/reactions_v2.png",
+      "sha256": "316ceb9c0467b42ab6106a272a2b45a0320b1096932ba20b2c57e7a7e0f4eb0e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/reactions_v2.prompt.txt",
+      "prompt_sha256": "90bbef8d4c4da45516668e24cc9cb3f37303995b3cca1eef66c49699270f2941",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-734b3aee-0889-449c-9523-f6c2664398d2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors_veteran/identity_reference.png",
+          "sha256": "14fe4ce183e7eb03f95b22ffea20279e66775afc154c4afa2f3b6fd347ea922f"
+        }
+      ]
+    }
+  ]
+}

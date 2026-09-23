@@ -7462,33 +7462,37 @@
     "unit_brasshollow_debt_engine_exactors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_debt_engine_exactors_veteran.png",
       "frame_size": [
-        248,
-        250
+        251,
+        257
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        130.0,
-        238
+        142.0,
+        249
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors_veteran.png",
+      "painted_extent": 241,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_debt_engine_exactors_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        126,
-        2,
-        374,
-        252
+        30,
+        11,
+        281,
+        268
       ],
-      "source_sha256": "857d0724853f32c231385404324d5917b3e3667196f954213bb27c96977a126e",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_debt_engine_exactors_veteran/provenance.json",
-      "sha256": "bd24b585800bd88b35ac78561938ffc0569a024e390ef662efbdc32085c7a7a3"
+      "source_sha256": "db9ab102d84e60723d2f7acf95cbc39935c405f5c9fcc302c045bf24029acbe9",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_debt_engine_exactors_veteran/provenance.json",
+      "sha256": "7035a5cd658f9b700dc048f0b31aa7347fcf845b3babc0ea46f71984537e52cf"
     },
     "unit_brasshollow_quenchbell_mortars_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_quenchbell_mortars_veteran.png",
