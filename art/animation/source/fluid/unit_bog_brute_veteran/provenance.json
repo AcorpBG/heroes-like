@@ -8,7 +8,11 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/attack_v2.png": "4c873bba582be50e6012415f8babced7c7e106f10167d66524efdbe74016cabf",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/reactions_v1.png": "60c77db24310d65ea1a685fa2815c2a0765e213ad1ca32023a198231559897c2",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/death_v1.png": "10f8b2b63157af9b2d7a67d4a44f4d94534693d47108cc40f1e99539a12a06ad",
-    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/support_v1.png": "94f2cec2e0341c074765a8ab513c1ec1b5cba71cf0da5f3187e5f51532ca3ca1"
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/support_v1.png": "94f2cec2e0341c074765a8ab513c1ec1b5cba71cf0da5f3187e5f51532ca3ca1",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_contacts_v1.png": "e2f821725590c31c19c3c1c9278032d7dcf316ef266d46bdb7e8fa66f7942963",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_far_v4.png": "f7e85063f879d781f504ac67c043167eeb00360f36c487d21e0cfa9221e37a49",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_reach_v7.png": "1838264166bc351753b15c94be5f6b3664db7a44815114758014e8f184851d93",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_near_v3.png": "aed8f475b9d0c0a7a42f2cabf9b47cc2f475393ebd9590389cde4aa019b5b4b9"
   },
   "accepted_clips": [
     "idle",
@@ -16,14 +20,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Game-scale review: visible maul regrip, overhead strike and low follow-through, shield brace, physical salute and coherent collapse. Reciprocal gait remains unaccepted."
+    "notes": "Solo source and native 128px review accepted eight original reciprocal walk poses: opposed shield-side/maul-side contacts, grounded support, clearly different raised passing knees and reaches. Maul forearm clears the raised knee. Fixed source scales preserve 207px body, source alpha separation and corrected muted armor avoid foreign fragments and bright-frame flashing. Earlier approved actions preserved exactly."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "8181d3aaf77d0d468817c4cd38c8cda966371f3c253ddf3e063665a03aa802c4",
-  "atlas_sha256": "e54cdeb14f4229a6b9d691b0cdea0f1d40db12461b3fe66642b59a3ccb834700",
-  "texture_bytes_rgba": 16676352
+  "atlas_sha256": "11a3a831427384713dbc7e2674f8132086031f48a0c65da6c396889327c9fe5c",
+  "texture_bytes_rgba": 19455744
 }

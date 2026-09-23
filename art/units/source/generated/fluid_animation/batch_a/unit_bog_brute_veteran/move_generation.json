@@ -1,0 +1,71 @@
+[
+  {
+    "stem": "move_v2",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-aba334ad-cce9-46f4-9b42-e467a31ccc61.png",
+    "references": [
+      "move_contacts_v1.png",
+      "reference.png"
+    ],
+    "status": "rejected repeated lead and incomplete legs",
+    "image_sha256": "7b9e127f3e1263eff816144166bd7b059995f6a7dbf69bcfe7dae62249d9acc1",
+    "prompt_sha256": "935bb39bd4110239706d6ceeb42a0dd8a25839eb83516d59ddbefce84320cb88"
+  },
+  {
+    "stem": "move_near_v3",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-bff004b9-74f3-45d5-8277-0148ec47438f.png",
+    "references": [
+      "move_contacts_v1.png"
+    ],
+    "status": "Selected original poses accepted after native-scale visual review; corrected candidate 11 checks and imported live 118 checks passed, zero failures.",
+    "image_sha256": "aed8f475b9d0c0a7a42f2cabf9b47cc2f475393ebd9590389cde4aa019b5b4b9",
+    "prompt_sha256": "8265e6da3022e0b98bd4407c81172c8add3d32c80615d9fbfec25ee4182b59be"
+  },
+  {
+    "stem": "move_far_v4",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e25e665b-c5eb-4369-9fb4-ad7d519c01aa.png",
+    "references": [
+      "move_contacts_v1.png",
+      "move_near_v3.png"
+    ],
+    "status": "First two poses accepted after native review; wrong-foot third pose excluded. Corrected candidate 11 checks and imported live 118 checks passed.",
+    "image_sha256": "f7e85063f879d781f504ac67c043167eeb00360f36c487d21e0cfa9221e37a49",
+    "prompt_sha256": "20e7907a7db4d52802c02f6ee55813b3b2bbf326d7bfecc531c3319238ff1870"
+  },
+  {
+    "stem": "move_far_v5",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-4b520206-c42c-45db-b62e-b7a088303347.png",
+    "references": [
+      "move_far_v4.png"
+    ],
+    "status": "corrected reach but rejected alpha halo, reference only",
+    "image_sha256": "f8a357b48950dc2c1935a670fd5c98104fb81db3fb929a2611b738a7fc044233",
+    "prompt_sha256": "91663b81c80491330a0bc75993dcbed5512e33cfa2f53e5549b53849c27851ab"
+  },
+  {
+    "stem": "move_reach_v6",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1e911e1f-d95a-40ed-8929-690144e6119c.png",
+    "references": [
+      "move_far_v5.png"
+    ],
+    "status": "Superseded: native review showed bright bronze material mismatch",
+    "image_sha256": "9525785e5d0ece516454db7ec5990ab6f4c19f7c0b99532107aa3fb91c9cb7ed",
+    "prompt_sha256": "70fa3a8ae7017e4881ee5046338bc176d2ef3ce766ec4d0924feacd568dfffdf"
+  },
+  {
+    "stem": "move_reach_v7",
+    "tool": "builtin_image_gen",
+    "output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-64abd9be-0399-4de0-8f4f-f4d2cde17616.png",
+    "references": [
+      "move_reach_v6.png",
+      "move_contacts_v1.png"
+    ],
+    "status": "Selected original poses accepted after native-scale visual review; corrected candidate 11 checks and imported live 118 checks passed, zero failures.",
+    "image_sha256": "1838264166bc351753b15c94be5f6b3664db7a44815114758014e8f184851d93",
+    "prompt_sha256": "1a58a7f8753909cf46f72922940159bb6e28d19bc60d7558f2367d235bb74115"
+  }
+]
