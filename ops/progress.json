@@ -107523,7 +107523,86 @@
       "startedAt": "2026-08-18T01:26:50Z",
       "completedAt": "2026-08-18T01:51:49Z",
       "updatedAt": "2026-08-18T01:51:49Z",
-      "notes": "Implemented one shared Main Menu action label with exact scene fallbacks, retained the Editor working-copy branch, and preserved contextual tooltip and route authority. Overworld, Town/Battle, Outcome/editor, all-four-state autosave failure/retry, active-focus, accetems_regression_smoke.tscn",
+      "notes": "Implemented one shared Main Menu action label with exact scene fallbacks, retained the Editor working-copy branch, and preserved contextual tooltip and route authority. Overworld, Town/Battle, Outcome/editor, all-four-state autosave failure/retry, active-focus, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first Overworld run exposed and corrected only a stale End? test oracle from the already-completed stable End Turn slice; its authoritative rerun passed. Packaged active-play interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-main-menu-settings-summary-word-ellipsis-10184",
+      "title": "Main Menu Settings Summary Word Ellipsis",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Keep the compact Main Menu Cabinet summary readable by ending only its overflowing Settings line at a complete word while preserving the full exact Settings value in the existing tooltip.",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_keyboard_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/main_menu_keyboard_navigation_smoke.tscn",
+        "tests/active_play_settings_runtime_report.tscn",
+        "tests/settings_display_mode_transaction_regression.tscn",
+        "tests/settings_restore_defaults_regression.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "At 1280x720 and 1920x1080 with UI scale 100 and 130 percent, fitting Presentation, Audio, and Gameplay summary lines remain exact and the overflowing Accessibility line ends at the last complete word with exactly one Unicode ellipsis, never Battle s... or another partial token",
+        "SettingsSummary retains the exact complete SettingsService.describe_settings value in its tooltip, the established four-line plus hidden-line-count budget, and live containment without changing the Settings scene layout",
+        "Existing Settings controls/order/focus/scroll, persistence/display/destructive dialogs, first-view return focus, session/save/campaign authority, accessibility/core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass"
+      ],
+      "nonGoals": [
+        "global FrontierVisualKit compact-text behavior, any non-Settings label, Settings values/schema/persistence, InputMap, display transactions, save/campaign/session, gameplay, content, AI, balance, or Native RMG changes",
+        "Settings scene/layout/size/font/theme/UI-scale options, new controls, control reorder, focus-cycle/scroll redesign, first-view composition, or ActivePlaySettingsDialog changes",
+        "packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing, publication, whole-game, or release-readiness claims"
+      ],
+      "baseline": {
+        "head": "1184a68f",
+        "runtimeVisibleLine": "Accessibility: UI scale 100% | High contrast Off | Color cues Standard | Battle s...",
+        "runtimeFullPhrase": "Battle shake Full",
+        "midwordCut": true,
+        "lineBudget": 4,
+        "characterBudget": 84,
+        "hiddenLineSummary": "+ 1 more",
+        "renderedEvidence": ".artifacts/main_menu_keyboard_navigation_smoke/settings_entry_focus.png"
+      },
+      "createdAt": "2026-08-18T02:03:43Z",
+      "startedAt": "2026-08-18T02:03:43Z",
+      "completedAt": "2026-08-18T02:55:16Z",
+      "updatedAt": "2026-08-18T02:55:16Z",
+      "notes": "Completed one-label Settings summary fitting from direct current-HEAD evidence. The exact complete SettingsService value remains in the tooltip; fitting lines remain exact; overflow ends at a complete setting segment or word with one Unicode ellipsis and retains the established + 1 more row. The authoritative focused run passed the exact 1280x720/1920x1080 and UI-scale 100/130 matrix together with the existing full focus/dialog/persistence authority. Display-mode, restore-defaults, active-play Settings, accessibility, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. The first focused attempt was excluded because Dummy-renderer screenshot capture was unsupported and its geometry oracle contradicted intentional scroll-to-focus behavior. Packaged Settings interaction, controller hardware, AT-SPI/UIA certification, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "remainingWork": "Select the next tracker-approved release-readiness implementation slice.",
+      "blockedReason": null
+    },
+    {
+      "id": "ux-battle-timing-tab-compact-summary-10184",
+      "title": "Battle Timing Tab Compact Summary",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Replace the duplicated, mid-word-truncated Battle Timing first view with a bounded semantic summary while retaining the exact complete timing detail in the existing tooltip.",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/battle_controller_board_navigation_smoke.tscn",
+        "tests/town_battle_visual_smoke.tscn",
+        "tests/active_play_keyboard_focus_smoke.tscn",
+        "tests/battle_event_animation_state_report.tscn",
+        "tests/accessibility_screen_reader_semantics_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
         "tests/packaging_linux_export_smoke.py",
         "tests/packaging_windows_export_smoke.py",
         "tests/validate_repo.py"
@@ -108650,7 +108729,105 @@
         "releaseReadyClaimed": false
       },
       "notes": "Completed live runtime behavior. MapPackageService accepts artifact proxy rows only when generated_kind is reward_reference, semantic_category is artifact, native_artifact_id is nonempty and equals the proxy object ID, and no site ID is present. Exact type/subtype uniqueness remains mandatory. The fresh Small type-67 and type-68 rows now adopt through the existing artifact-node bridge instead of the generic resource fallback; real collection awards the artifact and collected state survives SessionData round trip. Recovered payload bytes, object order/placement/masks/serialization, generation/private state, terrain, roads, guards, and all unsupported mappings remain unchanged. Focused/core/static/editor, four synchronized native outputs, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged pickup interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness are unclaimed.",
-      "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed artifact proje`is completed resource projection.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed artifact projection.",
+      "blockedReason": null
+    },
+    {
+      "id": "native-rmg-runtime-loose-resource-proxy-identity-projection-10184",
+      "title": "native rmg runtime loose resource proxy identity projection 10184",
+      "status": "completed",
+      "phase": "phase-6-production-alpha-layer",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "purpose": "Preserve exact recovered H3M loose-resource subtype identity by extending the accepted runtime proxy catalog with the corresponding already-live original-project resource-front identities.",
+      "implementationTargets": [
+        "content/homm3_re_reward_object_proxy_catalog.json",
+        "tests/native_rmg_end_to_end_runtime_boundary_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "testOwners": [
+        "tests/native_rmg_end_to_end_runtime_boundary_report.tscn",
+        "tests/core_systems_regression_smoke.tscn",
+        "tests/packaging_linux_export_smoke.py",
+        "tests/packaging_windows_export_smoke.py",
+        "tests/validate_repo.py"
+      ],
+      "completionCriteria": [
+        "The accepted catalog contains exactly one type-79 row for every subtype 0 through 6, with recovered source row/DEF identity and exact existing project object/site/resource identity; malformed, duplicate, missing, spell, artifact, and creature mappings remain fail-closed",
+        "Fresh Small projects every observed type-79 subtype 0,2,3,4,5,6 through its exact catalog row and none of its 13 subtype-3/4/5/6 rows uses site_generated_town_required_source_cache, while recovered order, placement, masks, serialization, and repeat authority remain exact",
+        "Package/session adoption preserves exact resource nodes and a real subtype-3 rare-resource claim changes embergrain plus authored gold while every other rare stockpile remains exact across SessionData round trip",
+        "Repository/editor, core, and bounded official Linux/Windows export-startup gates pass with the existing synchronized native binaries"
+      ],
+      "nonGoals": [
+        "changing recovered H3MapEd private state, final payload bytes, RNG, generation, object count/order/placement, masks, roads, terrain, guards, density, balance, native code, or audit thresholds",
+        "inventing subtype mappings, adding a new economy, activating spell/creature proxies, importing copyrighted art/DEF data, or claiming packaged resource interaction, broad Native RMG parity, hardware certification, signing, publication, whole-game, or release readiness"
+      ],
+      "baseline": {
+        "head": "15d4d3a30f50eb38bc1198ffd3b2bc84ef9d5dd8",
+        "freshSmallMap": "maps/small-moon-pass-spring-baee5d8b.amap",
+        "subtype3Count": 2,
+        "subtype4Count": 4,
+        "subtype5Count": 2,
+        "subtype6Count": 5,
+        "incorrectGenericCacheCount": 13,
+        "currentGenericSiteId": "site_generated_town_required_source_cache",
+        "recoveredSourceRows": {
+          "1": 940,
+          "3": 943,
+          "4": 937,
+          "5": 938,
+          "6": 939
+        },
+        "existingSubtypeIdentityOwner": "completed mine proxy projection plus live project resource sites"
+      },
+      "createdAt": "2026-08-21T10:55:00Z",
+      "startedAt": "2026-08-21T10:55:00Z",
+      "updatedAt": "2026-08-21T11:05:00Z",
+      "completedAt": "2026-08-21T11:05:00Z",
+      "evidence": {
+        "focusedArtifact": "/tmp/heroes-resource-proxy-focused.NEvwlm",
+        "focusedNaturalReturnCode": 0,
+        "smallPayloadBytes": 23664,
+        "smallObjectCount": 294,
+        "observedResourceProxyCount": 28,
+        "observedResourceSubtypes": [
+          0,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "catalogResourceSubtypeCount": 7,
+        "correctedRareGoldRowCount": 13,
+        "selectedGenericCacheCount": 0,
+        "liveResourceProxyCount": 28,
+        "embergrainClaimDelta": 1,
+        "goldClaimDelta": 120,
+        "otherRareStockpilesExact": true,
+        "sessionRoundTripExact": true,
+        "repeatProjectionExact": true,
+        "mediumPayloadBytes": 79333,
+        "mediumObjectCount": 1326,
+        "ordinal95PayloadBytes": 76831,
+        "ordinal95ObjectCount": 1283,
+        "xlargePayloadBytes": 365777,
+        "xlargeObjectCount": 2779,
+        "coreArtifact": "/tmp/heroes-resource-proxy-core.bbBUHT",
+        "linuxPackagingArtifact": "/tmp/heroes-resource-proxy-linux-package.PVjQUh",
+        "windowsPackagingArtifact": "/tmp/heroes-resource-proxy-windows-package.Xl0yGQ",
+        "linuxExportStartupOk": true,
+        "windowsExportWineStartupOk": true,
+        "nativeCodeChanged": false,
+        "nativeBinariesChanged": false,
+        "packagedResourceInteractionClaimed": false,
+        "broadNativeRmgParityClaimed": false,
+        "releaseReadyClaimed": false
+      },
+      "notes": "Completed shipped catalog/runtime behavior. The proxy catalog now contains unique exact source rows and DEF identities for every type-79 subtype, reusing the original-project resource-front identities already established by the mine projection. The existing runtime resolver and package bridge consume them without native-code changes. Fresh Small projects all 28 observed rows exactly; 13 sulfur/crystal/gems/gold rows no longer use the all-rare cache. Real subtype-3 collection awards only Embergrain plus authored gold and persists. Recovered payload/order/placement/masks/serialization, generation/private state, terrain, roads, guards, binaries, and unsupported mappings remain unchanged. Focused/core/static/editor and bounded Linux/Windows export-startup gates pass. Packaged interaction, broad Native RMG parity, hardware certification, signing/publication, whole-game, and release readiness are unclaimed.",
+      "remainingWork": "Select the next tracker-approved source-backed slice. Broader recovered Native RMG parity, packaged interaction, native hardware certification, signing/publication, and release readiness remain outside this completed resource projection.",
       "blockedReason": null
     },
     {
@@ -108807,7 +108984,71 @@
     {
       "id": "native-rmg-runtime-harpy-cliffhawk-roost-dwelling-projection-10184",
       "title": "native rmg runtime harpy cliffhawk roost dwelling projection 10184",
-      "status": "coms": "Projected exact Extra-Large type17 subtype68 row229/AVG2uni.def at both recovered placements through original Fenhound Kennels. Payload 33610c0a/365777/2779 and ordered12 authority exact; mapped claims total760 gold with exact recruits, repeat rejection, save v9, unrelated/package authority. Focused /tmp/heroes-fenhound-focused.BWqDOw, compatibility /tmp/heroes-fenhound-compat.j3YbNk, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Subtype45, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T14:50:06Z",
+      "startedAt": "2026-08-21T14:39:48Z",
+      "notes": "Completed exact Extra-Large subtype26 row194/AVGharp0.def projection to Cliffhawk Roost. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes26+50 mapped, other10 raw. Live claims total150 gold with exact Cliffhawk+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T14:50:06Z"
+    },
+    {
+      "id": "native-rmg-runtime-pit-lord-obsidian-scar-dwelling-projection-10184",
+      "title": "native rmg runtime pit lord obsidian scar dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T15:03:46Z",
+      "startedAt": "2026-08-21T14:53:36Z",
+      "notes": "Completed exact Extra-Large subtype40 row183/AVGpit0.def projection to Obsidian Scar. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes26+40+50 mapped, other9 raw. Live claims total240 gold with exact Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T15:03:46Z"
+    },
+    {
+      "id": "native-rmg-runtime-imp-charcoal-burners-dwelling-projection-10184",
+      "title": "native rmg runtime imp charcoal burners dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T15:20:11Z",
+      "startedAt": "2026-08-21T15:10:09Z",
+      "notes": "Completed exact Extra-Large subtype29 row179/AVGimp0.def projection to Charcoal Burners. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes29+26+40+50 mapped, other8 raw. Live claims total330 gold with exact Charcoal+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T15:20:11Z"
+    },
+    {
+      "id": "native-rmg-runtime-centaur-prism-outrider-dwelling-projection-10184",
+      "title": "native rmg runtime centaur prism outrider dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T15:33:15Z",
+      "startedAt": "2026-08-21T15:22:44Z",
+      "notes": "Completed exact Extra-Large subtype6 row165/AVGcent0.def projection to Prism Outrider Post. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes29+6+26+40+50 mapped, other7 raw. Live claims total410 gold with exact Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; duplicate roster counts exact; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T15:33:15Z"
+    },
+    {
+      "id": "native-rmg-runtime-lizard-reedbarge-mooring-dwelling-projection-10184",
+      "title": "native rmg runtime lizard reedbarge mooring dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T15:49:40Z",
+      "startedAt": "2026-08-21T15:39:28Z",
+      "notes": "Completed exact Extra-Large subtype30 row208/AVGlzrd0.def projection to Reedbarge Mooring. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes30+29+6+26+40+50 mapped, other6 raw. Live claims total500 gold with exact Reedbarge+Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T15:49:40Z"
+    },
+    {
+      "id": "native-rmg-runtime-elf-bramble-hedge-dwelling-projection-10184",
+      "title": "native rmg runtime elf bramble hedge dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T16:01:37Z",
+      "startedAt": "2026-08-21T15:52:22Z",
+      "notes": "Completed exact Extra-Large subtype15 row167/AVGelf0.def projection to Bramble Hedge at both recovered placements. Focused 33610c0a/365777/2779 and ordered 12 type17 rows exact; subtypes30+29+15+6+26+40+50 mapped, subtype15 twice, other4 raw. Live claims total620 gold with exact two Bramble+Reedbarge+Charcoal+Outrider+Cliffhawk+Obsidian+Kite recruits; repeat/save-v9/unrelated authority green. Dwelling/AI/content/core, static/editor, Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Other subtypes, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
+      "completedAt": "2026-08-21T16:01:37Z"
+    },
+    {
+      "id": "native-rmg-runtime-unicorn-fenhound-kennels-dwelling-projection-10184",
+      "title": "native rmg runtime unicorn fenhound kennels dwelling projection 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-21T16:16:33Z",
+      "startedAt": "2026-08-21T16:05:38Z",
+      "notes": "Projected exact Extra-Large type17 subtype68 row229/AVG2uni.def at both recovered placements through original Fenhound Kennels. Payload 33610c0a/365777/2779 and ordered12 authority exact; mapped claims total760 gold with exact recruits, repeat rejection, save v9, unrelated/package authority. Focused /tmp/heroes-fenhound-focused.BWqDOw, compatibility /tmp/heroes-fenhound-compat.j3YbNk, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup green. Subtype45, native parity, packaged interaction, certification, signing/publication, whole-game and release readiness excluded.",
       "completedAt": "2026-08-21T16:16:33Z"
     },
     {
@@ -108879,7 +109120,688 @@
       ],
       "completionCriteria": [
         "The existing Guide secondary board exposes one Credits & Notices command without adding another scenic first-view command or obscuring the menu art.",
-        "The scrollable modal displays Aurelion Reach contributor credit, the exact runtime Godot Engine license and engine third-party notices, and the exact vendored godot-cpp MIT notice from an exported data r",
+        "The scrollable modal displays Aurelion Reach contributor credit, the exact runtime Godot Engine license and engine third-party notices, and the exact vendored godot-cpp MIT notice from an exported data resource.",
+        "Keyboard, controller accept/cancel, modal focus ownership and return focus are exact at 1280x720 and 1920x1080, and the notice body has player-readable accessibility semantics.",
+        "Opening, scrolling, and closing notices do not mutate campaign, session, save, settings, input-map, or route authority.",
+        "The notice resource is present in the release payload; focused, compatibility, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass."
+      ],
+      "nonGoals": [
+        "No project-license selection or change, legal certification, contributor authorship adjudication, asset provenance rewrite, signing, publication, or whole-release claim.",
+        "No first-view button, scenic composition, campaign/skirmish/save/settings/editor/quit behavior, gameplay, save schema, content balance, strategic AI, or Native RMG change.",
+        "No packaged Credits interaction, screen-reader platform certification, controller hardware certification, AT-SPI/UIA certification, or native hardware claim."
+      ],
+      "notes": "Completed source-backed player notice access. The existing Guide board exposes the bounded Credits & Notices modal; Engine license/component text is runtime-sourced, the exported godot-cpp notice exactly matches the vendored MIT notice, Page Up/Page Down and keyboard/controller modal ownership preserve focus, and the focused 1280x720/1920x1080 report leaves session/campaign/settings/save/input-map/router authority exact. Main Menu keyboard navigation, player-comprehension and keyboard layouts, screen-reader semantics, core systems, release payload hygiene, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Platform claims are export/startup only; no packaged Credits interaction, project-license decision, legal/accessibility/controller/native-hardware certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T18:48:59Z"
+    },
+    {
+      "id": "ux-main-menu-credits-controller-paging-10184",
+      "title": "Main Menu Credits Controller Paging",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T18:58:11Z",
+      "updatedAt": "2026-08-21T19:26:11Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_credits_notices_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A controller-only path enters the notice body from initial Close focus, pages the live scroll range in both directions, closes with physical B, and restores the secondary Guide command focus at 1280x720 and 1920x1080.",
+        "Keyboard Enter, Tab, Page Up/Page Down, Escape, body semantics, read-only state, modal containment, and focus return remain exact.",
+        "The existing runtime Godot and exact exported godot-cpp notices remain unchanged, and session, campaign, save, settings, InputMap, and AppRouter authority remain exact.",
+        "Focused, Main Menu keyboard/navigation, accessibility, core, repository/editor, Linux export/startup, and Windows export/fresh-Wine startup gates pass."
+      ],
+      "nonGoals": [
+        "No notice content, project license, Guide topic, first-view composition, save/settings/input schema, gameplay, strategic AI, balance, or Native RMG change.",
+        "No custom controller mapping, input-remap policy, direct test scrolling, synthetic callback invocation, delay/timer workaround, or platform-specific input branch.",
+        "No packaged Credits interaction, native controller hardware, AT-SPI/UIA, legal certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct current-head controller defect without changing notice content or input mappings. The real modal handles physical right/left shoulder buttons as bounded page down/up, keeps physical cancel ownership, and publishes controller paging guidance through its authored accessibility description and Guide tooltip. The focused 1280x720 keyboard path pages 16->0; the 1920x1080 controller-only path opens with A, enters the body with D-pad Up, pages 17->0 with shoulder buttons, closes with B, restores Guide focus, and preserves exact session/campaign/save/settings/InputMap/AppRouter authority. Main Menu keyboard navigation, screen-reader semantics, core systems, validate_repo, py_compile, diff-check, exact/generic editor parses, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Claims remain bounded: no packaged Credits interaction, native controller hardware, AT-SPI/UIA, certification, signing/publication, whole-game, or release readiness.",
+      "completedAt": "2026-08-21T19:26:11Z"
+    },
+    {
+      "id": "ux-aurelion-reach-native-boot-splash-10184",
+      "title": "Aurelion Reach Native Boot Splash",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T19:35:10Z",
+      "updatedAt": "2026-08-21T19:45:38Z",
+      "implementationTargets": [
+        "project.godot",
+        "tests/packaging_platform_readiness_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720 and 1920x1080 desktop launches visibly show the complete approved Aurelion Reach crest during native startup with no stock Godot wordmark, clipping, distortion, or transparent-background leak.",
+        "The exact approved crest is loaded through native boot-splash settings with show_image true, aspect-preserving filtered scaling, and no forced minimum delay.",
+        "Boot public title, one Main Menu route, session, campaign, save, settings, InputMap, and AppRouter authority remain exact.",
+        "Focused startup/platform readiness, Main Menu compatibility, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No new branding art, icon, wordmark, Main Menu composition, Boot routing, loading UI, startup delay, compatibility identity, user-data path, save/settings schema, gameplay, content, balance, strategic AI, or Native RMG change.",
+        "No packaged visual interaction, controller/accessibility/native-hardware certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct current first-view correction. Fresh 1280x720 and 1920x1080 Xvfb captures in /tmp/heroes-boot-splash-focused.05g6er show the full approved crest centered on 020407ff with no stock Godot wordmark. The focused platform report /tmp/heroes-boot-splash-focused-rerun.iBthjF pins exact path, SHA-256, dimensions, alpha, stretch/filter/no-delay settings, Boot title, and technical identity; menu/outcome visual and core compatibility pass in /tmp/heroes-boot-splash-compat.Nycd9r. validate_repo, py_compile, JSON/diff/editor gates and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. Packaged splash inspection, certification, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-21T19:45:38Z"
+    },
+    {
+      "id": "ux-main-menu-credits-hidden-dialog-focus-lifecycle-10184",
+      "title": "Main Menu Credits Hidden-Dialog Focus Lifecycle",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T20:04:00Z",
+      "updatedAt": "2026-08-21T20:19:45Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "scenes/menus/MainMenu.tscn",
+        "tests/main_menu_credits_notices_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fresh 1280x720 and 1920x1080 Main Menu launches have no native subwindow focus or other unexpected startup diagnostics while Credits & Notices remains hidden and owns no focus.",
+        "Keyboard and controller paths open the modal, focus Close only after popup visibility, cycle and page the body, close, and restore Guide focus at both target sizes.",
+        "Session, campaign, save, settings, InputMap, AppRouter, Main Menu composition, notice content, and accessibility semantics remain exact.",
+        "Focused Credits, Main Menu compatibility, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No notice/license content, Guide architecture, first-view composition, dialog sizing, input mapping, accessibility wording, schema, gameplay, balance, strategic AI, or Native RMG change.",
+        "No timer/delay workaround, synthetic focus callback, custom modal system, packaged Credits interaction, certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct pushed-HEAD startup correction. CreditsNoticesDialog now owns visible=false in MainMenu.tscn and runtime configuration no longer transitions the unregistered native Window. Fresh 1280x720/1920x1080 desktop startup in /tmp/heroes-credits-focus-desktop.Ft5cCB is free of the prior `_sub_window_grab_focus`/`index == -1` error. The focused report /tmp/heroes-credits-focus-runtime.iThffP is natural rc0/ok:true with startup-hidden/no-focus plus physical keyboard/controller open, paging, close, focus return, semantics, content, and authority exact. The full Main Menu keyboard smoke /tmp/heroes-credits-keyboard-compat.t80jlg passes; accessibility/core compatibility /tmp/heroes-credits-remaining-compat.ZeerZL and static/editor /tmp/heroes-credits-final-static.WBjJej pass. Official Linux export/headless startup and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup are green. No packaged Credits interaction, certification, signing/publication, whole-game, or release readiness is claimed.",
+      "completedAt": "2026-08-21T20:19:45Z"
+    },
+    {
+      "id": "ux-main-menu-footer-pocket-upward-containment-10184",
+      "title": "Main Menu Frontier Log Upward Containment",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T20:37:52Z",
+      "updatedAt": "2026-08-21T21:11:04Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.tscn",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "At fresh 1280x720 and 1920x1080 Main Menu first views, the FooterPocketPanel, FooterTitle, and complete ActiveExpedition body are visible and contained within the live viewport with the exact three-line summary and tooltip.",
+        "The footer retains its left-pocket anchors and horizontal footprint, hides for secondary boards, returns unchanged, and does not overlap the logo or painted command hotspots.",
+        "Session, campaign, save, settings, InputMap, AppRouter, first-view focus/actions, accessibility semantics, and Main Menu visual authority remain exact.",
+        "Focused visual, keyboard/navigation, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No text truncation, line removal, font/UI-scale, new panel, first-view art/command, anchor/horizontal width, secondary-board, schema, gameplay, balance, strategic AI, or Native RMG change.",
+        "No timers, scripted resolution offsets, packaged interactive parity, certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed the direct packaged-visual defect. FooterPocketPanel now keeps its exact 0.032/0.895/0.372/0.975 anchors but uses BEGIN vertical growth, so the 108-pixel content minimum expands upward rather than below the viewport. Fresh real-renderer captures `/tmp/heroes-footer-live-capture.GMHAOv` show y594..702 at 1280x720 and y945..1053 at 1920x1080 with the complete three-line body and exact tooltip. The full visual smoke `/tmp/heroes-footer-visual-runtime.4Vrrb3`, keyboard matrix `/tmp/heroes-footer-keyboard-compat.KtGyaO`, accessibility `/tmp/heroes-footer-accessibility.wHM6gA`, core `/tmp/heroes-footer-core.csjhNK`, repository/editor gates, official Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged footer interaction, certification, signing/publication, whole-game, or release readiness is claimed.",
+      "completedAt": "2026-08-21T21:11:04Z"
+    },
+    {
+      "id": "performance-main-menu-secondary-browser-lazy-first-view-10184",
+      "title": "Main Menu Secondary Browser Lazy First View",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T21:28:10Z",
+      "updatedAt": "2026-08-21T21:57:28Z",
+      "implementationTargets": [
+        "scenes/menus/MainMenu.gd",
+        "tests/main_menu_lean_boot_save_guard.gd",
+        "tests/menu_outcome_visual_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Fresh first view performs no Campaign or Skirmish enumeration, reports both owners deferred, preserves zero save-summary inspection, and materially improves current packaged Main Menu refresh time.",
+        "Saves leaves both owners deferred; Campaign loads only Campaign with exact entries/selection/actions; Skirmish loads its exact native/package entries and generated controls before focus and interaction.",
+        "Current packaged Main Menu refresh improves from 3037 ms with 2602 ms Campaign plus 432 ms Skirmish work to under 500 ms without changing explicit board behavior.",
+        "Focused lean-boot, visual/keyboard, campaign/skirmish/package, accessibility, core, repository/editor, and bounded official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No campaign, skirmish, generated-map, save, focus, accessibility, map-folder, package, launch, session, content, gameplay, balance, strategic AI, or Native RMG behavior change.",
+        "No threads, timers, cross-shell/day/session cache, content truncation/removal, packaged interaction certification, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. `MainMenu.gd` now keeps Campaign and Skirmish behind per-shell loaded flags, refreshes only previously opened owners, and synchronously loads a selected owner before stage visibility and deferred focus. `/tmp/heroes-main-menu-lazy-focused.ZKjYfx` passes with a 747 ms source first view, zero first-view save inspections, Campaign 6 rows, and Skirmish 412 rows. Packaged Linux `/tmp/heroes-main-menu-lazy-packaged-profile.CseUWl` records refresh 2.495 ms and ready 31.472 ms versus baseline 3037.384/3071.869 ms. Visual, Campaign, Skirmish, keyboard, accessibility, core, static/editor, official Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged board interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T21:57:28Z"
+    },
+    {
+      "id": "performance-main-menu-selected-skirmish-entry-reuse-10184",
+      "title": "Main Menu Selected Skirmish Package Entry Reuse",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T22:05:00Z",
+      "updatedAt": "2026-08-21T22:59:48Z",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "scenes/menus/MainMenu.gd",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/main_menu_lean_boot_save_guard.gd",
+        "tests/player_facing_skirmish_browser_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Current 388-entry maps-folder fixture proves whole setup and launched-session parity between by-id and selected-entry paths without a second whole-folder setup, snapshot, or launch scan.",
+        "Selected entry mutation/staleness fails closed; the next explicit browser rebuild observes directory mutation; order, metadata, native/package validation, controls, launch/save/resume, focus, and authority remain exact.",
+        "Focused Main Menu flow materially improves from the measured 52817.714 ms index plus 57791.326 ms duplicate setup scan, and Skirmish/browser integration, visual/keyboard, accessibility, core, repository/editor, and bounded Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No package format/native parser/Native RMG/package validation/content/pagination/persistent cache/watcher/thread/timer/authored scenario/difficulty/save/gameplay/balance/AI change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native-hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. `ScenarioSelectRules.gd` adds entry-owned setup/start helpers with exact file identity, launchability, and loaded-reference guards while retaining by-id wrappers; `MainMenu.gd` reuses its selected entry and skips successful pre-route refresh. Focused `/tmp/heroes-skirmish-entry-lean-authoritative.nFbSy8` is natural rc0 with first view 719 ms and selected package launch 2860 ms versus the 57791.326 ms duplicate setup baseline. `/tmp/heroes-skirmish-entry-integration-rerun.KSfzIO` proves whole setup/session parity, stale rejection, and Map Editor compatibility; broad Skirmish, visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-21T22:59:48Z"
+    },
+    {
+      "id": "performance-maps-folder-package-index-single-read-10184",
+      "title": "Maps-Folder Package Index Single Read",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T23:04:01Z",
+      "updatedAt": "2026-08-21T23:29:29Z",
+      "implementationTargets": [
+        "scripts/core/ScenarioSelectRules.gd",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/map_editor_package_save_copy_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Valid package indexing reads each paired package exactly once, preserves whole entry/selection authority, and materially improves the current 52817.714 ms index by removing the measured 18334.484 ms inspection lane.",
+        "Failed loads retain exact inspect/load/legacy classification; non-generated, compact, and Map Editor authored-copy rows preserve exact visibility and authority.",
+        "Main Menu, maps-folder, Map Editor, visual/keyboard/accessibility/core, repository/editor, and bounded Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No package schema/native service API/Native RMG/content/validation/order/pagination/cache/watcher/thread/timer/launch/save/gameplay/balance/AI change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. `_maps_folder_package_record` loads each valid map/scenario package once and derives exact legacy/package/document authority from those results; only failed loads inspect to retain parse/legacy/document failure codes. `/tmp/heroes-package-single-read-focused.dCvcLb` passes in 344 seconds versus the prior 480-second integration while adding malformed/wrong-schema/legacy/unpaired controls. Main Menu improves 66->53 seconds, Map Editor Save Copy 117->85, and broad Skirmish 180->136; visual, keyboard, accessibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T23:29:29Z"
+    },
+    {
+      "id": "performance-native-package-browser-manifest-10184",
+      "title": "Native Package Browser Manifest",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-21T23:31:03Z",
+      "updatedAt": "2026-08-21T23:56:00Z",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "scripts/core/ScenarioSelectRules.gd",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Bounded detached native manifests reproduce exact current package browser entries while enumeration performs two inspections and no full document constructions per pair.",
+        "Malformed/wrong-schema/legacy/non-generated/compact/unpaired behavior and selected Map Editor/Skirmish load/session authority remain exact.",
+        "Synchronized Linux/Windows native builds, focused runtime, compatibility, static/editor, and official export-startup gates pass with material current-fixture improvement."
+      ],
+      "nonGoals": [
+        "No package/document schema, file format, full payload exposure, Native RMG, validation/content/order/load/session/cache/watcher/thread/timer/gameplay/balance/AI/save change.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. The cross-platform native service exposes schema-gated detached map/scenario browser manifests and valid indexing uses exactly those two bounded results; invalid-manifest paths retain full-load failure authority and selected launch still full-loads. Focused integration passes in 125 seconds versus 344, Main Menu 32 versus 53, Save Copy 36 versus 85, and broad Skirmish 64 versus 136. Visual, keyboard, accessibility, core, static/editor, synchronized native debug/release builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-21T23:56:00Z"
+    },
+    {
+      "id": "performance-native-package-browser-content-addressed-manifest-cache-10184",
+      "title": "Native Package Browser Content-Addressed Manifest Cache",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T00:08:00Z",
+      "updatedAt": "2026-08-22T00:38:00Z",
+      "implementationTargets": [
+        "src/gdextension/src/map_package_service.cpp",
+        "bin/libaurelion_map_persistence.linux.template_debug.x86_64.so",
+        "bin/libaurelion_map_persistence.linux.template_release.x86_64.so",
+        "bin/aurelion_map_persistence.windows.template_debug.x86_64.dll",
+        "bin/aurelion_map_persistence.windows.template_release.x86_64.dll",
+        "tests/maps_folder_package_browser_integration_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Exact-hash cached and uncached native inspections are whole-payload exact, save-created and first-read caches are detached, and changed/corrupt/missing/unsupported paths fail closed to unchanged full inspection authority.",
+        "The 796-file current corpus preserves exact browser entries while the cached path materially improves on 14348-18315 ms complete JSON inspection and remains close to the 2135-2162 ms SHA verification lane; public Main Menu and selected Map Editor/Skirmish authority remain exact.",
+        "Synchronized Linux/Windows native builds, focused runtime, compatibility, static/editor, and official export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No package/document schema or package format change, manifest expansion, unhashed/stale cache use, cache state in gameplay/session/save authority, Native RMG/content/order/load/session/watcher/thread/timer/gameplay/balance/AI change, or broad cache redesign.",
+        "No packaged Skirmish interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. Native save prepopulates a bounded JSON-normalized browser-manifest cache under user://; inspect accepts it only under exact path, whole-file SHA-256, schema, payload-kind, and integrity-hash authority and otherwise retains the original full parser. Focused save/hit/detach/corruption/change/restore/entry/failure/session/Map Editor parity passes in about49 seconds versus125. The 796-file cached lane is2710-2714 ms versus14348-18315, Main Menu22 versus32 seconds, Save Copy30 versus36, and broad Skirmish50 versus64. Visual, keyboard, accessibility, core, static/editor, synchronized native builds, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Skirmish interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-22T00:38:00Z"
+    },
+    {
+      "id": "presentation-overworld-failed-command-invalid-audio-10184",
+      "title": "Overworld Failed Command Invalid Audio",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T00:51:26Z",
+      "updatedAt": "2026-08-22T01:05:38Z",
+      "completedAt": "2026-08-22T01:05:38Z",
+      "implementationTargets": [
+        "scenes/overworld/OverworldShell.gd",
+        "tests/overworld_field_spell_cast_cue_playback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A failed live Overworld spell command appends one exact imported ui_invalid record through the common result-feedback boundary while session, presentation, feedback, focus, and presentation-audio authority remain exact.",
+        "Successful normal and reduced-motion field-spell commands retain exact imported field-spell audio/VFX, button-click behavior, recap, blocking, completion, and session authority at 1280x720 and 1920x1080.",
+        "Focused UI-audio/field-spell and Overworld input/focus/accessibility/core compatibility, static/editor, and official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No command availability, spell, movement, route, result, copy/layout, focus, session, save, Effects settings, cooldown, voice-budget, specialized VFX/audio, or asset change.",
+        "No Town/Battle/Editor invalid-result wiring, packaged interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. OverworldShell's common non-empty failed-result feedback boundary now plays exactly one imported ui_invalid transient with detached failure metadata. The real failed field-spell path proves exact cue/source/asset/role metadata and unchanged session, spell-presentation, focus, feedback, and PresentationAudio authority across 1280x720 and 1920x1080 in normal and reduced-motion modes. UI-audio, keyboard focus, accessibility, overworld visual, core, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Godot/Boot/MainMenu/native-DLL startup pass. No Town/Battle/Editor expansion, packaged interaction/listening, certification, signing/publication, whole-game, or release-readiness claim."
+    },
+    {
+      "id": "presentation-town-failed-action-invalid-audio-10184",
+      "title": "Town Failed Action Invalid Audio",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T01:11:19Z",
+      "updatedAt": "2026-08-22T01:32:59Z",
+      "completedAt": "2026-08-22T01:32:59Z",
+      "implementationTargets": [
+        "scenes/town/TownShell.gd",
+        "tests/town_hero_hire_completion_feedback_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A real enabled Town tavern button made stale after render appends the unchanged click plus one exact imported ui_invalid record through the common rule-result boundary while session, presentation, feedback, and PresentationAudio authority remain exact.",
+        "Disabled and unknown-id paths remain silent, while the restored successful hero-hire path retains exact roster/cost consequences and imported/fallback completion VFX/audio at 1280x720 and 1920x1080 across normal, missing-asset, and reduced-motion modes.",
+        "Focused Town/UI-audio and active-play focus/accessibility/Town visual/core compatibility, static/editor, and official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No Town action availability, cost, hero, build, recruit, market, response, study, transfer, artifact, specialty, rule result, feedback copy/layout, focus, session, save, cue asset, Effects setting, cooldown, voice-budget, or completion-presentation change.",
+        "No Overworld/Battle/Editor expansion, packaged Town interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. TownShell's common non-empty failed-result boundary now plays exactly one imported ui_invalid transient with detached lane, action-id, and message metadata. The focused real stale enabled tavern-button path proves exact invalid/click cue order, blocked feedback, unchanged session/presentation authority, disabled and validation-only silence, and unchanged successful hero-hire consequences and completion presentation at 1280x720 and 1920x1080 across normal, missing-asset, and reduced-motion modes. UI-audio, focus, accessibility, Town visual, core, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No packaged Town interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+    },
+    {
+      "id": "presentation-battle-board-failed-action-invalid-audio-10184",
+      "title": "Battle Board Failed Action Invalid Audio",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "phase": "phase-6-production-alpha-layer",
+      "source": "PLAN.md",
+      "startedAt": "2026-08-22T01:37:13Z",
+      "updatedAt": "2026-08-22T01:55:05Z",
+      "completedAt": "2026-08-22T01:55:05Z",
+      "implementationTargets": [
+        "scenes/battle/BattleShell.gd",
+        "tests/battle_controller_board_navigation_smoke.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "A real focused Battle Board physical-A action on a blocked enemy appends one exact imported ui_invalid record through the existing result-publication boundary while Board result text/timer, target selection, recent events, presentation, focus, and battle/session authority remain exact.",
+        "Physical-B cancel and the subsequent real physical-A legal movement add no invalid cue while retaining exact focus restoration, cursor/movement/event/recap consequences, and battle authority.",
+        "Focused Board/UI-audio and Battle layout/withdrawal/animation/focus/accessibility/core compatibility, static/editor, and official Linux/Windows export-startup gates pass."
+      ],
+      "nonGoals": [
+        "No Battle action legality, targeting, movement, Board geometry/cursor, semantic timing/coalescing, focus, recap, battle/session/save, cue asset, Effects setting, cooldown, voice-budget, or rule change.",
+        "No Battle command-button/spell/withdrawal invalid-audio expansion, Overworld/Town/Editor change, packaged Battle interaction/listening, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+      ],
+      "notes": "Completed. BattleShell's existing Board result-publication boundary now plays exactly one imported ui_invalid transient with detached action, target, state, and message metadata for non-empty failed results. The focused real D-pad/physical-A path proves exact cue/source/asset metadata and unchanged Shell/live-region/timer/event/presentation authority at 1280 and 1920; physical-B cancel and successful physical-A movement add no invalid cue and retain exact focus/cursor/event/recap/battle authority. UI-audio, withdrawal, animation, focus, accessibility, core, independent 1920/1280/1024 layout, validation/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No command-button/spell/withdrawal expansion, packaged Board interaction/listening, native controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game, or release-readiness claim."
+    },
+    {
+      "id": "presentation-signature-spell-distinct-icons-10184",
+      "title": "presentation signature spell distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T00:56:39Z",
+      "startedAt": "2026-08-24T00:40:39Z",
+      "notes": "Implemented seven distinct original signature spell source/runtime icons through centralized content/spell_icons.json and deterministic generation; SpellRules now prefers exact identities and fails closed to the unchanged school sigils for 105 other spells plus missing/malformed rows. Focused 1280/1920 Battle/Town/Overworld runtime report passed with exact focus/action/session/save authority, magic/Town/focus/core compatibility passed, and official Linux export/headless startup plus Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. No packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game, Native RMG, or release-readiness claim.",
+      "completedAt": "2026-08-24T00:56:39Z"
+    },
+    {
+      "id": "presentation-active-spellbook-distinct-icons-10184",
+      "title": "presentation active spellbook distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T01:22:49Z",
+      "startedAt": "2026-08-24T01:00:54Z",
+      "notes": "Implemented 17 distinct original 1254px source and deterministic 128px runtime icons, expanding the centralized specific spell manifest to 24 exact rows. All 23 production hero-start, town-library, and enemy-commander spells resolve specific art; the established Old Measure signature remains specific; 88 catalog spells retain school fallback. Focused Battle/Town/Overworld 1280/1920 runtime, spell schema/behavior/adventure/town/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T01:22:49Z"
+    },
+    {
+      "id": "presentation-generated-map-beacon-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map beacon spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T01:56:03Z",
+      "startedAt": "2026-08-24T01:26:09Z",
+      "notes": "Implemented five distinct original 1254px source and deterministic 128px runtime icons for the exact tier 1-5 Beacon generated-map spell rewards. The specific manifest now has 29 rows and 83 catalog fallbacks; the unchanged ordered 38-spell reward pool has 14 specific and 24 school-fallback entries. Focused 1280/1920 Battle buttons and non-terminal cast parity, generated reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T01:56:03Z"
+    },
+    {
+      "id": "presentation-generated-map-mire-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map mire spell reward distinct icons 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T02:10:40Z",
+      "startedAt": "2026-08-24T01:59:01Z",
+      "implementationTargets": [
+        "tools/generate_spell_icon_assets.py",
+        "content/spell_icons.json",
+        "art/magic/source/spells/curated/spell_mire_bog_drum_18.png",
+        "art/magic/source/spells/curated/spell_mire_brine_fenlight_24.png",
+        "art/magic/source/spells/curated/spell_mire_leech_snare_10.png",
+        "art/magic/runtime/spells/spell_mire_bog_drum_18.png",
+        "art/magic/runtime/spells/spell_mire_brine_fenlight_24.png",
+        "art/magic/runtime/spells/spell_mire_leech_snare_10.png",
+        "tests/spell_school_icon_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Bog Drum, Brine Fenlight, and Leech Snare each own distinct original 1254px source art and deterministic 128px runtime icons through the existing centralized manifest/resolver; no other icon identity changes.",
+        "The exact ordered 38-spell generated reward pool, values, tiers, schools, spell effects, and shrine acquisition remain unchanged while the reward pool advances from 14 to 17 specific icons and from 24 to 21 fallbacks.",
+        "Focused 1280/1920 Battle and Overworld action surfaces, real reward acquisition, magic/reward/focus/core compatibility, deterministic generation, repository/editor validation, and bounded Linux/Windows export-startup gates pass without session/save/focus/action drift."
+      ],
+      "nonGoals": [
+        "No spell rule, effect, target mode, mana, tier, reward weight/value/order, random-map generation, native RMG, resolver/fallback, UI geometry, focus, session, save, or non-Mire icon change.",
+        "No remaining reward or catalog icon completion, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Implemented distinct original 1254px source and deterministic 128px runtime icons for Bog Drum, Brine Fenlight, and Leech Snare, completing the generated-map Mire reward subset. The centralized manifest now has 32 specific rows and 80 catalog fallbacks; the unchanged ordered 38-spell reward pool has 17 specific and 21 school-fallback entries. Focused 1280/1920 Battle and Overworld action/icon/focus/session/save parity, reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T02:10:40Z"
+    },
+    {
+      "id": "presentation-generated-map-furnace-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map furnace spell reward distinct icons 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T02:24:04Z",
+      "startedAt": "2026-08-24T02:11:45Z",
+      "implementationTargets": [
+        "tools/generate_spell_icon_assets.py",
+        "content/spell_icons.json",
+        "art/magic/source/spells/curated/spell_furnace_foundry_bellows_11.png",
+        "art/magic/source/spells/curated/spell_furnace_brass_bellows_23.png",
+        "art/magic/source/spells/curated/spell_furnace_ash_mantle_09.png",
+        "art/magic/source/spells/curated/spell_furnace_ash_rail_25.png",
+        "art/magic/runtime/spells/spell_furnace_foundry_bellows_11.png",
+        "art/magic/runtime/spells/spell_furnace_brass_bellows_23.png",
+        "art/magic/runtime/spells/spell_furnace_ash_mantle_09.png",
+        "art/magic/runtime/spells/spell_furnace_ash_rail_25.png",
+        "tests/spell_school_icon_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Foundry Bellows, Brass Bellows, Ash Mantle, and Ash Rail each own distinct original 1254px source art and deterministic 128px runtime icons through the existing manifest/resolver; no other icon identity changes.",
+        "The exact ordered 38-spell generated reward pool, values, tiers, schools, spell effects, and shrine acquisition remain unchanged while the reward pool advances from 17 to 21 specific icons and from 21 to 17 fallbacks.",
+        "Focused 1280/1920 Battle and Overworld actions, real reward acquisition, magic/reward/focus/core compatibility, deterministic generation, repository/editor validation, and bounded Linux/Windows export-startup gates pass without session/save/focus/action drift."
+      ],
+      "nonGoals": [
+        "No spell rule, effect, target mode, mana, tier, reward weight/value/order, random-map generation, native RMG, resolver/fallback, UI geometry, focus, session, save, or non-Furnace icon change.",
+        "No remaining reward or catalog icon completion, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Implemented distinct original 1254px source and deterministic 128px runtime icons for Foundry Bellows, Brass Bellows, Ash Mantle, and Ash Rail, completing the generated-map Furnace reward subset. The centralized manifest now has 36 specific rows and 76 catalog fallbacks; the unchanged ordered 38-spell reward pool has 21 specific and 17 school-fallback entries. Focused 1280/1920 Battle and Overworld action/icon/focus/session/save parity, reward weighting and shrine acquisition, magic/focus/core compatibility, deterministic generation, validator/editor/static checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Other reward icons, packaged interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T02:24:04Z"
+    },
+    {
+      "id": "presentation-generated-map-root-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map root spell reward distinct icons 10184",
+      "status": "completed",
+      "classification": "implementation_slice",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T02:38:02Z",
+      "startedAt": "2026-08-24T02:26:29Z",
+      "implementationTargets": [
+        "tools/generate_spell_icon_assets.py",
+        "content/spell_icons.json",
+        "art/magic/source/spells/curated/spell_root_canopy_thorn_22.png",
+        "art/magic/source/spells/curated/spell_root_bark_bark_08.png",
+        "art/magic/source/spells/curated/spell_root_bark_rootway_24.png",
+        "art/magic/source/spells/curated/spell_root_bloom_bark_20.png",
+        "art/magic/runtime/spells/spell_root_canopy_thorn_22.png",
+        "art/magic/runtime/spells/spell_root_bark_bark_08.png",
+        "art/magic/runtime/spells/spell_root_bark_rootway_24.png",
+        "art/magic/runtime/spells/spell_root_bloom_bark_20.png",
+        "tests/spell_school_icon_runtime_report.gd",
+        "tests/validate_repo.py",
+        "PLAN.md",
+        "ops/progress.json"
+      ],
+      "completionCriteria": [
+        "Canopy Thorn, Bark Mantle, Bark Rootway, and Bloom Bark each own distinct original 1254px source art and deterministic 128px runtime icons through the existing manifest/resolver; no other icon identity changes.",
+        "The exact ordered 38-spell generated reward pool, values, tiers, schools, spell effects, and shrine acquisition remain unchanged while the reward pool advances from 21 to 25 specific icons and from 17 to 13 fallbacks.",
+        "Focused 1280/1920 Battle and Overworld actions, real reward acquisition, magic/reward/focus/core compatibility, deterministic generation, repository/editor validation, and bounded Linux/Windows export-startup gates pass without session/save/focus/action drift."
+      ],
+      "nonGoals": [
+        "No spell rule, effect, target mode, mana, tier, reward weight/value/order, random-map generation, native RMG, resolver/fallback, UI geometry, focus, session, save, or non-Root icon change.",
+        "No remaining reward or catalog icon completion, packaged spell interaction, controller hardware, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game validation, or release-readiness claim."
+      ],
+      "notes": "Completed four exact Root generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 40 specific/72 fallback; generated reward pool is 25 specific/13 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T02:38:02Z"
+    },
+    {
+      "id": "presentation-generated-map-veil-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map veil spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T02:53:39Z",
+      "startedAt": "2026-08-24T02:41:12Z",
+      "notes": "Completed four exact Veil generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 44 specific/68 fallback; generated reward pool is 29 specific/9 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T02:53:39Z"
+    },
+    {
+      "id": "presentation-generated-map-old-measure-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map old measure spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T03:07:39Z",
+      "startedAt": "2026-08-24T02:55:39Z",
+      "notes": "Completed four exact Old Measure generated-map reward icons with original source art and deterministic 128px runtime assets. Manifest is 48 specific/64 fallback; generated reward pool is 33 specific/5 fallback. Focused 1280/1920 Battle and Overworld actions preserve icon/focus/session/save authority; reward, magic, focus, core, deterministic generator, validator/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. No packaged spell interaction, controller, AT-SPI/UIA, native hardware/parity, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T03:07:39Z"
+    },
+    {
+      "id": "presentation-generated-map-lens-spell-reward-distinct-icons-10184",
+      "title": "presentation generated map lens spell reward distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T03:23:57Z",
+      "startedAt": "2026-08-24T03:10:00Z",
+      "notes": "Completed with five distinct original Lens spell reward icons, deterministic 53-row manifest generation, 38/38 generated reward-specific coverage, focused 1280/1920 battle authority, reward/spell/focus/core compatibility, exact repository/editor checks, Linux export plus packaged headless startup, and Windows export plus fresh-Wine Boot/MainMenu/native-DLL startup. Remaining 59 non-reward catalog fallbacks and packaged spell interaction, controller, AT-SPI/UIA, native hardware, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T03:23:57Z"
+    },
+    {
+      "id": "presentation-lens-town-study-complete-distinct-icons-10184",
+      "title": "presentation lens town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T04:21:29Z",
+      "startedAt": "2026-08-24T03:55:40Z",
+      "notes": "Eight remaining Lens town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Lens catalog icons. Manifest coverage is 61 specific/51 school fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Prismhearth and Halo Spire tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 51 non-Lens fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T04:21:29Z"
+    },
+    {
+      "id": "presentation-beacon-town-study-complete-distinct-icons-10184",
+      "title": "presentation beacon town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T04:38:56Z",
+      "startedAt": "2026-08-24T04:24:08Z",
+      "notes": "Five remaining Beacon town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Beacon catalog icons. Manifest coverage is 66 specific/46 non-Beacon fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Riverwatch Hold and Highwater Keep tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 46 non-Beacon fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T04:38:56Z"
+    },
+    {
+      "id": "presentation-furnace-town-study-complete-distinct-icons-10184",
+      "title": "presentation furnace town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T04:59:01Z",
+      "startedAt": "2026-08-24T04:41:37Z",
+      "notes": "Eight remaining Furnace town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Furnace catalog icons. Manifest coverage is 74 specific/38 non-Furnace fallback; the unchanged generated reward pool remains 38/38 specific. Focused 1280/1920 Orevein Gantry and Clauseworks Depot tier-one-to-five study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 38 non-Furnace fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T04:59:01Z"
+    },
+    {
+      "id": "presentation-mire-town-study-complete-distinct-icons-10184",
+      "title": "presentation mire town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T05:29:25Z",
+      "startedAt": "2026-08-24T05:01:55Z",
+      "notes": "Ten remaining Mire town-study spells now own original 1254px source art and deterministic 128px runtime icons, completing all 16 Mire catalog icons. Manifest coverage is 84 specific/28 non-Mire fallback; the unchanged generated reward pool remains 38/38 specific. A production Study ScrollContainer with focus following keeps all valid actions reachable without changing order or rule authority. Focused 1280/1920 Causeway Stand, Bogbound Oath, and Nightglass Ledger Reversal study buttons, focus/scroll, rule-result, session, and save authority passed; magic, Town, focus, core, deterministic generation, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining 28 non-Mire fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T05:29:25Z"
+    },
+    {
+      "id": "presentation-old-measure-town-study-complete-distinct-icons-10184",
+      "title": "presentation old measure town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T05:58:42Z",
+      "startedAt": "2026-08-24T05:34:34Z",
+      "notes": "All ten formerly fallback Old Measure town-study spells now own distinct original 1254px source art and deterministic 128px runtime icons, completing all 16 Old Measure catalog spells. The manifest is 94 specific/18 Root+Veil fallback; the unchanged 38-spell generated reward pool remains fully specific. Focused 1280x720/1920x1080 Orevein Contract, Clauseworks Counterclaim, Bellwake Wreck Claim, and Fogchart Mooring study actions preserve exact access/order, focus/scroll, consequences, session, and save authority. Magic/Town/focus/core compatibility, deterministic regeneration, repository/editor checks, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup passed. Packaged Town interaction, the remaining Root/Veil fallbacks, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T05:58:42Z"
+    },
+    {
+      "id": "presentation-veil-town-study-complete-distinct-icons-10184",
+      "title": "presentation veil town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T06:26:20Z",
+      "startedAt": "2026-08-24T06:04:17Z",
+      "notes": "Completed with nine original 1254px Veil spell sources and deterministic 128px runtime icons: all 16 Veil catalog spells are specific, the manifest is 103 specific/9 Root fallback, and the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Bellwake Harbor and Fogchart Mooring Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, Root completion, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T06:26:20Z"
+    },
+    {
+      "id": "presentation-root-town-study-complete-distinct-icons-10184",
+      "title": "presentation root town study complete distinct icons 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T06:46:09Z",
+      "startedAt": "2026-08-24T06:28:31Z",
+      "notes": "Completed with nine original 1254px Root spell sources and deterministic 128px runtime icons: all 112 production catalog spells now own specific icons, with zero school-sigil catalog fallback; the 38-spell generated reward pool remains fully specific. Focused live 1280/1920 Graftroot Caravan and Rootgate Nursery Study rows preserve order/access/focus/session/save authority; magic, Town, focus, core, deterministic/static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup gates pass. Packaged Town interaction, accessibility/controller/native hardware certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T06:46:09Z"
+    },
+    {
+      "id": "presentation-battle-spell-specific-cue-identity-fail-closed-10184",
+      "title": "presentation battle spell specific cue identity fail closed 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T07:03:40Z",
+      "startedAt": "2026-08-24T06:54:29Z",
+      "notes": "Completed live Battle cue-identity correction: the exact 90-spell classifier is 7 explicit, 55 shared Command Ward effects, and 28 generic-only. A real Pressure Clause cast retains generic imported cast VFX/audio and exact session authority without Cinder Burst identity. Battle animation, magic, cue catalog, Board navigation, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. No asset, spell/rule, packaged interaction, certification, signing/publication, whole-game, or release-readiness claim.",
+      "completedAt": "2026-08-24T07:03:40Z"
+    },
+    {
+      "id": "presentation-town-production-music-context-10184",
+      "title": "presentation town production music context 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T08:41:31Z",
+      "startedAt": "2026-08-24T08:25:50Z",
+      "notes": "Completed with three byte-distinct original deterministic seamless 8-second 44.1 kHz stereo 16-bit imported Town stems. A valid live Town visit synchronizes exact scenario/day/launch/town-placement/town-template/faction identity after route authority; invalid routes remain unchanged. Direct five-context playback, continuity/fallback, real TownShell 1280/1920, construction/audio, focus/layout, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass, and both PCKs contain all three imports. Final composition/mastering, packaged Town listening/interaction, hardware/accessibility/controller certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T08:41:31Z"
+    },
+    {
+      "id": "presentation-six-faction-town-music-identity-10184",
+      "title": "presentation six faction town music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T09:22:57Z",
+      "startedAt": "2026-08-24T09:03:08Z",
+      "notes": "Completed with 18 new original faction-specific Town stems and exact live town_faction_id routing; missing/unknown identity retains the generic Town cue. The deterministic 33-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 TownShell rows, continuous/settings/generated fallback, construction/audio, focus/layout, active-play/core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Both PCKs expose all 18 faction Town asset paths. Final composition, faction music outside Town, packaged interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T09:22:57Z"
+    },
+    {
+      "id": "presentation-six-faction-overworld-music-identity-10184",
+      "title": "presentation six faction overworld music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T09:46:15Z",
+      "startedAt": "2026-08-24T09:25:19Z",
+      "notes": "Completed with 18 new original faction-specific Overworld stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Overworld cue. The deterministic 51-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 OverworldShell rows, continuous/settings/generated fallback, route/movement/focus/session authority, compatibility, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition, faction battle/outcome/menu themes, packaged Overworld interaction/listening, certification, signing/publication, whole-game validation, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T09:46:15Z"
+    },
+    {
+      "id": "presentation-scenario-outcome-result-music-identity-10184",
+      "title": "presentation scenario outcome result music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T10:12:05Z",
+      "startedAt": "2026-08-24T09:54:58Z",
+      "notes": "Completed with two original three-layer terminal Outcome themes. Exact victory and defeat status select distinct cues while missing/unknown status retains the generic Outcome cue. The deterministic 57-cue pack is byte-distinct and exact-length; direct routes, four real 1280/1920 OutcomeShell rows with unchanged session authority, continuous/settings/generated fallback, Outcome focus and autosave-recovery compatibility, core, static/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, faction-specific Battle/Outcome/Menu themes, packaged Outcome interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T10:12:05Z"
+    },
+    {
+      "id": "presentation-six-faction-battle-music-identity-10184",
+      "title": "presentation six faction battle music identity 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T10:42:13Z",
+      "startedAt": "2026-08-24T10:15:39Z",
+      "notes": "Completed with 18 new original faction-specific Battle stems and exact live scenario player_faction_id routing; missing/unknown identity retains the generic Battle cue. The deterministic 75-cue pack is byte-distinct and exact-length. Six direct routes, generic/unknown fallback, 12 real 1280/1920 BattleShell rows with exact battle authority, continuous/settings/generated fallback, Battle animation/presentation, controller Board navigation, core, repository/editor, deterministic regeneration, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL startup pass. Final composition/mastering, enemy-faction or matchup-adaptive music, faction-specific Outcome/Menu themes, packaged Battle interaction/listening, certification, signing/publication, whole-game validation, Native-RMG work, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T10:42:13Z"
+    },
+    {
+      "id": "presentation-music-context-crossfade-transition-10184",
+      "title": "presentation music context crossfade transition 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T11:07:47Z",
+      "startedAt": "2026-08-24T10:47:31Z",
+      "notes": "Completed with a bounded exact 360 ms three-layer crossfade for changed signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at six transition players before settling to three; stable signatures do not restart, explicit stop is immediate, mute/generated fallback and all cue/metadata/settings/bus/session authority remain exact. Focused direct and real 1280/1920 Menu-to-Overworld, UI/ambient audio, active-play focus, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New composition, beat/bar synchronization, adaptive intensity, mixer migration, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
+      "completedAt": "2026-08-24T11:07:47Z"
+    },
+    {
+      "id": "presentation-overworld-ambient-context-crossfade-transition-10184",
+      "title": "presentation overworld ambient context crossfade transition 10184",
+      "status": "completed",
+      "source": "PLAN.md",
+      "updatedAt": "2026-08-24T11:24:44Z",
       "startedAt": "2026-08-24T11:09:56Z",
       "notes": "Completed with a bounded exact 300 ms crossfade for changed coordinate/terrain/day/threat signatures. Rapid replacements invalidate stale tween generations, retire only the older outgoing group, and remain capped at eight transition players before settling to the exact current 1-3 layers; stable signatures do not restart, missing-session/explicit stop is immediate, and mute/generated fallback plus cue/settings/session authority remain exact. Focused ambient lifecycle, real route movement and input ownership, active-play focus, music coexistence, core, repository/editor, Linux export/headless startup, and Windows export/fresh-Wine Boot/MainMenu/native-DLL gates pass. New ambient assets, spatial audio, mixer/gameplay changes, packaged listening/interaction, certification, signing/publication, whole-game validation, Native-RMG parity, and release readiness remain unclaimed.",
       "completedAt": "2026-08-24T11:24:44Z"
