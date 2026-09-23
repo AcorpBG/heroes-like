@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/move_v1.png",
+      "sha256": "f031fcbbf4caefad36bc9b700d63bb94c70661220c101e509fce2a4ab25ba21d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/move_v1.prompt.txt",
+      "prompt_sha256": "e4de6b29841fecf9c24784f7a14d637c1ec50d0344a0ebc1d4b89b0fc8b3b800",
+      "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+      "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-f63edbc4-7014-4db3-a7de-75cd15620201.png",
+      "tool": "built-in image_gen",
+      "status": "pending handoff"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_v1.png",
+      "sha256": "5baa2a3ab83fcba1eebdc8fadd7b886fbe5eb7d9241bc59ff0172d22b2d36748",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_v1.prompt.txt",
+      "prompt_sha256": "7d7ef3ad9a56e549eeea445ac958a67aff888391e5cf4f3572bdb956eaed79cc",
+      "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+      "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-ad39a865-0352-4c59-ad3c-28d68c5abb1f.png",
+      "tool": "built-in image_gen",
+      "status": "pending handoff"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_v1.png",
+      "sha256": "a7051d62fae784421c569ff4c6cf4aea803fc7b7dbb9cde04bbdabc6f42e6f69",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_v1.prompt.txt",
+      "prompt_sha256": "cdc81c052fae145158e50f579e7961d79a5116fc3940e95f0268213908ca680c",
+      "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+      "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-1254a829-9b09-495e-ab74-592a620f9adb.png",
+      "tool": "built-in image_gen",
+      "status": "pending handoff"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/reactions_v1.png",
+      "sha256": "ae7d54381dd0b7b8bf4e88555b128bfa2f061d3b26eed47518d4bfafe9fd68d1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/reactions_v1.prompt.txt",
+      "prompt_sha256": "2e152797233cb66c0da68ef2e0995588c519d06801605a7278dad7c8f603551c",
+      "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+      "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-2708889b-f42c-4f68-97b9-4c8845a53295.png",
+      "tool": "built-in image_gen",
+      "status": "pending handoff"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/death_v1.png",
+      "sha256": "919ce9456d37b35ac7559d843f5922563793731c7b72d4f5f5b23599a92f4bb9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/death_v1.prompt.txt",
+      "prompt_sha256": "2d4cbf203c102a21c9b76592e9c642d39e9b448640d932eb9ffa799266c4a40b",
+      "reference": "art/units/source/curated/unit_sunvault_mirror_duelists.png",
+      "reference_sha256": "3419a5ba83826bb78f37b2950d95302f9f575a1e276b24aacdbe48a727078a06",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-001dbb9d-fd02-42df-818e-e250d1356069.png",
+      "tool": "built-in image_gen",
+      "status": "pending handoff"
+    }
+  ]
+}
