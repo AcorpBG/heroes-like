@@ -1,0 +1,122 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/idle_v1.png",
+      "sha256": "5fbae2edd93085b82fce47cce27799b79f114d944c637ac50608b215eb4ba546",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "3429a00a6a3cdb51609907a20b7099536e7c6d40592ed6c29c647435dd530a28",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-1a1eb140-dd2b-437a-bbbd-60c6cb5d46e7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/attack_v1.png",
+      "sha256": "b7387f09dd4514bc8445c32b07eb5d5ebd12c48123a39bbffe98a6e79738c830",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "2a67e33e3e2193aad983f8087c65adc1bea1acafa13510fd533807d912aad52c",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b4bf110e-e646-4112-8d32-22eace4728a0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/ranged_v1.png",
+      "sha256": "6b1272d849e82abc64cb8ec3ab876b88bbfc5244721b96a6194acc0deeea22c0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "ec2f3f2b5a31d7b2b1b3893933b2c53aa986a8fd33b4dd694c7581a2fa91c040",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6b9021bd-c198-40d5-bbf1-7cbf23821bf5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/reactions_v1.png",
+      "sha256": "30a0aa743bb2481b3edaed670055394c93e9523197c2c402fca577bd33a20278",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "34f6550f98656a82128a3de03c84c8f908dbb121033990857db8c9869732b639",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bc85c99a-9ccd-4adb-8084-d6f98cc2cd4c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/cast_v1.png",
+      "sha256": "aad06e9be87134ad19532e4a6208a139cc3ee86fba998042531818ba2273c09b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "7e6edd2c82c033b798d79f49d319ce18ba69517c026eec6d4df0fa9f49567f12",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9fa0fe05-848e-453f-b289-d5e40487b858.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/death_v1.png",
+      "sha256": "de931ee7ff8ea8b5a6ae432901dfcf4a6b61d245cb0b257319b428a0f4e2109c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "f7ba02c0fa5ea3bae5ee6208c80f16630d2f368b5b24368e30f26b25098831e7",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9cc09f84-e527-471b-b581-d13ea52ac532.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_v1.png",
+      "sha256": "69150010efac93b7903e91a85c74d7f4b43f0d9b0bafbd40c798b2fd43a6f750",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "5a0a0e331d49b9646efcb777870e5f539414d229a75885e2650b405b136b4fd8",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-76fde35c-482b-4842-9268-4b7839590110.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_near_v1.png",
+      "sha256": "08ff288d6807a155d07698c5435db6517d118e80db650edb045fb62e3f83ba92",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "e2c72087707d035111b13ddc0cf420ec1b024df8ddfac1f12d4fb1a1d30b79f3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-17f5b5c6-61e6-4b11-8954-6c6a330f7c24.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_cross_v1.png",
+      "sha256": "43578540e381bb3be19a03e3716ac2d0a00c895d6e1b1566510ee5de04a6a8a7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/move_cross_v1.prompt.txt",
+      "prompt_sha256": "f9faaa002f723c7f393040a8120673a774f921a36d2d43074b75279f284f2567",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-2ca8c908-387e-4f5d-b548-830af136ab89.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchbell_mortars_veteran/identity_reference.png",
+          "sha256": "49ee676575b644a654988c1b677df6fcfa7e5a9583cd4592f0f910166dcb0e06"
+        }
+      ]
+    }
+  ]
+}
