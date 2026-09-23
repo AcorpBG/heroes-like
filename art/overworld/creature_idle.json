@@ -7303,33 +7303,37 @@
     "unit_brasshollow_quenchspool_slingers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_quenchspool_slingers_veteran.png",
       "frame_size": [
-        183,
-        249
+        199,
+        261
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        88.0,
-        238
+        95.0,
+        253
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_quenchspool_slingers_veteran.png",
+      "painted_extent": 245,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_quenchspool_slingers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        168,
-        2,
-        351,
-        251
+        129,
+        7,
+        328,
+        268
       ],
-      "source_sha256": "f31f17daf43c19e5ee8a721892985d60eef1d4c5f3edc6a51414ff640869b588",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_quenchspool_slingers_veteran/provenance.json",
-      "sha256": "74396ec8749477e4bf0921227fea779d0b4b339ddc5fcc1bd6bc8ceb5ed6cc7f"
+      "source_sha256": "f9417ca6b9e8f8281f5e0484ec330a49eef0b78d58572f7558526bff9587c0d6",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_quenchspool_slingers_veteran/provenance.json",
+      "sha256": "8f729b5bb67b5c087559c871f86659a7783557da60bde8455140aa7eec129319"
     },
     "unit_brasshollow_furnace_pavis_teams_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_furnace_pavis_teams_veteran.png",
