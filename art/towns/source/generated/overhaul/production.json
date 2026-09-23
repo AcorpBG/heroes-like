@@ -2151,11 +2151,508 @@
         805
       ],
       "grounding": "Authored Mireclaw marsh-settlement placement on cleared earth and plank terraces; base and upgraded stages share the same grounded entrance anchor."
+    },
+    {
+      "id": "building_town_hall",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.png",
+      "source_sha256": "d9b93624ea832c3bf56dea42b1a0a9bd73b09a665f06c277c721267976ef6b1a",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.prompt.txt",
+      "generation_output": "exec-3480c1e6-647e-4c23-b546-d82e6830b785.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 210,
+      "ground_anchor": [
+        790,
+        455
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_hall_2",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.png",
+      "source_sha256": "b2a1fb461214a52b37f3440c44b8f55da81f1b948d1f871f608c0c5bda763edf",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.prompt.txt",
+      "generation_output": "exec-41478b94-82e6-4539-9ed4-fa9dfa78ef85.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 250,
+      "ground_anchor": [
+        790,
+        455
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_hall_3",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png",
+      "source_sha256": "e286c3ef63f7a3de94308e6df6d3dd3ccb29c6c85bcd446f98de6d4c816cce51",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.prompt.txt",
+      "generation_output": "exec-8715fd57-6ea0-48cd-9822-062bc6917dcc.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 290,
+      "ground_anchor": [
+        790,
+        455
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_hall_4",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4.png",
+      "source_sha256": "c0da4da8399a927bb15901abccce4c55a9cf4ec3a44412a942b92739a47faeeb",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4.prompt.txt",
+      "generation_output": "exec-fa90f7b9-a4e2-4b8f-a3c3-f624ddf95d8b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "hall",
+      "visible_width": 330,
+      "ground_anchor": [
+        790,
+        455
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_fort_1",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.png",
+      "source_sha256": "62e7da624a6ad325e204bee9bf29899e04ebf806eeabc0b1332ddb2d7bc1d872",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.prompt.txt",
+      "generation_output": "exec-07486418-3fc1-4b6f-9d05-704ea66c60e0.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 170,
+      "ground_anchor": [
+        300,
+        465
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_fort_2",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.png",
+      "source_sha256": "6935086795e274d0c7da9438d76675aaec738094a099681c4309410624bf5b1f",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.prompt.txt",
+      "generation_output": "exec-fda63b20-37f9-4415-b76a-ed4a2987289b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 200,
+      "ground_anchor": [
+        300,
+        465
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_fort_3",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3.png",
+      "source_sha256": "898bfe7311cf99a263f9cda480d55636cfe545ecf2a28e9f7d5e3f60aa4f83bc",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3.prompt.txt",
+      "generation_output": "exec-adb7c415-99e8-4a0a-a0fd-92e3da7b77a9.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "fort",
+      "visible_width": 235,
+      "ground_anchor": [
+        300,
+        465
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_guild_1",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.png",
+      "source_sha256": "fd85ad3c84f3663a32269e8d66f3e2ef10ed9931a83d39c00c9bc56a920bdd85",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.prompt.txt",
+      "generation_output": "exec-f56f539a-3385-4cf3-a5c0-0d8f4a6038a0.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 105,
+      "ground_anchor": [
+        1260,
+        480
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_guild_2",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.png",
+      "source_sha256": "9b309ecd093506828ed4e21f8f5f323671e551b6abe0f26eefb588abd4765dff",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.prompt.txt",
+      "generation_output": "exec-a3e310ec-4507-434d-b714-d427cc5166c5.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 120,
+      "ground_anchor": [
+        1260,
+        480
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_guild_3",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.png",
+      "source_sha256": "f521864a8845ca9b502bab490b2da684c110bfe241fa0458addfb2f3940bd94b",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.prompt.txt",
+      "generation_output": "exec-449d9b28-2dd0-4f81-adaf-897f81f03777.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 140,
+      "ground_anchor": [
+        1260,
+        480
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_guild_4",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.png",
+      "source_sha256": "ebf624b0384eb78f25469a84f5ee285b319d48509c2caa2c7f163557db71251e",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.prompt.txt",
+      "generation_output": "exec-52c3d73f-7c97-4dd5-a353-1bf9214c6533.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 165,
+      "ground_anchor": [
+        1260,
+        480
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_guild_5",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5.png",
+      "source_sha256": "c966c9f30aba65989f23d318e0554dfd0c0345772fab4206f63b2dd371b8caf5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5.prompt.txt",
+      "generation_output": "exec-ae4f63d0-a87a-4680-91a4-fa26bb0276f7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.png"
+      ],
+      "kind": "building",
+      "plot_id": "guild",
+      "visible_width": 185,
+      "ground_anchor": [
+        1260,
+        480
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_market_square",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_market_square.png",
+      "source_sha256": "4d63ad813ffc42cc05695137f439ab3f71fa8c0f4b76727c026e7c3902965574",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_market_square.prompt.txt",
+      "generation_output": "exec-8dfb139b-301a-4ea5-b7e4-aa3064008af6.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 145,
+      "ground_anchor": [
+        420,
+        620
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_trade_exchange",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange.png",
+      "source_sha256": "3f15dc53604c56c81db5fbd3808b0f266bcf10d5a946f427a4665765b72864c5",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange.prompt.txt",
+      "generation_output": "exec-e02e0eeb-1f1c-458a-a8e9-3e1fe34b613b.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_market_square.png"
+      ],
+      "kind": "building",
+      "plot_id": "market",
+      "visible_width": 185,
+      "ground_anchor": [
+        420,
+        620
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_storehouse_1",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.png",
+      "source_sha256": "070c13a0113465a39deb14ac59f1ecbbbbe53d46e0fff44aa40df5dd9c939d93",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.prompt.txt",
+      "generation_output": "exec-1d8c378a-4d62-46fd-b862-739b66129da7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 130,
+      "ground_anchor": [
+        1010,
+        560
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "building_dev_storehouse_2",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2.png",
+      "source_sha256": "56f53252201078d177adc4165ef60ccc301141d525af8a546f5fc9306d8f5305",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2.prompt.txt",
+      "generation_output": "exec-4e1d32cf-546a-42d6-9614-73ffba326ee7.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.png"
+      ],
+      "kind": "building",
+      "plot_id": "storehouse",
+      "visible_width": 165,
+      "ground_anchor": [
+        1010,
+        560
+      ],
+      "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line."
+    },
+    {
+      "id": "cleared_plateau",
+      "faction_id": "faction_sunvault",
+      "source_path": "art/towns/source/generated/overhaul/faction_sunvault/cleared_plateau.png",
+      "source_sha256": "0e96a50581a45f797936cd0a5d6186d16064eae34204e684d7d8e539349df5be",
+      "prompt_path": "art/towns/source/generated/overhaul/faction_sunvault/cleared_plateau.prompt.txt",
+      "generation_output": "exec-e2bf7704-5013-4761-9d35-18709e5779d8.png",
+      "generation_date": "2026-09-22",
+      "tool": "built_in_image_gen",
+      "reference_inputs": [
+        "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png"
+      ],
+      "kind": "backdrop",
+      "stage": "village"
     }
   ],
   "existing_plot_placements": {
     "faction_embercourt": {},
-    "faction_mireclaw": {}
+    "faction_mireclaw": {},
+    "faction_sunvault": {
+      "building_wayfarers_hall": {
+        "visible_width": 175,
+        "ground_anchor": [
+          1370,
+          650
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_growth_1": {
+        "visible_width": 145,
+        "ground_anchor": [
+          190,
+          630
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_growth_2": {
+        "visible_width": 150,
+        "ground_anchor": [
+          600,
+          570
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_growth_3": {
+        "visible_width": 145,
+        "ground_anchor": [
+          960,
+          705
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_training_attack": {
+        "visible_width": 145,
+        "ground_anchor": [
+          155,
+          750
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_training_defense": {
+        "visible_width": 150,
+        "ground_anchor": [
+          365,
+          750
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_training_experience": {
+        "visible_width": 150,
+        "ground_anchor": [
+          595,
+          730
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_artifact_exchange": {
+        "visible_width": 145,
+        "ground_anchor": [
+          790,
+          670
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t1": {
+        "visible_width": 165,
+        "ground_anchor": [
+          1110,
+          700
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t2": {
+        "visible_width": 165,
+        "ground_anchor": [
+          1300,
+          760
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t3": {
+        "visible_width": 165,
+        "ground_anchor": [
+          1440,
+          790
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t4": {
+        "visible_width": 170,
+        "ground_anchor": [
+          1290,
+          845
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t5": {
+        "visible_width": 180,
+        "ground_anchor": [
+          1085,
+          845
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t6_1": {
+        "visible_width": 215,
+        "ground_anchor": [
+          210,
+          835
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "sunvault_t7_1": {
+        "visible_width": 230,
+        "ground_anchor": [
+          465,
+          835
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_sunvault_unique_1": {
+        "visible_width": 165,
+        "ground_anchor": [
+          680,
+          835
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_sunvault_unique_2": {
+        "visible_width": 160,
+        "ground_anchor": [
+          875,
+          840
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      },
+      "building_dev_sunvault_unique_3": {
+        "visible_width": 160,
+        "ground_anchor": [
+          925,
+          760
+        ],
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable."
+      }
+    }
   },
   "reference_assets": [
     {

@@ -11265,14 +11265,14 @@
           353
         ],
         "normalized_rect": [
-          0.7710937499999999,
-          0.6622222222222223,
-          0.10611694335937501,
-          0.13
+          0.8015625,
+          0.5881618923611112,
+          0.109375,
+          0.1340603298611111
         ],
         "ground_anchor": [
-          0.83,
-          0.785
+          0.85625,
+          0.7222222222222222
         ],
         "modulate": [
           1,
@@ -11281,7 +11281,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact travelers hall on the eastern terrace with its own frontage above the forge. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_wayfarers_hall.prompt.txt",
         "prompt_sha256": "0278fa4265a7a1588343c9dac260a9cfb7891a401042d8f1055022080f6c2116",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -11291,36 +11291,45 @@
         "shared_art_from": "building_wayfarers_hall"
       },
       "building_market_square": {
-        "asset_id": "faction_sunvault_building_market_square",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_market_square.png",
-        "source_sha256": "315e306f3b270f54a5170023312cde250321b72a096e3cc1febfacea2751b60c",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_market_square.png",
+        "source_sha256": "4d63ad813ffc42cc05695137f439ab3f71fa8c0f4b76727c026e7c3902965574",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_market_square.prompt.txt",
+        "prompt_sha256": "197d72200cffeb091c711fd205ac4e2cdfbeb4ab930481888fd2305c316ec5fa",
+        "generation_output": "exec-8dfb139b-301a-4ea5-b7e4-aa3064008af6.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_market_square",
         "trim_box": [
-          0,
-          0,
-          1536,
-          973
+          12,
+          44,
+          1244,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_market_square.png",
-        "trimmed_sha256": "d3d43ccea99c9083b2e5e47aaaac06e54df4ad9edb3f303988d837b64ecc12b7",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_market_square.png",
-        "runtime_sha256": "61e9e4dc36186cbea411f51e38cc08f407ca9d20111aa3813a8a53e4467d1ef5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_market_square.png",
+        "runtime_sha256": "f76fa467bad47af81c6e90acc353f229aaa0caeaeac43741a9f9ad941d1aaf9a",
         "runtime_size": [
           512,
-          324
+          493
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_market_square.png",
+        "icon_sha256": "acf16fcabd3dfb18ebe6e1c18c7ff910b3e16984a7c881e11b83161bd45a67f8",
         "normalized_rect": [
-          0.496875,
-          0.55,
-          0.1875,
-          0.2111545138888889
+          0.2171875,
+          0.53379329004329,
+          0.090625,
+          0.15509559884559884
         ],
         "ground_anchor": [
-          0.6,
-          0.7555555555555555
+          0.2625,
+          0.6888888888888889
         ],
         "modulate": [
           1,
@@ -11329,14 +11338,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low trading arcades grow from the central-right paved market terrace, leaving the main hall and canal readable.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_market_square.prompt.txt",
-        "prompt_sha256": "ebf56789fc334909007901b14d64bb101f2af93e2ffc4589cb32df579286fa18",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c9758f10-010e-4583-b637-72e1b3b165eb.png",
-        "shared_art_from": "building_market_square"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_lantern_archive": {
         "asset_id": "faction_sunvault_building_lantern_archive",
@@ -12514,36 +12517,45 @@
         "generation_output": "exec-e8b85ae9-9ba4-4a9c-a89e-793c06b75a96.png"
       },
       "building_dev_fort_1": {
-        "asset_id": "faction_sunvault_building_shard_yard",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.png",
-        "source_sha256": "aa2154fa691dc42d72597243e9ef66b963822fbaadda3ea9dd38d1b0db4de7e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.png",
+        "source_sha256": "62e7da624a6ad325e204bee9bf29899e04ebf806eeabc0b1332ddb2d7bc1d872",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.prompt.txt",
+        "prompt_sha256": "1f6c935acd26c1bf88b79dc438c25f0de4c53f6de5d6527d87b13f51bd035370",
+        "generation_output": "exec-07486418-3fc1-4b6f-9d05-704ea66c60e0.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_fort_1",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          19,
+          1238,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_shard_yard.png",
-        "trimmed_sha256": "2d8144c449de7bb7ce0b2fc12f272e5cac1cfb6d74a692ec4ce27381cd9350c3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_shard_yard.png",
-        "runtime_sha256": "67be31d389ea59f237a81de3353f753c5da218b35b4b6a4bf9772a5728855520",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_fort_1.png",
+        "runtime_sha256": "61b649e966e2b5325365fb72dc77fdca18c2b0da83fd682a6ee0fd3664b3b648",
         "runtime_size": [
           512,
-          344
+          511
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_fort_1.png",
+        "icon_sha256": "c5155b7a80739ae2df60f1a55c345221823706a8ebca3f57718b97430d094989",
         "normalized_rect": [
-          0.1375,
-          0.5111111111111111,
-          0.15482584635416666,
-          0.18518518518522223
+          0.134375,
+          0.3282355052952791,
+          0.10625,
+          0.18843116137138755
         ],
         "ground_anchor": [
-          0.225,
-          0.6833333333333333
+          0.1875,
+          0.5166666666666667
         ],
         "modulate": [
           1,
@@ -12552,46 +12564,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The guard courtyard joins the permanent western terrace behind the foreground reservoir wall.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.prompt.txt",
-        "prompt_sha256": "6298667d4eb9ea3fd8d1630a2d0145be4cde31e7079311741516f64cb014e1aa",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-bca0fce8-e456-40b9-8921-faf206f9eedd.png",
-        "shared_art_from": "building_shard_yard"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_fort_2": {
-        "asset_id": "faction_sunvault_building_shard_yard",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.png",
-        "source_sha256": "aa2154fa691dc42d72597243e9ef66b963822fbaadda3ea9dd38d1b0db4de7e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.png",
+        "source_sha256": "6935086795e274d0c7da9438d76675aaec738094a099681c4309410624bf5b1f",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.prompt.txt",
+        "prompt_sha256": "d48a5f4eaadf8e418203e7b4dacf700c1c49f58d8d7c8716ef6334e8e737d24f",
+        "generation_output": "exec-fda63b20-37f9-4415-b76a-ed4a2987289b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_fort_2",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          91,
+          1243,
+          1198
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_shard_yard.png",
-        "trimmed_sha256": "2d8144c449de7bb7ce0b2fc12f272e5cac1cfb6d74a692ec4ce27381cd9350c3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_shard_yard.png",
-        "runtime_sha256": "67be31d389ea59f237a81de3353f753c5da218b35b4b6a4bf9772a5728855520",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_fort_2.png",
+        "runtime_sha256": "1127ecdd5c8c943ac5950bddfa09c60c6e734db1347874c8abd4f64c1bc460f4",
         "runtime_size": [
           512,
-          344
+          456
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_fort_2.png",
+        "icon_sha256": "302e02bc9cb844c06ed739718d74f30f48ffd342ad8f91db1460ee637407243e",
         "normalized_rect": [
-          0.1375,
-          0.5111111111111111,
-          0.15482584635416666,
-          0.18518518518522223
+          0.125,
+          0.318758380262805,
+          0.125,
+          0.19790828640386163
         ],
         "ground_anchor": [
-          0.225,
-          0.6833333333333333
+          0.1875,
+          0.5166666666666667
         ],
         "modulate": [
           1,
@@ -12600,46 +12615,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The guard courtyard joins the permanent western terrace behind the foreground reservoir wall.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.prompt.txt",
-        "prompt_sha256": "6298667d4eb9ea3fd8d1630a2d0145be4cde31e7079311741516f64cb014e1aa",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-bca0fce8-e456-40b9-8921-faf206f9eedd.png",
-        "shared_art_from": "building_shard_yard"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_fort_3": {
-        "asset_id": "faction_sunvault_building_shard_yard",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.png",
-        "source_sha256": "aa2154fa691dc42d72597243e9ef66b963822fbaadda3ea9dd38d1b0db4de7e4",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3.png",
+        "source_sha256": "898bfe7311cf99a263f9cda480d55636cfe545ecf2a28e9f7d5e3f60aa4f83bc",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_3.prompt.txt",
+        "prompt_sha256": "ee74a67c7ddc275088c44a5d61f2a66be8302dc2d469bd265247c788013dbe06",
+        "generation_output": "exec-adb7c415-99e8-4a0a-a0fd-92e3da7b77a9.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_fort_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_fort_3",
         "trim_box": [
-          0,
-          0,
-          1522,
-          1024
+          27,
+          20,
+          1240,
+          1245
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_shard_yard.png",
-        "trimmed_sha256": "2d8144c449de7bb7ce0b2fc12f272e5cac1cfb6d74a692ec4ce27381cd9350c3",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_shard_yard.png",
-        "runtime_sha256": "67be31d389ea59f237a81de3353f753c5da218b35b4b6a4bf9772a5728855520",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_fort_3.png",
+        "runtime_sha256": "67f36ded0f8b7424c6162b0ae019f39fcf781b2eb619e8ef51ddb72b091ec239",
         "runtime_size": [
-          512,
-          344
+          507,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_fort_3.png",
+        "icon_sha256": "1fb0cd6dfba32caff2c4f21628e38bea657713417fe1a92bed37da03222fe719",
         "normalized_rect": [
-          0.1375,
-          0.5111111111111111,
-          0.15482584635416666,
-          0.18518518518522223
+          0.1140625,
+          0.2529724283227993,
+          0.146875,
+          0.26369423834386735
         ],
         "ground_anchor": [
-          0.225,
-          0.6833333333333333
+          0.1875,
+          0.5166666666666667
         ],
         "modulate": [
           1,
@@ -12648,46 +12666,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The guard courtyard joins the permanent western terrace behind the foreground reservoir wall.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_shard_yard.prompt.txt",
-        "prompt_sha256": "6298667d4eb9ea3fd8d1630a2d0145be4cde31e7079311741516f64cb014e1aa",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-bca0fce8-e456-40b9-8921-faf206f9eedd.png",
-        "shared_art_from": "building_shard_yard"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_1": {
-        "asset_id": "faction_sunvault_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "source_sha256": "de5c95eeb4876529426a17232e80fdb1b1c15d90e6c64c3c065098264aa19604",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.png",
+        "source_sha256": "fd85ad3c84f3663a32269e8d66f3e2ef10ed9931a83d39c00c9bc56a920bdd85",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.prompt.txt",
+        "prompt_sha256": "70993720fa5b926a08dd062fae252f2f674770b02563e5b9cda64008830ac6f9",
+        "generation_output": "exec-f56f539a-3385-4cf3-a5c0-0d8f4a6038a0.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_guild_1",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          19,
+          1230,
+          1230
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "trimmed_sha256": "fa50eecd732cb5ec2feb2187e8a5e78418f518fb5a5a9d3e41a352dd362d4dc8",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "runtime_sha256": "ae9e0db383e3be5ad2ef278aafec08d2ffb49efff4f95bd723a075f8ff8be864",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_guild_1.png",
+        "runtime_sha256": "23325647230b4da56961a6592d3dc40a765d8949f3c0d3f739f14a4dc7bbbbcf",
         "runtime_size": [
           512,
-          344
+          504
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_guild_1.png",
+        "icon_sha256": "ffa2c11909086c06ed65601114b0ee002b857147b2df1911ea80a6be50b15ba1",
         "normalized_rect": [
-          0.578125,
-          0.3333333333333333,
-          0.1672119140625,
-          0.2
+          0.7546875,
+          0.4184688346883469,
+          0.065625,
+          0.11486449864498645
         ],
         "ground_anchor": [
-          0.671875,
-          0.52
+          0.7875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -12696,46 +12717,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The archive sits on the dry rear-eastern bench above the central trading terrace.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "aa112fe8306ee80ed9665edb3133d5f8188b02c382a2be2084032acc2a2819c5",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-55e1a50e-77e1-4d66-923f-eb76cdbdddf5.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_2": {
-        "asset_id": "faction_sunvault_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "source_sha256": "de5c95eeb4876529426a17232e80fdb1b1c15d90e6c64c3c065098264aa19604",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.png",
+        "source_sha256": "9b309ecd093506828ed4e21f8f5f323671e551b6abe0f26eefb588abd4765dff",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.prompt.txt",
+        "prompt_sha256": "bb39af114dfe2ea2cea7ff6af9d6b25f7cac96d58aff1a2a25b5b221da557790",
+        "generation_output": "exec-a3e310ec-4507-434d-b714-d427cc5166c5.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_guild_2",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          16,
+          1222,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "trimmed_sha256": "fa50eecd732cb5ec2feb2187e8a5e78418f518fb5a5a9d3e41a352dd362d4dc8",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "runtime_sha256": "ae9e0db383e3be5ad2ef278aafec08d2ffb49efff4f95bd723a075f8ff8be864",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_guild_2.png",
+        "runtime_sha256": "c1e8eeb6717ef0bd97c74951a19024b0f024105f0d7220a366cf635a59860d8e",
         "runtime_size": [
-          512,
-          344
+          505,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_guild_2.png",
+        "icon_sha256": "ea7ffbb3ca681ba614c82bbd7d924caf8383a0e7b1604cb097e061b588c517f9",
         "normalized_rect": [
-          0.578125,
-          0.3333333333333333,
-          0.1672119140625,
-          0.2
+          0.75,
+          0.3982542280414621,
+          0.075,
+          0.13507910529187125
         ],
         "ground_anchor": [
-          0.671875,
-          0.52
+          0.7875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -12744,46 +12768,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The archive sits on the dry rear-eastern bench above the central trading terrace.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "aa112fe8306ee80ed9665edb3133d5f8188b02c382a2be2084032acc2a2819c5",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-55e1a50e-77e1-4d66-923f-eb76cdbdddf5.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_3": {
-        "asset_id": "faction_sunvault_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "source_sha256": "de5c95eeb4876529426a17232e80fdb1b1c15d90e6c64c3c065098264aa19604",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.png",
+        "source_sha256": "f521864a8845ca9b502bab490b2da684c110bfe241fa0458addfb2f3940bd94b",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.prompt.txt",
+        "prompt_sha256": "092f1645344520e2b63dd997ab155847585d235fa9084ae1f6a6fc49fdf58aeb",
+        "generation_output": "exec-449d9b28-2dd0-4f81-adaf-897f81f03777.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_guild_3",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          6,
+          1192,
+          1228
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "trimmed_sha256": "fa50eecd732cb5ec2feb2187e8a5e78418f518fb5a5a9d3e41a352dd362d4dc8",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "runtime_sha256": "ae9e0db383e3be5ad2ef278aafec08d2ffb49efff4f95bd723a075f8ff8be864",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_guild_3.png",
+        "runtime_sha256": "937a089ebdcf47731c2e9922f3cdf0e88be9e61e40ad39e7a8ecb63716c7f5cf",
         "runtime_size": [
-          512,
-          344
+          499,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_guild_3.png",
+        "icon_sha256": "6b21b87cd7ff552adc6ee28a902e2f9c6b01a240a6ef047703fa9b542a816207",
         "normalized_rect": [
-          0.578125,
-          0.3333333333333333,
-          0.1672119140625,
-          0.2
+          0.74375,
+          0.3738627889634601,
+          0.0875,
+          0.1594705443698732
         ],
         "ground_anchor": [
-          0.671875,
-          0.52
+          0.7875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -12792,46 +12819,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The archive sits on the dry rear-eastern bench above the central trading terrace.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "aa112fe8306ee80ed9665edb3133d5f8188b02c382a2be2084032acc2a2819c5",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-55e1a50e-77e1-4d66-923f-eb76cdbdddf5.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_4": {
-        "asset_id": "faction_sunvault_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "source_sha256": "de5c95eeb4876529426a17232e80fdb1b1c15d90e6c64c3c065098264aa19604",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.png",
+        "source_sha256": "ebf624b0384eb78f25469a84f5ee285b319d48509c2caa2c7f163557db71251e",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.prompt.txt",
+        "prompt_sha256": "1f6abf24f5d47cc4459c91c44f0b18fc71ece95c77f67a0a7694b91b88871479",
+        "generation_output": "exec-52c3d73f-7c97-4dd5-a353-1bf9214c6533.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_guild_4",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          8,
+          1236,
+          1232
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "trimmed_sha256": "fa50eecd732cb5ec2feb2187e8a5e78418f518fb5a5a9d3e41a352dd362d4dc8",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "runtime_sha256": "ae9e0db383e3be5ad2ef278aafec08d2ffb49efff4f95bd723a075f8ff8be864",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_guild_4.png",
+        "runtime_sha256": "993fda7ef8fe4e1ed1b88627ecdbf9a0e0158dcc0fbe8117be8014ab70372f02",
         "runtime_size": [
           512,
-          344
+          507
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_guild_4.png",
+        "icon_sha256": "73c130f6d814fe26d25f14da06f65a2713cbbbc513e274e9a7ca305b1556c0d4",
         "normalized_rect": [
-          0.578125,
-          0.3333333333333333,
-          0.1672119140625,
-          0.2
+          0.7359375,
+          0.3517799352750809,
+          0.103125,
+          0.1815533980582524
         ],
         "ground_anchor": [
-          0.671875,
-          0.52
+          0.7875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -12840,46 +12870,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The archive sits on the dry rear-eastern bench above the central trading terrace.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "aa112fe8306ee80ed9665edb3133d5f8188b02c382a2be2084032acc2a2819c5",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-55e1a50e-77e1-4d66-923f-eb76cdbdddf5.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_guild_5": {
-        "asset_id": "faction_sunvault_building_lantern_archive",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "source_sha256": "de5c95eeb4876529426a17232e80fdb1b1c15d90e6c64c3c065098264aa19604",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5.png",
+        "source_sha256": "c966c9f30aba65989f23d318e0554dfd0c0345772fab4206f63b2dd371b8caf5",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_5.prompt.txt",
+        "prompt_sha256": "481d307af5a5d3945fc5af996429f59755f16b965b4763395377dcfb71379439",
+        "generation_output": "exec-ae4f63d0-a87a-4680-91a4-fa26bb0276f7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_guild_4.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_guild_5",
         "trim_box": [
           0,
           0,
-          1522,
-          1024
+          1230,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "trimmed_sha256": "fa50eecd732cb5ec2feb2187e8a5e78418f518fb5a5a9d3e41a352dd362d4dc8",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_lantern_archive.png",
-        "runtime_sha256": "ae9e0db383e3be5ad2ef278aafec08d2ffb49efff4f95bd723a075f8ff8be864",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_guild_5.png",
+        "runtime_sha256": "4e70bfda75d89533b2304cd85a1257244db2ecd3f9d2c4c7226283b70b2ea9b7",
         "runtime_size": [
-          512,
-          344
+          502,
+          512
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_guild_5.png",
+        "icon_sha256": "87308f1fedf370b4ac9a4253a05695044b0de35bf201a6f24a0f572a59843c09",
         "normalized_rect": [
-          0.578125,
-          0.3333333333333333,
-          0.1672119140625,
-          0.2
+          0.7296875,
+          0.3237669376693767,
+          0.115625,
+          0.20956639566395666
         ],
         "ground_anchor": [
-          0.671875,
-          0.52
+          0.7875,
+          0.5333333333333333
         ],
         "modulate": [
           1,
@@ -12888,46 +12921,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The archive sits on the dry rear-eastern bench above the central trading terrace.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_lantern_archive.prompt.txt",
-        "prompt_sha256": "aa112fe8306ee80ed9665edb3133d5f8188b02c382a2be2084032acc2a2819c5",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-55e1a50e-77e1-4d66-923f-eb76cdbdddf5.png",
-        "shared_art_from": "building_lantern_archive"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_trade_exchange": {
-        "asset_id": "faction_sunvault_building_market_square",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_market_square.png",
-        "source_sha256": "315e306f3b270f54a5170023312cde250321b72a096e3cc1febfacea2751b60c",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange.png",
+        "source_sha256": "3f15dc53604c56c81db5fbd3808b0f266bcf10d5a946f427a4665765b72864c5",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_trade_exchange.prompt.txt",
+        "prompt_sha256": "33f982298e1acc9766bed773c669c1132c804bf822973f7c636e968f3a070894",
+        "generation_output": "exec-e02e0eeb-1f1c-458a-a8e9-3e1fe34b613b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_market_square.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_trade_exchange",
         "trim_box": [
           0,
-          0,
-          1536,
-          973
+          25,
+          1254,
+          1234
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_market_square.png",
-        "trimmed_sha256": "d3d43ccea99c9083b2e5e47aaaac06e54df4ad9edb3f303988d837b64ecc12b7",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_market_square.png",
-        "runtime_sha256": "61e9e4dc36186cbea411f51e38cc08f407ca9d20111aa3813a8a53e4467d1ef5",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_trade_exchange.png",
+        "runtime_sha256": "8fb2b1e3bf6d2c7c0f640ab0fb5a9d05c96a28ec0f524364fe7b279fb8ebee32",
         "runtime_size": [
           512,
-          324
+          494
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_trade_exchange.png",
+        "icon_sha256": "6a099dc1afb36b055dd4bf629d0f519a3a90aa36c55b39a2bfbcb4536033c62c",
         "normalized_rect": [
-          0.496875,
-          0.55,
-          0.1875,
-          0.2111545138888889
+          0.2046875,
+          0.4907097288676236,
+          0.115625,
+          0.1981791600212653
         ],
         "ground_anchor": [
-          0.6,
-          0.7555555555555555
+          0.2625,
+          0.6888888888888889
         ],
         "modulate": [
           1,
@@ -12936,46 +12972,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Low trading arcades grow from the central-right paved market terrace, leaving the main hall and canal readable.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_market_square.prompt.txt",
-        "prompt_sha256": "ebf56789fc334909007901b14d64bb101f2af93e2ffc4589cb32df579286fa18",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-c9758f10-010e-4583-b637-72e1b3b165eb.png",
-        "shared_art_from": "building_market_square"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_storehouse_1": {
-        "asset_id": "faction_sunvault_building_sunvault_lens_tithe",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "source_sha256": "19609907e0b8080776f1400edc14b560de074db624fd73ec1b7ffdf3354d6cdc",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.png",
+        "source_sha256": "070c13a0113465a39deb14ac59f1ecbbbbe53d46e0fff44aa40df5dd9c939d93",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.prompt.txt",
+        "prompt_sha256": "d63b13089fc11189e8c19bf772903fb188db7ece144a9f4d05e13ffa62c3a518",
+        "generation_output": "exec-1d8c378a-4d62-46fd-b862-739b66129da7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_storehouse_1",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          21,
+          1240,
+          1254
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "trimmed_sha256": "40febccdbe5c065ab0c340ad5d3316cb334f92a7c39bf94c6751575dc064574e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "runtime_sha256": "b8049e5f8eadcd23a2ebc55edafc347ae4eac8884ae59ed79c76f9c71215e636",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_storehouse_1.png",
+        "runtime_sha256": "35adc75201c327ad99a0473a056c962afb589c36d2feefb81f642ce8d53cde04",
         "runtime_size": [
           512,
-          344
+          509
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_storehouse_1.png",
+        "icon_sha256": "e6c10e1516a108708d4056fac94e1524e5fefd622a66a2457b51eaf560c618cf",
         "normalized_rect": [
-          0.384375,
-          0.4722222222222222,
-          0.1486328125,
-          0.17777777777777778
+          0.590625,
+          0.47859318996415773,
+          0.08125,
+          0.14362903225806453
         ],
         "ground_anchor": [
-          0.46875,
-          0.6333333333333333
+          0.63125,
+          0.6222222222222222
         ],
         "modulate": [
           1,
@@ -12984,46 +13023,49 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The assay house extends the existing stone canal-crossing abutment; arches and bank-facing stairs meet that permanent crossing.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_tithe.prompt.txt",
-        "prompt_sha256": "77932be65c97e4eefc8baccb3c6f0cbbe248700fe3f22cbf4a4780f87e31a1d2",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-4a9782ab-1c1b-4b89-9401-af39e5d9fe2c.png",
-        "shared_art_from": "building_sunvault_lens_tithe"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_storehouse_2": {
-        "asset_id": "faction_sunvault_building_sunvault_lens_tithe",
-        "source_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "source_sha256": "19609907e0b8080776f1400edc14b560de074db624fd73ec1b7ffdf3354d6cdc",
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2.png",
+        "source_sha256": "56f53252201078d177adc4165ef60ccc301141d525af8a546f5fc9306d8f5305",
         "source_size": [
-          1536,
-          1024
+          1254,
+          1254
         ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_2.prompt.txt",
+        "prompt_sha256": "38d9560e2ea3af53b8d06e023f5c1c10c768a0459f9fb5db3457c7fb54942eb4",
+        "generation_output": "exec-4e1d32cf-546a-42d6-9614-73ffba326ee7.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_storehouse_1.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_storehouse_2",
         "trim_box": [
           0,
-          0,
-          1522,
-          1024
+          37,
+          1236,
+          1235
         ],
-        "trimmed_path": "res://art/towns/source/trimmed/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "trimmed_sha256": "40febccdbe5c065ab0c340ad5d3316cb334f92a7c39bf94c6751575dc064574e",
-        "runtime_path": "res://art/towns/runtime/scene_layers/faction_sunvault/building_sunvault_lens_tithe.png",
-        "runtime_sha256": "b8049e5f8eadcd23a2ebc55edafc347ae4eac8884ae59ed79c76f9c71215e636",
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_storehouse_2.png",
+        "runtime_sha256": "ed932490eaf15eb1e163c8de6da2056739056bc34f83e66349c3bc9579e1dc33",
         "runtime_size": [
           512,
-          344
+          496
         ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_storehouse_2.png",
+        "icon_sha256": "3b851193fe0d3b0b398702488481a4fca2d1a5666b7606e94f2abb69b36187af",
         "normalized_rect": [
-          0.384375,
-          0.4722222222222222,
-          0.1486328125,
-          0.17777777777777778
+          0.5796875,
+          0.4445253505933118,
+          0.103125,
+          0.17769687162891046
         ],
         "ground_anchor": [
-          0.46875,
-          0.6333333333333333
+          0.63125,
+          0.6222222222222222
         ],
         "modulate": [
           1,
@@ -13032,14 +13074,8 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The assay house extends the existing stone canal-crossing abutment; arches and bank-facing stairs meet that permanent crossing.",
-        "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_tithe.prompt.txt",
-        "prompt_sha256": "77932be65c97e4eefc8baccb3c6f0cbbe248700fe3f22cbf4a4780f87e31a1d2",
-        "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
-        "reference_inputs": [],
-        "generation_date": "2026-09-09",
-        "generation_output": "exec-4a9782ab-1c1b-4b89-9401-af39e5d9fe2c.png",
-        "shared_art_from": "building_sunvault_lens_tithe"
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       },
       "building_dev_growth_1": {
         "asset_id": "faction_sunvault_building_sunvault_relay_scribes",
@@ -13064,14 +13100,14 @@
           348
         ],
         "normalized_rect": [
-          0.504486083984375,
-          0.4777777777777778,
-          0.134857177734375,
-          0.16276041666666666
+          0.0734375,
+          0.5904947916666666,
+          0.090625,
+          0.10950520833333334
         ],
         "ground_anchor": [
-          0.58,
-          0.63
+          0.11875,
+          0.7
         ],
         "modulate": [
           1,
@@ -13080,7 +13116,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The relay office joins the dry canal-side bank just above the market terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_relay_scribes.prompt.txt",
         "prompt_sha256": "18a941681acd7eb2716631dcd6d3a1ca918cd0ddeff3efd95bd4a8893dfd2f02",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13112,14 +13148,14 @@
           335
         ],
         "normalized_rect": [
-          0.18609375,
-          0.30583333333333335,
-          0.0590625,
-          0.0686328125
+          0.328125,
+          0.5242838541666667,
+          0.09375,
+          0.10904947916666667
         ],
         "ground_anchor": [
-          0.22,
-          0.37
+          0.375,
+          0.6333333333333333
         ],
         "modulate": [
           1,
@@ -13128,7 +13164,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Distant range scaled to the rear western plateau, above the cliff lip and clear of the painted pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_prism_range.prompt.txt",
         "prompt_sha256": "5db52684c867ecc70be494e62884d886423c7f7b607ebf0edb579e4769758d34",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13160,14 +13196,14 @@
           334
         ],
         "normalized_rect": [
-          0.41531250000000003,
-          0.33044469762731493,
-          0.12386840820312499,
-          0.1434836154514194
+          0.5546875,
+          0.6782335069444444,
+          0.090625,
+          0.10509982638888889
         ],
         "ground_anchor": [
-          0.484375,
-          0.4666666666666667
+          0.6,
+          0.7833333333333333
         ],
         "modulate": [
           1,
@@ -13176,7 +13212,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact rear duel court, preserving a visible approach beside the observatory. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_duel_circle.prompt.txt",
         "prompt_sha256": "498ac5c5b5abb7c02a279dd2b564cdad703f7c2b850f319d90063e617f61fdf4",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13208,14 +13244,14 @@
           341
         ],
         "normalized_rect": [
-          0.503125,
-          0.3611111111111111,
-          0.14375,
-          0.17037037037033334
+          0.0515625,
+          0.7260308159722222,
+          0.090625,
+          0.10730251736111111
         ],
         "ground_anchor": [
-          0.5875,
-          0.5166666666666667
+          0.096875,
+          0.8333333333333334
         ],
         "modulate": [
           1,
@@ -13224,7 +13260,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The brokers occupy the dry rear-central terrace between the duel court and archive.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_resonant_exchange.prompt.txt",
         "prompt_sha256": "7097b4d9af3602afb10f970add852515127686ec66acab4844d115e7beeb9b32",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13256,14 +13292,14 @@
           332
         ],
         "normalized_rect": [
-          0.09638671875,
-          0.3277777777777778,
-          0.147265625,
-          0.16979166666666667
+          0.18125,
+          0.7252604166666666,
+          0.09375,
+          0.10807291666666667
         ],
         "ground_anchor": [
-          0.18125,
-          0.4888888888888889
+          0.228125,
+          0.8333333333333334
         ],
         "modulate": [
           1,
@@ -13272,7 +13308,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The generic cloister joins the western terrace behind the advanced workshop, clear of the permanent main-hall dome.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_harmonic_cloister.prompt.txt",
         "prompt_sha256": "14ae26ade40eda55854fd3f7156d3189627abcdb15e97a238d3fbeb56b6e196f",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13304,14 +13340,14 @@
           358
         ],
         "normalized_rect": [
-          0.420062255859375,
-          0.17222222222222222,
-          0.187774658203125,
-          0.23333333333333334
+          0.325,
+          0.6945746527777777,
+          0.09375,
+          0.11653645833333333
         ],
         "ground_anchor": [
-          0.52625,
-          0.38333333333333336
+          0.371875,
+          0.8111111111111111
         ],
         "modulate": [
           1,
@@ -13320,7 +13356,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The generic artillery relay rises from the rear-central sandstone ridge.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_aurora_spire.prompt.txt",
         "prompt_sha256": "e050f7d808a671ff6d9041cd58e3e36f2dd2066132aee29e9d71bc62ddbcaed3",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13352,14 +13388,14 @@
           342
         ],
         "normalized_rect": [
-          0.553125,
-          0.17777777777777778,
-          0.215203857421875,
-          0.25555555555555554
+          0.4484375,
+          0.6368272569444444,
+          0.090625,
+          0.1076171875
         ],
         "ground_anchor": [
-          0.671875,
-          0.4166666666666667
+          0.49375,
+          0.7444444444444445
         ],
         "modulate": [
           1,
@@ -13368,7 +13404,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The generic command lattice occupies the rear eastern ridge, separate from the faction colossus works.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_daybreak_matrix.prompt.txt",
         "prompt_sha256": "25bdd9797503d683c9d8192228ca17ec072fa3f1d97ebbe6eac73ea23ff74104",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13400,14 +13436,14 @@
           341
         ],
         "normalized_rect": [
-          0.659375,
-          0.55,
-          0.1625,
-          0.19259259259255557
+          0.6421875,
+          0.6556749131944445,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.746875,
-          0.7244444444444444
+          0.69375,
+          0.7777777777777778
         ],
         "modulate": [
           1,
@@ -13416,7 +13452,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction warden academy joins the central-eastern working terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_shard_yard.prompt.txt",
         "prompt_sha256": "ba3e310b751ca1c7c18e03c9accddf43905bb4aefc513b0786f218ede3491925",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13448,14 +13484,14 @@
           341
         ],
         "normalized_rect": [
-          0.659375,
-          0.55,
-          0.1625,
-          0.19259259259255557
+          0.6421875,
+          0.6556749131944445,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.746875,
-          0.7244444444444444
+          0.69375,
+          0.7777777777777778
         ],
         "modulate": [
           1,
@@ -13464,7 +13500,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction warden academy joins the central-eastern working terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_shard_yard.prompt.txt",
         "prompt_sha256": "ba3e310b751ca1c7c18e03c9accddf43905bb4aefc513b0786f218ede3491925",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13496,14 +13532,14 @@
           341
         ],
         "normalized_rect": [
-          0.659375,
-          0.55,
-          0.1625,
-          0.19259259259255557
+          0.6421875,
+          0.6556749131944445,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.746875,
-          0.7244444444444444
+          0.69375,
+          0.7777777777777778
         ],
         "modulate": [
           1,
@@ -13512,7 +13548,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction warden academy joins the central-eastern working terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_shard_yard.prompt.txt",
         "prompt_sha256": "ba3e310b751ca1c7c18e03c9accddf43905bb4aefc513b0786f218ede3491925",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13544,14 +13580,14 @@
           341
         ],
         "normalized_rect": [
-          0.659375,
-          0.55,
-          0.1625,
-          0.19259259259255557
+          0.6421875,
+          0.6556749131944445,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.746875,
-          0.7244444444444444
+          0.69375,
+          0.7777777777777778
         ],
         "modulate": [
           1,
@@ -13560,7 +13596,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The faction warden academy joins the central-eastern working terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_shard_yard.prompt.txt",
         "prompt_sha256": "ba3e310b751ca1c7c18e03c9accddf43905bb4aefc513b0786f218ede3491925",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13592,14 +13628,14 @@
           341
         ],
         "normalized_rect": [
-          0.55515625,
-          0.6730555555555556,
-          0.10359375,
-          0.12277777777777778
+          0.7609375,
+          0.7223415798611111,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.61,
-          0.785
+          0.8125,
+          0.8444444444444444
         ],
         "modulate": [
           1,
@@ -13608,7 +13644,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Lens gallery on the west edge of the eastern terrace, beside rather than beneath the harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_gallery.prompt.txt",
         "prompt_sha256": "83839622137d7bda7371ca692145b0849759eb2f0ea26b07154c6ffe8cb9476a",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13640,14 +13676,14 @@
           341
         ],
         "normalized_rect": [
-          0.55515625,
-          0.6730555555555556,
-          0.10359375,
-          0.12277777777777778
+          0.7609375,
+          0.7223415798611111,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.61,
-          0.785
+          0.8125,
+          0.8444444444444444
         ],
         "modulate": [
           1,
@@ -13656,7 +13692,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Lens gallery on the west edge of the eastern terrace, beside rather than beneath the harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_gallery.prompt.txt",
         "prompt_sha256": "83839622137d7bda7371ca692145b0849759eb2f0ea26b07154c6ffe8cb9476a",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13688,14 +13724,14 @@
           341
         ],
         "normalized_rect": [
-          0.55515625,
-          0.6730555555555556,
-          0.10359375,
-          0.12277777777777778
+          0.7609375,
+          0.7223415798611111,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.61,
-          0.785
+          0.8125,
+          0.8444444444444444
         ],
         "modulate": [
           1,
@@ -13704,7 +13740,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Lens gallery on the west edge of the eastern terrace, beside rather than beneath the harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_gallery.prompt.txt",
         "prompt_sha256": "83839622137d7bda7371ca692145b0849759eb2f0ea26b07154c6ffe8cb9476a",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13736,14 +13772,14 @@
           341
         ],
         "normalized_rect": [
-          0.55515625,
-          0.6730555555555556,
-          0.10359375,
-          0.12277777777777778
+          0.7609375,
+          0.7223415798611111,
+          0.103125,
+          0.12210286458333333
         ],
         "ground_anchor": [
-          0.61,
-          0.785
+          0.8125,
+          0.8444444444444444
         ],
         "modulate": [
           1,
@@ -13752,7 +13788,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Lens gallery on the west edge of the eastern terrace, beside rather than beneath the harmonic cloister. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_lens_gallery.prompt.txt",
         "prompt_sha256": "83839622137d7bda7371ca692145b0849759eb2f0ea26b07154c6ffe8cb9476a",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13784,14 +13820,14 @@
           344
         ],
         "normalized_rect": [
-          0.7987345377604166,
-          0.7343333333333333,
-          0.11093587239583334,
-          0.1324450231481718
+          0.8484375,
+          0.7546006944444444,
+          0.103125,
+          0.12317708333333334
         ],
         "ground_anchor": [
-          0.86,
-          0.86
+          0.9,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -13800,7 +13836,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Forge on the lower eastern paved terrace, inside the sloping cliff edge and below the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_mirror_forge.prompt.txt",
         "prompt_sha256": "9e27add816412b830e03e45c1ded2f9ab9d2944fc7b7f90d8e8314e81a0a9832",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13832,14 +13868,14 @@
           344
         ],
         "normalized_rect": [
-          0.7987345377604166,
-          0.7343333333333333,
-          0.11093587239583334,
-          0.1324450231481718
+          0.8484375,
+          0.7546006944444444,
+          0.103125,
+          0.12317708333333334
         ],
         "ground_anchor": [
-          0.86,
-          0.86
+          0.9,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -13848,7 +13884,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Forge on the lower eastern paved terrace, inside the sloping cliff edge and below the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_mirror_forge.prompt.txt",
         "prompt_sha256": "9e27add816412b830e03e45c1ded2f9ab9d2944fc7b7f90d8e8314e81a0a9832",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13880,14 +13916,14 @@
           344
         ],
         "normalized_rect": [
-          0.7987345377604166,
-          0.7343333333333333,
-          0.11093587239583334,
-          0.1324450231481718
+          0.8484375,
+          0.7546006944444444,
+          0.103125,
+          0.12317708333333334
         ],
         "ground_anchor": [
-          0.86,
-          0.86
+          0.9,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -13896,7 +13932,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Forge on the lower eastern paved terrace, inside the sloping cliff edge and below the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_mirror_forge.prompt.txt",
         "prompt_sha256": "9e27add816412b830e03e45c1ded2f9ab9d2944fc7b7f90d8e8314e81a0a9832",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13928,14 +13964,14 @@
           344
         ],
         "normalized_rect": [
-          0.7987345377604166,
-          0.7343333333333333,
-          0.11093587239583334,
-          0.1324450231481718
+          0.8484375,
+          0.7546006944444444,
+          0.103125,
+          0.12317708333333334
         ],
         "ground_anchor": [
-          0.86,
-          0.86
+          0.9,
+          0.8777777777777778
         ],
         "modulate": [
           1,
@@ -13944,7 +13980,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Forge on the lower eastern paved terrace, inside the sloping cliff edge and below the travelers hall. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_mirror_forge.prompt.txt",
         "prompt_sha256": "9e27add816412b830e03e45c1ded2f9ab9d2944fc7b7f90d8e8314e81a0a9832",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -13976,14 +14012,14 @@
           341
         ],
         "normalized_rect": [
-          0.6389999999999999,
-          0.7471111111111111,
-          0.14250000000000002,
-          0.1688888888888889
+          0.753125,
+          0.8130859375,
+          0.10625,
+          0.1258029513888889
         ],
         "ground_anchor": [
-          0.72,
-          0.9
+          0.80625,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -13992,7 +14028,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Foreground cloister shifted east with a smaller footprint to expose the lens gallery frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_harmonic_cloister.prompt.txt",
         "prompt_sha256": "b00a2f097342ff7eadb24568d5be06e790edd5afd0ed8f2240a64e449899ef88",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14024,14 +14060,14 @@
           341
         ],
         "normalized_rect": [
-          0.6389999999999999,
-          0.7471111111111111,
-          0.14250000000000002,
-          0.1688888888888889
+          0.753125,
+          0.8130859375,
+          0.10625,
+          0.1258029513888889
         ],
         "ground_anchor": [
-          0.72,
-          0.9
+          0.80625,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14040,7 +14076,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Foreground cloister shifted east with a smaller footprint to expose the lens gallery frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_harmonic_cloister.prompt.txt",
         "prompt_sha256": "b00a2f097342ff7eadb24568d5be06e790edd5afd0ed8f2240a64e449899ef88",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14072,14 +14108,14 @@
           341
         ],
         "normalized_rect": [
-          0.6389999999999999,
-          0.7471111111111111,
-          0.14250000000000002,
-          0.1688888888888889
+          0.753125,
+          0.8130859375,
+          0.10625,
+          0.1258029513888889
         ],
         "ground_anchor": [
-          0.72,
-          0.9
+          0.80625,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14088,7 +14124,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Foreground cloister shifted east with a smaller footprint to expose the lens gallery frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_harmonic_cloister.prompt.txt",
         "prompt_sha256": "b00a2f097342ff7eadb24568d5be06e790edd5afd0ed8f2240a64e449899ef88",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14120,14 +14156,14 @@
           341
         ],
         "normalized_rect": [
-          0.6389999999999999,
-          0.7471111111111111,
-          0.14250000000000002,
-          0.1688888888888889
+          0.753125,
+          0.8130859375,
+          0.10625,
+          0.1258029513888889
         ],
         "ground_anchor": [
-          0.72,
-          0.9
+          0.80625,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14136,7 +14172,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Foreground cloister shifted east with a smaller footprint to expose the lens gallery frontage. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_harmonic_cloister.prompt.txt",
         "prompt_sha256": "b00a2f097342ff7eadb24568d5be06e790edd5afd0ed8f2240a64e449899ef88",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14168,14 +14204,14 @@
           405
         ],
         "normalized_rect": [
-          0.3733453369140625,
-          0.33699999999999997,
-          0.033987426757812494,
-          0.047777777777766664
+          0.621875,
+          0.7806857638888889,
+          0.1125,
+          0.158203125
         ],
         "ground_anchor": [
-          0.39,
-          0.38
+          0.678125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14184,7 +14220,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Small observatory on the rear plateau, scaled for its distance behind the main pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_observatory.prompt.txt",
         "prompt_sha256": "675878a4b6fab6d6dba94e155cf3d60f16c679cc5faf99e12cfea386a464dfab",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14216,14 +14252,14 @@
           405
         ],
         "normalized_rect": [
-          0.3733453369140625,
-          0.33699999999999997,
-          0.033987426757812494,
-          0.047777777777766664
+          0.621875,
+          0.7806857638888889,
+          0.1125,
+          0.158203125
         ],
         "ground_anchor": [
-          0.39,
-          0.38
+          0.678125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14232,7 +14268,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Small observatory on the rear plateau, scaled for its distance behind the main pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_observatory.prompt.txt",
         "prompt_sha256": "675878a4b6fab6d6dba94e155cf3d60f16c679cc5faf99e12cfea386a464dfab",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14264,14 +14300,14 @@
           405
         ],
         "normalized_rect": [
-          0.3733453369140625,
-          0.33699999999999997,
-          0.033987426757812494,
-          0.047777777777766664
+          0.621875,
+          0.7806857638888889,
+          0.1125,
+          0.158203125
         ],
         "ground_anchor": [
-          0.39,
-          0.38
+          0.678125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14280,7 +14316,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Small observatory on the rear plateau, scaled for its distance behind the main pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_observatory.prompt.txt",
         "prompt_sha256": "675878a4b6fab6d6dba94e155cf3d60f16c679cc5faf99e12cfea386a464dfab",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14312,14 +14348,14 @@
           405
         ],
         "normalized_rect": [
-          0.3733453369140625,
-          0.33699999999999997,
-          0.033987426757812494,
-          0.047777777777766664
+          0.621875,
+          0.7806857638888889,
+          0.1125,
+          0.158203125
         ],
         "ground_anchor": [
-          0.39,
-          0.38
+          0.678125,
+          0.9388888888888889
         ],
         "modulate": [
           1,
@@ -14328,7 +14364,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Small observatory on the rear plateau, scaled for its distance behind the main pavilion. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_observatory.prompt.txt",
         "prompt_sha256": "675878a4b6fab6d6dba94e155cf3d60f16c679cc5faf99e12cfea386a464dfab",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14360,14 +14396,14 @@
           350
         ],
         "normalized_rect": [
-          0.78125,
-          0.49444444444444446,
-          0.20087890625,
-          0.24444444444444444
+          0.0640625,
+          0.7644748263888889,
+          0.134375,
+          0.1633029513888889
         ],
         "ground_anchor": [
-          0.90625,
-          0.7222222222222222
+          0.13125,
+          0.9277777777777778
         ],
         "modulate": [
           1,
@@ -14376,7 +14412,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The bastion works meet the eastern sandstone ledge below the protected command overlay.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_aurora_spire.prompt.txt",
         "prompt_sha256": "7ab1f1af2988405267239c6638f655508eceb582190b6c76048374d5d3382a7b",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14408,14 +14444,14 @@
           350
         ],
         "normalized_rect": [
-          0.78125,
-          0.49444444444444446,
-          0.20087890625,
-          0.24444444444444444
+          0.0640625,
+          0.7644748263888889,
+          0.134375,
+          0.1633029513888889
         ],
         "ground_anchor": [
-          0.90625,
-          0.7222222222222222
+          0.13125,
+          0.9277777777777778
         ],
         "modulate": [
           1,
@@ -14424,7 +14460,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The bastion works meet the eastern sandstone ledge below the protected command overlay.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_aurora_spire.prompt.txt",
         "prompt_sha256": "7ab1f1af2988405267239c6638f655508eceb582190b6c76048374d5d3382a7b",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14456,14 +14492,14 @@
           341
         ],
         "normalized_rect": [
-          0.021875,
-          0.37222222222222223,
-          0.196875,
-          0.23333333333333334
+          0.21875,
+          0.7575737847222223,
+          0.14375,
+          0.17020399305555556
         ],
         "ground_anchor": [
-          0.1375,
-          0.5833333333333334
+          0.290625,
+          0.9277777777777778
         ],
         "modulate": [
           1,
@@ -14472,7 +14508,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The colossus fabrication court joins the western rock-cut terrace, separate from the generic rear command lattice.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_daybreak_matrix.prompt.txt",
         "prompt_sha256": "60c026db37ad03950913f6c374c44b3725ab4f388e26205782c2d7ace88749f5",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14504,14 +14540,14 @@
           341
         ],
         "normalized_rect": [
-          0.021875,
-          0.37222222222222223,
-          0.196875,
-          0.23333333333333334
+          0.21875,
+          0.7575737847222223,
+          0.14375,
+          0.17020399305555556
         ],
         "ground_anchor": [
-          0.1375,
-          0.5833333333333334
+          0.290625,
+          0.9277777777777778
         ],
         "modulate": [
           1,
@@ -14520,7 +14556,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The colossus fabrication court joins the western rock-cut terrace, separate from the generic rear command lattice.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_daybreak_matrix.prompt.txt",
         "prompt_sha256": "60c026db37ad03950913f6c374c44b3725ab4f388e26205782c2d7ace88749f5",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14552,14 +14588,14 @@
           329
         ],
         "normalized_rect": [
-          0.475,
-          0.6914713541666667,
-          0.1589599609375,
-          0.18151041666666667
+          0.3734375,
+          0.8099717881944445,
+          0.103125,
+          0.11780598958333334
         ],
         "ground_anchor": [
-          0.56375,
-          0.86
+          0.425,
+          0.9277777777777778
         ],
         "modulate": [
           1,
@@ -14568,7 +14604,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The teaching pavilion joins the paved lower central terrace beside the reservoir wall.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_prism_oratory.prompt.txt",
         "prompt_sha256": "6bc7448e7005525d34afa7147bfee50b493b30f0dec3eb4c6d973d3def910c40",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14600,14 +14636,14 @@
           347
         ],
         "normalized_rect": [
-          0.0375,
-          0.5777777777777777,
-          0.156573486328125,
-          0.18888888888888888
+          0.496875,
+          0.8128472222222223,
+          0.1,
+          0.12048611111111111
         ],
         "ground_anchor": [
-          0.12375,
-          0.75
+          0.546875,
+          0.9333333333333333
         ],
         "modulate": [
           1,
@@ -14616,7 +14652,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "The replacement workshop grows along the western reservoir-wall service terrace.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_halo_battery_yard.prompt.txt",
         "prompt_sha256": "a9f298dba1813abb1c126dbf3fbba0c4d1fcf515a5316144de75b374550db85b",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14648,14 +14684,14 @@
           359
         ],
         "normalized_rect": [
-          0.6824917602539062,
-          0.3025,
-          0.08694305419921876,
-          0.10833333333333334
+          0.528125,
+          0.7197916666666667,
+          0.1,
+          0.12465277777777778
         ],
         "ground_anchor": [
-          0.73,
-          0.4
+          0.578125,
+          0.8444444444444444
         ],
         "modulate": [
           1,
@@ -14664,7 +14700,7 @@
           1
         ],
         "hit_alpha_threshold": 0.25,
-        "grounding": "Compact rear relay hall west of the command rail. Original raster preserved; composition repair: docs/all-town-building-composition-repair.md.",
+        "grounding": "Existing Sunvault artwork relocated onto the cleared plateau terraces pending its original replacement; keep paths and other buildings selectable.",
         "prompt_path": "res://art/towns/source/generated/scene_layers/faction_sunvault/building_sunvault_zenith_relay_hall.prompt.txt",
         "prompt_sha256": "27abbc8fe0d01b01b2762dc643c100653aca4d1fb91584fd5b27c4058155c4b3",
         "curation": "Original built-in text-only Sunvault faction painting. Preserve generated alpha, sunlit sandstone/gold/violet-glass materials, the village and 88 earlier layers. Grounded composition, full rule/input/save and Linux/Windows acceptance are recorded separately in the art-repair report; detached fixtures are not earned progression.",
@@ -14672,6 +14708,210 @@
         "generation_date": "2026-09-09",
         "generation_output": "exec-e641e4a4-0b51-4300-80d5-58e95275c061.png",
         "shared_art_from": "building_sunvault_zenith_relay_hall"
+      },
+      "building_town_hall": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.png",
+        "source_sha256": "d9b93624ea832c3bf56dea42b1a0a9bd73b09a665f06c277c721267976ef6b1a",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.prompt.txt",
+        "prompt_sha256": "3967beeb37babb9ed074ddd8406d78bdf3a33b3ac31d8be7a30cfb7926fffae7",
+        "generation_output": "exec-3480c1e6-647e-4c23-b546-d82e6830b785.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_town_hall",
+        "trim_box": [
+          0,
+          71,
+          1192,
+          1228
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_town_hall.png",
+        "runtime_sha256": "c2f598a4e6b950b0c615ed4adbb4a544dcc708f315e09bcd2b295dad54afbd95",
+        "runtime_size": [
+          512,
+          497
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_town_hall.png",
+        "icon_sha256": "69ab3d235b7cb46b9fc6b357f8df78bbf0951439b9be91314c8a6aa66ee3ba88",
+        "normalized_rect": [
+          0.428125,
+          0.2790734526472782,
+          0.13125,
+          0.22648210290827742
+        ],
+        "ground_anchor": [
+          0.49375,
+          0.5055555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_2": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.png",
+        "source_sha256": "b2a1fb461214a52b37f3440c44b8f55da81f1b948d1f871f608c0c5bda763edf",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.prompt.txt",
+        "prompt_sha256": "4d5bb267970cd54fd0b3d67a19835c205efec72a4ed62aa5ac6d716e530d9f38",
+        "generation_output": "exec-41478b94-82e6-4539-9ed4-fa9dfa78ef85.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_town_hall.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_hall_2",
+        "trim_box": [
+          0,
+          48,
+          1254,
+          1230
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_hall_2.png",
+        "runtime_sha256": "1444fcdf09142150fb5d2dcb063d1d7c6d6e035123f12a6cb32da5ef7fb61694",
+        "runtime_size": [
+          512,
+          483
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_hall_2.png",
+        "icon_sha256": "08a8ddfbd3951345467d16ad99284b249fe6e002dc37017f599d4bdf0ef35429",
+        "normalized_rect": [
+          0.415625,
+          0.24372674109516215,
+          0.15625,
+          0.2618288144603934
+        ],
+        "ground_anchor": [
+          0.49375,
+          0.5055555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_3": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png",
+        "source_sha256": "e286c3ef63f7a3de94308e6df6d3dd3ccb29c6c85bcd446f98de6d4c816cce51",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.prompt.txt",
+        "prompt_sha256": "da70bd0b7695034ffb620290ee0d800b0b48f8966154375ce5c810b4da173748",
+        "generation_output": "exec-8715fd57-6ea0-48cd-9822-062bc6917dcc.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_2.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_hall_3",
+        "trim_box": [
+          0,
+          41,
+          1254,
+          1224
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_hall_3.png",
+        "runtime_sha256": "9a64b3fd459002f9f309e711509b96c09c1d0118d738b0fed47766de69c17135",
+        "runtime_size": [
+          512,
+          483
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_hall_3.png",
+        "icon_sha256": "255c62d940cc3299a2a5e4aaf634ad25a0cd7144d52913b3d6a7ec9b364dc7f4",
+        "normalized_rect": [
+          0.403125,
+          0.20157717526138577,
+          0.18125,
+          0.3039783802941698
+        ],
+        "ground_anchor": [
+          0.49375,
+          0.5055555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
+      },
+      "building_dev_hall_4": {
+        "source_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4.png",
+        "source_sha256": "c0da4da8399a927bb15901abccce4c55a9cf4ec3a44412a942b92739a47faeeb",
+        "source_size": [
+          1254,
+          1254
+        ],
+        "prompt_path": "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_4.prompt.txt",
+        "prompt_sha256": "d4d96ddec61445f2c803017a2ace635b779d7448d5b60b6705ec794d9fad8ad8",
+        "generation_output": "exec-fa90f7b9-a4e2-4b8f-a3c3-f624ddf95d8b.png",
+        "generation_date": "2026-09-22",
+        "generation_tool": "built_in_image_gen",
+        "reference_inputs": [
+          "res://art/towns/source/generated/overhaul/faction_sunvault/building_dev_hall_3.png"
+        ],
+        "processing_tool": "tools/prepare_town_overhaul_art.py",
+        "asset_id": "faction_sunvault_building_dev_hall_4",
+        "trim_box": [
+          0,
+          21,
+          1254,
+          1219
+        ],
+        "runtime_path": "res://art/towns/runtime/scene_layers/overhaul/faction_sunvault/building_dev_hall_4.png",
+        "runtime_sha256": "086de29a903fb1bfb70175e1e2742f722923b592d5dbd377814ad50fe605c9db",
+        "runtime_size": [
+          512,
+          489
+        ],
+        "icon_path": "res://art/towns/runtime/buildings/overhaul/faction_sunvault/building_dev_hall_4.png",
+        "icon_sha256": "bc08a84f8446678bcd5a6084cac6ae5e973a6f8beeb6b8f0ee5fee21f8e6dee4",
+        "normalized_rect": [
+          0.390625,
+          0.15526315789473685,
+          0.20625,
+          0.3502923976608187
+        ],
+        "ground_anchor": [
+          0.49375,
+          0.5055555555555555
+        ],
+        "modulate": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "hit_alpha_threshold": 0.25,
+        "grounding": "Sunvault ivory terrace campus: front-left doorway grounded on the authored sandstone platform, shared anchor for all stages in this line.",
+        "curation": "Original separate upgrade painting; see production packet for source and prompt. Runtime rendering is reviewed per integrated slice."
       }
     },
     "faction_thornwake": {

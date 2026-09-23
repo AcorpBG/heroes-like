@@ -21,6 +21,8 @@ func check_exposed(view):
 				var p:Vector2=button.size*Vector2((x+.5)/20.,(y+.5)/20.)
 				if not button._has_point(p):continue
 				painted+=1
+				# Off-screen alpha cannot serve as exposed user input.
+				if not get_viewport().get_visible_rect().has_point(button.global_position+p):continue
 				var screen:Vector2=button.position+p
 				var covered:=false
 				for other in controls:
@@ -123,6 +125,8 @@ def script_for_part(part, faction='embercourt'):
         script = setup + SCRIPT[dwellings:].replace('for branch in [1,2]:', 'for branch in [' + part + ']:')
     if faction == 'mireclaw':
         script = script.replace('embercourt', 'mireclaw').replace('town_riverwatch', 'town_duskfen')
+    elif faction == 'sunvault':
+        script = script.replace('embercourt', 'sunvault').replace('town_riverwatch', 'town_prismhearth')
     return script
 
 
@@ -131,7 +135,7 @@ if __name__ == '__main__':
     p.add_argument('--godot',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--part',choices=['all','civic','foundation','1','2'],default='all')
-    p.add_argument('--faction',choices=['embercourt','mireclaw'],default='embercourt')
+    p.add_argument('--faction',choices=['embercourt','mireclaw','sunvault'],default='embercourt')
     args=p.parse_args()
     parts=['civic','1','2'] if args.part=='all' else [args.part]
     results=[run_probe(script_for_part(part,args.faction),args.godot,args.output/part,'TOWN_CIVIC_ART_REPORT') for part in parts]
