@@ -1,0 +1,136 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v1.png",
+      "sha256": "4269e74ac4bf395436dfa4e8c8b261f59894a350556783b0e8778ed2c15e320f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v1.prompt.txt",
+      "prompt_sha256": "fee7725bdc731ccbd8f333b678f9ce7cabf50756d7094f662dd3ea41de3e2d78",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-cf8611d1-acce-4c4f-be23-517ade2166bc.png",
+      "tool": "built-in image_gen",
+      "status": "rejected: extra middle foot and weak near-leg motion"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v2.png",
+      "sha256": "9784dfe5ad91d2cee87fed41febeed724e225c9c4a2f6c245bbf7fe5d869ead4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v2.prompt.txt",
+      "prompt_sha256": "1677f313b6e4eabcfd44812eb9b28c6d21bc1042768b5edd42b2127defab2127",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-67a8242b-0796-4d2b-b2d5-3c52444e0172.png",
+      "tool": "built-in image_gen",
+      "status": "accepted: four-leg alternating crawl"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v1.png",
+      "sha256": "11e9602c0abd058004296329b20aee2bc725b9a469efa540824a33bcecee870b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v1.prompt.txt",
+      "prompt_sha256": "a3c2c0653a4bfa107b109eed08afa982fc3e9860c2d96cdf39c6d657f3ac69a9",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-17f90f4e-cd0b-4d01-a61e-f44e1fa8b2fc.png",
+      "tool": "built-in image_gen",
+      "status": "superseded: extra central feet"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v1.png",
+      "sha256": "3be139549156dc24487c2a36a138c9b1524d49851a435387abaaf8921636f38a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v1.prompt.txt",
+      "prompt_sha256": "cf2b13f39abb0e2acd8c27255341a0d0a2558e4432f9f8136f06f08ca0175c07",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-69fabdfe-30d0-461b-b50d-256173225e4a.png",
+      "tool": "built-in image_gen",
+      "status": "superseded: extra central strut and fifth foot"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v1.png",
+      "sha256": "056177aecde778ebbda35f82de950d1677386ae3eeee865c4c3dd21557bc5d6c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v1.prompt.txt",
+      "prompt_sha256": "e69bd8d15ee6b41d6386607519410cb6f56b60a136c3e438a260e05c52d0286d",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-9d03d6f9-1235-42c8-9e99-659655f4fbc6.png",
+      "tool": "built-in image_gen",
+      "status": "superseded: extra middle leg"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v2.png",
+      "sha256": "038e2f7ac93b9cca0aaf2cecac5ddd744e323b627751c62c7c129c74d098003d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v2.prompt.txt",
+      "prompt_sha256": "7356917d9a42509150ab830a0ffeccf25ac1851faa93d6559651bb9cc0664505",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v1.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-140f8309-811d-461b-922b-9f8ebd7ec85a.png",
+      "tool": "built-in image_gen",
+      "status": "accepted only original frames1-7; frame0 missing shield-side foot is superseded"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v1.png",
+      "sha256": "e39a91755a3f2c3260468a8669071de784aa918ca9471e0b0e5a8f4b27aa9c16",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v1.prompt.txt",
+      "prompt_sha256": "34dafeab3f957f14bc4cde22d54d9746d9e509b34ca518a327c2ad6678ff1f47",
+      "reference": "art/units/source/curated/unit_sunvault_aurora_ballistae.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-3939e0ad-b8dc-40f4-87f2-f5da6d8bd0c8.png",
+      "tool": "built-in image_gen",
+      "status": "superseded: initial extra central strut and fifth foot"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v2.png",
+      "sha256": "bd1494d27a1f1ba861587c62233b57ecb37e61b451d36f8b76f4b96f81a6fe96",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v2.prompt.txt",
+      "prompt_sha256": "2ffb1cb149248db92c625da021f78855cd776b302a09a2589fa8b4cded002f39",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v1.png",
+        "art/units/source/curated/unit_sunvault_aurora_ballistae.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e27731e5-64ce-4d19-afce-c4a4d2388bfa.png",
+      "tool": "built-in image_gen",
+      "status": "superseded: remaining top-right extra foot and missing rear foot in second-row-left"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v3.png",
+      "sha256": "980a0c2afa569e782fdb325c25060b41313c29ef389f7988cf2a0522fe381439",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v3.prompt.txt",
+      "prompt_sha256": "1e259ea50fcd13318c66277a510beb923e9cecba41f339bcd626f75538048dbf",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v2.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c85084aa-e32e-40e5-a372-e02dad43a16a.png",
+      "tool": "built-in image_gen",
+      "status": "accepted: targeted four-leg attack repair"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v2.png",
+      "sha256": "5e30abcd0fd183519dda396ee149c631ee87181a5a1e3106d5a04f6cc1314df5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v2.prompt.txt",
+      "prompt_sha256": "ad19161e730eb097b5afa6b3b375daefe05b5b3c35cc58aa11fe2065d859dcda",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-9f5ae9b1-fa92-4f29-905e-01be784be445.png",
+      "tool": "built-in image_gen",
+      "status": "accepted: four-leg support salute"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v2.png",
+      "sha256": "e58d40b03b95a96ce7c160697eb3e06ab65e95b70ba53431ceed33e2babbdeda",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v2.prompt.txt",
+      "prompt_sha256": "11a5cc0425843c8598e6a495c719d993d7a1b1d223ecf22962a248c2a24889c6",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v1.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-16bec295-c175-4262-842a-858093c2cc1b.png",
+      "tool": "built-in image_gen",
+      "status": "accepted: initial anatomy corrected, existing collapse preserved"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v3.png",
+      "sha256": "d9316f9036b46642913360f7cedfb8253392c5df936574a27b20384971878b8b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v3.prompt.txt",
+      "prompt_sha256": "50d3816e8b5dcc1c10cdb562654b5843c02289c69d7da7d303df5f6d10704e9b",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v2.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-149a284b-ed3e-44ce-a3c8-eb6e604f7fc7.png",
+      "tool": "built-in image_gen",
+      "status": "accepted only frame0; other edited frames not used, adjacent defense drawings touch at alpha edges"
+    }
+  ]
+}

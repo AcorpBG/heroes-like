@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/attack_v3.png": "980a0c2afa569e782fdb325c25060b41313c29ef389f7988cf2a0522fe381439",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v3.png": "d9316f9036b46642913360f7cedfb8253392c5df936574a27b20384971878b8b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/reactions_v2.png": "038e2f7ac93b9cca0aaf2cecac5ddd744e323b627751c62c7c129c74d098003d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/death_v2.png": "e58d40b03b95a96ce7c160697eb3e06ab65e95b70ba53431ceed33e2babbdeda",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/cast_v2.png": "5e30abcd0fd183519dda396ee149c631ee87181a5a1e3106d5a04f6cc1314df5",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae/move_v2.png": "9784dfe5ad91d2cee87fed41febeed724e225c9c4a2f6c245bbf7fe5d869ead4"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "move",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo native-scale anatomy and motion review: original-image repairs remove extra central struts/feet from attack, support and early collapse, restore the missing shield-side recoil foot, and retain four legitimate legs. Reciprocal mechanical crawl, shield windup/contact/recovery, recoil and brace, blade-mechanism salute and grounded fading-crystal collapse accepted. Reaction uses only repaired first hit pose with original good remaining reactions; existing articulated four-leg idle retained. All required clips accepted, no invented ranged action for this melee construct."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "e368be39378843be24c42418f9f5aab63128f2638c017419613e3cd6ee4cefc4",
+  "atlas_sha256": "a0b1adc5d7b376f08077f4bcc96e264d2018cbcdad20f2f7badcec7737d7827e",
+  "texture_bytes_rgba": 28512000
+}

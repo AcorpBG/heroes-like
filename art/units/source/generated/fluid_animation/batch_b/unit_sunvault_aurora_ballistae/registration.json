@@ -1,0 +1,446 @@
+{
+  "scale_reason": "Fixed source scales preserve the existing 242px construct: attack .71, mechanical salute/reactions/crawl .70, collapse .64. Shared body reference and sole anchors; no pose-specific resizing.",
+  "review_notes": "Original attack/support/collapse anatomy repaired. Reactions use original v2 frames1-7 plus only corrected v3 frame0, preserving prior good art and avoiding the touching edited neighboring defense cells. Legacy four-leg idle retained pending final native review.",
+  "generation_lineage": "provenance.json",
+  "timing": {
+    "attack": {
+      "contact_frame": 4
+    },
+    "cast": {
+      "contact_frame": 4
+    },
+    "move": {
+      "frame_msec": 115
+    }
+  },
+  "sheets": [
+    {
+      "stem": "attack_v3",
+      "scale": 0.71,
+      "seeds": [
+        [
+          330,
+          160
+        ],
+        [
+          900,
+          160
+        ],
+        [
+          330,
+          520
+        ],
+        [
+          920,
+          520
+        ],
+        [
+          390,
+          800
+        ],
+        [
+          912,
+          815
+        ],
+        [
+          335,
+          1150
+        ],
+        [
+          902,
+          1150
+        ]
+      ],
+      "anchors": [
+        [
+          326,
+          342
+        ],
+        [
+          910,
+          342
+        ],
+        [
+          330,
+          665
+        ],
+        [
+          916,
+          668
+        ],
+        [
+          370,
+          980
+        ],
+        [
+          920,
+          980
+        ],
+        [
+          330,
+          1300
+        ],
+        [
+          910,
+          1300
+        ]
+      ],
+      "clips": [
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack"
+      ]
+    },
+    {
+      "stem": "reactions_v2",
+      "scale": 0.7,
+      "seeds": [
+        [
+          789,
+          190
+        ],
+        [
+          278,
+          570
+        ],
+        [
+          797,
+          570
+        ],
+        [
+          290,
+          951
+        ],
+        [
+          795,
+          951
+        ],
+        [
+          280,
+          1340
+        ],
+        [
+          793,
+          1340
+        ]
+      ],
+      "anchors": [
+        [
+          793,
+          366
+        ],
+        [
+          280,
+          754
+        ],
+        [
+          793,
+          754
+        ],
+        [
+          280,
+          1127
+        ],
+        [
+          793,
+          1127
+        ],
+        [
+          280,
+          1515
+        ],
+        [
+          793,
+          1515
+        ]
+      ],
+      "clips": [
+        "hit",
+        "hit",
+        "hit",
+        "defend",
+        "defend",
+        "defend",
+        "defend"
+      ]
+    },
+    {
+      "stem": "death_v2",
+      "scale": 0.64,
+      "seeds": [
+        [
+          280,
+          170
+        ],
+        [
+          835,
+          210
+        ],
+        [
+          290,
+          565
+        ],
+        [
+          840,
+          565
+        ],
+        [
+          285,
+          900
+        ],
+        [
+          844,
+          916
+        ],
+        [
+          295,
+          1220
+        ],
+        [
+          830,
+          1220
+        ]
+      ],
+      "anchors": [
+        [
+          290,
+          null
+        ],
+        [
+          854,
+          null
+        ],
+        [
+          290,
+          null
+        ],
+        [
+          854,
+          null
+        ],
+        [
+          290,
+          null
+        ],
+        [
+          854,
+          null
+        ],
+        [
+          290,
+          null
+        ],
+        [
+          854,
+          null
+        ]
+      ],
+      "clips": [
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death"
+      ]
+    },
+    {
+      "stem": "cast_v2",
+      "scale": 0.7,
+      "seeds": [
+        [
+          290,
+          175
+        ],
+        [
+          795,
+          175
+        ],
+        [
+          300,
+          560
+        ],
+        [
+          806,
+          560
+        ],
+        [
+          305,
+          949
+        ],
+        [
+          794,
+          949
+        ],
+        [
+          315,
+          1325
+        ],
+        [
+          802,
+          1325
+        ]
+      ],
+      "anchors": [
+        [
+          300,
+          362
+        ],
+        [
+          805,
+          362
+        ],
+        [
+          300,
+          752
+        ],
+        [
+          805,
+          752
+        ],
+        [
+          300,
+          1130
+        ],
+        [
+          805,
+          1130
+        ],
+        [
+          300,
+          1503
+        ],
+        [
+          805,
+          1503
+        ]
+      ],
+      "clips": [
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast"
+      ]
+    },
+    {
+      "stem": "move_v2",
+      "scale": 0.7,
+      "seeds": [
+        [
+          283,
+          188
+        ],
+        [
+          803,
+          185
+        ],
+        [
+          300,
+          566
+        ],
+        [
+          813,
+          566
+        ],
+        [
+          311,
+          950
+        ],
+        [
+          805,
+          950
+        ],
+        [
+          305,
+          1334
+        ],
+        [
+          812,
+          1334
+        ]
+      ],
+      "anchors": [
+        [
+          265,
+          353
+        ],
+        [
+          810,
+          353
+        ],
+        [
+          270,
+          732
+        ],
+        [
+          820,
+          732
+        ],
+        [
+          288,
+          1105
+        ],
+        [
+          811,
+          1105
+        ],
+        [
+          285,
+          1488
+        ],
+        [
+          813,
+          1488
+        ]
+      ],
+      "clips": [
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move"
+      ]
+    },
+    {
+      "stem": "reactions_v3",
+      "scale": 0.7,
+      "seeds": [
+        [
+          270,
+          190
+        ]
+      ],
+      "anchors": [
+        [
+          280,
+          366
+        ]
+      ],
+      "clips": [
+        "hit"
+      ]
+    }
+  ],
+  "phase_order": {
+    "hit": [
+      3,
+      0,
+      1,
+      2
+    ]
+  }
+}
