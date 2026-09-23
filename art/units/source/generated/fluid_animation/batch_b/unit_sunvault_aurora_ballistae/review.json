@@ -1,0 +1,11 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae",
+  "status": "accepted_selected_fluid_clips",
+  "notes": [
+    "Native battle-scale review confirms four legitimate legs across attack_v3, cast_v2, death_v2 and move_v2.",
+    "Hit uses reactions_v3 frame0 and reactions_v2 frames1-3; defense retains reactions_v2 frames4-7.",
+    "Existing eight-frame idle has four feet and articulated mechanism motion; retained unchanged.",
+    "All required idle, movement, attack, hit, defend, support and death clips accepted; this is a melee unit, no ranged clip invented.",
+    "Rejected originals and exact generation lineage preserved in provenance.json. Candidate check: 106 passed; imported live check: 120 passed, zero failures. No full suite."
+  ]
+}
