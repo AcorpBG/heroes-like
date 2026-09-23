@@ -7369,33 +7369,37 @@
     "unit_brasshollow_gaugefire_arbalists_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_gaugefire_arbalists_veteran.png",
       "frame_size": [
-        207,
-        250
+        235,
+        255
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        68.0,
-        238
+        71.0,
+        247
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_gaugefire_arbalists_veteran.png",
+      "painted_extent": 239,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_gaugefire_arbalists_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        188,
-        2,
-        395,
-        252
+        109,
+        1,
+        344,
+        256
       ],
-      "source_sha256": "331e1f5a11533636e34ea1ef622e18088181934c28b4f8fb56048626e83c2cf1",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_gaugefire_arbalists_veteran/provenance.json",
-      "sha256": "81f8a62b3bd720fb308a129960fc576452de6454d3807b062912c56ec815c837"
+      "source_sha256": "9ebedc8b54d0b4df80b87a1e03cd760a007400bbd3fc24dca7243029baaecd27",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_gaugefire_arbalists_veteran/provenance.json",
+      "sha256": "8d53a33b225ab9ef447be839c81237b2b7e909e7925fca514cb60b180a520ebb"
     },
     "unit_brasshollow_boiler_rivetcasters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_boiler_rivetcasters_veteran.png",
