@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "generations": [
+    {
+      "source": "idle_v1.png",
+      "source_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "prompt": "idle_v1.prompt.txt",
+      "prompt_sha256": "6c342d92adee5a65ddac82fbe7b295de174cf8cd27f59d1f3134ff11d2d6dcaa",
+      "reference": "art/animation/source/poses/unit_thornwake_dawnseed_bolters_veteran/unit_thornwake_dawnseed_bolters_veteran-alpha.png",
+      "reference_sha256": "d593ebb88f9bf50d46ee6884b8335eddc757a96c5000cd6478b423e6c07eb267",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-8b862d93-02cf-439c-8aba-fe21d4ecd112.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "move_v1.png",
+      "source_sha256": "75254e735908064ff987bc722252053ac01ad4b7f204d0d4c0efe4a46715a78a",
+      "prompt": "move_v1.prompt.txt",
+      "prompt_sha256": "26b4446de5cb72cabaaedc8f48b7856b51830bc0fd069637594d346f1edd79ba",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-7f79820c-1ad2-4904-8653-be9474993392.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "move_v2.png",
+      "source_sha256": "bd0c15bc5e0f9fe6d6656669ed13420649e5791ab5c262a4b3d9068524ad34eb",
+      "prompt": "move_v2.prompt.txt",
+      "prompt_sha256": "d5583abb85d73b74140ca523992e84629227c2820db9ae982555098c7c18a57d",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_v1.png",
+      "reference_sha256": "75254e735908064ff987bc722252053ac01ad4b7f204d0d4c0efe4a46715a78a",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-92be44c1-01c2-4b14-9b19-13a13521f85b.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "attack_v1.png",
+      "source_sha256": "8603ac8df288649c48fe5c6258a49ae808d7b3e7885267d74f365becdb2188be",
+      "prompt": "attack_v1.prompt.txt",
+      "prompt_sha256": "18faf96482d1ef24caa1eb9d901914d8411a3b0edf02c83266bb1fe14710cd87",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-aebaf0f9-bb4e-42e2-ae5b-f14de9259d46.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "ranged_v1.png",
+      "source_sha256": "89bafbab56298eb3e54cfa9bbbf6ba59bb2085bc2fdb25842609b749962da59d",
+      "prompt": "ranged_v1.prompt.txt",
+      "prompt_sha256": "697e477c37bc8b77722862555823e664d7a8938721978873b30b72d2e888e651",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-a72cd0c1-7f71-4636-87f5-cb3a32890a18.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "hit_v1.png",
+      "source_sha256": "ab6c09edf1926fca79b7365a192f9ea23cf2ecb5472aeea7c4378c4440d301be",
+      "prompt": "hit_v1.prompt.txt",
+      "prompt_sha256": "904bf769a7b511bca2b855cdfd4f93a7ece9974cf8ea9ba7a21c8ff46b0775de",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-ab6ac311-85f3-4275-87b8-270567e647a8.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "defend_v1.png",
+      "source_sha256": "f701be7e8229cd78e1fda7c9842032fdfb16675954537f1c5e68bbb062a8ab93",
+      "prompt": "defend_v1.prompt.txt",
+      "prompt_sha256": "089796155ab4ffcacb5fd6444baf2b87ff33d15b23bf0d2b2d40ba60e1f9eeb8",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-5014349a-a745-4a6e-ac6a-e82f6c3412a7.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "death_v1.png",
+      "source_sha256": "9fb961f2c2203cef917ff6ba45e0f4a051ea06725d7edc24736e7dbba2669179",
+      "prompt": "death_v1.prompt.txt",
+      "prompt_sha256": "ccc0a990ce644ec5db4410abe70778c43bf75cfda3b9f319988eeb57ef72d729",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-2538cd9d-8ca5-4d9a-820f-c680bff9510f.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "cast_v1.png",
+      "source_sha256": "16cdb129c56510bbdd9e5d6b988fd0974889f3558f8cb63ba6fb86c6cb9270f0",
+      "prompt": "cast_v1.prompt.txt",
+      "prompt_sha256": "8e711760bc0f7925ee1442a79d1328ee17fb56d036147074a86283f9f682f8c6",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-99090e85-0b6e-4bd7-9ea3-5f81b1a9085b.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "cast_bridge_v1.png",
+      "source_sha256": "d64ceef2dff12ef28b8317d0878b3bcfd6a0f37640ba7d9d829f2812316335ea",
+      "prompt": "cast_bridge_v1.prompt.txt",
+      "prompt_sha256": "b918dba219e84f4aeeadd9f501c770ed7303e7f0c588ba3730709f022c4b0c0b",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-301519b1-6087-46ae-812e-02c553eed36e.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "cast_bridge_v2.png",
+      "source_sha256": "e78d05920eb2b0db5989dab1440935bb22141a179191ef3362a798f01f253a81",
+      "prompt": "cast_bridge_v2.prompt.txt",
+      "prompt_sha256": "8d8cdfeafbdda1c05a519a6fe0e73c242306ee4d9b9a44bc94b357e07760941f",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/cast_bridge_v1.png",
+      "reference_sha256": "d64ceef2dff12ef28b8317d0878b3bcfd6a0f37640ba7d9d829f2812316335ea",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-1498bb12-0bc5-49b8-9168-18bd0b716caf.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "cast_v2.png",
+      "source_sha256": "3b37f7dabeb83027fc91d8e1e319a6b9f5c3a05741b830f7466f8be8716cfa1d",
+      "prompt": "cast_v2.prompt.txt",
+      "prompt_sha256": "8653619ff92ed14bf5abc2863f5d17383e2059758d395c9ac22c3094abf6b1f7",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-4bf8339d-b92f-464a-9e80-54d761417b98.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "move_half_a_v1.png",
+      "source_sha256": "49e20566dde9fb436d7b6f81db8081102aa1787950404de7394d7cbd736815a2",
+      "prompt": "move_half_a_v1.prompt.txt",
+      "prompt_sha256": "2467db1b0c675d267a9993161687dd9f8f6ef474136b7ceceb85b93442a86032",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/idle_v1.png",
+      "reference_sha256": "a197542308c14a4cd7c9a8c9b4eecb8341def389082e2a48853fea85d2b0cd3d",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-6e96bb68-6d63-48b3-ae1a-3ce29a6f10a5.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "move_half_a_v2.png",
+      "source_sha256": "d1fc1bc3d2a90a9bffd9abc4790b6f9160fc22bfb683bf4f614495ad470735ea",
+      "prompt": "move_half_a_v2.prompt.txt",
+      "prompt_sha256": "dac8226938c5a41e2549efb6a016f5cdc629273bce3066a5c1c8ebed499d038e",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_half_a_v1.png",
+      "reference_sha256": "49e20566dde9fb436d7b6f81db8081102aa1787950404de7394d7cbd736815a2",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-db02a375-4da2-4d42-8198-262534cf4deb.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "move_half_b_v1.png",
+      "source_sha256": "3cc27268f8ff045d7dc5e249132fdabf4d11563de96c4e90d1ab3a2a98b9d99c",
+      "prompt": "move_half_b_v1.prompt.txt",
+      "prompt_sha256": "00e746ba885a293b55edfb55309a45943cf6c5050af2a0d6955b2d03be0ef87f",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/move_half_a_v2.png",
+      "reference_sha256": "d1fc1bc3d2a90a9bffd9abc4790b6f9160fc22bfb683bf4f614495ad470735ea",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-0b33f0a7-29a7-4011-9cc3-f95275042977.png",
+      "status": "pending_visual_acceptance"
+    },
+    {
+      "source": "death_end_v1.png",
+      "source_sha256": "5d9e63d1b68e56f96cd4e436f0b968d6df0b0ecef59bc80a4755f53265cb12aa",
+      "prompt": "death_end_v1.prompt.txt",
+      "prompt_sha256": "c4608d9b54b0b613dd787c026c5262be4a6d8c1f60fb0b047a64508ca0f1418a",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/death_v1.png",
+      "reference_sha256": "9fb961f2c2203cef917ff6ba45e0f4a051ea06725d7edc24736e7dbba2669179",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-97b7cda6-a6ad-4f1f-b1fb-804bdfe07551.png",
+      "status": "rejected_retained_original"
+    },
+    {
+      "source": "dead_v2.png",
+      "source_sha256": "841a9aeb96756f27f843b663c62d9170d4d5cf12e6e39f181f2c50019da85ccf",
+      "prompt": "dead_v2.prompt.txt",
+      "prompt_sha256": "50f510f4d5739a2bbc13963b79c090e259cd570217a28db69220be775fdf30fa",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters_veteran/death_v1.png",
+      "reference_sha256": "9fb961f2c2203cef917ff6ba45e0f4a051ea06725d7edc24736e7dbba2669179",
+      "tool": "builtin_image_gen",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-6586-7c63-8ef7-909cdaa1f504/exec-6cbe53ed-23cb-4ad8-b7ab-2fbf3dc835a8.png",
+      "status": "pending_visual_acceptance"
+    }
+  ],
+  "preparation": "Original connected-component pixel extraction; alpha <=8 removed. No pose painting, warp, interpolation or per-frame scaling."
+}

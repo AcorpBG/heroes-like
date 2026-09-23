@@ -1,0 +1,58 @@
+{
+  "unit_id": "unit_neutral_basalt_wardens",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png": "70b25a64ae186710800c98f5991cd9b52a4e092526eae37facfbc0612e6bea58",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_1.png": "61896acec43b57baf0075c7a852e8c26921490434149643b67616075bba33cfa",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_2.png": "e90f5e3c1146f894d09821ec2ca3d631f489c5be8928b59c1f3933d517cbfb19",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_3.png": "0e2ee4a1e3244e967be73ca2d002b706882628107ae784c0458f9cc00952c4e9",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_4.png": "5f5cfe8dd2c74177e496d0c0fbf26893f48f9b912c1f896848c8eb3e30ff85aa",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_5.png": "6bfafaac4836b3345d8084753c582a54eca10b2a202d2f41a2b76ec0e870b8d4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_6.png": "c96232de8ed450504520156cf9373c791cea9fa923c25ae9cb8ca484897aa0c0",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_7.png": "f4510aa57f852f35282f137d35c03bb994088e69552e70c01366698afb510056",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_0.png": "7de184649209d3efa4d0397139c555f8347984b0f65a1b04487c122eccd4c341",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_1.png": "c12d507b731559d09be267e5d3923976df149c27c94aabfd29623cdc28a7d43c",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_2.png": "b91778586517065eb0067a4907a71ac81d1be5790845dfa0ae5c4d03d49818b2",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_3.png": "b4bc2c71ccc9398f968dfb1d42d6e3106887012cdc3cf1961f5716fc64957562",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_4.png": "6d329c18c6b86202ce721fe00e3b20217f2f6a0b4718d43d6f90c487649f8f3e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_5.png": "98b68dce24a20f1bf062ffdb8b8fe92582dfea90de11425ffbdddf5cca3ca63a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_6.png": "2e7c6ab59a6930c0e2e73ebba42c7f552f7431d7b9dc29160a31e1996ef78de2",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/reactions_v1_7.png": "2e433485e92c660727071d60587b27555828362ea6741347f52fcf7b15657430",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_0.png": "a66479668a507c46cdad4a331ab06809bc9d4ed48197b896a6910f616ead33ba",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_1.png": "0accd56cbdeb5cf8f97d5b884ac2ac46ed26d3a1fcf10ef43f02a803a3fec4ee",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_2.png": "52bb67763edc7ed242f88b0c9a22d10321dc03d6050a6c603207fdd296ae8fff",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_3.png": "290be22c86688a643ec7210627cb25a114114dad2d0e096e0f542e5db386efc5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_4.png": "0c538f13413ce4c099a88966d1982766e54ffda8a6dcec5a477220c27640b12a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_5.png": "7cfd393b4aa30c1800bf73410177976dbff86632d14c7017211ccfa58b27066e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_6.png": "7b50d1ba817ee156c96e0184b11b6c097bae3d12ffa5f946bde14cb0a63326b0",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/death_v1_7.png": "ef79eb4831f7dc367305290541d7c32f32e1a086cc0a3d3670b5029409abbe33",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_0.png": "cfc8eb19e03f703bd3a9d3f6696133508cea4dc55b5ac6247f5c966787c80005",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_1.png": "391d43de943ed6ea4b0f9bb591d42f8f5c41e3ef9f4b19861737c9d107b49990",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_2.png": "780784f8096ab0e15afabb7e6a66a6ab3f8c2fd8362a69ad994298f303e2b31b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_3.png": "aaa70cde32000c63cb412b96cdd6e5dd72f05edb3d7a3736f5f36f0a89204ab8",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_4.png": "a39ee52262f64aa15f1b89870658c880b38505d9880df21ea936f0affc40b9e9",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_5.png": "a5fcb575afae91ecbbc0315d23dd114cb25b1f2728d15ed22b3a9170a746bc2f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_6.png": "b53780ae570079612bba4101325aff3417f10c724ee7578dac57f2b12463f536",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": "4fd64da1e57adf8d083e0d9e201951b37a423eb27f66ab4048375d9a8dcb23e3"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained mace/shield arm idle, mace swing with follow-through, weighted shield guard, recoil, grounded collapse and weapon salute. Movement remains unfinished."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "f4878aa7beb38f6b0b5b48bc3c5da5869a51ec867e0bf9f29b19cbd9f095b8c3",
+  "atlas_sha256": "24f370b4b375496838eeaa8f5f1b412e3df24a2c1b3f331d6037e070996c734f",
+  "texture_bytes_rgba": 13507200
+}

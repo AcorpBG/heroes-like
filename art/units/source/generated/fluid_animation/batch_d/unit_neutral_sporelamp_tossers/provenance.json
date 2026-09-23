@@ -1,0 +1,752 @@
+{
+  "schema_version": 1,
+  "tool": "built_in_image_gen",
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+  "generations": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "sha256": "c81a4a83f510c8bf01b2d311a615ec0492bd2ff10b1326bb7e1166d3d055d544",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.prompt.txt",
+      "prompt_sha256": "e95e2ffaa84a1ee499404a71878a36952749bda81d52dc8c8298912f3b7c029a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-24488b91-5e81-4a78-ad15-c696e27bfb40.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v1_rejected.png",
+      "sha256": "ad2f6301987a57c1244ce23257686abd491c01303a6f2a1c84a72a433c05dbd4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v1.prompt.txt",
+      "prompt_sha256": "175a7f57ebcc238cc6b258eefc487c8f13ddfae42cdaef36be5facc8c2bd4e1f",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-5d0cfc1e-2f2e-4853-8b03-a1b0660426f0.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v2_rejected.png",
+      "sha256": "5f40dd15a24c895f700329861cb10098e02b3ce27ba0bfb6e2c13a24813523f0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v2.prompt.txt",
+      "prompt_sha256": "a4981a7ef180bf3ee21937750ea265da2d6edc23b015929960410877e7644174",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-2f42e4b6-da35-413a-8570-326cfaf6ad5b.png",
+      "reference": "D:\\Games\\godot\\heroes-like\\art\\units\\source\\generated\\fluid_animation\\batch_d\\unit_neutral_sporelamp_tossers\\move_v1_rejected.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v1_rejected.png",
+      "sha256": "93152a5929b00cdfb010e597a7c87534ba44a3f54dc9ba53fb289b29fa5fdf28",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v1.prompt.txt",
+      "prompt_sha256": "b5564023117e908c69deb39554906275b31e1b004a2c5ec213034ae1f7055a7d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-51fda14c-f3c5-471d-9275-ac385ae0c92c.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "rejected",
+      "rejection_reason": "hand assignment changes during lamp swing"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "sha256": "da225ca38a55eae896a7643b6b44081de7892ba954e3f671afd4521d36964703",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.prompt.txt",
+      "prompt_sha256": "7fdec547997cf4c50c44d7ff591f1801b8cabe7ec57f54016ba62759ad46f6df",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-de4954e7-5faf-44a4-a7fa-a0e63527e6d7.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "sha256": "d66e7716701c27f0a7d3f9b391070a4890debfe829eb22af13d43fff50e9408c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.prompt.txt",
+      "prompt_sha256": "3b4ae5f509c8ada10ad5f0494e958ca9529ad650bbc1f1c8f9c69c33a47d65ed",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-7b59d833-4898-4244-822a-b55bd5e8ac26.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "sha256": "7bc041b1992ad1814e94295a2e0cfcc2f6f527f857b0dbc96341877f5dae55fb",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.prompt.txt",
+      "prompt_sha256": "3455288a13720563dcff401bcc83d4eeb029dc63362e0719e30f1944e498c81a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-f4ec42e4-5e9a-4fe5-8a8f-9b1c93c044a6.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "sha256": "1cbbd6de0fe6788e66f04e8d828271ec988c113ed2659473c8d37472e4dea437",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.prompt.txt",
+      "prompt_sha256": "9e596592d1e0e17bebb0838e1e379187b93a0d703ece96cfded77ae7023937f4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-42f66923-48b1-4baa-baa4-80020b112c3e.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v3_rejected.png",
+      "sha256": "27faabce56d9285c6c88db472aad93c9feb9c323b56ec997234f5328fbdb83c5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_v3.prompt.txt",
+      "prompt_sha256": "1ef69acf6f4a50d05e4a136a9d04233a96a11ecc222e12ddca103f29016c0827",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-ce9fd4a5-754c-4ce6-b47a-f7063634bd1b.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_contacts_v1.png",
+      "sha256": "2059d9c1e7b091911c1d3a961bc980150176db6aa7e8223189c5b136c53f8ea4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "592a5ad11a0b1e3161717e6907e5fa7e117d75250b7604fceca7b44f80b81352",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-f18e22de-b608-4505-90c7-a3e09a43df2a.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null,
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+        "art/units/source/curated/unit_neutral_sporelamp_tossers.png"
+      ]
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "sha256": "09544ef0a7a0e9c37c50cd80080cb32d2067c38a35e70a962300b01fbb546420",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.prompt.txt",
+      "prompt_sha256": "46ba782b9f1768c775694cb7aa56ced69cbaa407b1dc3d772168bf0d70ccdb7a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-2f06a65c-cbee-42f9-a3d2-3234a07d3c9b.png",
+      "reference": "art/units/source/curated/unit_neutral_sporelamp_tossers.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null,
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_contacts_v1.png"
+      ]
+    }
+  ],
+  "extraction": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_contacts_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_contacts_v1.png",
+      "source_bounds": [
+        226,
+        56,
+        856,
+        861
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.245
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_contacts_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_contacts_v1.png",
+      "source_bounds": [
+        1107,
+        59,
+        1724,
+        866
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.245
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        126,
+        8,
+        518,
+        511
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        610,
+        10,
+        992,
+        495
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        1113,
+        10,
+        1501,
+        516
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        128,
+        517,
+        519,
+        1016
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        610,
+        517,
+        998,
+        1008
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/move_inbetweens_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/move_inbetweens_v1.png",
+      "source_bounds": [
+        1119,
+        516,
+        1508,
+        1015
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.396
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        176,
+        15,
+        499,
+        351
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        668,
+        10,
+        1063,
+        354
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        146,
+        364,
+        526,
+        689
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        653,
+        364,
+        1008,
+        693
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        95,
+        686,
+        587,
+        1023
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        653,
+        715,
+        1025,
+        1022
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        165,
+        1018,
+        514,
+        1344
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/ranged_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/ranged_v1.png",
+      "source_bounds": [
+        673,
+        1010,
+        1009,
+        1344
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.586
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        140,
+        6,
+        464,
+        379
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        602,
+        7,
+        941,
+        386
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        132,
+        374,
+        481,
+        760
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        607,
+        383,
+        942,
+        764
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        135,
+        751,
+        470,
+        1133
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        606,
+        754,
+        945,
+        1133
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        138,
+        1125,
+        474,
+        1512
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/attack_v2_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/attack_v2.png",
+      "source_bounds": [
+        605,
+        1126,
+        945,
+        1514
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.528
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        146,
+        17,
+        417,
+        374
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        622,
+        17,
+        887,
+        378
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        143,
+        381,
+        422,
+        738
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        615,
+        388,
+        934,
+        741
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        139,
+        744,
+        475,
+        1133
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        616,
+        765,
+        906,
+        1124
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        149,
+        1136,
+        431,
+        1505
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/cast_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/cast_v1.png",
+      "source_bounds": [
+        616,
+        1136,
+        914,
+        1505
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.552
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        93,
+        53,
+        454,
+        466
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        595,
+        122,
+        934,
+        471
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        114,
+        548,
+        479,
+        865
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        557,
+        560,
+        988,
+        862
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        25,
+        938,
+        502,
+        1164
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        538,
+        990,
+        1002,
+        1151
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        32,
+        1295,
+        495,
+        1451
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/death_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/death_v1.png",
+      "source_bounds": [
+        529,
+        1303,
+        997,
+        1454
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.477
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        151,
+        13,
+        453,
+        385
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        572,
+        26,
+        953,
+        382
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        123,
+        388,
+        495,
+        767
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        606,
+        382,
+        925,
+        776
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        123,
+        764,
+        472,
+        1143
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        617,
+        785,
+        924,
+        1141
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        95,
+        1153,
+        507,
+        1502
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/prepared/reactions_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sporelamp_tossers/reactions_v1.png",
+      "source_bounds": [
+        598,
+        1161,
+        896,
+        1502
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixels; separate thrown flask retained on ranged contact. No repainting, warping or pose interpolation.",
+      "scale": 0.53
+    }
+  ]
+}

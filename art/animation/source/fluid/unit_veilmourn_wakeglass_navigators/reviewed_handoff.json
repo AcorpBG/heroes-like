@@ -1,0 +1,1427 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_wakeglass_navigators",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_0",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              388
+            ]
+          ],
+          "anchor": [
+            220,
+            376
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            90,
+            5,
+            479,
+            393
+          ]
+        },
+        {
+          "name": "idle_1",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              388
+            ]
+          ],
+          "anchor": [
+            278,
+            376
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            544,
+            5,
+            929,
+            393
+          ]
+        },
+        {
+          "name": "idle_2",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              397,
+              391
+            ]
+          ],
+          "anchor": [
+            221,
+            379
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            89,
+            388,
+            486,
+            779
+          ]
+        },
+        {
+          "name": "idle_3",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              391,
+              391
+            ]
+          ],
+          "anchor": [
+            275,
+            379
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            547,
+            388,
+            938,
+            779
+          ]
+        },
+        {
+          "name": "idle_4",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              396,
+              386
+            ]
+          ],
+          "anchor": [
+            219,
+            374
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            91,
+            767,
+            487,
+            1153
+          ]
+        },
+        {
+          "name": "idle_5",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              391,
+              389
+            ]
+          ],
+          "anchor": [
+            275,
+            377
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            547,
+            765,
+            938,
+            1154
+          ]
+        },
+        {
+          "name": "idle_6",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              393,
+              392
+            ]
+          ],
+          "anchor": [
+            215,
+            380
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            95,
+            1144,
+            488,
+            1536
+          ]
+        },
+        {
+          "name": "idle_7",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              399,
+              394
+            ]
+          ],
+          "anchor": [
+            277,
+            382
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1.png",
+          "source_master_rect": [
+            545,
+            1142,
+            944,
+            1536
+          ]
+        },
+        {
+          "name": "move_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              424,
+              381
+            ]
+          ],
+          "anchor": [
+            259,
+            369
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            51,
+            13,
+            475,
+            394
+          ]
+        },
+        {
+          "name": "move_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              452,
+              373
+            ]
+          ],
+          "anchor": [
+            289,
+            361
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            533,
+            21,
+            985,
+            394
+          ]
+        },
+        {
+          "name": "move_2",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              460,
+              379
+            ]
+          ],
+          "anchor": [
+            272,
+            367
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            38,
+            398,
+            498,
+            777
+          ]
+        },
+        {
+          "name": "move_3",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              375
+            ]
+          ],
+          "anchor": [
+            293,
+            363
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            529,
+            402,
+            1006,
+            777
+          ]
+        },
+        {
+          "name": "move_4",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              439,
+              377
+            ]
+          ],
+          "anchor": [
+            255,
+            365
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            55,
+            778,
+            494,
+            1155
+          ]
+        },
+        {
+          "name": "move_5",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              431,
+              375
+            ]
+          ],
+          "anchor": [
+            273,
+            363
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            549,
+            781,
+            980,
+            1156
+          ]
+        },
+        {
+          "name": "move_6",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              432,
+              380
+            ]
+          ],
+          "anchor": [
+            248,
+            368
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            62,
+            1156,
+            494,
+            1536
+          ]
+        },
+        {
+          "name": "move_7",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              451,
+              379
+            ]
+          ],
+          "anchor": [
+            265,
+            367
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1.png",
+          "source_master_rect": [
+            557,
+            1157,
+            1008,
+            1536
+          ]
+        },
+        {
+          "name": "attack_0",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              370,
+              396
+            ]
+          ],
+          "anchor": [
+            241,
+            384
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            69,
+            1,
+            439,
+            397
+          ]
+        },
+        {
+          "name": "attack_1",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              355,
+              393
+            ]
+          ],
+          "anchor": [
+            257,
+            381
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            565,
+            5,
+            920,
+            398
+          ]
+        },
+        {
+          "name": "attack_2",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              419
+            ]
+          ],
+          "anchor": [
+            256,
+            407
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            54,
+            377,
+            443,
+            796
+          ]
+        },
+        {
+          "name": "attack_3",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              457,
+              395
+            ]
+          ],
+          "anchor": [
+            279,
+            383
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            543,
+            401,
+            1000,
+            796
+          ]
+        },
+        {
+          "name": "attack_4",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              520,
+              339
+            ]
+          ],
+          "anchor": [
+            293,
+            327
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            17,
+            798,
+            537,
+            1137
+          ]
+        },
+        {
+          "name": "attack_5",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              431,
+              352
+            ]
+          ],
+          "anchor": [
+            277,
+            340
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            545,
+            785,
+            976,
+            1137
+          ]
+        },
+        {
+          "name": "attack_6",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              410,
+              399
+            ]
+          ],
+          "anchor": [
+            252,
+            387
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            58,
+            1137,
+            468,
+            1536
+          ]
+        },
+        {
+          "name": "attack_7",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              431,
+              399
+            ]
+          ],
+          "anchor": [
+            277,
+            387
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1.png",
+          "source_master_rect": [
+            545,
+            1137,
+            976,
+            1536
+          ]
+        },
+        {
+          "name": "hit_0",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              381,
+              377
+            ]
+          ],
+          "anchor": [
+            223,
+            365
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            87,
+            6,
+            468,
+            383
+          ]
+        },
+        {
+          "name": "hit_1",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              412,
+              374
+            ]
+          ],
+          "anchor": [
+            272,
+            362
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            550,
+            10,
+            962,
+            384
+          ]
+        },
+        {
+          "name": "hit_2",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              407,
+              390
+            ]
+          ],
+          "anchor": [
+            235,
+            378
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            75,
+            380,
+            482,
+            770
+          ]
+        },
+        {
+          "name": "hit_3",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              399,
+              391
+            ]
+          ],
+          "anchor": [
+            264,
+            379
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            558,
+            380,
+            957,
+            771
+          ]
+        },
+        {
+          "name": "defend_0",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              407,
+              380
+            ]
+          ],
+          "anchor": [
+            235,
+            368
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            75,
+            766,
+            482,
+            1146
+          ]
+        },
+        {
+          "name": "defend_1",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              380,
+              379
+            ]
+          ],
+          "anchor": [
+            253,
+            367
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            569,
+            767,
+            949,
+            1146
+          ]
+        },
+        {
+          "name": "defend_2",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              399,
+              397
+            ]
+          ],
+          "anchor": [
+            234,
+            385
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            76,
+            1139,
+            475,
+            1536
+          ]
+        },
+        {
+          "name": "defend_3",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              390,
+              397
+            ]
+          ],
+          "anchor": [
+            253,
+            385
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1.png",
+          "source_master_rect": [
+            569,
+            1139,
+            959,
+            1536
+          ]
+        },
+        {
+          "name": "cast_0",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              376
+            ]
+          ],
+          "anchor": [
+            209,
+            364
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            101,
+            3,
+            472,
+            379
+          ]
+        },
+        {
+          "name": "cast_1",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              375
+            ]
+          ],
+          "anchor": [
+            251,
+            363
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            571,
+            4,
+            935,
+            379
+          ]
+        },
+        {
+          "name": "cast_2",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              384
+            ]
+          ],
+          "anchor": [
+            217,
+            372
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            93,
+            383,
+            478,
+            767
+          ]
+        },
+        {
+          "name": "cast_3",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              388,
+              384
+            ]
+          ],
+          "anchor": [
+            254,
+            372
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            568,
+            383,
+            956,
+            767
+          ]
+        },
+        {
+          "name": "cast_4",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              383
+            ]
+          ],
+          "anchor": [
+            213,
+            371
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            97,
+            767,
+            482,
+            1150
+          ]
+        },
+        {
+          "name": "cast_5",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              384,
+              379
+            ]
+          ],
+          "anchor": [
+            251,
+            367
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            571,
+            771,
+            955,
+            1150
+          ]
+        },
+        {
+          "name": "cast_6",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              382,
+              385
+            ]
+          ],
+          "anchor": [
+            219,
+            373
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            91,
+            1151,
+            473,
+            1536
+          ]
+        },
+        {
+          "name": "cast_7",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              375,
+              386
+            ]
+          ],
+          "anchor": [
+            248,
+            374
+          ],
+          "scale": 0.62,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1.png",
+          "source_master_rect": [
+            574,
+            1150,
+            949,
+            1536
+          ]
+        },
+        {
+          "name": "death_0",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              476
+            ]
+          ],
+          "anchor": [
+            288,
+            461
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            32,
+            4,
+            509,
+            480
+          ]
+        },
+        {
+          "name": "death_1",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              471,
+              465
+            ]
+          ],
+          "anchor": [
+            316,
+            450
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            516,
+            31,
+            987,
+            496
+          ]
+        },
+        {
+          "name": "death_2",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              498,
+              441
+            ]
+          ],
+          "anchor": [
+            311,
+            426
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            9,
+            473,
+            507,
+            914
+          ]
+        },
+        {
+          "name": "death_3",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              523,
+              354
+            ]
+          ],
+          "anchor": [
+            342,
+            339
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            490,
+            570,
+            1013,
+            924
+          ]
+        },
+        {
+          "name": "death_4",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              502,
+              186
+            ]
+          ],
+          "anchor": [
+            313,
+            171
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            7,
+            1028,
+            509,
+            1214
+          ]
+        },
+        {
+          "name": "death_5",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              513,
+              159
+            ]
+          ],
+          "anchor": [
+            325,
+            144
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            507,
+            1057,
+            1020,
+            1216
+          ]
+        },
+        {
+          "name": "death_6",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              501,
+              149
+            ]
+          ],
+          "anchor": [
+            315,
+            134
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            5,
+            1352,
+            506,
+            1501
+          ]
+        },
+        {
+          "name": "death_7",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              506,
+              144
+            ]
+          ],
+          "anchor": [
+            322,
+            129
+          ],
+          "scale": 0.53,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1.png",
+          "source_master_rect": [
+            510,
+            1358,
+            1016,
+            1502
+          ]
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 140,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 105,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 3
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "death": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 130,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death"
+      ],
+      "preserve_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_0.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_2.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_3.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_4.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_5.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_6.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/move_v1_frame_7.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_0.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_2.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_3.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_4.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_5.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_6.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/attack_v1_frame_7.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_0.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_2.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_3.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_4.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_5.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_6.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/idle_v1_frame_7.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_0.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_2.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_3.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_4.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_5.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_6.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/reaction_v1_frame_7.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_0.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_1.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_2.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_3.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_4.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_5.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_6.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/cast_v1_frame_7.png": 0.62,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_0.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_1.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_2.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_3.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_4.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_5.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_6.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators/death_v1_frame_7.png": 0.53
+      },
+      "source_scale_reason": "All 2x4 standing masters fixed .62 scale. Death master has a larger original standing body registration, fixed .53 for all its frames, preserving same anatomical size in collapse. Original pixel component cutout crops inherit master scale, no per-pose scaling or warping.",
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Native 128px review: free hand and compass-staff articulate, streaming robes accompany hovering locomotion, staff thrust and recovery, distinct guarding/recoil/invocation, progressive grounded collapse with fallen staff."
+      },
+      "preserved_accepted_clips": []
+    }
+  ]
+}

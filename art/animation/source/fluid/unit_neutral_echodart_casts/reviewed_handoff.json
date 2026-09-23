@@ -1,0 +1,1008 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_echodart_casts",
+      "reference_height": 256,
+      "source_facing": "left",
+      "frames": [
+        {
+          "name": "attack_v1_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              43,
+              0,
+              398,
+              445
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              510,
+              0,
+              839,
+              445
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              935,
+              0,
+              1284,
+              445
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              1336,
+              0,
+              1744,
+              445
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              4,
+              445,
+              443,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              501,
+              445,
+              850,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              929,
+              445,
+              1286,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_08",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "rects": [
+            [
+              1372,
+              445,
+              1728,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              90,
+              0,
+              386,
+              445
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              517,
+              0,
+              842,
+              445
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              934,
+              0,
+              1298,
+              445
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              1359,
+              0,
+              1731,
+              445
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              0,
+              445,
+              445,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              441,
+              445,
+              889,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              885,
+              445,
+              1332,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_08",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "rects": [
+            [
+              1328,
+              445,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              49,
+              0,
+              416,
+              445
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              543,
+              0,
+              866,
+              445
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              911,
+              0,
+              1320,
+              445
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              1422,
+              0,
+              1767,
+              445
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              27,
+              445,
+              428,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              530,
+              445,
+              860,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              945,
+              445,
+              1281,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_08",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "rects": [
+            [
+              1389,
+              445,
+              1724,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              73,
+              0,
+              392,
+              445
+            ]
+          ],
+          "anchor": [
+            221.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              523,
+              0,
+              834,
+              445
+            ]
+          ],
+          "anchor": [
+            664.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              960,
+              0,
+              1283,
+              445
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              1395,
+              0,
+              1738,
+              445
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            438
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              71,
+              445,
+              392,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              516,
+              445,
+              838,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              957,
+              445,
+              1283,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_08",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "rects": [
+            [
+              1399,
+              445,
+              1742,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            879
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              36,
+              0,
+              379,
+              540
+            ]
+          ],
+          "anchor": [
+            221.0,
+            499
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              489,
+              0,
+              843,
+              540
+            ]
+          ],
+          "anchor": [
+            664.5,
+            499
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              885,
+              0,
+              1270,
+              540
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            499
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              1357,
+              0,
+              1734,
+              540
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            499
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              40,
+              540,
+              437,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            797
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              458,
+              540,
+              873,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            797
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              884,
+              540,
+              1318,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            797
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_08",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "rects": [
+            [
+              1328,
+              540,
+              1763,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            797
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
+          "alpha_noise_cutoff": 0
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 110,
+          "loop": false
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "hold_last": true
+        },
+        "cast": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "death": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 120,
+          "loop": false
+        }
+      },
+      "accepted_clips": [
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "cast",
+        "death"
+      ],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Native 128px review: crossbow butt strike and recovery, aim/release/recovery, recoil/crouched brace, free-hand physical signal and grounded collapse accepted. Idle arms are too static; walk lacks clear reciprocal legs and is withheld."
+      },
+      "provenance": [
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
+          "source_sha256": "322880aaad795054ba747f0f77b01a8974b155fe5d416947969705fca642cdc0",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.prompt.txt",
+          "prompt_sha256": "27d0f6af8eee3488c9d7293b8bf01ffbd4f64d80e31809691c3ac099988edb4d",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ec194580-830d-4779-8313-34471950253a.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
+          "source_sha256": "d6dcca58008be8cf28b33f06babad4cb665d8263b4881085ced4323f0704f5ac",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.prompt.txt",
+          "prompt_sha256": "75c20fe1b5f3d0c308969c74b8948d5ff615f5b1dcf7e2df235adc55376a231c",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ee149d39-952e-4d0e-a7bf-26929b599201.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
+          "source_sha256": "5f6ae1438aa8ce86548916da13c82c742a3547a7a98f469ee1bd01a3ede9885c",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.prompt.txt",
+          "prompt_sha256": "9801e828df55b9b84def6c1c49ea4148588bf0e82117c27de07fa34ad3e27736",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-e1ede49d-9198-4302-b8fc-fcaa562771e8.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
+          "source_sha256": "f99a2b8a6cc25acd9b4ef010493439cf2b29ecf4cec2d2bdb96453b1306f2151",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.prompt.txt",
+          "prompt_sha256": "32797962cd33570d8875cd1c6ed01d70b1eefb72ad33457acfbe4b2378e3ef20",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-79ce213c-ac40-48c0-a8d8-eeb89db3e013.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
+          "source_sha256": "a1c8ed08dfe540586be33a1ebd5f7b3e703f8c7fbef4d7688b8f26eb92186d7a",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.prompt.txt",
+          "prompt_sha256": "76a68ddc7c56ba9a1362c262865d76d015d3002b649e80ced671ec406411ef29",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-169e43a5-0a45-4d80-829d-8c981bcefe7c.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
+          "source_sha256": "1bc3a18f28e7c5c488881eb40ccc9926c2ac87f6f11401eaabd62fad758f2765",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.prompt.txt",
+          "prompt_sha256": "62d3e14ba8b2434305400d69d085453b28e51d34c541d7e85862bb008ad5119b",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1a926726-1a7a-4d72-a71c-1129a98c655b.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
+          "source_sha256": "d9cf1dc97742b2b44ef992c9707d2b3f5ba42c89b54f6450713d4afd59f6a514",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.prompt.txt",
+          "prompt_sha256": "ce420fa6b0922c933962f02332eb0b50630e5252865f294828fc9ddf81d3d39e",
+          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
+          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1c9bc743-1795-4a52-b0dd-6e55a2629b5a.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "preserved_accepted_clips": []
+    }
+  ]
+}

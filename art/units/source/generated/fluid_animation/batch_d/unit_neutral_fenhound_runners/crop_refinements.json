@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "frames": [
+    {
+      "clip": "move",
+      "frame": 1,
+      "seed": [
+        665,
+        210
+      ],
+      "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+    },
+    {
+      "clip": "defend",
+      "frame": 1,
+      "seed": [
+        665,
+        650
+      ],
+      "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+    },
+    {
+      "clip": "death",
+      "frame": 4,
+      "seed": [
+        1552,
+        310
+      ],
+      "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "generator": "built_in_imagegen",
+  "reference": "art/units/source/curated/unit_mireclaw_bogplate_maulers.png",
+  "reference_sha256": "c77d8b089bf4a8aa352825621db0a65efac291bb5ada040a67feb13d73150ecd",
+  "outputs": {
+    "move": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-a486871b-4ffe-45ec-9a96-7d9e54db0a1c.png",
+    "attack": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-c7942e82-7ad3-4574-af56-358df8edb2b3.png",
+    "reactions": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-922ee0e3-6a1d-4f0a-8d9c-4093ea088a67.png",
+    "death": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-3ba52166-41de-4cfa-86e4-6972d159b3ca.png",
+    "cast": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-f935957d-ca78-4fc1-af2b-1e0fb46612cd.png"
+  },
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/move_v1.png",
+      "sha256": "b181b8338617a5812617d05ededebefcd5dbd7bc9ced23d8591ad78c984597bc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/move_v1.prompt.txt",
+      "prompt_sha256": "506d9d9819aa8c6b26b75a00b04f8d836569d90887bb38be1f70399c13d8ebf0"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png",
+      "sha256": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.prompt.txt",
+      "prompt_sha256": "e8810fde903749b8538b176bc5da5f3ef3746da4bd00c192adc44aae99172327"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/reactions_v1.png",
+      "sha256": "b3abd10474d0007ead406f327bde4c90c5527483ff6950f27e847563c318ec92",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/reactions_v1.prompt.txt",
+      "prompt_sha256": "c016a5ec73e42fd1f675455f7d14243d518b43fb1c4f99326f4940a574d91ba5"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/death_v2.png",
+      "sha256": "e348133de1a81ed6c683da9828f90abaaaf4de0001c2d87657c1f1cee16b4667",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/death_v2.prompt.txt",
+      "prompt_sha256": "273cca246a38d60bf9b652a177c4823d3042d0399035f09f20272c1ac833adf8"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/cast_v1.png",
+      "sha256": "e076749b47e15e5752f0674582c859ecaa906acee3b83b426fcfcd23221ab800",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/cast_v1.prompt.txt",
+      "prompt_sha256": "3e88a23b2c16ab4da6ccf8b1eb8bea13fd8fd3301b67291b426bb273094c9ced"
+    }
+  ],
+  "rejected_sources": [
+    "death_v1.png"
+  ],
+  "extraction": "Original alpha greater than 8 connected silhouette spans; no pixel repainting, deformations or pose duplication. Corpse uses final death pose."
+}

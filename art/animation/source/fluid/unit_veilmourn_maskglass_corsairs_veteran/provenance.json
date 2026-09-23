@@ -1,0 +1,29 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/idle_v1.png": "efc8282e307950670d3147f6ba71a3f7b5b3c84a72e9a5e5af7f4b71060ba32e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/attack_v1.png": "f5a622bc949dfaf0c48f06c8c4ec47612b2b198b445b72f111634036ff0ad1e0",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/hit_defend_v1.png": "f30a8d4f766262b1a104e28e0ca956c63f4997fac16aad2a1256b6a200971cb7",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.png": "ecc0fba86ef02d8b6ee9482eb26b111a640904b42cfeecc56b198fbd075ae6b9",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/cast_v1.png": "20e1aa0a9f95e164e53f8236d0d3bc0e81f3130b74d1f35f612d4c146e47e4e7"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: both sword arms articulate in idle, coordinated two-blade slash/recovery, crossed guard, recoil and grounded collapse; support uses a physical crossed-blade salute. Movement remains unfinished."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "d9c2a478b4c52a14246c59436266e59bc4ce5203a1f3a096fac26ba0b757801c",
+  "atlas_sha256": "6076dfcdde8358b654584b4927f59fe582a23dc62dd5019c3c11ef401dcfe291",
+  "texture_bytes_rgba": 13418496
+}

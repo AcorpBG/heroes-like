@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "generator": "built_in_imagegen",
+  "reference": "art/units/source/curated/unit_mireclaw_fenbell_chainstalkers.png",
+  "reference_sha256": "6c93d3a6302d21f710de10a718b85e6d9c855213d7f64ab3f745cd6f951b3e15",
+  "outputs": {
+    "move": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-e4a36d11-faaf-4a21-a06f-403cad40803e.png",
+    "attack": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-c10b0ff5-a1c7-4b56-9788-603a0f0a02d0.png",
+    "reactions": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-9c599248-5144-412a-9203-04759a52e0e9.png",
+    "death": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-9c329925-36e0-4934-992f-258a8911aae4.png",
+    "cast": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccce-88ea-7833-a5d0-4cdc88cd07a9\\exec-290f43cd-136e-4268-ad3e-831050751660.png"
+  },
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/move_v1.png",
+      "sha256": "ccfb82f063a3e0bb43e65b6beec3d66c98113264fc1298faaa23ac3f15f1716b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/move_v1.prompt.txt",
+      "prompt_sha256": "982be2427eaaa92decf3644ab824458b33efc56f4c42677300e4db04cf1a8859"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.png",
+      "sha256": "7f59c888a46ad55a3c0cf3772a739547eda22c88c3419b29bbc37270d75a1254",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.prompt.txt",
+      "prompt_sha256": "2013094e7e7b2e2997fa7c4029b27f9902406bcd0af2cabcee9d6f48c9ec6543"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png",
+      "sha256": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.prompt.txt",
+      "prompt_sha256": "befa84f396015ba3e5296e32f40bc00006d0a8fa270c563f2ca590f759cb4224"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.png",
+      "sha256": "0662038bf098cb6378c7f05607753cdd73cc0031a82b20a0f85a885758ab6806",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.prompt.txt",
+      "prompt_sha256": "ee24a211003174692f502ca2cd4a49085f8102e497f60424bfa017f9fdac5697"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/cast_v1.png",
+      "sha256": "e847afe357f706e7e182fe7b0cde3920437afc1979843a06fc7fa5e5fe69cae5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/cast_v1.prompt.txt",
+      "prompt_sha256": "1fd3ebe1ec15620bbb412354a0fa16baf1b0e73e818229533e87c4cc11a2b76e"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_anticipation_v1.png",
+      "sha256": "300d3c4b1e95d8855c75783ac940f4e283684946d4cfcf7fc03cf9f7447144b9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_anticipation_v1.prompt.txt",
+      "prompt_sha256": "338258cf4087b9377cf5edc45ad3fd0b39f5bb8a40a16e0ac3221a423c50e3fb"
+    }
+  ],
+  "rejected_sources": [
+    "attack_v2.png"
+  ],
+  "extraction": "Original alpha greater than 8 connected silhouette spans; no pixel repainting, deformations or pose duplication. Corpse uses final death pose."
+}

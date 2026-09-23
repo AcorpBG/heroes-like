@@ -8,7 +8,8 @@
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png": "737fef43385dc510e37ec29682d6d42cb9a17ddc0a5ce136e76885d9397846a0",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png": "f97cd61d44fae7edce189fffaf4a783dbcbb3cd83705e0c7dc8d60b52a5e4cb6",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png": "d40115a7984dcc44ce857f6c1db0913e3574dc895cdb9d4d3a5397f785ad165e",
-    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44"
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png": "e3a1db8bbc542bb09c21f6dda9979e9bb2c638ff26763333ddcd399da502be9d"
   },
   "accepted_clips": [
     "idle",
@@ -16,14 +17,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "ranged"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+    "notes": "Native 128px review of revised ranged release: anticipatory sling wind-up, empty release hand and recovery without a baked traveling projectile. Previously accepted clips retained; repeated-leading-foot movement remains unfinished."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "8fcccdef2a021f221dc96ecff101533a091156205f46beadcf8744b5304b4320",
-  "atlas_sha256": "0d667a96e086b16781175680e7d9100529b2bbd7f739aca7a517a5150c696e1e",
-  "texture_bytes_rgba": 16144128
+  "atlas_sha256": "74933698c79151705c7670934b28427668a49340ed75c9d829e28e314871a30c",
+  "texture_bytes_rgba": 14598144
 }

@@ -1,0 +1,27 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "frames": [
+    {
+      "clip": "cast",
+      "frame": 5,
+      "seed": [
+        130,
+        160
+      ],
+      "reason": "Exclude foreign upper-right pose fragment."
+    },
+    {
+      "clip": "ranged",
+      "frame": 4,
+      "seed": [
+        140,
+        150
+      ],
+      "reason": "Runtime owns the detached dart; align planted body independently of projectile envelope.",
+      "anchor": [
+        159,
+        330
+      ]
+    }
+  ]
+}

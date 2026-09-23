@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_veilmourn_wakeglass_navigators",
+  "generations": [
+    {
+      "source": "move_v1.png",
+      "source_sha256": "84f43bb2a045035b1d9eb6f7fa0b680d8b07542367700a1a56b64c4f157115be",
+      "prompt_file": "move_v1.prompt.txt",
+      "prompt_sha256": "0917b4515c451fa7053a51312ab29f6e442add27ca24e469bb5971a9e4f43741",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-2e5f152e-515e-4ab7-92b6-d95607df5f99.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "attack_v1.png",
+      "source_sha256": "f17c6fb35fa2dcf73abc0a1826f897857931dfc9c4bfd49835dd14ed6b5fe5ae",
+      "prompt_file": "attack_v1.prompt.txt",
+      "prompt_sha256": "752bdbc7b9c952204c7db42e0cbaa3064f2ee04c9317e5207d12f056468b070e",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-a56f1fa3-ad79-4b99-a864-6dc074a1b711.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "reaction_v1.png",
+      "source_sha256": "25c64c97828bf2a167653a39bf093f7a287d30250661f801dfe072cf863ad13b",
+      "prompt_file": "reaction_v1.prompt.txt",
+      "prompt_sha256": "34a9c1321d58f4641a0fd39b656d26c07fafe0e1407335ecf4b83a2388854a90",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-c77c88cb-5dba-4e0e-b921-24edea182965.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "death_v1.png",
+      "source_sha256": "3c6163a051912e33f2c7007d48325250f818bcaeaaaf560e7c6b9d85cda2f6fb",
+      "prompt_file": "death_v1.prompt.txt",
+      "prompt_sha256": "4eba11f25e3a4759314e60a82624ba0e6911bc2fe982d8d25ace7da348287b39",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-8701f20d-c8d8-4a5b-b7ec-cebe4f4aaaca.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "cast_v1.png",
+      "source_sha256": "b8b6819727f6d3a14f25a90ed67f10453453b5e30546a4f8d63179a846026107",
+      "prompt_file": "cast_v1.prompt.txt",
+      "prompt_sha256": "83d9c432a9c9f22d8bff449bfee3e44c353cc30f2efd8817add7aad23daf13e9",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-41d151cc-15a9-4f25-99b1-7a1fcb43f609.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "idle_v1.png",
+      "source_sha256": "ab911fc628a58c8bc1f98fc24e83409c7da6816c8267fcd9d4c1743584b505b4",
+      "prompt_file": "idle_v1.prompt.txt",
+      "prompt_sha256": "08e00ac7ac99807762930630e6f2906469378a4cc48f03ae35fbbdb31f013491",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-62e5f93c-9b58-4159-982c-10743063a2de.png",
+      "references": [
+        "art/units/source/curated/unit_veilmourn_wakeglass_navigators.png"
+      ],
+      "reference_sha256": "7019f7fbc74338b678f8509a591e59428c706e6102bdceb6b9acf68a59c621d4",
+      "status": "pending_visual_review"
+    }
+  ]
+}

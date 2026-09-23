@@ -1,0 +1,58 @@
+{
+  "unit_id": "unit_neutral_rimebell_skyrakers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_00.png": "f0f09142ec6dd58056ba8b4e016d8466bc9cd1a3d630997a82681020225b61ca",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_01.png": "ae6fccd8ae8ab03fe9dfece66d6727e8d091561d6055185c64a47d137d2f8765",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_02.png": "edb6bfcf10f8a1cad46553548dd6a52296ac9e7abcfa63a242cb241f097965eb",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_03.png": "70e8f3a8e2b6bc6d403bb78ff3ee6d422bbfe3e26b4de2a90870531d672bd51c",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_04.png": "e181ed226caaeeb9435b094df1974df2d788a027af4ec0e04913da064665a10f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_05.png": "1ac5bacfe0fb5d8a774332ebe4f0c5cd8d698fbe2803b7ee6e0970f44c6dfae2",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_06.png": "1518dfdd75b9265dc9f15349f7fcab8c2d6e062dc320321733251a4574deea5b",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_07.png": "cf947a79cf1891a073c3486acb7ef829b2238816a9edb7dd54ea053b76022db0",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_00.png": "d5d916cd5918ef7f467b5e2c66e1fdf2ce8f83429049ce7807586cfd1185a904",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_02.png": "8e7f8523548710594a4824b6b42d026524845bab2d83af9db729c6ee088e68db",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_04.png": "a56734becba1eb91b5207cae46dd9b327a110f3a1ba45cdb145f61c9fe3b7f56",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_06.png": "feb19dabcdaf724d61541a555457d42fe9508039fe5b320f42507243852cc864",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_01.png": "6f1b858835f169b372a5c9c1a5dd07511e2d78a7adfa1cd0addfce7242015bd6",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_03.png": "46804f03836e6801e19643a352526ced64c7172beefa05850832b4adc078af27",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_05.png": "19b88b1fd1dbbd0965960c7a502eb98206372e21485c6553608dc9dc3051df59",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_07.png": "461758140422765c7765ee9cbbbb811f3e55d10bd8942068594ab14ef197b68f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_00.png": "fde41a6cc7fcfc55277742008c5ecb75dea0ab8485d7f651c88194cae7665f3f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_01.png": "4581a12f7f820ea5a1d1fabd4725568c4945b16c8698b5ab315ed25708064503",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_02.png": "16771612a13ee5fbb17835d69fa08feeb05c6c910921011500fcfced78a744e7",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_03.png": "95c2d7c7607c9e7dc84324b164ca523adcaa39e92eb04ea4fe0da375da0e8e70",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_04.png": "3bba503e16890c736c78ea9c5286f309925598edf239112331fe09b50d9792af",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_05.png": "0a702ccc6c2e5346be5ad6bd5fca25baecf6a2345e571b703220058eee68b77c",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_06.png": "79ec24bd137461793c70e353d63ef5e17bb7ae45d8ede5005350c927e5adff9d",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_07.png": "5ff038245de493a2ca3b0d9d03c6c3190304b6d1d67d8f901acfef5103fa673a",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_00.png": "6a76ba006bbffedb5ebd33b1458ca59be7ada332d7373328be42d8dd7f66b3bb",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_01.png": "673970cd522a06cf9fdf43b613317ab7894ff3080a4cf500b1486998299037a0",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_02.png": "72197a2d8be494178510fe949882e17cd5df6b4bc4925839545b1e9ffe3f9998",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_03.png": "e0c8ec959b4a10ea98e761f0e9c4dbf5a0680a3e1dfe18b060427264ad2e062f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_04.png": "7e693a76837bdac0bff6581bb47cb200c7cb56c2abe1b82a923332c960eacea5",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_05.png": "39a530c757b88df5083cb6459c298a9c7f7c91bd6cb8f9cbbd8cdd37fc8cb8af",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_06.png": "2bd2cb0bbe8d2188247d57117499e962dfd46cce0dde8eb12bb916d43ca93faf",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_07.png": "354b2ba1bda20b57e29e4ada711a1a324e790c0a8a2d4abe8a05ea417f058893"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained wing/talon idle, forward claw strike and recovery, feather-wrapped guard, recoil, grounded collapse and wing-raised call. Locomotion remains held for body-scale continuity review against the other clips."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "f80c5bcc49ab4be70ec10b56fb022961906ee6d4e3ddae95dd22372d919203dc",
+  "atlas_sha256": "95f34276ffcdc2ef85a725d5b110eb8ca12dca7096607cda37d2c3cf856b95eb",
+  "texture_bytes_rgba": 15949440
+}

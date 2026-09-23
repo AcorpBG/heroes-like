@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png": "4beade8ded613ea5e195b7d0ea05dee39c91d760d012b17c0e13fa62465e7b1c",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png": "afef2c6a4ed533dda0a202b6e4e1b063b94865b9b29cbe8335bceb7d80e74617",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.png": "b506bcc26f806788b2d827b22061c21c69b716047a3e61786993e5a0b3e6187e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png": "2fd0d3000e3612c2443f85e6147258b6fd31ca82cabc7dc52ef2fc9e8db2d18f",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.png": "9bf90e169081d7db03864b08f7efe577bf861f9b33e10438fca7d3e350834033",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png": "6d7c0be4e0a82eaf39ee4061ba210d6ff5910704914815abc0abcf9250cf3fa3"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: articulated spool-arm idle, tethered canister melee strike/recovery, separate release/reload, recoil/brace, physical rally and grounded collapse. Neighboring pose fragments excluded and actual boot-contact anchors corrected. Repeated-leg walk remains withheld."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "945e485216ab8e0b3f99ab65abcaf5ac3c21d04e4144ea39e310cff9fa4175fa",
+  "atlas_sha256": "7273a12d8f4f7f1efa9af7c47ee9cfdd640ebaf1c63976c8a8f98dec7254e880",
+  "texture_bytes_rgba": 17535744
+}

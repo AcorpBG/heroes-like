@@ -1,0 +1,14 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers",
+  "frames": [
+    {
+      "clip": "ranged",
+      "frame": 4,
+      "seed": [
+        190,
+        180
+      ],
+      "reason": "Runtime owns the detached dart; retain complete wings, weapon and anatomy."
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "art/units/source/curated/unit_thornwake_canopy_rammers.png",
+  "reference_sha256": "a072a8af177c4f41dcae2b28a775f018a9793a22c4a6e51dbd670bf7ebc4c8ae",
+  "outputs": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/move_v1.png",
+      "source_sha256": "cd0fd3d59029373795732309909a3bc865ceb4663b6301d83f30c4d90a657c1f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/move_v1.prompt.txt",
+      "prompt_sha256": "25bfe61cd49d42d50045f2afbad259920695637d000059c2545939d513f73790",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-64d8cfce-6eeb-4f7a-a29a-cfdfa60afff9.png",
+      "status": "rejected_unclear_opposite_lead"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.png",
+      "source_sha256": "b195ac96e1b5d03e5e69f5cd8328bd3e1fb91a58abcf44966fae528316458219",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.prompt.txt",
+      "prompt_sha256": "7a9b01140a2aa2294043e7800f7c0d4c717d97f6ddfa663e9d94a7e1edea0a2b",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-72db69af-af02-410f-9998-b822536ffd1c.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/hit_defend_v1.png",
+      "source_sha256": "c2d483067f86827c0985c5a9d687bafa1e4a4e697ecff31f095b5eecfd073985",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "a12cd9a3d65231b22cca302ee020b241607a32e491f1584171f569396a3bf5ab",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-c3ce8480-4bcf-47f5-99ee-4ad0c09a01ab.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/death_v1.png",
+      "source_sha256": "1a5fa38266c3bd42ed7351359609437c6a09fc92f5e34528fe7d98654b3309dc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/death_v1.prompt.txt",
+      "prompt_sha256": "d3f58c74ac700f89ba817a199cb1499f9ae9c9ea1d59473c31d5395d6e1fcecc",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-29839e8e-e560-4b50-992a-6b021fcc9e33.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/cast_v1.png",
+      "source_sha256": "b1cf478622a02cf83fdec048148a9e074ef58baef0e26bb791f4e98f6d1ff10d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/cast_v1.prompt.txt",
+      "prompt_sha256": "e047c40d42c53bd1370f42baefe1cc5a6ca824d68924e50c23f173abaf0671ed",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-f4b4cf88-03de-45f7-a16f-f759dcca4200.png",
+      "status": "pending_visual_review"
+    }
+  ]
+}
