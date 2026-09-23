@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            318,
+            613
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            945,
+            613
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              639,
+              1254
+            ]
+          ],
+          "anchor": [
+            318,
+            1240
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              639,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            945,
+            1240
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              622,
+              656
+            ]
+          ],
+          "anchor": [
+            326,
+            655
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              622,
+              0,
+              1254,
+              656
+            ]
+          ],
+          "anchor": [
+            852,
+            655
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              656,
+              570,
+              1254
+            ]
+          ],
+          "anchor": [
+            344,
+            1219
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              570,
+              656,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            930,
+            1210
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          682,
+          599
+        ]
+      ],
+      "anchor": [
+        323,
+        596
+      ],
+      "source": "unit_embercourt_bargebow_crews_veteran_idle-alpha.png",
+      "scale": 0.3870967741935484,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          682,
+          0,
+          1312,
+          599
+        ]
+      ],
+      "anchor": [
+        968,
+        597
+      ],
+      "source": "unit_embercourt_bargebow_crews_veteran_idle-alpha.png",
+      "scale": 0.3870967741935484,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          599,
+          682,
+          1199
+        ]
+      ],
+      "anchor": [
+        303,
+        1181
+      ],
+      "source": "unit_embercourt_bargebow_crews_veteran_idle-alpha.png",
+      "scale": 0.3870967741935484,
+      "name": "idle_2"
+    },
+    {
+      "source": "unit_embercourt_bargebow_crews_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          641,
+          599
+        ]
+      ],
+      "anchor": [
+        274,
+        582
+      ],
+      "scale_multiplier": 1.1,
+      "scale": 0.42580645161290326
+    },
+    {
+      "source": "unit_embercourt_bargebow_crews_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          641,
+          0,
+          1312,
+          599
+        ]
+      ],
+      "anchor": [
+        848,
+        583
+      ],
+      "scale_multiplier": 1.1,
+      "scale": 0.42580645161290326
+    },
+    {
+      "source": "unit_embercourt_bargebow_crews_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          599,
+          656,
+          1028
+        ],
+        [
+          0,
+          1028,
+          614,
+          1199
+        ]
+      ],
+      "anchor": [
+        301,
+        1149
+      ],
+      "scale_multiplier": 1.1,
+      "scale": 0.42580645161290326
+    },
+    {
+      "source": "unit_embercourt_bargebow_crews_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          656,
+          599,
+          1312,
+          1028
+        ],
+        [
+          614,
+          1028,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        965,
+        1117
+      ],
+      "scale_multiplier": 1.1,
+      "scale": 0.42580645161290326
+    }
+  ]
+}

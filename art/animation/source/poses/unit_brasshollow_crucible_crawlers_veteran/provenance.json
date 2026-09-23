@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_crucible_crawlers_veteran/unit_brasshollow_crucible_crawlers_veteran_source-alpha.png": "3e42578192129fd18cb641df83b640aa15846c000b608b1cffa4d52ad5e6344e",
+    "res://art/animation/source/poses/unit_brasshollow_crucible_crawlers_veteran/unit_brasshollow_crucible_crawlers_veteran_actions-alpha.png": "6b6192cb9fc87ffe62f8138c7d8eb7cb8181adb619344c28fa017182533cc7c5"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "95d6bb98bb2f98c7df2d20d329003a3cb7b8b5db49df110649cb9e7177815571",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

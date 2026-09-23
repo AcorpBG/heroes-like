@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "name": "Duskpass Revenants",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran.png",
+  "sha256": "b777f74e772ab0e997809fcee4eecb260ff43a1568c0984140c908aafdc71212",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_files": [
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran.final.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran_actions.prompt.txt"
+  ],
+  "portable_reference_files": [
+    "art/units/battle_standees/unit_veilmourn_gloamkeel_bulwarks.png"
+  ],
+  "reference_role": "Existing standee inspected for painterly rendering style only; no base sprite recoloring or pixel reuse.",
+  "frame_selection": [
+    {
+      "slot": 0,
+      "alpha_bbox": [
+        60,
+        54,
+        622,
+        596
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 1,
+      "alpha_bbox": [
+        668,
+        65,
+        1233,
+        596
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 2,
+      "alpha_bbox": [
+        52,
+        677,
+        682,
+        1224
+      ],
+      "separator_alpha_pixels": 14
+    },
+    {
+      "slot": 3,
+      "alpha_bbox": [
+        682,
+        677,
+        1234,
+        1224
+      ],
+      "separator_alpha_pixels": 14
+    }
+  ],
+  "quality_notes": "Four articulated blade/arm poses. Lower pair uses two-rectangle masks separated at y900 to preserve extended blade and neighboring trailing cape without clipping.",
+  "selected_prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mirrorkeel_reavers_veteran.final.prompt.txt",
+  "preserved_candidates": []
+}

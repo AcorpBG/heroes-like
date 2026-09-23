@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            296,
+            591
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            923,
+            591
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              622,
+              1254
+            ]
+          ],
+          "anchor": [
+            296,
+            1210
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              622,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            923,
+            1210
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              548,
+              627
+            ]
+          ],
+          "anchor": [
+            296,
+            626
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              548,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            789,
+            625
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              569,
+              1254
+            ]
+          ],
+          "anchor": [
+            280,
+            1175
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakechain_boarders_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              569,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            1044,
+            1202
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

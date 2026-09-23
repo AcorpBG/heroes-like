@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_boiler_rivetcasters_veteran/unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png": "c80a648a70c2dff6de761619fc3a2120b5bfa00e39ea7b878722538fe85ee67b",
+    "res://art/animation/source/poses/unit_brasshollow_boiler_rivetcasters_veteran/unit_brasshollow_boiler_rivetcasters_veteran_actions-alpha.png": "b9aff35d0d9b30dafc716321a493bfc7d333495a0036f52915a566e69d793b97"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "4c3c6db6816ab07af10a4bcbe7232510dde7706b55cf6f571db100382bca6f79",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

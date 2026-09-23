@@ -28,7 +28,7 @@ Owner-selected completion passes (2026-09-22), in order:
 - `town-overhaul-ai-services-20260922` (completed; 146 focused AI checks, 676 shared town checks): persistent once-only hero training, paid existing-army upgrades and useful artifact commerce for AI town visitors.
 - `town-overhaul-faction-mechanics-20260922` (completed; 185 focused checks): six paid weekly faction services and six asymmetric town-battle defenses, with player/AI use, save persistence and visible explanations.
 - `town-overhaul-building-art-20260922` (completed): all six factions have 51 original building stages and matching icons each (306 stages), six cleared backdrops and authored placements. Both dwelling branches and all 23 active plots are exposed. Focused Windows rendering/input checks passed for every faction; source masters, prompts and provenance are preserved. See `docs/common-town-building-template.md`.
-- `town-overhaul-creature-upgrades-20260922` (in progress): individual upgrade names, abilities and original animated visuals for all 72 selected creatures.
+- `town-overhaul-creature-upgrades-20260922` (completed): all 72 upgrades have individual names and combat distinctions, original portrait/battle/map art, 285 idle poses and 288 attack/hit/fallen paintings. Stable IDs preserve saves; 1,233 idle/recruitment/save and 2,291 action/GPU checks plus 424 faction combat checks passed.
 - `town-overhaul-match-balance-20260922` (in progress): complete matches, tune construction/growth/rare-resource/artifact economy from observed play.
 Preserve saves and existing work; focused checks only, no full repository suite. Workshop and destructible siege structures remain excluded.
 

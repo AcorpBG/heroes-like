@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_worldroot_bastion_veteran/unit_thornwake_worldroot_bastion_veteran-alpha.png": "ea6f10330f0e28157dcf74658c1d8f7a445a535f58b8982dafb50dd7c3631fe6",
+    "res://art/animation/source/poses/unit_thornwake_worldroot_bastion_veteran/unit_thornwake_worldroot_bastion_veteran_actions-alpha.png": "876d18ce753711a591238075f29d364bfe0c467b33ed9c6a6d20c0f22c25fb75"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_seedglass_cantors_veteran/unit_thornwake_seedglass_cantors_veteran-alpha.png": "fdfc47a6c05544011ef223bdc1a71f97833d8122ddbbd8db9382b30ee5255e0e",
+    "res://art/animation/source/poses/unit_thornwake_seedglass_cantors_veteran/unit_thornwake_seedglass_cantors_veteran_actions-alpha.png": "5d2a2799d93dd87e36632c24f463598819c36ee297cee558626da7275041262a"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "0d8cbb32f2954d9003bfc4df9b366045ca2eb26ddc59b3cce49d7e97638c7723",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

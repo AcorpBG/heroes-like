@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    320
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          630
+        ]
+      ],
+      "anchor": [
+        342,
+        621
+      ],
+      "source": "unit_sunvault_resonant_choristers_veteran_source-alpha.png",
+      "scale": 0.37012987012987014,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          630
+        ]
+      ],
+      "anchor": [
+        959,
+        621
+      ],
+      "source": "unit_sunvault_resonant_choristers_veteran_source-alpha.png",
+      "scale": 0.37012987012987014,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          630,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        346,
+        1242
+      ],
+      "source": "unit_sunvault_resonant_choristers_veteran_source-alpha.png",
+      "scale": 0.37012987012987014,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          630,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        964,
+        1241
+      ],
+      "source": "unit_sunvault_resonant_choristers_veteran_source-alpha.png",
+      "scale": 0.37012987012987014,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        299,
+        607
+      ],
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          650
+        ]
+      ],
+      "scale_multiplier": 1.33,
+      "source": "unit_sunvault_resonant_choristers_veteran_actions-alpha.png",
+      "scale": 0.4922727272727273
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        848,
+        607
+      ],
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          650
+        ]
+      ],
+      "scale_multiplier": 1.33,
+      "source": "unit_sunvault_resonant_choristers_veteran_actions-alpha.png",
+      "scale": 0.4922727272727273
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        373,
+        1132
+      ],
+      "rects": [
+        [
+          0,
+          650,
+          580,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.33,
+      "source": "unit_sunvault_resonant_choristers_veteran_actions-alpha.png",
+      "scale": 0.4922727272727273
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        915,
+        1120
+      ],
+      "rects": [
+        [
+          580,
+          650,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.33,
+      "source": "unit_sunvault_resonant_choristers_veteran_actions-alpha.png",
+      "scale": 0.4922727272727273
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_embercourt_beacon_lectors_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              659,
+              596
+            ]
+          ],
+          "anchor": [
+            378,
+            582
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              659,
+              0,
+              1318,
+              596
+            ]
+          ],
+          "anchor": [
+            965,
+            582
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              596,
+              659,
+              1193
+            ]
+          ],
+          "anchor": [
+            377,
+            1143
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              659,
+              596,
+              1318,
+              1193
+            ]
+          ],
+          "anchor": [
+            948,
+            1145
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              659,
+              596
+            ]
+          ],
+          "anchor": [
+            351,
+            559
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              659,
+              0,
+              1318,
+              596
+            ]
+          ],
+          "anchor": [
+            880,
+            560
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              596,
+              659,
+              1193
+            ]
+          ],
+          "anchor": [
+            315,
+            1114
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              659,
+              596,
+              1318,
+              1193
+            ]
+          ],
+          "anchor": [
+            927,
+            1074
+          ]
+        }
+      ]
+    }
+  ]
+}

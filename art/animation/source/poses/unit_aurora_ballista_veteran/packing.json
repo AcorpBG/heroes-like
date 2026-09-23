@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_aurora_ballista_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          627
+        ]
+      ],
+      "anchor": [
+        300,
+        593
+      ],
+      "source": "unit_aurora_ballista_veteran_source-alpha.png",
+      "scale": 0.40714285714285714,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          650,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        927,
+        593
+      ],
+      "source": "unit_aurora_ballista_veteran_source-alpha.png",
+      "scale": 0.40714285714285714,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          645,
+          1254
+        ]
+      ],
+      "anchor": [
+        300,
+        1194
+      ],
+      "source": "unit_aurora_ballista_veteran_source-alpha.png",
+      "scale": 0.40714285714285714,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          650,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        927,
+        1194
+      ],
+      "source": "unit_aurora_ballista_veteran_source-alpha.png",
+      "scale": 0.40714285714285714,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        300,
+        639
+      ],
+      "scale_multiplier": 1.1,
+      "source": "unit_aurora_ballista_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          680
+        ]
+      ],
+      "scale": 0.4478571428571429
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        891,
+        642
+      ],
+      "scale_multiplier": 1.1,
+      "source": "unit_aurora_ballista_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          680
+        ]
+      ],
+      "scale": 0.4478571428571429
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        326,
+        1165
+      ],
+      "scale_multiplier": 1.1,
+      "source": "unit_aurora_ballista_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          680,
+          627,
+          1254
+        ]
+      ],
+      "scale": 0.4478571428571429
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        927,
+        1165
+      ],
+      "scale_multiplier": 1.1,
+      "source": "unit_aurora_ballista_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          680,
+          1254,
+          1254
+        ]
+      ],
+      "scale": 0.4478571428571429
+    }
+  ]
+}

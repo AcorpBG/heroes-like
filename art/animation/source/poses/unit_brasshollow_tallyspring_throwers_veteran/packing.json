@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          687,
+          572
+        ]
+      ],
+      "anchor": [
+        342,
+        560
+      ],
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_source-alpha.png",
+      "scale": 0.41454545454545455,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          687,
+          0,
+          1374,
+          572
+        ]
+      ],
+      "anchor": [
+        1029,
+        560
+      ],
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_source-alpha.png",
+      "scale": 0.41454545454545455,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          572,
+          687,
+          1144
+        ]
+      ],
+      "anchor": [
+        342,
+        1130
+      ],
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_source-alpha.png",
+      "scale": 0.41454545454545455,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          687,
+          572,
+          1374,
+          1144
+        ]
+      ],
+      "anchor": [
+        1028,
+        1130
+      ],
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_source-alpha.png",
+      "scale": 0.41454545454545455,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          655
+        ]
+      ],
+      "anchor": [
+        296,
+        619
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.4269818181818182
+    },
+    {
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          655
+        ]
+      ],
+      "anchor": [
+        917,
+        613
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.4269818181818182
+    },
+    {
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          655,
+          580,
+          1254
+        ]
+      ],
+      "anchor": [
+        300,
+        1185
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.4269818181818182
+    },
+    {
+      "source": "unit_brasshollow_tallyspring_throwers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          580,
+          655,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        908,
+        1202
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.4269818181818182
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_shard_guard_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_shard_guard_veteran/unit_shard_guard_veteran_source-alpha.png": "7979d5d5967431ab02e13dee417f4ce3d9ccfaf5c46c49aa03131677e4a02e6e",
+    "res://art/animation/source/poses/unit_shard_guard_veteran/unit_shard_guard_veteran_actions-alpha.png": "31d2cd4fe2b01449d58d61c1462fb019ee9b97199ab9e611a97b1bcd92928882"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "1c87be9d09c7d24f0c3d48335d81d95325fc346c0310f3267e2250ee8d0b98cd",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

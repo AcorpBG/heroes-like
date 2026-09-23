@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_tidehook_deckhands_veteran/unit_veilmourn_tidehook_deckhands_veteran-alpha.png": "33f302cdd8c395a7d253cbbec41705270605f28a21358017117ea897a938d79a",
+    "res://art/animation/source/poses/unit_veilmourn_tidehook_deckhands_veteran/unit_veilmourn_tidehook_deckhands_veteran_actions-alpha.png": "8aaf9edeb5f3d7c02863fd0ce2c0299a047ddc3ccd2150431eabaeea8e21b9fd"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "f7b2316fc005d3d350d7ff417f9a7a892cd3f7a89f0fb926d74f75013e748165",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

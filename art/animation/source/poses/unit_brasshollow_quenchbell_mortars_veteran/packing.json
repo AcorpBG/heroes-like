@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        327,
+        527
+      ],
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_source-alpha.png",
+      "scale": 0.5685785536159601,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        953,
+        527
+      ],
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_source-alpha.png",
+      "scale": 0.5685785536159601,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        327,
+        1154
+      ],
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_source-alpha.png",
+      "scale": 0.5685785536159601,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        953,
+        1154
+      ],
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_source-alpha.png",
+      "scale": 0.5685785536159601,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        335,
+        551
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.5685785536159601
+    },
+    {
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        940,
+        557
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.5685785536159601
+    },
+    {
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        387,
+        1133
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.5685785536159601
+    },
+    {
+      "source": "unit_brasshollow_quenchbell_mortars_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        927,
+        1116
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.5685785536159601
+    }
+  ]
+}

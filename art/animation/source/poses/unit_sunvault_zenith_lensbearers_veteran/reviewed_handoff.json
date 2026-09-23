@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              660,
+              627
+            ]
+          ],
+          "anchor": [
+            309,
+            610
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            944,
+            610
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              660,
+              1254
+            ]
+          ],
+          "anchor": [
+            311,
+            1218
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            944,
+            1220
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_windup",
+          "anchor": [
+            360,
+            630
+          ],
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              660
+            ]
+          ],
+          "scale_multiplier": 1.16,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_release",
+          "anchor": [
+            872,
+            644
+          ],
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              660
+            ]
+          ],
+          "scale_multiplier": 1.16,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+        },
+        {
+          "clip": "hit",
+          "name": "hit_recoil",
+          "anchor": [
+            445,
+            1171
+          ],
+          "rects": [
+            [
+              0,
+              660,
+              627,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.16,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+        },
+        {
+          "clip": "dead",
+          "name": "fallen",
+          "anchor": [
+            925,
+            1115
+          ],
+          "rects": [
+            [
+              627,
+              660,
+              1254,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.16,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+        }
+      ]
+    }
+  ]
+}

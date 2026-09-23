@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          669,
+          597
+        ]
+      ],
+      "anchor": [
+        321.5,
+        589
+      ],
+      "source": "unit_thornwake_graft_matriarchs_veteran-alpha.png",
+      "scale": 0.3910806174957118,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          669,
+          0,
+          1312,
+          597
+        ]
+      ],
+      "anchor": [
+        1005.0,
+        589
+      ],
+      "source": "unit_thornwake_graft_matriarchs_veteran-alpha.png",
+      "scale": 0.3910806174957118,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          597,
+          687,
+          1199
+        ]
+      ],
+      "anchor": [
+        321.0,
+        1187
+      ],
+      "source": "unit_thornwake_graft_matriarchs_veteran-alpha.png",
+      "scale": 0.3910806174957118,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          687,
+          597,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1004.0,
+        1188
+      ],
+      "source": "unit_thornwake_graft_matriarchs_veteran-alpha.png",
+      "scale": 0.3910806174957118,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_graft_matriarchs_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          616,
+          617
+        ]
+      ],
+      "anchor": [
+        314.5,
+        613
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.3910806174957118
+    },
+    {
+      "source": "unit_thornwake_graft_matriarchs_veteran_actions-alpha.png",
+      "rects": [
+        [
+          616,
+          0,
+          1312,
+          712
+        ]
+      ],
+      "anchor": [
+        1014.5,
+        621
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.3910806174957118
+    },
+    {
+      "source": "unit_thornwake_graft_matriarchs_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          617,
+          616,
+          1199
+        ]
+      ],
+      "anchor": [
+        364.0,
+        1166
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.3910806174957118
+    },
+    {
+      "source": "unit_thornwake_graft_matriarchs_veteran_actions-alpha.png",
+      "rects": [
+        [
+          616,
+          712,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        968,
+        1140
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.3910806174957118
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        439,
+        492
+      ],
+      "source": "unit_mireclaw_mudglass_slingers_veteran_idle-alpha.png",
+      "scale": 0.47401247401247404,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1168,
+        492
+      ],
+      "source": "unit_mireclaw_mudglass_slingers_veteran_idle-alpha.png",
+      "scale": 0.47401247401247404,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        439,
+        996
+      ],
+      "source": "unit_mireclaw_mudglass_slingers_veteran_idle-alpha.png",
+      "scale": 0.47401247401247404,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1168,
+        996
+      ],
+      "source": "unit_mireclaw_mudglass_slingers_veteran_idle-alpha.png",
+      "scale": 0.47401247401247404,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_mudglass_slingers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          508
+        ]
+      ],
+      "anchor": [
+        407,
+        489
+      ],
+      "scale": 0.47401247401247404
+    },
+    {
+      "source": "unit_mireclaw_mudglass_slingers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          508
+        ]
+      ],
+      "anchor": [
+        998,
+        489
+      ],
+      "scale": 0.47401247401247404
+    },
+    {
+      "source": "unit_mireclaw_mudglass_slingers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          508,
+          740,
+          1024
+        ]
+      ],
+      "anchor": [
+        451,
+        946
+      ],
+      "scale": 0.47401247401247404
+    },
+    {
+      "source": "unit_mireclaw_mudglass_slingers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          740,
+          508,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1130,
+        914
+      ],
+      "scale": 0.47401247401247404
+    }
+  ]
+}

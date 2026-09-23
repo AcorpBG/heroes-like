@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_gaugefire_arbalists_veteran/unit_brasshollow_gaugefire_arbalists_veteran_source-alpha.png": "14df5168643b7ab1fb76e44663c052b9e3f3b65f9c2b343ea6b8706af6682ecb",
+    "res://art/animation/source/poses/unit_brasshollow_gaugefire_arbalists_veteran/unit_brasshollow_gaugefire_arbalists_veteran_actions-alpha.png": "a9e8a6700a4b4fc9a208aea3295f1b7eba541b52eed0e7060e502ae8997570ca"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "331e1f5a11533636e34ea1ef622e18088181934c28b4f8fb56048626e83c2cf1",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

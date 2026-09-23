@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_noonfacet_sentinels_veteran/unit_sunvault_noonfacet_sentinels_veteran_source-alpha.png": "3b3813a694d68cf54c89932cdd3072a382b779bc6acebc4feb98657c66ca2705",
+    "res://art/animation/source/poses/unit_sunvault_noonfacet_sentinels_veteran/unit_sunvault_noonfacet_sentinels_veteran_actions-alpha.png": "7c4ff6d0bb526b362caa9f15eacaa59ea94e5ae4b9db9ad9daae4297549fae91"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "319bfcde9faf51a8a24b9b070091e3c27e055236933e3db17bb06ba7d86186a9",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,20 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs_veteran",
+  "asset": "attack_hit_fallen",
+  "prompt": "Use case: stylized-concept. Create a NEW battle-action sprite sheet for the EXACT upgraded Brasshollow creature shown in the reference image. Reference is identity/design/style ONLY, not desired poses. Preserve the SAME armor silhouette, face/mask, equipment, proportions, painterly weathered brass/iron finish, right-facing three-quarter camera and body scale. Actual new articulated paintings, NOT shifted/rotated existing cutouts. TRUE transparent RGBA background. Exactly FOUR distinct poses in a regular2x2 grid, row-major: top-left ATTACK WINDUP; top-right ATTACK IMPACT/RELEASE; bottom-left HIT RECOIL; bottom-right FALLEN/DEAD. No captions/text. Sheet1536x1536, each cell768x768, generous100px transparent margin per cell. Entire weapons, all body parts, whole horizontal fallen body within each cell. Shrink all figures equally if necessary to fit longest pose. No grid, scenery, ground tile, base, cast ground shadow, gore or external effects clouds. Same character equipment count in all cells. Hit pose visibly bends/recoils with weapons still held. Fallen pose MUST show creature lying collapsed on its side on the ground, not crouching/standing: horizontal torso, bent limbs, gear fallen beside body but fully in frame. Warrant Anvil. Windup draws hammer BACK AT WAIST with elbow behind torso and shield forward. Do NOT raise hammer over head; hammer stays below shoulder height. Impact swings hammer horizontally right with extended elbow and tilted gauge shield. Hit torso recoils with knees flexed and hammer lowered. Fallen fully horizontal on side, rectangular gauge shield tipped beside body, hammer beside gauntlet. Shield/gauge/tabard chains identical to reference. Important: Keep full upper silhouette at or BELOW reference idle head height. Attacks extend horizontally, not overhead. Wide empty gutters.",
+  "date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "original_source": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc24-612b-75a2-9f16-51450fe5f8fd\\exec-f02cf91a-4252-4e30-b5e3-1eacc488aba0.png",
+  "references": [
+    "D:/Games/godot/heroes-like/art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_gaugeplate_bailiffs_veteran_source.png"
+  ],
+  "reference_use": "Accepted upgraded idle sheet supplied as identity and style reference. Original articulated action poses.",
+  "sha256": "8fcd02bb05c0ac685f674275f383bb82b920486c4fce04fa38382a5f74fb91d6",
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "reference_sha256": {
+    "unit_brasshollow_gaugeplate_bailiffs_veteran_source.png": "35bd95fea5b8c5ff48ba7ce8c18948b691531f34ede8734a7c1b898cac78cc41"
+  }
+}

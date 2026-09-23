@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    320
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          650,
+          610
+        ]
+      ],
+      "anchor": [
+        334,
+        583
+      ],
+      "source": "unit_embercourt_fordhook_cadets_veteran_idle-alpha.png",
+      "scale": 0.40425531914893614,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          650,
+          0,
+          1312,
+          610
+        ]
+      ],
+      "anchor": [
+        963,
+        583
+      ],
+      "source": "unit_embercourt_fordhook_cadets_veteran_idle-alpha.png",
+      "scale": 0.40425531914893614,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          610,
+          735,
+          1199
+        ]
+      ],
+      "anchor": [
+        269,
+        1139
+      ],
+      "source": "unit_embercourt_fordhook_cadets_veteran_idle-alpha.png",
+      "scale": 0.40425531914893614,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          735,
+          610,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        951,
+        1152
+      ],
+      "source": "unit_embercourt_fordhook_cadets_veteran_idle-alpha.png",
+      "scale": 0.40425531914893614,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_embercourt_fordhook_cadets_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          611,
+          599
+        ]
+      ],
+      "anchor": [
+        306,
+        579
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.5053191489361701
+    },
+    {
+      "source": "unit_embercourt_fordhook_cadets_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          611,
+          0,
+          1312,
+          599
+        ]
+      ],
+      "anchor": [
+        845,
+        577
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.5053191489361701
+    },
+    {
+      "source": "unit_embercourt_fordhook_cadets_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          599,
+          656,
+          1199
+        ]
+      ],
+      "anchor": [
+        367,
+        1123
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.5053191489361701
+    },
+    {
+      "source": "unit_embercourt_fordhook_cadets_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          656,
+          599,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        972,
+        1078
+      ],
+      "scale_multiplier": 1.25,
+      "scale": 0.5053191489361701
+    }
+  ]
+}

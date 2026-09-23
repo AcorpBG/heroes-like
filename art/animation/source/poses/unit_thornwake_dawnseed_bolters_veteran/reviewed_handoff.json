@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              821,
+              513
+            ]
+          ],
+          "anchor": [
+            342.5,
+            505
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              821,
+              0,
+              1536,
+              513
+            ]
+          ],
+          "anchor": [
+            1115.5,
+            506
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              513,
+              827,
+              1024
+            ]
+          ],
+          "anchor": [
+            342.5,
+            1014
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              827,
+              513,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1109.5,
+            1014
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              779,
+              512
+            ]
+          ],
+          "anchor": [
+            347.5,
+            496
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran_actions.png",
+          "rects": [
+            [
+              779,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1097.0,
+            495
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              512,
+              719,
+              1024
+            ]
+          ],
+          "anchor": [
+            343.5,
+            971
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_dawnseed_bolters_veteran_actions.png",
+          "rects": [
+            [
+              719,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1120,
+            980
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "420b02234c91338ebbe6ee07c82854e9a5062a8680c237b87ba801d21dff0686"
+    }
+  ]
+}

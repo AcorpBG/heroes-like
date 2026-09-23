@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_blackbranch_cutthroat_veteran/unit_blackbranch_cutthroat_veteran_idle-alpha.png": "7e569db1ddc328a5a69ca26fdbc8c0676ba6ec088e0f1b235830a014875e8930",
+    "res://art/animation/source/poses/unit_blackbranch_cutthroat_veteran/unit_blackbranch_cutthroat_veteran_actions-alpha.png": "82ccb63e37c6eba4edae9c2e5d8e2c2db9d8c9b68bc9341e8fa268cca32edb4c"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "1c55d02b3ec7e4484e39ee0209d40df98bb7bbd696f4c40236d6b26fe1906765",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        320,
+        492
+      ],
+      "source": "unit_mireclaw_bogplate_maulers_veteran_idle-alpha.png",
+      "scale": 0.4720496894409938,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1070,
+        492
+      ],
+      "source": "unit_mireclaw_bogplate_maulers_veteran_idle-alpha.png",
+      "scale": 0.4720496894409938,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        329,
+        999
+      ],
+      "source": "unit_mireclaw_bogplate_maulers_veteran_idle-alpha.png",
+      "scale": 0.4720496894409938,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1083,
+        999
+      ],
+      "source": "unit_mireclaw_bogplate_maulers_veteran_idle-alpha.png",
+      "scale": 0.4720496894409938,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_bogplate_maulers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          510
+        ]
+      ],
+      "anchor": [
+        331,
+        493
+      ],
+      "scale": 0.4720496894409938
+    },
+    {
+      "source": "unit_mireclaw_bogplate_maulers_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          510
+        ]
+      ],
+      "anchor": [
+        1027,
+        498
+      ],
+      "scale": 0.4720496894409938
+    },
+    {
+      "source": "unit_mireclaw_bogplate_maulers_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          510,
+          750,
+          1024
+        ]
+      ],
+      "anchor": [
+        350,
+        968
+      ],
+      "scale": 0.4720496894409938
+    },
+    {
+      "source": "unit_mireclaw_bogplate_maulers_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          750,
+          510,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1140,
+        946
+      ],
+      "scale": 0.4720496894409938
+    }
+  ]
+}

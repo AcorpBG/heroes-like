@@ -1,0 +1,157 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_river_guard_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png",
+      "source_facing": "right",
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              625,
+              648
+            ]
+          ],
+          "anchor": [
+            323,
+            637
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              625,
+              0,
+              1254,
+              600
+            ],
+            [
+              625,
+              600,
+              1110,
+              648
+            ]
+          ],
+          "anchor": [
+            894,
+            636
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              650,
+              716,
+              1254
+            ]
+          ],
+          "anchor": [
+            299,
+            1222
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              716,
+              650,
+              1254,
+              1254
+            ],
+            [
+              1110,
+              600,
+              1254,
+              650
+            ]
+          ],
+          "anchor": [
+            893,
+            1222
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              553,
+              627
+            ]
+          ],
+          "anchor": [
+            285,
+            595
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              553,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            731,
+            588
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              569,
+              1254
+            ]
+          ],
+          "anchor": [
+            343,
+            1156
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              569,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            868,
+            1130
+          ],
+          "scale_multiplier": 1.25
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

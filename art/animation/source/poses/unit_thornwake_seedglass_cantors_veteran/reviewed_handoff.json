@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              690,
+              615
+            ]
+          ],
+          "anchor": [
+            345.0,
+            599
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              690,
+              0,
+              1278,
+              615
+            ]
+          ],
+          "anchor": [
+            981.0,
+            599
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              615,
+              702,
+              1230
+            ]
+          ],
+          "anchor": [
+            342.5,
+            1214
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              702,
+              615,
+              1278,
+              1230
+            ]
+          ],
+          "anchor": [
+            984.5,
+            1214
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              629,
+              649
+            ]
+          ],
+          "anchor": [
+            318.5,
+            615
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran_actions.png",
+          "rects": [
+            [
+              629,
+              0,
+              1278,
+              649
+            ]
+          ],
+          "anchor": [
+            898.5,
+            612
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              649,
+              598,
+              1230
+            ]
+          ],
+          "anchor": [
+            334.5,
+            1188
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedglass_cantors_veteran_actions.png",
+          "rects": [
+            [
+              598,
+              649,
+              1278,
+              1230
+            ]
+          ],
+          "anchor": [
+            938,
+            1180
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "2f3da9ac9871f809306a869bec3b30756f889c0e06b81d7a59be9cc09735d468"
+    }
+  ]
+}

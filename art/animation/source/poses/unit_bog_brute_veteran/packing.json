@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        442,
+        495
+      ],
+      "source": "unit_bog_brute_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1160,
+        495
+      ],
+      "source": "unit_bog_brute_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        448,
+        1005
+      ],
+      "source": "unit_bog_brute_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1160,
+        1005
+      ],
+      "source": "unit_bog_brute_veteran_idle-alpha.png",
+      "scale": 0.4691358024691358,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_bog_brute_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          526
+        ]
+      ],
+      "anchor": [
+        370,
+        516
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_bog_brute_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          526
+        ]
+      ],
+      "anchor": [
+        1057,
+        516
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_bog_brute_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          526,
+          715,
+          1024
+        ]
+      ],
+      "anchor": [
+        438,
+        966
+      ],
+      "scale": 0.4691358024691358
+    },
+    {
+      "source": "unit_bog_brute_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          715,
+          526,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1150,
+        964
+      ],
+      "scale": 0.4691358024691358
+    }
+  ]
+}

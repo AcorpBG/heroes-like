@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            439,
+            492
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1168,
+            492
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            439,
+            996
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1168,
+            996
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              508
+            ]
+          ],
+          "anchor": [
+            407,
+            489
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              508
+            ]
+          ],
+          "anchor": [
+            998,
+            489
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              508,
+              740,
+              1024
+            ]
+          ],
+          "anchor": [
+            451,
+            946
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              740,
+              508,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1130,
+            914
+          ]
+        }
+      ]
+    }
+  ]
+}

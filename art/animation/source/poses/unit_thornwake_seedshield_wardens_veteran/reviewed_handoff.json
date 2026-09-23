@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              646,
+              612
+            ]
+          ],
+          "anchor": [
+            358.0,
+            590
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              646,
+              0,
+              1254,
+              612
+            ]
+          ],
+          "anchor": [
+            943.5,
+            588
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              612,
+              699,
+              1254
+            ]
+          ],
+          "anchor": [
+            316.0,
+            1219
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              699,
+              612,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            953.5,
+            1219
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              565,
+              657
+            ]
+          ],
+          "anchor": [
+            314.5,
+            627
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran_actions.png",
+          "rects": [
+            [
+              565,
+              0,
+              1254,
+              657
+            ]
+          ],
+          "anchor": [
+            812.0,
+            618
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              657,
+              572,
+              1254
+            ]
+          ],
+          "anchor": [
+            350,
+            1166
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_seedshield_wardens_veteran_actions.png",
+          "rects": [
+            [
+              572,
+              657,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            920,
+            1121
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "b131fea9c6910c5b3a0b9b484c094c9ee07fbed9618bd0c8b010b8877b1a561b"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_ember_archer_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_ember_archer_veteran/unit_ember_archer_veteran_idle-alpha.png": "055fecc630055f658902bb6449b36c5be72fd5f2f41a15b554725fcfa5e7d6c6",
+    "res://art/animation/source/poses/unit_ember_archer_veteran/unit_ember_archer_veteran_actions-alpha.png": "3aeea80b0443e6be50b09f66129192ce2ca00ec134ff6de945f2f1cd2b488323"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "d05e9ec3d2025e283a84b207180a9349e8e76697c69e0dfc4f5be2259ac6c53d",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_prism_adepts_veteran/unit_sunvault_prism_adepts_veteran_source-alpha.png": "cde9cd2bfecae0e1e3001336c84882238839e71dcf97645d7c70e22e44335fad",
+    "res://art/animation/source/poses/unit_sunvault_prism_adepts_veteran/unit_sunvault_prism_adepts_veteran_actions-alpha.png": "6f4191210ae6203e2e227bc2937fbab3ead817a21fd1535ef2e6483c53376dba"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "8d741e89446d5f50f477919e0fb0f0edde4266dcc2888f42f43dca7677b56ce4",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

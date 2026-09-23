@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          715,
+          535
+        ]
+      ],
+      "anchor": [
+        294.0,
+        511
+      ],
+      "source": "unit_thornwake_barkmantle_rams_veteran-alpha.png",
+      "scale": 0.44357976653696496,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          715,
+          0,
+          1402,
+          535
+        ]
+      ],
+      "anchor": [
+        1015.0,
+        510
+      ],
+      "source": "unit_thornwake_barkmantle_rams_veteran-alpha.png",
+      "scale": 0.44357976653696496,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          535,
+          710,
+          1122
+        ]
+      ],
+      "anchor": [
+        294.0,
+        1072
+      ],
+      "source": "unit_thornwake_barkmantle_rams_veteran-alpha.png",
+      "scale": 0.44357976653696496,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          710,
+          535,
+          1402,
+          1122
+        ]
+      ],
+      "anchor": [
+        993.0,
+        1073
+      ],
+      "source": "unit_thornwake_barkmantle_rams_veteran-alpha.png",
+      "scale": 0.44357976653696496,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_barkmantle_rams_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          676,
+          552
+        ]
+      ],
+      "anchor": [
+        325.5,
+        527
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.44357976653696496
+    },
+    {
+      "source": "unit_thornwake_barkmantle_rams_veteran_actions-alpha.png",
+      "rects": [
+        [
+          676,
+          0,
+          1402,
+          552
+        ]
+      ],
+      "anchor": [
+        1026.5,
+        531
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.44357976653696496
+    },
+    {
+      "source": "unit_thornwake_barkmantle_rams_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          552,
+          690,
+          1122
+        ]
+      ],
+      "anchor": [
+        293.0,
+        1059
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.44357976653696496
+    },
+    {
+      "source": "unit_thornwake_barkmantle_rams_veteran_actions-alpha.png",
+      "rects": [
+        [
+          690,
+          552,
+          1402,
+          1122
+        ]
+      ],
+      "anchor": [
+        1040,
+        1064
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.44357976653696496
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_bellwake_oars_veteran/unit_veilmourn_bellwake_oars_veteran-alpha.png": "bb03a0ae3e9c89d464712bf18785a521479aa611103b85f9ad4274d7fc370d76",
+    "res://art/animation/source/poses/unit_veilmourn_bellwake_oars_veteran/unit_veilmourn_bellwake_oars_veteran_actions-alpha.png": "a06bb0fce64a61a1232fda5a038b6fd9653f2955873c2217c4c716560cc8e046"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "7eb0d3d6b85fc4f7af56108899ed32bbcd649bc55da6ba25e303137f8eb405b8",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

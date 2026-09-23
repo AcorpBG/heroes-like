@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              774,
+              564
+            ]
+          ],
+          "anchor": [
+            423.0,
+            550
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              774,
+              0,
+              1393,
+              564
+            ]
+          ],
+          "anchor": [
+            1045.0,
+            552
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              564,
+              811,
+              1129
+            ]
+          ],
+          "anchor": [
+            420.0,
+            1111
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              811,
+              564,
+              1393,
+              1129
+            ]
+          ],
+          "anchor": [
+            1040.0,
+            1113
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              670,
+              603
+            ]
+          ],
+          "anchor": [
+            311.0,
+            587
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran_actions.png",
+          "rects": [
+            [
+              670,
+              0,
+              1393,
+              603
+            ]
+          ],
+          "anchor": [
+            1000.0,
+            589
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              603,
+              668,
+              1129
+            ]
+          ],
+          "anchor": [
+            316.5,
+            1101
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_pollenhook_whistlers_veteran_actions.png",
+          "rects": [
+            [
+              668,
+              603,
+              1393,
+              1129
+            ]
+          ],
+          "anchor": [
+            1030,
+            1039
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "b69af3de04022b7bf4909596136a508adb583e7547b2398dbfd50a93b5aea070"
+    }
+  ]
+}

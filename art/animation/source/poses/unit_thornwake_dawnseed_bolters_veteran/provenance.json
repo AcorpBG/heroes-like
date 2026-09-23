@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_dawnseed_bolters_veteran/unit_thornwake_dawnseed_bolters_veteran-alpha.png": "d593ebb88f9bf50d46ee6884b8335eddc757a96c5000cd6478b423e6c07eb267",
+    "res://art/animation/source/poses/unit_thornwake_dawnseed_bolters_veteran/unit_thornwake_dawnseed_bolters_veteran_actions-alpha.png": "0b3e58f7cc8c07ea9745bde911d5f3660d43bc1e2501785e094287e80ccd4642"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "eb18c3900ab9f6da0cedf629535e6a408a2a2348b18b4ec601594ce26d8ef43c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

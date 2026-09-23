@@ -22337,13 +22337,13 @@
     {
       "id": "town-overhaul-creature-upgrades-20260922",
       "title": "Individual creature upgrade identities, gameplay and animated art",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "All72 individual names and supported combat designs integrated locally, with stable upgrade IDs for saves. Six faction combat probes cover actual trigger/non-trigger behavior. Original upgraded artwork and articulated idle poses are being produced and packed across all six factions; final import and live battle/overworld rendering checks remain. Not complete or fully committed."
+      "notes": "All72 individually named upgrades and authored supported combat mechanics shipped with stable IDs, original portraits/battle/map sprites and573 original articulated paintings (285idle+288attack/hit/fallen). New action/death/corpse clips replace base-art aliases; enlarged transparent envelopes preserve body scale/grounding. Actual BattleRules status effects now respect innate/active immunity before spending readiness wards. Focused Windows checks:1233idle/render/recruit/save,2291real action/GPU/sim-save parity,424six-faction combat. Source masters, exact prompts, hashes, frame recipes and provenance preserved; new Git attributes retain prompt bytes. No full suite or Linux execution. Full-match rare economy balance remains active."
     },
     {
       "id": "town-overhaul-match-balance-20260922",

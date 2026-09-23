@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_aurora_ballistae_veteran/unit_sunvault_aurora_ballistae_veteran_source-alpha.png": "6eaad0b1d55f2095faca2cec878e6d3a1d583c52a493fd7e5337331f268d7dd1",
+    "res://art/animation/source/poses/unit_sunvault_aurora_ballistae_veteran/unit_sunvault_aurora_ballistae_veteran_actions-alpha.png": "d03a7a36d7308a3df15d5218d3c7cee03c03d9d65d4dad45976f4a95758da434"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "13a347c93f6dffa760e79862cf3c6daa24572df022084d01530a94e1285f2992",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

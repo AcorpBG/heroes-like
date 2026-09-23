@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+  "sha256": "bb5c62b2919672abb1314064f9e2a2cb360110753e63af14a72f0fc069c983f3",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "38f736514dd563be1dea21b0671d2e286527b001c62c9c8689d3637d0a6a03a0"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          651
+        ]
+      ],
+      "anchor": [
+        328,
+        650
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          651
+        ]
+      ],
+      "anchor": [
+        884,
+        650
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          651,
+          576,
+          1254
+        ]
+      ],
+      "anchor": [
+        337,
+        1163
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_wakeglass_navigators_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          576,
+          651,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        894,
+        1181
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

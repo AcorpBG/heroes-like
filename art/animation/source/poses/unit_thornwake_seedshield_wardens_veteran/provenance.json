@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_seedshield_wardens_veteran/unit_thornwake_seedshield_wardens_veteran-alpha.png": "9474d31fe7397fa6834238893af54a45b57e0a696dfc2d81e5bf4ba86617994c",
+    "res://art/animation/source/poses/unit_thornwake_seedshield_wardens_veteran/unit_thornwake_seedshield_wardens_veteran_actions-alpha.png": "107c5505cec10237449499ef5cd460ff6019934d67afb8b30a8d377697d81129"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "bed215a83954917b9023ebd251b9310fbcdeba90e711e09f204865eaf090990e",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

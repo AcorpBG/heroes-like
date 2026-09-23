@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+  "sha256": "34289bbde9456761f174df25f3ddb885aa8d1d52dd9757985ff0861170c746f4",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "e68a6c37f77a22f9d934f6924dfd39ec2e840ceb99273fc63fcef0d3d47b7260"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          632
+        ]
+      ],
+      "anchor": [
+        361,
+        629
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          632
+        ]
+      ],
+      "anchor": [
+        857,
+        631
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          632,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        362,
+        1195
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_bellwake_oars_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          632,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        879,
+        1205
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

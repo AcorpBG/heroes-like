@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png": "66052fc59809a9df43173d8538e328266ec42316b13f665863228a06fd8ea987",
+    "res://art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_actions-alpha.png": "405bb932a826c418c9395a0fd25a3adc7732fbed5a7d7615333afae904623bd1"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "61b8b5c76498d860e7fd33be74f415b1ad78475f64e8945f20b0180a7a596710",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

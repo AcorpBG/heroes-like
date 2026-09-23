@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    576,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        361,
+        493
+      ],
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png",
+      "scale": 0.5100671140939598,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1137,
+        499
+      ],
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png",
+      "scale": 0.5100671140939598,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        492,
+        961
+      ],
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png",
+      "scale": 0.5100671140939598,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1128,
+        954
+      ],
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png",
+      "scale": 0.5100671140939598,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          650,
+          512
+        ]
+      ],
+      "anchor": [
+        403,
+        470
+      ],
+      "scale": 0.5100671140939598
+    },
+    {
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          650,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        961,
+        469
+      ],
+      "scale": 0.5100671140939598
+    },
+    {
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          512,
+          710,
+          1024
+        ]
+      ],
+      "anchor": [
+        491,
+        956
+      ],
+      "scale": 0.5100671140939598
+    },
+    {
+      "source": "unit_embercourt_sluicefire_lindworms_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          710,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1121,
+        933
+      ],
+      "scale": 0.5100671140939598
+    }
+  ]
+}

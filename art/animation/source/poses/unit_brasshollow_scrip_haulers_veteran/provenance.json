@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_scrip_haulers_veteran/unit_brasshollow_scrip_haulers_veteran_source-alpha.png": "90f6fb910baa10926f974de8ea8a44673337a64dbdf7b8cb0a195a1f4e71f651",
+    "res://art/animation/source/poses/unit_brasshollow_scrip_haulers_veteran/unit_brasshollow_scrip_haulers_veteran_actions-alpha.png": "2026c3891ab34375c26a2c6f0a79e617996bf96e641a8a1d464a5c4bbe1fa0c2"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "a628d73a1e8b3471ce3c62b66b351465126121c32fc4a6958161d44ab7c10a01",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

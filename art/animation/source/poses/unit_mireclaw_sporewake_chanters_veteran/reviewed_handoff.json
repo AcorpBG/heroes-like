@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            397,
+            493
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1143,
+            493
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            397,
+            1006
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1160,
+            1006
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              505
+            ]
+          ],
+          "anchor": [
+            396,
+            494
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              505
+            ]
+          ],
+          "anchor": [
+            1050,
+            487
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              505,
+              715,
+              1024
+            ]
+          ],
+          "anchor": [
+            416,
+            978
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              715,
+              505,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1130,
+            932
+          ]
+        }
+      ]
+    }
+  ]
+}

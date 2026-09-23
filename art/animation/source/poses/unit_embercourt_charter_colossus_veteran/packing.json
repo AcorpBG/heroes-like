@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          656,
+          595
+        ]
+      ],
+      "anchor": [
+        347,
+        584
+      ],
+      "source": "unit_embercourt_charter_colossus_veteran_idle-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          656,
+          0,
+          1312,
+          595
+        ]
+      ],
+      "anchor": [
+        977,
+        587
+      ],
+      "source": "unit_embercourt_charter_colossus_veteran_idle-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          595,
+          656,
+          1199
+        ]
+      ],
+      "anchor": [
+        316,
+        1170
+      ],
+      "source": "unit_embercourt_charter_colossus_veteran_idle-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          656,
+          595,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1031,
+        1174
+      ],
+      "source": "unit_embercourt_charter_colossus_veteran_idle-alpha.png",
+      "scale": 0.39378238341968913,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_embercourt_charter_colossus_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          656,
+          599
+        ]
+      ],
+      "anchor": [
+        294,
+        577
+      ],
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_embercourt_charter_colossus_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          656,
+          0,
+          1312,
+          599
+        ]
+      ],
+      "anchor": [
+        950,
+        590
+      ],
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_embercourt_charter_colossus_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          599,
+          656,
+          1199
+        ]
+      ],
+      "anchor": [
+        270,
+        1148
+      ],
+      "scale": 0.39378238341968913
+    },
+    {
+      "source": "unit_embercourt_charter_colossus_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          656,
+          599,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        961,
+        1126
+      ],
+      "scale": 0.39378238341968913
+    }
+  ]
+}

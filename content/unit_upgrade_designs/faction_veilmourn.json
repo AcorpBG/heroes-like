@@ -1,0 +1,743 @@
+{
+  "faction_id": "faction_veilmourn",
+  "items": [
+    {
+      "base_id": "unit_veilmourn_bellwake_oars",
+      "upgrade_id": "unit_veilmourn_bellwake_oars_veteran",
+      "name": "Knellwake Wardens",
+      "art_brief": "Broad black oar with bronze bell crossbar, layered stormcoat, small stern-board shield; grounded funeral-fleet infantry with a low braced silhouette.",
+      "gameplay_rationale": "Gains a defend-and-retaliate stagger, allowing the inexpensive oar line to delay a boarder and prepare a corsair strike even outside natural fog. The choice to defend matters more than extra damage.",
+      "unit": {
+        "id": "unit_veilmourn_bellwake_oars_veteran",
+        "name": "Knellwake Wardens",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 6,
+        "defense": 6,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "fog_screen",
+            "name": "Mistwake Screen",
+            "description": "Bellwake crews scatter their line through a natural fog bank, reducing incoming damage without hardening their clear-weather formation.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.98
+          },
+          {
+            "id": "brace",
+            "name": "Knellward Stand",
+            "description": "While defending, a returning oar strike staggers the attacker, reducing its initiative by one for one round.",
+            "retaliation_multiplier": 1.0,
+            "defending_cohesion_bonus": 1,
+            "grants_base_cohesion": false,
+            "status_id": "status_staggered",
+            "status_label": "Knell-Staggered",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1
+            }
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 75
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "veil": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_bellwake_oars",
+        "art_source_unit_id": "unit_veilmourn_bellwake_oars"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_saltbell_casters",
+      "upgrade_id": "unit_veilmourn_saltbell_casters_veteran",
+      "name": "Echo-Salt Slingers",
+      "art_brief": "Paired silver bell cups on a sling yoke, short sea-green cape, glowing memory-salt vials; compact mobile coastal skirmisher.",
+      "gameplay_rationale": "Becomes a two-use enemy-shooter disruptor. Fogbound marks lower ranged enemies defense and initiative, feeding the fleet ambush chain while other targets preserve the limited charges.",
+      "unit": {
+        "id": "unit_veilmourn_saltbell_casters_veteran",
+        "name": "Echo-Salt Slingers",
+        "faction_id": "faction_veilmourn",
+        "role": "ranged",
+        "tier": 1,
+        "hp": 9,
+        "attack": 7,
+        "defense": 5,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 6,
+        "growth": 8,
+        "cost": {
+          "gold": 81
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Far-Shore Echo",
+            "description": "Twice per battle, a strike against a ranged enemy leaves it fogbound for one round, reducing defense and initiative by one.",
+            "status_id": "status_fogbound",
+            "status_label": "Saltbell-Fogbound",
+            "duration_rounds": 1,
+            "uses_per_battle": 2,
+            "target_min_tier": 1,
+            "momentum_gain": 0,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1
+            },
+            "ai_target_priority_bonus": 0.5,
+            "target_role": "ranged"
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "veil": 8
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_saltbell_casters",
+        "art_source_unit_id": "unit_veilmourn_saltbell_casters"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_mourning_lanterns",
+      "upgrade_id": "unit_veilmourn_mourning_lanterns_veteran",
+      "name": "Lastlight Keepers",
+      "art_brief": "Tall two-chamber blue-and-amber funeral lantern with polished cage ribs, veiled hood and long dark apron; light held forward like a guiding beacon.",
+      "gameplay_rationale": "Two persistent lantern marks replace one brief elite-only mark. Tier-two and higher targets lose defense and cohesion for two rounds, creating a reliable setup window for slow boarding units.",
+      "unit": {
+        "id": "unit_veilmourn_mourning_lanterns_veteran",
+        "name": "Lastlight Keepers",
+        "faction_id": "faction_veilmourn",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 11,
+        "attack": 7,
+        "defense": 5,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 5,
+        "cost": {
+          "gold": 122,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 7,
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Lastlight Vigil",
+            "description": "Twice per battle, a hit against a tier-two or higher enemy marks it for two rounds, reducing defense and cohesion by one.",
+            "status_id": "status_harried",
+            "status_label": "Wake-Marked",
+            "duration_rounds": 2,
+            "uses_per_battle": 2,
+            "target_min_tier": 2,
+            "modifiers": {
+              "defense": -1,
+              "cohesion": -1
+            },
+            "momentum_gain": 0
+          }
+        ],
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "veil": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_mourning_lanterns",
+        "art_source_unit_id": "unit_veilmourn_mourning_lanterns"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_tidehook_deckhands",
+      "upgrade_id": "unit_veilmourn_tidehook_deckhands_veteran",
+      "name": "Mooring Talons",
+      "art_brief": "Paired inward hooks, cross-chest rope harness, compact deckcoat and low boarding stance; bright copper hook tips distinguish the quick interceptors.",
+      "gameplay_rationale": "Their single pull is available from round one, creating an immediate interception option while Wakechain upgrades keep a longer rooted mark for harpoon combinations. The pull itself still sacrifices damage; the rooted marker does not immobilize movement.",
+      "unit": {
+        "id": "unit_veilmourn_tidehook_deckhands_veteran",
+        "name": "Mooring Talons",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 2,
+        "hp": 14,
+        "attack": 7,
+        "defense": 6,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 5,
+        "cost": {
+          "gold": 129,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "hookline",
+            "name": "First-Tide Snatch",
+            "description": "Once per battle, available from the first round, a tidehook pulls a surviving target across a one-gap lane into contact and applies a rooted mark for one round.",
+            "distance_one_multiplier": 0.0,
+            "uses_per_battle": 1,
+            "available_from_round": 1,
+            "status_id": "status_rooted",
+            "status_label": "Tidehook-Pinned",
+            "duration_rounds": 1
+          },
+          {
+            "id": "fog_screen",
+            "name": "Deck-Fog Scatter",
+            "description": "Inside a natural fog bank, low coats and bell-chain signals scatter incoming force across the boarding line.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.97
+          }
+        ],
+        "spell_resistance_pct": 3,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "veil": 8
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_tidehook_deckhands",
+        "art_source_unit_id": "unit_veilmourn_tidehook_deckhands"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_maskglass_corsairs",
+      "upgrade_id": "unit_veilmourn_maskglass_corsairs_veteran",
+      "name": "Shattermask Duelists",
+      "art_brief": "Split mirrored faceplate, asymmetric dark sail cloak and two curved glass-edged blades; lean aggressive silhouette with glints confined to mask and blades.",
+      "gameplay_rationale": "Their ambush strike now recognizes fogbound and obituary-marked enemies as well as harried and staggered targets. This broadens concrete fleet combinations without raising the existing ambush multiplier.",
+      "unit": {
+        "id": "unit_veilmourn_maskglass_corsairs_veteran",
+        "name": "Shattermask Duelists",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 3,
+        "hp": 18,
+        "attack": 9,
+        "defense": 8,
+        "min_damage": 5,
+        "max_damage": 8,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 4,
+        "cost": {
+          "gold": 210,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "backstab",
+            "name": "Shattermask Opening",
+            "description": "Harried, staggered, fogbound or obituary-marked enemies expose a stronger strike; badly wounded lines remain vulnerable to the existing finishing cut.",
+            "damage_multiplier": 1.16,
+            "momentum_gain": 1,
+            "status_ids": [
+              "status_harried",
+              "status_staggered",
+              "status_fogbound",
+              "status_obituary_marked"
+            ],
+            "health_threshold_ratio": 0.6,
+            "threshold_damage_multiplier": 1.1
+          }
+        ],
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "veil": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_maskglass_corsairs",
+        "art_source_unit_id": "unit_veilmourn_maskglass_corsairs"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_wakechain_boarders",
+      "upgrade_id": "unit_veilmourn_wakechain_boarders_veteran",
+      "name": "Gravetide Anchors",
+      "art_brief": "Massive chained grapnel, wrapped forearms, broad brass capstan belt and heavy pale boarding coat; chain hangs in a clear deliberate arc.",
+      "gameplay_rationale": "The mid-battle hook now leaves a rooted mark for two rounds, extending the Keelbreaker ranged-payoff window. The marker does not immobilize movement; the actual pull into contact and longer setup window distinguish this from the Tidehook opening pull.",
+      "unit": {
+        "id": "unit_veilmourn_wakechain_boarders_veteran",
+        "name": "Gravetide Anchors",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 3,
+        "hp": 22,
+        "attack": 9,
+        "defense": 8,
+        "min_damage": 5,
+        "max_damage": 8,
+        "speed": 5,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 4,
+        "cost": {
+          "gold": 250,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "hookline",
+            "name": "Gravetide Mooring",
+            "description": "Once per battle from round two, the grapnel pulls a surviving target across a one-gap lane into contact and applies a rooted mark for two rounds.",
+            "distance_one_multiplier": 0.0,
+            "uses_per_battle": 1,
+            "available_from_round": 2,
+            "status_id": "status_rooted",
+            "status_label": "Wake-Pinned",
+            "duration_rounds": 2
+          },
+          {
+            "id": "fog_screen",
+            "name": "Pale Boarding Wake",
+            "description": "Inside a natural fog bank, pale coats and hooded lanterns scatter the boarding line through incoming force.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.95
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 8,
+        "spell_school_resistance_pct": {
+          "veil": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_wakechain_boarders",
+        "art_source_unit_id": "unit_veilmourn_wakechain_boarders"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_undertow_harpooners",
+      "upgrade_id": "unit_veilmourn_undertow_harpooners_veteran",
+      "name": "Keelbreaker Lancers",
+      "art_brief": "Heavy shoulder harpoon launcher with forked spear, ivory net bundles and dark teal naval coat; braced firing stance with a substantial weapon silhouette.",
+      "gameplay_rationale": "Gains a ranged payoff against rooted or fogbound targets. Hooks and saltbells now prepare their killing shots, while existing nets retain the anti-shielding role. The bonus checks target state rather than increasing every shot.",
+      "unit": {
+        "id": "unit_veilmourn_undertow_harpooners_veteran",
+        "name": "Keelbreaker Lancers",
+        "faction_id": "faction_veilmourn",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 22,
+        "attack": 10,
+        "defense": 9,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 3,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 3,
+        "cost": {
+          "gold": 331,
+          "wood": 1,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "abilities": [
+          {
+            "id": "harry",
+            "name": "Mourning Nets",
+            "description": "Black-salt nets and bellwire shots foul advancing lines before they can cleanly board the Veilmourn range.",
+            "status_id": "status_harried",
+            "status_label": "Harried",
+            "duration_rounds": 2,
+            "shielding_damage_multiplier": 1.25,
+            "shielding_ai_target_priority_bonus": 2.0,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1,
+              "cohesion": -1
+            },
+            "momentum_gain": 1
+          },
+          {
+            "id": "volley",
+            "name": "Keelbreaker Crossline",
+            "description": "Ranged attacks deal fifteen percent more damage to rooted or fogbound targets.",
+            "damage_multiplier": 1.0,
+            "min_distance": 1,
+            "status_ids": [
+              "status_rooted",
+              "status_fogbound"
+            ],
+            "status_damage_multiplier": 1.15
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "veil": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_undertow_harpooners",
+        "art_source_unit_id": "unit_veilmourn_undertow_harpooners"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_gloamkeel_bulwarks",
+      "upgrade_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+      "name": "Mournhull Sentinels",
+      "art_brief": "Tall curved ship-prow shield with a lantern eye inset, layered black hull armor, salt-white binding and a short boarding blade; broad anchored protector silhouette.",
+      "gameplay_rationale": "Adds a genuine fleet screen: less incoming ranged damage to the sentinel and reduced contact melee damage to friendly shooters. Existing defending retaliation still fogbinds attackers, linking protection to the fleet status chain.",
+      "unit": {
+        "id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+        "name": "Mournhull Sentinels",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 4,
+        "hp": 27,
+        "attack": 10,
+        "defense": 12,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 372,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Gloamkeel Brace",
+            "description": "The salt-marked keel shield steadies the boarding line and leaves an attacker listening to the wrong bell.",
+            "retaliation_multiplier": 1.08,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_fogbound",
+            "status_label": "Keel-Fogbound",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "fog_screen",
+            "name": "Shield in the Sounding",
+            "description": "Inside a natural fog bank, the broad ship-keel shield turns incoming force into harmless wake spray.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.95
+          },
+          {
+            "id": "shielding",
+            "name": "Mournhull Escort",
+            "description": "The sentinel takes ten percent less ranged damage; its side ranged stacks and shielding units take ten percent less contact melee damage.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.9,
+            "engaged_damage_multiplier": 1.0,
+            "harried_damage_multiplier": 1.0,
+            "ally_ranged_melee_damage_reduction_pct": 10,
+            "linebreaker_screen_bonus_pct": 0,
+            "ranged_damage_return_ratio": 0.0
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "veil": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_gloamkeel_bulwarks",
+        "art_source_unit_id": "unit_veilmourn_gloamkeel_bulwarks"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_obituary_scribes",
+      "upgrade_id": "unit_veilmourn_obituary_scribes_veteran",
+      "name": "Lastword Registrars",
+      "art_brief": "Unfurled glowing obituary scroll, suspended ledger frame and long split-nib staff; severe veiled archivist with ivory paper against a charcoal funeral robe.",
+      "gameplay_rationale": "Can register two targets per battle, with each notice lasting two rounds. The existing stronger anti-brace retaliation penalty makes this a deliberate answer to defended lines and gives corsairs a second setup source.",
+      "unit": {
+        "id": "unit_veilmourn_obituary_scribes_veteran",
+        "name": "Lastword Registrars",
+        "faction_id": "faction_veilmourn",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 34,
+        "attack": 12,
+        "defense": 10,
+        "min_damage": 9,
+        "max_damage": 11,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 2,
+        "cost": {
+          "gold": 460,
+          "wood": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "abilities": [
+          {
+            "id": "obituary",
+            "name": "Second and Final Notice",
+            "description": "Twice per battle, a ranged hit records a two-round obituary that weakens cohesion and retaliation; braced tier-two or higher lines suffer the stronger existing penalty.",
+            "status_id": "status_obituary_marked",
+            "status_label": "Obituary-Marked",
+            "duration_rounds": 2,
+            "uses_per_battle": 2,
+            "braced_target_min_tier": 2,
+            "braced_ai_target_priority_bonus": 3.75,
+            "modifiers": {
+              "cohesion": -1,
+              "retaliation": -10
+            },
+            "braced_modifiers": {
+              "cohesion": -2,
+              "retaliation": -20
+            }
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "veil": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_obituary_scribes",
+        "art_source_unit_id": "unit_veilmourn_obituary_scribes"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_wakeglass_navigators",
+      "upgrade_id": "unit_veilmourn_wakeglass_navigators_veteran",
+      "name": "Pale Meridian Pilots",
+      "art_brief": "Large tilted glass astrolabe, crescent compass staff, fog-streaming cape and pale tideglass visor; navigator holds the instrument sideways to chart a narrow passage.",
+      "gameplay_rationale": "Gains a reduced-force one-gap melee strike, allowing the existing limited False Bearing mark to land before direct contact. It remains a melee control specialist rather than another shooter.",
+      "unit": {
+        "id": "unit_veilmourn_wakeglass_navigators_veteran",
+        "name": "Pale Meridian Pilots",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 5,
+        "hp": 32,
+        "attack": 12,
+        "defense": 11,
+        "min_damage": 8,
+        "max_damage": 11,
+        "speed": 4,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 2,
+        "cost": {
+          "gold": 527,
+          "memory_salt": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "fog_screen",
+            "name": "Wakeglass Bearing",
+            "description": "Inside a fog bank, the suspended compass finds a cold route through incoming fire.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.93
+          },
+          {
+            "id": "harry",
+            "name": "False Bearing",
+            "description": "Once per battle, a refracted meridian sends a veteran line one beat off course.",
+            "status_id": "status_harried",
+            "status_label": "Mischarted",
+            "duration_rounds": 1,
+            "modifiers": {
+              "initiative": -1,
+              "cohesion": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "target_min_tier": 3
+          },
+          {
+            "id": "reach",
+            "name": "Pale Meridian Passage",
+            "description": "The compass staff can strike across a one-gap lane at fifty-five percent damage, carrying the existing False Bearing mark to a surviving eligible target.",
+            "distance_one_multiplier": 0.55
+          }
+        ],
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "veil": 15
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_wakeglass_navigators",
+        "art_source_unit_id": "unit_veilmourn_wakeglass_navigators"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_mirrorkeel_reavers",
+      "upgrade_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+      "name": "Duskpass Revenants",
+      "art_brief": "Mirror keel-shaped greatblade, black sail mantle and translucent trailing reflections; armored funeral-fleet raider with a long angular blade and unmistakably changed mantle.",
+      "gameplay_rationale": "Natural fog now provides a meaningful approach defense while the breach strike can exploit fogbound and obituary-marked targets. The reach attack remains reduced force and rare-resource recruitment stays on the faction secondary resource.",
+      "unit": {
+        "id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+        "name": "Duskpass Revenants",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 6,
+        "hp": 59,
+        "attack": 15,
+        "defense": 13,
+        "min_damage": 11,
+        "max_damage": 16,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 919,
+          "verdant_grafts": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Mirror-Keel Passage",
+            "description": "The reavers phase a reflected keel through a half-open lane, trading some force for access to the backline beyond it.",
+            "distance_one_multiplier": 0.5
+          },
+          {
+            "id": "backstab",
+            "name": "Duskpass Breach",
+            "description": "Harried, staggered, fogbound or obituary-marked enemies expose the reavers existing boarding bonus and momentum gain.",
+            "damage_multiplier": 1.05,
+            "momentum_gain": 1,
+            "status_ids": [
+              "status_harried",
+              "status_staggered",
+              "status_fogbound",
+              "status_obituary_marked"
+            ]
+          },
+          {
+            "id": "fog_screen",
+            "name": "Duskpass Shroud",
+            "description": "Inside a natural fog bank the reflected sail mantle reduces incoming damage by twelve percent.",
+            "required_battlefield_tags": [
+              "fog_bank"
+            ],
+            "incoming_damage_multiplier": 0.88
+          }
+        ],
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "veil": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_veilmourn_mirrorkeel_reavers",
+        "art_source_unit_id": "unit_veilmourn_mirrorkeel_reavers"
+      }
+    },
+    {
+      "base_id": "unit_veilmourn_fogbound_leviathan",
+      "upgrade_id": "unit_veilmourn_fogbound_leviathan_veteran",
+      "name": "Mourningdeep Sovereign",
+      "art_brief": "Huge sea leviathan with lantern-like amber throat sacs, ribbed fog crown, hanging wreck-bell harness and broad dark fins; a living funeral-fleet sea monarch, not a humanoid.",
+      "gameplay_rationale": "Rooted-status immunity denies enemy rooted-mark combinations while the isolation fog lasts two rounds. Enemies can still blunt the damage/status trigger by remaining adjacent to allies; other control remains effective and main-resource recruitment is preserved.",
+      "unit": {
+        "id": "unit_veilmourn_fogbound_leviathan_veteran",
+        "name": "Mourningdeep Sovereign",
+        "faction_id": "faction_veilmourn",
+        "role": "melee",
+        "tier": 7,
+        "hp": 120,
+        "attack": 19,
+        "defense": 20,
+        "min_damage": 20,
+        "max_damage": 29,
+        "speed": 4,
+        "initiative": 5,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 1918,
+          "memory_salt": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "fogwake",
+            "name": "Mourningdeep Exile",
+            "description": "A primary melee strike against an enemy with no adjacent ally gains the existing isolation bonus and leaves survivors fogbound for two rounds.",
+            "isolated_damage_multiplier": 1.12,
+            "status_id": "status_fogbound",
+            "status_label": "Fogbound",
+            "duration_rounds": 2,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1,
+              "cohesion": -1
+            },
+            "ai_target_priority_bonus": 2.0
+          }
+        ],
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "veil": 10
+        },
+        "status_immunity_ids": [
+          "status_rooted"
+        ],
+        "upgrade_from": "unit_veilmourn_fogbound_leviathan",
+        "art_source_unit_id": "unit_veilmourn_fogbound_leviathan"
+      }
+    }
+  ]
+}

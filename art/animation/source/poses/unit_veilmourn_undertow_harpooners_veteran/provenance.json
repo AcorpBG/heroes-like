@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_undertow_harpooners_veteran/unit_veilmourn_undertow_harpooners_veteran-alpha.png": "dbad4ac1ef71656fffd7d9c8ef30f6b25167fb58abe6997ca6c7f7ffa6e987b1",
+    "res://art/animation/source/poses/unit_veilmourn_undertow_harpooners_veteran/unit_veilmourn_undertow_harpooners_veteran_actions-alpha.png": "901652ee4a03f3bd3210b61128c6635c46bd81bba9c9e474bc7c5b7f70499395"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "3f9b00d194162a8537be247908cbbe6acdc3b977454af417f1066ae6a8d829d6",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

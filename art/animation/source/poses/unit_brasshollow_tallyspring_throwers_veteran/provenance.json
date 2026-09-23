@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_tallyspring_throwers_veteran/unit_brasshollow_tallyspring_throwers_veteran_source-alpha.png": "41a4378df15d9012f0b4dc763e4c5a1ccee8ff82980d0dfe4a89eb66a1b04f12",
+    "res://art/animation/source/poses/unit_brasshollow_tallyspring_throwers_veteran/unit_brasshollow_tallyspring_throwers_veteran_actions-alpha.png": "e61ab163a0ab1b70f450ac132acf84d4d237e6fac3c6d82f0c7fa79c39a4334d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "697e8af6be0c1d35edb663828522f114da0fd7ac71cc441ad0c76d52bd2c9ae1",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          627
+        ]
+      ],
+      "anchor": [
+        325,
+        563
+      ],
+      "source": "unit_sunvault_solar_array_striders_veteran_source-alpha.png",
+      "scale": 0.5241379310344828,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        938,
+        561
+      ],
+      "source": "unit_sunvault_solar_array_striders_veteran_source-alpha.png",
+      "scale": 0.5241379310344828,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        308,
+        1144
+      ],
+      "source": "unit_sunvault_solar_array_striders_veteran_source-alpha.png",
+      "scale": 0.5241379310344828,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        903,
+        1144
+      ],
+      "source": "unit_sunvault_solar_array_striders_veteran_source-alpha.png",
+      "scale": 0.5241379310344828,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        339,
+        598
+      ],
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_solar_array_striders_veteran_actions-alpha.png",
+      "scale": 0.5346206896551725
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        883,
+        595
+      ],
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_solar_array_striders_veteran_actions-alpha.png",
+      "scale": 0.5346206896551725
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        329,
+        1138
+      ],
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_solar_array_striders_veteran_actions-alpha.png",
+      "scale": 0.5346206896551725
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        913,
+        1140
+      ],
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_solar_array_striders_veteran_actions-alpha.png",
+      "scale": 0.5346206896551725
+    }
+  ]
+}

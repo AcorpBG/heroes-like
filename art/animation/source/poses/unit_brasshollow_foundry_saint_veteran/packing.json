@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        317,
+        586
+      ],
+      "source": "unit_brasshollow_foundry_saint_veteran_source-alpha.png",
+      "scale": 0.41007194244604317,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        944,
+        588
+      ],
+      "source": "unit_brasshollow_foundry_saint_veteran_source-alpha.png",
+      "scale": 0.41007194244604317,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        317,
+        1213
+      ],
+      "source": "unit_brasshollow_foundry_saint_veteran_source-alpha.png",
+      "scale": 0.41007194244604317,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        944,
+        1213
+      ],
+      "source": "unit_brasshollow_foundry_saint_veteran_source-alpha.png",
+      "scale": 0.41007194244604317,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_foundry_saint_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        307,
+        596
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.41007194244604317
+    },
+    {
+      "source": "unit_brasshollow_foundry_saint_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        933,
+        596
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.41007194244604317
+    },
+    {
+      "source": "unit_brasshollow_foundry_saint_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        377,
+        1150
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.41007194244604317
+    },
+    {
+      "source": "unit_brasshollow_foundry_saint_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        927,
+        1149
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.41007194244604317
+    }
+  ]
+}

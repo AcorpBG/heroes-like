@@ -46,6 +46,10 @@ static func idle_elapsed_msec(animation: Dictionary, now_msec: int, instance_key
 	return maxi(0, now_msec) + posmod(hash(instance_key), cycle)
 
 static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}) -> Rect2:
+	# Expanded transparent action envelopes retain the accepted creature scale.
+	# The reference height describes its original canvas, not its painted bounds.
+	var reference_height := maxf(1.0, float(animation.get("pose_reference_height", region.size.y)))
+	height *= region.size.y / reference_height
 	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
 	# cells are independent of this presentation-only transparent canvas.
 	var width := height * region.size.x / maxf(1.0, region.size.y)

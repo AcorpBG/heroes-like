@@ -1,0 +1,373 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.png",
+  "sha256": "99259549c07dcba946ae44063b71bd4903fdd383739e928f7566acdf023e45f6",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "d08774f6888951768adaa3706e244ebf8d6d1948db37e624df6b023b1f2c0601"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        350,
+        613
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        876,
+        603
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          659,
+          627,
+          675
+        ],
+        [
+          0,
+          675,
+          627,
+          691
+        ],
+        [
+          0,
+          691,
+          627,
+          707
+        ],
+        [
+          0,
+          707,
+          627,
+          723
+        ],
+        [
+          0,
+          723,
+          627,
+          739
+        ],
+        [
+          0,
+          739,
+          627,
+          755
+        ],
+        [
+          0,
+          755,
+          627,
+          771
+        ],
+        [
+          0,
+          771,
+          627,
+          787
+        ],
+        [
+          0,
+          787,
+          627,
+          803
+        ],
+        [
+          0,
+          803,
+          627,
+          819
+        ],
+        [
+          0,
+          819,
+          627,
+          835
+        ],
+        [
+          0,
+          835,
+          627,
+          851
+        ],
+        [
+          0,
+          851,
+          627,
+          867
+        ],
+        [
+          0,
+          867,
+          627,
+          883
+        ],
+        [
+          0,
+          883,
+          627,
+          899
+        ],
+        [
+          0,
+          899,
+          627,
+          915
+        ],
+        [
+          0,
+          915,
+          627,
+          931
+        ],
+        [
+          0,
+          931,
+          628,
+          947
+        ],
+        [
+          0,
+          947,
+          632,
+          963
+        ],
+        [
+          0,
+          963,
+          627,
+          979
+        ],
+        [
+          0,
+          979,
+          629,
+          995
+        ],
+        [
+          0,
+          995,
+          627,
+          1011
+        ],
+        [
+          0,
+          1011,
+          627,
+          1027
+        ],
+        [
+          0,
+          1027,
+          627,
+          1043
+        ],
+        [
+          0,
+          1043,
+          627,
+          1059
+        ],
+        [
+          0,
+          1059,
+          627,
+          1075
+        ],
+        [
+          0,
+          1075,
+          627,
+          1091
+        ],
+        [
+          0,
+          1091,
+          610,
+          1107
+        ],
+        [
+          0,
+          1107,
+          595,
+          1123
+        ],
+        [
+          0,
+          1123,
+          594,
+          1139
+        ],
+        [
+          0,
+          1139,
+          637,
+          1155
+        ],
+        [
+          0,
+          1155,
+          627,
+          1171
+        ],
+        [
+          0,
+          1171,
+          627,
+          1187
+        ],
+        [
+          0,
+          1187,
+          627,
+          1203
+        ]
+      ],
+      "anchor": [
+        312,
+        1187
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_saltbell_casters_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          963,
+          1254,
+          979
+        ],
+        [
+          629,
+          979,
+          1254,
+          995
+        ],
+        [
+          627,
+          995,
+          1254,
+          1011
+        ],
+        [
+          627,
+          1011,
+          1254,
+          1027
+        ],
+        [
+          627,
+          1027,
+          1254,
+          1043
+        ],
+        [
+          627,
+          1043,
+          1254,
+          1059
+        ],
+        [
+          627,
+          1059,
+          1254,
+          1075
+        ],
+        [
+          627,
+          1075,
+          1254,
+          1091
+        ],
+        [
+          610,
+          1091,
+          1254,
+          1107
+        ],
+        [
+          595,
+          1107,
+          1254,
+          1123
+        ],
+        [
+          594,
+          1123,
+          1254,
+          1139
+        ],
+        [
+          637,
+          1139,
+          1254,
+          1155
+        ],
+        [
+          627,
+          1155,
+          1254,
+          1171
+        ],
+        [
+          627,
+          1171,
+          1254,
+          1187
+        ],
+        [
+          627,
+          1187,
+          1254,
+          1203
+        ]
+      ],
+      "anchor": [
+        985,
+        1191
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

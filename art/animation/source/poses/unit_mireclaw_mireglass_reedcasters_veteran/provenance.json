@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_mireglass_reedcasters_veteran/unit_mireclaw_mireglass_reedcasters_veteran_idle-alpha.png": "84a75776fc4ac0184fdf0e6a0efafb86ac3071d970d7631337908717f1a40be1",
+    "res://art/animation/source/poses/unit_mireclaw_mireglass_reedcasters_veteran/unit_mireclaw_mireglass_reedcasters_veteran_actions-alpha.png": "fed4db9ed4c85ccffb6f64518b7f0eee3b4b353b14b9b3e9a46eaf17c7146f5b"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "98878dfb4ee281bce9891ebb654bcb26cacde6a4b900248ef5f744cf3b8d829c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

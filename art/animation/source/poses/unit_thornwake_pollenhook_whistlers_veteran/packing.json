@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          774,
+          564
+        ]
+      ],
+      "anchor": [
+        423.0,
+        550
+      ],
+      "source": "unit_thornwake_pollenhook_whistlers_veteran-alpha.png",
+      "scale": 0.4253731343283582,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          774,
+          0,
+          1393,
+          564
+        ]
+      ],
+      "anchor": [
+        1045.0,
+        552
+      ],
+      "source": "unit_thornwake_pollenhook_whistlers_veteran-alpha.png",
+      "scale": 0.4253731343283582,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          564,
+          811,
+          1129
+        ]
+      ],
+      "anchor": [
+        420.0,
+        1111
+      ],
+      "source": "unit_thornwake_pollenhook_whistlers_veteran-alpha.png",
+      "scale": 0.4253731343283582,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          811,
+          564,
+          1393,
+          1129
+        ]
+      ],
+      "anchor": [
+        1040.0,
+        1113
+      ],
+      "source": "unit_thornwake_pollenhook_whistlers_veteran-alpha.png",
+      "scale": 0.4253731343283582,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_pollenhook_whistlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          670,
+          603
+        ]
+      ],
+      "anchor": [
+        311.0,
+        587
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.4253731343283582
+    },
+    {
+      "source": "unit_thornwake_pollenhook_whistlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          670,
+          0,
+          1393,
+          603
+        ]
+      ],
+      "anchor": [
+        1000.0,
+        589
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.4253731343283582
+    },
+    {
+      "source": "unit_thornwake_pollenhook_whistlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          603,
+          668,
+          1129
+        ]
+      ],
+      "anchor": [
+        316.5,
+        1101
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.4253731343283582
+    },
+    {
+      "source": "unit_thornwake_pollenhook_whistlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          668,
+          603,
+          1393,
+          1129
+        ]
+      ],
+      "anchor": [
+        1030,
+        1039
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.4253731343283582
+    }
+  ]
+}

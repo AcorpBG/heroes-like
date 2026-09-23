@@ -1,0 +1,141 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              595
+            ]
+          ],
+          "anchor": [
+            347,
+            584
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              595
+            ]
+          ],
+          "anchor": [
+            977,
+            587
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              595,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            316,
+            1170
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              595,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            1031,
+            1174
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            294,
+            577
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            950,
+            590
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            270,
+            1148
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            961,
+            1126
+          ]
+        }
+      ]
+    }
+  ]
+}

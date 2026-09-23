@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_barkmantle_rams_veteran/unit_thornwake_barkmantle_rams_veteran-alpha.png": "bfc9599237250080ac8052bf2f1f4051f15011396766bd0810c59ea94a03df0e",
+    "res://art/animation/source/poses/unit_thornwake_barkmantle_rams_veteran/unit_thornwake_barkmantle_rams_veteran_actions-alpha.png": "0bedacfd389bb3f85b8c71f9e11fc2d244e445bc3899a682033749f8bc397998"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "7d7d74a22d4161d3b194898fe051388c2bc26c2214d7f74d137615495d446f18",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              653,
+              611
+            ]
+          ],
+          "anchor": [
+            364.0,
+            573
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              653,
+              0,
+              1312,
+              611
+            ]
+          ],
+          "anchor": [
+            1016.0,
+            573
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              611,
+              692,
+              1199
+            ]
+          ],
+          "anchor": [
+            364.5,
+            1168
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              692,
+              611,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            1016.5,
+            1168
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              584,
+              639
+            ]
+          ],
+          "anchor": [
+            353.0,
+            582
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran_actions.png",
+          "rects": [
+            [
+              584,
+              0,
+              1312,
+              639
+            ]
+          ],
+          "anchor": [
+            991.5,
+            578
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              639,
+              633,
+              1199
+            ]
+          ],
+          "anchor": [
+            418.0,
+            1113
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_bramblekite_needlers_veteran_actions.png",
+          "rects": [
+            [
+              633,
+              639,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            978,
+            1075
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "f62e0cab2b29e9878285a22ecd88b6698b3c85f381ea1adae3048b5f424bb818"
+    }
+  ]
+}

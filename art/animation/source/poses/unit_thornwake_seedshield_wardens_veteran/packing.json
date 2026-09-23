@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          646,
+          612
+        ]
+      ],
+      "anchor": [
+        358.0,
+        590
+      ],
+      "source": "unit_thornwake_seedshield_wardens_veteran-alpha.png",
+      "scale": 0.38841567291311757,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          646,
+          0,
+          1254,
+          612
+        ]
+      ],
+      "anchor": [
+        943.5,
+        588
+      ],
+      "source": "unit_thornwake_seedshield_wardens_veteran-alpha.png",
+      "scale": 0.38841567291311757,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          612,
+          699,
+          1254
+        ]
+      ],
+      "anchor": [
+        316.0,
+        1219
+      ],
+      "source": "unit_thornwake_seedshield_wardens_veteran-alpha.png",
+      "scale": 0.38841567291311757,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          699,
+          612,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        953.5,
+        1219
+      ],
+      "source": "unit_thornwake_seedshield_wardens_veteran-alpha.png",
+      "scale": 0.38841567291311757,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_seedshield_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          565,
+          657
+        ]
+      ],
+      "anchor": [
+        314.5,
+        627
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.38841567291311757
+    },
+    {
+      "source": "unit_thornwake_seedshield_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          565,
+          0,
+          1254,
+          657
+        ]
+      ],
+      "anchor": [
+        812.0,
+        618
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.38841567291311757
+    },
+    {
+      "source": "unit_thornwake_seedshield_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          657,
+          572,
+          1254
+        ]
+      ],
+      "anchor": [
+        350,
+        1166
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.38841567291311757
+    },
+    {
+      "source": "unit_thornwake_seedshield_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          572,
+          657,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        920,
+        1121
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.38841567291311757
+    }
+  ]
+}

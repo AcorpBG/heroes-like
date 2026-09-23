@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_seedcutters_veteran/unit_thornwake_seedcutters_veteran-alpha.png": "bbaad87cc22cea9b89ac33bd9b7c2ef61c86cc3e3436586662744fd7c5d5624a",
+    "res://art/animation/source/poses/unit_thornwake_seedcutters_veteran/unit_thornwake_seedcutters_veteran_actions-alpha.png": "2212a60671c48da7dad53047d4dc26fba66e9771116a4e5a129bf11dbcd9c8d9"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "398790d0af45363d37c00b825c30d3695c23c408e5d34bda368a61ca696591e9",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

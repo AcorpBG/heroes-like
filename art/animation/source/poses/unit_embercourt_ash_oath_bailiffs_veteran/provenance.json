@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_embercourt_ash_oath_bailiffs_veteran/unit_embercourt_ash_oath_bailiffs_veteran_idle-alpha.png": "2a0e2923a75ba3967362cd76ba5c56041b43accc314b16b8071f447162ed1fea",
+    "res://art/animation/source/poses/unit_embercourt_ash_oath_bailiffs_veteran/unit_embercourt_ash_oath_bailiffs_veteran_actions-alpha.png": "4b4e884c969b3290cb3807600420f1e0586e4624fc12b847602f54f60aa4c434"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "b6b71a7aa522a177b52e38d60fb2961b28df30e5d2bcf7069eef69fb0fee1ccc",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

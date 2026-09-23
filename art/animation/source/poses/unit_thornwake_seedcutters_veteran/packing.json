@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          664,
+          628
+        ]
+      ],
+      "anchor": [
+        339.0,
+        618
+      ],
+      "source": "unit_thornwake_seedcutters_veteran-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          664,
+          0,
+          1254,
+          628
+        ]
+      ],
+      "anchor": [
+        964.5,
+        619
+      ],
+      "source": "unit_thornwake_seedcutters_veteran-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          628,
+          721,
+          1254
+        ]
+      ],
+      "anchor": [
+        341.0,
+        1244
+      ],
+      "source": "unit_thornwake_seedcutters_veteran-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          721,
+          628,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        965.5,
+        1245
+      ],
+      "source": "unit_thornwake_seedcutters_veteran-alpha.png",
+      "scale": 0.37438423645320196,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_seedcutters_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          578,
+          666
+        ]
+      ],
+      "anchor": [
+        313.5,
+        625
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.37438423645320196
+    },
+    {
+      "source": "unit_thornwake_seedcutters_veteran_actions-alpha.png",
+      "rects": [
+        [
+          578,
+          0,
+          1254,
+          666
+        ]
+      ],
+      "anchor": [
+        899.0,
+        620
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.37438423645320196
+    },
+    {
+      "source": "unit_thornwake_seedcutters_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          666,
+          611,
+          1254
+        ]
+      ],
+      "anchor": [
+        355.0,
+        1182
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.37438423645320196
+    },
+    {
+      "source": "unit_thornwake_seedcutters_veteran_actions-alpha.png",
+      "rects": [
+        [
+          611,
+          666,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        945,
+        1140
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.37438423645320196
+    }
+  ]
+}

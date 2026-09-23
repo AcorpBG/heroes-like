@@ -1,0 +1,387 @@
+{
+  "generator": "built-in image_gen",
+  "date": "2026-09-23",
+  "sources": [
+    {
+      "unit_id": "unit_blackbranch_cutthroat_veteran",
+      "source": "unit_blackbranch_cutthroat_veteran_idle.png",
+      "sha256": "e3e0e4538e274cb3b473323bf63863726d3e8c4068db1c273478e710928166a6",
+      "prompt": "unit_blackbranch_cutthroat_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_blackbranch_cutthroat.png"
+      ],
+      "reference_use": "visually inspected body-plan and style; fresh artwork, no pixel reuse",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-721816f6-fe69-4abd-a760-9c55fa892246.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+      "source": "unit_mireclaw_reedsnare_kin_veteran_idle.png",
+      "sha256": "1d195fefab36fcd8191d2e7f410506369647013f8579d8a73e6f3f2a1a1ef2a5",
+      "prompt": "unit_mireclaw_reedsnare_kin_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_reedsnare_kin.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-c110b48d-6eab-485e-afe2-43a5d866b001.png"
+    },
+    {
+      "unit_id": "unit_bog_brute_veteran",
+      "source": "unit_bog_brute_veteran_idle.png",
+      "sha256": "cdf2ccce5283b1accefbcd43a21431407f95d4d7a131ed93ccb1fdd6b35d812d",
+      "prompt": "unit_bog_brute_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_bog_brute.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-e76960d9-cce1-455f-a24a-43c18bf1f9e4.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+      "source": "unit_mireclaw_mudglass_slingers_veteran_idle.png",
+      "sha256": "b048e819fb19228781750e55c89d5f977aacc639f2f7d920b61c63573c0a4b49",
+      "prompt": "unit_mireclaw_mudglass_slingers_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_mudglass_slingers.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-11114afc-3ebf-4494-99a8-5406293c1351.png"
+    },
+    {
+      "unit_id": "unit_gorefen_ripper_veteran",
+      "source": "unit_gorefen_ripper_veteran_idle.png",
+      "sha256": "b83f8fd12583107de30718ee53c25c44c4457e07e06f165b5049cc9c02571546",
+      "prompt": "unit_gorefen_ripper_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_gorefen_ripper.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-8972e859-3f40-4115-92e4-4dfe54671284.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+      "source": "unit_mireclaw_bogplate_maulers_veteran_idle.png",
+      "sha256": "b1fe0247f037b49760bbc1e8dd1179988d53165754fd9906566e2adb234b256e",
+      "prompt": "unit_mireclaw_bogplate_maulers_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_bogplate_maulers.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-ef39ee2c-541e-4f9b-b15d-f7091ce54dac.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+      "source": "unit_mireclaw_ferrychain_lashers_veteran_idle.png",
+      "sha256": "87dfea5c7722fbb83919f1a8c2e8071919ad26bff55e6fd2dcd84181cfe7b3e7",
+      "prompt": "unit_mireclaw_ferrychain_lashers_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_ferrychain_lashers.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-ac27f979-e0e4-4521-bd8c-ff7f9b4f206e.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+      "source": "unit_mireclaw_mireglass_reedcasters_veteran_idle.png",
+      "sha256": "b01cdfcf11ae229af5f2510c83e7f64ae22eb7db532d08b3981d09fc02082647",
+      "prompt": "unit_mireclaw_mireglass_reedcasters_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_mireglass_reedcasters.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-68de2c08-5093-4aa3-8b99-86f854642f67.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+      "source": "unit_mireclaw_sporewake_chanters_veteran_idle.png",
+      "sha256": "7aea12c1a066642198685b8c9d69cbb2262d9798b697434ef9dfa136ec1a358f",
+      "prompt": "unit_mireclaw_sporewake_chanters_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_sporewake_chanters.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-b6605b4d-b46f-4184-9ef7-137a002df17c.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_idle.png",
+      "sha256": "f61763db62d84c52b7f99685f70b16367607df2da3c89dfe90b039929b46383e",
+      "prompt": "unit_mireclaw_fenbell_chainstalkers_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_fenbell_chainstalkers.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-ba01d2c6-5ef5-49c9-8109-85ebb4d2b0e7.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+      "source": "unit_mireclaw_gorefen_rippers_veteran_idle.png",
+      "sha256": "c6b3f681fd99556a7d95f160d346576f11055b4501c9d876533f38b6d00d4fff",
+      "prompt": "unit_mireclaw_gorefen_rippers_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_gorefen_rippers.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-e61d542f-6ca2-45ae-a7c0-0ba4ceeb0107.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_idle.png",
+      "sha256": "8c7ca986405c97501e60a4b17c506d1253ca1dbc6cdcf4c5e9c74f9e12e03ab4",
+      "prompt": "unit_mireclaw_drowned_antler_sovereign_veteran.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_drowned_antler_sovereign.png"
+      ],
+      "reference_use": "visual body-plan and style inspection; original generated artwork; no reused pixels",
+      "status": "rejected_body_plan",
+      "generated_original_preserved": true,
+      "reason": "Small battle icon misread; full portrait confirms quadruped. Preserved original generation; not used in runtime.",
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-6e98cb26-043c-4034-8c99-7fed563b88ee.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle.png",
+      "sha256": "a89fbd7156389d84054c149a99d8bb2ac1cc198edf5ec934b93f5e5a686a78d0",
+      "prompt": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/portraits/unit_mireclaw_drowned_antler_sovereign.png"
+      ],
+      "reference_use": "Reference image supplied to built-in image_gen to preserve quadruped body plan and style.",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-b7a13028-4741-4755-b1cc-aac6e0880235.png"
+    },
+    {
+      "unit_id": "unit_blackbranch_cutthroat_veteran",
+      "source": "unit_blackbranch_cutthroat_veteran_actions.png",
+      "sha256": "a3051034f00c3fc0468b2daa58c89653c6d9e59d7eae365ab789fd6c6867786f",
+      "prompt": "unit_blackbranch_cutthroat_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_blackbranch_cutthroat_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-4655b50e-1828-4633-970c-bd07b409a080.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+      "source": "unit_mireclaw_reedsnare_kin_veteran_actions.png",
+      "sha256": "bc85acdb162e81ef89c81c3ea4556398b444edbfb6a64d50be7560e7b556d1ee",
+      "prompt": "unit_mireclaw_reedsnare_kin_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_reedsnare_kin_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-6ff4ad77-d65f-49f7-bbe9-c86400ff0785.png"
+    },
+    {
+      "unit_id": "unit_bog_brute_veteran",
+      "source": "unit_bog_brute_veteran_actions.png",
+      "sha256": "42d1c7034f30b18965f8a4393ee11c9ec74314f19ed4eae4999dc9612546e30e",
+      "prompt": "unit_bog_brute_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_bog_brute_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-6ada4cbd-b94f-48ce-9348-a50cb8ef7834.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+      "source": "unit_mireclaw_mudglass_slingers_veteran_actions.png",
+      "sha256": "a902fe050a3195dc58f46fb5990b00cd9e0ba65e7439e022ccdc8e8d37f0d140",
+      "prompt": "unit_mireclaw_mudglass_slingers_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mudglass_slingers_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-26b60eed-1bea-445e-b719-413d83712f43.png"
+    },
+    {
+      "unit_id": "unit_gorefen_ripper_veteran",
+      "source": "unit_gorefen_ripper_veteran_actions.png",
+      "sha256": "f667b4ebb07483d0562e00ca46ad9ec30c4f7c2aeb095cf43fefdde7d1cf2923",
+      "prompt": "unit_gorefen_ripper_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_gorefen_ripper_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-c9bedf05-9316-4583-8a19-67d43fc275d4.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+      "source": "unit_mireclaw_bogplate_maulers_veteran_actions.png",
+      "sha256": "923beb3ab87a61f531839abd8596e589985b690fcccaeeee86a0da5b51e14fb1",
+      "prompt": "unit_mireclaw_bogplate_maulers_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_bogplate_maulers_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-c1e91ddc-8de0-4a41-8562-830607727da6.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+      "source": "unit_mireclaw_ferrychain_lashers_veteran_actions.png",
+      "sha256": "4f880446e73bf09ad8cab69e3ed7a1f117bb0f2fc56e7dad07901cc840685efc",
+      "prompt": "unit_mireclaw_ferrychain_lashers_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_ferrychain_lashers_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-aa1821df-7781-4038-ba22-b699f34cdfac.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+      "source": "unit_mireclaw_mireglass_reedcasters_veteran_actions.png",
+      "sha256": "07836f435ecf09670524ab79ffc1ddf06507c1c201a9da4cab39d7d31647d519",
+      "prompt": "unit_mireclaw_mireglass_reedcasters_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_mireglass_reedcasters_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-4f3b02e5-f082-42dd-90d3-1178d2455328.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+      "source": "unit_mireclaw_sporewake_chanters_veteran_actions.png",
+      "sha256": "44036378dc0f350e3c3523fb95a10517766fe3f98fcca93a67513b588044ee7b",
+      "prompt": "unit_mireclaw_sporewake_chanters_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_sporewake_chanters_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-086cd6ac-28f5-4b98-9a32-3b0e6b728523.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+      "source": "unit_mireclaw_fenbell_chainstalkers_veteran_actions.png",
+      "sha256": "adac797f1c717618f47cad89799d5fc418b07c3410fc06ff2e7e5d8bc9603615",
+      "prompt": "unit_mireclaw_fenbell_chainstalkers_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_fenbell_chainstalkers_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-72d8000a-80f1-4c5d-804a-a64a8a605375.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+      "source": "unit_mireclaw_gorefen_rippers_veteran_actions.png",
+      "sha256": "a3a4e41339f2a230c752a3e5cbab851a9660c8f13f4c176acc1c9a0355d7ebbb",
+      "prompt": "unit_mireclaw_gorefen_rippers_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_gorefen_rippers_veteran_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-c68aec27-c261-4765-ac40-413f4ab39038.png"
+    },
+    {
+      "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_actions.png",
+      "sha256": "2419b62cef138d1bed0ca36b66d7dcef53b254425a4af1526593789816f7962e",
+      "prompt": "unit_mireclaw_drowned_antler_sovereign_veteran_actions.prompt.txt",
+      "generator": "built-in image_gen",
+      "date": "2026-09-23",
+      "reference_lineage": [
+        "art/units/source/generated/town_upgrades/faction_mireclaw/unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle.png"
+      ],
+      "reference_use": "Accepted upgraded idle reference supplied to image_gen for original articulated battle actions",
+      "status": "selected",
+      "generated_original_preserved": true,
+      "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0cc23-6e4d-7fa0-8c21-39d8031729a5\\exec-d352b685-04fc-46ee-8605-1b665bebea02.png"
+    }
+  ]
+}

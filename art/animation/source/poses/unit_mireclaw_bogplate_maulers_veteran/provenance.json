@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_bogplate_maulers_veteran/unit_mireclaw_bogplate_maulers_veteran_idle-alpha.png": "ae4298d8f9f840745679631a2b86a58cd4188f37f0718d86f30409f13bb5a051",
+    "res://art/animation/source/poses/unit_mireclaw_bogplate_maulers_veteran/unit_mireclaw_bogplate_maulers_veteran_actions-alpha.png": "990ba1912a346b1d38dbd84fab3a43a10bd1f05eac4346a526cd9288414bcea1"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "426a1a185305f9468c3090a3dc4372f6d5cad475a0e14be801dd19ffe8220e25",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

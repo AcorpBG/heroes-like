@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_bog_brute_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_bog_brute_veteran/unit_bog_brute_veteran_idle-alpha.png": "5f7414e1e6d75327a56ae51bece8ddd88061e9a8e45f9f87b3b8a0349715c745",
+    "res://art/animation/source/poses/unit_bog_brute_veteran/unit_bog_brute_veteran_actions-alpha.png": "0522bf98de8640c752d2af40a56ae5ba2a389a7ff48d38bc09240e2fb30f6578"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "8181d3aaf77d0d468817c4cd38c8cda966371f3c253ddf3e063665a03aa802c4",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

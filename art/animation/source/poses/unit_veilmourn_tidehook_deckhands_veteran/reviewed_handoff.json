@@ -1,0 +1,124 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            300,
+            615
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            963,
+            615
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              641,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            958,
+            1217
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            296,
+            610
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            909,
+            602
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              605,
+              1254
+            ]
+          ],
+          "anchor": [
+            355,
+            1179
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              605,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            954,
+            1161
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

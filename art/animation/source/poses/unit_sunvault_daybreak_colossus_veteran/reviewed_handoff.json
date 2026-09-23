@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              660,
+              627
+            ]
+          ],
+          "anchor": [
+            350,
+            577
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            940,
+            578
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              660,
+              1254
+            ]
+          ],
+          "anchor": [
+            351,
+            1169
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              680,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            954,
+            1169
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_windup",
+          "anchor": [
+            318,
+            588
+          ],
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.02,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_release",
+          "anchor": [
+            889,
+            606
+          ],
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "scale_multiplier": 1.02,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+        },
+        {
+          "clip": "hit",
+          "name": "hit_recoil",
+          "anchor": [
+            344,
+            1151
+          ],
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.02,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+        },
+        {
+          "clip": "dead",
+          "name": "fallen",
+          "anchor": [
+            925,
+            1122
+          ],
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "scale_multiplier": 1.02,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+        }
+      ]
+    }
+  ]
+}

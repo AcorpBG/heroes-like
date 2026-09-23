@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_resonant_choristers_veteran/unit_sunvault_resonant_choristers_veteran_source-alpha.png": "85aee57de34a45a9f1bcca1812ee4cbda4fecb943c95a8284b519d22b95f70ff",
+    "res://art/animation/source/poses/unit_sunvault_resonant_choristers_veteran/unit_sunvault_resonant_choristers_veteran_actions-alpha.png": "912d730804f369c42a5b11805d6427f529a7f59bcecfc791d4eb4bd83fd95de9"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "cbe834e07c58b3cb9192edbe5e9db6bce041886b01889f8ca9af4b3d5dd915b3",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

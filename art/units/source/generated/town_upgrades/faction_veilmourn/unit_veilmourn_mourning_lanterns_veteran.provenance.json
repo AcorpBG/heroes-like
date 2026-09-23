@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "name": "Lastlight Keepers",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png",
+  "sha256": "bca8cb0fa23eaf7fa1495a65d85658de5c9b3e3155e4990d33b4fb83d776c42f",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_files": [
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.prompt.txt"
+  ],
+  "portable_reference_files": [
+    "art/units/battle_standees/unit_veilmourn_gloamkeel_bulwarks.png"
+  ],
+  "reference_role": "Existing standee inspected for painterly rendering style only; no base sprite recoloring or pixel reuse.",
+  "frame_selection": [
+    {
+      "slot": 0,
+      "alpha_bbox": [
+        118,
+        18,
+        548,
+        614
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 1,
+      "alpha_bbox": [
+        743,
+        4,
+        1175,
+        614
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 2,
+      "alpha_bbox": [
+        110,
+        645,
+        639,
+        1241
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 3,
+      "alpha_bbox": [
+        745,
+        655,
+        1185,
+        1241
+      ],
+      "separator_alpha_pixels": 0
+    }
+  ],
+  "quality_notes": "Visually reviewed genuinely distinct arm/weapon poses, preserved generated alpha.",
+  "selected_prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.prompt.txt",
+  "preserved_candidates": []
+}

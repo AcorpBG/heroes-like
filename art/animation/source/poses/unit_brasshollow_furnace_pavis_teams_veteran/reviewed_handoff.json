@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_furnace_pavis_teams_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            311,
+            538
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            938,
+            538
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            311,
+            1165
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            938,
+            1165
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_source.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              627
+            ]
+          ],
+          "anchor": [
+            327,
+            546
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            919,
+            548
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              627,
+              1254
+            ]
+          ],
+          "anchor": [
+            337,
+            1147
+          ],
+          "scale_multiplier": 1.08
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_brasshollow/unit_brasshollow_furnace_pavis_teams_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              627,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            937,
+            1163
+          ],
+          "scale_multiplier": 1.08
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              601,
+              627
+            ]
+          ],
+          "anchor": [
+            360,
+            594
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            987,
+            595
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              601,
+              1254
+            ]
+          ],
+          "anchor": [
+            360,
+            1222
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              601,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            987,
+            1222
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              623,
+              627
+            ]
+          ],
+          "anchor": [
+            327,
+            605
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              623,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            890,
+            604
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              598,
+              1254
+            ]
+          ],
+          "anchor": [
+            317,
+            1179
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_gloamkeel_bulwarks_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              598,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            929,
+            1185
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8
+    }
+  ]
+}

@@ -1,0 +1,1731 @@
+{
+  "faction_id": "faction_embercourt",
+  "generator": "built-in image_gen",
+  "style_reference_images_observed": [
+    "art/units/source/curated/unit_embercourt_fordhook_cadets.png",
+    "art/units/source/curated/unit_embercourt_sluicefire_lindworms.png"
+  ],
+  "notes": "Original upgrade designs. No base sprite reused. Frame0 is master.10 units have4 articulated idle poses; Winchbow and Prismwrit have3 selected complete and consistent poses. Source alpha retained; <=8 noise may be removed only in derived preparation. Hidden RGB haze in alpha0 areas does not render.",
+  "units": [
+    {
+      "unit_id": "unit_river_guard_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_idle.png",
+      "source_facing": "right",
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              625,
+              648
+            ]
+          ],
+          "anchor": [
+            323,
+            637
+          ]
+        },
+        {
+          "rects": [
+            [
+              625,
+              0,
+              1254,
+              600
+            ],
+            [
+              625,
+              600,
+              1110,
+              648
+            ]
+          ],
+          "anchor": [
+            894,
+            636
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              650,
+              716,
+              1254
+            ]
+          ],
+          "anchor": [
+            299,
+            1222
+          ]
+        },
+        {
+          "rects": [
+            [
+              716,
+              650,
+              1254,
+              1254
+            ],
+            [
+              1110,
+              600,
+              1254,
+              650
+            ]
+          ],
+          "anchor": [
+            893,
+            1222
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "name": "Weirshield Sentinels",
+      "sha256": "e6170a5569763d379fe5e9ef779c8220f112d6bfd3ea5da28993001754dc99e3",
+      "prompt_file": "unit_river_guard_veteran_idle.prompt.txt",
+      "provenance_file": "unit_river_guard_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              553,
+              627
+            ]
+          ],
+          "anchor": [
+            285,
+            595
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              553,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            731,
+            588
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              627,
+              569,
+              1254
+            ]
+          ],
+          "anchor": [
+            343,
+            1156
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_river_guard_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              569,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            868,
+            1130
+          ],
+          "scale_multiplier": 1.25
+        }
+      ],
+      "actions_sha256": "e6379c0590fed898e256636d44ac30595f4d856d7c5bcaa26cd92d3250e0fada",
+      "actions_prompt_file": "unit_river_guard_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_river_guard_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_idle.png",
+      "source_facing": "right",
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              650,
+              610
+            ]
+          ],
+          "anchor": [
+            334,
+            583
+          ]
+        },
+        {
+          "rects": [
+            [
+              650,
+              0,
+              1312,
+              610
+            ]
+          ],
+          "anchor": [
+            963,
+            583
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              610,
+              735,
+              1199
+            ]
+          ],
+          "anchor": [
+            269,
+            1139
+          ]
+        },
+        {
+          "rects": [
+            [
+              735,
+              610,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            951,
+            1152
+          ]
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "name": "Chainford Marshals",
+      "sha256": "8ab3d0a7e3d4fa196e991395db97ff0972f2d3b80899b48ad765925e15e3a5f3",
+      "prompt_file": "unit_embercourt_fordhook_cadets_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_fordhook_cadets_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              611,
+              599
+            ]
+          ],
+          "anchor": [
+            306,
+            579
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              611,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            845,
+            577
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            367,
+            1123
+          ],
+          "scale_multiplier": 1.25
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_fordhook_cadets_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            972,
+            1078
+          ],
+          "scale_multiplier": 1.25
+        }
+      ],
+      "actions_sha256": "5536aee7def84522e95b897a041e832a6e01bf6582b6853444c03c08d1c8dcaa",
+      "actions_prompt_file": "unit_embercourt_fordhook_cadets_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_fordhook_cadets_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_citadel_pikeward_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            356,
+            579
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            952,
+            578
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            342,
+            1167
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            977,
+            1166
+          ]
+        }
+      ],
+      "name": "Gateward Phalanx",
+      "sha256": "0882855bfa39e9060bf545f712d5b833ec42516c4165c08c76e1b4cc40929f67",
+      "prompt_file": "unit_citadel_pikeward_veteran_idle.prompt.txt",
+      "provenance_file": "unit_citadel_pikeward_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              587
+            ]
+          ],
+          "anchor": [
+            317,
+            562
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              587
+            ]
+          ],
+          "anchor": [
+            843,
+            562
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              587,
+              634,
+              1199
+            ]
+          ],
+          "anchor": [
+            389,
+            1122
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_citadel_pikeward_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              634,
+              587,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            897,
+            1087
+          ]
+        }
+      ],
+      "actions_sha256": "a2f5d82fa2433cbb0dec56bbf7591126875447bbd2e3f08b0f3c4e43ff78ed28",
+      "actions_prompt_file": "unit_citadel_pikeward_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_citadel_pikeward_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_ember_archer_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            324,
+            582
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            963,
+            582
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            326,
+            1170
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            964,
+            1179
+          ]
+        }
+      ],
+      "name": "Cinderwake Longbows",
+      "sha256": "c8fb96571089559ecb02e381331ba16336520f659fb4f0523c855ecfcb25578b",
+      "prompt_file": "unit_ember_archer_veteran_idle.prompt.txt",
+      "provenance_file": "unit_ember_archer_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              602
+            ]
+          ],
+          "anchor": [
+            284,
+            597
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              602
+            ]
+          ],
+          "anchor": [
+            898,
+            602
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              602,
+              625,
+              1199
+            ]
+          ],
+          "anchor": [
+            322,
+            1147
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              625,
+              602,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            931,
+            1102
+          ],
+          "scale_multiplier": 1.15
+        }
+      ],
+      "actions_sha256": "8b87d94dc62962183bd6c17b809efa4e137298145c00a846cee79c6898c5dbec",
+      "actions_prompt_file": "unit_ember_archer_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_ember_archer_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_lantern_sappers_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lantern_sappers_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              724,
+              543
+            ]
+          ],
+          "anchor": [
+            418,
+            530
+          ]
+        },
+        {
+          "rects": [
+            [
+              724,
+              0,
+              1448,
+              543
+            ]
+          ],
+          "anchor": [
+            1075,
+            530
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              543,
+              724,
+              1086
+            ]
+          ],
+          "anchor": [
+            397,
+            1041
+          ]
+        },
+        {
+          "rects": [
+            [
+              724,
+              543,
+              1448,
+              1086
+            ]
+          ],
+          "anchor": [
+            1083,
+            1041
+          ]
+        }
+      ],
+      "name": "Flarepot Engineers",
+      "sha256": "02945f14c18df87e465abe75ef0b1ea155be5137f6945140d1f7b64704ae12e7",
+      "prompt_file": "unit_embercourt_lantern_sappers_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_lantern_sappers_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lantern_sappers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              724,
+              551
+            ]
+          ],
+          "anchor": [
+            361,
+            546
+          ],
+          "scale_multiplier": 1.12
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lantern_sappers_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              724,
+              0,
+              1448,
+              551
+            ]
+          ],
+          "anchor": [
+            970,
+            551
+          ],
+          "scale_multiplier": 1.12
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lantern_sappers_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              551,
+              724,
+              1086
+            ]
+          ],
+          "anchor": [
+            428,
+            1022
+          ],
+          "scale_multiplier": 1.12
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lantern_sappers_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              724,
+              551,
+              1448,
+              1086
+            ]
+          ],
+          "anchor": [
+            1049,
+            1010
+          ],
+          "scale_multiplier": 1.12
+        }
+      ],
+      "actions_sha256": "92de52b7eee64861a951144ef2f28843d9fdaec4f4cf5a7dbfd5b568a19bd40c",
+      "actions_prompt_file": "unit_embercourt_lantern_sappers_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_lantern_sappers_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_ash_oath_bailiffs_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            485,
+            496
+          ]
+        },
+        {
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1067,
+            496
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            513,
+            999
+          ]
+        },
+        {
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1074,
+            999
+          ]
+        }
+      ],
+      "name": "Ashseal Justiciars",
+      "sha256": "866cb897e59e223036f940ea82802c76e3430f278de0e92f6459525271d91157",
+      "prompt_file": "unit_embercourt_ash_oath_bailiffs_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_ash_oath_bailiffs_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            447,
+            501
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1036,
+            485
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            484,
+            946
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_ash_oath_bailiffs_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1140,
+            928
+          ]
+        }
+      ],
+      "actions_sha256": "d3ac9e5480e02481cacf0544ba19f7eb5e42546b724ce9f1c4cf07513f6c37c6",
+      "actions_prompt_file": "unit_embercourt_ash_oath_bailiffs_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_ash_oath_bailiffs_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_bargebow_crews_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_bargebow_crews_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              682,
+              599
+            ]
+          ],
+          "anchor": [
+            323,
+            596
+          ]
+        },
+        {
+          "rects": [
+            [
+              682,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            968,
+            597
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              682,
+              1199
+            ]
+          ],
+          "anchor": [
+            303,
+            1181
+          ]
+        }
+      ],
+      "name": "Winchbow Arbalests",
+      "sha256": "2c853b91b0bbd5b47e8568fe642f8f04a72260bb8c91d604171e539111583998",
+      "prompt_file": "unit_embercourt_bargebow_crews_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_bargebow_crews_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_bargebow_crews_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              641,
+              599
+            ]
+          ],
+          "anchor": [
+            274,
+            582
+          ],
+          "scale_multiplier": 1.1
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_bargebow_crews_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              641,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            848,
+            583
+          ],
+          "scale_multiplier": 1.1
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_bargebow_crews_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1028
+            ],
+            [
+              0,
+              1028,
+              614,
+              1199
+            ]
+          ],
+          "anchor": [
+            301,
+            1149
+          ],
+          "scale_multiplier": 1.1
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_bargebow_crews_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1028
+            ],
+            [
+              614,
+              1028,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            965,
+            1117
+          ],
+          "scale_multiplier": 1.1
+        }
+      ],
+      "actions_sha256": "c897211807121039139d7a8832e0adabb9e64f3ba080e1bf8c28b57c50303975",
+      "actions_prompt_file": "unit_embercourt_bargebow_crews_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_bargebow_crews_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_beacon_lectors_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              659,
+              596
+            ]
+          ],
+          "anchor": [
+            378,
+            582
+          ]
+        },
+        {
+          "rects": [
+            [
+              659,
+              0,
+              1318,
+              596
+            ]
+          ],
+          "anchor": [
+            965,
+            582
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              596,
+              659,
+              1193
+            ]
+          ],
+          "anchor": [
+            377,
+            1143
+          ]
+        },
+        {
+          "rects": [
+            [
+              659,
+              596,
+              1318,
+              1193
+            ]
+          ],
+          "anchor": [
+            948,
+            1145
+          ]
+        }
+      ],
+      "name": "Dawnwrit Precentors",
+      "sha256": "37adbacbaf2622edd815bbf2c994f880eb958a404ecbc791360aa50040384eb8",
+      "prompt_file": "unit_embercourt_beacon_lectors_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_beacon_lectors_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              659,
+              596
+            ]
+          ],
+          "anchor": [
+            351,
+            559
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              659,
+              0,
+              1318,
+              596
+            ]
+          ],
+          "anchor": [
+            880,
+            560
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              596,
+              659,
+              1193
+            ]
+          ],
+          "anchor": [
+            315,
+            1114
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beacon_lectors_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              659,
+              596,
+              1318,
+              1193
+            ]
+          ],
+          "anchor": [
+            927,
+            1074
+          ]
+        }
+      ],
+      "actions_sha256": "245fab9c3377499cdf7a66b7e798149148d7115f06e23350be63038e292c3fdd",
+      "actions_prompt_file": "unit_embercourt_beacon_lectors_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_beacon_lectors_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_beaconline_writguard_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beaconline_writguard_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              583
+            ]
+          ],
+          "anchor": [
+            371,
+            581
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              583
+            ]
+          ],
+          "anchor": [
+            1060,
+            583
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              583,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            333,
+            1148
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              583,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            1038,
+            1147
+          ]
+        }
+      ],
+      "name": "Lanternwall Wardens",
+      "sha256": "dada0f2ccfcdb9a8899c09c50cab0e9ee76c3474e023ce7ec7d36cd4efb126ba",
+      "prompt_file": "unit_embercourt_beaconline_writguard_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_beaconline_writguard_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beaconline_writguard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              644,
+              599
+            ]
+          ],
+          "anchor": [
+            339,
+            556
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beaconline_writguard_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              644,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            849,
+            556
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beaconline_writguard_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            386,
+            1085
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_beaconline_writguard_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            955,
+            1080
+          ]
+        }
+      ],
+      "actions_sha256": "be8a11c278d709f7f09ade28d8125686051d7cbbad2684cc8d9220c0f59faefa",
+      "actions_prompt_file": "unit_embercourt_beaconline_writguard_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_beaconline_writguard_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_charter_colossus_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              595
+            ]
+          ],
+          "anchor": [
+            347,
+            584
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              595
+            ]
+          ],
+          "anchor": [
+            977,
+            587
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              595,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            316,
+            1170
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              595,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            1031,
+            1174
+          ]
+        }
+      ],
+      "name": "Covenant Bastion",
+      "sha256": "9cda0173806c8047e88ebf7975d66fa7e16d71bc75be9587ea819c4df4227c96",
+      "prompt_file": "unit_embercourt_charter_colossus_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_charter_colossus_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            294,
+            577
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            950,
+            590
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            270,
+            1148
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_charter_colossus_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            961,
+            1126
+          ]
+        }
+      ],
+      "actions_sha256": "45352bf4d5c9ec5a4757d474503fb5ece76c85aa21ef700ab44a8f5f80b1d052",
+      "actions_prompt_file": "unit_embercourt_charter_colossus_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_charter_colossus_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            331,
+            587
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            964,
+            586
+          ]
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            965,
+            1165
+          ]
+        }
+      ],
+      "name": "Prismwrit Adjudicators",
+      "sha256": "388838914a2fabbaf02f8d165622219270f069efa38b51a3637b1982af90e2f8",
+      "prompt_file": "unit_embercourt_lockglass_writcasters_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_lockglass_writcasters_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              633,
+              599
+            ]
+          ],
+          "anchor": [
+            295,
+            582
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              633,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            862,
+            576
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              599,
+              604,
+              1199
+            ]
+          ],
+          "anchor": [
+            221,
+            1117
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_lockglass_writcasters_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              604,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            938,
+            1104
+          ]
+        }
+      ],
+      "actions_sha256": "d69c4391175b892d2018a6ddab2e013f1fc6de0a860c32495b7ab60f3c70ee41",
+      "actions_prompt_file": "unit_embercourt_lockglass_writcasters_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_lockglass_writcasters_veteran_actions.provenance.json"
+    },
+    {
+      "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_sluicefire_lindworms_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              768,
+              512
+            ]
+          ],
+          "anchor": [
+            361,
+            493
+          ]
+        },
+        {
+          "rects": [
+            [
+              768,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            1137,
+            499
+          ]
+        },
+        {
+          "rects": [
+            [
+              0,
+              512,
+              768,
+              1024
+            ]
+          ],
+          "anchor": [
+            492,
+            961
+          ]
+        },
+        {
+          "rects": [
+            [
+              768,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1128,
+            954
+          ]
+        }
+      ],
+      "name": "Floodpyre Lindworms",
+      "sha256": "2057a66d0e11d3d392504bff0fd2bd476736620fa2d49b36e714e3f8c24729e9",
+      "prompt_file": "unit_embercourt_sluicefire_lindworms_veteran_idle.prompt.txt",
+      "provenance_file": "unit_embercourt_sluicefire_lindworms_veteran_idle.provenance.json",
+      "actions": [
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_sluicefire_lindworms_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              650,
+              512
+            ]
+          ],
+          "anchor": [
+            403,
+            470
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_sluicefire_lindworms_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              650,
+              0,
+              1536,
+              512
+            ]
+          ],
+          "anchor": [
+            961,
+            469
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_sluicefire_lindworms_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              512,
+              710,
+              1024
+            ]
+          ],
+          "anchor": [
+            491,
+            956
+          ]
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_embercourt_sluicefire_lindworms_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              710,
+              512,
+              1536,
+              1024
+            ]
+          ],
+          "anchor": [
+            1121,
+            933
+          ]
+        }
+      ],
+      "actions_sha256": "b130ce25bf76767f0cdaaba8d51a15346c5c427ea68f5a86d306a573c86718f5",
+      "actions_prompt_file": "unit_embercourt_sluicefire_lindworms_veteran_actions.prompt.txt",
+      "actions_provenance_file": "unit_embercourt_sluicefire_lindworms_veteran_actions.provenance.json"
+    }
+  ]
+}

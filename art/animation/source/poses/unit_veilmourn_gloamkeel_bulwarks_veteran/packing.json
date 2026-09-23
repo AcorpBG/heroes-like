@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          601,
+          627
+        ]
+      ],
+      "anchor": [
+        360,
+        594
+      ],
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png",
+      "scale": 0.3986013986013986,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          601,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        987,
+        595
+      ],
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png",
+      "scale": 0.3986013986013986,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          601,
+          1254
+        ]
+      ],
+      "anchor": [
+        360,
+        1222
+      ],
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png",
+      "scale": 0.3986013986013986,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          601,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        987,
+        1222
+      ],
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran-alpha.png",
+      "scale": 0.3986013986013986,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          623,
+          627
+        ]
+      ],
+      "anchor": [
+        327,
+        605
+      ],
+      "scale": 0.3986013986013986
+    },
+    {
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          623,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        890,
+        604
+      ],
+      "scale": 0.3986013986013986
+    },
+    {
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          598,
+          1254
+        ]
+      ],
+      "anchor": [
+        317,
+        1179
+      ],
+      "scale": 0.3986013986013986
+    },
+    {
+      "source": "unit_veilmourn_gloamkeel_bulwarks_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          598,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        929,
+        1185
+      ],
+      "scale": 0.3986013986013986
+    }
+  ]
+}

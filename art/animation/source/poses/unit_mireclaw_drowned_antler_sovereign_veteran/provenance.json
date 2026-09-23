@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign_veteran/unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle-alpha.png": "c05b89baeed1ff8f47ba7ed5d061f6af2df89f37e1ccfde005b56c65e3faf57e",
+    "res://art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign_veteran/unit_mireclaw_drowned_antler_sovereign_veteran_actions-alpha.png": "f23933b0ca3914d47d0567e55f350184bc37f0c9965c25f43d003ae88e7a0e8e"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "56d6ee515ed56b897341a40e2d568da52d16bb95bd592b4718a31b06bdde15b0",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

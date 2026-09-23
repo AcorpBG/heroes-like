@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_quenchbell_mortars_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_quenchbell_mortars_veteran/unit_brasshollow_quenchbell_mortars_veteran_source-alpha.png": "7a6ed4d9900f93406df59fd61afa109f1d6f7dacbc1bdd1886a26b5b4f3f19ec",
+    "res://art/animation/source/poses/unit_brasshollow_quenchbell_mortars_veteran/unit_brasshollow_quenchbell_mortars_veteran_actions-alpha.png": "06e3fcc6d3cc57d8245feb52ee46335a72ca09929449c7938fa0ce604b90834d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "9b5a3c4874eb2bbc3ba3543fea5607c7bc6bab599b804e2927abeca273b316c1",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

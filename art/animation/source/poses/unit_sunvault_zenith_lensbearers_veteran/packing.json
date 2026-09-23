@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    288
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          627
+        ]
+      ],
+      "anchor": [
+        309,
+        610
+      ],
+      "source": "unit_sunvault_zenith_lensbearers_veteran_source-alpha.png",
+      "scale": 0.3825503355704698,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        944,
+        610
+      ],
+      "source": "unit_sunvault_zenith_lensbearers_veteran_source-alpha.png",
+      "scale": 0.3825503355704698,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        311,
+        1218
+      ],
+      "source": "unit_sunvault_zenith_lensbearers_veteran_source-alpha.png",
+      "scale": 0.3825503355704698,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        944,
+        1220
+      ],
+      "source": "unit_sunvault_zenith_lensbearers_veteran_source-alpha.png",
+      "scale": 0.3825503355704698,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        360,
+        630
+      ],
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          660
+        ]
+      ],
+      "scale_multiplier": 1.16,
+      "source": "unit_sunvault_zenith_lensbearers_veteran_actions-alpha.png",
+      "scale": 0.44375838926174493
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        872,
+        644
+      ],
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          660
+        ]
+      ],
+      "scale_multiplier": 1.16,
+      "source": "unit_sunvault_zenith_lensbearers_veteran_actions-alpha.png",
+      "scale": 0.44375838926174493
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        445,
+        1171
+      ],
+      "rects": [
+        [
+          0,
+          660,
+          627,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.16,
+      "source": "unit_sunvault_zenith_lensbearers_veteran_actions-alpha.png",
+      "scale": 0.44375838926174493
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        925,
+        1115
+      ],
+      "rects": [
+        [
+          627,
+          660,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.16,
+      "source": "unit_sunvault_zenith_lensbearers_veteran_actions-alpha.png",
+      "scale": 0.44375838926174493
+    }
+  ]
+}

@@ -1,0 +1,826 @@
+{
+  "faction_id": "faction_sunvault",
+  "items": [
+    {
+      "base_id": "unit_shard_guard",
+      "upgrade_id": "unit_shard_guard_veteran",
+      "name": "Dawnwall Custodians",
+      "art_brief": "Melee crystal pavise infantry; broad interlocking shield with a sunrise notch, long hooked crystal spear, ivory layered shoulder guards. Distinguish the spear silhouette and weight-bearing shield stance.",
+      "gameplay_rationale": "Adds two-hex melee reach and a second retaliation, turning a basic shield into a defensive counterattack anchor that can answer two attackers.",
+      "unit": {
+        "id": "unit_shard_guard_veteran",
+        "name": "Dawnwall Custodians",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 1,
+        "hp": 12,
+        "attack": 6,
+        "defense": 7,
+        "min_damage": 3,
+        "max_damage": 5,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 2,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Custodian Answer",
+            "description": "While defending, retaliations hit 25% harder and stagger attackers for two rounds. Two retaliations each round punish successive assaults.",
+            "retaliation_multiplier": 1.25,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_staggered",
+            "status_label": "Staggered",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -1,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "shielding",
+            "name": "Facet Ward",
+            "description": "Layered mirror-glass keeps the stack from folding under ranged pressure and sustains the line once engaged.",
+            "cohesion_hold_bonus": 1,
+            "ranged_damage_multiplier": 0.84,
+            "engaged_damage_multiplier": 1.08
+          },
+          {
+            "id": "reach",
+            "name": "Dawnwall Interlock",
+            "description": "The hooked crystal spear can strike and retaliate across a one-hex gap at 80% damage.",
+            "distance_one_multiplier": 0.8
+          }
+        ],
+        "growth": 7,
+        "cost": {
+          "gold": 88
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_shard_guard",
+        "art_source_unit_id": "unit_shard_guard",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_shard_wardens",
+      "upgrade_id": "unit_sunvault_shard_wardens_veteran",
+      "name": "Mirrorback Wardens",
+      "art_brief": "Melee infantry with a radial mirror shield projecting rigid facet fins, short crystal sword and mirrored backplate. No bow or staff; shield and sword must read clearly.",
+      "gameplay_rationale": "Expands linked protection to both tier-two branches and their upgrades, adds a contact screen for ranged and shielded allies, and punishes focus fire through reflection.",
+      "unit": {
+        "id": "unit_sunvault_shard_wardens_veteran",
+        "name": "Mirrorback Wardens",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 1,
+        "hp": 10,
+        "attack": 6,
+        "defense": 6,
+        "min_damage": 3,
+        "max_damage": 4,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Mirrorback Refraction",
+            "description": "Reflects 18% of received ranged damage while surviving. Screens both Prism Adept and Prism Harrier lines from 5% of ranged damage, and all allied ranged or shielded stacks from 4% of contact melee damage.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.98,
+            "ranged_damage_return_ratio": 0.18,
+            "linked_ranged_unit_ids": [
+              "unit_sunvault_prism_adepts",
+              "unit_sunvault_prism_adepts_veteran",
+              "unit_prism_adept",
+              "unit_prism_adept_veteran"
+            ],
+            "linked_ranged_damage_reduction_pct": 5,
+            "ally_ranged_melee_damage_reduction_pct": 4
+          }
+        ],
+        "growth": 8,
+        "cost": {
+          "gold": 95,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_shard_wardens",
+        "art_source_unit_id": "unit_sunvault_shard_wardens"
+      }
+    },
+    {
+      "base_id": "unit_prism_adept",
+      "upgrade_id": "unit_prism_adept_veteran",
+      "name": "Glarewing Harriers",
+      "art_brief": "Light ranged skirmisher with twin-lens bow, swept wing-shaped shoulder prisms and short wind-split scarf. A mobile archer silhouette, not a melee warden.",
+      "gameplay_rationale": "Adds a wounded-target execution condition to the mobile harrier, encouraging it to finish damaged stacks while the stationary adept branch prepares targets.",
+      "unit": {
+        "id": "unit_prism_adept_veteran",
+        "name": "Glarewing Harriers",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 9,
+        "attack": 7,
+        "defense": 6,
+        "min_damage": 3,
+        "max_damage": 5,
+        "speed": 6,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 8,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Refraction Volley",
+            "description": "Prepared firing tiers bend light into harsher volleys, especially into already-staggered targets.",
+            "damage_multiplier": 1.12,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.12,
+            "ally_defending_multiplier": 1.05
+          },
+          {
+            "id": "harry",
+            "name": "Glarewing Pursuit",
+            "description": "Shots harry surviving targets for two rounds. Against stacks at or below 40% of their starting health, focused splinters deal 20% more damage.",
+            "status_id": "status_harried",
+            "status_label": "Harried",
+            "duration_rounds": 2,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1,
+              "cohesion": -1
+            },
+            "momentum_gain": 1,
+            "wounded_threshold_ratio": 0.4,
+            "wounded_damage_multiplier": 1.2
+          }
+        ],
+        "growth": 5,
+        "cost": {
+          "gold": 122
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_prism_adept",
+        "art_source_unit_id": "unit_prism_adept",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_prism_adepts",
+      "upgrade_id": "unit_sunvault_prism_adepts_veteran",
+      "name": "Lattice Conjurers",
+      "art_brief": "Ranged robed optical mage carrying a focus wand inside a suspended hexagonal lens cage, angular crystal headpiece and layered ivory mantle. Clearly different from bow-armed harriers.",
+      "gameplay_rationale": "Adds limited stagger control against mid/high-tier enemies; the new mark activates the existing Sunvault volley and formation-guard payoffs across the army.",
+      "unit": {
+        "id": "unit_sunvault_prism_adepts_veteran",
+        "name": "Lattice Conjurers",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 2,
+        "hp": 11,
+        "attack": 7,
+        "defense": 5,
+        "min_damage": 4,
+        "max_damage": 5,
+        "speed": 3,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 5,
+        "cost": {
+          "gold": 142,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 8,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Refraction Volley",
+            "description": "Prepared firing tiers bend light into harsher volleys, especially into already-staggered targets.",
+            "damage_multiplier": 1.12,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.12,
+            "ally_defending_multiplier": 1.05
+          },
+          {
+            "id": "harry",
+            "name": "Lattice Arrest",
+            "description": "The first two successful attacks on surviving tier-three-or-higher stacks stagger their aim and footing for two rounds.",
+            "status_id": "status_staggered",
+            "status_label": "Lattice-Staggered",
+            "duration_rounds": 2,
+            "uses_per_battle": 2,
+            "target_min_tier": 3,
+            "modifiers": {
+              "initiative": -2,
+              "defense": -1
+            },
+            "momentum_gain": 0
+          }
+        ],
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_prism_adepts",
+        "art_source_unit_id": "unit_sunvault_prism_adepts"
+      }
+    },
+    {
+      "base_id": "unit_aurora_ballista",
+      "upgrade_id": "unit_aurora_ballista_veteran",
+      "name": "Sunline Repeater",
+      "art_brief": "Compact ranged crystal siege engine with three parallel bolt rails, rotating prism drum, brass calibration wheel and planted tripod supports. An engine, not a humanoid or giant.",
+      "gameplay_rationale": "Adds anti-melee suppression and deeper ammunition reserves to the existing ranged relay, allowing follow-up melee to attack weakened retaliation safely.",
+      "unit": {
+        "id": "unit_aurora_ballista_veteran",
+        "name": "Sunline Repeater",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 3,
+        "hp": 15,
+        "attack": 9,
+        "defense": 8,
+        "min_damage": 5,
+        "max_damage": 8,
+        "speed": 4,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 9,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Aurora Salvo",
+            "description": "Relay-calibrated bolts hit hardest when the battery owns the lane and the target line is already disrupted.",
+            "damage_multiplier": 1.18,
+            "min_distance": 1,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.15,
+            "ally_defending_multiplier": 1.1
+          },
+          {
+            "id": "formation_guard",
+            "name": "Aurora Relay",
+            "description": "A fixed relay lattice steadies nearby arrays, quickens allied volleys, and rewards holding ground.",
+            "ally_ranged_damage_multiplier": 1.12,
+            "ally_ranged_initiative_bonus": 1,
+            "ally_cohesion_bonus": 1,
+            "defending_cohesion_bonus": 1,
+            "defending_initiative_bonus": 1,
+            "staggered_damage_multiplier": 1.08
+          },
+          {
+            "id": "harry",
+            "name": "Rail-Pinning Salvo",
+            "description": "The first two hits against surviving tier-three-or-higher melee stacks reduce their initiative by two and retaliation strength by 15% for two rounds.",
+            "status_id": "status_harried",
+            "status_label": "Rail-Pinned",
+            "duration_rounds": 2,
+            "uses_per_battle": 2,
+            "target_min_tier": 3,
+            "target_role": "melee",
+            "modifiers": {
+              "initiative": -2,
+              "retaliation": -15
+            },
+            "momentum_gain": 0
+          }
+        ],
+        "growth": 3,
+        "cost": {
+          "gold": 237
+        },
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_aurora_ballista",
+        "art_source_unit_id": "unit_aurora_ballista",
+        "content_status": "town_dwelling_upgrade_live"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_mirror_duelists",
+      "upgrade_id": "unit_sunvault_mirror_duelists_veteran",
+      "name": "Parallax Blades",
+      "art_brief": "Melee duelist with two curved mirror sabres of unequal length, split asymmetric cloak and forked mirrored mask. Low forward stance and opposing blade arcs.",
+      "gameplay_rationale": "Removes objective dependence from gap attacks and adds a wounded-target payoff to primary melee strikes, giving the army an independent flanker and finisher.",
+      "unit": {
+        "id": "unit_sunvault_mirror_duelists_veteran",
+        "name": "Parallax Blades",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 3,
+        "hp": 18,
+        "attack": 9,
+        "defense": 8,
+        "min_damage": 5,
+        "max_damage": 8,
+        "speed": 5,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "abilities": [
+          {
+            "id": "reach",
+            "name": "Parallax Crossing",
+            "description": "The twin blades reach across a one-hex gap at 85% damage without requiring a held objective.",
+            "distance_one_multiplier": 0.85
+          },
+          {
+            "id": "backstab",
+            "name": "Split-Second Cut",
+            "description": "Primary melee attacks deal 12% more damage to harried or staggered targets, and another 12% against stacks at or below half their starting health.",
+            "damage_multiplier": 1.12,
+            "momentum_gain": 1,
+            "primary_melee_only": true,
+            "status_ids": [
+              "status_harried",
+              "status_staggered"
+            ],
+            "health_threshold_ratio": 0.5,
+            "threshold_damage_multiplier": 1.12
+          }
+        ],
+        "growth": 4,
+        "cost": {
+          "gold": 223,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 0,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_mirror_duelists",
+        "art_source_unit_id": "unit_sunvault_mirror_duelists"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_resonant_choristers",
+      "upgrade_id": "unit_sunvault_resonant_choristers_veteran",
+      "name": "Harmonic Precentors",
+      "art_brief": "Ranged choir mage with tall tuning-fork staff, floating concentric chime rings around shoulders and throat, long pleated ivory robes and segmented crystal halo.",
+      "gameplay_rationale": "Broadens the relay to both early ranged branches and adds mid-tier retaliation suppression, so the choir coordinates melee follow-through as well as calibrated fire.",
+      "unit": {
+        "id": "unit_sunvault_resonant_choristers_veteran",
+        "name": "Harmonic Precentors",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 4,
+        "hp": 22,
+        "attack": 10,
+        "defense": 9,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 3,
+        "initiative": 7,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 3,
+        "cost": {
+          "gold": 338,
+          "wood": 1,
+          "ore": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 6,
+        "abilities": [
+          {
+            "id": "resonance_relay",
+            "name": "Full-Spectrum Measure",
+            "description": "While alive, synchronizes two or more allied spell-calibrated stacks into firing damage and initiative. Both Prism Adept and Prism Harrier branches receive its linked initiative bonus.",
+            "minimum_calibrated_stacks": 2,
+            "maximum_calibrated_stacks": 3,
+            "line_damage_per_calibrated_stack": 0.03,
+            "line_initiative_bonus": 1,
+            "late_round_initiative_bonus": 1,
+            "terrain_momentum_bonus": 1,
+            "linked_unit_ids": [
+              "unit_sunvault_prism_adepts",
+              "unit_sunvault_prism_adepts_veteran",
+              "unit_prism_adept",
+              "unit_prism_adept_veteran"
+            ],
+            "linked_initiative_bonus": 1
+          },
+          {
+            "id": "harry",
+            "name": "Counterpoint Censure",
+            "description": "The first two hits on surviving tier-four-or-higher enemies lower defense and cohesion and weaken retaliation by 15% for one round.",
+            "status_id": "status_harried",
+            "status_label": "Calibrated",
+            "duration_rounds": 1,
+            "modifiers": {
+              "defense": -1,
+              "cohesion": -1,
+              "retaliation": -15
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 2,
+            "target_min_tier": 4
+          }
+        ],
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 0,
+        "spell_school_resistance_pct": {
+          "lens": 5
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_resonant_choristers",
+        "art_source_unit_id": "unit_sunvault_resonant_choristers"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_noonfacet_sentinels",
+      "upgrade_id": "unit_sunvault_noonfacet_sentinels_veteran",
+      "name": "Meridian Lockguards",
+      "art_brief": "Heavy melee sentinel with tall sundial shield, mechanical locking polearm ending in two crystal hooks, noon-disc helmet and broad articulated greaves.",
+      "gameplay_rationale": "Adds a delayed one-use pull into the defending line; unlike the low-tier reach guard, it can displace a target before its existing brace punishes retaliation exchanges.",
+      "unit": {
+        "id": "unit_sunvault_noonfacet_sentinels_veteran",
+        "name": "Meridian Lockguards",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 4,
+        "hp": 28,
+        "attack": 10,
+        "defense": 12,
+        "min_damage": 6,
+        "max_damage": 10,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 3,
+        "cost": {
+          "gold": 392,
+          "ore": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "brace",
+            "name": "Noonfacet Brace",
+            "description": "The sentinel locks shield and polearm into one measured facet, trading tempo for a harder answering line.",
+            "retaliation_multiplier": 1.18,
+            "defending_cohesion_bonus": 2,
+            "status_id": "status_rooted",
+            "status_label": "Facet-Locked",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -2,
+              "cohesion": -1
+            }
+          },
+          {
+            "id": "shielding",
+            "name": "Mirrorface Screen",
+            "description": "Broad non-color facets turn missile lanes aside while the sentinel holds the choir's front measure.",
+            "cohesion_hold_bonus": 0,
+            "ranged_damage_multiplier": 0.84,
+            "engaged_damage_multiplier": 1.04,
+            "harried_damage_multiplier": 1.04
+          },
+          {
+            "id": "hookline",
+            "name": "Meridian Lock",
+            "description": "Once per battle from round two, the polearm strikes across a one-hex gap at 70% damage and pulls a surviving target into contact if space permits, reducing initiative by two and defense by one for two rounds.",
+            "distance_one_multiplier": 0.7,
+            "uses_per_battle": 1,
+            "available_from_round": 2,
+            "status_id": "status_rooted",
+            "status_label": "Meridian-Locked",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -2,
+              "defense": -1
+            }
+          }
+        ],
+        "spell_resistance_pct": 8,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "lens": 12
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_noonfacet_sentinels",
+        "art_source_unit_id": "unit_sunvault_noonfacet_sentinels"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_solar_array_striders",
+      "upgrade_id": "unit_sunvault_solar_array_striders_veteran",
+      "name": "Heliostat Pathfinders",
+      "art_brief": "Melee long-legged articulated construct with broad folding solar arrays over its back and a forward-reaching survey blade, exposed brass joints and crystal feet.",
+      "gameplay_rationale": "Makes the anti-melee lane network available with tier-five lensbearers before tier seven and adds reach to contest space while screening the gunline.",
+      "unit": {
+        "id": "unit_sunvault_solar_array_striders_veteran",
+        "name": "Heliostat Pathfinders",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 5,
+        "hp": 34,
+        "attack": 12,
+        "defense": 11,
+        "min_damage": 9,
+        "max_damage": 14,
+        "speed": 5,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 2,
+        "cost": {
+          "gold": 581,
+          "ore": 2
+        },
+        "abilities": [
+          {
+            "id": "solar_array_lane",
+            "name": "Heliostat Corridor",
+            "description": "While a Daybreak Colossus or Zenith Lensbearer line also survives, reduces incoming melee damage to allied Sunvault ranged stacks by 8%.",
+            "incoming_melee_damage_multiplier": 0.92,
+            "linked_unit_ids": [
+              "unit_sunvault_daybreak_colossus",
+              "unit_sunvault_daybreak_colossus_veteran",
+              "unit_sunvault_zenith_lensbearers",
+              "unit_sunvault_zenith_lensbearers_veteran"
+            ]
+          },
+          {
+            "id": "reach",
+            "name": "Survey Blade",
+            "description": "The articulated forward blade strikes and retaliates across a one-hex gap at 85% damage.",
+            "distance_one_multiplier": 0.85
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 5,
+        "control_resistance_pct": 15,
+        "spell_school_resistance_pct": {
+          "lens": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_solar_array_striders",
+        "art_source_unit_id": "unit_sunvault_solar_array_striders"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_zenith_lensbearers",
+      "upgrade_id": "unit_sunvault_zenith_lensbearers_veteran",
+      "name": "Horizon Arbiters",
+      "art_brief": "Ranged survey mage bearing a huge offset circular sighting lens and ornate survey staff, long geometric tabard and narrow horizon-shaped visor. Keep the large aperture as the dominant silhouette.",
+      "gameplay_rationale": "Adds a living anti-ambush screen that weakens bonus attacks and prevents fogwake control, giving the vulnerable ranged formation a distinct counter to isolated-target hunters.",
+      "unit": {
+        "id": "unit_sunvault_zenith_lensbearers_veteran",
+        "name": "Horizon Arbiters",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 5,
+        "hp": 27,
+        "attack": 14,
+        "defense": 9,
+        "min_damage": 8,
+        "max_damage": 12,
+        "speed": 4,
+        "initiative": 8,
+        "retaliations": 1,
+        "ranged": true,
+        "shots": 7,
+        "growth": 2,
+        "cost": {
+          "gold": 675,
+          "aetherglass": 1
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Zenith Crossline",
+            "description": "The calibrated aperture folds two surveyed lanes into one precise long-range discharge.",
+            "damage_multiplier": 1.1,
+            "min_distance": 2,
+            "status_ids": [
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.08,
+            "ally_defending_multiplier": 1.05
+          },
+          {
+            "id": "harry",
+            "name": "False Zenith",
+            "description": "Once per battle, a refracted sighting mark makes one veteran line guard the wrong horizon.",
+            "status_id": "status_harried",
+            "status_label": "Mismeasured",
+            "duration_rounds": 1,
+            "modifiers": {
+              "defense": -1,
+              "initiative": -1
+            },
+            "momentum_gain": 0,
+            "uses_per_battle": 1,
+            "target_min_tier": 4
+          },
+          {
+            "id": "counter_ambush_flare",
+            "name": "Horizon Audit",
+            "description": "While this stack survives, halves enemy backstab and fogwake bonus damage against its allies, prevents Fogbound, and reveals fogwake attackers for one round with reduced defense and initiative.",
+            "countered_ability_ids": [
+              "backstab",
+              "fogwake"
+            ],
+            "ambush_bonus_retention": 0.5,
+            "blocks_ambush_status": true,
+            "revealed_status_id": "status_flare_revealed",
+            "revealed_status_label": "Horizon-Exposed",
+            "revealed_duration_rounds": 1,
+            "revealed_ability_ids": [
+              "fogwake"
+            ],
+            "revealed_modifiers": {
+              "defense": -1,
+              "initiative": -1
+            }
+          }
+        ],
+        "spell_resistance_pct": 12,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "lens": 15
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_zenith_lensbearers",
+        "art_source_unit_id": "unit_sunvault_zenith_lensbearers"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_aurora_ballistae",
+      "upgrade_id": "unit_sunvault_aurora_ballistae_veteran",
+      "name": "Corona Bulwarks",
+      "art_brief": "Massive MELEE walking crystal shield-body with layered radial armor fins and heavy short ram arms, a warm solar core hidden behind interlocking facets. Absolutely no ballista rails or ranged weapon.",
+      "gameplay_rationale": "Adds specialized protection against reach/brace linebreakers and a defensive counterattack debuff to the existing anti-assault screen; remains a melee tier-six bastion.",
+      "unit": {
+        "id": "unit_sunvault_aurora_ballistae_veteran",
+        "name": "Corona Bulwarks",
+        "faction_id": "faction_sunvault",
+        "role": "melee",
+        "tier": 6,
+        "hp": 60,
+        "attack": 15,
+        "defense": 13,
+        "min_damage": 11,
+        "max_damage": 17,
+        "speed": 4,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": false,
+        "growth": 1,
+        "cost": {
+          "gold": 973,
+          "brass_scrip": 1
+        },
+        "abilities": [
+          {
+            "id": "shielding",
+            "name": "Corona Breakwater",
+            "description": "Reduces incoming ranged damage by 8%. Allied ranged or shielded stacks take 8% less contact melee damage, plus another 6% against reach or brace attackers. Ranged allies retain the extra 4% screen against bloodrush assaults.",
+            "cohesion_hold_bonus": 2,
+            "ranged_damage_multiplier": 0.92,
+            "committed_assault_screen_reduction_pct": 4,
+            "ally_ranged_melee_damage_reduction_pct": 8,
+            "linebreaker_screen_bonus_pct": 6
+          },
+          {
+            "id": "brace",
+            "name": "Corona Answer",
+            "description": "While defending, answers hit 20% harder and reduce the attacker's attack and initiative by one for two rounds.",
+            "retaliation_multiplier": 1.2,
+            "defending_cohesion_bonus": 1,
+            "status_id": "status_staggered",
+            "status_label": "Corona-Dazzled",
+            "duration_rounds": 2,
+            "modifiers": {
+              "attack": -1,
+              "initiative": -1
+            }
+          }
+        ],
+        "content_status": "town_dwelling_upgrade_live",
+        "spell_resistance_pct": 10,
+        "control_resistance_pct": 5,
+        "spell_school_resistance_pct": {
+          "lens": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_aurora_ballistae",
+        "art_source_unit_id": "unit_sunvault_aurora_ballistae"
+      }
+    },
+    {
+      "base_id": "unit_sunvault_daybreak_colossus",
+      "upgrade_id": "unit_sunvault_daybreak_colossus_veteran",
+      "name": "Firstlight Colossus",
+      "art_brief": "Towering RANGED construct with an immense chest solar aperture, orbiting crown of independent focusing lenses, heavy planted legs and broad heat-shedding shoulder plates. No hand sword; radiant aperture is its weapon.",
+      "gameplay_rationale": "Adds bounded adjacent-stack splash and a real post-shot heat penalty, rewarding clustered-target selection and screened firing positions without becoming an unrestricted area wipe.",
+      "unit": {
+        "id": "unit_sunvault_daybreak_colossus_veteran",
+        "name": "Firstlight Colossus",
+        "faction_id": "faction_sunvault",
+        "role": "ranged",
+        "tier": 7,
+        "hp": 110,
+        "attack": 19,
+        "defense": 19,
+        "min_damage": 20,
+        "max_damage": 32,
+        "speed": 3,
+        "initiative": 6,
+        "retaliations": 1,
+        "ranged": true,
+        "growth": 1,
+        "cost": {
+          "gold": 1958,
+          "aetherglass": 2
+        },
+        "content_status": "town_dwelling_upgrade_live",
+        "shots": 5,
+        "abilities": [
+          {
+            "id": "volley",
+            "name": "Daybreak Firing Solution",
+            "description": "The colossus resolves a prepared firing solution through open lanes, intensifying fire against disrupted targets and behind a held line.",
+            "damage_multiplier": 1.08,
+            "min_distance": 1,
+            "status_ids": [
+              "status_harried",
+              "status_staggered"
+            ],
+            "status_damage_multiplier": 1.08,
+            "ally_defending_multiplier": 1.05
+          },
+          {
+            "id": "pressure_artillery",
+            "name": "Firstlight Scatter",
+            "description": "Each shot scatters light into one enemy stack adjacent to the target, dealing four damage per surviving colossus up to 24. Firing heats the aperture for two rounds, reducing initiative by one.",
+            "cluster_range": 1,
+            "secondary_damage_per_unit": 4,
+            "max_secondary_damage": 24,
+            "max_secondary_targets": 1,
+            "status_id": "status_overheated",
+            "status_label": "Aperture-Heated",
+            "duration_rounds": 2,
+            "modifiers": {
+              "initiative": -1
+            },
+            "ai_heat_score_penalty": 0.6
+          }
+        ],
+        "spell_resistance_pct": 15,
+        "control_resistance_pct": 10,
+        "spell_school_resistance_pct": {
+          "lens": 10
+        },
+        "status_immunity_ids": [],
+        "upgrade_from": "unit_sunvault_daybreak_colossus",
+        "art_source_unit_id": "unit_sunvault_daybreak_colossus"
+      }
+    }
+  ]
+}

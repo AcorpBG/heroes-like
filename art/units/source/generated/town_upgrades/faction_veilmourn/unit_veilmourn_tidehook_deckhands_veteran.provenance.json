@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+  "name": "Mooring Talons",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.png",
+  "sha256": "70384d5df3313e0642c61d631c2f6601e48b82ec0f0f967f2ae6a32d308c2765",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_files": [
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.prompt.txt",
+    "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran_actions.prompt.txt"
+  ],
+  "portable_reference_files": [
+    "art/units/battle_standees/unit_veilmourn_gloamkeel_bulwarks.png"
+  ],
+  "reference_role": "Existing standee inspected for painterly rendering style only; no base sprite recoloring or pixel reuse.",
+  "frame_selection": [
+    {
+      "slot": 0,
+      "alpha_bbox": [
+        77,
+        20,
+        556,
+        616
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 1,
+      "alpha_bbox": [
+        741,
+        18,
+        1177,
+        616
+      ],
+      "separator_alpha_pixels": 0
+    },
+    {
+      "slot": 3,
+      "alpha_bbox": [
+        719,
+        645,
+        1212,
+        1218
+      ],
+      "separator_alpha_pixels": 0
+    }
+  ],
+  "quality_notes": "Visually reviewed genuinely distinct arm/weapon poses. Tidehook slot2 excluded for missing second hook.",
+  "selected_prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_tidehook_deckhands_veteran.prompt.txt",
+  "preserved_candidates": []
+}

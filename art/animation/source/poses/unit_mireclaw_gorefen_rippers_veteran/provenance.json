@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_mireclaw_gorefen_rippers_veteran/unit_mireclaw_gorefen_rippers_veteran_idle-alpha.png": "4ce936a9bc1b23caa83bffb6fb28073733a9be21bde72784a80007b69ac41f04",
+    "res://art/animation/source/poses/unit_mireclaw_gorefen_rippers_veteran/unit_mireclaw_gorefen_rippers_veteran_actions-alpha.png": "d91d40064ec0dbedfdfbcb126fc144f7a9dc509f178c3a80763789d7e95060cc"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "4246f067058ae3a74392959791c0e8710db39ea1bb9be875278c718fd1afc6c5",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

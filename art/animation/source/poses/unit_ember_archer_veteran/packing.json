@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_ember_archer_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    304
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          656,
+          599
+        ]
+      ],
+      "anchor": [
+        324,
+        582
+      ],
+      "source": "unit_ember_archer_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          656,
+          0,
+          1312,
+          599
+        ]
+      ],
+      "anchor": [
+        963,
+        582
+      ],
+      "source": "unit_ember_archer_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          599,
+          656,
+          1199
+        ]
+      ],
+      "anchor": [
+        326,
+        1170
+      ],
+      "source": "unit_ember_archer_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          656,
+          599,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        964,
+        1179
+      ],
+      "source": "unit_ember_archer_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_ember_archer_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          656,
+          602
+        ]
+      ],
+      "anchor": [
+        284,
+        597
+      ],
+      "scale_multiplier": 1.15,
+      "scale": 0.45599999999999996
+    },
+    {
+      "source": "unit_ember_archer_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          656,
+          0,
+          1312,
+          602
+        ]
+      ],
+      "anchor": [
+        898,
+        602
+      ],
+      "scale_multiplier": 1.15,
+      "scale": 0.45599999999999996
+    },
+    {
+      "source": "unit_ember_archer_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          602,
+          625,
+          1199
+        ]
+      ],
+      "anchor": [
+        322,
+        1147
+      ],
+      "scale_multiplier": 1.15,
+      "scale": 0.45599999999999996
+    },
+    {
+      "source": "unit_ember_archer_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          625,
+          602,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        931,
+        1102
+      ],
+      "scale_multiplier": 1.15,
+      "scale": 0.45599999999999996
+    }
+  ]
+}

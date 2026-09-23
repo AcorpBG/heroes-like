@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_thornwake_bramblekite_needlers_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          653,
+          611
+        ]
+      ],
+      "anchor": [
+        364.0,
+        573
+      ],
+      "source": "unit_thornwake_bramblekite_needlers_veteran-alpha.png",
+      "scale": 0.43846153846153846,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          653,
+          0,
+          1312,
+          611
+        ]
+      ],
+      "anchor": [
+        1016.0,
+        573
+      ],
+      "source": "unit_thornwake_bramblekite_needlers_veteran-alpha.png",
+      "scale": 0.43846153846153846,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          611,
+          692,
+          1199
+        ]
+      ],
+      "anchor": [
+        364.5,
+        1168
+      ],
+      "source": "unit_thornwake_bramblekite_needlers_veteran-alpha.png",
+      "scale": 0.43846153846153846,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          692,
+          611,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        1016.5,
+        1168
+      ],
+      "source": "unit_thornwake_bramblekite_needlers_veteran-alpha.png",
+      "scale": 0.43846153846153846,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_thornwake_bramblekite_needlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          584,
+          639
+        ]
+      ],
+      "anchor": [
+        353.0,
+        582
+      ],
+      "clip": "attack",
+      "name": "attack_windup",
+      "scale": 0.43846153846153846
+    },
+    {
+      "source": "unit_thornwake_bramblekite_needlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          584,
+          0,
+          1312,
+          639
+        ]
+      ],
+      "anchor": [
+        991.5,
+        578
+      ],
+      "clip": "attack",
+      "name": "attack_release",
+      "scale": 0.43846153846153846
+    },
+    {
+      "source": "unit_thornwake_bramblekite_needlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          639,
+          633,
+          1199
+        ]
+      ],
+      "anchor": [
+        418.0,
+        1113
+      ],
+      "clip": "hit",
+      "name": "hit_recoil",
+      "scale": 0.43846153846153846
+    },
+    {
+      "source": "unit_thornwake_bramblekite_needlers_veteran_actions-alpha.png",
+      "rects": [
+        [
+          633,
+          639,
+          1312,
+          1199
+        ]
+      ],
+      "anchor": [
+        978,
+        1075
+      ],
+      "clip": "dead",
+      "name": "fallen",
+      "scale": 0.43846153846153846
+    }
+  ]
+}

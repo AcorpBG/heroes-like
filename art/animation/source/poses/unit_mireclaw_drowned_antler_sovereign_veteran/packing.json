@@ -1,0 +1,188 @@
+{
+  "unit_id": "unit_mireclaw_drowned_antler_sovereign_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ],
+        [
+          768,
+          0,
+          830,
+          300
+        ]
+      ],
+      "anchor": [
+        525,
+        501
+      ],
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle-alpha.png",
+      "scale": 0.4672131147540984,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          830,
+          0,
+          1536,
+          512
+        ],
+        [
+          768,
+          300,
+          830,
+          512
+        ]
+      ],
+      "anchor": [
+        1290,
+        501
+      ],
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle-alpha.png",
+      "scale": 0.4672131147540984,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          785,
+          1024
+        ],
+        [
+          785,
+          512,
+          870,
+          850
+        ]
+      ],
+      "anchor": [
+        535,
+        992
+      ],
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle-alpha.png",
+      "scale": 0.4672131147540984,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          870,
+          512,
+          1536,
+          1024
+        ],
+        [
+          790,
+          850,
+          870,
+          1024
+        ]
+      ],
+      "anchor": [
+        1300,
+        992
+      ],
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_quadruped_idle-alpha.png",
+      "scale": 0.4672131147540984,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          820,
+          355
+        ],
+        [
+          0,
+          355,
+          775,
+          482
+        ]
+      ],
+      "anchor": [
+        478,
+        467
+      ],
+      "scale": 0.4672131147540984
+    },
+    {
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          820,
+          0,
+          1536,
+          355
+        ],
+        [
+          775,
+          355,
+          1536,
+          482
+        ]
+      ],
+      "anchor": [
+        1140,
+        477
+      ],
+      "scale": 0.4672131147540984
+    },
+    {
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          482,
+          730,
+          1024
+        ]
+      ],
+      "anchor": [
+        480,
+        990
+      ],
+      "scale": 0.4672131147540984
+    },
+    {
+      "source": "unit_mireclaw_drowned_antler_sovereign_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          730,
+          482,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1150,
+        972
+      ],
+      "scale": 0.4672131147540984
+    }
+  ]
+}

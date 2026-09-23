@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_wakeglass_navigators_veteran/unit_veilmourn_wakeglass_navigators_veteran-alpha.png": "138d24ba3c351d8b194813ce1106f669425a7bfc80794130ca244855faeca4d1",
+    "res://art/animation/source/poses/unit_veilmourn_wakeglass_navigators_veteran/unit_veilmourn_wakeglass_navigators_veteran_actions-alpha.png": "a5698864024a1504733050d8f84e41247a35afdbe899f026e2435aa5754b7fb6"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "85e029e166bbb71c7abd20d5c43b742887ff9d6601af83613011fe15f973d20e",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

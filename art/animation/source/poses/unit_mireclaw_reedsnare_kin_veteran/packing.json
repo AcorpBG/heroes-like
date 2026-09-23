@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        366,
+        506
+      ],
+      "source": "unit_mireclaw_reedsnare_kin_veteran_idle-alpha.png",
+      "scale": 0.4523809523809524,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1110,
+        506
+      ],
+      "source": "unit_mireclaw_reedsnare_kin_veteran_idle-alpha.png",
+      "scale": 0.4523809523809524,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          810,
+          1024
+        ]
+      ],
+      "anchor": [
+        352,
+        1012
+      ],
+      "source": "unit_mireclaw_reedsnare_kin_veteran_idle-alpha.png",
+      "scale": 0.4523809523809524,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          810,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1110,
+        1012
+      ],
+      "source": "unit_mireclaw_reedsnare_kin_veteran_idle-alpha.png",
+      "scale": 0.4523809523809524,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_mireclaw_reedsnare_kin_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          710,
+          505
+        ]
+      ],
+      "anchor": [
+        442,
+        496
+      ],
+      "scale": 0.4523809523809524
+    },
+    {
+      "source": "unit_mireclaw_reedsnare_kin_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          710,
+          0,
+          1536,
+          505
+        ]
+      ],
+      "anchor": [
+        969,
+        496
+      ],
+      "scale": 0.4523809523809524
+    },
+    {
+      "source": "unit_mireclaw_reedsnare_kin_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          505,
+          715,
+          1024
+        ]
+      ],
+      "anchor": [
+        463,
+        962
+      ],
+      "scale": 0.4523809523809524
+    },
+    {
+      "source": "unit_mireclaw_reedsnare_kin_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          715,
+          505,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1128,
+        947
+      ],
+      "scale": 0.4523809523809524
+    }
+  ]
+}

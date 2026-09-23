@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_mourning_lanterns_veteran/unit_veilmourn_mourning_lanterns_veteran-alpha.png": "d918e775ab8ded7f5129373423c122a7c628ffa1f6c17953675910348ac74ed7",
+    "res://art/animation/source/poses/unit_veilmourn_mourning_lanterns_veteran/unit_veilmourn_mourning_lanterns_veteran_actions-alpha.png": "41450b77ba5983c21c95709caf2e27f2568219fb8f3552f5fc9b1b37a9c9441d"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "2b5dee303546425139d303df022be2ca6483ee2ad84593f4e8d0c7cc6b86aa85",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

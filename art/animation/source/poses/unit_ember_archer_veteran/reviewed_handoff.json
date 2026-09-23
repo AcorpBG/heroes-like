@@ -1,0 +1,145 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_ember_archer_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frame_msec": 280,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              599
+            ]
+          ],
+          "anchor": [
+            324,
+            582
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              599
+            ]
+          ],
+          "anchor": [
+            963,
+            582
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            326,
+            1170
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png"
+        },
+        {
+          "rects": [
+            [
+              656,
+              599,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            964,
+            1179
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_idle.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_windup",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              602
+            ]
+          ],
+          "anchor": [
+            284,
+            597
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "attack",
+          "name": "attack_release",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              602
+            ]
+          ],
+          "anchor": [
+            898,
+            602
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "hit",
+          "name": "hit_recoil",
+          "rects": [
+            [
+              0,
+              602,
+              625,
+              1199
+            ]
+          ],
+          "anchor": [
+            322,
+            1147
+          ],
+          "scale_multiplier": 1.15
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_embercourt/unit_ember_archer_veteran_actions.png",
+          "clip": "dead",
+          "name": "fallen",
+          "rects": [
+            [
+              625,
+              602,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            931,
+            1102
+          ],
+          "scale_multiplier": 1.15
+        }
+      ]
+    }
+  ]
+}

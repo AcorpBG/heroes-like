@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          660,
+          627
+        ]
+      ],
+      "anchor": [
+        350,
+        577
+      ],
+      "source": "unit_sunvault_daybreak_colossus_veteran_source-alpha.png",
+      "scale": 0.4634146341463415,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          680,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        940,
+        578
+      ],
+      "source": "unit_sunvault_daybreak_colossus_veteran_source-alpha.png",
+      "scale": 0.4634146341463415,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          660,
+          1254
+        ]
+      ],
+      "anchor": [
+        351,
+        1169
+      ],
+      "source": "unit_sunvault_daybreak_colossus_veteran_source-alpha.png",
+      "scale": 0.4634146341463415,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          680,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        954,
+        1169
+      ],
+      "source": "unit_sunvault_daybreak_colossus_veteran_source-alpha.png",
+      "scale": 0.4634146341463415,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        318,
+        588
+      ],
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_daybreak_colossus_veteran_actions-alpha.png",
+      "scale": 0.4726829268292683
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        889,
+        606
+      ],
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_daybreak_colossus_veteran_actions-alpha.png",
+      "scale": 0.4726829268292683
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        344,
+        1151
+      ],
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_daybreak_colossus_veteran_actions-alpha.png",
+      "scale": 0.4726829268292683
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        925,
+        1122
+      ],
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "scale_multiplier": 1.02,
+      "source": "unit_sunvault_daybreak_colossus_veteran_actions-alpha.png",
+      "scale": 0.4726829268292683
+    }
+  ]
+}

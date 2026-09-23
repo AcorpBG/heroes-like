@@ -1,0 +1,144 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_aurora_ballista_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png",
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              627
+            ]
+          ],
+          "anchor": [
+            300,
+            593
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              650,
+              0,
+              1254,
+              627
+            ]
+          ],
+          "anchor": [
+            927,
+            593
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              627,
+              645,
+              1254
+            ]
+          ],
+          "anchor": [
+            300,
+            1194
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png"
+        },
+        {
+          "rects": [
+            [
+              650,
+              627,
+              1254,
+              1254
+            ]
+          ],
+          "anchor": [
+            927,
+            1194
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png"
+        },
+        {
+          "clip": "attack",
+          "name": "attack_windup",
+          "anchor": [
+            300,
+            639
+          ],
+          "scale_multiplier": 1.1,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              627,
+              680
+            ]
+          ]
+        },
+        {
+          "clip": "attack",
+          "name": "attack_release",
+          "anchor": [
+            891,
+            642
+          ],
+          "scale_multiplier": 1.1,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+          "rects": [
+            [
+              627,
+              0,
+              1254,
+              680
+            ]
+          ]
+        },
+        {
+          "clip": "hit",
+          "name": "hit_recoil",
+          "anchor": [
+            326,
+            1165
+          ],
+          "scale_multiplier": 1.1,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              680,
+              627,
+              1254
+            ]
+          ]
+        },
+        {
+          "clip": "dead",
+          "name": "fallen",
+          "anchor": [
+            927,
+            1165
+          ],
+          "scale_multiplier": 1.1,
+          "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+          "rects": [
+            [
+              627,
+              680,
+              1254,
+              1254
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

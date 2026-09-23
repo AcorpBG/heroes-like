@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_thornwake_stagknot_runners_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+    "res://art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "8f4499e35a19eca289c72ec3a1b361ff283703238da9078c2ffc626a77b1abf1",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        362,
+        548
+      ],
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_source-alpha.png",
+      "scale": 0.46530612244897956,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        985,
+        549
+      ],
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_source-alpha.png",
+      "scale": 0.46530612244897956,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        362,
+        1175
+      ],
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_source-alpha.png",
+      "scale": 0.46530612244897956,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        985,
+        1176
+      ],
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_source-alpha.png",
+      "scale": 0.46530612244897956,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        366,
+        597
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.47926530612244894
+    },
+    {
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        880,
+        597
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.47926530612244894
+    },
+    {
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          610,
+          1254
+        ]
+      ],
+      "anchor": [
+        408,
+        1160
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.47926530612244894
+    },
+    {
+      "source": "unit_brasshollow_debt_engine_exactors_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          610,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        912,
+        1190
+      ],
+      "scale_multiplier": 1.03,
+      "scale": 0.47926530612244894
+    }
+  ]
+}

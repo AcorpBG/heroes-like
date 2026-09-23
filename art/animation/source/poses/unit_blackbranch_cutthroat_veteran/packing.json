@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        398,
+        500
+      ],
+      "source": "unit_blackbranch_cutthroat_veteran_idle-alpha.png",
+      "scale": 0.4578313253012048,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1130,
+        500
+      ],
+      "source": "unit_blackbranch_cutthroat_veteran_idle-alpha.png",
+      "scale": 0.4578313253012048,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          512,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        398,
+        1010
+      ],
+      "source": "unit_blackbranch_cutthroat_veteran_idle-alpha.png",
+      "scale": 0.4578313253012048,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          768,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1130,
+        1010
+      ],
+      "source": "unit_blackbranch_cutthroat_veteran_idle-alpha.png",
+      "scale": 0.4578313253012048,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_blackbranch_cutthroat_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          768,
+          512
+        ]
+      ],
+      "anchor": [
+        420,
+        505
+      ],
+      "scale": 0.4578313253012048
+    },
+    {
+      "source": "unit_blackbranch_cutthroat_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          768,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1070,
+        503
+      ],
+      "scale": 0.4578313253012048
+    },
+    {
+      "source": "unit_blackbranch_cutthroat_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          512,
+          710,
+          1024
+        ]
+      ],
+      "anchor": [
+        479,
+        978
+      ],
+      "scale": 0.4578313253012048
+    },
+    {
+      "source": "unit_blackbranch_cutthroat_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          710,
+          512,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1130,
+        965
+      ],
+      "scale": 0.4578313253012048
+    }
+  ]
+}

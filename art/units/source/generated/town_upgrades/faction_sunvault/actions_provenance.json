@@ -1,0 +1,1104 @@
+[
+  {
+    "unit_id": "unit_shard_guard_veteran",
+    "name": "Dawnwall Custodians",
+    "prompt": "Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Dawnwall Custodians. Melee crystal pavise infantry; broad interlocking shield with a sunrise notch, long hooked crystal spear, ivory layered shoulder guards. Distinguish the spear silhouette and weight-bearing shield stance.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_source.png",
+    "reference_sha256": "f786fde84a2d61588b15b8c652b32a9bce33c7d7a76e0f08658dee56592fb3cb",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "edits": [
+      {
+        "prompt": "Framing correction ONLY. Shrink each of these four whole figures, including its entire weapon, to75percent current size and center inside its own quadrant. Restore the complete hooked spear blade tip in the upper-right thrust pose. All four full body and spear silhouettes need50pixels transparent space to every quadrant edge. Preserve exactly the four articulated combat/death poses, exact character design, equipment, rendering and true transparent background. No overlap. The lower-right figure stays fallen horizontal and inert.",
+        "reference": "unit_shard_guard_veteran_actions_master_v1.png",
+        "reason": "Repair full spear margins",
+        "reference_sha256": "deeae479091e951b8ba99da221e5830b9df563ca89f5b75b9f7903ac0f3316a9"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_actions.png",
+    "source_sha256": "8cb6aadbd0d5c2982fe786267e9721fd913bb67dc7da30a8292a7d34c1856ff4",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          315,
+          563
+        ],
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.3
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          857,
+          560
+        ],
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.3
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          332,
+          1132
+        ],
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.3
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          921,
+          1105
+        ],
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_shard_guard_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.3
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_shard_wardens_veteran",
+    "name": "Mirrorback Wardens",
+    "prompt": "Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Mirrorback Wardens. Melee infantry with a radial mirror shield projecting rigid facet fins, short crystal sword and mirrored backplate. No bow or staff; shield and sword must read clearly.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_source.png",
+    "reference_sha256": "4a054f6ab02701ba24b95bf40f5d6b28e1fb6c4e63a3a69d1cdc07afd1be360a",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_actions.png",
+    "source_sha256": "017cce8c87ed94897531dc354d2a8f14b62e30d89760c40f12d695f2ebab5f75",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          299,
+          641
+        ],
+        "scale_multiplier": 1.05,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            680
+          ]
+        ]
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          879,
+          641
+        ],
+        "scale_multiplier": 1.05,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            680
+          ]
+        ]
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          420,
+          1183
+        ],
+        "scale_multiplier": 1.05,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            680,
+            627,
+            1254
+          ]
+        ]
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          940,
+          1166
+        ],
+        "scale_multiplier": 1.05,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_shard_wardens_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            680,
+            1254,
+            1254
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_prism_adept_veteran",
+    "name": "Glarewing Harriers",
+    "prompt": "Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Glarewing Harriers. Light ranged skirmisher with twin-lens bow, swept wing-shaped shoulder prisms and short wind-split scarf. A mobile archer silhouette, not a melee warden.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_source.png",
+    "reference_sha256": "252529bb4cee84cee7a7634aa28af70366dc236d7eb1ce4bfe8bc5b00b9a755f",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "edits": [
+      {
+        "prompt": "Repair framing only: shrink each whole figure with bow, scarf, hair and arrow to75percent its current size, center each in own quadrant, preserve exactly these four poses and character design. Restore any clipped scarf at left edge. Full bow and full hair/scarf must have50pixels empty transparent clearance from all edges. Keep actual transparent RGBA, four poses2x2, lower-right fallen, no ground. Shorten the released bolt so it fits fully inside upper-right quadrant. Same body scale across poses.",
+        "reference": "unit_prism_adept_veteran_actions_master_v1.png",
+        "reason": "Repair scarf and projectile margins",
+        "reference_sha256": "793c080b5bd40ba44824926770b048cc6322732b15564b789b664c472d0b3862"
+      },
+      {
+        "prompt": "Change ONLY the top-left windup pose's BOW ORIENTATION: cant the same twin-lens bow strongly diagonally forward, about45degrees from vertical, with upper bow tip NO HIGHER than the character's own head/hair. Her hands prepare to draw at chest height. This is a compact ready-to-fire windup. Keep the same character/body anatomy,size, exact feet and head position, all colors and equipment. Preserve the other3poses pixel-identical if possible. Do not shrink the character. Same true transparent RGBA,2x2 layout and margins. Full bow must fit; no new effects. Apply that same compact forward-diagonal bow orientation to the upper-right release and lower-left hit pose too, retaining their distinct arm/body actions. No bow tip may extend above its character head. Fallen pose unchanged.",
+        "reference": "unit_prism_adept_veteran_actions_master_v2.png",
+        "reason": "Compact bow orientations for battle canvas while preserving body scale",
+        "reference_sha256": "39a681bf45c998db7e054c3aa8b39e5ad57ad4d4d38d74ecf445f700fa1ed0fc"
+      }
+    ],
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_actions.png",
+    "source_sha256": "f3b22f8e5879089ea81960814736c2d50524e4d6651140456c8b934fcf7c46b3",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          336,
+          592
+        ],
+        "scale_multiplier": 1.35,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ]
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          922,
+          595
+        ],
+        "scale_multiplier": 1.35,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ]
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          407,
+          1165
+        ],
+        "scale_multiplier": 1.35,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ]
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          921,
+          1060
+        ],
+        "scale_multiplier": 1.35,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_prism_adept_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_prism_adepts_veteran",
+    "name": "Lattice Conjurers",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Lattice Conjurers. Ranged robed optical mage carrying a focus wand inside a suspended hexagonal lens cage, angular crystal headpiece and layered ivory mantle. Clearly different from bow-armed harriers.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_source.png",
+    "reference_sha256": "2fb7fcd32396b366f70e91435082a7078602287de05c0db551621b0c01f7e8a6",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_actions.png",
+    "source_sha256": "91adf2903120e1da1fc4c6c6abef2c1c8c0d9940b99271c3eb69c206258633ac",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          287,
+          607
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ]
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          828,
+          616
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ]
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          285,
+          1162
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ]
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          917,
+          1128
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_prism_adepts_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_aurora_ballista_veteran",
+    "name": "Sunline Repeater",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Sunline Repeater. Compact ranged crystal siege engine with three parallel bolt rails, rotating prism drum, brass calibration wheel and planted tripod supports. An engine, not a humanoid or giant. For this siege engine: windup has elevated cradle with loaded rails and drum twisted; release has rails driven forward in mechanical recoil with a small bolt visible; hit tips cradle sideways with flexed tripod joints; dead is a tipped-over inert engine on its side with folded legs and dark crystal drum. No human limbs.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_source.png",
+    "reference_sha256": "654533af1c16cbe9bf8f4604a9dab5b479c2ee7f8af41ac12f347c4f2a750db4",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+    "source_sha256": "85875e784a3abbd0c7f2e9e7acbdd65cf86594ca4becbd7fddedf581fced0981",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          300,
+          639
+        ],
+        "scale_multiplier": 1.1,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            680
+          ]
+        ]
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          891,
+          642
+        ],
+        "scale_multiplier": 1.1,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            680
+          ]
+        ]
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          326,
+          1165
+        ],
+        "scale_multiplier": 1.1,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+        "rects": [
+          [
+            0,
+            680,
+            627,
+            1254
+          ]
+        ]
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          927,
+          1165
+        ],
+        "scale_multiplier": 1.1,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_aurora_ballista_veteran_actions.png",
+        "rects": [
+          [
+            627,
+            680,
+            1254,
+            1254
+          ]
+        ]
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_mirror_duelists_veteran",
+    "name": "Parallax Blades",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Parallax Blades. Melee duelist with two curved mirror sabres of unequal length, split asymmetric cloak and forked mirrored mask. Low forward stance and opposing blade arcs.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_source.png",
+    "reference_sha256": "a9387c423045b28902093ef30ea83e2d916607a97e69b0e6d4611e3e8021d0fe",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png",
+    "source_sha256": "20ccc55d5e28d64e2eba66ae52771f1e1df02d171a873534a50b9b66ee209db2",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          260,
+          598
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.4,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          843,
+          604
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.4,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          368,
+          1151
+        ],
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.4,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          925,
+          1124
+        ],
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.4,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_mirror_duelists_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_resonant_choristers_veteran",
+    "name": "Harmonic Precentors",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Harmonic Precentors. Ranged choir mage with tall tuning-fork staff, floating concentric chime rings around shoulders and throat, long pleated ivory robes and segmented crystal halo.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_source.png",
+    "reference_sha256": "92c94d241a74d217a74bcba80eae59e292eff201cb2b1698e41c97699060b16c",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_actions.png",
+    "source_sha256": "107c552530bd649940fbd4473ae8f2a8c825a663c21e57a55aae91f0d2436018",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          299,
+          607
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            650
+          ]
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          848,
+          607
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            650
+          ]
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          373,
+          1132
+        ],
+        "rects": [
+          [
+            0,
+            650,
+            580,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          915,
+          1120
+        ],
+        "rects": [
+          [
+            580,
+            650,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.33,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_resonant_choristers_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_noonfacet_sentinels_veteran",
+    "name": "Meridian Lockguards",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Meridian Lockguards. Heavy melee sentinel with tall sundial shield, mechanical locking polearm ending in two crystal hooks, noon-disc helmet and broad articulated greaves.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_source.png",
+    "reference_sha256": "e0b6c12b8befb9f07ba7021de87691f9cbd64741419e463a22baff62e870cb1a",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png",
+    "source_sha256": "3dd7d88e0e36427b96621f556eb9825a8b17f4e6a85a39ce4080ca3ab5411ec2",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          350,
+          610
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.18,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          870,
+          610
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.18,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          415,
+          1155
+        ],
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.18,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          932,
+          1127
+        ],
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.18,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_noonfacet_sentinels_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_solar_array_striders_veteran",
+    "name": "Heliostat Pathfinders",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Heliostat Pathfinders. Melee long-legged articulated construct with broad folding solar arrays over its back and a forward-reaching survey blade, exposed brass joints and crystal feet. Construct action: winding back survey blade with solar arrays folding, thrusting blade forward with all four legs braced, recoiling with bent leg joints, and inert collapsed side-on construct with folded legs/back arrays. No cannon or projectile.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_source.png",
+    "reference_sha256": "d943da6cc0747b7debdea64f2db6b75f14f94823742ddf959659636698a6996d",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_actions.png",
+    "source_sha256": "99bb9e397e2f6836cc0d09c1f982208369a5cb302b621690a0934b36a85bda5d",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          339,
+          598
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          883,
+          595
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          329,
+          1138
+        ],
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          913,
+          1140
+        ],
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_solar_array_striders_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+    "name": "Horizon Arbiters",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Horizon Arbiters. Ranged survey mage bearing a huge offset circular sighting lens and ornate survey staff, long geometric tabard and narrow horizon-shaped visor. Keep the large aperture as the dominant silhouette.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_source.png",
+    "reference_sha256": "7ff77c73068c90f8e608f3f2fa26317d0968279541709c96a4e7322474571179",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png",
+    "source_sha256": "fe5d889398601cf5e721538650061a816330d59c5e3dbc541ec2c271b3660d02",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          360,
+          630
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            660
+          ]
+        ],
+        "scale_multiplier": 1.16,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          872,
+          644
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            660
+          ]
+        ],
+        "scale_multiplier": 1.16,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          445,
+          1171
+        ],
+        "rects": [
+          [
+            0,
+            660,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.16,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          925,
+          1115
+        ],
+        "rects": [
+          [
+            627,
+            660,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.16,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_zenith_lensbearers_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+    "name": "Corona Bulwarks",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Corona Bulwarks. Massive MELEE walking crystal shield-body with layered radial armor fins and heavy short ram arms, a warm solar core hidden behind interlocking facets. Absolutely no ballista rails or ranged weapon. This is a MELEE shield construct: winding heavy ram fists back, then a powerful forward punch with torso twist; recoil must flex knees and move arms; dead is collapsed face-down/side-on heap with dark solar core, no gun or cannon.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_source.png",
+    "reference_sha256": "2e66c4f60e6ec0d5f30fe174081edae5d04ad1a556babc7589738ea82e6a7dc1",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_actions.png",
+    "source_sha256": "7662dce610eb42e2fd4cd6512bd187d21038079cc9a04e8ec9a440342f8a85a5",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          320,
+          550
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.25,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          906,
+          550
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.25,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          382,
+          1145
+        ],
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.25,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          940,
+          1146
+        ],
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.25,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_aurora_ballistae_veteran_actions.png"
+      }
+    ]
+  },
+  {
+    "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+    "name": "Firstlight Colossus",
+    "prompt": "FRAMING PRIORITY: create SMALL full figures with a lot of EMPTY TRANSPARENT SPACE around them, each body about400pixels high, rather than filling each cell. NO part of a weapon or garment may reach a sheet edge. Create an ACTION sprite sheet for the exact upgraded creature in the reference image. The reference is an identity/design sheet, not a pose layout to repeat. Preserve its exact anatomy, armor, colors, face and every piece of equipment. True transparent RGBA background. Hand-painted original fantasy strategy game sprite art. Strict2x2 arrangement of FOUR distinct complete articulated poses, one pose per quadrant. Upper-left ATTACK WINDUP: draw weapon or arms back visibly; upper-right ATTACK RELEASE/IMPACT: swing/thrust/discharge toward screen right with changed arms and torso; lower-left HIT RECOIL: flinch backward, knees bent, guard displaced; lower-right FALLEN/DEAD: clearly collapsed inert body lying horizontally on its side, all equipment lowered to ground beside it. No gore. No ground tile, no scenery, no text, no borders, no big magical clouds. Same three-quarter camera facing screen right, identical CHARACTER BODY SCALE in every pose even prone. Each full figure and its whole weapon must fit within central70percent of its quadrant with large transparent gutters. Do not overlap or clip. Fallen body lies on ground, NOT a fourth standing pose. Use expressive physical limb articulation, not rotations or translations of idle cutouts. Character: Firstlight Colossus. Towering RANGED construct with an immense chest solar aperture, orbiting crown of independent focusing lenses, heavy planted legs and broad heat-shedding shoulder plates. No hand sword; radiant aperture is its weapon. This is a RANGED chest-aperture construct: windup braces arms and opens chest shutters, release chest aperture shines with a compact ray tip while arms spread, hit torso recoils with arms folding in, dead lies collapsed inert with closed dark chest and crown lenses collapsed beside head. No hand sword, no hand cannon.",
+    "reference": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_source.png",
+    "reference_sha256": "95d5ef3a1e9b3895bfbba012a0e0b6a322110ca3fb8fc4c0a21a0034d85f1ce4",
+    "generated_date": "2026-09-23",
+    "generator": "built-in image_gen",
+    "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png",
+    "source_sha256": "f28bf16704364d38672348e89d8286df7dd0c358a4a709884d345abd3e5826cb",
+    "source_dimensions": [
+      1254,
+      1254
+    ],
+    "review": "Four original articulated action poses visually inspected: attack windup, release, hit recoil, and collapsed fallen body. All equipment and full body visible; accepted upgraded idle design retained.",
+    "runtime_frames": [
+      {
+        "clip": "attack",
+        "name": "attack_windup",
+        "anchor": [
+          318,
+          588
+        ],
+        "rects": [
+          [
+            0,
+            0,
+            627,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+      },
+      {
+        "clip": "attack",
+        "name": "attack_release",
+        "anchor": [
+          889,
+          606
+        ],
+        "rects": [
+          [
+            627,
+            0,
+            1254,
+            627
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+      },
+      {
+        "clip": "hit",
+        "name": "hit_recoil",
+        "anchor": [
+          344,
+          1151
+        ],
+        "rects": [
+          [
+            0,
+            627,
+            627,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+      },
+      {
+        "clip": "dead",
+        "name": "fallen",
+        "anchor": [
+          925,
+          1122
+        ],
+        "rects": [
+          [
+            627,
+            627,
+            1254,
+            1254
+          ]
+        ],
+        "scale_multiplier": 1.02,
+        "source": "art/units/source/generated/town_upgrades/faction_sunvault/unit_sunvault_daybreak_colossus_veteran_actions.png"
+      }
+    ]
+  }
+]

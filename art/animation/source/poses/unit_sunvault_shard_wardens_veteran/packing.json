@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          640,
+          627
+        ]
+      ],
+      "anchor": [
+        342,
+        615
+      ],
+      "source": "unit_sunvault_shard_wardens_veteran_source-alpha.png",
+      "scale": 0.3756177924217463,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          650,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        950,
+        615
+      ],
+      "source": "unit_sunvault_shard_wardens_veteran_source-alpha.png",
+      "scale": 0.3756177924217463,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          645,
+          1254
+        ]
+      ],
+      "anchor": [
+        334,
+        1239
+      ],
+      "source": "unit_sunvault_shard_wardens_veteran_source-alpha.png",
+      "scale": 0.3756177924217463,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          650,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        960,
+        1239
+      ],
+      "source": "unit_sunvault_shard_wardens_veteran_source-alpha.png",
+      "scale": 0.3756177924217463,
+      "name": "idle_3"
+    },
+    {
+      "clip": "attack",
+      "name": "attack_windup",
+      "anchor": [
+        299,
+        641
+      ],
+      "scale_multiplier": 1.05,
+      "source": "unit_sunvault_shard_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          680
+        ]
+      ],
+      "scale": 0.3943986820428336
+    },
+    {
+      "clip": "attack",
+      "name": "attack_release",
+      "anchor": [
+        879,
+        641
+      ],
+      "scale_multiplier": 1.05,
+      "source": "unit_sunvault_shard_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          680
+        ]
+      ],
+      "scale": 0.3943986820428336
+    },
+    {
+      "clip": "hit",
+      "name": "hit_recoil",
+      "anchor": [
+        420,
+        1183
+      ],
+      "scale_multiplier": 1.05,
+      "source": "unit_sunvault_shard_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          0,
+          680,
+          627,
+          1254
+        ]
+      ],
+      "scale": 0.3943986820428336
+    },
+    {
+      "clip": "dead",
+      "name": "fallen",
+      "anchor": [
+        940,
+        1166
+      ],
+      "scale_multiplier": 1.05,
+      "source": "unit_sunvault_shard_wardens_veteran_actions-alpha.png",
+      "rects": [
+        [
+          627,
+          680,
+          1254,
+          1254
+        ]
+      ],
+      "scale": 0.3943986820428336
+    }
+  ]
+}

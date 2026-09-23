@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    272
+  ],
+  "columns": 4,
+  "ground_margin": 32,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          659,
+          596
+        ]
+      ],
+      "anchor": [
+        378,
+        582
+      ],
+      "source": "unit_embercourt_beacon_lectors_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          659,
+          0,
+          1318,
+          596
+        ]
+      ],
+      "anchor": [
+        965,
+        582
+      ],
+      "source": "unit_embercourt_beacon_lectors_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          596,
+          659,
+          1193
+        ]
+      ],
+      "anchor": [
+        377,
+        1143
+      ],
+      "source": "unit_embercourt_beacon_lectors_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          659,
+          596,
+          1318,
+          1193
+        ]
+      ],
+      "anchor": [
+        948,
+        1145
+      ],
+      "source": "unit_embercourt_beacon_lectors_veteran_idle-alpha.png",
+      "scale": 0.39652173913043476,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_embercourt_beacon_lectors_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          659,
+          596
+        ]
+      ],
+      "anchor": [
+        351,
+        559
+      ],
+      "scale": 0.39652173913043476
+    },
+    {
+      "source": "unit_embercourt_beacon_lectors_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          659,
+          0,
+          1318,
+          596
+        ]
+      ],
+      "anchor": [
+        880,
+        560
+      ],
+      "scale": 0.39652173913043476
+    },
+    {
+      "source": "unit_embercourt_beacon_lectors_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          596,
+          659,
+          1193
+        ]
+      ],
+      "anchor": [
+        315,
+        1114
+      ],
+      "scale": 0.39652173913043476
+    },
+    {
+      "source": "unit_embercourt_beacon_lectors_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          659,
+          596,
+          1318,
+          1193
+        ]
+      ],
+      "anchor": [
+        927,
+        1074
+      ],
+      "scale": 0.39652173913043476
+    }
+  ]
+}

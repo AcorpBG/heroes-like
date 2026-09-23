@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        345,
+        583
+      ],
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png",
+      "scale": 0.4681724845995893,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        968,
+        582
+      ],
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png",
+      "scale": 0.4681724845995893,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        345,
+        1206
+      ],
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png",
+      "scale": 0.4681724845995893,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        968,
+        1207
+      ],
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_source-alpha.png",
+      "scale": 0.4681724845995893,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        336,
+        599
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4681724845995893
+    },
+    {
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        922,
+        596
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4681724845995893
+    },
+    {
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          610,
+          1254
+        ]
+      ],
+      "anchor": [
+        371,
+        1170
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4681724845995893
+    },
+    {
+      "source": "unit_brasshollow_boiler_rivetcasters_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          610,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        918,
+        1157
+      ],
+      "scale_multiplier": 1.0,
+      "scale": 0.4681724845995893
+    }
+  ]
+}

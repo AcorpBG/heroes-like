@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "created_utc_date": "2026-09-23",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+  "sha256": "95a6bd5d1c489ef277408a58ab9b0cd1dcb3e8418bb500b8f2120e770c9449bb",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "prompt_file": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.prompt.txt",
+  "reference_files": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran.png",
+      "role": "Accepted original upgraded idle design; preserve character identity, equipment, camera and rendering.",
+      "sha256": "bca8cb0fa23eaf7fa1495a65d85658de5c9b3e3155e4990d33b4fb83d776c42f"
+    }
+  ],
+  "selected_actions": [
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          622,
+          656
+        ]
+      ],
+      "anchor": [
+        326,
+        655
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          622,
+          0,
+          1254,
+          656
+        ]
+      ],
+      "anchor": [
+        852,
+        655
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          656,
+          570,
+          1254
+        ]
+      ],
+      "anchor": [
+        344,
+        1219
+      ]
+    },
+    {
+      "source": "art/units/source/generated/town_upgrades/faction_veilmourn/unit_veilmourn_mourning_lanterns_veteran_actions.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          570,
+          656,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        930,
+        1210
+      ]
+    }
+  ],
+  "visual_review": "Four original articulated battle poses: attack windup, attack release, hit recoil and truly fallen corpse; transparent source exterior, no ground or gore."
+}

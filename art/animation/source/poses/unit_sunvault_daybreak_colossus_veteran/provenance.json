@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_sunvault_daybreak_colossus_veteran/unit_sunvault_daybreak_colossus_veteran_source-alpha.png": "a46ab886c4125116d64184ae17a5b21e533d9422c27e2dd2f8cb71b336053e55",
+    "res://art/animation/source/poses/unit_sunvault_daybreak_colossus_veteran/unit_sunvault_daybreak_colossus_veteran_actions-alpha.png": "d18284d05ca24d152ac66c76c2a4622e6bc9d35e2caf77cdd6d5bf8f6290ffbb"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "1d23636e49ff744d5349f4e3c6d518ee114d106d35f6634208b011378d4d553c",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

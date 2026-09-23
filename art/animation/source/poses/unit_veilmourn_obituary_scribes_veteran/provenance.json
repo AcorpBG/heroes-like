@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_veilmourn_obituary_scribes_veteran/unit_veilmourn_obituary_scribes_veteran-alpha.png": "0d579652964e877fd54e2b07a89435177c21cdda32b359b6606e50dbac119607",
+    "res://art/animation/source/poses/unit_veilmourn_obituary_scribes_veteran/unit_veilmourn_obituary_scribes_veteran_actions-alpha.png": "d088bea4a67bd699aa9d50829acbeb7c45bef55ca85b8d81162afb6e5374b428"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "571ebd0421dee282a402d485b9e78bf69427e8ada4f60c41b51f15e27563720b",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

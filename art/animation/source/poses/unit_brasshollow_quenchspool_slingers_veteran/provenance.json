@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers_veteran",
+  "sources": {
+    "res://art/animation/source/poses/unit_brasshollow_quenchspool_slingers_veteran/unit_brasshollow_quenchspool_slingers_veteran_source-alpha.png": "587b85f9c1560999021d28766d06911a6c58918ad1a4996cbcccde0583acb909",
+    "res://art/animation/source/poses/unit_brasshollow_quenchspool_slingers_veteran/unit_brasshollow_quenchspool_slingers_veteran_actions-alpha.png": "68365d203224ce0521afa1531dd900ab741e7c512c95eb3e7a69abf3255d7da9"
+  },
+  "handoff": "reviewed_handoff.json",
+  "packing_tool": "tools/integrate_town_creature_upgrades.py",
+  "recipe": "packing.json",
+  "atlas_sha256": "f31f17daf43c19e5ee8a721892985d60eef1d4c5f3edc6a51414ff640869b588",
+  "policy": "Original articulated paintings; common scale and anatomical ground anchor; no synthesized pose."
+}

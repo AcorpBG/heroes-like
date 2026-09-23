@@ -1,0 +1,140 @@
+{
+  "units": [
+    {
+      "unit_id": "unit_thornwake_stagknot_runners_veteran",
+      "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran.png",
+      "frames": [
+        {
+          "rects": [
+            [
+              0,
+              0,
+              648,
+              599
+            ]
+          ],
+          "anchor": [
+            349.0,
+            542
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              648,
+              0,
+              1305,
+              599
+            ]
+          ],
+          "anchor": [
+            938.0,
+            543
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              0,
+              599,
+              662,
+              1205
+            ]
+          ],
+          "anchor": [
+            354.5,
+            1166
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran.png"
+        },
+        {
+          "rects": [
+            [
+              662,
+              599,
+              1305,
+              1205
+            ]
+          ],
+          "anchor": [
+            971.0,
+            1167
+          ],
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran.png"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              0,
+              625,
+              612
+            ]
+          ],
+          "anchor": [
+            252.0,
+            599
+          ],
+          "clip": "attack",
+          "name": "attack_windup"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran_actions.png",
+          "rects": [
+            [
+              625,
+              0,
+              1306,
+              612
+            ]
+          ],
+          "anchor": [
+            943.5,
+            595
+          ],
+          "clip": "attack",
+          "name": "attack_release"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran_actions.png",
+          "rects": [
+            [
+              0,
+              612,
+              603,
+              1205
+            ]
+          ],
+          "anchor": [
+            276.5,
+            1158
+          ],
+          "clip": "hit",
+          "name": "hit_recoil"
+        },
+        {
+          "source": "art/units/source/generated/town_upgrades/faction_thornwake/unit_thornwake_stagknot_runners_veteran_actions.png",
+          "rects": [
+            [
+              603,
+              612,
+              1306,
+              1205
+            ]
+          ],
+          "anchor": [
+            950,
+            1146
+          ],
+          "clip": "dead",
+          "name": "fallen"
+        }
+      ],
+      "alpha_noise_cutoff": 8,
+      "sha256": "fe4e3cdf6a89e161b8afd66fe5c330686565c80dd275a14e5972c29296f7a263"
+    }
+  ]
+}

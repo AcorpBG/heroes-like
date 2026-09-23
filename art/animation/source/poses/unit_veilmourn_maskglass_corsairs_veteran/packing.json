@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "status": "original_town_upgrade_poses",
+  "frame_size": [
+    512,
+    256
+  ],
+  "columns": 4,
+  "ground_margin": 16,
+  "frames": [
+    {
+      "rects": [
+        [
+          0,
+          0,
+          601,
+          627
+        ]
+      ],
+      "anchor": [
+        350,
+        582
+      ],
+      "source": "unit_veilmourn_maskglass_corsairs_veteran-alpha.png",
+      "scale": 0.4277673545966229,
+      "name": "idle_0"
+    },
+    {
+      "rects": [
+        [
+          601,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        965,
+        582
+      ],
+      "source": "unit_veilmourn_maskglass_corsairs_veteran-alpha.png",
+      "scale": 0.4277673545966229,
+      "name": "idle_1"
+    },
+    {
+      "rects": [
+        [
+          0,
+          627,
+          628,
+          1254
+        ]
+      ],
+      "anchor": [
+        354,
+        1205
+      ],
+      "source": "unit_veilmourn_maskglass_corsairs_veteran-alpha.png",
+      "scale": 0.4277673545966229,
+      "name": "idle_2"
+    },
+    {
+      "rects": [
+        [
+          628,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        964,
+        1205
+      ],
+      "source": "unit_veilmourn_maskglass_corsairs_veteran-alpha.png",
+      "scale": 0.4277673545966229,
+      "name": "idle_3"
+    },
+    {
+      "source": "unit_veilmourn_maskglass_corsairs_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_windup",
+      "rects": [
+        [
+          0,
+          0,
+          627,
+          627
+        ]
+      ],
+      "anchor": [
+        360,
+        615
+      ],
+      "scale": 0.4277673545966229
+    },
+    {
+      "source": "unit_veilmourn_maskglass_corsairs_veteran_actions-alpha.png",
+      "clip": "attack",
+      "name": "attack_release",
+      "rects": [
+        [
+          627,
+          0,
+          1254,
+          627
+        ]
+      ],
+      "anchor": [
+        888,
+        609
+      ],
+      "scale": 0.4277673545966229
+    },
+    {
+      "source": "unit_veilmourn_maskglass_corsairs_veteran_actions-alpha.png",
+      "clip": "hit",
+      "name": "hit_recoil",
+      "rects": [
+        [
+          0,
+          627,
+          627,
+          1254
+        ]
+      ],
+      "anchor": [
+        356,
+        1177
+      ],
+      "scale": 0.4277673545966229
+    },
+    {
+      "source": "unit_veilmourn_maskglass_corsairs_veteran_actions-alpha.png",
+      "clip": "dead",
+      "name": "fallen",
+      "rects": [
+        [
+          627,
+          627,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        953,
+        1162
+      ],
+      "scale": 0.4277673545966229
+    }
+  ]
+}
