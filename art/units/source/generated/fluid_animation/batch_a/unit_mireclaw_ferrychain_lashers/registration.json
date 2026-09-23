@@ -1,6 +1,6 @@
 {
-  "scale_reason": "One scale per source preserves the existing 223px standing body: attack .645, reactions .60, death .435. Ground anchors follow soles and grounded collapse, never per-frame body rescaling. Support original .60 and larger two-pose hand correction .275 share the same body/head size.",
-  "review_notes": "Original lash, recoil, brace, collapse and repaired same-arm support signal awaiting native review. Repeated-leading-foot walk remains withheld.",
+  "scale_reason": "One scale per source preserves the existing 223px standing body: attack .645, reactions .60, death .435. Ground anchors follow soles and grounded collapse, never per-frame body rescaling. Support original .60 and larger two-pose hand correction .275 share the same body/head size. Movement v6 uses fixed .66 anatomical scale to match existing 223px body height, pelvic horizontal anchors and sole baselines; spaced source bodies use the unchanged alpha cutoff of 8.",
+  "review_notes": "All required clips visually accepted. Source v6 reciprocal gait uses isolated original bodies; prior accepted actions preserved. Candidate 106 and live 120 focused checks passed; no full suite.",
   "generation_lineage": "generation_outputs.json",
   "timing": {
     "attack": {
@@ -10,6 +10,9 @@
     "cast": {
       "contact_frame": 4,
       "frame_msec": 115
+    },
+    "move": {
+      "frame_msec": 110
     }
   },
   "sheets": [
@@ -349,6 +352,88 @@
       "clips": [
         "cast",
         "cast"
+      ]
+    },
+    {
+      "stem": "move_v6",
+      "scale": 0.66,
+      "seeds": [
+        [
+          277,
+          140
+        ],
+        [
+          767,
+          140
+        ],
+        [
+          277,
+          520
+        ],
+        [
+          767,
+          520
+        ],
+        [
+          277,
+          900
+        ],
+        [
+          767,
+          900
+        ],
+        [
+          277,
+          1280
+        ],
+        [
+          767,
+          1280
+        ]
+      ],
+      "anchors": [
+        [
+          273,
+          366
+        ],
+        [
+          765,
+          366
+        ],
+        [
+          271,
+          750
+        ],
+        [
+          764,
+          750
+        ],
+        [
+          272,
+          1132
+        ],
+        [
+          765,
+          1132
+        ],
+        [
+          264,
+          1502
+        ],
+        [
+          760,
+          1502
+        ]
+      ],
+      "clips": [
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move",
+        "move"
       ]
     }
   ],
