@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_sunvault_mirror_duelists",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/attack_v1.png": "5baa2a3ab83fcba1eebdc8fadd7b886fbe5eb7d9241bc59ff0172d22b2d36748",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/reactions_v1.png": "ae7d54381dd0b7b8bf4e88555b128bfa2f061d3b26eed47518d4bfafe9fd68d1",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/death_v1.png": "919ce9456d37b35ac7559d843f5922563793731c7b72d4f5f5b23599a92f4bb9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/cast_v1.png": "a7051d62fae784421c569ff4c6cf4aea803fc7b7dbb9cde04bbdabc6f42e6f69",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_mirror_duelists/move_v1.png": "f031fcbbf4caefad36bc9b700d63bb94c70661220c101e509fce2a4ab25ba21d"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "move",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo native-scale review: reciprocal near/far stepping with bent-knee passing, sword anticipation/slash/recovery, shoulder recoil, dedicated shield brace, raised-blade salute with lowered head and eight-stage grounded collapse. Original blade and shield remain in the same hands, body scale preserved; existing articulated sword-lift idle retained. All required clips visually accepted."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "f0eb03d9879a4b5a0b1aaa99a97b6a7471e066d736955c116e2294a3bde36659",
+  "atlas_sha256": "05e36bf22336ae4febdc4d548a9bb7ac295effc8990f968d862ad4d7c2df7f02",
+  "texture_bytes_rgba": 19455744
+}

@@ -1,0 +1,367 @@
+{
+  "scale_reason": "One scale per source preserves the existing 223px standing body: attack .645, reactions .60, death .435. Ground anchors follow soles and grounded collapse, never per-frame body rescaling. Support original .60 and larger two-pose hand correction .275 share the same body/head size.",
+  "review_notes": "Original lash, recoil, brace, collapse and repaired same-arm support signal awaiting native review. Repeated-leading-foot walk remains withheld.",
+  "generation_lineage": "generation_outputs.json",
+  "timing": {
+    "attack": {
+      "contact_frame": 4,
+      "frame_msec": 110
+    },
+    "cast": {
+      "contact_frame": 4,
+      "frame_msec": 115
+    }
+  },
+  "sheets": [
+    {
+      "stem": "attack_v1",
+      "scale": 0.645,
+      "seeds": [
+        [
+          270,
+          150
+        ],
+        [
+          800,
+          150
+        ],
+        [
+          315,
+          520
+        ],
+        [
+          740,
+          530
+        ],
+        [
+          250,
+          920
+        ],
+        [
+          735,
+          915
+        ],
+        [
+          300,
+          1270
+        ],
+        [
+          787,
+          1270
+        ]
+      ],
+      "anchors": [
+        [
+          260,
+          366
+        ],
+        [
+          815,
+          366
+        ],
+        [
+          325,
+          753
+        ],
+        [
+          702,
+          752
+        ],
+        [
+          200,
+          1118
+        ],
+        [
+          704,
+          1108
+        ],
+        [
+          301,
+          1497
+        ],
+        [
+          792,
+          1497
+        ]
+      ],
+      "clips": [
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack",
+        "attack"
+      ]
+    },
+    {
+      "stem": "reactions_v1",
+      "scale": 0.6,
+      "seeds": [
+        [
+          350,
+          170
+        ],
+        [
+          770,
+          180
+        ],
+        [
+          315,
+          550
+        ],
+        [
+          788,
+          560
+        ],
+        [
+          305,
+          950
+        ],
+        [
+          792,
+          950
+        ],
+        [
+          325,
+          1310
+        ],
+        [
+          789,
+          1310
+        ]
+      ],
+      "anchors": [
+        [
+          317,
+          394
+        ],
+        [
+          776,
+          394
+        ],
+        [
+          325,
+          786
+        ],
+        [
+          775,
+          786
+        ],
+        [
+          317,
+          1151
+        ],
+        [
+          776,
+          1151
+        ],
+        [
+          327,
+          1499
+        ],
+        [
+          775,
+          1499
+        ]
+      ],
+      "clips": [
+        "hit",
+        "hit",
+        "hit",
+        "hit",
+        "defend",
+        "defend",
+        "defend",
+        "defend"
+      ]
+    },
+    {
+      "stem": "death_v1",
+      "scale": 0.435,
+      "seeds": [
+        [
+          287,
+          235
+        ],
+        [
+          785,
+          260
+        ],
+        [
+          285,
+          740
+        ],
+        [
+          787,
+          757
+        ],
+        [
+          325,
+          1100
+        ],
+        [
+          810,
+          1110
+        ],
+        [
+          290,
+          1420
+        ],
+        [
+          810,
+          1420
+        ]
+      ],
+      "anchors": [
+        [
+          340,
+          null
+        ],
+        [
+          814,
+          null
+        ],
+        [
+          317,
+          null
+        ],
+        [
+          825,
+          null
+        ],
+        [
+          295,
+          null
+        ],
+        [
+          790,
+          null
+        ],
+        [
+          275,
+          null
+        ],
+        [
+          790,
+          null
+        ]
+      ],
+      "clips": [
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death",
+        "death"
+      ]
+    },
+    {
+      "stem": "cast_v1",
+      "scale": 0.6,
+      "seeds": [
+        [
+          260,
+          165
+        ],
+        [
+          769,
+          165
+        ],
+        [
+          763,
+          541
+        ],
+        [
+          255,
+          929
+        ],
+        [
+          265,
+          1320
+        ],
+        [
+          778,
+          1320
+        ]
+      ],
+      "anchors": [
+        [
+          246,
+          389
+        ],
+        [
+          764,
+          389
+        ],
+        [
+          760,
+          772
+        ],
+        [
+          246,
+          1155
+        ],
+        [
+          246,
+          1526
+        ],
+        [
+          764,
+          1526
+        ]
+      ],
+      "clips": [
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast",
+        "cast"
+      ]
+    },
+    {
+      "stem": "cast_hands_v2",
+      "scale": 0.275,
+      "seeds": [
+        [
+          430,
+          350
+        ],
+        [
+          1285,
+          350
+        ]
+      ],
+      "anchors": [
+        [
+          410,
+          823
+        ],
+        [
+          1270,
+          823
+        ]
+      ],
+      "clips": [
+        "cast",
+        "cast"
+      ]
+    }
+  ],
+  "phase_order": {
+    "cast": [
+      0,
+      1,
+      6,
+      2,
+      3,
+      7,
+      4,
+      5
+    ]
+  }
+}

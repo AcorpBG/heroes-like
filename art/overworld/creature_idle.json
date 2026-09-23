@@ -752,25 +752,25 @@
         229
       ],
       "painted_extent": 224,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_ferrychain_lashers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_ferrychain_lashers.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
         152,
-        7,
+        15,
         328,
-        247
+        255
       ],
-      "source_sha256": "97ffd08cb5144a63dd950242b962ac33241a6499ef508b3f18d73188d5000e37",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_ferrychain_lashers/provenance.json",
+      "source_sha256": "28f2a7b83d759ee371dfaa9f84b8be391b86d818eda0bc2b84b46eba37bb8c5e",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_ferrychain_lashers/provenance.json",
       "sha256": "3a2b074a4da35f34ecf9b01afc0ce11a6267f9e47f9ccc87602a31a4b387c1be"
     },
     "unit_mireclaw_sporewake_chanters": {
@@ -962,25 +962,25 @@
         220
       ],
       "painted_extent": 215,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_mirror_duelists.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_mirror_duelists.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        144,
+        76,
         28,
-        333,
+        265,
         259
       ],
-      "source_sha256": "f0eb03d9879a4b5a0b1aaa99a97b6a7471e066d736955c116e2294a3bde36659",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_mirror_duelists/provenance.json",
+      "source_sha256": "05e36bf22336ae4febdc4d548a9bb7ac295effc8990f968d862ad4d7c2df7f02",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_mirror_duelists/provenance.json",
       "sha256": "b745ece343d99b4cf21e1cbd0ea4707a49faa9e4a256f5b0bfc68d6a57046348"
     },
     "unit_sunvault_resonant_choristers": {
