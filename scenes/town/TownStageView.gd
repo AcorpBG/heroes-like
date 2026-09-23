@@ -172,7 +172,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png",
 	},
 	"faction_thornwake": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_thornwake_cleared_orchard.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png",
 	},

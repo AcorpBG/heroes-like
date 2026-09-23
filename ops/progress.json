@@ -22332,29 +22332,29 @@
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Art pass remains in progress across factions. Embercourt, Mireclaw and Sunvault each have all 51 original building stages and matching icons, with 460, 464 and 464 focused Windows checks respectively. Sunvault support/dwelling completion adds 35 original paintings for both T1-T5 branches and T6/T7; a revised barracks tower/bridge makes its upgrade visibly distinct. All 23 active plots stay grounded and selectable on cleared plateau terraces. Both final developed branches and all building icons visually reviewed; 51 master hashes and 102 scene/icon bindings verified. Original masters, exact prompts, prior revision provenance and alpha-preserving packaging retained; wiki updated. Remaining art integration: Thornwake, Brasshollow and Veilmourn. Creature identities/animations and match balance are separate pending passes. No full suite or Linux execution."
+      "notes": "Embercourt, Mireclaw, Sunvault and Thornwake each have all 51 original building stages and icons. Focused Windows art checks: 460, 464, 464 and 464 respectively; Thornwake halls additionally passed47. Thornwake orchard-caravan paintings, cleared orchard backdrop and authored placements preserve23 accessible active plots in both dwelling branches. All Thornwake icons and final developed compositions reviewed; source masters, exact prompts, provenance and hashes preserved; wiki scoped to integrated art. Brasshollow and Veilmourn integration remains in progress. No full suite or Linux execution."
     },
     {
       "id": "town-overhaul-creature-upgrades-20260922",
       "title": "Individual creature upgrade identities, gameplay and animated art",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+      "notes": "All72 individual names and supported combat designs integrated locally, with stable upgrade IDs for saves. Six faction combat probes cover actual trigger/non-trigger behavior. Original upgraded artwork and articulated idle poses are being produced and packed across all six factions; final import and live battle/overworld rendering checks remain. Not complete or fully committed."
     },
     {
       "id": "town-overhaul-match-balance-20260922",
       "title": "Full-match town development playtesting and balance tuning",
-      "status": "pending",
+      "status": "in_progress",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Owner-authorized completion goal. Completion requires shipped behavior/content and focused validation; planning alone is not completion."
+      "notes": "Parallel Windows full-match runs across all six factions use actual scene actions and exact save/resume state. Initial games reach genuine terminal defeats but lack late-tier rare-resource and artifact-commerce coverage. Improved legal economic policies are running; no cost/growth tuning justified yet. Host certificate/shader errors remain a reported validation limitation. Not complete."
     },
     {
       "id": "feature-common-town-development-20260921",
