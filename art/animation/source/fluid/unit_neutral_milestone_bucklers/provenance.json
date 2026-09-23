@@ -1,0 +1,26 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png": "7cb6967f7e35c035d54d83d3e1bfed3e24f2c19005f63273f5c62c2dc84a5523",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Spear regrip idle, forward thrust, recoil and shield brace reviewed at battle scale. Gait needs reciprocal-leg correction; death and support crops still contain foreign fragments and are withheld."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "56ddbedefe1b1145e63313a1edae9997979b71a5cb423c4bccc1fdadb4f92c28",
+  "atlas_sha256": "5b5979c0f61102f2273c8527399ead75d5fc16685b9f319acfc040e3ed9e96cf",
+  "texture_bytes_rgba": 9984000
+}

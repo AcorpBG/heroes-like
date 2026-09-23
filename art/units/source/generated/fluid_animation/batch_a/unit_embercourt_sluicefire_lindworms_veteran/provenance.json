@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "tool": "image_gen.imagegen built-in",
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v1_rejected.png",
+      "source_sha256": "2357fd60ee4955420b2b2f1d9e47446a68f140a432b131b0336a45b2a7df4b42",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-b27d3ce1-95e1-4580-9461-0011c1aa54f4.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b5c2a237429c238886d165ba2c0a0f543d5b96a43fdd33980245dad189f6ae0c",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: edge clipping"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v2.png",
+      "source_sha256": "2db682d22edd4b5fdb74d6638ef5100ad988a0c0aca7282cfcfe69115faf6c73",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-4cec29ec-6270-4e56-9838-7442c4a5b77a.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v2.prompt.txt",
+      "prompt_sha256": "78a0cac22357d0feef790e8d94af860275acb32486082673f054a90f39b03260",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v1_rejected.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v1_rejected.png",
+      "source_sha256": "0e412371df4e9ebd7972a7715f800da5d3e7076bdd10c88ea52ecfb82e267fc0",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-3424b556-7ada-4679-adc3-595817442b7c.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "1d53fc0546322a1827889aa4b040404ee2f56b52478826c043418ba184778073",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: edge clipping"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v2.png",
+      "source_sha256": "a805390ea34858330034f88ac5f4d645e73c1f6cfae2eeb8a175ddf2d2dfee59",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-a761a9e5-e457-42aa-b56b-3b953bfa393a.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v2.prompt.txt",
+      "prompt_sha256": "9d9924e3e898f7fb052f4e0dfa3006e1f5baf956ba7e262e4864038d3f9fab7c",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v1_rejected.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v1_rejected.png",
+      "source_sha256": "d393fa4a5c419c32577a2872d9f01153b9a04de1a4a3e6c55f67fb010d2cd7f5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-b8976f82-e53a-41a9-8ee5-4bce373c8b9e.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "5c2aba6b3029e0c37a6e15d89c10c1a55f46eaa0a9bf8dddaa3465cb1a566a0d",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v2.png"
+      ],
+      "status": "rejected: overlap/edge clipping"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v2.png",
+      "source_sha256": "87112a2296fdbc13b83776be5894efa42cb669eaa947f5de0cc0ec8e1842bc41",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-1addf91d-3237-484a-b3a3-4785fb8ed216.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v2.prompt.txt",
+      "prompt_sha256": "e11b642f1b72e1334d47831c33891bce1daa9fba3fc4913630ab41cf74604378",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v1_rejected.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/reactions_v1.png",
+      "source_sha256": "bcb77ea1227e58039fcb51710542c19cf3eb10fc830c50873ba2c9c1415399b5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-a22a1e59-1f65-4be3-b630-5644d060163b.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "b04f31010ad63d0ef457e5144c73f818ab70ced8472ee2b0d3092d03a641be41",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/death_v1.png",
+      "source_sha256": "1a8be4585993a507c3e01b5df9d8a4e314748aaac12c16706f4b85e36feb68b4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-1bf2666d-37af-438e-83f7-7e1d8214cd69.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "9a0717669b1b04d9485dc1742003c4ae234c5b08cc620a696c6a0cce543fa9f4",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v1.png",
+      "source_sha256": "898dc081a8f8d05c31a0afd1f8b94714acf740f7587070b556d187b379661de9",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-9bd3cf39-0988-490e-b661-68a2eaf16d0c.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "27d6146e818ebf01d72be7059d2fdb177bf2c8a40a239886aab8756e92dfd550",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_sluicefire_lindworms_veteran/unit_embercourt_sluicefire_lindworms_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: touching silhouettes"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v2.png",
+      "source_sha256": "1b0dd9b5183a05bd8f753b792f578ccf1279850141372625394959b337f78cde",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-a74765f1-bd34-48a1-8734-05b3bfc953fb.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v2.prompt.txt",
+      "prompt_sha256": "af6435d8238261cae96b20609c889508f57877476174fb19ccc49b4766232319",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v1.png"
+      ],
+      "status": "candidate"
+    }
+  ]
+}

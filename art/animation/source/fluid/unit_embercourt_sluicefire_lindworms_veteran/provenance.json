@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/idle_v2.png": "2db682d22edd4b5fdb74d6638ef5100ad988a0c0aca7282cfcfe69115faf6c73",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/move_v2.png": "a805390ea34858330034f88ac5f4d645e73c1f6cfae2eeb8a175ddf2d2dfee59",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/attack_v2.png": "87112a2296fdbc13b83776be5894efa42cb669eaa947f5de0cc0ec8e1842bc41",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/reactions_v1.png": "bcb77ea1227e58039fcb51710542c19cf3eb10fc830c50873ba2c9c1415399b5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/death_v1.png": "1a8be4585993a507c3e01b5df9d8a4e314748aaac12c16706f4b85e36feb68b4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_sluicefire_lindworms_veteran/cast_v2.png": "1b0dd9b5183a05bd8f753b792f578ccf1279850141372625394959b337f78cde"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Game-scale review: anatomy-appropriate serpentine locomotion and articulated neck/tail, bite windup and withdrawal, coil defense and progressive grounded collapse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "61b8b5c76498d860e7fd33be74f415b1ad78475f64e8945f20b0180a7a596710",
+  "atlas_sha256": "41174b77715f2f76fa2c0b3a3a72f86b96d1c98d82fd9ffe76922c0a516b84c2",
+  "texture_bytes_rgba": 24492160
+}

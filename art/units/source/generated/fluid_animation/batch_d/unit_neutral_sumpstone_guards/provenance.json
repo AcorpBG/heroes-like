@@ -1,0 +1,657 @@
+{
+  "schema_version": 1,
+  "tool": "built_in_image_gen",
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+  "generations": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_v1.png",
+      "sha256": "897d25047f0b1a7ed05c9f8a2626838c64670685a6fa6385a013712fcd21c26d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_v1.prompt.txt",
+      "prompt_sha256": "009b6086413461f13ce0103baac4d5d249b10648c5de81075cc3356b033769da",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-d2b2ccb4-59c0-4762-aeb2-45f9a4637dc4.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "rejected",
+      "rejection_reason": "Same lead-foot shuffle rather than alternating gait."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "sha256": "7c345e8be71e5be474ed2da39bbf6150620d39eff3c3235bd20159533d360d00",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.prompt.txt",
+      "prompt_sha256": "e594151a23fde4f6793113b37251e31d9ef4e08e9e5013fbc08ba8955c022918",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-b137b9f0-148d-4759-b6d9-d84f73ca8443.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "sha256": "4e93926927eab9ff553f9a5cae1b4eadcad7974290de4e7a3cbc218386cfa5a2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.prompt.txt",
+      "prompt_sha256": "92c4f660f5cbb9d504723c7e4c1b3e4e57bfd0cf6cd4804b0e626bbede7f1170",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-9df71ca4-c24a-48a3-b244-3337915f31f8.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "sha256": "3313f9d306f64edf97cef11f0b862565b240839ce730317c3b2bb3ffc93a3b71",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.prompt.txt",
+      "prompt_sha256": "d245b7c77aa91db26bd0d8b5627ee775d66ecf43401cb3277eb2843e8c962123",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-f4f60b55-8bce-4787-8b1f-138103350d14.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v1.png",
+      "sha256": "bf6ecc78a708bfb1f04896c35510cfd067c282a72191db1f80b0379db90bd482",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v1.prompt.txt",
+      "prompt_sha256": "6ebc606153a82d3141ebf13c639df8fa362062ec45aeddc2957acfe8a273711a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-3c561bfd-f9d2-434d-9c42-e61d41d60cf3.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "rejected",
+      "rejection_reason": "Raised pickaxe touches preceding pose in source sheet."
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "sha256": "0943f8122572f151f59223923077105fd43fa5dc953000fc2cd44c4929960db6",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.prompt.txt",
+      "prompt_sha256": "4710067643420eca9658fdfc343abc4611857d45579977efe1f902bc155e37fd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-d4a69faf-2052-4097-91f6-544d49dbe3dc.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v1.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v1_rejected.png",
+      "sha256": "d732d01dcdee22aaaf785b82eccc5fbae21b6362259a44ab0ba811318b0308f0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "8c468ab72ab367180d060239a5d7ee099d619d2e4eef49f8733572fef38994a0",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-9d8f60bd-3a39-4401-9e97-0cd38a8d0124.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v2.png",
+        "art/units/source/curated/unit_neutral_sumpstone_guards.png"
+      ]
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v2.png",
+      "sha256": "f36a309ee3aa9022e86dc9b73e693da2c6bbed12be22767d642d445562f2897e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v2.prompt.txt",
+      "prompt_sha256": "fca5bdab7781b8ca434e94804395ca1059e2a5cdd22b1895944f1695736974f6",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-7f30aa6e-fe6e-48cf-86e2-184fdb821699.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null,
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v1_rejected.png"
+      ]
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v1_rejected.png",
+      "sha256": "2ccc6a5dfa4d99a169b1c353cb9e825b9ffe4d768a80b67d7a5ba36d8b17a9f8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v1.prompt.txt",
+      "prompt_sha256": "723489cdf88b9eb2052623172bf5efc72ca873988dfb3c1cc19511bc33ee2be5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-ffbdd51d-187e-40a5-b28d-ab93b0e9f1ef.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v2.png"
+      ]
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v2_rejected.png",
+      "sha256": "82fff865ab6d110fbe9132e4e47061cd84f40818e26263ba012eec5dbcbdc46f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v2.prompt.txt",
+      "prompt_sha256": "18dc461f4b248d2a84f8ee252fe3ce3c6c9ea3f4cf2343da9dc5b621599b5810",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-a296635b-f66d-4761-99c6-779a52a0f6a6.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "rejected",
+      "rejection_reason": "same lead leg repeats instead of alternating full gait",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v1_rejected.png"
+      ]
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "sha256": "4c68e453edb65b4e906c46a32585df2d61c59f5be279cd583832e7a4a8891d9c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.prompt.txt",
+      "prompt_sha256": "ec41c11b56e1e1cc758d6adeb06819721424bedb93a94feb70315e6ef4a9fdbf",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-9789-78e2-b817-2ac75766ba4d/exec-bb466efe-e6ee-41dd-ae73-f454d5d90fe5.png",
+      "reference": "art/units/source/curated/unit_neutral_sumpstone_guards.png",
+      "status": "pending_visual_review",
+      "rejection_reason": null,
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v2_rejected.png"
+      ]
+    }
+  ],
+  "extraction": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v2.png",
+      "source_bounds": [
+        78,
+        83,
+        822,
+        848
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.212
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_contacts_v2.png",
+      "source_bounds": [
+        966,
+        83,
+        1697,
+        843
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.212
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        37,
+        14,
+        518,
+        502
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        529,
+        13,
+        1007,
+        507
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        1025,
+        13,
+        1501,
+        508
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        36,
+        513,
+        513,
+        999
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        530,
+        512,
+        1009,
+        981
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/move_inbetweens_v3.png",
+      "source_bounds": [
+        1025,
+        509,
+        1502,
+        1003
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.331
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        91,
+        10,
+        466,
+        384
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        578,
+        18,
+        924,
+        380
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        99,
+        384,
+        464,
+        801
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        597,
+        387,
+        953,
+        799
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        98,
+        815,
+        485,
+        1141
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        572,
+        826,
+        961,
+        1155
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        92,
+        1140,
+        466,
+        1515
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/attack_v1.png",
+      "source_bounds": [
+        580,
+        1145,
+        952,
+        1516
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.433
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        31,
+        17,
+        527,
+        404
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        543,
+        16,
+        985,
+        405
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        35,
+        385,
+        529,
+        789
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        548,
+        396,
+        998,
+        798
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        32,
+        766,
+        513,
+        1183
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        579,
+        790,
+        968,
+        1177
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        113,
+        1174,
+        525,
+        1523
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/reactions_v1.png",
+      "source_bounds": [
+        603,
+        1165,
+        963,
+        1523
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.419
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        61,
+        18,
+        517,
+        448
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        586,
+        101,
+        1006,
+        447
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        70,
+        498,
+        531,
+        841
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        547,
+        545,
+        1010,
+        865
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        17,
+        933,
+        553,
+        1195
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        562,
+        969,
+        1017,
+        1210
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        41,
+        1312,
+        546,
+        1501
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/death_v1.png",
+      "source_bounds": [
+        550,
+        1312,
+        1019,
+        1501
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.377
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_00.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        114,
+        56,
+        450,
+        378
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_01.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        608,
+        54,
+        927,
+        378
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_02.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        146,
+        407,
+        448,
+        755
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_03.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        626,
+        406,
+        932,
+        755
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        148,
+        764,
+        446,
+        1136
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        623,
+        775,
+        932,
+        1132
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        127,
+        1175,
+        448,
+        1491
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png",
+      "master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/cast_v2.png",
+      "source_bounds": [
+        585,
+        1174,
+        929,
+        1491
+      ],
+      "alpha_noise_cutoff": 8,
+      "method": "Exact connected foreground pixel extraction with alpha<=8 removed; no repainting, warping or interpolation.",
+      "scale": 0.503
+    }
+  ]
+}

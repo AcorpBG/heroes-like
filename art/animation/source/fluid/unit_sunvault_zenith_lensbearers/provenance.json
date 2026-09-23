@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png": "62303699700f746e011f946abb56311a8f70212940b38d489e413f89f868b185",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.png": "4e7a97f2e1e04ca23c4d9c5622762d422324d961afa18cd38119df74ab97f581",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png": "585ba3870ba0d8eab6ed2b1327acd55985641484495de5254896147c9098795e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.png": "681752de01cc78dab052ce675bf97b52a21875ca0f2dab503a22f4e2773fe739",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png": "db122cd017c87e06296b2949ba6fe8ff78d07afc5109a58872c9bd67fd833b63"
+  },
+  "accepted_clips": [
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Game-scale review: articulated weapon idle, lens thrust, charged release, guard, physical support and grounded collapse. Movement remains unaccepted due repeated leading foot."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "ec34f2f9e7c4494654cbcf0338cde0823be3626a97e128a9e32e2c8daa179417",
+  "atlas_sha256": "be7c4107515129d9ff32d62c3c80d75b59d7175efe1c44ec998c6dfaee8bd355",
+  "texture_bytes_rgba": 23887872
+}

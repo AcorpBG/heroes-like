@@ -1,0 +1,83 @@
+{
+  "move": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-225522c9-b971-4b7c-a064-a1ebefd1fba6.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png"
+    ],
+    "source_sha256": "edfa5807dd93941d4749fdff9eac0b5c939a0d03a839861be578accbee6f455b",
+    "prompt_sha256": "5847c117e956b2178468a4f2e05adfa31cc806d19942c715502ca9889398aa9d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2"
+    }
+  },
+  "attack": {
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd2-7f01-7350-87bd-42078beb90b9/exec-e9e5beb4-9bff-46cb-978c-ea25686be9cf.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png"
+    ],
+    "source_sha256": "7cb6967f7e35c035d54d83d3e1bfed3e24f2c19005f63273f5c62c2dc84a5523",
+    "prompt_sha256": "20afc5272963a4719ccadc89ad4cb0231e2b974ac58bb376dc714034ea0fd760",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2"
+    }
+  },
+  "reactions": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-da7ec6df-5a16-45de-80ee-6f4240595830.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png"
+    ],
+    "source_sha256": "f30540dd641016fc13f80c30b084dfde0864bd9513c5bf7eb7a44d71f3553b8c",
+    "prompt_sha256": "84c2b3eb0e220deb936789d223d031f5be671d6c96aecd30db26657c7ae615a3",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2"
+    }
+  },
+  "death": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-ae7e0290-a750-4bed-9b39-f286e5136738.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png"
+    ],
+    "source_sha256": "c212c00950a0273b9313955766408957186a1ae435e9507e8f552982f469e516",
+    "prompt_sha256": "a8218878143d4d9cc82ac02147211e85bc34259d29dab72142645ee247c49c32",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2"
+    }
+  },
+  "cast": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-87b13e40-281f-4fe8-9484-41f4911c7514.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png"
+    ],
+    "source_sha256": "fc48a9ac263f6370d8746b775ada2a183741c55e136e976e4ef4adc43de4e65f",
+    "prompt_sha256": "be15abc53dfa8a2dad7172b20eab60d44e7a2f57c94e7fe04505eabdb7539a83",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_milestone_bucklers.png": "bb66cd02103eaad2bef2b89d2e3cae55e44f43e8fe60223455ae6e1ec34edfe2"
+    }
+  },
+  "attack_v1_rejected": {
+    "reason": "Spear tip reversed in windup",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd2-7f01-7350-87bd-42078beb90b9/exec-34f84761-3534-4c13-a0f1-46c0c0b8bccf.png"
+  },
+  "attack_v2_rejected": {
+    "reason": "Targeted edit did not fix reversed spear",
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd2-7f01-7350-87bd-42078beb90b9/exec-0e172152-0b18-468f-9abc-91b2d99abd2a.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v1.png"
+    ]
+  }
+}

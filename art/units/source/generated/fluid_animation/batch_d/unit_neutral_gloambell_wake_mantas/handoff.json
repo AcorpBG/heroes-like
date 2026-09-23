@@ -1,0 +1,1658 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_gloambell_wake_mantas",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_0",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              391,
+              370
+            ]
+          ],
+          "anchor": [
+            262,
+            373
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            38,
+            57,
+            429,
+            427
+          ]
+        },
+        {
+          "name": "move_1",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              432,
+              333
+            ]
+          ],
+          "anchor": [
+            292,
+            336
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            451,
+            94,
+            883,
+            427
+          ]
+        },
+        {
+          "name": "move_2",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              497,
+              295
+            ]
+          ],
+          "anchor": [
+            352,
+            303
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            835,
+            127,
+            1332,
+            422
+          ]
+        },
+        {
+          "name": "move_3",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              395,
+              230
+            ]
+          ],
+          "anchor": [
+            274,
+            223
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            1357,
+            207,
+            1752,
+            437
+          ]
+        },
+        {
+          "name": "move_4",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              434,
+              245
+            ]
+          ],
+          "anchor": [
+            284,
+            274
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            16,
+            600,
+            450,
+            845
+          ]
+        },
+        {
+          "name": "move_5",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              429,
+              326
+            ]
+          ],
+          "anchor": [
+            284,
+            350
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            459,
+            524,
+            888,
+            850
+          ]
+        },
+        {
+          "name": "move_6",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              424,
+              349
+            ]
+          ],
+          "anchor": [
+            275,
+            374
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            912,
+            500,
+            1336,
+            849
+          ]
+        },
+        {
+          "name": "move_7",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              405,
+              359
+            ]
+          ],
+          "anchor": [
+            274,
+            384
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1.png",
+          "source_master_rect": [
+            1357,
+            489,
+            1762,
+            848
+          ]
+        },
+        {
+          "name": "attack_0",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              410,
+              296
+            ]
+          ],
+          "anchor": [
+            235,
+            323
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            65,
+            67,
+            475,
+            363
+          ]
+        },
+        {
+          "name": "attack_1",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              370,
+              251
+            ]
+          ],
+          "anchor": [
+            244,
+            288
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            568,
+            102,
+            938,
+            353
+          ]
+        },
+        {
+          "name": "attack_2",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              312
+            ]
+          ],
+          "anchor": [
+            230,
+            355
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            70,
+            419,
+            441,
+            731
+          ]
+        },
+        {
+          "name": "attack_3",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              409,
+              266
+            ]
+          ],
+          "anchor": [
+            255,
+            323
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            557,
+            451,
+            966,
+            717
+          ]
+        },
+        {
+          "name": "attack_4",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              422,
+              213
+            ]
+          ],
+          "anchor": [
+            229,
+            316
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            71,
+            842,
+            493,
+            1055
+          ]
+        },
+        {
+          "name": "attack_5",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              375,
+              283
+            ]
+          ],
+          "anchor": [
+            236,
+            356
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            576,
+            802,
+            951,
+            1085
+          ]
+        },
+        {
+          "name": "attack_6",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              404,
+              294
+            ]
+          ],
+          "anchor": [
+            227,
+            356
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            73,
+            1186,
+            477,
+            1480
+          ]
+        },
+        {
+          "name": "attack_7",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              422,
+              294
+            ]
+          ],
+          "anchor": [
+            250,
+            357
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2.png",
+          "source_master_rect": [
+            562,
+            1185,
+            984,
+            1479
+          ]
+        },
+        {
+          "name": "ranged_0",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              408,
+              300
+            ]
+          ],
+          "anchor": [
+            246,
+            313
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            54,
+            77,
+            462,
+            377
+          ]
+        },
+        {
+          "name": "ranged_1",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              435,
+              270
+            ]
+          ],
+          "anchor": [
+            258,
+            307
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            554,
+            83,
+            989,
+            353
+          ]
+        },
+        {
+          "name": "ranged_2",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              280
+            ]
+          ],
+          "anchor": [
+            246,
+            339
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            54,
+            435,
+            498,
+            715
+          ]
+        },
+        {
+          "name": "ranged_3",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              448,
+              236
+            ]
+          ],
+          "anchor": [
+            266,
+            329
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            546,
+            445,
+            994,
+            681
+          ]
+        },
+        {
+          "name": "ranged_4",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              462,
+              263
+            ]
+          ],
+          "anchor": [
+            254,
+            354
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            46,
+            804,
+            508,
+            1067
+          ]
+        },
+        {
+          "name": "ranged_5",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              455,
+              274
+            ]
+          ],
+          "anchor": [
+            273,
+            354
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            539,
+            804,
+            994,
+            1078
+          ]
+        },
+        {
+          "name": "ranged_6",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              408,
+              293
+            ]
+          ],
+          "anchor": [
+            252,
+            374
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            48,
+            1168,
+            456,
+            1461
+          ]
+        },
+        {
+          "name": "ranged_7",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              412,
+              303
+            ]
+          ],
+          "anchor": [
+            277,
+            385
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2.png",
+          "source_master_rect": [
+            535,
+            1157,
+            947,
+            1460
+          ]
+        },
+        {
+          "name": "idle_0",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              454,
+              269
+            ]
+          ],
+          "anchor": [
+            254,
+            307
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            46,
+            83,
+            500,
+            352
+          ]
+        },
+        {
+          "name": "idle_1",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              269
+            ]
+          ],
+          "anchor": [
+            258,
+            307
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            554,
+            83,
+            997,
+            352
+          ]
+        },
+        {
+          "name": "idle_2",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              432,
+              301
+            ]
+          ],
+          "anchor": [
+            226,
+            339
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            74,
+            435,
+            506,
+            736
+          ]
+        },
+        {
+          "name": "idle_3",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              427,
+              317
+            ]
+          ],
+          "anchor": [
+            247,
+            357
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            565,
+            417,
+            992,
+            734
+          ]
+        },
+        {
+          "name": "idle_4",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              432,
+              284
+            ]
+          ],
+          "anchor": [
+            235,
+            340
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            65,
+            818,
+            497,
+            1102
+          ]
+        },
+        {
+          "name": "idle_5",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              449,
+              288
+            ]
+          ],
+          "anchor": [
+            257,
+            339
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            555,
+            819,
+            1004,
+            1107
+          ]
+        },
+        {
+          "name": "idle_6",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              460,
+              294
+            ]
+          ],
+          "anchor": [
+            253,
+            368
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            47,
+            1174,
+            507,
+            1468
+          ]
+        },
+        {
+          "name": "idle_7",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              443,
+              286
+            ]
+          ],
+          "anchor": [
+            257,
+            360
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1.png",
+          "source_master_rect": [
+            555,
+            1182,
+            998,
+            1468
+          ]
+        },
+        {
+          "name": "hit_0",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              394,
+              318
+            ]
+          ],
+          "anchor": [
+            211,
+            304
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            89,
+            86,
+            483,
+            404
+          ]
+        },
+        {
+          "name": "hit_1",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              350,
+              255
+            ]
+          ],
+          "anchor": [
+            230,
+            254
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            582,
+            136,
+            932,
+            391
+          ]
+        },
+        {
+          "name": "hit_2",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              415,
+              301
+            ]
+          ],
+          "anchor": [
+            215,
+            308
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            85,
+            466,
+            500,
+            767
+          ]
+        },
+        {
+          "name": "hit_3",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              402,
+              283
+            ]
+          ],
+          "anchor": [
+            233,
+            290
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            579,
+            484,
+            981,
+            767
+          ]
+        },
+        {
+          "name": "defend_0",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              266
+            ]
+          ],
+          "anchor": [
+            208,
+            316
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            92,
+            842,
+            481,
+            1108
+          ]
+        },
+        {
+          "name": "defend_1",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              344,
+              238
+            ]
+          ],
+          "anchor": [
+            214,
+            300
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            598,
+            858,
+            942,
+            1096
+          ]
+        },
+        {
+          "name": "defend_2",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              381,
+              220
+            ]
+          ],
+          "anchor": [
+            204,
+            335
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            96,
+            1207,
+            477,
+            1427
+          ]
+        },
+        {
+          "name": "defend_3",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              380,
+              237
+            ]
+          ],
+          "anchor": [
+            236,
+            344
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1.png",
+          "source_master_rect": [
+            576,
+            1198,
+            956,
+            1435
+          ]
+        },
+        {
+          "name": "cast_0",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              445,
+              319
+            ]
+          ],
+          "anchor": [
+            249,
+            342
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            51,
+            48,
+            496,
+            367
+          ]
+        },
+        {
+          "name": "cast_1",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              393,
+              280
+            ]
+          ],
+          "anchor": [
+            240,
+            316
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            572,
+            74,
+            965,
+            354
+          ]
+        },
+        {
+          "name": "cast_2",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              407,
+              294
+            ]
+          ],
+          "anchor": [
+            236,
+            349
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            64,
+            425,
+            471,
+            719
+          ]
+        },
+        {
+          "name": "cast_3",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              388,
+              259
+            ]
+          ],
+          "anchor": [
+            234,
+            344
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            578,
+            430,
+            966,
+            689
+          ]
+        },
+        {
+          "name": "cast_4",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              456,
+              295
+            ]
+          ],
+          "anchor": [
+            251,
+            353
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            49,
+            805,
+            505,
+            1100
+          ]
+        },
+        {
+          "name": "cast_5",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              420,
+              291
+            ]
+          ],
+          "anchor": [
+            249,
+            346
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            563,
+            812,
+            983,
+            1103
+          ]
+        },
+        {
+          "name": "cast_6",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              425,
+              303
+            ]
+          ],
+          "anchor": [
+            237,
+            348
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            63,
+            1194,
+            488,
+            1497
+          ]
+        },
+        {
+          "name": "cast_7",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              450,
+              312
+            ]
+          ],
+          "anchor": [
+            258,
+            358
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1.png",
+          "source_master_rect": [
+            554,
+            1184,
+            1004,
+            1496
+          ]
+        },
+        {
+          "name": "death_0",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              409,
+              355
+            ]
+          ],
+          "anchor": [
+            243,
+            358
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            57,
+            72,
+            466,
+            427
+          ]
+        },
+        {
+          "name": "death_1",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              422,
+              290
+            ]
+          ],
+          "anchor": [
+            257,
+            283
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            555,
+            147,
+            977,
+            437
+          ]
+        },
+        {
+          "name": "death_2",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              405,
+              287
+            ]
+          ],
+          "anchor": [
+            228,
+            294
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            72,
+            526,
+            477,
+            813
+          ]
+        },
+        {
+          "name": "death_3",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              424,
+              194
+            ]
+          ],
+          "anchor": [
+            259,
+            197
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            553,
+            623,
+            977,
+            817
+          ]
+        },
+        {
+          "name": "death_4",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              416,
+              168
+            ]
+          ],
+          "anchor": [
+            249,
+            178
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            51,
+            1002,
+            467,
+            1170
+          ]
+        },
+        {
+          "name": "death_5",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              425,
+              155
+            ]
+          ],
+          "anchor": [
+            260,
+            155
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            552,
+            1025,
+            977,
+            1180
+          ]
+        },
+        {
+          "name": "death_6",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              420,
+              138
+            ]
+          ],
+          "anchor": [
+            247,
+            143
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            53,
+            1357,
+            473,
+            1495
+          ]
+        },
+        {
+          "name": "death_7",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              427,
+              134
+            ]
+          ],
+          "anchor": [
+            259,
+            143
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8,
+          "source_master": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1.png",
+          "source_master_rect": [
+            553,
+            1357,
+            980,
+            1491
+          ]
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 105,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "idle": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 130,
+          "loop": true,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            32,
+            33,
+            34,
+            35
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 3
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "death": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 130,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            55
+          ],
+          "frame_msec": 1000,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/move_v1_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/attack_v2_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/ranged_v2_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/idle_v1_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/reaction_v1_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/cast_v1_frame_7.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_0.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_2.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_3.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_4.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_5.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_6.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_gloambell_wake_mantas/death_v1_frame_7.png": 0.46
+      },
+      "source_scale_reason": "All source masters paint approximately 400px-wide original anatomy. Fixed .46 scale for every frame/master preserves existing approximately 190px-wide runtime body envelope; wing extension and grounded collapse remain genuine anatomical changes. Pixel-exact source-component crops, no per-pose normalization.",
+      "visual_review": {
+        "status": "pending",
+        "notes": "Eight real wingbeat, ram, bell broadside, support, idle and collapse poses; four recoil and four folded-wing guard. Original attack/ranged v1 rejected for overlapping cells; roomier v2 replaces those. Some far-side bells occluded behind folded wings/stalks."
+      }
+    }
+  ]
+}

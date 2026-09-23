@@ -1,0 +1,134 @@
+{
+  "id": "unit_neutral_ridgeflare_shots",
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "name": "Ridgeflare Shots",
+  "faction_id": "neutral",
+  "tier": 2,
+  "role": "ranged",
+  "motif": "ranged",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_neutral_ridgeflare_shots.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+  "curated_source_sha256": "277dd758df76c45f3c63a88ecb80ab261729231254ff12be6dc343b872f404ba",
+  "pose_sheet": "res://art/animation/source/fluid/unit_neutral_ridgeflare_shots/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_provenance": "res://art/animation/source/poses/unit_neutral_ridgeflare_shots/provenance.json",
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 2,
+      "indices": [
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        4,
+        5,
+        6
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        7,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 210,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        9,
+        7
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        10,
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        14,
+        15,
+        16
+      ],
+      "loop": false,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        16
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "pose_source_facing": "right",
+  "pose_ground_margin": 20,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

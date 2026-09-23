@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "tool": "image_gen.imagegen built-in",
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/idle_v1.png",
+      "source_sha256": "5cb7e3289ffe5d820df700aafdf8141beb4c5e883fcde594f4b6f3c111384e56",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-8358d527-f0ec-4e23-9772-e9f224ebe815.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b1c25745eefcab04379c0587ab5f76ffcc80d7efb0d59b87f528f68f0b458858",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/move_v1.png",
+      "source_sha256": "b0650e997ce6f00e8836390390c71217df38e6d157f4339510ac53d560789efd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-85738874-eecf-45be-b432-dc14558f0f19.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "24451abb84cb44bd0f7d50313e3156e1409c5af06cbb6476cdb8a167c6b039e5",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/attack_v1.png",
+      "source_sha256": "4f6eb1e009245e4088dda66c040eec711689b6e3fdef84c843f44e50e2e80514",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-20ae6587-542f-443a-8d58-0896378a9983.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "f4c82c198858e249ac5530fa948bce63eaa18315ee6dea79fcb845144b0c0534",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v1.png",
+      "source_sha256": "823bfad6dc65882200de432dbbbf1a3272aa232b91cac84e4490369b15282d0c",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-ffbdcde3-71b6-4641-9521-da4c01672764.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "3031c67350c3c086061e96001e832d70fe3a3ec7d377c7d13eec713d4a5ce23a",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: touching silhouettes"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v2.png",
+      "source_sha256": "f3143147f2521ddf5331f79d32dfb68c449cb36459bcc3088f02f2fb9eadc812",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-273d3e97-fe34-40f3-a631-3ea9b8979382.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v2.prompt.txt",
+      "prompt_sha256": "ae77ec8baeb173317ede3fbf0350bef4d295fffd846b34076e7f53193247866a",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v1.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/death_v1.png",
+      "source_sha256": "c36235699605a9d1d5de219e90f84c6e3c6a55e5630754cf2a50b0d0f33c863e",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-823d06fb-5b93-4f6a-8413-121e4371fc11.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "a9ef1ba5d0d471cf75a57c552b77b02442284bf61307d888267c8aa452960efe",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/cast_v1.png",
+      "source_sha256": "0e942386915e74535c3e71b836c2f5da52b42ca0e6be7ff816d606a161adbf3d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-c9d928d2-617d-4182-b794-645718d81a80.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "bebdb5dd309fa49a1153726d25501c699f649872f803e008856e04810a4f12ec",
+      "references": [
+        "art/animation/source/poses/unit_gorefen_ripper_veteran/unit_gorefen_ripper_veteran_idle-alpha.png"
+      ],
+      "status": "candidate; coordinator acceptance pending"
+    }
+  ]
+}

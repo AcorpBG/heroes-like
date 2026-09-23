@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/idle_v1.png": "b860973275bb2a8dbd6a424ff51070e6421ee144fac140dcaf12bb8b565d61f3",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/move_v2.png": "d6ab851f5fa7e4c7b1d9c496cc327401264821ffba7c735a847d2829e4dab9c9",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/attack_v1.png": "1099163698e15387db24f774c4dcc5275fe1838f4cf7ea5d4d5b0dcddd9bc53d",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/reactions_v1.png": "dea1db27f7c8da367764cd8d65ed553b5d977871df103cdbdd5794d249001a37",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/death_v1.png": "b9cd14360c325d8345fba1e303e95caebcf4db6f071f403d8a6c5e5dcbb98d3d",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/cast_v1.png": "ee2d9f3dd6183081b92d1defa023e5d986910954e62783ed079f14ead5f5bca4"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native phase review: individual piston/paw articulation, readable running cycle, pounce anticipation/recovery, folded brace and settled mechanical corpse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "627d69868ed72f59a716cb05160808dbcb35d6e151f6cd8b1cfabea5196cf435",
+  "atlas_sha256": "1de1b5eff7d213898f7baca00f1ac79abe5b1b92dc539d119501803105fbeb7b",
+  "texture_bytes_rgba": 12995584
+}

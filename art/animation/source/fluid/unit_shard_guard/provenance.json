@@ -1,0 +1,27 @@
+{
+  "unit_id": "unit_shard_guard",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png": "4a3e448ba2d3ba52ef61b9207d3b07c3c8f51b399cc19bf108f53a71611cd10a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png": "ec5082c512866eabe1b7adf7cb6dc614ae6947c3106bea7c2b88bbbdb5245ea5",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png": "8f217529ded5ae66c66484cae7ca3580ddfa5b248b5d229184d587d76e846186"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Game-scale review: sword strike, salute, dedicated shield guard and full collapse. Existing idle lacks sufficient arm movement; new gait repeats the leading foot and remains unaccepted."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "c65954117b1f23e95abfebc3c67621a35660242a0c19ecb03cba62c9ec56cf86",
+  "atlas_sha256": "57d7439abb41613d9291e5566435ac74378b184f146f21ffcd2383e50545cad4",
+  "texture_bytes_rgba": 17366400
+}

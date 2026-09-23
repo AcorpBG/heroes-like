@@ -1,0 +1,714 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_shard_guard",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              113,
+              12,
+              414,
+              384
+            ]
+          ],
+          "anchor": [
+            280,
+            382
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              602,
+              12,
+              892,
+              386
+            ]
+          ],
+          "anchor": [
+            755,
+            382
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              145,
+              388,
+              408,
+              764
+            ]
+          ],
+          "anchor": [
+            267,
+            762
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              540,
+              386,
+              904,
+              764
+            ]
+          ],
+          "anchor": [
+            758,
+            762
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              97,
+              764,
+              547,
+              1117
+            ]
+          ],
+          "anchor": [
+            261,
+            1117
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              608,
+              764,
+              951,
+              1124
+            ]
+          ],
+          "anchor": [
+            745,
+            1120
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              120,
+              1125,
+              413,
+              1507
+            ]
+          ],
+          "anchor": [
+            270,
+            1505
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+          "rects": [
+            [
+              593,
+              1127,
+              896,
+              1513
+            ]
+          ],
+          "anchor": [
+            753,
+            1505
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              107,
+              22,
+              480,
+              380
+            ]
+          ],
+          "anchor": [
+            348,
+            377
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              540,
+              33,
+              864,
+              380
+            ]
+          ],
+          "anchor": [
+            729,
+            377
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              131,
+              380,
+              499,
+              763
+            ]
+          ],
+          "anchor": [
+            350,
+            760
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              553,
+              380,
+              857,
+              763
+            ]
+          ],
+          "anchor": [
+            730,
+            756
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              132,
+              763,
+              485,
+              1118
+            ]
+          ],
+          "anchor": [
+            345,
+            1117
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              563,
+              763,
+              870,
+              1118
+            ]
+          ],
+          "anchor": [
+            730,
+            1100
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              116,
+              1118,
+              500,
+              1479
+            ]
+          ],
+          "anchor": [
+            345,
+            1478
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+          "rects": [
+            [
+              545,
+              1118,
+              881,
+              1472
+            ]
+          ],
+          "anchor": [
+            730,
+            1478
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              80,
+              32,
+              438,
+              447
+            ]
+          ],
+          "anchor": [
+            260,
+            444
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              542,
+              103,
+              955,
+              445
+            ]
+          ],
+          "anchor": [
+            785,
+            444
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              24,
+              518,
+              473,
+              829
+            ]
+          ],
+          "anchor": [
+            256,
+            830
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              513,
+              550,
+              984,
+              833
+            ]
+          ],
+          "anchor": [
+            768,
+            830
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              24,
+              936,
+              494,
+              1152
+            ]
+          ],
+          "anchor": [
+            267,
+            1152
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              515,
+              992,
+              999,
+              1172
+            ]
+          ],
+          "anchor": [
+            768,
+            1158
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              16,
+              1294,
+              507,
+              1472
+            ]
+          ],
+          "anchor": [
+            265,
+            1471
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+          "rects": [
+            [
+              526,
+              1296,
+              1007,
+              1474
+            ]
+          ],
+          "anchor": [
+            768,
+            1471
+          ],
+          "scale": 0.54,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              100,
+              13,
+              386,
+              366
+            ]
+          ],
+          "anchor": [
+            258,
+            364
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              660,
+              13,
+              869,
+              366
+            ]
+          ],
+          "anchor": [
+            753,
+            364
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              177,
+              368,
+              389,
+              758
+            ]
+          ],
+          "anchor": [
+            258,
+            756
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              657,
+              367,
+              867,
+              758
+            ]
+          ],
+          "anchor": [
+            753,
+            756
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              179,
+              758,
+              394,
+              1139
+            ]
+          ],
+          "anchor": [
+            258,
+            1136
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              638,
+              782,
+              868,
+              1139
+            ]
+          ],
+          "anchor": [
+            753,
+            1136
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              97,
+              1152,
+              392,
+              1514
+            ]
+          ],
+          "anchor": [
+            258,
+            1510
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+          "rects": [
+            [
+              581,
+              1152,
+              876,
+              1515
+            ]
+          ],
+          "anchor": [
+            753,
+            1510
+          ],
+          "scale": 0.63,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 3
+        },
+        "death": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 135,
+          "loop": false,
+          "static_frame": 7
+        },
+        "cast": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "preserve_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast"
+      ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/move_v1.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png": 0.61,
+        "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png": 0.54
+      },
+      "source_scale_reason": "Fixed anatomical scale per original: regular sheets ~365px body versus old ~223px idle; salute drawn slightly smaller, death armor drawn larger. No per-pose resizing.",
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Game-scale review: sword strike, salute, dedicated shield guard and full collapse. Existing idle lacks sufficient arm movement; new gait repeats the leading foot and remains unaccepted."
+      },
+      "preserved_accepted_clips": []
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_neutral_miremoon_crownmaws",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/idle_v1.png": "48a77939ee969f3f45d1f759c66315b8b56f8c3c4d8af89fca2fb6be754fe6e8",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/move_v1.png": "4e9aa1b397957ebac089903c3052c10e4ca0a0a3334b8556836d0606615448f6",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/attack_v1.png": "aa9219c4f9bc536c376d895e4b39da0521b161e94654f65d600e56f872b60684",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/reactions_v1.png": "3ee83268823e43c2255f163e5b4f38ab75236c8ffd8574e1430e00705dca7718",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/death_v1.png": "7ba92a478403ca1129c380ab29d0d7b08bc7806f37615f6010a103d4e1c39b75",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_miremoon_crownmaws/cast_v1.png": "5c2b220d59aa5fa2449dd6474f90c4fe755de7424fef7a20622840e19eaaf90c"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native game-scale review: articulated forepaw idle, readable quadruped stride and jaw strike, brace/recoil, progressive grounded collapse and physical roar support."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "836ff3cc6bcb920b77d22769a9e679b086f41a141c80f37def402d3464b1fa4c",
+  "atlas_sha256": "c3dfe0c6b0319dbaf4b9da642d1c0327b5a05894a945d63c991eff024e0c980d",
+  "texture_bytes_rgba": 19756800
+}

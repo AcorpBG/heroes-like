@@ -1,0 +1,93 @@
+{
+  "move": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-00c757e2-a416-4388-bf34-22e62c8fbdec.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "source_sha256": "eb14d5e1dd8ad357afa81b71b66e4d9588197743b424159b3b9cdbad7691b61e",
+    "prompt_sha256": "11906c4b786f365aa7db3c701f71eef53652fff0503c24b7d4dd86755e0a296a",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/move_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/move_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_millstone_slingers.png": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc"
+    }
+  },
+  "attack": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-67adecec-5917-45c0-8e44-fb8d3b4fbcda.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "source_sha256": "6ff38497016b49d82f13ce994ad1004bb4d161befe6902720bf273053a0dd122",
+    "prompt_sha256": "da9f45b3bd41aa99ac207b5ea72d2090facbf69ae1db072a811be3fbedec5daa",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_millstone_slingers.png": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc"
+    }
+  },
+  "ranged": {
+    "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd2-7f01-7350-87bd-42078beb90b9/exec-77bf67c0-a399-455b-b786-3c1c9b50acdf.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v1.png"
+    ],
+    "source_sha256": "ba6e26b06cd8de4ab9eb22f9d379c7397621a89942b796a5fd0af71ffab1a775",
+    "prompt_sha256": "37eeedc7c91b9396006ad3dd143089ab699aadf448fd197049ba5b6d5d13847c",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v1.png": "060a73511ef8318f19181c0bc87549d7b85664dcb4e09325e0e8ecf72582d5bd"
+    }
+  },
+  "reactions": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-dcbeff91-a714-43c0-8173-1f6cb2f951df.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "source_sha256": "9e483de144db8939887830fb2eafd972480919daf3058c494a7264b73fbdabc0",
+    "prompt_sha256": "b2b31107c7350a4087299cb32e7fc4d17479692652c6a3266b590398f197be4a",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_millstone_slingers.png": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc"
+    }
+  },
+  "death": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-cdac4026-2d1a-49a8-bdaa-f2d8687878bf.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "source_sha256": "867f538719d312c3a156596499a6f37b29718efbd4ce458868a34047b8542ddc",
+    "prompt_sha256": "55a62f13c0501d2b55389e9fa8dc1623a0b624fa7b68b345cab3b51e68fa0c8a",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_millstone_slingers.png": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc"
+    }
+  },
+  "cast": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-d29aae30-cf7d-4f37-bf45-9ba165760713.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "source_sha256": "ef2f5fe5f2ddcef4082ed3126a590065fb139af11bda7e7ef815570ab5569184",
+    "prompt_sha256": "f4b49f69673dd29180be98ad5da6cbe05cf00de79194e919da4c0f7c52e1a51c",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/cast_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/cast_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_millstone_slingers.png": "9b61faeb853ef421523750c97591b7be6057e79808e6c7dd9ca65ac53845cffc"
+    }
+  },
+  "ranged_v1_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-0ac4b061-2a69-4396-ad3e-75fc9dc00ae7.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_millstone_slingers.png"
+    ],
+    "reason": "Extra sling pouch and detached release cord"
+  }
+}

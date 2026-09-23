@@ -51,7 +51,15 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_04.png": "6e89d652c1b67364bf2735d2d5376153e4de82701b6f32fea74059c0a3fcabf2",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_05.png": "d4386fee056edfc11cdfe5bfd56f9a4774fe42048a2399f518f76fa24bf4c29c",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_06.png": "17b4d88a5ee4199497475c38b50c7eac54922770a5d0ddb5cd0ea5cf8c714ff0",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png": "49234517f9a9b7738713db3e3a836cd042e6830c4e5407c75d88359daaea844b"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png": "49234517f9a9b7738713db3e3a836cd042e6830c4e5407c75d88359daaea844b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_00.png": "b20b39c077dff3524b235fd21bbcff73250aeaa84b803b83f048b115cd5bc3ae",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_01.png": "ea427a546b43591a576e030ca7d23fb43e0579652f3f1217336c41a09d1d34fa",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_02.png": "b1513ebfa7f1e1ff4f7086ea746684cdcffbe4e38259abbe08d2c3dc0639ea5a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_03.png": "e64240de1aee3b77ba4ad87fb9b6b93c2bbe14dbed3db010ff9336e5bf6f5c90",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_04.png": "dcea0284c8a5a535c170540d768782681019aeda1029bdac428ee5ee6c5ad178",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_05.png": "02290179bac55fccaab66f16fcbe6c2103914f8e4c987dbfa73cf44c8823d77e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_06.png": "dd062705de52582704854c97ffa19b3fd052bd67065440e24aa8cfe49f8baf5f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_07.png": "d1569523efe07ff7612c062951c4f8faf24ed69be0ef32190ccc1b8f9451c324"
   },
   "accepted_clips": [
     "idle",
@@ -60,14 +68,15 @@
     "ranged",
     "hit",
     "defend",
-    "death"
+    "death",
+    "cast"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+    "notes": "Repainted two-handed weapon salute reviewed in native128px overview. Both hands remain attached to the weapon; earlier ambiguous extra-hand version is not used."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "b54678cd35fe9c3ffe32bde23c8ad56f234786f5632ae7acb7e9dcbf758f0610",
-  "atlas_sha256": "11e9387b9e541bf49aaf916c092c279c2e668c290b3a2131af93cc8fc2f495f7",
-  "texture_bytes_rgba": 19618816
+  "atlas_sha256": "f24dccb9d865bee6ab966732780779dbe32aab0cf2e45835d0ad154d3aefabbd",
+  "texture_bytes_rgba": 25789440
 }

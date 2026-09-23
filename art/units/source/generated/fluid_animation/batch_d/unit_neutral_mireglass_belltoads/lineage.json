@@ -1,0 +1,130 @@
+{
+  "idle": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-8d0489e2-52ea-4c64-ac03-f017166970b3.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v1.png"
+    ],
+    "source_sha256": "0127f941567515e7ef7d0ef0f4229d672fde6fd42a9b0a2fc1a3f06598b77db2",
+    "prompt_sha256": "35d51813b8d9eeef6356347bbe9845a4d81b79843a46cec452b3e85c51a00a6d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v1.png": "b0dac4a4512c112316faa34753fe798e0d5ab97b1c438448e8b12bdeecb3cfd4"
+    }
+  },
+  "move": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-ff3440f5-edf5-421c-9d68-2a5374c84c88.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/move_v1.png"
+    ],
+    "source_sha256": "c5bf57e1d543988887a2aab6478cdf8672920ff4bf475b1afae2f41a7ec6d3b0",
+    "prompt_sha256": "35d51813b8d9eeef6356347bbe9845a4d81b79843a46cec452b3e85c51a00a6d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/move_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/move_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/move_v1.png": "0862f06ccb6f66b755edd5e467e596d32bd1742ce093035dbdd37441fa7ad34c"
+    }
+  },
+  "attack": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-63554892-6d92-45ab-89bf-ca5feb7108b1.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ],
+    "source_sha256": "2f174fac14574d6c16c5f0d1684958ff6b320be3c4e0cc45dd11fff91f22018f",
+    "prompt_sha256": "c1cb2fda164a9c7878952ee93bbb6abcadc7b67951ad0833c0bec009762203fe",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/attack_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/attack_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png": "dcac2aea21aa7d0508ec54611356b62576ba6132430a6b3cb0202c832736339e"
+    }
+  },
+  "ranged": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-5b5ebf99-52c9-4af8-8e6c-74ec33a231f6.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v1.png"
+    ],
+    "source_sha256": "6eacb8494878b51219bfc01c22df983a9d46eaa210e8d5ab48ae42dbf8d186a6",
+    "prompt_sha256": "35d51813b8d9eeef6356347bbe9845a4d81b79843a46cec452b3e85c51a00a6d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v1.png": "1b9f5aaf6f009f1dd8300b88382e4a60ff826ecfd7623cc3726fe80ffc65701d"
+    }
+  },
+  "reactions": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-34d43de9-9c92-4a54-a4e7-80430b477587.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/reactions_v1.png"
+    ],
+    "source_sha256": "c14a26dc486d3d1b9bbe45782e13b280042dabbd0a8753dd636b8fdad922f290",
+    "prompt_sha256": "35d51813b8d9eeef6356347bbe9845a4d81b79843a46cec452b3e85c51a00a6d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/reactions_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/reactions_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/reactions_v1.png": "adf92c2661887ca5b9384ed9cbcaa932b1d5f5f48edfbf969d35c6de00ec6f20"
+    }
+  },
+  "death": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-ac99adcc-1f78-4fc3-a07f-e31a49eda587.png",
+    "reference_paths": [
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/death_v1.png"
+    ],
+    "source_sha256": "500674ef435e688a37350922783b988c8947e0d60c8e71e981355db1dc321152",
+    "prompt_sha256": "35d51813b8d9eeef6356347bbe9845a4d81b79843a46cec452b3e85c51a00a6d",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/death_v2.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/death_v2.png",
+    "reference_sha256": {
+      "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/death_v1.png": "454d378efe9671f74684a7dfada429256842aa6446bbef6d3f4637585f28bb82"
+    }
+  },
+  "cast": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-b157f9b1-5c3d-49dc-979c-58e408b2e1a8.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ],
+    "source_sha256": "56948979d6ce5bc89baf6fec99936622b1c8390a3a7fffcc09a9899423c2caf8",
+    "prompt_sha256": "fcdfba9836a104bf935ba1e8ccbba16e684f0a17e470ae97775b2e0792d8f332",
+    "tool": "built-in image_gen",
+    "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/cast_v1.prompt.txt",
+    "source_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/cast_v1.png",
+    "reference_sha256": {
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png": "dcac2aea21aa7d0508ec54611356b62576ba6132430a6b3cb0202c832736339e"
+    }
+  },
+  "idle_v1_margin_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-07d5429f-4304-4291-b907-667db6732095.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ]
+  },
+  "move_v1_margin_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-70e676ca-a02b-44d3-ac60-93493a91f8e6.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ]
+  },
+  "ranged_v1_margin_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-3a48894c-e3b6-4e0f-b148-f90ac475134f.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ]
+  },
+  "reactions_v1_margin_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-ef24f43d-753e-46dc-9df5-86258e084d10.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ]
+  },
+  "death_v1_margin_rejected": {
+    "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccd2-7f01-7350-87bd-42078beb90b9\\exec-fbd5078d-42ea-4874-abbe-8b8974afe9f4.png",
+    "reference_paths": [
+      "art/units/source/curated/unit_neutral_mireglass_belltoads.png"
+    ]
+  }
+}

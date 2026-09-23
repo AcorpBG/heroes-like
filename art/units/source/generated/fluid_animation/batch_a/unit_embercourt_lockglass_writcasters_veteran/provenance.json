@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "tool": "image_gen.imagegen built-in",
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "sources": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+      "source_sha256": "ae482f9b2d4efd446e8e10873cfb2cf9e20352d7737225b7e51b89b7e933c305",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-de1a4608-fff8-42fa-ac9b-3d01401fe4a1.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "f1ea566d3bb00754747575d9492db0d6ea09595af0a48e742ed7cc8e1e0b8f26",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v1.png",
+      "source_sha256": "6dadcd8a4a3b3eeafd72bc28f21c2cbc7469a632d4ef14addc3ad4d9fdc2ab69",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-bcadf24e-042c-4715-882f-382bf8a3d56d.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "697350283e127e78a921e35acdd6734861bf2544b8c66896ec7199af3cc3d501",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: weak alternating gait"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v1_rejected.png",
+      "source_sha256": "0ce1c745a5b982130965cad64a598a90b07e30faeec9f070c89ba6047bdd7d5a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-ce7f9c92-bcf8-4d3a-a0ad-d5b33c02e7dc.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "2e3e6fdad30d14da1ed0631b0201ae73c998c6c475102f3b33e006a4a5482984",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: swapped and duplicate prism"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v2_rejected.png",
+      "source_sha256": "ff6356e21ef43309fe35e011ccda838931716364f4258bdf23fe46ad035572fb",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-da7e195a-22c0-45d8-9829-19288113296e.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v2.prompt.txt",
+      "prompt_sha256": "950d7df50373b365dba81af630fcfe7156976416e01c2788a9103b24578be8a0",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v1_rejected.png"
+      ],
+      "status": "rejected: swapped prism hand"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+      "source_sha256": "c6256885333b4cd92392049f63c8d85cc12545cc1175fac98741665b5864be97",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-b619201c-c873-48ec-aad4-5b88d3a2ff22.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.prompt.txt",
+      "prompt_sha256": "186b1eadb91cc0c30b60930df7e6912799b3a1364e35302b21a762999e8ae0f9",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png",
+      "source_sha256": "2473250bec99921e80558e96be341b2ebe7f71a122485fef90fcef01a7654d14",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-4fe0bd21-982a-4e99-a403-94d1cc2f2a64.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "b5ce88fb4220e3271e7fcf228c43995823ec41a221bdd7e4637378a7ca0cecca",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "top four hit candidate; bottom defense rejected hand change"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+      "source_sha256": "96e0c3e59d7fce1fe7c7096341001571c7f300ead15d65d8f283df7e6f848324",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-c1062e4d-d68d-448d-b014-710e8a7ef997.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "86e06363ccb38db8e873571ae0f3f18abf63df9e631da513a443d2f1484548c8",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+      "source_sha256": "2abf87258eedb515836d473a7fe42b647c5ecadf0afa37af34ba8f6211683e98",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-a7871372-8c08-4a96-9692-467c08343f73.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "7366d32785fdd1cf7dd34141a7b3f478a6d8733cbb80038eb4655f89cfec5433",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v1_rejected.png",
+      "source_sha256": "0fe05fb472bbdfc46cc74e821ab2786b3b4710542eb2671369f8aa54d8ca9fd6",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-64ef7a76-1191-4a02-8989-6cb4cd5b8034.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "2e073ad42fa66a272946532cdf3e149826661f3ed2b12dc7f90f92c47eccbf0a",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "rejected: last-column belt tablets clipped"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+      "source_sha256": "acd7af9bfc087c68334474ff6fdea1ee4fb2611bfb72b29a2368e85974dbdbd1",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-6ab38733-2a46-4927-b0a0-b509ca93d03e.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.prompt.txt",
+      "prompt_sha256": "f642d1899b7ff3dec1363967c7e0998997875738515b597c867ff002a3cce9eb",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v1_rejected.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png",
+      "source_sha256": "a8746b7950bd6df824f7cf442b71b547c7cd8cbb61bb0e725da0297ce9e8723d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-6c668178-ab15-4597-a01a-60e4ff3dad81.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.prompt.txt",
+      "prompt_sha256": "f8d13a98c08083cfeb18513d5222633cd33f1fd9dea43efdcccaf9d8b75338a8",
+      "references": [
+        "art/animation/source/poses/unit_embercourt_lockglass_writcasters_veteran/unit_embercourt_lockglass_writcasters_veteran_idle-alpha.png"
+      ],
+      "status": "candidate"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+      "source_sha256": "22fe0f16f755a7a908d0e27b6570f1743ccb9d6647c28eaa9138ce0624279f5c",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-1b0c-78f0-9cfc-fea721badb97/exec-4b360fa2-bc61-478b-915f-bea5ee20290d.png",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.prompt.txt",
+      "prompt_sha256": "0ab52bfcb1d077a5a48416c933cbe7c2b7938d057e7cafef3616d541e76f8a96",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v1.png"
+      ],
+      "status": "candidate: motion review required"
+    }
+  ]
+}

@@ -1,0 +1,1545 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_prism_adept_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              387,
+              475
+            ]
+          ],
+          "anchor": [
+            178.02,
+            472
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            20,
+            31,
+            407,
+            506
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              361,
+              476
+            ]
+          ],
+          "anchor": [
+            166.06,
+            473
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            412,
+            30,
+            773,
+            506
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              475
+            ]
+          ],
+          "anchor": [
+            167.44,
+            472
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            779,
+            31,
+            1143,
+            506
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              365,
+              481
+            ]
+          ],
+          "anchor": [
+            167.9,
+            478
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1139,
+            26,
+            1504,
+            507
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              374,
+              477
+            ]
+          ],
+          "anchor": [
+            172.04000000000002,
+            474
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            24,
+            527,
+            398,
+            1004
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              497
+            ]
+          ],
+          "anchor": [
+            168.82,
+            494
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            402,
+            507,
+            769,
+            1004
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              503
+            ]
+          ],
+          "anchor": [
+            168.82,
+            500
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            786,
+            501,
+            1153,
+            1004
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "idle_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              505
+            ]
+          ],
+          "anchor": [
+            168.82,
+            502
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1145,
+            499,
+            1512,
+            1004
+          ],
+          "clip": "idle"
+        },
+        {
+          "name": "move_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              375,
+              456
+            ]
+          ],
+          "anchor": [
+            172.5,
+            453
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            26,
+            36,
+            401,
+            492
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              356,
+              459
+            ]
+          ],
+          "anchor": [
+            163.76000000000002,
+            456
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            411,
+            34,
+            767,
+            493
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              339,
+              455
+            ]
+          ],
+          "anchor": [
+            155.94,
+            452
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            789,
+            36,
+            1128,
+            491
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              384,
+              446
+            ]
+          ],
+          "anchor": [
+            176.64000000000001,
+            443
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1143,
+            34,
+            1527,
+            480
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_opposite_half_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              615,
+              591
+            ]
+          ],
+          "anchor": [
+            282.90000000000003,
+            588
+          ],
+          "scale": 0.35,
+          "source_rect": [
+            27,
+            15,
+            642,
+            606
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_opposite_half_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              589,
+              597
+            ]
+          ],
+          "anchor": [
+            270.94,
+            594
+          ],
+          "scale": 0.35,
+          "source_rect": [
+            641,
+            22,
+            1230,
+            619
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_opposite_half_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              615,
+              639
+            ]
+          ],
+          "anchor": [
+            282.90000000000003,
+            636
+          ],
+          "scale": 0.35,
+          "source_rect": [
+            35,
+            593,
+            650,
+            1232
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "move_opposite_half_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              588,
+              630
+            ]
+          ],
+          "anchor": [
+            270.48,
+            627
+          ],
+          "scale": 0.35,
+          "source_rect": [
+            639,
+            593,
+            1227,
+            1223
+          ],
+          "clip": "move"
+        },
+        {
+          "name": "attack_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              440
+            ]
+          ],
+          "anchor": [
+            167.44,
+            437
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            10,
+            63,
+            374,
+            503
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              464
+            ]
+          ],
+          "anchor": [
+            168.36,
+            461
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            407,
+            39,
+            773,
+            503
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              363,
+              470
+            ]
+          ],
+          "anchor": [
+            166.98000000000002,
+            467
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            782,
+            32,
+            1145,
+            502
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              396,
+              470
+            ]
+          ],
+          "anchor": [
+            182.16,
+            467
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1124,
+            28,
+            1520,
+            498
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              414,
+              421
+            ]
+          ],
+          "anchor": [
+            190.44,
+            418
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            15,
+            549,
+            429,
+            970
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              381,
+              417
+            ]
+          ],
+          "anchor": [
+            175.26000000000002,
+            414
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            425,
+            560,
+            806,
+            977
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              354,
+              433
+            ]
+          ],
+          "anchor": [
+            162.84,
+            430
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            794,
+            544,
+            1148,
+            977
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "attack_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              376,
+              439
+            ]
+          ],
+          "anchor": [
+            172.96,
+            436
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1143,
+            548,
+            1519,
+            987
+          ],
+          "clip": "attack"
+        },
+        {
+          "name": "ranged_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              337,
+              431
+            ]
+          ],
+          "anchor": [
+            155.02,
+            428
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            25,
+            72,
+            362,
+            503
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              348,
+              429
+            ]
+          ],
+          "anchor": [
+            160.08,
+            426
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            401,
+            74,
+            749,
+            503
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              488
+            ]
+          ],
+          "anchor": [
+            168.82,
+            485
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            784,
+            14,
+            1151,
+            502
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              357,
+              495
+            ]
+          ],
+          "anchor": [
+            164.22,
+            492
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1174,
+            8,
+            1531,
+            503
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              473,
+              484
+            ]
+          ],
+          "anchor": [
+            217.58,
+            481
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            15,
+            512,
+            488,
+            996
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              362,
+              463
+            ]
+          ],
+          "anchor": [
+            166.52,
+            460
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            404,
+            532,
+            766,
+            995
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              353,
+              426
+            ]
+          ],
+          "anchor": [
+            162.38,
+            423
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            786,
+            569,
+            1139,
+            995
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "ranged_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              334,
+              428
+            ]
+          ],
+          "anchor": [
+            153.64000000000001,
+            425
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1170,
+            567,
+            1504,
+            995
+          ],
+          "clip": "ranged"
+        },
+        {
+          "name": "cast_v2_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              370,
+              483
+            ]
+          ],
+          "anchor": [
+            170.20000000000002,
+            480
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            12,
+            18,
+            382,
+            501
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              486
+            ]
+          ],
+          "anchor": [
+            168.82,
+            483
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            396,
+            16,
+            763,
+            502
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              484
+            ]
+          ],
+          "anchor": [
+            168.36,
+            481
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            777,
+            17,
+            1143,
+            501
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              368,
+              485
+            ]
+          ],
+          "anchor": [
+            169.28,
+            482
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1161,
+            16,
+            1529,
+            501
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              370,
+              479
+            ]
+          ],
+          "anchor": [
+            170.20000000000002,
+            476
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            13,
+            527,
+            383,
+            1006
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              480
+            ]
+          ],
+          "anchor": [
+            170.66,
+            477
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            393,
+            526,
+            764,
+            1006
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              372,
+              480
+            ]
+          ],
+          "anchor": [
+            171.12,
+            477
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            778,
+            526,
+            1150,
+            1006
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "cast_v2_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              369,
+              479
+            ]
+          ],
+          "anchor": [
+            169.74,
+            476
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1160,
+            527,
+            1529,
+            1006
+          ],
+          "clip": "cast"
+        },
+        {
+          "name": "hit_defend_v1_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              376,
+              472
+            ]
+          ],
+          "anchor": [
+            172.96,
+            469
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            25,
+            30,
+            401,
+            502
+          ],
+          "clip": "hit"
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              376,
+              446
+            ]
+          ],
+          "anchor": [
+            172.96,
+            443
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            403,
+            57,
+            779,
+            503
+          ],
+          "clip": "hit"
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              371,
+              440
+            ]
+          ],
+          "anchor": [
+            170.66,
+            437
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            762,
+            60,
+            1133,
+            500
+          ],
+          "clip": "hit"
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              368,
+              472
+            ]
+          ],
+          "anchor": [
+            169.28,
+            469
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1145,
+            34,
+            1513,
+            506
+          ],
+          "clip": "hit"
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              352,
+              473
+            ]
+          ],
+          "anchor": [
+            161.92000000000002,
+            470
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            28,
+            520,
+            380,
+            993
+          ],
+          "clip": "defend"
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              347,
+              465
+            ]
+          ],
+          "anchor": [
+            159.62,
+            462
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            409,
+            526,
+            756,
+            991
+          ],
+          "clip": "defend"
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              356,
+              450
+            ]
+          ],
+          "anchor": [
+            163.76000000000002,
+            447
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            781,
+            542,
+            1137,
+            992
+          ],
+          "clip": "defend"
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              338,
+              418
+            ]
+          ],
+          "anchor": [
+            155.48000000000002,
+            415
+          ],
+          "scale": 0.45,
+          "source_rect": [
+            1155,
+            575,
+            1493,
+            993
+          ],
+          "clip": "defend"
+        },
+        {
+          "name": "death_v2_00",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              285,
+              381
+            ]
+          ],
+          "anchor": [
+            131.1,
+            378
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            85,
+            144,
+            370,
+            525
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_01",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              281,
+              292
+            ]
+          ],
+          "anchor": [
+            129.26000000000002,
+            289
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            522,
+            224,
+            803,
+            516
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_02",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              329,
+              250
+            ]
+          ],
+          "anchor": [
+            151.34,
+            247
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            73,
+            671,
+            402,
+            921
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_03",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              351,
+              229
+            ]
+          ],
+          "anchor": [
+            161.46,
+            226
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            497,
+            720,
+            848,
+            949
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_04",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              355,
+              210
+            ]
+          ],
+          "anchor": [
+            163.3,
+            207
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            63,
+            1140,
+            418,
+            1350
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_05",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              354,
+              195
+            ]
+          ],
+          "anchor": [
+            162.84,
+            192
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            486,
+            1153,
+            840,
+            1348
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_06",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              356,
+              189
+            ]
+          ],
+          "anchor": [
+            163.76000000000002,
+            186
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            54,
+            1528,
+            410,
+            1717
+          ],
+          "clip": "death"
+        },
+        {
+          "name": "death_v2_07",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              357,
+              190
+            ]
+          ],
+          "anchor": [
+            164.22,
+            187
+          ],
+          "scale": 0.55,
+          "source_rect": [
+            481,
+            1532,
+            838,
+            1722
+          ],
+          "clip": "death"
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 135,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            40,
+            41,
+            42,
+            43
+          ],
+          "frame_msec": 90,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 125,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            55
+          ],
+          "frame_msec": 125,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_04.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_05.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_06.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/idle_v1_frame_07.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v1_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_00.png": 0.35,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_01.png": 0.35,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_02.png": 0.35,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_opposite_half_v1_frame_03.png": 0.35,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_04.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_05.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_06.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/attack_v1_frame_07.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_04.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_05.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_06.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1_frame_07.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_04.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_05.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_06.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/cast_v2_frame_07.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_00.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_01.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_02.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_03.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_04.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_05.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_06.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/hit_defend_v1_frame_07.png": 0.45,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_00.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_01.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_02.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_03.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_04.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_05.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_06.png": 0.55,
+        "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_07.png": 0.55
+      },
+      "source_scale_reason": "One rigid factor per original generated sheet matches approximately205px standing body; movement second half has larger original source resolution and death layout revision smaller source figures. Never pose-dependent scale fitting.",
+      "visual_review": {
+        "status": "pending",
+        "notes": "Original archer poses. Corrected cast arm ownership and death clipping. Movement uses first four original poses followed by newly authored opposite-half poses; root must assess complete left-right gait continuity. The rejected eight-frame movement retries repeated similar halves. Ranged projectile is explicitly assigned to release frame5 despite crossing invisible cell boundary."
+      }
+    }
+  ]
+}

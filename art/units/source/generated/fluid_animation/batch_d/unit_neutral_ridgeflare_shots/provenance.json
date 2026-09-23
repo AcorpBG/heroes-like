@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/ranged_v1.png",
+      "source_sha256": "cedc348a12ad99216f5048f713958bbe3407fdb32d36ddea6c215809d3aae605",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/ranged_v1.prompt.txt",
+      "prompt_sha256": "36e4657f4d880f11f773cfe57e38239b468160277f1f11389c501eae2ddc7a6f",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-f3efe1be-f1e7-49b4-bea5-b0b49b79c2c6.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/move_v1.png",
+      "source_sha256": "fd518cac67cc23d0bb047a34691f77311f2bca77b0b55598ea28b236b01520e6",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/move_v1.prompt.txt",
+      "prompt_sha256": "c07dee757307d04a0815c0922d40695e5d9d921d1dc4a1c953394274cfb5a257",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-8f60a7b8-44f8-4f67-90d4-67d9a9d4e834.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/attack_v1.png",
+      "source_sha256": "ee70a24297f353a96d00d79f8687d77bca6318577223c8fbc24d0cb059024341",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/attack_v1.prompt.txt",
+      "prompt_sha256": "2dd86b4d0abbbb43f70f4591908743b0b889d6c132a36f4800b188dc3b13a20e",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-c1aa1676-4807-471a-815f-83d03f7d66f2.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/reactions_v1.png",
+      "source_sha256": "da2753f71674335024c90785fffb5ff51a30146d7777e3874177d21e3a15fc8e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/reactions_v1.prompt.txt",
+      "prompt_sha256": "22da138d37e13d76ae9192eb4cac04f4b10a3260c3c53b315a430fa377f3ec6c",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-529d0829-ca31-4fb9-986b-53abe2866633.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/death_v1.png",
+      "source_sha256": "e6dd7c965f32887569eaa232e8730ee1ee021e0eb169a86204a2b0ad8d39ff8c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/death_v1.prompt.txt",
+      "prompt_sha256": "908d23c3d948202963d31717a0f9dbe0bbfb027ed0cddd1816162e63e6d93db9",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-ea08a328-2828-4d16-9340-c03e4091bed1.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/cast_v1.png",
+      "source_sha256": "bee1b1e80c8ec6c7698883e58ea6637d7ba87bc8fa686c77dd97a71959c4c1ff",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/cast_v1.prompt.txt",
+      "prompt_sha256": "80050e8957198928f2ed6fac1a29864b90818517bc6385219a957dc02740c07e",
+      "reference": "art/units/source/curated/unit_neutral_ridgeflare_shots.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-2ded1c1a-2a34-4b56-8782-a3147b0305c8.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    }
+  ],
+  "extraction": "Connected components alpha>16; eight largest figures in row-major order; small detached features assigned nearest body; copied exact pixels, no painting."
+}

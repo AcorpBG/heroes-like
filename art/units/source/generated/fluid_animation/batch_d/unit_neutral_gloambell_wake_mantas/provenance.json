@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_neutral_gloambell_wake_mantas",
+  "generations": [
+    {
+      "source": "move_v1.png",
+      "source_sha256": "160842facaefe2797fd0a28825ef7d597f0cb59be26bd39a7f16e1659186b49e",
+      "prompt_file": "move_v1.prompt.txt",
+      "prompt_sha256": "07f9a35e3ad4b85965ba004902b2296b416a87eadf466424ce02a105aad3592f",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-7ba91ee8-f99f-4b68-a562-15503ae683b0.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "attack_v1.png",
+      "source_sha256": "2c96f3ee0fffc7335370da091f15477ca93437bef23e7e737cd33f1e35582a3a",
+      "prompt_file": "attack_v1.prompt.txt",
+      "prompt_sha256": "01926e26ca0a87f3213500441024292a28397aea8071feac8158e0105b1d5abf",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-19af1839-bf19-4a26-99b6-da9d3a7fab5a.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "rejected_source_overlap"
+    },
+    {
+      "source": "ranged_v1.png",
+      "source_sha256": "7a5e6abc21c6322a92b3661dc76efe9c4dee5a00bf018c0e71b4f986451685cb",
+      "prompt_file": "ranged_v1.prompt.txt",
+      "prompt_sha256": "482a8ae67d637b5218394cee5437f41a9fd272bc289556c0e032e8132bedebb0",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-c3d29c4c-4775-48e8-b938-e05fa22455ee.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "rejected_source_overlap"
+    },
+    {
+      "source": "ranged_v2.png",
+      "source_sha256": "5487514ff8c2e8538b1534b86c6f9b1ec66f44dc198b725c8dc0c9da442a15cf",
+      "prompt_file": "ranged_v2.prompt.txt",
+      "prompt_sha256": "202acbc6c11ada6c80de79afe8011f8a68cfec1af459ea78b36243cf8763250e",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-2e6173a1-53da-4f58-97c6-a83839c7a7cc.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "attack_v2.png",
+      "source_sha256": "956759749250181fa598c347a6691740f0df54393e4f08a485272a3bbcd3c211",
+      "prompt_file": "attack_v2.prompt.txt",
+      "prompt_sha256": "68e5eafb8aed6396a65b82b26ac6f8e3243443afce213754342a7ec27f44f49d",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-e76cd995-4faa-4510-b676-0770126566ef.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "reaction_v1.png",
+      "source_sha256": "d5cef871ee7745dba412d9fd70fd8399aecc43bff8c2fbfba1c1ed6b4ec6a824",
+      "prompt_file": "reaction_v1.prompt.txt",
+      "prompt_sha256": "768c761bdd4fdd8b4cd37de798d04e9070350fe6f0a51364685ffcdc60e54797",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-137c9563-5834-4fea-95f4-8ce90ffe3d52.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "death_v1.png",
+      "source_sha256": "c88e6ab20d044401b0d2c9874ea160d92ef2398858d713b79557d9c6ce87cb27",
+      "prompt_file": "death_v1.prompt.txt",
+      "prompt_sha256": "f0f5ce92c5619295334ecf8f67c1ca25f7175f9954e64f7828c68baf1a5724ed",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-1d912f92-4a5e-4fd2-8d40-8ac2d9592894.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "cast_v1.png",
+      "source_sha256": "d9dc75136470c7821d598fcf37612eb85b0e42a63200f9e626d607ef8e723152",
+      "prompt_file": "cast_v1.prompt.txt",
+      "prompt_sha256": "5bcea671e80fa76bb8d4f3c50274624b14e491443679a78e0cc7f2b3cbedde9f",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-c27275b7-8f6e-44fa-8dcb-87a251aae637.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "idle_v1.png",
+      "source_sha256": "51437056645fb1c06ba78a1ce1d22e85354904857b8ebc67ac7aa970cebbc0b8",
+      "prompt_file": "idle_v1.prompt.txt",
+      "prompt_sha256": "4d0bcc73c50684bb351382c59e2c96eebfa942d561d31369362a3db4d3ef58d0",
+      "tool": "image_gen.imagegen",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-f6ce-7f42-b36a-45bac5e6eca7/exec-2f8688ff-83c1-43be-afda-1fe05095d12d.png",
+      "references": [
+        "art/units/source/curated/unit_neutral_gloambell_wake_mantas.png"
+      ],
+      "reference_sha256": "c1c83e87ee50a0079e90c61b15c99b05ba15df0ca3066a66dd2b11263d72a548",
+      "status": "pending_visual_review"
+    }
+  ]
+}
