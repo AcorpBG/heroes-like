@@ -1,0 +1,113 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_v1.png",
+      "sha256": "089cbe852fb39937bcd7c6dc8d3d15901c31b7a296b2faab9b3526a213d8f4ca",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b2174fcb43acb6ca0b0290f8354e3070982217f0e2ee5aa81116091ffa643a62",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-6b0db8cd-18e5-4417-9a09-838f16bd8083.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/attack_v1.png",
+      "sha256": "d44aea775fdc7a0265241b1ed65fce581346dc777f5bfab7eac7879a39fe4d7a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "f1dd94954492b4978c52758fb9dd780466fe14f96f4e5d24134e9b26c18c2649",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-1bc9eb97-f159-475b-8762-24090350200e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/reactions_v1.png",
+      "sha256": "ed2d83871c54c42307852bb271baec6489528511a16417868fccf62f11b0f02d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "6ea68924274fc62b983420abd35053d13844f9c2458e32a07b43307a92bd75c4",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-35f71ea6-b2b8-44ce-b1ff-2f7ad91af830.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/cast_v1.png",
+      "sha256": "e2ef49b4b3fca8148b4863c91fe1a058ea4e292421033919caafb24abd05dee8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "cb11177fcced0e6e15ca0af1feb7e67e1181f1fbed63facb80deb0e9e1bf0742",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c5da560e-1464-4180-9767-bd95a7515ad6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/death_v1.png",
+      "sha256": "da4721a0d3689da99ff6d28bac2cdec8ee03d77ee39711c83b79b3720edd1d82",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "020aa41266cddc41cf5ab6c3e0647203b4ff66593aaa7c96cda6b257ef446a5e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-297cc914-833c-42fc-a839-58c9d08fcddc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_a_v1.png",
+      "sha256": "f610086fed482352d3bbe6f56347cd695ad09204c99dfaeedb099d48d05afe61",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_a_v1.prompt.txt",
+      "prompt_sha256": "6d1deaa1cb264774f905911f561dde526b61a7edc3686c29cd212630b8843014",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a71dae33-c206-4021-86c4-56bf666bff79.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_b_v1.png",
+      "sha256": "6a6011369d2d1ae75cb6cece56f937a46605dfb45749a88f20227fdacfc4a886",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_b_v1.prompt.txt",
+      "prompt_sha256": "fab72a7a3e7b8edb392ade80e74fc5f3cf0caa28a052beee4ddea0b540a10dca",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-8c0c3d8d-e636-471b-8d76-4de104bf85bc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_support_v1.png",
+      "sha256": "b58b4612fe8add5c16c3c30a8d90cf18bc12190de9185d2a5fc1eb33e6fe24d9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_support_v1.prompt.txt",
+      "prompt_sha256": "bfa917c1c993c25f25c1f7c2c2fcba2d251aec3071444cfcff743b87e9b306ec",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-48d59854-c980-4e14-a587-1304d2d679de.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/identity_reference.png",
+          "sha256": "f72df0ff948fa9283d6909d03b2dca58df914d1ce881e9f9fd11a81fe97cb0a6"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/far_leg_reference.png",
+          "sha256": "bb3d8f0501b832dd9fe5c810ba07a7c0188f243f964fad80c5c59754ca9fe924"
+        }
+      ]
+    }
+  ]
+}

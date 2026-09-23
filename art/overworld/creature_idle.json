@@ -6445,33 +6445,37 @@
     "unit_sunvault_shard_wardens_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_shard_wardens_veteran.png",
       "frame_size": [
-        202,
-        249
+        206,
+        253
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 150,
       "static_frame": 0,
       "ground_anchor": [
-        82.0,
-        238
+        90.0,
+        245
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_shard_wardens_veteran.png",
+      "painted_extent": 237,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_shard_wardens_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        174,
-        2,
-        376,
-        251
+        110,
+        3,
+        316,
+        256
       ],
-      "source_sha256": "4dee28a0a85658140e990a16eedffac75b8dc0c34268ffe24e6282288a3ff299",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_shard_wardens_veteran/provenance.json",
-      "sha256": "2c09c39058fafd52b941ee1013be9a989724ed2707561f24dd9adcd35a170e4c"
+      "source_sha256": "232f33478612f782dbeac709d062ba57178273f059a5b6d903d2b63669e24b9f",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_shard_wardens_veteran/provenance.json",
+      "sha256": "576d4b15b32b0f529fc768ed58fec1c2bbe994f59afbe45534097bc40a8fe509"
     },
     "unit_prism_adept_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_prism_adept_veteran.png",

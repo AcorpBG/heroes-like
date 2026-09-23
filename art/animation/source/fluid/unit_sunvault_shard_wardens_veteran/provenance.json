@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/idle_v1.png": "089cbe852fb39937bcd7c6dc8d3d15901c31b7a296b2faab9b3526a213d8f4ca",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/attack_v1.png": "d44aea775fdc7a0265241b1ed65fce581346dc777f5bfab7eac7879a39fe4d7a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/reactions_v1.png": "ed2d83871c54c42307852bb271baec6489528511a16417868fccf62f11b0f02d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/cast_v1.png": "e2ef49b4b3fca8148b4863c91fe1a058ea4e292421033919caafb24abd05dee8",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/death_v1.png": "da4721a0d3689da99ff6d28bac2cdec8ee03d77ee39711c83b79b3720edd1d82",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_b_v1.png": "6a6011369d2d1ae75cb6cece56f937a46605dfb45749a88f20227fdacfc4a886",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_support_v1.png": "b58b4612fe8add5c16c3c30a8d90cf18bc12190de9185d2a5fc1eb33e6fe24d9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens_veteran/move_a_v1.png": "f610086fed482352d3bbe6f56347cd695ad09204c99dfaeedb099d48d05afe61"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Mirrorback Wardens: 48 original frames in seven clips reviewed at Godot 128px. Articulated sword windup/strike/recovery, shield brace and support salute, reciprocal gait with corrected far-leg support, grounded collapse. Original eight masters and prompts retained; unused repeated-support proposal excluded."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "4dee28a0a85658140e990a16eedffac75b8dc0c34268ffe24e6282288a3ff299",
+  "atlas_sha256": "232f33478612f782dbeac709d062ba57178273f059a5b6d903d2b63669e24b9f",
+  "texture_bytes_rgba": 21011200
+}
