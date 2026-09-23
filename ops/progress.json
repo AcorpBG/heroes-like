@@ -22348,13 +22348,13 @@
     {
       "id": "town-overhaul-match-balance-20260922",
       "title": "Full-match town development playtesting and balance tuning",
-      "status": "in_progress",
+      "status": "completed",
       "classification": "gameplay_content_implementation_slice",
       "source": "PLAN.md",
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Windows matches use actual gameplay/economy rules and exact save continuations. Six Small terminal defeats and Sunvault Medium victory on day57 are observed; remaining Medium histories continue. Veilmourn Medium seed10 has no renewable secondary resource, blocking T6/T7. Implemented Trade Exchange imports: 1200 gold/unit, five of each authored faction resource per town/week, persistent allowance and AI banking; 198 focused checks pass. Mireclaw earned T6 construction after four paid imports; Thornwake earned T6 construction/upgrade/recruitment naturally. Complete late-tier and terminal coverage remains in progress. No native generation changes or full suite; Windows host certificate warnings remain a validation limitation."
+      "notes": "Completed nine genuine terminal matches: six Small defeats and three western Medium victories (Sun57/Mire63/Ember67). Three eastern Medium histories checkpointed nonterminal (Thorn84/Brass88/Veil73), with actual Thorn T6/T7 build/upgrade/recruitment. Fixed observed Veil seed10 zero-renewable-secondary softlock through paid capped Trade Exchange imports; 198 focused checks passed. Actual occupying AI imported five grafts and built Veil T6 on day71; player recapture preserved dwelling and consumed allowance. Player imports also enabled Mire/Brass/Ember progression. Income, weekly growth, training, artifact buy/sell/equip and exact saves exercised; no blanket cost/growth tuning justified. Reusable two-driver tooling retained. No full suite or Linux run; strict wrappers flag host certificate/sampler warnings despite terminal gameplay reports without gameplay failures. Temporary evidence removed, actual saves/backups/caches and unrelated work preserved."
     },
     {
       "id": "feature-common-town-development-20260921",
