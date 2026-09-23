@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/idle_v1.png": "e4ddb706baccfe1cec4819b91bd28b322a41dc248f910266f3f867d0b30d1130",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/attack_v1.png": "0f99675d460e424d283d134645715d7a6d0deee757aa82dc51de51aa77510199",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/ranged_v1.png": "3344028ac847610cdbf2139d2fe365c48bce413d0c997aaa69781e118e5588b4",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/reactions_v1.png": "c1beba03b4984272d0c2007bf62e0817d8094373ac08eb83a8fd5aa412e14ccf",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_v1.png": "a30cf8ccca6c767a2231f39045684fd5a1d74e7aef87073344c600ce5d1cf0c2",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_transitions_v1.png": "ea79b76bd16ad7dc524ee39350d2b652ba774a47881d229d1ec5fa1f2a4b1599",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_corrections_v1.png": "ee152894de8735e63b32383aad86ff27d7b6febbe62009377f718a1565c44026",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_v1.png": "517a8e8874de50f244939c1b1b1d06b744049f5229911d3bf90c21afc025fc0f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_grounded_v1.png": "a12a86fd3316dc806f7dfee5229cd3d31ee259804115b58b6e765838ede1e8dc",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_far_v1.png": "28457dc0686d73dea10e47610df4cdf70c25726a7ac811079f8ff8cae8650a29",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_near_v1.png": "76dab0c4dae8ce3d26bcb018b063a8f87412df0f63cb0a6739eb38c29f49cb1d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_reach_v1.png": "1aee190e69d75dcfd9ab24bbd9b8cd68892128b555081ef5cb36523c12c3f7e6",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_foreground_v1.png": "aa2d1783ab67f5d2791b509809b045d64dcd748d255781514deb4361edf81619"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Lattice Conjurers: 56 original action frames across eight clips reviewed in Godot at 128px. Articulated staff idle, melee recovery, dedicated ranged release/recoil, brace, consistent one-hand support grip, actual reciprocal gait and grounded collapse. Rejected floating-staff, repeated-leg and suspended-corpse proposals retained only as original provenance."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "8d741e89446d5f50f477919e0fb0f0edde4266dcc2888f42f43dca7677b56ce4",
+  "atlas_sha256": "eef37332d72f15d0122cb1665642bcb9822af1343503ffb7c5346cc6965baa9e",
+  "texture_bytes_rgba": 25966080
+}

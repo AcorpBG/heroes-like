@@ -1,0 +1,203 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/idle_v1.png",
+      "sha256": "e4ddb706baccfe1cec4819b91bd28b322a41dc248f910266f3f867d0b30d1130",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "6e1b34d5f506f10a6cb6be2e167871ee025e6c79b81379f8c6851aded6b442b9",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-6c694a61-5e0c-4342-801e-d02fb914bd1f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/attack_v1.png",
+      "sha256": "0f99675d460e424d283d134645715d7a6d0deee757aa82dc51de51aa77510199",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "beb5b770f0133a3bafafca6973957edcaff63afed9942c47e1c03cb018923135",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-090652dc-2835-4432-a7de-fc4d5e02c60f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/ranged_v1.png",
+      "sha256": "3344028ac847610cdbf2139d2fe365c48bce413d0c997aaa69781e118e5588b4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "3ce43b4a0156febe6da624d418a4d024e54d33f644e7085d1457f50881a7b6e8",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fe4f3c84-97d4-4bf7-949d-010c2d3b92e2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/reactions_v1.png",
+      "sha256": "c1beba03b4984272d0c2007bf62e0817d8094373ac08eb83a8fd5aa412e14ccf",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "c6daf4cbc18e8332cbd4d7d513783bd8d1eeb8690f5944208a566a43cebf3995",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d52d3670-b2de-4199-ae94-0e194cba83ab.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_v1.png",
+      "sha256": "a30cf8ccca6c767a2231f39045684fd5a1d74e7aef87073344c600ce5d1cf0c2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "44df1fcffef1ffcb5ba3afbd3975b46e1445f0ba699ebab1e79185130591c22e",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-02739088-09b2-4aa6-bbec-c13706b6707e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_v1.png",
+      "sha256": "517a8e8874de50f244939c1b1b1d06b744049f5229911d3bf90c21afc025fc0f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "cb09c51c8b77fd038bae280c3a7c3b0e4c44c9e3398e7c4aeaafd62e114bd8ae",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e8dba5f0-86cb-4d6b-8bfd-cc81f814c086.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_corrections_v1.png",
+      "sha256": "ee152894de8735e63b32383aad86ff27d7b6febbe62009377f718a1565c44026",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_corrections_v1.prompt.txt",
+      "prompt_sha256": "80eb0f3aff48b754f6b0d64340240074592f483223ddb60b4bee58be468d8e5e",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-54784c81-45a1-4229-80b4-fe7be13442f7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_transitions_v1.png",
+      "sha256": "ea79b76bd16ad7dc524ee39350d2b652ba774a47881d229d1ec5fa1f2a4b1599",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/cast_transitions_v1.prompt.txt",
+      "prompt_sha256": "9de52bf851dd4ea0e887ee952d68f2d0a12c5877442439a3eda3eece32e2b589",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7a49d19b-b2ef-46b4-a540-95bca8ac2b4d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/support_grip_reference.png",
+          "sha256": "3e3d2b3d6d69de851d489081493dc24f8425917c03affc4081dba6f145366d7b"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_far_v1.png",
+      "sha256": "28457dc0686d73dea10e47610df4cdf70c25726a7ac811079f8ff8cae8650a29",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "d606b466e6be3e8bb6640c6c90a9ac561e8001fec602d7336de913c7639bbe06",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-618bed97-af25-4029-a4de-c2f7cc52be3b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_near_v1.png",
+      "sha256": "76dab0c4dae8ce3d26bcb018b063a8f87412df0f63cb0a6739eb38c29f49cb1d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "c0f8342678572efdbc716f26c37e843eaaf3d86df70c870d533769b87b2ab359",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-2796c53c-69cb-42e4-a17b-fd0b47133e28.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_corrections_v1.png",
+      "sha256": "4127afe00033f69dddcd4cf471e632be2cb85dde83e8e84936340863c0c63169",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_corrections_v1.prompt.txt",
+      "prompt_sha256": "4bb57f86ad6f9f44e06557315bdccaa049c2df67535957a086115dfa4c698de7",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-977ebfc3-fb25-477a-9d99-44e2d51e8084.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/near_passing_reference.png",
+          "sha256": "c0b98f61e0b3fd4295110ea2d502be99669cf6fbff9747c1f2b434777fa35630"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_foreground_v1.png",
+      "sha256": "aa2d1783ab67f5d2791b509809b045d64dcd748d255781514deb4361edf81619",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_foreground_v1.prompt.txt",
+      "prompt_sha256": "ec73fb83d905a212ecb71b4493c4f887210800566b1deba06dff4f35476188cc",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-cab8f6b4-2a82-4794-baa8-b93b07422e9a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/near_passing_reference.png",
+          "sha256": "c0b98f61e0b3fd4295110ea2d502be99669cf6fbff9747c1f2b434777fa35630"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_reach_v1.png",
+      "sha256": "1aee190e69d75dcfd9ab24bbd9b8cd68892128b555081ef5cb36523c12c3f7e6",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/move_reach_v1.prompt.txt",
+      "prompt_sha256": "1f05c7a3d8b5d0121cd328a344ead7ce04b4eae65cab19c33167731a91f08008",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-43fb8a98-0400-487f-931b-ec2256612c29.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/near_contact_reference.png",
+          "sha256": "0b68f62eb67054bd1d968942bf1aa7615902264508d25cc9cefb7559069b47e5"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_grounded_v1.png",
+      "sha256": "a12a86fd3316dc806f7dfee5229cd3d31ee259804115b58b6e765838ede1e8dc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/death_grounded_v1.prompt.txt",
+      "prompt_sha256": "dad67be9fc9447f9d7449b9a48491f3a7d8a5574c62b8eb1cd843a66da65fcbf",
+      "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-069f085e-fd8c-4a74-8c9f-6d2bab256f86.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts_veteran/identity_reference.png",
+          "sha256": "16b6851a84a07e1f0ad1f5ef434dca4bce5de35ccc96470635b15a21e56a390c"
+        }
+      ]
+    }
+  ]
+}
