@@ -53,6 +53,12 @@ func run():
 '''
 
 def script_for_faction(faction):
+    if faction == 'veilmourn':
+        return (SCRIPT.replace('faction_embercourt', 'faction_veilmourn')
+                .replace('town_riverwatch', 'town_veilmourn_bellwake_harbor'))
+    if faction == 'brasshollow':
+        return (SCRIPT.replace('faction_embercourt', 'faction_brasshollow')
+                .replace('town_riverwatch', 'town_brasshollow_orevein_gantry'))
     if faction == 'thornwake':
         return (SCRIPT.replace('faction_embercourt', 'faction_thornwake')
                 .replace('town_riverwatch', 'town_thornwake_graftroot_caravan'))
@@ -72,6 +78,6 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--godot', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--faction', choices=['embercourt', 'mireclaw', 'sunvault', 'thornwake'], default='embercourt')
+    parser.add_argument('--faction', choices=['embercourt', 'mireclaw', 'sunvault', 'thornwake', 'brasshollow', 'veilmourn'], default='embercourt')
     args=parser.parse_args()
     raise SystemExit(run_probe(script_for_faction(args.faction),args.godot,args.output,'TOWN_HALL_ART_REPORT'))

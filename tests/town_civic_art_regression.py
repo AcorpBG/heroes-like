@@ -129,6 +129,10 @@ def script_for_part(part, faction='embercourt'):
         script = script.replace('embercourt', 'sunvault').replace('town_riverwatch', 'town_prismhearth')
     elif faction == 'thornwake':
         script = script.replace('embercourt', 'thornwake').replace('town_riverwatch', 'town_thornwake_graftroot_caravan')
+    elif faction == 'brasshollow':
+        script = script.replace('embercourt', 'brasshollow').replace('town_riverwatch', 'town_brasshollow_orevein_gantry')
+    elif faction == 'veilmourn':
+        script = script.replace('embercourt', 'veilmourn').replace('town_riverwatch', 'town_veilmourn_bellwake_harbor')
     return script
 
 
@@ -137,7 +141,7 @@ if __name__ == '__main__':
     p.add_argument('--godot',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--part',choices=['all','civic','foundation','1','2'],default='all')
-    p.add_argument('--faction',choices=['embercourt','mireclaw','sunvault','thornwake'],default='embercourt')
+    p.add_argument('--faction',choices=['embercourt','mireclaw','sunvault','thornwake','brasshollow','veilmourn'],default='embercourt')
     args=p.parse_args()
     parts=['civic','1','2'] if args.part=='all' else [args.part]
     results=[run_probe(script_for_part(part,args.faction),args.godot,args.output/part,'TOWN_CIVIC_ART_REPORT') for part in parts]

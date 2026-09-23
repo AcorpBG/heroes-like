@@ -177,12 +177,12 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_thornwake_fully_built.png",
 	},
 	"faction_brasshollow": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_brasshollow_cleared_foundry.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_brasshollow_fully_built.png",
 	},
 	"faction_veilmourn": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_veilmourn_cleared_harbor.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_veilmourn_fully_built.png",
 	},
