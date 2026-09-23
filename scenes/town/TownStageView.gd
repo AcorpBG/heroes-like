@@ -167,7 +167,7 @@ const FACTION_DEVELOPMENT_SCENE_PATHS := {
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_mireclaw_fully_built.png",
 	},
 	"faction_sunvault": {
-		"village": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_village.png",
+		"village": "res://art/towns/runtime/backdrops/overhaul/faction_sunvault_cleared_plateau.png",
 		"developing": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_developing.png",
 		"fully_built": "res://art/towns/runtime/backdrops/development_scenes/town_sunvault_fully_built.png",
 	},

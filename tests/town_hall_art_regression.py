@@ -53,6 +53,9 @@ func run():
 '''
 
 def script_for_faction(faction):
+    if faction == 'sunvault':
+        return (SCRIPT.replace('faction_embercourt', 'faction_sunvault')
+                .replace('town_riverwatch', 'town_prismhearth'))
     if faction == 'mireclaw':
         # Substitute together so the comparison still targets the other faction.
         return (SCRIPT.replace('faction_mireclaw', 'other_faction')
@@ -66,6 +69,6 @@ if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--godot', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--faction', choices=['embercourt', 'mireclaw'], default='embercourt')
+    parser.add_argument('--faction', choices=['embercourt', 'mireclaw', 'sunvault'], default='embercourt')
     args=parser.parse_args()
     raise SystemExit(run_probe(script_for_faction(args.faction),args.godot,args.output,'TOWN_HALL_ART_REPORT'))
