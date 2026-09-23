@@ -22,6 +22,10 @@ Rules:
 
 ## Current Tactical State
 
+### Fluid creature animation across the entire roster
+
+`art-fluid-creature-animation-20260923` (in progress): replace deficient clips for all 232 live units, including base, upgraded and neutral creatures. Target 8-12 idle/attack/death poses, eight movement and relevant ranged/cast poses, four-six hit poses and dedicated defense. Preserve already qualifying, visually coherent art. Owner-expanded to 20 subagents: nineteen disjoint art assignments and one runtime/pipeline integration agent; coordinator owns visual acceptance and final integration. No duplicate-frame padding, whole-sprite warping or idle aliases counted as finished actions. See `docs/fluid-creature-animation.md`. Focused tests only; no full suite.
+
 ### Shared town development
 
 Owner-selected completion passes (2026-09-22), in order:

@@ -1,0 +1,15 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_v3.png",
+  "source_sha256": "fb04ad190468b096ccf6e485fa47ef82c755d59d0bc2581aa5f6ea823d7b7a64",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_v3.prompt.txt",
+  "prompt_sha256": "10f5a3dab64fac457376ee60afe59782b91eeb33b149aa5e878426a2fb5fffad",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_upperbody.png",
+      "sha256": "57dba3cd51f1e6804e5f30e769b44597472ca72617f4e67717f065dd9c917c52"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-7ddd2daf-50c8-4d0a-87e1-b7cfa0704c95.png",
+  "review_status": "rejected_non_alternating_gait"
+}

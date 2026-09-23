@@ -1,0 +1,16 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v1.png",
+  "source_sha256": "69e384a1cdf2144ca605e809990e4ab1c8298fb3b01c460604ecfa4ed2110fd3",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_contacts_v1.prompt.txt",
+  "prompt_sha256": "8f57d329390f95da2fb866e984754866bdff979e7408feec34b48d9883367b28",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_neutral.png",
+      "sha256": "a0812ff6b0bd6726dc6eef3e1e40793e2a5afdb81a128dd218f800818684e8e0",
+      "role": "identity_or_contact_key"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-812e9340-84d2-4f11-aaa9-c577011d9deb.png",
+  "review_status": "rejected_same_leading_leg"
+}

@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_gorefen_ripper",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/idle_v2.png": "82109128bfb84b4ed75599f326392306431afc3a92e547338edd9cadc25c2d11",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/move_v1.png": "43817b2e1b4090321a5199e8eff980de4ec8db71e6c33ccd59b6c2e45399c192",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/attack_v1.png": "88ae77bd45ba20bde46196dfe034b88daecaa6ccb2d8dbf44cce98d4f2d85690",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/reactions_v1.png": "7ad4d5d2b9569cd5b9b0876437008801dc60a8f1ea165575d537fa01f2cf2e9f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/death_v1.png": "94c815dea29a812b788b9f6b0fd4ad84c79ef2b5d53bb28514e4a19a92905606",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper/cast_v2.png": "7848102a23de609567296b8c57078db8e818f98419b4060f1b29a5eb1720275d"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Godot128 phase overview reviewed: alternating fore/hind paw movement, claw swipe and recoil, crouching brace, chest/forelimb support gesture and continuous prone collapse. Seven clips accepted; sprite extends beyond contact cell only in preview, source atlas preserves tail."
+  },
+  "atlas_sha256": "e15e21922c70ab466e6992e387d379c5e87f2db34b763cd8bb0fa0a57eae8b7b",
+  "texture_bytes_rgba": 23030784,
+  "baseline_atlas_sha256": "75c57af319225e4adcc207580a5a3587780008fab837b72dc2179d7c7413202c"
+}

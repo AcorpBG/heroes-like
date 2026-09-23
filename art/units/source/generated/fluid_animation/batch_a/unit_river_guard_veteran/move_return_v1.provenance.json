@@ -1,0 +1,19 @@
+{
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_return_v1.png",
+  "source_sha256": "480f865c807e247e3122fe93216e8e12a3565f0805fcaadd9fafc941130630c8",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_return_v1.prompt.txt",
+  "prompt_sha256": "da43f01c339482d09611be1b9f471f4f52c35f69e5970d003a6fb4bbe83b7262",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_opposite_v1.png",
+      "sha256": "51bb6493fb6d48ef1aa603d2b98c6b849137b59947d13aa4d3dbce3b44dc6640"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/reference_neutral.png",
+      "sha256": "a0812ff6b0bd6726dc6eef3e1e40793e2a5afdb81a128dd218f800818684e8e0"
+    }
+  ],
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-a3fc0cd9-c1cb-4604-8b99-95ff187046de.png",
+  "review_status": "rejected_non_alternating_gait"
+}

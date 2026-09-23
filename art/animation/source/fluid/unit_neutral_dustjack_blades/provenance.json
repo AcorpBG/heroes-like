@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png": "3e90f8531e27c3b21ddc51c41985751b95402ba3af5e5728c18ee9019273a5bb",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png": "d2dbbd5b511dcc6998c85d4502b9166e61c9d9542fa4b4b8ec0986ceb973533f"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Godot128 overview reviewed: two-blade windup/slash/recovery, crossed-blade guard, recoil, arms-open physical support, quiet wrist/shoulder idle and continuous collapse. Movement withheld: apparent repeated leading boot still requires correction."
+  },
+  "atlas_sha256": "c12728f03ac33814522540d0ffd24052c02e066738fadc2034aa9a2b225ad48c",
+  "texture_bytes_rgba": 11796480,
+  "baseline_atlas_sha256": "8ad6db39c52f23e9eb457a71569c36cf4c1b4f5aeb6c573f7862a6500e335e20"
+}
