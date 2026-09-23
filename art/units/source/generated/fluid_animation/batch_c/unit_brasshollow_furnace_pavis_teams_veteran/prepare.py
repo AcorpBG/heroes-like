@@ -35,11 +35,12 @@ add('hit','reactions_v1',[(265,170),(770,180),(265,560),(770,560)],[265,770,265,
 add('defend','reactions_v1',[(265,940),(770,940),(270,1300),(770,1300)],[265,770,270,770],.67)
 add('cast','cast_v1',[(270,160),(760,160),(270,550),(760,550),(270,940),(760,940),(270,1320),(760,1320)],[270,760,270,760,270,760,270,760],.675)
 add('death','death_v1',[(260,200),(760,240),(270,600),(780,670),(270,1050),(770,1050),(265,1380),(770,1400)],[260,760,260,760,260,760,260,760],.64,extras={2:[(485,740)],3:[(969,760)],4:[(460,1075)],5:[(970,1110)],6:[(456,1460)],7:[(970,1470)]})
+add('move','move_step_together_v1',[(270,170),(780,170),(270,540),(780,540),(270,920),(780,920),(290,1300),(790,1300)],[270,780,270,780,270,780,290,790],.71)
 for name,clip in entry['clips'].items():
-    clip.update(static_frame=0,frame_msec={'idle':160,'attack':125,'hit':115,'defend':130,'cast':130,'death':155}[name])
+    clip.update(static_frame=0,frame_msec={'idle':160,'attack':125,'hit':115,'defend':130,'cast':130,'death':155,'move':140}[name])
 entry['clips']['attack']['contact_frame']=4
 entry['clips']['cast']['contact_frame']=4
 entry['clips']['defend']['static_frame']=3
-entry['visual_review']=dict(status='accepted_selected_clips',notes='Six original two-person combat sequences reviewed in actual Godot 128px renders: rim-grip and poker idle, shove/jab with recovery, recoil, brace, physical support signal and grounded two-body collapse. Five movement proposal sheets are retained but explicitly unaccepted: alternating leg ownership is not yet coherent for both crew. Movement remains unfinished.')
+entry['visual_review']=dict(status='accepted',notes='Seven clips reviewed in actual Godot 128px renders. Previously accepted six combat clips retained unchanged. The original eight-pose heavy step-together carry advances a leading foot then draws the trailing foot alongside, with visibly narrow feet-together load transfer before the next step. This is a deliberate carrying shuffle, not an alternating march. Earlier unsuccessful walk proposals remain excluded.')
 (HERE/'handoff.json').write_bytes((json.dumps({'schema_version':1,'units':[entry]},indent=2)+'\n').encode('utf-8'))
 print('Prepared',len(entry['frames']),'frames across',len(entry['clips']),'clips')

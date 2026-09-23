@@ -8,7 +8,8 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/attack_v1.png": "48012d499d6fa1d1435598ce2473c5e7f05a1c105d3713259bb95b9b8a7fcf96",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/reactions_v1.png": "fc8572737dc75c0ff26ffe8448831a1f975c9897ff4f261ce71fb9bc5b193a50",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/cast_v1.png": "5d0757722fca014a7f2a74b3f183f8c86638bd4d787e7504bb9ca23533fe5c1f",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/death_v1.png": "f98d1cf8cf187e552861df3eb72c477748dd044c3c74dc0613dae6998d223742"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/death_v1.png": "f98d1cf8cf187e552861df3eb72c477748dd044c3c74dc0613dae6998d223742",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams_veteran/move_step_together_v1.png": "0a1f1fe9cfa5ceb92471d1a5de2bb570529bd430d5be8111a341087460520338"
   },
   "accepted_clips": [
     "idle",
@@ -16,14 +17,15 @@
     "hit",
     "defend",
     "cast",
-    "death"
+    "death",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Forty original poses reviewed at native Godot battle scale: articulated two-person idle, shield shove and poker jab, recoil, brace, physical support gesture and grounded two-body collapse. Movement remains unaccepted: five preserved proposal sheets fail reciprocal gait for both crew; legacy alias is not completion."
+    "notes": "Seven original clips reviewed at native battle scale. Eight new heavy step-together carry poses show leading-foot advance, trailing-foot catch-up, narrow load-transfer stance and renewed step; appropriate shuffle rather than reciprocal march. Six previously accepted combat clips are retained unchanged. Rejected movement drafts remain source provenance only."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "a02a84374e9419192eedc09f8846ef877ca2608ef50f21539369d0b1fcc6cde2",
-  "atlas_sha256": "07933f52ae415ef6c0365f6bf9761a7a550f49f63e7e8fca49f560c7f5a35fae",
-  "texture_bytes_rgba": 19009536
+  "atlas_sha256": "8e39c796909cbea50872132cb8ac05775796d3fd51219b8828c9914df56b46ae",
+  "texture_bytes_rgba": 22177792
 }
