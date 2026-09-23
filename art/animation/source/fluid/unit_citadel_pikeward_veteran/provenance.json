@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.png": "7f8b177bf38cdf321ceed4b4e3a115911be5d2c237eff430b66c81d8d565aed1",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.png": "742515617f7028e85a5ff95948803864ed6dd2363556dc85465cc9e01b24f13f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reactions_v1.png": "f6144c67555c00dc8c47fe48fe83eb9b3d7d2ed30e830e91255c6a91e183cdd0",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v3.png": "f3d282ad5d9f0402559432da86b833eb5073aa1fbd5f8bf52aea4d7d51610778",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.png": "44d07cab6b5d0572eae3c114bfa02e7cd5620d596380cab0fc2781a5d8ec4c07",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_v1.png": "dc32af6cc8e521408753f0c7cd344d8ca6deb3a94c98a10f63e0520349c784a5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_missing_v1.png": "752b3038f009579c158031f0c9eb65a33dedc64e85923efd7881fe4dc7144ea8",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_contact_v1.png": "df7b4cad9ede1e9f04c25905c1bb84c314641c00cf4f2c690674fd1c7bd80e76",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_near_v1.png": "5deb97be244e4878f4092742558f118bb78199fdd6013e15da7168b750356d18"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Seven original clips reviewed at source and native 128px scale: eight articulated idle, thrust/recovery, reciprocal walk, physical rally and grounded death poses; four hit and shield-defense poses. Dedicated pike-side contact/passing/reach paintings correct repeated-foot gait; planted-pike rally preserves equipment proportions. Full source silhouettes, anatomical scale and persistent corpse retained."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "84a626f709b8072c8129b9e6ac2ff929fa1f7acf505a72a25e591a85ff161d41",
+  "atlas_sha256": "b6fc769c28d33b824e6e6246ebd9c25e06ce2eeacb528642bd89d14beda90582",
+  "texture_bytes_rgba": 24372992
+}

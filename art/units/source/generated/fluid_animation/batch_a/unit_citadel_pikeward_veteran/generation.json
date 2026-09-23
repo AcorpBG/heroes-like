@@ -1,0 +1,140 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_citadel_pikeward_veteran",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.png",
+      "sha256": "7f8b177bf38cdf321ceed4b4e3a115911be5d2c237eff430b66c81d8d565aed1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "749842d066f6f8f80d0c5d5310449efbcf48cd133e99a464305342737ca3db37",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f25a622f-f1ac-42f2-8d16-514d4764abd2.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Accepted all eight articulated pike-arm/shield idle poses after native-scale review.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.png",
+      "sha256": "742515617f7028e85a5ff95948803864ed6dd2363556dc85465cc9e01b24f13f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "db8758bd6127f9256517649508a084795d942bbe94f45734b899f771d91deb54",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-be921311-1545-4f4f-9c46-30daafc3fa03.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Accepted eight windup/thrust/recovery poses; connected-source crops preserve full horizontal pike without neighboring sprites.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reactions_v1.png",
+      "sha256": "f6144c67555c00dc8c47fe48fe83eb9b3d7d2ed30e830e91255c6a91e183cdd0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "81ef921c5821175264ed486a5046f18078f160015b2a265007ca40a25639af0b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a072716f-19b8-43a8-9360-c30742da15be.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Accepted four hit and four defend poses with visible recoil and shield bracing.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v1.png",
+      "sha256": "5697ae62f8fa7015d07fa29b086124e844246f6b7f8fb48da321673ec43c9cd2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "b70c9d54f19b31ad8070f360d391efcc9cd449a8bbbebded6d35bd0317dcaf8d",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4e1ae659-6c19-42d5-8624-5b7c25832bcb.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Rejected: raised pike changes length and one tip reaches the sheet edge. Preserved original.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.png",
+      "sha256": "44d07cab6b5d0572eae3c114bfa02e7cd5620d596380cab0fc2781a5d8ec4c07",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "8f38f9f52bb039d0d533ccaf13dcd35a2d8a61bcb536394900ac49f56ea32fc8",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c61ef8a6-46fa-4502-ab39-7d7bd4abb929.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Accepted eight collapse poses; explicit detached-pike source selection keeps full equipment beside persistent grounded corpse.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_v1.png",
+      "sha256": "dc32af6cc8e521408753f0c7cd344d8ca6deb3a94c98a10f63e0520349c784a5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "25b1f5df1c51f668a325e57e36d911b234615a8f882010c7268e7662b437b35e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b792c592-9af6-473c-abc7-bdc7dfea0028.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Partial selection only: far contact/support, early far swing over near support, and far heel reach; do not use repeated-leading-foot sheet as full gait.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_near_v1.png",
+      "sha256": "5deb97be244e4878f4092742558f118bb78199fdd6013e15da7168b750356d18",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "c5191a80d6315c555d490a42b8ab2dc5841ab8e3a45044254d8092c654f6e7ce",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-71323a17-4e18-4db6-bf01-0297f5f1ecf3.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Selected bottom-left high far-knee swing over near support only; remainder unused.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v2.png",
+      "sha256": "bcb0040ae1ba2dcbeba12ea23f5771aaf5455a8f17e8bfbdcd24a8f326af61de",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v2.prompt.txt",
+      "prompt_sha256": "2ee03f34c1d68fce0606f659c09a7639de701d1f1080a207194635fc5e930280",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-11478a3c-f8d4-4a4c-b2f7-c53ee6199253.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Rejected: raised pike proportions remain inconsistent. Preserved original.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v3.png",
+      "sha256": "f3d282ad5d9f0402559432da86b833eb5073aa1fbd5f8bf52aea4d7d51610778",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/cast_v3.prompt.txt",
+      "prompt_sha256": "93c8eebbd7fbb005631a03f7720cf06266c937252a73fc3bdb6dddbfe13beb09",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-706fef15-090e-48fa-890f-61304ff6c3c0.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Accepted eight physical rally poses with hand sliding on planted pike; stable equipment length.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_contact_v1.png",
+      "sha256": "df7b4cad9ede1e9f04c25905c1bb84c314641c00cf4f2c690674fd1c7bd80e76",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_contact_v1.prompt.txt",
+      "prompt_sha256": "119effe8f2729304e46b248330908dcf2decc18e2d98c9a42aef36264c6bf559",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f9933ec3-bf12-4915-9a35-0a1f9bfd8014.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Selected left pike-side near-foot contact only; right figure uses wrong support leg and is excluded.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_missing_v1.png",
+      "sha256": "752b3038f009579c158031f0c9eb65a33dedc64e85923efd7881fe4dc7144ea8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/move_missing_v1.prompt.txt",
+      "prompt_sha256": "03cbb8ef54da3fa31cf3c0828a7af52aea60af9bf4022451175dbf57aff55ed9",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-768f27a9-485f-4fea-a7c5-ddae02ada571.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/reference.png"
+      ],
+      "review": "Selected left near-knee passing and center near-heel reach only; right wrong-support pose excluded.",
+      "reference_sha256": "a3b56c35c3df136ca827075c515168bb5f460ec436d92fbfaf8942d598020b41"
+    }
+  ],
+  "selected_recipe": "art/units/source/generated/fluid_animation/batch_a/unit_citadel_pikeward_veteran/prepare.py",
+  "review": "All selected poses inspected at original source and native 128px reference; 116 candidate focused checks passed. No image warping, synthetic padding or source recoloring."
+}
