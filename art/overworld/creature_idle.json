@@ -5672,33 +5672,37 @@
     "unit_ember_archer_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_ember_archer_veteran.png",
       "frame_size": [
-        176,
-        250
+        170,
+        254
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        78.0,
-        239
+        85.0,
+        246
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_ember_archer_veteran.png",
+      "painted_extent": 238,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_ember_archer_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        178,
-        33,
-        354,
-        283
+        91,
+        6,
+        261,
+        260
       ],
-      "source_sha256": "d05e9ec3d2025e283a84b207180a9349e8e76697c69e0dfc4f5be2259ac6c53d",
-      "source_provenance": "res://art/animation/source/poses/unit_ember_archer_veteran/provenance.json",
-      "sha256": "1dc34aebee5a195bebfb7f21d156bf60b4322ff06b98d0eec5e47f8ac5711329"
+      "source_sha256": "a95427e946542bf9087fa127c284898b0b5ef78a0fcd18138b5b3bde54635bca",
+      "source_provenance": "res://art/animation/source/fluid/unit_ember_archer_veteran/provenance.json",
+      "sha256": "22cc47771883ce0c8e1e905deade29299efd48eaf85c6eb4d87a4146bb834e26"
     },
     "unit_embercourt_lantern_sappers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_lantern_sappers_veteran.png",

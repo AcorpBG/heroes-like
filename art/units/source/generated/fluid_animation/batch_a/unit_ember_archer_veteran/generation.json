@@ -1,0 +1,116 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_ember_archer_veteran",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/idle_v1.png",
+      "sha256": "86929d54230e83d44e6edc8efe4750cd872c19d965d5065acea44e84cc5ca513",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "05d3b13e9932f57e08a3f7d6fb7baeedb04daf27ebffaf9b2754c4dd70a025a6",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-8aa82b67-2205-4607-bd89-bb8763017829.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted eight bowstring-check idle paintings; middle hand positions reordered to rise then settle. First ready pose also ends melee recovery."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/ranged_v1.png",
+      "sha256": "470cd4f26bbd49deb1aa248c187ed8f77aed9d2161a7d8c904f741020ce68f56",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "41130040aa24edc5948c5ae0ec30aead192335c44364b660aa1fcca4bf2c8f04",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d0889b85-0101-4bdb-8b2e-c812f5a8bb68.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted eight retrieve/nock/draw/release/recovery poses. Release occurs at frame index 5 with no painted flying arrow; runtime owns flight."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/attack_v1.png",
+      "sha256": "1a6cf00cf0ea3232c6470bfe9955ecd4ff4ec61ec9a889ed96086e567c6ec3c4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "b9caa31bc1fd7823131195e92359290f1b4bbf416218a7a60055db40b59cd083",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-1f718f89-01d4-45ca-989c-310fee9b4140.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted first six windup/shove/retraction poses only. Seventh has extra hand and eighth introduces held arrow; both rejected and retained as original history. Dedicated coherent elbow-return and ready paintings complete the clip."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reactions_v1.png",
+      "sha256": "dd34d992d893be4578fc5404cf96cee7ad453815b04094e536af6f351d045445",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "8a97573ee7f128ca8e39eba42853102b2a52050c35e81e49f5ff7ec579881707",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-eeceba0c-c3c0-4cd1-9c43-b72247aa566c.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted upper four hit poses; third also supplies anatomical melee elbow-return. Whole source registered at .54 after native-scale review. Lower four defense poses rejected for hand swaps or floating bow."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/defend_v2.png",
+      "sha256": "736f7c3679752eb13c515fefacc58731a016b0aa32875c13b6116a80333bf97d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/defend_v2.prompt.txt",
+      "prompt_sha256": "ecaf453b58779323b4a9da84268d4c402b2fcb6c3e329c643beb207af41871c2",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d40d3b10-52ff-4ce4-b052-ac79ae7021d4.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted four replacement defenses, near arm shields face and far arm continuously grips the full bow."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/cast_v1.png",
+      "sha256": "af18a8a91e3aae6d9da93f9815e437bef00b9f70295718b6c4a7cfbfac411bcc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "808209247559f62d69fc7757c77c5b15c6aa1c27db683a97678ec102c2f9651f",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ef5c33d4-087c-4e99-a8ad-f156029d3b1a.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted eight dedicated physical rally gestures with empty raised free hand and fixed bow ownership."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/death_v1.png",
+      "sha256": "e6823b1d146e92603d7f767108a682fdbeaf6d1070bb8ba5bffe2ef1ea62cd83",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "b033b08eb33eb8a1f28b9bd3e513ce7d0649817c86f88d408064493dd5a379fd",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-3d6f63d8-2a7e-4354-b9e4-67ca0748ee1f.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted eight progressive collapse paintings with complete detached bow explicitly retained beside grounded persistent corpse."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_v1.png",
+      "sha256": "43f1c3ecb393d13fc6cf187984b04f1e17897541d806443327ba8b1d20fb27aa",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "6cf268bfac386ba454ea1010ad36914316284e70be24e7c1ac8450241fd5558c",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7d9a90fa-e573-46c1-8466-3ce687678004.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Selected first two far contact/support and next two far passing/reach poses only; repeated half excluded."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_near_v1.png",
+      "sha256": "d1d6cf4d43a116f897759e166b9c5342285aa26a14bf63ea9b82d550a95bf9e8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "145bee085412ee9107f419000f497fdfd239a06fb87bf4eb2bdb86ec023b25ec",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ab1b26b8-659b-491d-bffd-34b8e02b6292.png",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/reference.png"
+      ],
+      "reference_sha256": "81c8233d3824629e308dc825aa6cdfe62150675a5b84d4ec0e8c3e3a0c6ebce2",
+      "review": "Accepted four distinct opposite-leg contact/support/passing/reach poses; anatomical registration combines them with far-leg source half."
+    }
+  ],
+  "selected_recipe": "art/units/source/generated/fluid_animation/batch_a/unit_ember_archer_veteran/prepare.py",
+  "review": "Original paintings and 132-check candidate render reviewed. One fixed reaction-source scale correction preserves anatomy; no generated padding, recoloring or whole-sprite warp."
+}
