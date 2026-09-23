@@ -1,0 +1,27 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png": "6ff38497016b49d82f13ce994ad1004bb4d161befe6902720bf273053a0dd122",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png": "9e483de144db8939887830fb2eafd972480919daf3058c494a7264b73fbdabc0",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/death_v1.png": "867f538719d312c3a156596499a6f37b29718efbd4ce458868a34047b8542ddc"
+  },
+  "accepted_clips": [
+    "attack",
+    "defend",
+    "death",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Hand-check idle, physical punch, dedicated guard and continuous collapse reviewed at game scale. Movement needs reciprocal gait; ranged, hit and cast source crops need foreign-fragment correction."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "06167719c7d599dd426cecd918710f18174a33407fd0921da422226f6c787127",
+  "atlas_sha256": "5d51cb374f697e98e2cb8b42d8d87145edf26fd235fbac67b75c562d2540c01d",
+  "texture_bytes_rgba": 12280320
+}

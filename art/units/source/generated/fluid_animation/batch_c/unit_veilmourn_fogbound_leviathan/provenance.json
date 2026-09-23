@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "assets": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/move_v1.png",
+      "sha256": "c70f39db8b68a6c2940c8345d66a2ab04bacbb85d5b9f4fa6f68faeeeced4898",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/move_v1.prompt.txt",
+      "prompt_sha256": "ea8852f2ea0b36f91df8dbef33120ad573461beab55cd9c02a6025e95ff12551",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+      "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-52d11e33-22f3-4d73-8684-61462edada54.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/attack_v1.png",
+      "sha256": "5cdbe5a15cd072a0de3f1adb4fd39fd5712ddeef108ffb66f686d227d72560c9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/attack_v1.prompt.txt",
+      "prompt_sha256": "dfaf90e16d6dbbf067b7aa11e8b54e0c9572d07ebdfd9669b4e43ed9c92c27f8",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+      "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-1b5d0ac1-7ed9-46a9-9252-18bf7241411e.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/reactions_v1.png",
+      "sha256": "7999652a6a1800580367c7ef02df9231c4049a552ab027cbe8f050a0c5b0d1ca",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/reactions_v1.prompt.txt",
+      "prompt_sha256": "0cd971b1d06a5abcd99443a9e5bfc7e2331fe401f4852fe39d9ab77f542efe6b",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+      "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-033c7d3f-eff8-4883-ba6c-0f95478c5477.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/death_v1.png",
+      "sha256": "60a934de25358906bd7bcee15b843a094ee9b5c98453a9efefcb13104cece377",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/death_v1.prompt.txt",
+      "prompt_sha256": "500b4686d7d35cbefacd93e4adc0aed742f0ec9cd9d1e50a7d03fd025211bfda",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+      "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-c6c77c55-160a-4a41-b13f-259d32ca42d9.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/cast_v1.png",
+      "sha256": "c904fca2f8406a3ad23682bf6891683f18805064f1ddee470b2c8c08c4bfd8c1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_fogbound_leviathan/cast_v1.prompt.txt",
+      "prompt_sha256": "00d03c1908ad94d2d19a20549c3b594c4a6730b6dd66917dfa3d90c18e679df8",
+      "prompt_encoding": "utf-8 exact tool prompt bytes",
+      "reference": "art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+      "reference_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd1-6d7e-7c70-9f33-f86f3332e28b/exec-39ad9c9b-cef4-48d0-ab19-859a9bd6d01b.png",
+      "tool": "image_gen.imagegen",
+      "status": "pending_visual_review"
+    }
+  ]
+}

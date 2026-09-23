@@ -1,0 +1,58 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png": "b036bb2653069db4d00b6e9b3fc37f3dec414f13ba5f0b216e7b1cccd08c7997",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_01.png": "9ed62673ffe4b0fb1263ef0b87709647b7bae4570f2ae339890f0ecd32e49d21",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_02.png": "eb88ddbe00a73dd1af718327eda332c957b6849b7b920fbe2616ffa7d8c64612",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_03.png": "7471b974b480e8124d6e091612311d2939eac5b26f456afbf34fc4146158f818",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_04.png": "6b8bc3660edfa30187801d2e52773d03e2cbd5c55670950eef315ea0029ea623",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_05.png": "0c52e705a238683d9aef28efdf9e50cc054e91d9f56261399d1156b404293ad9",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_06.png": "d1302be4db42beff3be5427fc97350b76712a2767aebd43d23c41a666da6c20d",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_07.png": "47d85a3ab7c528900379f567dc3d368836a567807728a18d11f28347b75ba389",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_00.png": "49051ed72bb5f90376346e0df4a3c966833c9e273086a2935d94e11344386572",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_01.png": "318ce97535e9b4d409ed83a78e20ef641b16adf856b2f2e610acf6501e08aced",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_02.png": "98c1e81c20175628cbc6a63497d9e5fb1b809e5ddef48777b8aa3048dcd14dd7",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_03.png": "e6d33ba11ce8524ad3a3cb4586e537676834d435b83e6e1349dc7bb1f1787fda",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_04.png": "33ad6b6b6b4602a7f664c80da97a72e113d005de67df05c679d2bab3cd265b4c",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_05.png": "e05e8006cd8f8cab1b260668c4b66d0adcc1709c79bf71e6f4ac77b33d512578",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_06.png": "e148d3a7c55cc803d7d4d8b1e3ce5940fd34b9499e0ab46adaa3e8b7c2b0f206",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_07.png": "4f708e39b76e56aaf36e73ece44de214c2dfb53fcdffae16439522e8b69807f0",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_00.png": "5ac2707b3f26c60c6a5ec7df1bc884b8fa18aedc141823f00099d493543527e7",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_01.png": "27dab772b255ed6a0ff6c40e2fc781b0b810c66200d1361b2d313bf6276e4736",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_02.png": "d781d680e4fae3896987194ca40f122dcc5edc78a6d82baff073a5b75e8d7db6",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_03.png": "5c34dac7da494dc60c5b040622d9ae26155e3026d78cfa480f026161d43fd83b",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_04.png": "d62762c00b7e1676c09527f17c343b30f59074af0d5c3f18844a7d98ed20badb",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_05.png": "899534165af5af5ea6d62ca84467081b58f2e45ee0873003956ed4b449857de9",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_06.png": "dd3573ed1b7102fc259ff29b7eebbfd19713c6cddf2be21a313e962810e757d7",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_07.png": "bcebb1708a06b803a69f9e61efc27d5135adfcaa6c64e24cff917fd6aa3b53e8",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_00.png": "974f6a435a8affbdaac7005b191c369bd07c4524dffdfd70c96ebff1630d63b6",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_01.png": "649c540ff557c811e1cfc2890cdb03a302e3f833081102350cbd4cc1dfe0f88f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_02.png": "a2099ef0b36f495069cdb8bae7f618aa5d5a7d710c21c513b34cd5c0e3d49d57",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_03.png": "4cd0c4b757486adadccef505049f8fedacfe81db59f9cfe6610c2f04cc05a0ef",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png": "839ecf81e1d6468014f5997c0141dae3b2058c631d2db7622c6e98a62cee4044",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png": "fde67d0ddbb29785c8f351d1c1ba9214adb660a742e0f75c2db2bf061fc9a097",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png": "3f55315ebe60dc45120d68cf327d3bea955fe0706a09cde283b229b24a6e6f1a",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png": "730fbc9495bf14006b0fd033cacbcab5286ca6841acc4e1c4dae9cde775c741f"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native review: articulated pick-hand idle, pick swing, shield brace, support salute and collapse accepted. Repaired gait alternates feet but contact and inbetween paintings visibly differ in color, so movement is withheld."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "8259c79e1f5c36015afbcd275b2ede678e4599fc7eed94d132a1b2868cf843b6",
+  "atlas_sha256": "5c77164a5f2cdce39ac94ebbb16ad497ea4a359dee2a388eb6e3dcf4d487915e",
+  "texture_bytes_rgba": 10723328
+}

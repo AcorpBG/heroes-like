@@ -1253,6 +1253,214 @@
             1472
           ],
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              360,
+              347
+            ]
+          ],
+          "anchor": [
+            192,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            33,
+            58,
+            393,
+            405
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              347
+            ]
+          ],
+          "anchor": [
+            200,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            470,
+            59,
+            836,
+            406
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              342,
+              347
+            ]
+          ],
+          "anchor": [
+            201,
+            345
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            909,
+            59,
+            1251,
+            406
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              325,
+              378
+            ]
+          ],
+          "anchor": [
+            189,
+            376
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            1366,
+            28,
+            1691,
+            406
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              332,
+              395
+            ]
+          ],
+          "anchor": [
+            192,
+            393
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            33,
+            450,
+            365,
+            845
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              353,
+              356
+            ]
+          ],
+          "anchor": [
+            199,
+            354
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            471,
+            489,
+            824,
+            845
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              349
+            ]
+          ],
+          "anchor": [
+            201,
+            347
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            909,
+            498,
+            1273,
+            847
+          ],
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              364,
+              349
+            ]
+          ],
+          "anchor": [
+            196,
+            347
+          ],
+          "scale": 0.67,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3.png",
+          "source_rect": [
+            1359,
+            499,
+            1723,
+            848
+          ],
+          "alpha_noise_cutoff": 8
         }
       ],
       "clips": {
@@ -1354,6 +1562,21 @@
           "frame_msec": 100,
           "loop": false,
           "static_frame": 7
+        },
+        "cast": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
         }
       },
       "accepted_clips": [
@@ -1363,7 +1586,8 @@
         "ranged",
         "hit",
         "defend",
-        "death"
+        "death",
+        "cast"
       ],
       "preserve_clips": [],
       "alpha_noise_cutoff": 8,
@@ -1416,19 +1640,19 @@
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_05.png": 0.61,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_06.png": 0.61,
         "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/death_v1_frame_07.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_00.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_01.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_02.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_03.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_04.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_05.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_06.png": 0.61,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v1_frame_07.png": 0.61
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_00.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_01.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_02.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_03.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_04.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_05.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_06.png": 0.67,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers_veteran/cast_v3_frame_07.png": 0.67
       },
-      "source_scale_reason": "Eight-pose sources use 1024x1536 canvases; hit and defense use 1254px square masters with larger painted bodies. One fixed anatomical scale per source image preserves the existing approximately 231px tall standing body.",
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed native Godot phase sequences at battle scale; accepted articulated anatomy and action continuity. Corrected source crop contamination where needed. Only listed clips accepted; deferred movement or anatomy gaps remain unchanged."
+        "notes": "Repainted two-handed weapon salute reviewed in native128px overview. Both hands remain attached to the weapon; earlier ambiguous extra-hand version is not used."
       },
       "preserved_accepted_clips": []
     }

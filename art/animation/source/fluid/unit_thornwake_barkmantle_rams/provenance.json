@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/attack_v1.png": "d36dcbc0f5c09b0a5ca9e31e54405862e7f93ed2e81d5dcf9aeece22d62913cc",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/hit_defend_v1.png": "e20bc9493705de5691605a8b0de7dce9893b692645cc35f3731326b4c0545477",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/death_v1.png": "e765cb03d8ab790c0ea9602c072df88f6c86320c26a65f77ab39ac8f23c1f2e9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/cast_v1.png": "c6f548eae0bb19f8cce991c9471c2e26d3d94f9a6c7ad5a9669c54c6dd352466"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Game-scale review: horn/foreleg idle, horn thrust and recoil, lowered brace, support rear and full grounded collapse. Dedicated locomotion remains unfinished."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "e054b07969e06d8736acfe3d3f356559b9526a2521712de0532e8d3e96d91bef",
+  "atlas_sha256": "f2066e1e45b716bcf534990a82e779fbe123bab2f43b7d85bde5f69620e0766a",
+  "texture_bytes_rgba": 18213120
+}

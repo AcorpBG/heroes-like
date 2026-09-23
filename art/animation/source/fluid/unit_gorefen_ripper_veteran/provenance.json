@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_gorefen_ripper_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/idle_v1.png": "5cb7e3289ffe5d820df700aafdf8141beb4c5e883fcde594f4b6f3c111384e56",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/move_v1.png": "b0650e997ce6f00e8836390390c71217df38e6d157f4339510ac53d560789efd",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/attack_v1.png": "4f6eb1e009245e4088dda66c040eec711689b6e3fdef84c843f44e50e2e80514",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/reactions_v2.png": "f3143147f2521ddf5331f79d32dfb68c449cb36459bcc3088f02f2fb9eadc812",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/death_v1.png": "c36235699605a9d1d5de219e90f84c6e3c6a55e5630754cf2a50b0d0f33c863e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_gorefen_ripper_veteran/cast_v1.png": "0e942386915e74535c3e71b836c2f5da52b42ca0e6be7ff816d606a161adbf3d"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Game-scale review: tail and foreclaw idle articulation, leg cycling, full claw windup and follow-through, claw guard, grounded collapse and physical support gesture."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "fb3419b1cdaea3e55e758c491aa690bb313c0f2278d84ea92be0e7e262c3383f",
+  "atlas_sha256": "0a241a9a5fb0eb5bceafac58050b661a433360955d79fb6fe009db0bfb4b07fb",
+  "texture_bytes_rgba": 25288704
+}

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_shard_guard",
+  "sources": [
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/move_v1.png",
+      "sha256": "e41d86ad26d96fcb9542a86bf963e2c59aa7436812b43880eade86b081b94c5f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/move_v1.prompt.txt",
+      "prompt_sha256": "1083b8141d5e627a88a8d7e3fc74d0153aea974b45515da64aafe6fa0a0f8903",
+      "reference": "art/units/source/curated/unit_shard_guard.png",
+      "reference_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-c77f5bf9-681c-42c3-a613-b62a9580d00c.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+      "sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.prompt.txt",
+      "prompt_sha256": "08940cbf4528b0bfa8a4d0e4395f713c1ee1a056fdd6d700e4f56062402db848",
+      "reference": "art/units/source/curated/unit_shard_guard.png",
+      "reference_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-3fcc9695-69d5-4094-9eb6-7655ed86a819.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.png",
+      "sha256": "8f217529ded5ae66c66484cae7ca3580ddfa5b248b5d229184d587d76e846186",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/cast_v1.prompt.txt",
+      "prompt_sha256": "66f497901439cd2d4aa6ca37245bdb3f7db14a0f5c3f3be23ffb0d595f4b3182",
+      "reference": "art/units/source/curated/unit_shard_guard.png",
+      "reference_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-ee79f26c-a021-449e-b0e2-155e107fbb50.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.png",
+      "sha256": "4a3e448ba2d3ba52ef61b9207d3b07c3c8f51b399cc19bf108f53a71611cd10a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/reactions_v1.prompt.txt",
+      "prompt_sha256": "2f54b0e1cdd26263aa7c39a18cefb30bacd05c228db36fd55976abe15f7ba6b5",
+      "reference": "art/units/source/curated/unit_shard_guard.png",
+      "reference_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-6da36ac4-aba6-40e8-ab66-5bbd04a1fe4b.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    },
+    {
+      "master": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.png",
+      "sha256": "ec5082c512866eabe1b7adf7cb6dc614ae6947c3106bea7c2b88bbbdb5245ea5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/death_v1.prompt.txt",
+      "prompt_sha256": "296a4bd2c7459865a939cc67ec910be46ddfc82611bf35c461b3f02d75c4b8a2",
+      "reference": "art/units/source/curated/unit_shard_guard.png",
+      "reference_sha256": "03f31b58e721b917e36394effbaf8b6fc23d0b1b40a6ebe38dc2e78f4de59c67",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccf-7af7-75c2-ae2f-73ff433f51e8/exec-ede9f6be-662a-4e4c-82e9-edb257b0970a.png",
+      "tool": "built-in image_gen",
+      "status": "pending coordinator visual acceptance"
+    }
+  ]
+}

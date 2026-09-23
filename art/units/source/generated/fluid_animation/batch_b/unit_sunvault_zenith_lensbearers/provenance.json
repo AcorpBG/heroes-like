@@ -1,0 +1,71 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "art/units/source/curated/unit_sunvault_zenith_lensbearers.png",
+  "reference_sha256": "42c57b8a2ec5449e24d370934bd4f79c01e122bd12de9c678d0e4c93100e81ac",
+  "outputs": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_v1.png",
+      "source_sha256": "ee416356782dad12101f2f9168b2817b4cf6af9d3c6b52734d229c85082c9bf0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_v1.prompt.txt",
+      "prompt_sha256": "ed005a540b236e9cae5f97f75e14c9d00491f4daf57d0e2ea8d2e565e0224885",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-6f57ce54-f5d8-4be6-b50f-76ef86a5c77b.png",
+      "status": "rejected_same_leading_leg"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png",
+      "source_sha256": "62303699700f746e011f946abb56311a8f70212940b38d489e413f89f868b185",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.prompt.txt",
+      "prompt_sha256": "1acd2ea354130a8632347307a91c7cb4f196241fb14ae67030683a0feb936f33",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-0759d360-0fa7-453c-ae50-3b2203d1005f.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png",
+      "source_sha256": "585ba3870ba0d8eab6ed2b1327acd55985641484495de5254896147c9098795e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "8f3ff48c5a0689c6389323652c476ca5890639ab9793aaf5c4bd64eb83158876",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-7e7b9875-d7b9-45ad-a114-df685bd9ab91.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_keys_v2.png",
+      "source_sha256": "8e88089e2b2eae4fde070be8a85924bce20cefad73bc2bddd0f66e56838d32fd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_keys_v2.prompt.txt",
+      "prompt_sha256": "ba6ac0dc30059e00098e12ae82db8602ef9fb5a01a74df5d2d3369339dac8af8",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-150fa3b6-74d4-4c60-8250-6cd613408021.png",
+      "status": "rejected_same_leading_leg"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_opposite_v3.png",
+      "source_sha256": "77e348655de92bd0cefaf0722841a65e8a1f2e5b7ed8c4abf2b8da9c410f76c5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/move_opposite_v3.prompt.txt",
+      "prompt_sha256": "7e0e204eacad7ef94c1ebf776cf7f59fc6b3f54cc3f1af0ad8855c561c050fec",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-01baa2f1-b658-41c3-adf0-62245c4fe619.png",
+      "status": "rejected_same_leading_leg"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.png",
+      "source_sha256": "681752de01cc78dab052ce675bf97b52a21875ca0f2dab503a22f4e2773fe739",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.prompt.txt",
+      "prompt_sha256": "7e2c800b0b1d494b61aef8b8cdd5d5a08e5c9e19778ee1dff0f7733fc933c53d",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-6e26aee2-31c2-4ef8-9ed9-b422e34e6235.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.png",
+      "source_sha256": "4e7a97f2e1e04ca23c4d9c5622762d422324d961afa18cd38119df74ab97f581",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.prompt.txt",
+      "prompt_sha256": "fa5ef8a98a6108d1cc43973ebf3ec6257c5882b4d0f2a5e85cb7de0a7a604a90",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-e012872c-3256-4e21-9772-4949832fd9aa.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png",
+      "source_sha256": "db122cd017c87e06296b2949ba6fe8ff78d07afc5109a58872c9bd67fd833b63",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.prompt.txt",
+      "prompt_sha256": "164bd883041605f74adcca3ae86b37c66c769635a94ad34e374ce63c7cdf84b1",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-93bd33e0-5bf9-46e9-a2cf-09055aab2f1e.png",
+      "status": "pending_visual_review"
+    }
+  ]
+}

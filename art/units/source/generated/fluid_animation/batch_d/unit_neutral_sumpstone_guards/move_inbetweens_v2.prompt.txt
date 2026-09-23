@@ -1,0 +1,7 @@
+Precise anatomy edit of this SIX-dwarf sprite sheet, THREE columns TWO rows. Preserve all upper bodies, gear, shields, picks, heads and style unchanged.
+Currently EVERY dwarf leads with screen-left leg; correct ONLY legs in these THREE cells:
+TOP LEFT CELL: SHIELD-SIDE leg on screen RIGHT must be FORWARD with visible boot sole nearest viewer; PICKAXE-SIDE screen LEFT leg behind.
+BOTTOM MIDDLE CELL: SHIELD-SIDE screen RIGHT leg straight beneath body supporting weight; PICKAXE-SIDE screen LEFT knee bent and boot lifted BACK behind body.
+BOTTOM RIGHT CELL: SHIELD-SIDE screen RIGHT thigh/knee reaches FORWARD with boot ahead nearest camera; PICKAXE-SIDE screen LEFT boot retreats behind.
+Other three cells stay unchanged.
+Never flip or mirror upper bodies, never swap equipment. Do not retain the same screen-left-forward pose in selected cells: BOTH leg locations and knee depth must exchange so the shield-side leg visibly comes forward. Transparent RGBA. No added text or background.

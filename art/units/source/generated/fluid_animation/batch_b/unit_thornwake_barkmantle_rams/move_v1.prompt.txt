@@ -1,0 +1,11 @@
+Use case: identity-preserve. Animate the EXACT Barkmantle Ram in the reference: massive low four-legged wooden beast, pale layered bark armor, moss, amber resin nodules, thick red vine lashings, red woven back harness, three curled pale wooden horns pointing RIGHT, broad stump toes. Preserve all four legs, horn count, armor, harness and camera. Crisp painterly fantasy strategy sprite, true transparent RGBA.
+Make an EIGHT-FRAME walking cycle sprite sheet, FOUR columns TWO rows in reading order, equal generous cells with no text/grid. Same three-quarter side camera facing right and constant body volume. Entire horns, feet and rump safely inside each cell with 12% empty gutter. Body occupies 65% cell width. Four feet must perform a genuine alternating slow quadruped gait, not head bobbing.
+1 near forefoot reaches forward right, far forefoot back; near hindfoot back, far hindfoot forward.
+2 near forefoot loads, far forefoot lifts bent at knee; near hindfoot begins forward swing.
+3 far foreleg bent and passing beneath chest, near forefoot planted; near hindfoot passing beneath belly.
+4 far foreleg extends forward, near hindfoot extends forward.
+5 far forefoot touches forward, near forefoot back; near hindfoot forward, far hindfoot back: opposite support to frame 1.
+6 far forefoot loads, near forefoot lifts and knee flexes; far hindfoot starts swinging.
+7 near foreleg bent and passing chest, far hindfoot passing belly.
+8 near foreleg extends forward to next contact, far hindfoot reaches forward, preparing frame 1.
+Clearly distinguish near and far legs by overlap and light, no swapping limb identity. Back remains stable with a tiny weight shift, no whole-sprite translations or scale changes. No magical effects, no ground scenery, no duplicate poses, no armor redesign.

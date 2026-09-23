@@ -1,0 +1,882 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_milestone_bucklers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              591,
+              333
+            ]
+          ],
+          "anchor": [
+            335,
+            330
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              591,
+              0,
+              1182,
+              333
+            ]
+          ],
+          "anchor": [
+            867,
+            330
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              0,
+              333,
+              591,
+              667
+            ]
+          ],
+          "anchor": [
+            335,
+            664
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              591,
+              333,
+              1182,
+              667
+            ]
+          ],
+          "anchor": [
+            867,
+            664
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              0,
+              667,
+              591,
+              999
+            ]
+          ],
+          "anchor": [
+            335,
+            996
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              591,
+              667,
+              1182,
+              999
+            ]
+          ],
+          "anchor": [
+            867,
+            996
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              0,
+              999,
+              591,
+              1330
+            ]
+          ],
+          "anchor": [
+            335,
+            1326
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png",
+          "rects": [
+            [
+              591,
+              999,
+              1182,
+              1330
+            ]
+          ],
+          "anchor": [
+            867,
+            1326
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              385
+            ]
+          ],
+          "anchor": [
+            260,
+            376
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              385
+            ]
+          ],
+          "anchor": [
+            772,
+            376
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              0,
+              385,
+              512,
+              775
+            ]
+          ],
+          "anchor": [
+            260,
+            760
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              512,
+              385,
+              1024,
+              775
+            ]
+          ],
+          "anchor": [
+            772,
+            760
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              0,
+              775,
+              512,
+              1156
+            ]
+          ],
+          "anchor": [
+            260,
+            1142
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              512,
+              775,
+              1024,
+              1156
+            ]
+          ],
+          "anchor": [
+            772,
+            1142
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              0,
+              1156,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            260,
+            1522
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png",
+          "rects": [
+            [
+              512,
+              1156,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            772,
+            1522
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              388
+            ]
+          ],
+          "anchor": [
+            277,
+            378
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              388
+            ]
+          ],
+          "anchor": [
+            789,
+            378
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              388,
+              512,
+              748
+            ]
+          ],
+          "anchor": [
+            277,
+            737
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              388,
+              1024,
+              748
+            ]
+          ],
+          "anchor": [
+            789,
+            737
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              748,
+              512,
+              1123
+            ]
+          ],
+          "anchor": [
+            277,
+            1112
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              748,
+              1024,
+              1123
+            ]
+          ],
+          "anchor": [
+            789,
+            1112
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              1123,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            277,
+            1504
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              1123,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            789,
+            1504
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              515
+            ]
+          ],
+          "anchor": [
+            285,
+            475
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              515
+            ]
+          ],
+          "anchor": [
+            797,
+            475
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              0,
+              515,
+              512,
+              904
+            ]
+          ],
+          "anchor": [
+            285,
+            880
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              512,
+              515,
+              1024,
+              904
+            ]
+          ],
+          "anchor": [
+            797,
+            880
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              0,
+              904,
+              512,
+              1235
+            ]
+          ],
+          "anchor": [
+            285,
+            1204
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              512,
+              904,
+              1024,
+              1235
+            ]
+          ],
+          "anchor": [
+            797,
+            1204
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              0,
+              1235,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            285,
+            1480
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png",
+          "rects": [
+            [
+              512,
+              1235,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            797,
+            1480
+          ],
+          "scale": 0.46,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              378
+            ]
+          ],
+          "anchor": [
+            315,
+            373
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              378
+            ]
+          ],
+          "anchor": [
+            827,
+            373
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              0,
+              378,
+              512,
+              762
+            ]
+          ],
+          "anchor": [
+            315,
+            753
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              512,
+              378,
+              1024,
+              762
+            ]
+          ],
+          "anchor": [
+            827,
+            753
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              0,
+              762,
+              512,
+              1185
+            ]
+          ],
+          "anchor": [
+            315,
+            1180
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              512,
+              762,
+              1024,
+              1185
+            ]
+          ],
+          "anchor": [
+            827,
+            1180
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              0,
+              1185,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            315,
+            1528
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+          "rects": [
+            [
+              512,
+              1185,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            827,
+            1528
+          ],
+          "scale": 0.61,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "loop": true,
+          "frame_msec": 100,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            10,
+            12,
+            11,
+            9,
+            14,
+            13,
+            15
+          ],
+          "loop": false,
+          "frame_msec": 100,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "defend": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "loop": false,
+          "frame_msec": 100,
+          "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "loop": false,
+          "frame_msec": 100,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "loop": false,
+          "frame_msec": 120,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "loop": false,
+          "frame_msec": 120,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "loop": false,
+          "frame_msec": 120,
+          "static_frame": 0,
+          "contact_frame": 4
+        }
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/move_v1.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/attack_v3.png": 0.59,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/reactions_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/death_v1.png": 0.46,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png": 0.61
+      },
+      "source_scale_reason": "Each image uses one fixed scale calibrated to the old approximately 220-pixel standing body. Death source is drawn larger; no frame-specific resizing. Anchors follow the same ground reference, preserving collapse rather than aligning heads.",
+      "preserve_clips": [
+        "idle"
+      ],
+      "accepted_clips": [],
+      "visual_review": {
+        "status": "pending",
+        "notes": "Existing idle inspected: spear arm raises across torso then returns and shield settles. Candidate retained. Attack v1/v2 rejected for reversing spear; v3 reordered into anticipation/contact/recovery. Body scale and temporal continuity pending coordinator review."
+      }
+    }
+  ]
+}

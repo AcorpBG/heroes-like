@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_neutral_mireglass_belltoads",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/idle_v2.png": "0127f941567515e7ef7d0ef0f4229d672fde6fd42a9b0a2fc1a3f06598b77db2",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/move_v2.png": "c5bf57e1d543988887a2aab6478cdf8672920ff4bf475b1afae2f41a7ec6d3b0",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/attack_v1.png": "2f174fac14574d6c16c5f0d1684958ff6b320be3c4e0cc45dd11fff91f22018f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/ranged_v2.png": "6eacb8494878b51219bfc01c22df983a9d46eaa210e8d5ab48ae42dbf8d186a6",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/reactions_v2.png": "c14a26dc486d3d1b9bbe45782e13b280042dabbd0a8753dd636b8fdad922f290",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/death_v2.png": "500674ef435e688a37350922783b988c8947e0d60c8e71e981355db1dc321152",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_mireglass_belltoads/cast_v1.png": "56948979d6ce5bc89baf6fec99936622b1c8390a3a7fffcc09a9899423c2caf8"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native phase review after connected-component crop correction: articulated sac/foreleg idle, crouch-hop-landing, bite/croak release, tuck defense and deflated grounded corpse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "bbba9b3d9225fc585b2da28f5c4dcc2bad81acbaf3426a7081f76a18f754d988",
+  "atlas_sha256": "4dc00f6bd5a5812e02614315429d82f016229ac8adf37a967350f8e42d197d52",
+  "texture_bytes_rgba": 17817600
+}

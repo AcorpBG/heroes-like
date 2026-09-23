@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png": "c6256885333b4cd92392049f63c8d85cc12545cc1175fac98741665b5864be97",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png": "2abf87258eedb515836d473a7fe42b647c5ecadf0afa37af34ba8f6211683e98",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png": "acd7af9bfc087c68334474ff6fdea1ee4fb2611bfb72b29a2368e85974dbdbd1",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png": "2473250bec99921e80558e96be341b2ebe7f71a122485fef90fcef01a7654d14",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png": "a8746b7950bd6df824f7cf442b71b547c7cd8cbb61bb0e725da0297ce9e8723d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png": "96e0c3e59d7fce1fe7c7096341001571c7f300ead15d65d8f283df7e6f848324"
+  },
+  "accepted_clips": [
+    "attack",
+    "ranged",
+    "cast",
+    "hit",
+    "defend",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed crystal thrust, charged release, free-hand support, recoil/guard and collapse at game scale. Idle needs foreign-fragment cleanup; movement lacks a clear reciprocal stride."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "7c0583390b0ab5c6160380c40d5bf3c104368c4f36e54c77bd0a72785049b21a",
+  "atlas_sha256": "4ff6e3cce06b3417896b4a1dcef6c84d27f527f33dfa43195ec074d6b3d5e401",
+  "texture_bytes_rgba": 13128192
+}

@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "tool": "built-in image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/move_v1.png",
+      "sha256": "10f0f7a99a903fcde02666a0076eef3dd8402c79fb723dfc531f2321dcf478d2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/move_v1.prompt.txt",
+      "prompt_sha256": "db2c65f33fccfb95277daf018c74250a46201fb6b585446f7cf97bda89c287a0",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-7d29a5c7-18dc-4159-b4a9-5030301d5eb6.png",
+      "status": "rejected_clipped_rightmost_noses"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/move_v2.png",
+      "sha256": "d6ab851f5fa7e4c7b1d9c496cc327401264821ffba7c735a847d2829e4dab9c9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/move_v2.prompt.txt",
+      "prompt_sha256": "9f7119060c0773e3b557e178a7ed262d7fafed43e73900070ea301c8825781ce",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-c2b39c20-317f-4a49-9da9-a657aab1c3e8.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/attack_v1.png",
+      "sha256": "1099163698e15387db24f774c4dcc5275fe1838f4cf7ea5d4d5b0dcddd9bc53d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/attack_v1.prompt.txt",
+      "prompt_sha256": "82d7a45c23b9d50aedd6e1fd4a5036892931b2a838e4b827597437a1e2fe8f27",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-ec9211ff-854f-429a-82f0-1ad0b6c7ace0.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/death_v1.png",
+      "sha256": "b9cd14360c325d8345fba1e303e95caebcf4db6f071f403d8a6c5e5dcbb98d3d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/death_v1.prompt.txt",
+      "prompt_sha256": "8fb3ccf21a12c69cdec7b8caefddf1c1f496a0ecbc602277de2fad85d22b3203",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-bab9b6ac-4b7e-44ad-ba83-1e07adbe8ed6.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/cast_v1.png",
+      "sha256": "ee2d9f3dd6183081b92d1defa023e5d986910954e62783ed079f14ead5f5bca4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/cast_v1.prompt.txt",
+      "prompt_sha256": "90ebff27c6ff553007be16f0c21be2f59b9cabb5ad2043bb5a630c05aaa36e04",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-13d8e90d-3bb3-4422-875c-740e7a377999.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/reactions_v1.png",
+      "sha256": "dea1db27f7c8da367764cd8d65ed553b5d977871df103cdbdd5794d249001a37",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/reactions_v1.prompt.txt",
+      "prompt_sha256": "d2912ab69c32521d926e40e03c7b02fe663797439ee2d07d5b2677b9c17584ce",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-fe338212-57bc-42e1-88f0-32fcd1c4bf78.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/idle_v1.png",
+      "sha256": "b860973275bb2a8dbd6a424ff51070e6421ee144fac140dcaf12bb8b565d61f3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds/idle_v1.prompt.txt",
+      "prompt_sha256": "7f987481b8a51ae52dec8d4e2e6811c8c7f7094e82ea65d962034beace607694",
+      "reference": "art/units/source/curated/unit_brasshollow_rivet_hounds.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-6e32d19c-bc41-42b6-a08b-24fb3c46fa17.png",
+      "status": "pending"
+    }
+  ],
+  "processing": "Crop and one fixed scale per source only; no synthetic poses."
+}

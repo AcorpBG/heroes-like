@@ -1,0 +1,20 @@
+{
+  "stem": "move_inbetweens_v1",
+  "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb1-654e-7aa2-af06-8bdc2dae09d2/exec-18b4b98d-1f7c-4e28-9313-0019c69bbda0.png",
+  "generator": "built-in image_gen",
+  "source": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_inbetweens_v1.png",
+  "source_sha256": "d0de3c3e0332e7957212889655d3aa30c8c19cda5b2e300407828b7783244db7",
+  "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_inbetweens_v1.prompt.txt",
+  "prompt_sha256": "2a1c6a3e485f9430719f0a5e340762b605aa3633a58a40dc17e4e11926cd3610",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_river_guard_veteran/move_inbetweens_v1.png",
+      "sha256": "8236ab24c06b12851f5c14f03e4aebf24584f8247376a80f48139f32a44d9f77"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_bog_brute_veteran/move_contacts_v1.png",
+      "sha256": "e2f821725590c31c19c3c1c9278032d7dcf316ef266d46bdb7e8fa66f7942963"
+    }
+  ],
+  "review_status": "withheld_weak_opposite_inbetweens"
+}

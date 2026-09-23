@@ -1,0 +1,1163 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_lockglass_writcasters_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "idle_00",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            256,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            768,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "idle_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            256,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            768,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            256,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            768,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_00",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            256,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            768,
+            1140
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "ranged_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1524
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              0,
+              768,
+              512,
+              1152
+            ]
+          ],
+          "anchor": [
+            256,
+            1140
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              0,
+              1152,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1524
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              512,
+              768,
+              1024,
+              1152
+            ]
+          ],
+          "anchor": [
+            768,
+            1140
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png",
+          "rects": [
+            [
+              512,
+              1152,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1524
+          ],
+          "scale": 0.63
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              384
+            ]
+          ],
+          "anchor": [
+            256,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              384
+            ]
+          ],
+          "anchor": [
+            768,
+            372
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png",
+          "rects": [
+            [
+              0,
+              384,
+              512,
+              768
+            ]
+          ],
+          "anchor": [
+            256,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png",
+          "rects": [
+            [
+              512,
+              384,
+              1024,
+              768
+            ]
+          ],
+          "anchor": [
+            768,
+            756
+          ],
+          "scale": 0.6
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png",
+          "rects": [
+            [
+              0,
+              0,
+              656,
+              600
+            ]
+          ],
+          "anchor": [
+            396,
+            591
+          ],
+          "scale": 0.39
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png",
+          "rects": [
+            [
+              656,
+              0,
+              1312,
+              600
+            ]
+          ],
+          "anchor": [
+            996,
+            591
+          ],
+          "scale": 0.39
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png",
+          "rects": [
+            [
+              0,
+              600,
+              656,
+              1199
+            ]
+          ],
+          "anchor": [
+            396,
+            1170
+          ],
+          "scale": 0.39
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png",
+          "rects": [
+            [
+              656,
+              600,
+              1312,
+              1199
+            ]
+          ],
+          "anchor": [
+            996,
+            1170
+          ],
+          "scale": 0.39
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              512,
+              530
+            ]
+          ],
+          "anchor": [
+            256,
+            494
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              0,
+              1024,
+              530
+            ]
+          ],
+          "anchor": [
+            768,
+            501
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              530,
+              512,
+              950
+            ]
+          ],
+          "anchor": [
+            256,
+            918
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              530,
+              1024,
+              950
+            ]
+          ],
+          "anchor": [
+            768,
+            918
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              950,
+              512,
+              1280
+            ]
+          ],
+          "anchor": [
+            256,
+            1245
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              950,
+              1024,
+              1280
+            ]
+          ],
+          "anchor": [
+            768,
+            1248
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              0,
+              1280,
+              512,
+              1536
+            ]
+          ],
+          "anchor": [
+            256,
+            1501
+          ],
+          "scale": 0.47
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png",
+          "rects": [
+            [
+              512,
+              1280,
+              1024,
+              1536
+            ]
+          ],
+          "anchor": [
+            768,
+            1499
+          ],
+          "scale": 0.47
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 140,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            40,
+            41,
+            42,
+            43
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55
+          ],
+          "frame_msec": 140,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            55
+          ],
+          "frame_msec": 1000,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "pending",
+        "notes": "Source paintings reviewed for identity. Runtime scale/motion acceptance remains coordinator-owned. Idle and cast poses reordered only to follow hand-height continuity; no painted frames duplicated. Walk near/far leg continuity and death 5-to-6 fall need real playback review."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/idle_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/move_v2.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/attack_v3.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/ranged_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/cast_v2.png": 0.63,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/reactions_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/defend_v2.png": 0.39,
+        "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_lockglass_writcasters_veteran/death_v1.png": 0.47
+      },
+      "source_scale_reason": "Each original keeps one fixed anatomical scale. Most 1024x1536 eight-pose sheets depict standing bodies about370px tall (0.60); cast bodies are about350px (0.63); death source first standing body about470px (0.47); 1312x1199 four-pose defense bodies about570px (0.39). All target approximately220-225px standing anatomy at reference height256. Collapsed/recoiled poses are never individually enlarged. Coordinator runtime registration review pending."
+    }
+  ]
+}

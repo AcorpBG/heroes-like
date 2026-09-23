@@ -1,0 +1,127 @@
+{
+  "id": "unit_veilmourn_fogbound_leviathan",
+  "unit_id": "unit_veilmourn_fogbound_leviathan",
+  "name": "Fogbound Leviathan",
+  "faction_id": "faction_veilmourn",
+  "tier": 7,
+  "role": "melee",
+  "motif": "beast",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_veilmourn_fogbound_leviathan.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_veilmourn_fogbound_leviathan.png",
+  "curated_source_sha256": "b30e43ca1d825ceedc1dbc407cfc02e217dcaa6ae80abe2e3a16bafce77bf8dd",
+  "pose_sheet": "res://art/animation/source/fluid/unit_veilmourn_fogbound_leviathan/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_provenance": "res://art/animation/source/poses/unit_veilmourn_fogbound_leviathan/provenance.json",
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "loop": true,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 6,
+      "indices": [
+        2,
+        3,
+        4,
+        3,
+        5,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 3,
+      "indices": [
+        6,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 300,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 170,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 250,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 180,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_source_facing": "left",
+  "pose_ground_margin": 20,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

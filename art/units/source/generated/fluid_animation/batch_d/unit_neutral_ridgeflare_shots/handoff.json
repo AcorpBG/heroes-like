@@ -1,0 +1,1049 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_ridgeflare_shots",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              258,
+              361
+            ]
+          ],
+          "anchor": [
+            129.0,
+            361
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              261,
+              361
+            ]
+          ],
+          "anchor": [
+            130.5,
+            361
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              298,
+              373
+            ]
+          ],
+          "anchor": [
+            149.0,
+            373
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              293,
+              360
+            ]
+          ],
+          "anchor": [
+            146.5,
+            360
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              355,
+              363
+            ]
+          ],
+          "anchor": [
+            177.5,
+            363
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              292,
+              369
+            ]
+          ],
+          "anchor": [
+            146.0,
+            369
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              282,
+              375
+            ]
+          ],
+          "anchor": [
+            141.0,
+            375
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              265,
+              375
+            ]
+          ],
+          "anchor": [
+            132.5,
+            375
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_00",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              223,
+              365
+            ]
+          ],
+          "anchor": [
+            111.5,
+            365
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              225,
+              364
+            ]
+          ],
+          "anchor": [
+            112.5,
+            364
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              254,
+              368
+            ]
+          ],
+          "anchor": [
+            127.0,
+            368
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              294,
+              366
+            ]
+          ],
+          "anchor": [
+            147.0,
+            366
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              256,
+              375
+            ]
+          ],
+          "anchor": [
+            128.0,
+            375
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              254,
+              378
+            ]
+          ],
+          "anchor": [
+            127.0,
+            378
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              251,
+              399
+            ]
+          ],
+          "anchor": [
+            125.5,
+            399
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "ranged_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              238,
+              396
+            ]
+          ],
+          "anchor": [
+            119.0,
+            396
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              251,
+              375
+            ]
+          ],
+          "anchor": [
+            125.5,
+            375
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              233,
+              374
+            ]
+          ],
+          "anchor": [
+            116.5,
+            374
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              246,
+              392
+            ]
+          ],
+          "anchor": [
+            123.0,
+            392
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              239,
+              380
+            ]
+          ],
+          "anchor": [
+            119.5,
+            380
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              283,
+              377
+            ]
+          ],
+          "anchor": [
+            141.5,
+            377
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              254,
+              378
+            ]
+          ],
+          "anchor": [
+            127.0,
+            378
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              241,
+              386
+            ]
+          ],
+          "anchor": [
+            120.5,
+            386
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "move_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              255,
+              381
+            ]
+          ],
+          "anchor": [
+            127.5,
+            381
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              290,
+              474
+            ]
+          ],
+          "anchor": [
+            145.0,
+            474
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              334,
+              430
+            ]
+          ],
+          "anchor": [
+            167.0,
+            430
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              422,
+              365
+            ]
+          ],
+          "anchor": [
+            211.0,
+            365
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              453,
+              328
+            ]
+          ],
+          "anchor": [
+            226.5,
+            328
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              447,
+              304
+            ]
+          ],
+          "anchor": [
+            223.5,
+            304
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              503,
+              240
+            ]
+          ],
+          "anchor": [
+            251.5,
+            240
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              499,
+              213
+            ]
+          ],
+          "anchor": [
+            249.5,
+            213
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              489,
+              224
+            ]
+          ],
+          "anchor": [
+            244.5,
+            224
+          ],
+          "scale": 0.43
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              268,
+              367
+            ]
+          ],
+          "anchor": [
+            134.0,
+            367
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              269,
+              367
+            ]
+          ],
+          "anchor": [
+            134.5,
+            367
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              268,
+              370
+            ]
+          ],
+          "anchor": [
+            134.0,
+            370
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              269,
+              370
+            ]
+          ],
+          "anchor": [
+            134.5,
+            370
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              268,
+              401
+            ]
+          ],
+          "anchor": [
+            134.0,
+            401
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              269,
+              371
+            ]
+          ],
+          "anchor": [
+            134.5,
+            371
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              268,
+              371
+            ]
+          ],
+          "anchor": [
+            134.0,
+            371
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              268,
+              372
+            ]
+          ],
+          "anchor": [
+            134.0,
+            372
+          ],
+          "scale": 0.56
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              343,
+              387
+            ]
+          ],
+          "anchor": [
+            171.5,
+            387
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              365,
+              356
+            ]
+          ],
+          "anchor": [
+            182.5,
+            356
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              328,
+              372
+            ]
+          ],
+          "anchor": [
+            164.0,
+            372
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              300,
+              413
+            ]
+          ],
+          "anchor": [
+            150.0,
+            413
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "defend_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              298,
+              382
+            ]
+          ],
+          "anchor": [
+            149.0,
+            382
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "defend_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              313,
+              328
+            ]
+          ],
+          "anchor": [
+            156.5,
+            328
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "defend_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              320,
+              329
+            ]
+          ],
+          "anchor": [
+            160.0,
+            329
+          ],
+          "scale": 0.54
+        },
+        {
+          "name": "defend_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              333,
+              335
+            ]
+          ],
+          "anchor": [
+            166.5,
+            335
+          ],
+          "scale": 0.54
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 3
+        },
+        "move": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 115,
+          "loop": false,
+          "static_frame": 7
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 115,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            40,
+            41,
+            42,
+            43
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 3
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "frame_msec": 100,
+          "loop": false
+        }
+      },
+      "preserve_clips": [
+        "idle"
+      ],
+      "accepted_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_01.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_02.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_03.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_04.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_05.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_06.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_07.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_00.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_01.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_02.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_03.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_04.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_05.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_06.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/ranged_v1_07.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_00.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_01.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_02.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_03.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_04.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_05.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_06.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/move_v1_07.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_00.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_01.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_02.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_03.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_04.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_05.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_06.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/death_v1_07.png": 0.43,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_00.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_01.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_02.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_03.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_04.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_05.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_06.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_07.png": 0.56,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_00.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_02.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_04.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_06.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_01.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_03.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_05.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/reactions_v1_07.png": 0.54
+      },
+      "source_scale_reason": "Fixed per-original source resolution: ordinary sheets standing body about360px at0.56, reactions390px at0.54, death standing470px at0.43, targeting about205px within reference256. All extracted poses from each source retain exactly that scale; no per-pose normalization.",
+      "visual_review": {
+        "status": "pending",
+        "notes": [
+          "Existing eight-pose idle visually inspected: arms raise/lower crossbow visibly with stable identity and grounded feet; retain pending coordinator confirmation.",
+          "Move is pending closer temporal review of alternating legs.",
+          "Extracted images copy original alpha>16 component pixels without synthesis or deformation; preserved masters and rebuild recipe included.",
+          "Death terminal is grounded closed-eye corpse; no additional corpse painting."
+        ]
+      }
+    }
+  ]
+}

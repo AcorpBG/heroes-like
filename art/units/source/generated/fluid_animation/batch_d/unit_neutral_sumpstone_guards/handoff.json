@@ -1,0 +1,878 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_sumpstone_guards",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 8,
+      "frames": [
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              744,
+              765
+            ]
+          ],
+          "anchor": [
+            382,
+            761
+          ],
+          "scale": 0.212
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              731,
+              760
+            ]
+          ],
+          "anchor": [
+            366,
+            756
+          ],
+          "scale": 0.212
+        },
+        {
+          "name": "move_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              481,
+              488
+            ]
+          ],
+          "anchor": [
+            248,
+            484
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "move_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              478,
+              494
+            ]
+          ],
+          "anchor": [
+            252,
+            490
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "move_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              476,
+              495
+            ]
+          ],
+          "anchor": [
+            252,
+            491
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "move_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              486
+            ]
+          ],
+          "anchor": [
+            249,
+            482
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "move_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              479,
+              469
+            ]
+          ],
+          "anchor": [
+            251,
+            465
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "move_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              477,
+              494
+            ]
+          ],
+          "anchor": [
+            252,
+            490
+          ],
+          "scale": 0.331
+        },
+        {
+          "name": "attack_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              375,
+              374
+            ]
+          ],
+          "anchor": [
+            204,
+            370
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              346,
+              362
+            ]
+          ],
+          "anchor": [
+            195,
+            358
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              365,
+              417
+            ]
+          ],
+          "anchor": [
+            196,
+            413
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              356,
+              412
+            ]
+          ],
+          "anchor": [
+            179,
+            408
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              387,
+              326
+            ]
+          ],
+          "anchor": [
+            196,
+            322
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              329
+            ]
+          ],
+          "anchor": [
+            204,
+            325
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              374,
+              375
+            ]
+          ],
+          "anchor": [
+            205,
+            371
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "attack_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              372,
+              371
+            ]
+          ],
+          "anchor": [
+            198,
+            367
+          ],
+          "scale": 0.433
+        },
+        {
+          "name": "hit_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              496,
+              387
+            ]
+          ],
+          "anchor": [
+            256,
+            383
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "hit_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              442,
+              389
+            ]
+          ],
+          "anchor": [
+            236,
+            385
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "hit_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              494,
+              404
+            ]
+          ],
+          "anchor": [
+            252,
+            400
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "hit_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              450,
+              402
+            ]
+          ],
+          "anchor": [
+            230,
+            398
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "defend_04",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              481,
+              417
+            ]
+          ],
+          "anchor": [
+            255,
+            413
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "defend_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              389,
+              387
+            ]
+          ],
+          "anchor": [
+            200,
+            383
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "defend_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              412,
+              349
+            ]
+          ],
+          "anchor": [
+            176,
+            345
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "defend_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              360,
+              358
+            ]
+          ],
+          "anchor": [
+            175,
+            354
+          ],
+          "scale": 0.419
+        },
+        {
+          "name": "death_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              456,
+              430
+            ]
+          ],
+          "anchor": [
+            226,
+            426
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              420,
+              346
+            ]
+          ],
+          "anchor": [
+            217,
+            342
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              461,
+              343
+            ]
+          ],
+          "anchor": [
+            221,
+            339
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              463,
+              320
+            ]
+          ],
+          "anchor": [
+            242,
+            316
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              536,
+              262
+            ]
+          ],
+          "anchor": [
+            274,
+            258
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              455,
+              241
+            ]
+          ],
+          "anchor": [
+            225,
+            237
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              505,
+              189
+            ]
+          ],
+          "anchor": [
+            252,
+            185
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "death_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              469,
+              189
+            ]
+          ],
+          "anchor": [
+            237,
+            185
+          ],
+          "scale": 0.377
+        },
+        {
+          "name": "cast_00",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              336,
+              322
+            ]
+          ],
+          "anchor": [
+            176,
+            318
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              319,
+              324
+            ]
+          ],
+          "anchor": [
+            162,
+            320
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              302,
+              348
+            ]
+          ],
+          "anchor": [
+            141,
+            344
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              306,
+              349
+            ]
+          ],
+          "anchor": [
+            145,
+            345
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              298,
+              372
+            ]
+          ],
+          "anchor": [
+            139,
+            368
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              309,
+              357
+            ]
+          ],
+          "anchor": [
+            148,
+            353
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              321,
+              316
+            ]
+          ],
+          "anchor": [
+            160,
+            312
+          ],
+          "scale": 0.503
+        },
+        {
+          "name": "cast_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              344,
+              317
+            ]
+          ],
+          "anchor": [
+            187,
+            313
+          ],
+          "scale": 0.503
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            2,
+            3,
+            4,
+            1,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 100,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 3
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 100,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [
+        "idle"
+      ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_00.png": 0.212,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_01.png": 0.212,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_00.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_01.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_02.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_03.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_04.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_inbetweens_v3_05.png": 0.331,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_00.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_01.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_02.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_03.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_04.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_05.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_06.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/attack_v1_07.png": 0.433,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_00.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_01.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_02.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_03.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_04.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_05.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_06.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/reactions_v1_07.png": 0.419,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_00.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_01.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_02.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_03.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_04.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_05.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_06.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/death_v1_07.png": 0.377,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_00.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_01.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_02.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_03.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png": 0.503,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png": 0.503
+      },
+      "source_scale_reason": "Each originating master has one fixed anatomical scale matching existing 162-pixel idle figure. Separate crop files retain that exact master scale; no per-frame normalization.",
+      "visual_review": {
+        "status": "pending",
+        "existing_idle": "Eight original idle paintings inspected: coherent pickaxe arm lift and settle with planted feet and rigid shield. Recommend retention, coordinator final acceptance required.",
+        "movement": "Opposite-contact and six-inbetween paintings repaired with specific leg-only edits; both shield-side and pick-side legs now lead. Pending coordinator review of full motion."
+      }
+    }
+  ]
+}
