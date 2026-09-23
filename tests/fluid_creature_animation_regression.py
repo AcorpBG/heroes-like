@@ -182,7 +182,14 @@ func run():
 				var duration:int=mini(Pose.clip_duration_msec(row.pose_clips.attack),260) if reduced else Pose.clip_duration_msec(row.pose_clips.attack)
 				check(record.base_duration_ms==duration,"board truncated authored clip")
 				check(record.max_duration_ms==board._presentation_duration_msec(duration),"speed mismatch")
-				check(board.action_playback_wait_msec()>=record.max_duration_ms,"shell wait truncates final pose")
+				# The shell waits for the remaining interval, not the original
+				# duration. Bound its clock sample to avoid setup-time flakes.
+				var wait_before:int=Time.get_ticks_msec()
+				var remaining_wait:int=board.action_playback_wait_msec()
+				var wait_after:int=Time.get_ticks_msec()
+				var minimum_wait:int=maxi(1,int(record.expires_at_msec)-wait_after)+16
+				var maximum_wait:int=maxi(1,int(record.expires_at_msec)-wait_before)+16
+				check(remaining_wait>=minimum_wait and remaining_wait<=maximum_wait,"shell wait does not match remaining animation deadline")
 				check(board.can_overlap_action_contact(hit)==not reduced,"contact overlap policy")
 				if not reduced:
 					var contact_wait:int=board.action_playback_wait_msec(true)

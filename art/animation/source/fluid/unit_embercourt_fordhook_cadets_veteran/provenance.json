@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/idle_v1.png": "5b91d615ee7779771f539559cd9a96296acab98088d557abb8c0b223a83c3267",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/attack_v1.png": "6cc27e3665d88da78d3ffaa86ba0bd01f01257ed83d6b636a38ac6a497097103",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/reactions_v1.png": "6391a936fcfa2672d146534dbfe9a630317e6d04cca12631dabefb3e09e00041",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/cast_v1.png": "804b59f1dbcbf1d3d5687293ba0e9c681485b272478a89169e35f2cc8338906c",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/death_v1.png": "71b37f7ba841356bd676aaeb2e2f2288df0b9b6df2ee738e00cb2580dbefd54f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_far_v1.png": "aad3127e501207f326a3c1f1f1ae8f1eaffff862ffbf0b40a48fdf3b9998fcec",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_fordhook_cadets_veteran/move_near_v1.png": "cec27d6260aff5142db6b1df2741df38209d44af58025c5b70c76f71f64e3483"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Chainford Marshals: seven complete original articulated actions reviewed in source and actual Godot 128px phases. Dual-hook strike/recovery, chain-grip idle, crossed-hook brace, raised-hook rally, opposing gait and column-reordered grounded collapse preserve face, coat, weapon ownership and anatomical scale."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "28d3c18a08008b86db02303484a4b613c3bc211de43a18e4d19cb38faf0c3e70",
+  "atlas_sha256": "02d4858b1aa4ddc4ca46626703911b561d9592c7dd901543e5256990663c479f",
+  "texture_bytes_rgba": 22077440
+}
