@@ -11408,6 +11408,12 @@ static func _town_market_panel_lines(session: SessionStateStoreScript.SessionDat
 		int(session.day) if session != null else -1
 	)
 	lines.append("- Weekly caps %s." % _market_usage_summary(state, usage))
+	var reset_day := int(usage.get("week", 1)) * 7 + 1
+	for resource in state.get("import_resources", []):
+		var remaining := maxi(0, int(state.buy_caps.get(resource, 0)) - int(usage.buy.get(resource, 0)))
+		lines.append("- Import %s: %d gold each; %d/%d remaining this week. Allowance resets Day %d; buy only." % [String(resource).replace("_", " "), int(buy_rates[resource]), remaining, int(state.buy_caps[resource]), reset_day])
+	if state.get("import_resources", []).is_empty():
+		lines.append("- Upgrade to Trade Exchange for limited weekly imports of this town's two rare resources.")
 	var bulk_resource := String(state.get("bulk_resource", ""))
 	var bulk_resources := _market_bulk_resources(state)
 	var bulk_amount := int(state.get("bulk_amount", 0))
@@ -11437,7 +11443,7 @@ static func _town_market_actions(session: SessionStateStoreScript.SessionData, t
 	var state := _town_market_state(town)
 	if not bool(state.get("active", false)):
 		return actions
-	var resource_order := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
+	var resource_order := _market_buy_resources(state)
 	var bulk_resources := _market_bulk_resources(state)
 	for index in range(bulk_resources.size() - 1, -1, -1):
 		var bulk_resource := String(bulk_resources[index])
@@ -11487,12 +11493,14 @@ static func _market_action_entry(
 		int(cap_state.get("used", 0)),
 		int(cap_state.get("limit", 0)),
 	]
+	if resource_key in state.get("import_resources", []):
+		summary += " | Import allowance: %d remaining; resets Day %d. Buy only." % [int(cap_state.get("remaining", 0)), int(cap_state.get("week", 1)) * 7 + 1]
 	if not _can_afford(session, quote.get("cost", {})):
 		disabled = true
 		disabled_reason = "Insufficient reserves for this exchange."
 	return {
 		"id": "market:%s:%s:%d" % [action_type, resource_key, amount],
-		"label": "%s %d %s" % [
+		"label": ("Import %d %s - %d gold (%d left)" % [amount, resource_key.replace("_", " ").capitalize(), int(quote.get("gold_value", 0)), int(cap_state.get("remaining", 0))]) if resource_key in state.get("import_resources", []) else "%s %d %s" % [
 			"Buy" if action_type == "buy" else "Sell",
 			amount,
 			resource_key.capitalize(),
@@ -11644,10 +11652,22 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		exchange_value += max(0, 900 - int(buy_rates.get(resource_key, 0)))
 	exchange_value += bulk_resources.size() * 120
 	var caps := _market_caps_for_profile(market_profile)
+	var import_resources: Array = []
+	var imports: Dictionary = market_profile.get("rare_import", {})
+	if tier >= 2 and not imports.is_empty():
+		var pair: Dictionary = faction.get("town_resources", {})
+		for slot in ["main", "secondary"]:
+			var resource := String(pair.get(slot, ""))
+			if resource == "gold" or resource in NORMAL_MARKET_RESOURCE_KEYS or resource not in LIVE_STOCKPILE_RESOURCE_KEYS or resource in import_resources:
+				continue
+			import_resources.append(resource)
+			buy_rates[resource] = maxi(1, int(imports.get("unit_gold", 1200)))
+			caps.buy_caps[resource] = maxi(0, int(imports.get("weekly_cap", 5)))
 	return {
 		"active": true,
 		"tier": tier,
 		"profile": profile_id,
+		"import_resources": import_resources,
 		"building_id": market_building_id,
 		"building_name": String(market_building.get("name", market_building_id)),
 		"buy_rates": buy_rates,
@@ -11661,6 +11681,48 @@ static func _town_market_state(town: Dictionary) -> Dictionary:
 		"specialty_summary": specialty_summary,
 		"exchange_value": exchange_value,
 	}
+
+static func _market_buy_resources(state: Dictionary) -> Array:
+	var result := NORMAL_MARKET_RESOURCE_KEYS.duplicate()
+	result.append_array(state.get("import_resources", []))
+	return result
+
+static func bank_town_rare_imports(town: Dictionary, pool: Dictionary, cost: Dictionary, current_day: int, gold_reserve: int = 2000) -> Array:
+	# Bank only a selected legal project's shortage. Require funding for its full
+	# remaining import bill, ordinary cost and reserve before spending this week.
+	var state := _town_market_state(town)
+	var resources: Array = state.get("import_resources", [])
+	if resources.is_empty() or current_day < 1:
+		return []
+	var projected := pool.duplicate(true)
+	var import_bill := 0
+	for resource in resources:
+		var deficit := maxi(0, int(cost.get(resource, 0)) - int(pool.get(resource, 0)))
+		import_bill += deficit * int(state.buy_rates[resource])
+		projected[resource] = maxi(int(projected.get(resource, 0)), int(cost.get(resource, 0)))
+	if import_bill <= 0:
+		return []
+	projected["gold"] = int(projected.get("gold", 0)) - import_bill - maxi(0, gold_reserve)
+	# No liquidation: already-owned staples remain reserved for the project.
+	var readiness := _town_market_cost_coverage(town, projected, cost, current_day)
+	if not bool(readiness.get("affordable", false)) or int(projected.gold) < int(readiness.get("required_gold_total", 0)):
+		return []
+	var usage := _normalize_town_market_usage_state(town.get("market_usage", {}), current_day)
+	var actions: Array = []
+	for resource in resources:
+		var deficit := maxi(0, int(cost.get(resource, 0)) - int(pool.get(resource, 0)))
+		var quote := _market_quote_from_state(state, "buy", String(resource), 1)
+		var cap := _market_cap_state_for_quote({"market_usage": usage}, state, quote, current_day)
+		var amount := mini(deficit, int(cap.remaining))
+		if amount <= 0:
+			continue
+		quote = _market_quote_from_state(state, "buy", String(resource), amount)
+		_apply_resource_transaction_to_pool(pool, quote.cost, quote.gain)
+		usage.buy[resource] = int(usage.buy.get(resource, 0)) + amount
+		actions.append("%s imports %d %s for %d gold toward construction." % [_town_name(town), amount, String(resource).replace("_", " "), int(quote.gold_value)])
+	if not actions.is_empty():
+		town["market_usage"] = usage
+	return actions
 
 static func _market_caps_for_profile(profile: Dictionary) -> Dictionary:
 	var buy_caps := _empty_market_usage_bucket(MARKET_BASE_BUY_CAP)
@@ -11699,8 +11761,9 @@ static func _normalize_market_usage_bucket(value: Variant) -> Dictionary:
 	var bucket := _empty_market_usage_bucket()
 	if not (value is Dictionary):
 		return bucket
-	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
-		bucket[resource_key] = max(0, int(value.get(resource_key, 0)))
+	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
+		if resource_key != "gold" and (resource_key in NORMAL_MARKET_RESOURCE_KEYS or value.has(resource_key)):
+			bucket[resource_key] = max(0, int(value.get(resource_key, 0)))
 	return bucket
 
 static func _normalize_town_market_usage_state(value: Variant, current_day: int = -1) -> Dictionary:
@@ -11772,7 +11835,7 @@ static func _town_market_quote(town: Dictionary, action_type: String, resource_k
 static func _market_quote_from_state(state: Dictionary, action_type: String, resource_key: String, amount: int) -> Dictionary:
 	if not bool(state.get("active", false)):
 		return {}
-	if resource_key not in NORMAL_MARKET_RESOURCE_KEYS:
+	if resource_key not in NORMAL_MARKET_RESOURCE_KEYS and (action_type != "buy" or resource_key not in state.get("import_resources", [])):
 		return {}
 	var normalized_amount = max(0, amount)
 	if normalized_amount <= 0:
@@ -11845,7 +11908,8 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 	var liquidatable_gold := 0
 	var market_cap_blockers := []
 	var restricted_resource_blockers := []
-	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+	var buy_resources := _market_buy_resources(state)
+	for resource_key in buy_resources:
 		var required_amount := int(normalized_cost.get(resource_key, 0))
 		var current_amount := int(normalized_pool.get(resource_key, 0))
 		var deficit = max(0, required_amount - current_amount)
@@ -11853,17 +11917,17 @@ static func _town_market_cost_coverage(town: Dictionary, pool: Dictionary, cost:
 		if deficit > 0:
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, deficit)
 			var buy_remaining := int(_market_cap_state_for_quote(town, state, buy_quote, current_day).get("remaining", deficit))
-			if current_day > 0 and buy_remaining < deficit:
+			if (current_day > 0 or resource_key in state.get("import_resources", [])) and buy_remaining < deficit:
 				market_cap_blockers.append("buy %s %d/%d" % [resource_key, buy_remaining, deficit])
 			else:
 				required_gold_total += deficit * int(state.get("buy_rates", {}).get(resource_key, 0))
-		if surplus > 0:
+		if surplus > 0 and resource_key in NORMAL_MARKET_RESOURCE_KEYS:
 			var sell_quote := _market_quote_from_state(state, "sell", resource_key, surplus)
 			var sell_remaining := int(_market_cap_state_for_quote(town, state, sell_quote, current_day).get("remaining", surplus))
 			var sellable_surplus: int = surplus if current_day <= 0 else min(surplus, sell_remaining)
 			liquidatable_gold += sellable_surplus * int(state.get("sell_rates", {}).get(resource_key, 0))
 	for resource_key in LIVE_STOCKPILE_RESOURCE_KEYS:
-		if resource_key == "gold" or resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+		if resource_key == "gold" or resource_key in buy_resources:
 			continue
 		var restricted_deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(normalized_pool.get(resource_key, 0)))
 		if restricted_deficit > 0:
@@ -11923,24 +11987,24 @@ static func _apply_market_cost_coverage(town: Dictionary, pool: Dictionary, cost
 			actions.append("%s sold 1 %s for %d gold" % [_town_name(town), resource_key, int(sell_quote.get("gold_value", 0))])
 		if int(pool.get("gold", 0)) >= required_gold_total:
 			break
-	for resource_key in NORMAL_MARKET_RESOURCE_KEYS:
+	for resource_key in _market_buy_resources(state):
 		var deficit = max(0, int(normalized_cost.get(resource_key, 0)) - int(pool.get(resource_key, 0)))
 		while deficit > 0:
 			var buy_quote := _market_quote_from_state(state, "buy", resource_key, 1)
 			if buy_quote.is_empty() or int(pool.get("gold", 0)) < int(buy_quote.get("gold_value", 0)):
 				return actions
-			if current_day > 0:
+			if current_day > 0 or resource_key in state.get("import_resources", []):
 				var buy_cap := _market_cap_state_for_quote({"market_usage": local_usage}, state, buy_quote, current_day)
 				if int(buy_cap.get("remaining", 0)) <= 0:
 					return actions
 			_apply_resource_transaction_to_pool(pool, buy_quote.get("cost", {}), buy_quote.get("gain", {}))
-			if current_day > 0:
+			if current_day > 0 or resource_key in state.get("import_resources", []):
 				var buy_bucket: Dictionary = local_usage.get("buy", {})
 				buy_bucket[resource_key] = int(buy_bucket.get(resource_key, 0)) + 1
 				local_usage["buy"] = buy_bucket
 			deficit -= 1
 			actions.append("%s bought 1 %s for %d gold" % [_town_name(town), resource_key, int(buy_quote.get("gold_value", 0))])
-	if not actions.is_empty() and current_day > 0:
+	if not actions.is_empty() and (current_day > 0 or not state.get("import_resources", []).is_empty()):
 		town["market_usage"] = local_usage
 	return actions
 

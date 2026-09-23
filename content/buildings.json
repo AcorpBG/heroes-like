@@ -4475,6 +4475,10 @@
       "market_profile": {
         "id": "trade_exchange",
         "tier": 2,
+        "rare_import": {
+          "unit_gold": 1200,
+          "weekly_cap": 5
+        },
         "buy_rate_adjustments": {
           "wood": -150,
           "ore": -150
@@ -4491,7 +4495,7 @@
         "sell_cap_bonus": {},
         "specialty_summary": "Resource exchange; upgraded brokers offer better rates and bulk trades."
       },
-      "description": "Exchange wood and ore for gold. Improved rates and bulk trading."
+      "description": "Improved wood and ore rates and bulk trading. Import this town's two rare resources for 1,200 gold each, up to 5 of each per week. Buy only; unused allowance does not accumulate."
     },
     {
       "id": "building_wayfarers_hall",

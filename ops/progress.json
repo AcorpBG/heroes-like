@@ -22354,7 +22354,7 @@
       "sourceDocs": [
         "docs/common-town-building-template.md"
       ],
-      "notes": "Parallel Windows full-match runs across all six factions use actual scene actions and exact save/resume state. Initial games reach genuine terminal defeats but lack late-tier rare-resource and artifact-commerce coverage. Improved legal economic policies are running; no cost/growth tuning justified yet. Host certificate/shader errors remain a reported validation limitation. Not complete."
+      "notes": "Windows matches use actual gameplay/economy rules and exact save continuations. Six Small terminal defeats and Sunvault Medium victory on day57 are observed; remaining Medium histories continue. Veilmourn Medium seed10 has no renewable secondary resource, blocking T6/T7. Implemented Trade Exchange imports: 1200 gold/unit, five of each authored faction resource per town/week, persistent allowance and AI banking; 198 focused checks pass. Mireclaw earned T6 construction after four paid imports; Thornwake earned T6 construction/upgrade/recruitment naturally. Complete late-tier and terminal coverage remains in progress. No native generation changes or full suite; Windows host certificate warnings remain a validation limitation."
     },
     {
       "id": "feature-common-town-development-20260921",
