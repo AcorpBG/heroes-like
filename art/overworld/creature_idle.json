@@ -5878,33 +5878,37 @@
     "unit_embercourt_beacon_lectors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beacon_lectors_veteran.png",
       "frame_size": [
-        186,
-        250
+        181,
+        243
       ],
-      "frames": 4,
-      "frame_msec": 280,
+      "frames": 8,
+      "frame_msec": 145,
       "static_frame": 0,
       "ground_anchor": [
-        87.0,
-        239
+        89.0,
+        235
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_beacon_lectors_veteran.png",
+      "painted_extent": 227,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_beacon_lectors_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        169,
-        1,
-        355,
-        251
+        119,
+        17,
+        300,
+        260
       ],
-      "source_sha256": "2e18a709742370f04d7a25c29e0b2e52866f6028b693fa6fcb81f99ab471588b",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_beacon_lectors_veteran/provenance.json",
-      "sha256": "3e3e977e875900187e8a60f78beadc4b58b6b659281fc9f0699bed3b34ecec6f"
+      "source_sha256": "c362320d6b666d31fdc1a4416aed15b900f58e8d8b3e07164245c6825db28d39",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_beacon_lectors_veteran/provenance.json",
+      "sha256": "fe4dd7b7446893c1bc974a3f37bdca9a9bd9dfe4abd6de1a0d0cb691de1a8465"
     },
     "unit_embercourt_beaconline_writguard_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_beaconline_writguard_veteran.png",

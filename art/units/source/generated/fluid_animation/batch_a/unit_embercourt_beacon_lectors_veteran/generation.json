@@ -1,0 +1,178 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/idle_v1.png",
+      "sha256": "7dc98216497cd713bf26e1f3f88651864be69205a9276e38b55585eee8876468",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "c13a15eb5aeffda39f0c8f6eaf8cecf73e5c974464ee86e1d9bfef9803653b6a",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-777e44e8-0ea1-40ab-98e0-ea3d8591bca4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Original artwork and native 128px phases reviewed; all eight or four authored poses selected."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_v1.png",
+      "sha256": "efbb5929077aee57a58123b9b8bbfc1d7fb34bf0064b8a6b58ee44bb5e528f01",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "e2fb1534f768dbcea7386d9a225aa885e7ad2209f6d2d17223d2440670e1a81f",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c46b0e08-3ecb-474c-b00d-98e848a64f6b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Only poses 1,2,3 and 7 selected. Clipped staff/book tips and touching neighboring silhouettes exclude the other poses."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/ranged_v1.png",
+      "sha256": "da57846072ccdbff3901da4bd1efe35c8da0269c08eb137b3e1b91db60135858",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "3f0ebccd247ade26a90fd77b5b161e9c3ef82a589a3b2ab96f0cd834940ac9e2",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-9fb7a4b2-8911-44b2-aca7-2ca34ff560d8.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Original artwork and native 128px phases reviewed; all eight or four authored poses selected."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reactions_v1.png",
+      "sha256": "8d8da8da5c065431874f376bacfe2d812d027185f1f098e07770266e47f8af59",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "4549c5d5526f41fbaca6d3ff4ea869ce49083d21e56e67738128a7586db528cd",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-651d764f-76b0-4f8a-a1fe-af8f0375e4e0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Reordered from actual artwork: hit 1,3,4,7; defend 2,5,6,8."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/cast_v1.png",
+      "sha256": "fd69c138e27b6b71fe4dd184d7ac5a549a36d07778e291b3a30b23c1fec6b274",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "244766e50e82c2e361c7cdce80a54ff12c5a2b18883cf98bb32f01174e923651",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d4d84479-634e-4552-8837-23fb658b5bca.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Original artwork and native 128px phases reviewed; all eight or four authored poses selected."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.png",
+      "sha256": "6d6a577dc00bd7c13b439db49edfcb1d6e2944a083e3f306fc578ed12400ab7f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "56cc63ac013c5b4a2aec5ca43805c1a172a845913af917dc50ed6c88c45c7728",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d93cb2ea-ff00-431c-84c1-c238607f8d43.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Original artwork and native 128px phases reviewed; all eight or four authored poses selected."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_far_v1.png",
+      "sha256": "b2297c89b3a1f94eebc71792bac666d8d734b72253819f0cb9678d137fa1e906",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "d8e581528cae865234a46d94f05b25739e597856012f46cf58ca440f7084d40f",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-43d4488a-abe5-4776-8e43-361f085e3ebf.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Original artwork and native 128px phases reviewed; all eight or four authored poses selected."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_near_v1.png",
+      "sha256": "bfee2c11d1f79d3569fad9b42348bcca91e6e95db072965040c8caeda52d6f25",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "6f28c1de854fe6dbed409792e11240f51bee9a355de5f90fbe0af61603af3fc5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d6682a0f-ea6c-4b5f-b2d9-31950f78f41b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_ash_oath_bailiffs_veteran/near_passing_v1.png",
+          "sha256": "94a5b3a70983d4f12a0726b5ab440dea0f92b55e95b71028d8d13104baac74db"
+        }
+      ],
+      "review": "All four near-leg phases selected. Second reference supplied leg arrangement only, never creature identity."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v1.png",
+      "sha256": "c7a2c192c1ac5631e0a820716bfcae52b91c087188dc804dda94e41834d66468",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v1.prompt.txt",
+      "prompt_sha256": "06a343298790235070ded4a648f6f788e6413c2bdef0185d6a2302dfb7c45969",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ad08c4b6-dc9b-4aa6-928c-58cb07be4775.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Superseded: horizontal contact staff too long."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/contact_v1.png",
+      "sha256": "154bd1518582714bae24d5ec4b2461ad99b05b1881a0897269e0fe29a020ae72",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/contact_v1.prompt.txt",
+      "prompt_sha256": "a94514795f69cefda1d7bc6f9c241492b6f575b0f17efdc1b99a2ea13040bb26",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-60dd8fa5-69e3-4483-9f9d-9c4a05cf6e75.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reference.png",
+          "sha256": "776cc656f5f04037a2c384354f02018b8378ea4e1167a5c5b5795ff091203f93"
+        }
+      ],
+      "review": "Rejected: staff too long and insufficient lantern-tip margin."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v2.png",
+      "sha256": "c764d9d75033c634f14fd6f2a721e51a8477fefc17f3b570fe0c18b46d08d563",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v2.prompt.txt",
+      "prompt_sha256": "b5e7b0a8305c68285c9f5e03636f21bcf6eaf81d69e2b838ed96b924316535ea",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5e1eb34e-0a57-44ab-896f-45016b18f411.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v1.png",
+          "sha256": "c7a2c192c1ac5631e0a820716bfcae52b91c087188dc804dda94e41834d66468"
+        }
+      ],
+      "review": "Superseded: contact staff too short."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v3.png",
+      "sha256": "9059f5ea6f4cd70603fd2322a8fcc6f7c835cf1a60e3dc383e1b3e8516366e96",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v3.prompt.txt",
+      "prompt_sha256": "c9b1230194bb4abd1d5768b080f5c76c43cbae5a06fb93f2a799b2086119cf26",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e40e8ce9-bd2f-47af-a8e5-170abc17ddf9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v2.png",
+          "sha256": "c764d9d75033c634f14fd6f2a721e51a8477fefc17f3b570fe0c18b46d08d563"
+        }
+      ],
+      "review": "All three selected: downswing, corrected-length contact and recovery."
+    }
+  ]
+}

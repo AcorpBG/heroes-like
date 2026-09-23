@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/idle_v1.png": "7dc98216497cd713bf26e1f3f88651864be69205a9276e38b55585eee8876468",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_v1.png": "efbb5929077aee57a58123b9b8bbfc1d7fb34bf0064b8a6b58ee44bb5e528f01",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/attack_corrections_v3.png": "9059f5ea6f4cd70603fd2322a8fcc6f7c835cf1a60e3dc383e1b3e8516366e96",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/ranged_v1.png": "da57846072ccdbff3901da4bd1efe35c8da0269c08eb137b3e1b91db60135858",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/reactions_v1.png": "8d8da8da5c065431874f376bacfe2d812d027185f1f098e07770266e47f8af59",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/cast_v1.png": "fd69c138e27b6b71fe4dd184d7ac5a549a36d07778e291b3a30b23c1fec6b274",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/death_v1.png": "6d6a577dc00bd7c13b439db49edfcb1d6e2944a083e3f306fc578ed12400ab7f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_far_v1.png": "b2297c89b3a1f94eebc71792bac666d8d734b72253819f0cb9678d137fa1e906",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_embercourt_beacon_lectors_veteran/move_near_v1.png": "bfee2c11d1f79d3569fad9b42348bcca91e6e95db072965040c8caeda52d6f25"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Original sources and native 128px phases reviewed: reading/grip idle, full staff swing and recovery, lantern ranged release, book invocation, recoil and bracing, reciprocal walk and grounded corpse with both items. Contact staff length corrected through original image edits; clipped ends and overlong/short variants excluded. Fixed anatomical scale per source and stable equipment ownership preserved. Imported battle/map review follows."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "2e18a709742370f04d7a25c29e0b2e52866f6028b693fa6fcb81f99ab471588b",
+  "atlas_sha256": "c362320d6b666d31fdc1a4416aed15b900f58e8d8b3e07164245c6825db28d39",
+  "texture_bytes_rgba": 27555840
+}
