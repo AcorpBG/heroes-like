@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_brasshollow_gaugefire_arbalists_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/idle_v1.png": "352d9f1cc14132dee6451199a203d09632f961e442afe1af5fd5a53cec7e112d",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/attack_v1.png": "c0625ac3024b5a3e4a796830e4b0701b5963594917875d66cbdbdf74f4dbc719",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/ranged_v1.png": "3d3dbd86bd91664de4f63ee5c341ab2f9266738e54ce6e3d68be6fbe4f206051",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/reactions_v1.png": "0b4bf7e62eeb9bed3737222fdf3d94106e6f3324b0d8b8f80bc36b12072e8459",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/cast_v1.png": "ed7e8f516db3f417d76f762241c9202f6f4db9217452135499aa674c16f8b17e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/death_v1.png": "5ff3ec12c70328e3c2cb229dd110170ab06a53ca47541f3cadd6acf77dd52c2f",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_near_v1.png": "d9fd54bb2637cce71b9405a982c37e29ed23708c3ba59273fcaad20705208384",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_v1.png": "6e8b0fa32d5ab88e70d517f8f1bb781c7196372e02e3bfb4643bea435eeab5f3",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_reach_v1.png": "b10a5fae3ceb61a5b3cbe39479625066ebecb70434f8993c0f0b78233eca0df1"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Eight clips reviewed at native Godot battle scale: articulated grip idle, two-handed muzzle shove, aimed shot and recoil, stagger/guard, physical support signal, grounded corpse and reciprocal walk. Foreground-leg corrections preserve side ownership. Matching original lowered-weapon recovery replaces two oversized ranged proposals; no duplicates within any clip. All nine masters and rejected proposals retained."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "331e1f5a11533636e34ea1ef622e18088181934c28b4f8fb56048626e83c2cf1",
+  "atlas_sha256": "9ebedc8b54d0b4df80b87a1e03cd760a007400bbd3fc24dca7243029baaecd27",
+  "texture_bytes_rgba": 22118400
+}

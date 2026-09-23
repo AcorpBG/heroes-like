@@ -1,0 +1,122 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/idle_v1.png",
+      "sha256": "352d9f1cc14132dee6451199a203d09632f961e442afe1af5fd5a53cec7e112d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "3c1371170258e128a229a1700571de709fa953c05bf4f043ac68cef1af23f0ab",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b8e7b578-63be-4742-86d1-259629397e3b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/attack_v1.png",
+      "sha256": "c0625ac3024b5a3e4a796830e4b0701b5963594917875d66cbdbdf74f4dbc719",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "9e8d94fd0da19fd88acc44769502c219f7ef6d9cc96fc8e7f66db103e872bf76",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ce68c944-5685-492b-9421-48037d906dfd.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/ranged_v1.png",
+      "sha256": "3d3dbd86bd91664de4f63ee5c341ab2f9266738e54ce6e3d68be6fbe4f206051",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "5ae2838838542730d8d9c9288cd1ca27e16c55515395ce71952a2e656ee3edb1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-26b9d6f5-59b6-4097-abd5-54a893338cbd.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/reactions_v1.png",
+      "sha256": "0b4bf7e62eeb9bed3737222fdf3d94106e6f3324b0d8b8f80bc36b12072e8459",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "b56b7a97237223b52e28fd5a74294b2f3c92b5b3d19f1544507175614e4fa94f",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b369b0a2-54b8-4d6e-9b67-ff1101b92b9d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/cast_v1.png",
+      "sha256": "ed7e8f516db3f417d76f762241c9202f6f4db9217452135499aa674c16f8b17e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "3cca75577e38378064b2cf681a70ad4c2a1d49e2a61b08f31ccd29234ef6347a",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-46ef0d36-ead4-4ac4-af21-83a03e489e1a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/death_v1.png",
+      "sha256": "5ff3ec12c70328e3c2cb229dd110170ab06a53ca47541f3cadd6acf77dd52c2f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "137084d767aa1d9594433a9f9673359287bff489e3784c4ed810be63ea6fbf9d",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4d518415-9b36-47be-8788-b46e3b22776d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_v1.png",
+      "sha256": "6e8b0fa32d5ab88e70d517f8f1bb781c7196372e02e3bfb4643bea435eeab5f3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "7665edec75edcbfc81fdb79c1bfe09985781d0f6584d0ebeeb39e804f7fdc091",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-604eba85-aacb-44bb-a37a-ea69fb6a0d9a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_near_v1.png",
+      "sha256": "d9fd54bb2637cce71b9405a982c37e29ed23708c3ba59273fcaad20705208384",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "25330599c6fccdbccd5f60ca3d398920afc910277cbb87f18eb9330d14a2a3d5",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a2b7ab92-9e08-462f-93da-251a049d049d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/identity_reference.png",
+          "sha256": "886b4eac1d881bd845e4a9e1b1de092e590f4e421be7b58fcad800da3aaf5a7e"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_reach_v1.png",
+      "sha256": "b10a5fae3ceb61a5b3cbe39479625066ebecb70434f8993c0f0b78233eca0df1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/move_reach_v1.prompt.txt",
+      "prompt_sha256": "d3379f1721565d91b6ad114244cfac1f120a6c1f6a27923fa840e1dea1779552",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c7683cf6-0b70-4ed5-b602-2d2a810dc852.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_gaugefire_arbalists_veteran/near_contact_reference.png",
+          "sha256": "f2f768c6259d335cb46d15676da0aa756acdaaf3226957d15f6d43ab70f32130"
+        }
+      ]
+    }
+  ]
+}
