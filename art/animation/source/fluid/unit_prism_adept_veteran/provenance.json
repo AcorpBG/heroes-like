@@ -43,7 +43,9 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_04.png": "add3df4e2df5031c25b3311b99073428301995004e6fbad542516e6dd0f74914",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_05.png": "d54113d105d74e4d0a454b96835773dafe859036d0782db97451c4b9c6619607",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_06.png": "c8dae3edba43036c1033f3c97e9a09481efcf0eac522e2e235ab40c62692e0a1",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_07.png": "7eb2b34c44714f212b92f98474bdeeb0bece84cf77ccca15df1555f9a154783c"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/death_v2_frame_07.png": "7eb2b34c44714f212b92f98474bdeeb0bece84cf77ccca15df1555f9a154783c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/move_v3.png": "b1a2715bb15e37f16954fa039e5370e86704a384ee9725a9765e5967075e33b7",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_prism_adept_veteran/ranged_v1.png": "954311da9e27e123d97a534f0d761f0c7c1d11a574118ac5d92e84f9449c2bb7"
   },
   "accepted_clips": [
     "idle",
@@ -51,14 +53,16 @@
     "cast",
     "hit",
     "defend",
-    "death"
+    "death",
+    "move",
+    "ranged"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed articulated bow-hand idle, bow strike, physical salute, guarded stance and continuous collapse. Movement halves mismatch scale/stride; detached ranged arrow still needs separation from runtime projectile."
+    "notes": "Solo original-source and native 128px review: eight walking paintings include distinct thigh crossing, knee lifts, heel support and reaching phases with stable bow grip and subtle free-hand/scarf motion. Ranged original paintings retain nock/draw/release/recovery; connected-body source regions omit detached flight arrow, leaving runtime projectile ownership intact. Fixed source scales and anatomical anchors match approved body. Previous accepted actions preserved."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "50f7ed1baa05675b4c68b0675b85bf2383a41ef9c48603cde48a59d06bb46652",
-  "atlas_sha256": "b16e3a065eaf8e2c7c853ccf1c7d4d7b8c56ca969662508a84b88722245ea1f0",
-  "texture_bytes_rgba": 14676480
+  "atlas_sha256": "40d0053550048fd846af60d9e175934dc0175ca7cbcbc29733c1d5d3034bc5a1",
+  "texture_bytes_rgba": 21864960
 }
