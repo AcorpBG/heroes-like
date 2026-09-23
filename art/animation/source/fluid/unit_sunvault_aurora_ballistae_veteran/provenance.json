@@ -43,7 +43,9 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_04.png": "660af229f39cb091420852ac2b4652c1f27a33ba134730108ffa51de5b77e975",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_05.png": "3cfc69c27679c4affb0580ae42315a6967a9dd02f81e1fed1a69b1c29b55afd4",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_06.png": "0a7671d8aa418bce3f9c1f7585fdd5bfef1e072fe96087ec4f3be001f7206d01",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_07.png": "76a284bd71e2e45571e55cd61246a696bb74d386583ec215c995b5cd059ee620"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/death_v1_frame_07.png": "76a284bd71e2e45571e55cd61246a696bb74d386583ec215c995b5cd059ee620",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v3.png": "4af1dc586d4b49fbcd3a908e753a5b7bc305b65b1d78d9c3f482bb6b04f71a35",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_reach_v5.png": "f432d19cef739796f51fd139b96dce324a3b24d3dbc62573980a00071eab159e"
   },
   "accepted_clips": [
     "idle",
@@ -51,14 +53,15 @@
     "cast",
     "hit",
     "defend",
-    "death"
+    "death",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: arm articulation, anticipatory punch and recovery, physical crystal-chest salute, guarded recoil and grounded collapse accepted. Walk still repeats the same leading foot and is withheld."
+    "notes": "Reviewed native 128px reciprocal armored walk and imported live atlas, 118 focused checks passed. Prior accepted source poses unchanged; final reach repainted to preserve broad body proportions."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "13a347c93f6dffa760e79862cf3c6daa24572df022084d01530a94e1285f2992",
-  "atlas_sha256": "806c55983cad0ba326e3a024064643cdfa35785888c499e2c71f0872da2cc770",
-  "texture_bytes_rgba": 12192768
+  "atlas_sha256": "f8925293709c7b1cee41f4ace51d9325cc681dad56376ce224017dd821f6f517",
+  "texture_bytes_rgba": 14676480
 }

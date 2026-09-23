@@ -1,0 +1,13 @@
+Use case: identity-preserve. Production transparent sprite sheet for an original fantasy strategy game. Reference image is the exact upgraded Aurora armored crystal construct identity. Paint EIGHT distinct full-body WALK cycle poses, laid out in TWO columns and FOUR rows with generous transparent gutters, reading row-major. Keep exactly this squat heavy biped, ivory plate armor with thin gold borders, blue-violet crystal fan crown, pointed central breastplate, TWO chunky fist arms and TWO armored legs. Fixed elevated three-quarter camera facing screen-right; same body dimensions, material painting and lighting each pose. No new weapons, humanoid head, extra limbs, particles or ground scenery. Real transparent alpha, no colored matte/shadow backdrop, no text. Every complete foot/fist/crown stays inside its own cell.
+
+Animate a COMPLETE RECIPROCAL WALK: frames 1-4 advance the near leg (the leg attached under screen-left half of torso), frames 5-8 advance the far leg (attached under screen-right half). Crucial: leg identities are attached to their original hip; never mirror the whole creature or rotate camera. The two halfway contact poses must have OPPOSITE feet in front. Arm elbows bend and fists swing opposite their respective leg, restrained heavy weight.
+
+1 near-foot forward contact at right of pelvis, far foot behind at left, opposite arm forward.
+2 near sole bears weight, near knee compresses, far heel lifts behind.
+3 far knee passes forward high while near foot planted below pelvis; far boot fully airborne.
+4 far shin extends ahead, toe lifted just before landing, near heel begins lift.
+5 FAR-foot forward contact at right of pelvis, NEAR foot behind at left, arms reversed from frame1.
+6 far sole bears weight, far knee compresses, near heel lifts behind.
+7 NEAR knee passes forward high while far foot planted below pelvis; near boot fully airborne.
+8 near shin extends ahead, toe lifted just before landing, far heel begins lift.
+Preserve two distinct limb chains through overlap; no disappearing feet, duplicates or elastic armor. Eight freshly painted poses, not four poses repeated. Shell moves only slightly with real joint compression. Original game sprite painterly fidelity, not shiny plastic.

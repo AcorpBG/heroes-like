@@ -1,0 +1,45 @@
+{
+  "tool": "builtin_image_gen",
+  "unit_id": "unit_sunvault_aurora_ballistae_veteran",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v2.png",
+      "sha256": "8c293a958c0895856b9e51cf39266fa6aa491db8d2468e5e0f5227a79a7865fd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v2.prompt.txt",
+      "prompt_sha256": "416945a083d2801f03246161ed561256222b90a200f0ac417147c0e80a02b55e",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/identity_reference.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-24868d75-cc2b-452f-947f-7abd8c3e0a23.png",
+      "review": "withheld: crown margin and repeated final reach"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v3.png",
+      "sha256": "4af1dc586d4b49fbcd3a908e753a5b7bc305b65b1d78d9c3f482bb6b04f71a35",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v3.prompt.txt",
+      "prompt_sha256": "26cd66b39d6e4439872d691b570276aa8c6a4cc36e726870849cff6c1dfb7045",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v2.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-3bd74551-ba83-4509-97b7-39838f9af990.png",
+      "review": "selected first seven poses; final reach replaced"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_near_v4.png",
+      "sha256": "6a3bfb4f8ab1e1bb3f9a14b0068995a797c16585b9c11008585ddc5a6b2165ac",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_near_v4.prompt.txt",
+      "prompt_sha256": "4699357bc71823658ad770026aae16d6834539e0014868b57e68dbe3076190a3",
+      "reference": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/identity_reference.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c5aefbaf-f06d-4a3c-bdee-8795f2a6ae82.png",
+      "review": "withheld after native review: narrower body; retained pose reference"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_reach_v5.png",
+      "sha256": "f432d19cef739796f51fd139b96dce324a3b24d3dbc62573980a00071eab159e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_reach_v5.prompt.txt",
+      "prompt_sha256": "1bf8a2fdae4b42d664f412962f3671418c16787ba4ad7220f93ac3a3846f2c78",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_v3.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_aurora_ballistae_veteran/move_near_v4.png"
+      ],
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-46bef1cd-0b22-4d0e-8fe3-0abf7573c8fb.png",
+      "review": "selected corrected broad-body near reach"
+    }
+  ]
+}
