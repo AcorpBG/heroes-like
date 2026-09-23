@@ -1,0 +1,1094 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_sporewake_chanters",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_0",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              249,
+              379
+            ]
+          ],
+          "anchor": [
+            116,
+            378
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_1",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              276,
+              379
+            ]
+          ],
+          "anchor": [
+            143,
+            378
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_2",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              300,
+              380
+            ]
+          ],
+          "anchor": [
+            129,
+            379
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_3",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              310,
+              377
+            ]
+          ],
+          "anchor": [
+            137,
+            376
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_4",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              299,
+              378
+            ]
+          ],
+          "anchor": [
+            121,
+            377
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_5",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              307,
+              377
+            ]
+          ],
+          "anchor": [
+            137,
+            376
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_6",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              284,
+              375
+            ]
+          ],
+          "anchor": [
+            118,
+            374
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "idle_7",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              276,
+              372
+            ]
+          ],
+          "anchor": [
+            128,
+            371
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_0",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              259,
+              385
+            ]
+          ],
+          "anchor": [
+            144,
+            384
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_1",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              299,
+              378
+            ]
+          ],
+          "anchor": [
+            172,
+            377
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_2",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              339,
+              376
+            ]
+          ],
+          "anchor": [
+            191,
+            375
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_3",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              316,
+              372
+            ]
+          ],
+          "anchor": [
+            181,
+            371
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_4",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              535,
+              336
+            ]
+          ],
+          "anchor": [
+            170,
+            335
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_5",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              385,
+              335
+            ]
+          ],
+          "anchor": [
+            198,
+            334
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_6",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              269,
+              403
+            ]
+          ],
+          "anchor": [
+            147,
+            402
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "attack_7",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              267,
+              397
+            ]
+          ],
+          "anchor": [
+            129,
+            396
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_0",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              381
+            ]
+          ],
+          "anchor": [
+            176,
+            380
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_1",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              244,
+              358
+            ]
+          ],
+          "anchor": [
+            116,
+            357
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_2",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              354,
+              409
+            ]
+          ],
+          "anchor": [
+            146,
+            408
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "hit_3",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              284,
+              425
+            ]
+          ],
+          "anchor": [
+            163,
+            424
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_0",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              367,
+              375
+            ]
+          ],
+          "anchor": [
+            186,
+            374
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_1",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              378,
+              356
+            ]
+          ],
+          "anchor": [
+            225,
+            355
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_2",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              439,
+              372
+            ]
+          ],
+          "anchor": [
+            167,
+            371
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "defend_3",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              432,
+              390
+            ]
+          ],
+          "anchor": [
+            214,
+            389
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_0",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              321,
+              459
+            ]
+          ],
+          "anchor": [
+            187,
+            458
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_1",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              313,
+              394
+            ]
+          ],
+          "anchor": [
+            188,
+            393
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_2",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              315,
+              403
+            ]
+          ],
+          "anchor": [
+            177,
+            402
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_3",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              454,
+              316
+            ]
+          ],
+          "anchor": [
+            252,
+            315
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_4",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              467,
+              215
+            ]
+          ],
+          "anchor": [
+            273,
+            214
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_5",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              488,
+              146
+            ]
+          ],
+          "anchor": [
+            295,
+            145
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_6",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              483,
+              145
+            ]
+          ],
+          "anchor": [
+            291,
+            144
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "death_7",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              488,
+              135
+            ]
+          ],
+          "anchor": [
+            294,
+            134
+          ],
+          "scale": 0.495,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_0",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              214,
+              336
+            ]
+          ],
+          "anchor": [
+            112,
+            335
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_1",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              199,
+              326
+            ]
+          ],
+          "anchor": [
+            111,
+            325
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_2",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              218,
+              350
+            ]
+          ],
+          "anchor": [
+            106,
+            349
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_3",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              236,
+              359
+            ]
+          ],
+          "anchor": [
+            130,
+            358
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_4",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              293,
+              395
+            ]
+          ],
+          "anchor": [
+            148,
+            394
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_5",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              285,
+              384
+            ]
+          ],
+          "anchor": [
+            141,
+            383
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_6",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              255,
+              352
+            ]
+          ],
+          "anchor": [
+            126,
+            351
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "cast_7",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              217,
+              359
+            ]
+          ],
+          "anchor": [
+            115,
+            358
+          ],
+          "scale": 0.69,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_0",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_0.png",
+          "rects": [
+            [
+              0,
+              0,
+              255,
+              350
+            ]
+          ],
+          "anchor": [
+            131,
+            349
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_1",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_1.png",
+          "rects": [
+            [
+              0,
+              0,
+              252,
+              350
+            ]
+          ],
+          "anchor": [
+            145,
+            349
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_2",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_2.png",
+          "rects": [
+            [
+              0,
+              0,
+              260,
+              349
+            ]
+          ],
+          "anchor": [
+            139,
+            348
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_3",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_3.png",
+          "rects": [
+            [
+              0,
+              0,
+              354,
+              346
+            ]
+          ],
+          "anchor": [
+            153,
+            345
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_4",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_4.png",
+          "rects": [
+            [
+              0,
+              0,
+              445,
+              350
+            ]
+          ],
+          "anchor": [
+            159,
+            349
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_5",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_5.png",
+          "rects": [
+            [
+              0,
+              0,
+              307,
+              349
+            ]
+          ],
+          "anchor": [
+            153,
+            348
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_6",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_6.png",
+          "rects": [
+            [
+              0,
+              0,
+              334,
+              331
+            ]
+          ],
+          "anchor": [
+            133,
+            330
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "ranged_7",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_7.png",
+          "rects": [
+            [
+              0,
+              0,
+              249,
+              330
+            ]
+          ],
+          "anchor": [
+            148,
+            329
+          ],
+          "scale": 0.64,
+          "alpha_noise_cutoff": 8
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 135,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 105,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 105,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 145,
+          "loop": false,
+          "static_frame": 0
+        },
+        "dead": {
+          "indices": [
+            31
+          ],
+          "frame_msec": 150,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 125,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [],
+      "preserve_clips": [],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_0.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_2.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_3.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_4.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_5.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_6.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_7.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_0.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_2.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_3.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_4.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_5.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_6.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_7.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_0.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_2.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_3.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_4.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_5.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_6.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_7.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_0.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_1.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_2.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_3.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_4.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_5.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_6.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/death_v1_7.png": 0.495,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_0.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_1.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_2.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_3.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_4.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_5.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_6.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_7.png": 0.69,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_0.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_1.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_2.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_3.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_4.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_5.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_6.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_7.png": 0.64
+      },
+      "source_scale_reason": "Each master has one fixed drawing scale across all its poses. Idle/attack/reactions use 0.60, death 0.495, cast 0.69 and ranged 0.64 to register their differently sized painted figures to the original approximately 226-pixel standing silhouette at reference height 256. Derived extracted images copy unchanged source pixels, so inherit exactly their master scale. No per-pose body normalization or deformation is performed.",
+      "visual_review": {
+        "status": "pending",
+        "notes": "Candidate original source poses; coordinator motion and scale review required. Movement v1/v2 rejected locally: reciprocal leg phase remains insufficient. Do not merge as complete unit."
+      },
+      "unfinished_clips": [
+        "move"
+      ]
+    }
+  ]
+}

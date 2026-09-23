@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/idle_v1.png": "24c08ea52553dc6e9cf155504191c6431b19801b500df7ed8d25ed7fe80572f6",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/move_v1.png": "ddbcda7273a182bb51b71b1d68cd326d4db95eb7dc8e6947eb61dc7d92294b5b",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/ranged_v1.png": "073431d53ef382274bdf2977fcf560cdf241e489f1494d48fd8fd391761fff2a",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/reactions_v1.png": "f06c94d243e79f4da1feed9eb85859b055627568eb46c3f91711a512fdd893cc",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/support_v1.png": "997ddd3b634aa68c7ebd878fc78438bdb6ac6413132112c2bc136671500f28d9",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/death_v1.png": "9c5648292033b63e91b4681977b9c496fb6eaf54072922f965103250af29949e",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers_veteran/attack_v1.png": "8f1ef45b56d923e18bd5ee8f2da016bf2ec9fa954f38d8a7f4a0d5797f1b0c41"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "ranged",
+    "defend",
+    "cast",
+    "death",
+    "attack",
+    "hit"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: articulated cannon aiming and independent leg joints, crawling stance changes, chassis thrust and muzzle release, lowered brace, gun-elevation salute and continuous grounded mechanical collapse. Final live inspection removed the adjacent sprite foot fragment from attack anticipation and hit recovery."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "95d6bb98bb2f98c7df2d20d329003a3cb7b8b5db49df110649cb9e7177815571",
+  "atlas_sha256": "982570cd99f04a3bd98c80c2f95831fe718bba0a19f2e237833a22458abeb139",
+  "texture_bytes_rgba": 25966080
+}

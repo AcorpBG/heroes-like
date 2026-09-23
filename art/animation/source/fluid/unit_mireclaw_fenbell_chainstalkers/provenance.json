@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_v1.png": "7f59c888a46ad55a3c0cf3772a739547eda22c88c3419b29bbc37270d75a1254",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_anticipation_v1.png": "300d3c4b1e95d8855c75783ac940f4e283684946d4cfcf7fc03cf9f7447144b9",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.png": "0662038bf098cb6378c7f05607753cdd73cc0031a82b20a0f85a885758ab6806",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/cast_v1.png": "e847afe357f706e7e182fe7b0cde3920437afc1979843a06fc7fa5e5fe69cae5"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained chain/bell arm idle, continuous hooked-chain sweep and recovery, dedicated guard/recoil, grounded collapse and bell-arm rally. Walk does not show a clear reciprocal stride and remains withheld."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "578568efd7b218fd0da2bcb79891ad0d6b50b7044b56aef81413aada4094810f",
+  "atlas_sha256": "750fe0c46af25850045c9a770f60bba905858b77091e6e50bd33519299a79c6a",
+  "texture_bytes_rgba": 19537920
+}

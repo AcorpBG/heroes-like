@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/move_v2.png",
+      "source_sha256": "b7cb687f64fb133d8347b47807e9aa55b85977d73f49bff9426c583a7bb61684",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/move_v2.prompt.txt",
+      "prompt_sha256": "fd6649021f0b9c13e7d871d2fda1a3166284f46ad6059bffc4d69e3c9a9a6226",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-2867d1cf-5133-4778-8cec-1e3c0bb67f85.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/attack_v1.png",
+      "source_sha256": "555d8c79effc109500b435400df6b7e5e8b2fd3aada0cfaa196888867888de54",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/attack_v1.prompt.txt",
+      "prompt_sha256": "a0ee755a4acfa3d3e9d8d892e7d415879ff4f141d3e4a2d9da845b9ec9c0dc21",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-fa7e826a-8853-48bd-87a7-7fd5948815eb.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/reactions_v1.png",
+      "source_sha256": "210be9e0366ef72b79a4afbb093abfb722931fc18c852693491af9fc78be0cb5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/reactions_v1.prompt.txt",
+      "prompt_sha256": "6e28690ba1f3b79ffe747d5eb92cf77b3d4327aa3f83b38c0dbbb1403ffce4b7",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-f571e41d-9abf-434e-814c-c9dfdbe0d6eb.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/death_v1.png",
+      "source_sha256": "4e6ea42bc6f7e295d173e9bc3b67525c965d47b43f36ca34330478052e8a4c64",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/death_v1.prompt.txt",
+      "prompt_sha256": "3a1c56abb4db58a7d8e31e61ad7858266f0a0cdac7263c34509dd786552e4c8b",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-40dadf04-4d1c-47cf-bdcb-d3272bdc8b67.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/cast_v1.png",
+      "source_sha256": "e1abfcf1555643bedf607a8df6db7b08ddcc0c94e11d3977a22f13c85e2ec513",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/cast_v1.prompt.txt",
+      "prompt_sha256": "1abbe49c2663ce7e25e3ff3acd7d69ba22eac9ab39f712a4ea3bcd6701308fca",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-fcb6436c-7a2b-4bab-8f2c-e8185f982900.png",
+      "tool": "built-in image_gen",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/move_v1.png",
+      "source_sha256": "9fde37d648eebae0766976616c0a0e34df1ab0b20933648d55e5aea8a55e807f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/move_v1.prompt.txt",
+      "prompt_sha256": "9bf1c89b9c8c82d4415323433f0af04545958f4bbf8719510b5f94bde2d3b2f8",
+      "reference": "art/units/source/curated/unit_neutral_rimebell_skyrakers.png",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-c692c987-b96d-4667-8165-3595cfb29a9c.png",
+      "tool": "built-in image_gen",
+      "status": "rejected",
+      "reason": "4x2 layout clips right tail; superseded by move_v2."
+    }
+  ],
+  "extraction": "Connected components alpha>16; eight largest figures in row-major order; small detached features assigned nearest body; copied exact pixels, no painting."
+}

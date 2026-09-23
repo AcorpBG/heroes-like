@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/attack_v1.png": "dd899a0e1185e946d1b339eda7d7366460ff5cde728a6c2070bdccca0ae66ae2",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/ranged_v1.png": "1b3da6b3656b2cbe095e61f0fe55a84cc82e605da68265c82b12d2f61511a9fb",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/reactions_v1.png": "544b8c5f861953550066af8120b3054bea6dfc08d1db6f3fd5ac5d997fb0b37c",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/death_v1.png": "f1a6778f98db37fe2af6bf08f94deb7e37f898a3ab590d3a6e1a9088ef0a0029",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_dreamwake_tideglass_oracles/cast_v1.png": "c13edae68e36ea18d7077ea6d30981a2c4ab311487d144d71269ec499d42ca49"
+  },
+  "accepted_clips": [
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained staff/bowl arm idle, staff sweep, bowl-directed release, recoil/brace, grounded collapse and distinct scrying invocation. Source crop now retains the full staff crescent and owned ring while excluding neighboring fragments. Movement remains unfinished."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "e38ab9d9c0b303b5361aa4eb66da7250d93396585d8467cd488d30ca35e755af",
+  "atlas_sha256": "4f55ef75dc8e9fa08ff4416f5419369e137c9fdd40e7d200bbd5390069999d22",
+  "texture_bytes_rgba": 28643328
+}

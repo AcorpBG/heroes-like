@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/attack_v1.png": "b195ac96e1b5d03e5e69f5cd8328bd3e1fb91a58abcf44966fae528316458219",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/hit_defend_v1.png": "c2d483067f86827c0985c5a9d687bafa1e4a4e697ecff31f095b5eecfd073985",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/death_v1.png": "1a5fa38266c3bd42ed7351359609437c6a09fc92f5e34528fe7d98654b3309dc"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained branching-arm idle, clear heavy forearm punch, recoiling trunk, tucked guard and gradual grounded collapse. Movement absent; support arm gesture needs stronger differentiation from idle."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "9816fea1ec06e7aab0cf75cc3c827c96b0642ddbb058b3222d9d04e45f662765",
+  "atlas_sha256": "174a2cee4bf2c5debbed24b1400298db1cf965845b1281d6608e84ea22d219ce",
+  "texture_bytes_rgba": 11451648
+}

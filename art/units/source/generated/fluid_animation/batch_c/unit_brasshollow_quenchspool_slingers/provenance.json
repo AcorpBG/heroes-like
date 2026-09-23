@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "tool": "built-in image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v1.png",
+      "sha256": "c57ff03b81a9ba9b4d6f612ae1c28a2d23683f05956c8aec91c9127ca93d46c8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v1.prompt.txt",
+      "prompt_sha256": "efe8908b041ee2185b1faaa776aa8389396c483425281913a61eac29b71c6906",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-f04fabcd-f7e2-437d-8fab-a61f82727b4b.png",
+      "status": "rejected_gait_leg_alternation"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v2.png",
+      "sha256": "c7b0dfe7e9df5b00ecd1e4a058cac4388b03802b1d0a4ae178b89a390bfda728",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v2.prompt.txt",
+      "prompt_sha256": "b48cce03d49372c864671881bb6e84f740bf506d7db5189f8b6282dc50bb6d29",
+      "reference": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v1.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-a38b1482-5387-466a-bb59-2f908aa887ed.png",
+      "status": "rejected_gait_leg_alternation"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_return_v1.png",
+      "sha256": "8bc47e2d8d9d2c89f6a76a0d6cd3a7ddfcfa15400b9a6bcc6c5185eb0fed7e31",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_return_v1.prompt.txt",
+      "prompt_sha256": "466cf321d18f6ce9f464d5102a15c9ec39401fae980c2fbcdd81eee4b5c4ad43",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-fe281b4b-0ef0-4a79-a997-7dc694a7ae30.png",
+      "status": "rejected_gait_leg_alternation"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png",
+      "sha256": "afef2c6a4ed533dda0a202b6e4e1b063b94865b9b29cbe8335bceb7d80e74617",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.prompt.txt",
+      "prompt_sha256": "1cae2f1b0977d2565076c45304c28cc849b030a3be11ac2b31db44c57954bf81",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-40f9c366-d9f5-4ce6-8db9-7738137d2cbe.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.png",
+      "sha256": "b506bcc26f806788b2d827b22061c21c69b716047a3e61786993e5a0b3e6187e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.prompt.txt",
+      "prompt_sha256": "4d774c6ae3cf1e841d96cf8b0104a7ce184c0947baeae045405d0a1aa80e8e74",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-64a45da1-8071-4c15-a37e-3aee17e81195.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png",
+      "sha256": "6d7c0be4e0a82eaf39ee4061ba210d6ff5910704914815abc0abcf9250cf3fa3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.prompt.txt",
+      "prompt_sha256": "c104a878714059259c2d4e72f0202c14b605233e24a571e6964df7fa108c3d58",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-8f9547fc-e74b-452d-8898-210f21108157.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.png",
+      "sha256": "9bf90e169081d7db03864b08f7efe577bf861f9b33e10438fca7d3e350834033",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.prompt.txt",
+      "prompt_sha256": "74a61d7ce0c564a4ef4f644fe67c6147c94cbdd1453c66fa28a2bdb8174c315b",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-87b3f356-ee65-4c7e-b366-fa3cd639b3d0.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png",
+      "sha256": "2fd0d3000e3612c2443f85e6147258b6fd31ca82cabc7dc52ef2fc9e8db2d18f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.prompt.txt",
+      "prompt_sha256": "a7486134e2f214088b6c829176ba74f969d3407603efdf6d8af159e7f93950d4",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-ab139a1b-1231-4dfa-97e0-c6386738faf8.png",
+      "status": "pending"
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png",
+      "sha256": "4beade8ded613ea5e195b7d0ea05dee39c91d760d012b17c0e13fa62465e7b1c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.prompt.txt",
+      "prompt_sha256": "04d29f5994ae52ae00888b38b7acbbffd1fcc6dcb3bebd46d913f1fa245e3c9d",
+      "reference": "art/units/source/curated/unit_brasshollow_quenchspool_slingers.png",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-e7c2-7e63-a35e-26d49ab9c84d/exec-38f2ec9f-fbb9-42bc-a180-ec4e9760363b.png",
+      "status": "pending"
+    }
+  ],
+  "processing": "Cropping and fixed per-source scale only; no synthetic frames."
+}

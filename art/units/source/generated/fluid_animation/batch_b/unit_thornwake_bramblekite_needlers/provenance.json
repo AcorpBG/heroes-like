@@ -1,0 +1,626 @@
+{
+  "tool": "built-in image_gen",
+  "reference": "art/units/source/curated/unit_thornwake_bramblekite_needlers.png",
+  "reference_sha256": "3550f9978d09a49ff29382ef9fcb06db350bb394425475afba7944ebb42aecf8",
+  "outputs": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "source_sha256": "432ec1cf9769fa2696a6f5325b137e54056f88c978f2e352749fd6fc3833827e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.prompt.txt",
+      "prompt_sha256": "8cd52d492d0b0159b1b23054ab2c9d2449353d72bf0c9dc551484f6f91563067",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-16ec5533-95d0-49fb-af19-49d3a78d0772.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "source_sha256": "72bcfdc78a6385472ff7bb3717b171bd4905159fd9c9a1860b302b02672c6165",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.prompt.txt",
+      "prompt_sha256": "968bcbaa524985ba6a846eeb7cfe7bd5ad5b074b25902601fef2fcae2857f239",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-b03d7957-fa4e-44a3-99b3-8502ceb05735.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+      "source_sha256": "8799c63295db8ab83c44467815cf271168ee9260582515edbb9e74ed57b3e17c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "3313047a022358ef3431f92bcc5794ecc4e144b95647ec7dbab1f051480e1653",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-d00252b7-a25b-485b-8f6e-8673fd896b90.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "partially_rejected_guard_half"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+      "source_sha256": "212392063514399392ff0d3d8020c6749413c2b93716535690cb207dccdf3414",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.prompt.txt",
+      "prompt_sha256": "d552d7a91608e7d75575653c124547b03b3fab38b70e6173e64e665f1d89cdb8",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-b9f164be-e43c-4df9-b1c7-22a64ee2f579.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "source_sha256": "a40c243bef6d3b421ddf2bb5bf013e6842d1e4df18b32ca64b264e823cd84d12",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.prompt.txt",
+      "prompt_sha256": "f00114af10bb2cf125fe8b681549d560087847a88a988ecd63127c31edf5e14c",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-83324719-a674-4e21-b09f-30426f27ca0e.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "source_sha256": "adad9a5b0bf14913155896f97ea264ac7d1adada149cde5a02826dc152119cc3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.prompt.txt",
+      "prompt_sha256": "03c61b02e34c2ad43534b161ef2bfbb3d685ef366ade330f237b50adf5c501e9",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-d993777e-cd71-4f9a-9c5b-d2c2dda79f21.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "source_sha256": "5771088e290d55d9fb3b73c72ae63406ff9b78e06d3474b7bb4fa54c6c0126e1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.prompt.txt",
+      "prompt_sha256": "fa25714def306a0d41d15f5ebff6166bc38477cebd0ae77e3d205f0933fa97cc",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-0fcc1eb5-90d8-4684-98dc-0e93af80b89a.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png"
+      ],
+      "status": "partially_rejected_clipped_final_two"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.png",
+      "source_sha256": "8707c94069bfa1eef707c37650817a0885d8189ff4668329e3ef6778e12b18f9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.prompt.txt",
+      "prompt_sha256": "16f4cc9dcdb0953e39e64322cf55ee074d214a5540644a4f824cdb10215b6c48",
+      "generated_output": "C:/Users/acorp/.codex/generated_images/01a0ccd0-015a-7981-ae58-ff4d5582854d/exec-d767f24d-8739-4b17-b40b-272c2f8e925a.png",
+      "references": [
+        "art/units/source/curated/unit_thornwake_bramblekite_needlers.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png"
+      ],
+      "status": "pending_visual_review"
+    }
+  ],
+  "extraction": [
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        74,
+        10,
+        454,
+        410
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        553,
+        75,
+        962,
+        410
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        23,
+        426,
+        566,
+        758
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        570,
+        426,
+        953,
+        765
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_04.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        177,
+        786,
+        448,
+        1106
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_05.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        618,
+        782,
+        930,
+        1116
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_06.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        100,
+        1148,
+        454,
+        1497
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_07.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+      "original_bounds": [
+        561,
+        1101,
+        960,
+        1499
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        103,
+        6,
+        428,
+        386
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        560,
+        16,
+        915,
+        385
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        94,
+        410,
+        435,
+        770
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        542,
+        396,
+        953,
+        768
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_04.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        72,
+        777,
+        508,
+        1126
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_05.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        573,
+        768,
+        935,
+        1137
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_06.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        104,
+        1126,
+        422,
+        1524
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_07.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+      "original_bounds": [
+        598,
+        1122,
+        934,
+        1524
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+      "original_bounds": [
+        142,
+        16,
+        455,
+        394
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+      "original_bounds": [
+        578,
+        24,
+        944,
+        379
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+      "original_bounds": [
+        131,
+        371,
+        453,
+        779
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+      "original_bounds": [
+        609,
+        376,
+        924,
+        780
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+      "original_bounds": [
+        48,
+        6,
+        596,
+        627
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+      "original_bounds": [
+        686,
+        61,
+        1242,
+        619
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+      "original_bounds": [
+        40,
+        683,
+        649,
+        1208
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+      "original_bounds": [
+        682,
+        638,
+        1233,
+        1237
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        111,
+        25,
+        480,
+        435
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        712,
+        104,
+        1099,
+        440
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        77,
+        471,
+        516,
+        759
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        640,
+        509,
+        1142,
+        755
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_04.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        34,
+        842,
+        566,
+        1012
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_05.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        641,
+        868,
+        1190,
+        1026
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_06.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        34,
+        1094,
+        581,
+        1250
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_07.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+      "original_bounds": [
+        641,
+        1092,
+        1191,
+        1255
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        149,
+        9,
+        467,
+        345
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        685,
+        4,
+        979,
+        345
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        137,
+        340,
+        466,
+        687
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        675,
+        339,
+        1028,
+        688
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_04.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        126,
+        686,
+        536,
+        1031
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        687,
+        686,
+        1026,
+        1032
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_06.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        147,
+        1020,
+        473,
+        1366
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+      "original_bounds": [
+        693,
+        1020,
+        1006,
+        1367
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        127,
+        17,
+        415,
+        386
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        603,
+        16,
+        893,
+        386
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_02.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        131,
+        398,
+        423,
+        770
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_03.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        616,
+        399,
+        902,
+        771
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_04.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        152,
+        796,
+        421,
+        1154
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_05.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+      "original_bounds": [
+        607,
+        780,
+        902,
+        1154
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_00.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.png",
+      "original_bounds": [
+        152,
+        169,
+        686,
+        879
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    },
+    {
+      "file": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_01.png",
+      "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.png",
+      "original_bounds": [
+        863,
+        170,
+        1399,
+        901
+      ],
+      "method": "Original connected alpha pixels extracted without repainting, alpha <=8 omitted, separate neighboring poses excluded."
+    }
+  ]
+}

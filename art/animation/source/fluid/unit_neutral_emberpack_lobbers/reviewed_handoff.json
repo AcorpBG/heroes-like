@@ -817,6 +817,166 @@
           "scale": 0.4,
           "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              36,
+              0,
+              393,
+              450
+            ]
+          ],
+          "anchor": [
+            221.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              444,
+              0,
+              889,
+              450
+            ]
+          ],
+          "anchor": [
+            664.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              893,
+              0,
+              1322,
+              450
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              1368,
+              0,
+              1761,
+              450
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            437
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              38,
+              450,
+              478,
+              887
+            ]
+          ],
+          "anchor": [
+            221.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              506,
+              450,
+              870,
+              887
+            ]
+          ],
+          "anchor": [
+            664.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              956,
+              450,
+              1293,
+              887
+            ]
+          ],
+          "anchor": [
+            1108.0,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_08",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
+          "rects": [
+            [
+              1403,
+              450,
+              1727,
+              887
+            ]
+          ],
+          "anchor": [
+            1551.5,
+            865
+          ],
+          "scale": 0.4,
+          "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
+          "alpha_noise_cutoff": 0
         }
       ],
       "clips": {
@@ -899,6 +1059,21 @@
           "frame_msec": 110,
           "loop": false,
           "contact_frame": 4
+        },
+        "ranged": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
         }
       },
       "accepted_clips": [
@@ -907,12 +1082,13 @@
         "hit",
         "defend",
         "death",
-        "cast"
+        "cast",
+        "ranged"
       ],
       "preserve_clips": [],
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed original painted phases in native Godot overview at battle scale: articulated limbs and equipment, coherent action recovery and grounded corpse. Only listed clips accepted; remaining clips retain prior artwork."
+        "notes": "Native 128px review of revised ranged release: anticipatory sling wind-up, empty release hand and recovery without a baked traveling projectile. Previously accepted clips retained; repeated-leading-foot movement remains unfinished."
       },
       "provenance": [
         {
@@ -1029,6 +1205,15 @@
           ]
         }
       ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png": 0.4
+      },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "preserved_accepted_clips": []
     }
   ]

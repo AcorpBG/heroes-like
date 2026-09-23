@@ -1,0 +1,2875 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_bramblekite_needlers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_v1_frame_00",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              380,
+              400
+            ]
+          ],
+          "anchor": [
+            216,
+            400
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            74,
+            10,
+            454,
+            410
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              409,
+              335
+            ]
+          ],
+          "anchor": [
+            217,
+            335
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            553,
+            75,
+            962,
+            410
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              543,
+              332
+            ]
+          ],
+          "anchor": [
+            267,
+            332
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            23,
+            426,
+            566,
+            758
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              383,
+              339
+            ]
+          ],
+          "anchor": [
+            200,
+            339
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            570,
+            426,
+            953,
+            765
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              271,
+              320
+            ]
+          ],
+          "anchor": [
+            113,
+            320
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            177,
+            786,
+            448,
+            1106
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              312,
+              334
+            ]
+          ],
+          "anchor": [
+            152,
+            334
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            618,
+            782,
+            930,
+            1116
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              354,
+              349
+            ]
+          ],
+          "anchor": [
+            190,
+            349
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            100,
+            1148,
+            454,
+            1497
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_frame_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              399,
+              398
+            ]
+          ],
+          "anchor": [
+            209,
+            398
+          ],
+          "scale": 0.58,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+          "source_rect": [
+            561,
+            1101,
+            960,
+            1499
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_00",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              325,
+              380
+            ]
+          ],
+          "anchor": [
+            182,
+            380
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            103,
+            6,
+            428,
+            386
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              355,
+              369
+            ]
+          ],
+          "anchor": [
+            188,
+            369
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            560,
+            16,
+            915,
+            385
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              341,
+              360
+            ]
+          ],
+          "anchor": [
+            182,
+            360
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            94,
+            410,
+            435,
+            770
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              411,
+              372
+            ]
+          ],
+          "anchor": [
+            221,
+            372
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            542,
+            396,
+            953,
+            768
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              436,
+              349
+            ]
+          ],
+          "anchor": [
+            188,
+            349
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            72,
+            777,
+            508,
+            1126
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              362,
+              369
+            ]
+          ],
+          "anchor": [
+            180,
+            369
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            573,
+            768,
+            935,
+            1137
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              318,
+              398
+            ]
+          ],
+          "anchor": [
+            182,
+            398
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            104,
+            1126,
+            422,
+            1524
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_frame_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              336,
+              402
+            ]
+          ],
+          "anchor": [
+            172,
+            402
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+          "source_rect": [
+            598,
+            1122,
+            934,
+            1524
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_frame_00",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              313,
+              378
+            ]
+          ],
+          "anchor": [
+            155,
+            378
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+          "source_rect": [
+            142,
+            16,
+            455,
+            394
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_frame_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              366,
+              355
+            ]
+          ],
+          "anchor": [
+            181,
+            355
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+          "source_rect": [
+            578,
+            24,
+            944,
+            379
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_frame_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              322,
+              408
+            ]
+          ],
+          "anchor": [
+            164,
+            408
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+          "source_rect": [
+            131,
+            371,
+            453,
+            779
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_frame_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              315,
+              404
+            ]
+          ],
+          "anchor": [
+            161,
+            404
+          ],
+          "scale": 0.51,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+          "source_rect": [
+            609,
+            376,
+            924,
+            780
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "defend_v2_frame_00",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              548,
+              621
+            ]
+          ],
+          "anchor": [
+            322,
+            621
+          ],
+          "scale": 0.31,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+          "source_rect": [
+            48,
+            6,
+            596,
+            627
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "defend_v2_frame_01",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              556,
+              558
+            ]
+          ],
+          "anchor": [
+            314,
+            558
+          ],
+          "scale": 0.31,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+          "source_rect": [
+            686,
+            61,
+            1242,
+            619
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "defend_v2_frame_02",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              609,
+              525
+            ]
+          ],
+          "anchor": [
+            326,
+            525
+          ],
+          "scale": 0.31,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+          "source_rect": [
+            40,
+            683,
+            649,
+            1208
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "defend_v2_frame_03",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              551,
+              599
+            ]
+          ],
+          "anchor": [
+            318,
+            599
+          ],
+          "scale": 0.31,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+          "source_rect": [
+            682,
+            638,
+            1233,
+            1237
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_00",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              369,
+              410
+            ]
+          ],
+          "anchor": [
+            176,
+            410
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            111,
+            25,
+            480,
+            435
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              387,
+              336
+            ]
+          ],
+          "anchor": [
+            186,
+            336
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            712,
+            104,
+            1099,
+            440
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              439,
+              288
+            ]
+          ],
+          "anchor": [
+            208,
+            288
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            77,
+            471,
+            516,
+            759
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              502,
+              246
+            ]
+          ],
+          "anchor": [
+            250,
+            246
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            640,
+            509,
+            1142,
+            755
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_04.png",
+          "rects": [
+            [
+              0,
+              0,
+              532,
+              170
+            ]
+          ],
+          "anchor": [
+            254,
+            170
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            34,
+            842,
+            566,
+            1012
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              549,
+              158
+            ]
+          ],
+          "anchor": [
+            258,
+            158
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            641,
+            868,
+            1190,
+            1026
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              547,
+              156
+            ]
+          ],
+          "anchor": [
+            258,
+            156
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            34,
+            1094,
+            581,
+            1250
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_frame_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              550,
+              163
+            ]
+          ],
+          "anchor": [
+            259,
+            163
+          ],
+          "scale": 0.47,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+          "source_rect": [
+            641,
+            1092,
+            1191,
+            1255
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_00",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_00.png",
+          "rects": [
+            [
+              0,
+              0,
+              318,
+              336
+            ]
+          ],
+          "anchor": [
+            156,
+            336
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            149,
+            9,
+            467,
+            345
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_01",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_01.png",
+          "rects": [
+            [
+              0,
+              0,
+              294,
+              341
+            ]
+          ],
+          "anchor": [
+            160,
+            341
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            685,
+            4,
+            979,
+            345
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_02",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_02.png",
+          "rects": [
+            [
+              0,
+              0,
+              329,
+              347
+            ]
+          ],
+          "anchor": [
+            165,
+            347
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            137,
+            340,
+            466,
+            687
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_03",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_03.png",
+          "rects": [
+            [
+              0,
+              0,
+              353,
+              349
+            ]
+          ],
+          "anchor": [
+            170,
+            349
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            675,
+            339,
+            1028,
+            688
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_04",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_04.png",
+          "rects": [
+            [
+              134,
+              0,
+              136,
+              1
+            ],
+            [
+              134,
+              1,
+              137,
+              3
+            ],
+            [
+              134,
+              3,
+              138,
+              4
+            ],
+            [
+              133,
+              4,
+              139,
+              5
+            ],
+            [
+              133,
+              5,
+              140,
+              6
+            ],
+            [
+              133,
+              6,
+              142,
+              7
+            ],
+            [
+              133,
+              7,
+              143,
+              8
+            ],
+            [
+              133,
+              8,
+              144,
+              9
+            ],
+            [
+              133,
+              9,
+              145,
+              10
+            ],
+            [
+              133,
+              10,
+              144,
+              11
+            ],
+            [
+              133,
+              11,
+              156,
+              12
+            ],
+            [
+              133,
+              12,
+              160,
+              13
+            ],
+            [
+              134,
+              13,
+              161,
+              14
+            ],
+            [
+              134,
+              14,
+              203,
+              15
+            ],
+            [
+              97,
+              15,
+              204,
+              16
+            ],
+            [
+              94,
+              16,
+              205,
+              17
+            ],
+            [
+              94,
+              17,
+              206,
+              18
+            ],
+            [
+              96,
+              18,
+              207,
+              19
+            ],
+            [
+              99,
+              19,
+              208,
+              20
+            ],
+            [
+              99,
+              20,
+              209,
+              21
+            ],
+            [
+              100,
+              21,
+              209,
+              22
+            ],
+            [
+              101,
+              22,
+              210,
+              23
+            ],
+            [
+              102,
+              23,
+              211,
+              25
+            ],
+            [
+              102,
+              25,
+              212,
+              27
+            ],
+            [
+              103,
+              27,
+              217,
+              30
+            ],
+            [
+              103,
+              30,
+              216,
+              31
+            ],
+            [
+              102,
+              31,
+              215,
+              32
+            ],
+            [
+              102,
+              32,
+              217,
+              33
+            ],
+            [
+              103,
+              33,
+              216,
+              34
+            ],
+            [
+              103,
+              34,
+              217,
+              35
+            ],
+            [
+              102,
+              35,
+              218,
+              37
+            ],
+            [
+              102,
+              37,
+              216,
+              38
+            ],
+            [
+              102,
+              38,
+              218,
+              39
+            ],
+            [
+              103,
+              39,
+              218,
+              40
+            ],
+            [
+              96,
+              40,
+              218,
+              41
+            ],
+            [
+              95,
+              41,
+              217,
+              42
+            ],
+            [
+              94,
+              42,
+              219,
+              43
+            ],
+            [
+              95,
+              43,
+              218,
+              44
+            ],
+            [
+              97,
+              44,
+              219,
+              46
+            ],
+            [
+              97,
+              46,
+              220,
+              48
+            ],
+            [
+              97,
+              48,
+              221,
+              49
+            ],
+            [
+              81,
+              49,
+              222,
+              50
+            ],
+            [
+              79,
+              50,
+              222,
+              51
+            ],
+            [
+              78,
+              51,
+              221,
+              52
+            ],
+            [
+              57,
+              52,
+              221,
+              53
+            ],
+            [
+              56,
+              53,
+              221,
+              54
+            ],
+            [
+              56,
+              54,
+              222,
+              55
+            ],
+            [
+              57,
+              55,
+              222,
+              56
+            ],
+            [
+              58,
+              56,
+              223,
+              57
+            ],
+            [
+              58,
+              57,
+              224,
+              58
+            ],
+            [
+              59,
+              58,
+              224,
+              59
+            ],
+            [
+              59,
+              59,
+              225,
+              60
+            ],
+            [
+              60,
+              60,
+              226,
+              61
+            ],
+            [
+              60,
+              61,
+              227,
+              63
+            ],
+            [
+              59,
+              63,
+              228,
+              66
+            ],
+            [
+              59,
+              66,
+              229,
+              67
+            ],
+            [
+              59,
+              67,
+              230,
+              68
+            ],
+            [
+              58,
+              68,
+              230,
+              69
+            ],
+            [
+              57,
+              69,
+              231,
+              71
+            ],
+            [
+              57,
+              71,
+              232,
+              72
+            ],
+            [
+              57,
+              72,
+              233,
+              73
+            ],
+            [
+              57,
+              73,
+              235,
+              74
+            ],
+            [
+              58,
+              74,
+              236,
+              75
+            ],
+            [
+              58,
+              75,
+              237,
+              76
+            ],
+            [
+              57,
+              76,
+              239,
+              77
+            ],
+            [
+              57,
+              77,
+              241,
+              79
+            ],
+            [
+              57,
+              79,
+              350,
+              80
+            ],
+            [
+              56,
+              80,
+              350,
+              82
+            ],
+            [
+              56,
+              82,
+              349,
+              83
+            ],
+            [
+              56,
+              83,
+              347,
+              84
+            ],
+            [
+              56,
+              84,
+              346,
+              85
+            ],
+            [
+              55,
+              85,
+              344,
+              86
+            ],
+            [
+              55,
+              86,
+              343,
+              87
+            ],
+            [
+              55,
+              87,
+              342,
+              88
+            ],
+            [
+              55,
+              88,
+              343,
+              89
+            ],
+            [
+              54,
+              89,
+              343,
+              91
+            ],
+            [
+              53,
+              91,
+              344,
+              92
+            ],
+            [
+              52,
+              92,
+              347,
+              94
+            ],
+            [
+              51,
+              94,
+              347,
+              96
+            ],
+            [
+              51,
+              96,
+              346,
+              97
+            ],
+            [
+              50,
+              97,
+              344,
+              98
+            ],
+            [
+              50,
+              98,
+              342,
+              99
+            ],
+            [
+              49,
+              99,
+              342,
+              100
+            ],
+            [
+              50,
+              100,
+              341,
+              101
+            ],
+            [
+              50,
+              101,
+              343,
+              102
+            ],
+            [
+              49,
+              102,
+              343,
+              104
+            ],
+            [
+              48,
+              104,
+              344,
+              105
+            ],
+            [
+              48,
+              105,
+              345,
+              106
+            ],
+            [
+              47,
+              106,
+              346,
+              107
+            ],
+            [
+              46,
+              107,
+              347,
+              108
+            ],
+            [
+              46,
+              108,
+              348,
+              109
+            ],
+            [
+              45,
+              109,
+              349,
+              110
+            ],
+            [
+              45,
+              110,
+              350,
+              112
+            ],
+            [
+              45,
+              112,
+              255,
+              113
+            ],
+            [
+              44,
+              113,
+              256,
+              115
+            ],
+            [
+              43,
+              115,
+              256,
+              116
+            ],
+            [
+              42,
+              116,
+              256,
+              117
+            ],
+            [
+              42,
+              117,
+              257,
+              118
+            ],
+            [
+              41,
+              118,
+              257,
+              119
+            ],
+            [
+              40,
+              119,
+              258,
+              120
+            ],
+            [
+              39,
+              120,
+              258,
+              121
+            ],
+            [
+              38,
+              121,
+              259,
+              122
+            ],
+            [
+              37,
+              122,
+              259,
+              123
+            ],
+            [
+              36,
+              123,
+              260,
+              124
+            ],
+            [
+              36,
+              124,
+              261,
+              125
+            ],
+            [
+              37,
+              125,
+              262,
+              126
+            ],
+            [
+              39,
+              126,
+              263,
+              127
+            ],
+            [
+              40,
+              127,
+              264,
+              128
+            ],
+            [
+              40,
+              128,
+              265,
+              129
+            ],
+            [
+              40,
+              129,
+              266,
+              130
+            ],
+            [
+              39,
+              130,
+              266,
+              131
+            ],
+            [
+              39,
+              131,
+              262,
+              132
+            ],
+            [
+              38,
+              132,
+              262,
+              133
+            ],
+            [
+              37,
+              133,
+              262,
+              134
+            ],
+            [
+              37,
+              134,
+              263,
+              136
+            ],
+            [
+              36,
+              136,
+              264,
+              137
+            ],
+            [
+              35,
+              137,
+              264,
+              138
+            ],
+            [
+              34,
+              138,
+              265,
+              139
+            ],
+            [
+              34,
+              139,
+              266,
+              140
+            ],
+            [
+              33,
+              140,
+              266,
+              141
+            ],
+            [
+              33,
+              141,
+              267,
+              142
+            ],
+            [
+              33,
+              142,
+              268,
+              143
+            ],
+            [
+              32,
+              143,
+              270,
+              145
+            ],
+            [
+              31,
+              145,
+              270,
+              147
+            ],
+            [
+              30,
+              147,
+              270,
+              148
+            ],
+            [
+              30,
+              148,
+              271,
+              149
+            ],
+            [
+              29,
+              149,
+              272,
+              150
+            ],
+            [
+              29,
+              150,
+              273,
+              151
+            ],
+            [
+              29,
+              151,
+              274,
+              152
+            ],
+            [
+              28,
+              152,
+              275,
+              153
+            ],
+            [
+              27,
+              153,
+              275,
+              154
+            ],
+            [
+              25,
+              154,
+              276,
+              155
+            ],
+            [
+              24,
+              155,
+              277,
+              156
+            ],
+            [
+              22,
+              156,
+              278,
+              157
+            ],
+            [
+              22,
+              157,
+              279,
+              158
+            ],
+            [
+              21,
+              158,
+              280,
+              160
+            ],
+            [
+              20,
+              160,
+              281,
+              161
+            ],
+            [
+              20,
+              161,
+              282,
+              162
+            ],
+            [
+              20,
+              162,
+              283,
+              163
+            ],
+            [
+              21,
+              163,
+              284,
+              164
+            ],
+            [
+              23,
+              164,
+              285,
+              165
+            ],
+            [
+              24,
+              165,
+              272,
+              166
+            ],
+            [
+              23,
+              166,
+              273,
+              167
+            ],
+            [
+              23,
+              167,
+              274,
+              170
+            ],
+            [
+              23,
+              170,
+              275,
+              173
+            ],
+            [
+              22,
+              173,
+              275,
+              174
+            ],
+            [
+              22,
+              174,
+              276,
+              175
+            ],
+            [
+              21,
+              175,
+              276,
+              176
+            ],
+            [
+              20,
+              176,
+              277,
+              178
+            ],
+            [
+              19,
+              178,
+              277,
+              179
+            ],
+            [
+              18,
+              179,
+              278,
+              181
+            ],
+            [
+              17,
+              181,
+              278,
+              182
+            ],
+            [
+              16,
+              182,
+              278,
+              183
+            ],
+            [
+              15,
+              183,
+              278,
+              185
+            ],
+            [
+              15,
+              185,
+              279,
+              186
+            ],
+            [
+              16,
+              186,
+              279,
+              188
+            ],
+            [
+              16,
+              188,
+              280,
+              190
+            ],
+            [
+              16,
+              190,
+              281,
+              191
+            ],
+            [
+              15,
+              191,
+              281,
+              194
+            ],
+            [
+              14,
+              194,
+              282,
+              196
+            ],
+            [
+              13,
+              196,
+              283,
+              197
+            ],
+            [
+              13,
+              197,
+              284,
+              198
+            ],
+            [
+              12,
+              198,
+              284,
+              199
+            ],
+            [
+              12,
+              199,
+              285,
+              200
+            ],
+            [
+              12,
+              200,
+              286,
+              201
+            ],
+            [
+              11,
+              201,
+              287,
+              202
+            ],
+            [
+              11,
+              202,
+              288,
+              203
+            ],
+            [
+              10,
+              203,
+              288,
+              205
+            ],
+            [
+              9,
+              205,
+              285,
+              206
+            ],
+            [
+              8,
+              206,
+              282,
+              208
+            ],
+            [
+              7,
+              208,
+              282,
+              209
+            ],
+            [
+              6,
+              209,
+              282,
+              210
+            ],
+            [
+              6,
+              210,
+              283,
+              211
+            ],
+            [
+              5,
+              211,
+              283,
+              213
+            ],
+            [
+              4,
+              213,
+              283,
+              214
+            ],
+            [
+              4,
+              214,
+              284,
+              215
+            ],
+            [
+              3,
+              215,
+              283,
+              217
+            ],
+            [
+              2,
+              217,
+              282,
+              218
+            ],
+            [
+              2,
+              218,
+              283,
+              219
+            ],
+            [
+              1,
+              219,
+              283,
+              220
+            ],
+            [
+              0,
+              220,
+              283,
+              221
+            ],
+            [
+              1,
+              221,
+              283,
+              222
+            ],
+            [
+              19,
+              222,
+              283,
+              226
+            ],
+            [
+              18,
+              226,
+              283,
+              232
+            ],
+            [
+              17,
+              232,
+              283,
+              235
+            ],
+            [
+              16,
+              235,
+              283,
+              237
+            ],
+            [
+              15,
+              237,
+              283,
+              240
+            ],
+            [
+              14,
+              240,
+              282,
+              242
+            ],
+            [
+              17,
+              242,
+              282,
+              243
+            ],
+            [
+              18,
+              243,
+              282,
+              244
+            ],
+            [
+              18,
+              244,
+              281,
+              246
+            ],
+            [
+              18,
+              246,
+              254,
+              248
+            ],
+            [
+              18,
+              248,
+              253,
+              253
+            ],
+            [
+              18,
+              253,
+              254,
+              256
+            ],
+            [
+              19,
+              256,
+              255,
+              257
+            ],
+            [
+              19,
+              257,
+              256,
+              258
+            ],
+            [
+              19,
+              258,
+              257,
+              259
+            ],
+            [
+              19,
+              259,
+              258,
+              261
+            ],
+            [
+              19,
+              261,
+              259,
+              262
+            ],
+            [
+              20,
+              262,
+              259,
+              263
+            ],
+            [
+              20,
+              263,
+              260,
+              265
+            ],
+            [
+              20,
+              265,
+              261,
+              266
+            ],
+            [
+              21,
+              266,
+              261,
+              267
+            ],
+            [
+              21,
+              267,
+              262,
+              269
+            ],
+            [
+              22,
+              269,
+              263,
+              271
+            ],
+            [
+              23,
+              271,
+              263,
+              273
+            ],
+            [
+              24,
+              273,
+              263,
+              275
+            ],
+            [
+              25,
+              275,
+              261,
+              276
+            ],
+            [
+              26,
+              276,
+              261,
+              277
+            ],
+            [
+              89,
+              277,
+              261,
+              278
+            ],
+            [
+              90,
+              278,
+              262,
+              279
+            ],
+            [
+              91,
+              279,
+              262,
+              280
+            ],
+            [
+              92,
+              280,
+              262,
+              281
+            ],
+            [
+              94,
+              281,
+              263,
+              282
+            ],
+            [
+              93,
+              282,
+              263,
+              283
+            ],
+            [
+              94,
+              283,
+              264,
+              284
+            ],
+            [
+              95,
+              284,
+              264,
+              285
+            ],
+            [
+              94,
+              285,
+              264,
+              286
+            ],
+            [
+              95,
+              286,
+              264,
+              287
+            ],
+            [
+              95,
+              287,
+              265,
+              289
+            ],
+            [
+              94,
+              289,
+              266,
+              290
+            ],
+            [
+              94,
+              290,
+              267,
+              291
+            ],
+            [
+              93,
+              291,
+              268,
+              293
+            ],
+            [
+              92,
+              293,
+              270,
+              294
+            ],
+            [
+              92,
+              294,
+              271,
+              295
+            ],
+            [
+              91,
+              295,
+              273,
+              296
+            ],
+            [
+              91,
+              296,
+              274,
+              297
+            ],
+            [
+              90,
+              297,
+              274,
+              298
+            ],
+            [
+              89,
+              298,
+              274,
+              299
+            ],
+            [
+              88,
+              299,
+              275,
+              300
+            ],
+            [
+              87,
+              300,
+              275,
+              301
+            ],
+            [
+              86,
+              301,
+              275,
+              302
+            ],
+            [
+              85,
+              302,
+              276,
+              303
+            ],
+            [
+              83,
+              303,
+              276,
+              304
+            ],
+            [
+              83,
+              304,
+              277,
+              305
+            ],
+            [
+              82,
+              305,
+              277,
+              306
+            ],
+            [
+              80,
+              306,
+              278,
+              307
+            ],
+            [
+              79,
+              307,
+              279,
+              308
+            ],
+            [
+              77,
+              308,
+              280,
+              309
+            ],
+            [
+              73,
+              309,
+              280,
+              310
+            ],
+            [
+              68,
+              310,
+              280,
+              311
+            ],
+            [
+              67,
+              311,
+              280,
+              312
+            ],
+            [
+              64,
+              312,
+              280,
+              313
+            ],
+            [
+              61,
+              313,
+              281,
+              314
+            ],
+            [
+              61,
+              314,
+              282,
+              315
+            ],
+            [
+              60,
+              315,
+              283,
+              316
+            ],
+            [
+              59,
+              316,
+              284,
+              317
+            ],
+            [
+              57,
+              317,
+              284,
+              318
+            ],
+            [
+              56,
+              318,
+              285,
+              319
+            ],
+            [
+              55,
+              319,
+              287,
+              320
+            ],
+            [
+              54,
+              320,
+              288,
+              321
+            ],
+            [
+              54,
+              321,
+              289,
+              322
+            ],
+            [
+              54,
+              322,
+              290,
+              323
+            ],
+            [
+              53,
+              323,
+              291,
+              324
+            ],
+            [
+              53,
+              324,
+              292,
+              325
+            ],
+            [
+              53,
+              325,
+              293,
+              326
+            ],
+            [
+              54,
+              326,
+              293,
+              327
+            ],
+            [
+              60,
+              327,
+              295,
+              328
+            ],
+            [
+              60,
+              328,
+              296,
+              329
+            ],
+            [
+              60,
+              329,
+              297,
+              330
+            ],
+            [
+              61,
+              330,
+              298,
+              331
+            ],
+            [
+              252,
+              331,
+              299,
+              332
+            ],
+            [
+              251,
+              332,
+              299,
+              333
+            ],
+            [
+              251,
+              333,
+              300,
+              335
+            ],
+            [
+              250,
+              335,
+              301,
+              340
+            ],
+            [
+              251,
+              340,
+              286,
+              342
+            ],
+            [
+              253,
+              342,
+              286,
+              343
+            ],
+            [
+              254,
+              343,
+              286,
+              344
+            ],
+            [
+              283,
+              344,
+              285,
+              345
+            ]
+          ],
+          "anchor": [
+            175,
+            345
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            126,
+            686,
+            536,
+            1031
+          ],
+          "alpha_noise_cutoff": 8,
+          "crop_recipe": {
+            "tool": "tools/refine_fluid_frame_crops.py",
+            "seed": [
+              190,
+              180
+            ],
+            "cutoff": 8,
+            "reason": "Runtime owns the detached dart; retain complete wings, weapon and anatomy."
+          }
+        },
+        {
+          "name": "ranged_v1_frame_05",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png",
+          "rects": [
+            [
+              0,
+              0,
+              339,
+              346
+            ]
+          ],
+          "anchor": [
+            158,
+            346
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            687,
+            686,
+            1026,
+            1032
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_06",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_06.png",
+          "rects": [
+            [
+              0,
+              0,
+              326,
+              346
+            ]
+          ],
+          "anchor": [
+            158,
+            346
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            147,
+            1020,
+            473,
+            1366
+          ],
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "ranged_v1_frame_07",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png",
+          "rects": [
+            [
+              0,
+              0,
+              313,
+              347
+            ]
+          ],
+          "anchor": [
+            156,
+            347
+          ],
+          "scale": 0.57,
+          "original_source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+          "source_rect": [
+            693,
+            1020,
+            1006,
+            1367
+          ],
+          "alpha_noise_cutoff": 0
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 110,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "static_frame": 0
+        },
+        "ranged": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 95,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "ranged",
+        "idle"
+      ],
+      "preserve_clips": [
+        "idle"
+      ],
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_00.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_01.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_02.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_03.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_04.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_05.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_06.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_07.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_00.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_01.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_02.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_03.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_04.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_05.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_06.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_07.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_00.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_01.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_02.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_03.png": 0.51,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_00.png": 0.31,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_01.png": 0.31,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_02.png": 0.31,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_03.png": 0.31,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_00.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_01.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_02.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_03.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_04.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_05.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_06.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_07.png": 0.47,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_00.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_01.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_02.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_03.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_04.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_06.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png": 0.57,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_00.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_01.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_02.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_03.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_04.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_05.png": 0.52,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_00.png": 0.275,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_01.png": 0.275
+      },
+      "source_original_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_04.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_05.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_06.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1_frame_07.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/move_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_04.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_05.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_06.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1_frame_07.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/attack_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/hit_defend_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/defend_v2.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_04.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_05.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_06.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1_frame_07.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/death_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_04.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_05.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_06.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1_frame_07.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/ranged_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_02.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_03.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_04.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1_frame_05.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_v1.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_00.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.png",
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2_frame_01.png": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_bramblekite_needlers/cast_return_v2.png"
+      },
+      "source_scale_reason": "All poses from a given original sheet have exactly one scale: flight .58, attack/hit .51, defense .31, death .47, ranged .57, support .52, support return .275. Original sheets have different raster resolutions. Calibration targets old ~194px standing crown-to-foot height and corresponding torso size; raised flight wings may extend higher. Connected-alpha extraction preserves original pose pixels; no per-frame resizing/warping.",
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Native 128px review: articulated blowpipe idle, eight-pose wingbeat, thrust/recovery, wing brace/recoil, grounded collapse and cleaned ranged release accepted. Detached dart now belongs only to runtime projectile. Support gesture remains too subtle."
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

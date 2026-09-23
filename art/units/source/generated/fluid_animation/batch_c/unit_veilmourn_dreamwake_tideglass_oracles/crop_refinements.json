@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "frames": [
+    {
+      "clip": "attack",
+      "frame": 0,
+      "seed": [
+        290,
+        230
+      ],
+      "reason": "Exclude following pose staff crown below the first pose."
+    },
+    {
+      "clip": "attack",
+      "frame": 5,
+      "seed": [
+        760,
+        950
+      ],
+      "reason": "Exclude following pose staff crown while preserving this pose staff and ribbons."
+    },
+    {
+      "clip": "cast",
+      "frame": 3,
+      "seed": [
+        790,
+        600
+      ],
+      "reason": "Exclude following pose staff crown below the boots."
+    },
+    {
+      "clip": "cast",
+      "frame": 5,
+      "seed": [
+        755,
+        1000
+      ],
+      "additional_rects": [
+        [
+          805,
+          850,
+          875,
+          920
+        ]
+      ],
+      "reason": "Recover staff crescent above previous row boundary while preserving the separately owned invocation ring."
+    }
+  ]
+}

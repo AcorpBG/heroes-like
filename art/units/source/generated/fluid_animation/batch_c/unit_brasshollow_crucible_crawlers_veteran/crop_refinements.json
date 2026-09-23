@@ -1,0 +1,23 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers_veteran",
+  "frames": [
+    {
+      "clip": "attack",
+      "frame": 2,
+      "seed": [
+        1107,
+        280
+      ],
+      "reason": "Exclude the next sprite foot fragment at the right edge of the anticipation frame."
+    },
+    {
+      "clip": "hit",
+      "frame": 2,
+      "seed": [
+        1107,
+        280
+      ],
+      "reason": "Exclude the next sprite foot fragment at the right edge of the recovery frame."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_neutral_fenhound_runners",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png": "08f0b7e09b1bff66f270d2c2a800fc3e8d430f29c65ab99f92ab7607a2d7169c",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png": "e4c65cabaac949e10ea1ad21dd0a2c9a647b70d7fb7984d4620e7710913b085f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png": "4513f03636283cf3aa66c96dbabb4c477c367b86b0a7927a6ae0780e9c6ee76e",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png": "9db1d3a8dfd75db5c0cd00fb71fecc92b3acee00433cab0f5dcade52784a4c4f",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png": "86e74cfc87f67ed34677dd37759afa9f57f7fb329aa1f373e903241d9bbc938e",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png": "e3d94ea50d86e6c06011e20ca04f88657f93bd275884dde6b0e610f6487a62a6"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: articulated canine alert idle, coordinated four-legged running poses, jaw lunge/recovery, recoil/low guard, physical howl and grounded collapse. Removed three foreign source fragments and moved the low-shoulder gasp before the fully prone pose."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "a50a5b92701b906b7183d2186104537d7e3fb95ee00b9d0844f3db820af23fb5",
+  "atlas_sha256": "9c5a3df9d867b03359b4385a717c8acc5f9243ffb9de275bfb6eaeabe61b81e0",
+  "texture_bytes_rgba": 12644352
+}

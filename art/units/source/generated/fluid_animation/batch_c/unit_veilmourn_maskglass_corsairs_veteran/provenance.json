@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_veilmourn_maskglass_corsairs_veteran",
+  "tool": "builtin image_gen",
+  "reference": "art/animation/source/poses/unit_veilmourn_maskglass_corsairs_veteran/unit_veilmourn_maskglass_corsairs_veteran-alpha.png",
+  "reference_sha256": "ec56e795d4edadbc7d7b0848e8698f088eac2a31790823f2e96a4184292e2525",
+  "generations": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/idle_v1.png",
+      "source_sha256": "efc8282e307950670d3147f6ba71a3f7b5b3c84a72e9a5e5af7f4b71060ba32e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b4ac620bf9ee71798df06de6e2077ea594b79f8b17d0e7d23216639929681213",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-063deac2-0610-4d3e-bc19-34fb2498f14a.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v1.png",
+      "source_sha256": "fcf7bec057de906ff3382d9ebb06f5a2a3b9524b6f8609714adab6bbc7d0a688",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "7116fb649560b6bb99d77ea912416c974454cdec4bca294e1d6db1d2d6e0feac",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-0902f2eb-6b2f-43a9-a70c-83af2ef725cd.png",
+      "status": "rejected_same_leg_leads_twice"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/attack_v1.png",
+      "source_sha256": "f5a622bc949dfaf0c48f06c8c4ec47612b2b198b445b72f111634036ff0ad1e0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "8c40e7ad1545e514f2740298a4f69ea68156c0e366e972f00e8c198dad23caf1",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-86d8d903-872e-4080-82b6-07151115338b.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/hit_defend_v1.png",
+      "source_sha256": "f30a8d4f766262b1a104e28e0ca956c63f4997fac16aad2a1256b6a200971cb7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "dff62e66f3fc869fed334739f5f5f3be1748ff7728c441118b36eb35e6c6288d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-04310106-5c18-434c-bc66-9c546cc45340.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.png",
+      "source_sha256": "ecc0fba86ef02d8b6ee9482eb26b111a640904b42cfeecc56b198fbd075ae6b9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "f4be37bed55d1a6fa11f598f9fc67e1d76b80688c773e857b416f0058ffc4dd3",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-b7b128d0-275e-4639-b518-8130636f6929.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/cast_v1.png",
+      "source_sha256": "20e1aa0a9f95e164e53f8236d0d3bc0e81f3130b74d1f35f612d4c146e47e4e7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "9090f8fc2e7eebc52ab154f00dfbee663558579208c7f7db75c33b8247c63ae5",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-b6326cd8-f43e-4ba0-b72b-5127945ec928.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_contacts_v1.png",
+      "source_sha256": "58d391e88b0201a26e680c5fe7028aadc43d1b89339aea9fc7bb9c82e041ce00",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "8ebae34fed79cd1b3da3cf556481fdb39ef38b1e3ec45be358e0ffa3360f35fa",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-0b17fa06-19f1-449b-99d9-59148176387e.png",
+      "status": "rejected_incoherent_gait_or_clipped_blades",
+      "supporting_references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_far_contact_v1.png",
+      "source_sha256": "54e39e8f471169aa5e7ba6180c3dc2976bafbd99e25e41f231789808a0eab099",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_far_contact_v1.prompt.txt",
+      "prompt_sha256": "757dd9d14dd608723b619aec56710fbac60b71929ac0e1c64e9aa8666dfa800b",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-444fff00-9965-4715-87a3-0933e07b634f.png",
+      "status": "rejected_incoherent_gait_or_clipped_blades",
+      "supporting_references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v2.png",
+      "source_sha256": "cf4f9446d6fae6494e5718d2fb8b72da3aef5009d84736acfed97ba5fbc0d309",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_v2.prompt.txt",
+      "prompt_sha256": "a29c22e0bb093b7c3b540f24865c85c22c0d7f3913e6c699474d3f402192f95d",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-80b71fa0-b734-4b82-95c0-b0c245b6f7b4.png",
+      "status": "rejected_incoherent_gait_or_clipped_blades",
+      "supporting_references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_far_half_v1.png",
+      "source_sha256": "3b9196506df4009c33c74a1ec861fa4cf0d994b13aae7e88ba3e448f8c0fb936",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs_veteran/move_far_half_v1.prompt.txt",
+      "prompt_sha256": "9fae5872ce57b23fd3cc1c26da82ddca9ada4d942c0be28df958c1f67e92b315",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-31a211c8-8391-4053-bf49-cd86cc1f7ba4.png",
+      "status": "rejected_incoherent_gait_or_clipped_blades",
+      "supporting_references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+      ]
+    }
+  ],
+  "derived_reference_crops": {
+    "move_identity_reference.png": "move_contacts_v1.png left887x887",
+    "move_opposite_pose_reference.png": "../unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png right887x887"
+  }
+}

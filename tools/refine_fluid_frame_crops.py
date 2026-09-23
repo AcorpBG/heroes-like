@@ -51,11 +51,35 @@ def refine_frame(unit, clip, number, seed):
     frame['crop_recipe'] = {'tool': 'tools/refine_fluid_frame_crops.py', 'seed': seed, 'cutoff': cutoff}
 
 
+def apply_recipe(handoff, recipe):
+    """Replay individually reviewed crop/anchor corrections after source extraction."""
+    packet = json.loads(Path(handoff).read_text(encoding='utf-8'))
+    selections = json.loads(Path(recipe).read_text(encoding='utf-8'))
+    if len(packet['units']) != 1 or packet['units'][0]['unit_id'] != selections['unit_id']:
+        raise ValueError('Crop recipe must identify exactly this unit')
+    unit = packet['units'][0]
+    for selection in selections['frames']:
+        clip, number = selection['clip'], selection['frame']
+        refine_frame(unit, clip, number, selection['seed'])
+        frame = unit['frames'][unit['clips'][clip]['indices'][number]]
+        # Some reviewed poses own detached effects; keep their explicit regions.
+        frame['rects'].extend(selection.get('additional_rects', []))
+        if 'anchor' in selection:
+            frame['anchor'] = selection['anchor']
+        frame['crop_recipe']['reason'] = selection['reason']
+    Path(handoff).write_text(json.dumps(packet, indent=2) + '\n', encoding='utf-8')
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('handoff', type=Path)
-    parser.add_argument('--frame', action='append', required=True, help='clip:zero_based_frame:source_seed_x:source_seed_y')
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument('--frame', action='append', help='clip:zero_based_frame:source_seed_x:source_seed_y')
+    mode.add_argument('--recipe', type=Path, help='Replay a reviewed per-unit crop_refinements.json')
     args = parser.parse_args()
+    if args.recipe:
+        apply_recipe(args.handoff, args.recipe)
+        return
     packet = json.loads(args.handoff.read_text(encoding='utf-8'))
     if len(packet['units']) != 1:
         raise ValueError('Select one unit handoff')

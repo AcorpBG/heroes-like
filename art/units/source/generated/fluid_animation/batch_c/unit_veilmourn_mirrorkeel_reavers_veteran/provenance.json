@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers_veteran",
+  "tool": "builtin image_gen",
+  "reference": "art/animation/source/poses/unit_veilmourn_mirrorkeel_reavers_veteran/unit_veilmourn_mirrorkeel_reavers_veteran-alpha.png",
+  "reference_sha256": "1288aac4b0004eade20850856c400565aee5b2b07f71a4407ecf7596410a3b70",
+  "generations": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/idle_v1.png",
+      "source_sha256": "37fcc3c2f25df3d8f28649c8217d8e805e5c503937157248ea8a49afbe419247",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "a9c44e8fb0cdbd3bd44374b4ecd1f85a60924e3750fe2a119c8348b0e7a77c81",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-825b70d2-2f74-43e4-8309-37ded0cb7447.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/hit_defend_v1.png",
+      "source_sha256": "6b26346f4c5597f41f41e35a5e174e42515b858fbd9d19f926ceea1311bcd927",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/hit_defend_v1.prompt.txt",
+      "prompt_sha256": "28905a0a6ba15daeb1af9212e8df0772c9118af2c580f0eadec86876476c5528",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-261b31bd-b946-4a3a-849a-62374cd4b0b4.png",
+      "status": "rejected_clipping_or_gait"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/attack_v1.png",
+      "source_sha256": "b3ef31a3b07b44c89cd87d700f63b04d41e0700ac2782d5346e22aa26769aca8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "8ca6e4d02b1474e140d62d80a21a2880a0f103f615bcb580e0e65218ae9e6fb1",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-d557bf37-4a4a-4a54-8582-44a43550580e.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.png",
+      "source_sha256": "02cd2000e9b83dcaedfa0b66d561720f976d9f6e39200f93c81aabf35839ff86",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "4cfc62a8f7be121d2a60fd725ee975c8823a74160ed9650c21bef368c70f61e2",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-7f7b8ea6-10d2-4da6-82a8-6e7aef6d4206.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/cast_v1.png",
+      "source_sha256": "39feb3d57691a7da8878347b81a611fa42a6db72af921162f19883bae48d95e1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "6496731a1558733b46d17f533eab74b329820963eb73624066b729d478ce83d4",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-dbd511f4-5671-4bf1-a14b-4070b6e0591b.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/hit_defend_v2.png",
+      "source_sha256": "a8b5613e613bb97bfcb929b90fd2b7cc4ba49c00250971b850c65c4e37566647",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/hit_defend_v2.prompt.txt",
+      "prompt_sha256": "c424ec64400709e0a3db96558dbd7234edcbabda24a2b95b5ee7b5441091c0c3",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-7b24913a-a146-45b8-bc41-421ed61e93ab.png",
+      "status": "pending_coordinator_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png",
+      "source_sha256": "14e0039c332dbd62d06be6062ef5fbb4990efbc577a6264b751fe2d8ae3e7905",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.prompt.txt",
+      "prompt_sha256": "ff1a835cd29a7f32f8cd3f60f5f7de938a71169276368b4b55992c8c854d2a21",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-66063498-7f86-4509-9e5b-3cefb9c7d691.png",
+      "status": "rejected_clipping_or_gait",
+      "supporting_pose_reference": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_contacts_v1.png"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_inbetweens_v1.png",
+      "source_sha256": "a4a18945bfdda5c2a09545334f159940692a3affa69e7af6e69f44611619c495",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_inbetweens_v1.prompt.txt",
+      "prompt_sha256": "4319ef6b34e88be51ae72808f2df0793612ad823d9d2171e8907b59240a125c7",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-d20a9b2f-10cc-432e-a27f-9bf4f821f838.png",
+      "status": "rejected_clipping_or_gait",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png"
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_inbetweens_v2.png",
+      "source_sha256": "b07a3734b096539aa9f92aeae327dd77e8d4c705cdb8258d6322b4d0ec27f504",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_inbetweens_v2.prompt.txt",
+      "prompt_sha256": "5fb393efba38bc3196a48df34143401f10e74d1762bbda481b8b079599b90c32",
+      "generation_output": "C:/Users/acorp/.codex/generated_images/01a0cccd-b1cc-70b2-93ed-d1105d3c53e7/exec-4720995b-33cc-4b40-ae73-1d8da6f22fa1.png",
+      "status": "rejected_clipping_or_gait",
+      "references": [
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers_veteran/move_contacts_v1.png",
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_gloamkeel_bulwarks_veteran/move_inbetweens_v1.png"
+      ]
+    }
+  ]
+}

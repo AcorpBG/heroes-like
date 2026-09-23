@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_brasshollow_quenchspool_slingers",
+  "frames": [
+    {
+      "clip": "attack",
+      "frame": 4,
+      "seed": [
+        220,
+        950
+      ],
+      "reason": "Exclude next-row head and register actual boot baseline.",
+      "anchor": [
+        305,
+        1106
+      ]
+    },
+    {
+      "clip": "attack",
+      "frame": 5,
+      "seed": [
+        760,
+        950
+      ],
+      "reason": "Exclude next-row head and register actual boot baseline.",
+      "anchor": [
+        806,
+        1106
+      ]
+    },
+    {
+      "clip": "hit",
+      "frame": 2,
+      "seed": [
+        300,
+        600
+      ],
+      "reason": "Exclude neighboring recoil fragment above head."
+    }
+  ]
+}

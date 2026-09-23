@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.png",
+      "source_sha256": "496f5782ab88ea56b4c7f376d47e92dbed6102cbbfae1f338060336904f526fa",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.prompt.txt",
+      "prompt_sha256": "05b295eaf3472f855b6cac5fb107b46a015ebdb1fde832212d77a6c0a6117a71",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-a9908379-b728-4180-b119-9b22a172238f.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v3.png",
+      "source_sha256": "26c6f8a689860b2561663d5d2a168429efc0770d5707615d99b280e1c188530a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v3.prompt.txt",
+      "prompt_sha256": "03ee91dfefedabaa7d42a5a55d791e183d89b9f1a0221db64b9a19b76a3af1ee",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-b0607bbf-f008-44f9-bb23-74a67511c795.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v1.png",
+      "source_sha256": "ed3012282abc38244b70fa37efee492d7ec83a307aee9b69444b6c655ac57808",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v1.prompt.txt",
+      "prompt_sha256": "258cb18b5c5e12f9b43c5cee7b0d89eb19b63de503c845407171184b77498d7d",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-3806b056-b186-4fab-8359-c0807f167c8a.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "rejected"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png",
+      "source_sha256": "7318e8b4570f12d4c803cf61650f4f0e08803fe6e96eb119271fa8ae496250fd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.prompt.txt",
+      "prompt_sha256": "b8e44b13175d720eb189938e80f1412c4f6c201ab35f6deea8604f1dfe730666",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-286ad24e-d907-4569-9df3-0aa926cb195f.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v1.png",
+      "source_sha256": "18a459e27e9c609fcad1d986e7175e974b39f3120ab2d3ecd0b46e738fad26f1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v1.prompt.txt",
+      "prompt_sha256": "0b2e360f0090a56a1963b939d6e0a97f7c101e90ccb62d7fa0f95ddf8f2e8bbd",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-2ac2786e-4c35-4951-b78f-eac09ebeae10.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "rejected"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v2.png",
+      "source_sha256": "52c2ba050e804e5bb39964cc490b7b5a0fbe6a09b5ce1b47e647f3dc7726d8ec",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v2.prompt.txt",
+      "prompt_sha256": "2ca1a9767a1dfd57eb3dee8291649aacde38ef2680448e8b15d61f95e47c4e3b",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-53ca470f-5590-42ed-8dba-02b9c963e754.png",
+      "reference": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/move_v1.png",
+      "status": "rejected"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.png",
+      "source_sha256": "c36fd1afaf6161a30de0418a8c983aa5820d39085f54121c705f0368aa5f7238",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.prompt.txt",
+      "prompt_sha256": "1a8335be9bbde6b1ccb86e99ef47f1b19085d57e6a115a7a5f73607b3a977a72",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-c74b5d1a-f4e6-44a0-a1af-54e67117215b.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.png",
+      "source_sha256": "aef643c645d83fac0e4ed4aa5b68cd779819e1c72b4e1358e8a5c08e3ab6a0f1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.prompt.txt",
+      "prompt_sha256": "36cd4fbf061b7033a6e0bc80bdb6c075448d86335fba9aefae5e6779e83a79d3",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-fdc9549c-a606-4e88-b77c-31b2f116402f.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png",
+      "source_sha256": "802e9ef232b2b3abfae936a0cc613b2d9c43468d25d1df8dd185eb0206ce3940",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.prompt.txt",
+      "prompt_sha256": "6fa4252a91b51dd9710dce4c8ed46624f1a5f04b85ec855f7f90f8f0e2c13554",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-0c0b2796-5012-47ea-b856-48b85d26b5af.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png",
+      "source_sha256": "b9c144f1f2425ca13809b9e9d82841dba33a58a5d514b46eea435dab007e1ab9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.prompt.txt",
+      "prompt_sha256": "e8cabea31d07da36ca5d421ce685df2a6e992a8a9f6ba3281730aaa3fdac7ad0",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-79a20d80-92b8-4cc2-a96d-07bb65ae81ab.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png",
+      "source_sha256": "2771dfde1ab204a61b95968c989bc65877f83a9d9fbac567913e11731c0cfef5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.prompt.txt",
+      "prompt_sha256": "83df23177f52ae113a2ce5667c76cad6406b89edfd2d800c70eb87682b928d69",
+      "tool": "built-in image_gen",
+      "output": "C:/Users/acorp/.codex/generated_images/01a0ccd3-0f4d-76f1-9dbf-e05854f78ac7/exec-ce52a235-8e60-48a9-bf0b-34f5bb632c70.png",
+      "reference": "art/units/source/curated/unit_neutral_reefbolt_crews.png",
+      "status": "pending_visual_review"
+    }
+  ],
+  "notes": [
+    "Idle v1 clips weapon edge. Idle v2 needs smoother return. Both gait attempts keep near leg forward; rejected, not counted complete.",
+    "No automatic visual acceptance. Generated masters retained unchanged."
+  ]
+}

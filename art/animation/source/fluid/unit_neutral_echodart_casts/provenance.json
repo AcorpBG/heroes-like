@@ -1,0 +1,29 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png": "5f6ae1438aa8ce86548916da13c82c742a3547a7a98f469ee1bd01a3ede9885c",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png": "d9cf1dc97742b2b44ef992c9707d2b3f5ba42c89b54f6450713d4afd59f6a514",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png": "a1c8ed08dfe540586be33a1ebd5f7b3e703f8c7fbef4d7688b8f26eb92186d7a",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png": "1bc3a18f28e7c5c488881eb40ccc9926c2ac87f6f11401eaabd62fad758f2765",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png": "322880aaad795054ba747f0f77b01a8974b155fe5d416947969705fca642cdc0"
+  },
+  "accepted_clips": [
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: crossbow butt strike and recovery, aim/release/recovery, recoil/crouched brace, free-hand physical signal and grounded collapse accepted. Idle arms are too static; walk lacks clear reciprocal legs and is withheld."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "6cd767601c4d1d40f50e99413a28c98d51cb9c6b4465fbc764031869924c7378",
+  "atlas_sha256": "35f00ae5b02443b57a46e505aa2f99d56da0505abd986c969a6ba1c452d6605c",
+  "texture_bytes_rgba": 12337920
+}

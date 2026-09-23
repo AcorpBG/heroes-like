@@ -1,0 +1,4905 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_fenhound_runners",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_v1_01",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            400
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_02",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              444,
+              0,
+              887,
+              444
+            ]
+          ],
+          "anchor": [
+            665,
+            400
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_03",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            400
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_04",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1552,
+            400
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_05",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_06",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_07",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_v1_08",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_01",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            397
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_02",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              801,
+              89,
+              803,
+              90
+            ],
+            [
+              801,
+              90,
+              840,
+              91
+            ],
+            [
+              802,
+              91,
+              840,
+              92
+            ],
+            [
+              803,
+              92,
+              840,
+              93
+            ],
+            [
+              803,
+              93,
+              841,
+              95
+            ],
+            [
+              803,
+              95,
+              842,
+              96
+            ],
+            [
+              803,
+              96,
+              843,
+              97
+            ],
+            [
+              803,
+              97,
+              844,
+              98
+            ],
+            [
+              803,
+              98,
+              845,
+              100
+            ],
+            [
+              803,
+              100,
+              846,
+              101
+            ],
+            [
+              803,
+              101,
+              847,
+              103
+            ],
+            [
+              802,
+              103,
+              848,
+              105
+            ],
+            [
+              801,
+              105,
+              849,
+              107
+            ],
+            [
+              800,
+              107,
+              851,
+              108
+            ],
+            [
+              799,
+              108,
+              852,
+              109
+            ],
+            [
+              798,
+              109,
+              852,
+              112
+            ],
+            [
+              797,
+              112,
+              852,
+              114
+            ],
+            [
+              776,
+              114,
+              852,
+              115
+            ],
+            [
+              777,
+              115,
+              852,
+              116
+            ],
+            [
+              779,
+              116,
+              851,
+              117
+            ],
+            [
+              780,
+              117,
+              851,
+              118
+            ],
+            [
+              781,
+              118,
+              852,
+              120
+            ],
+            [
+              780,
+              120,
+              852,
+              121
+            ],
+            [
+              780,
+              121,
+              853,
+              123
+            ],
+            [
+              507,
+              123,
+              853,
+              124
+            ],
+            [
+              506,
+              124,
+              853,
+              126
+            ],
+            [
+              490,
+              126,
+              854,
+              127
+            ],
+            [
+              492,
+              127,
+              854,
+              128
+            ],
+            [
+              493,
+              128,
+              855,
+              129
+            ],
+            [
+              492,
+              129,
+              855,
+              130
+            ],
+            [
+              481,
+              130,
+              856,
+              131
+            ],
+            [
+              479,
+              131,
+              856,
+              132
+            ],
+            [
+              478,
+              132,
+              856,
+              133
+            ],
+            [
+              476,
+              133,
+              856,
+              134
+            ],
+            [
+              474,
+              134,
+              856,
+              135
+            ],
+            [
+              473,
+              135,
+              856,
+              136
+            ],
+            [
+              472,
+              136,
+              856,
+              140
+            ],
+            [
+              471,
+              140,
+              856,
+              141
+            ],
+            [
+              470,
+              141,
+              856,
+              142
+            ],
+            [
+              469,
+              142,
+              856,
+              143
+            ],
+            [
+              471,
+              143,
+              856,
+              144
+            ],
+            [
+              469,
+              144,
+              856,
+              145
+            ],
+            [
+              468,
+              145,
+              856,
+              146
+            ],
+            [
+              466,
+              146,
+              856,
+              147
+            ],
+            [
+              465,
+              147,
+              856,
+              148
+            ],
+            [
+              463,
+              148,
+              856,
+              149
+            ],
+            [
+              462,
+              149,
+              856,
+              150
+            ],
+            [
+              461,
+              150,
+              856,
+              151
+            ],
+            [
+              460,
+              151,
+              856,
+              152
+            ],
+            [
+              459,
+              152,
+              857,
+              153
+            ],
+            [
+              458,
+              153,
+              857,
+              154
+            ],
+            [
+              457,
+              154,
+              857,
+              155
+            ],
+            [
+              457,
+              155,
+              859,
+              156
+            ],
+            [
+              456,
+              156,
+              860,
+              158
+            ],
+            [
+              455,
+              158,
+              861,
+              160
+            ],
+            [
+              454,
+              160,
+              862,
+              161
+            ],
+            [
+              454,
+              161,
+              863,
+              162
+            ],
+            [
+              454,
+              162,
+              865,
+              163
+            ],
+            [
+              454,
+              163,
+              871,
+              164
+            ],
+            [
+              453,
+              164,
+              872,
+              167
+            ],
+            [
+              452,
+              167,
+              872,
+              168
+            ],
+            [
+              452,
+              168,
+              870,
+              169
+            ],
+            [
+              452,
+              169,
+              871,
+              173
+            ],
+            [
+              452,
+              173,
+              869,
+              174
+            ],
+            [
+              453,
+              174,
+              869,
+              176
+            ],
+            [
+              454,
+              176,
+              869,
+              177
+            ],
+            [
+              455,
+              177,
+              870,
+              179
+            ],
+            [
+              456,
+              179,
+              870,
+              180
+            ],
+            [
+              457,
+              180,
+              870,
+              181
+            ],
+            [
+              462,
+              181,
+              869,
+              185
+            ],
+            [
+              462,
+              185,
+              870,
+              186
+            ],
+            [
+              462,
+              186,
+              869,
+              187
+            ],
+            [
+              462,
+              187,
+              870,
+              189
+            ],
+            [
+              462,
+              189,
+              871,
+              190
+            ],
+            [
+              463,
+              190,
+              872,
+              191
+            ],
+            [
+              464,
+              191,
+              873,
+              192
+            ],
+            [
+              469,
+              192,
+              874,
+              193
+            ],
+            [
+              469,
+              193,
+              875,
+              194
+            ],
+            [
+              469,
+              194,
+              876,
+              195
+            ],
+            [
+              469,
+              195,
+              877,
+              196
+            ],
+            [
+              469,
+              196,
+              878,
+              197
+            ],
+            [
+              469,
+              197,
+              879,
+              198
+            ],
+            [
+              469,
+              198,
+              880,
+              199
+            ],
+            [
+              469,
+              199,
+              881,
+              200
+            ],
+            [
+              471,
+              200,
+              882,
+              201
+            ],
+            [
+              471,
+              201,
+              883,
+              202
+            ],
+            [
+              472,
+              202,
+              884,
+              203
+            ],
+            [
+              473,
+              203,
+              885,
+              204
+            ],
+            [
+              473,
+              204,
+              886,
+              205
+            ],
+            [
+              474,
+              205,
+              886,
+              206
+            ],
+            [
+              515,
+              206,
+              886,
+              207
+            ],
+            [
+              514,
+              207,
+              886,
+              212
+            ],
+            [
+              514,
+              212,
+              887,
+              214
+            ],
+            [
+              526,
+              214,
+              887,
+              216
+            ],
+            [
+              591,
+              216,
+              887,
+              217
+            ],
+            [
+              590,
+              217,
+              886,
+              218
+            ],
+            [
+              591,
+              218,
+              885,
+              219
+            ],
+            [
+              591,
+              219,
+              884,
+              220
+            ],
+            [
+              589,
+              220,
+              884,
+              222
+            ],
+            [
+              590,
+              222,
+              884,
+              225
+            ],
+            [
+              589,
+              225,
+              880,
+              226
+            ],
+            [
+              592,
+              226,
+              860,
+              227
+            ],
+            [
+              589,
+              227,
+              859,
+              228
+            ],
+            [
+              588,
+              228,
+              858,
+              229
+            ],
+            [
+              585,
+              229,
+              857,
+              230
+            ],
+            [
+              583,
+              230,
+              851,
+              231
+            ],
+            [
+              567,
+              231,
+              851,
+              232
+            ],
+            [
+              565,
+              232,
+              851,
+              233
+            ],
+            [
+              564,
+              233,
+              801,
+              234
+            ],
+            [
+              563,
+              234,
+              801,
+              235
+            ],
+            [
+              562,
+              235,
+              802,
+              236
+            ],
+            [
+              561,
+              236,
+              802,
+              239
+            ],
+            [
+              560,
+              239,
+              802,
+              240
+            ],
+            [
+              560,
+              240,
+              803,
+              242
+            ],
+            [
+              560,
+              242,
+              802,
+              243
+            ],
+            [
+              559,
+              243,
+              802,
+              244
+            ],
+            [
+              559,
+              244,
+              801,
+              247
+            ],
+            [
+              558,
+              247,
+              801,
+              248
+            ],
+            [
+              558,
+              248,
+              800,
+              250
+            ],
+            [
+              557,
+              250,
+              799,
+              252
+            ],
+            [
+              557,
+              252,
+              798,
+              253
+            ],
+            [
+              556,
+              253,
+              795,
+              254
+            ],
+            [
+              556,
+              254,
+              794,
+              255
+            ],
+            [
+              555,
+              255,
+              794,
+              256
+            ],
+            [
+              555,
+              256,
+              793,
+              258
+            ],
+            [
+              555,
+              258,
+              792,
+              259
+            ],
+            [
+              554,
+              259,
+              790,
+              260
+            ],
+            [
+              554,
+              260,
+              788,
+              261
+            ],
+            [
+              553,
+              261,
+              787,
+              263
+            ],
+            [
+              552,
+              263,
+              786,
+              264
+            ],
+            [
+              551,
+              264,
+              785,
+              265
+            ],
+            [
+              551,
+              265,
+              783,
+              266
+            ],
+            [
+              550,
+              266,
+              781,
+              267
+            ],
+            [
+              550,
+              267,
+              779,
+              268
+            ],
+            [
+              549,
+              268,
+              779,
+              269
+            ],
+            [
+              549,
+              269,
+              778,
+              270
+            ],
+            [
+              548,
+              270,
+              778,
+              272
+            ],
+            [
+              547,
+              272,
+              779,
+              273
+            ],
+            [
+              545,
+              273,
+              779,
+              274
+            ],
+            [
+              544,
+              274,
+              780,
+              275
+            ],
+            [
+              543,
+              275,
+              780,
+              276
+            ],
+            [
+              543,
+              276,
+              781,
+              277
+            ],
+            [
+              541,
+              277,
+              781,
+              278
+            ],
+            [
+              543,
+              278,
+              782,
+              279
+            ],
+            [
+              540,
+              279,
+              782,
+              280
+            ],
+            [
+              538,
+              280,
+              783,
+              281
+            ],
+            [
+              537,
+              281,
+              783,
+              282
+            ],
+            [
+              537,
+              282,
+              784,
+              283
+            ],
+            [
+              536,
+              283,
+              785,
+              284
+            ],
+            [
+              538,
+              284,
+              786,
+              285
+            ],
+            [
+              536,
+              285,
+              786,
+              286
+            ],
+            [
+              535,
+              286,
+              786,
+              287
+            ],
+            [
+              534,
+              287,
+              787,
+              288
+            ],
+            [
+              533,
+              288,
+              787,
+              290
+            ],
+            [
+              532,
+              290,
+              787,
+              295
+            ],
+            [
+              532,
+              295,
+              788,
+              298
+            ],
+            [
+              532,
+              298,
+              789,
+              300
+            ],
+            [
+              534,
+              300,
+              789,
+              301
+            ],
+            [
+              535,
+              301,
+              790,
+              303
+            ],
+            [
+              534,
+              303,
+              790,
+              304
+            ],
+            [
+              534,
+              304,
+              791,
+              305
+            ],
+            [
+              536,
+              305,
+              791,
+              307
+            ],
+            [
+              536,
+              307,
+              792,
+              308
+            ],
+            [
+              538,
+              308,
+              792,
+              309
+            ],
+            [
+              539,
+              309,
+              793,
+              310
+            ],
+            [
+              541,
+              310,
+              793,
+              311
+            ],
+            [
+              602,
+              311,
+              794,
+              312
+            ],
+            [
+              603,
+              312,
+              794,
+              314
+            ],
+            [
+              604,
+              314,
+              795,
+              316
+            ],
+            [
+              605,
+              316,
+              796,
+              317
+            ],
+            [
+              606,
+              317,
+              796,
+              318
+            ],
+            [
+              607,
+              318,
+              796,
+              319
+            ],
+            [
+              608,
+              319,
+              797,
+              320
+            ],
+            [
+              608,
+              320,
+              798,
+              321
+            ],
+            [
+              609,
+              321,
+              798,
+              323
+            ],
+            [
+              610,
+              323,
+              799,
+              324
+            ],
+            [
+              610,
+              324,
+              800,
+              325
+            ],
+            [
+              611,
+              325,
+              801,
+              327
+            ],
+            [
+              612,
+              327,
+              802,
+              329
+            ],
+            [
+              613,
+              329,
+              803,
+              331
+            ],
+            [
+              614,
+              331,
+              804,
+              333
+            ],
+            [
+              614,
+              333,
+              805,
+              335
+            ],
+            [
+              615,
+              335,
+              806,
+              336
+            ],
+            [
+              615,
+              336,
+              807,
+              338
+            ],
+            [
+              615,
+              338,
+              808,
+              339
+            ],
+            [
+              616,
+              339,
+              809,
+              340
+            ],
+            [
+              616,
+              340,
+              810,
+              341
+            ],
+            [
+              617,
+              341,
+              811,
+              343
+            ],
+            [
+              618,
+              343,
+              812,
+              344
+            ],
+            [
+              618,
+              344,
+              813,
+              345
+            ],
+            [
+              618,
+              345,
+              814,
+              346
+            ],
+            [
+              619,
+              346,
+              815,
+              347
+            ],
+            [
+              620,
+              347,
+              816,
+              348
+            ],
+            [
+              621,
+              348,
+              817,
+              349
+            ],
+            [
+              622,
+              349,
+              819,
+              350
+            ],
+            [
+              622,
+              350,
+              827,
+              351
+            ],
+            [
+              622,
+              351,
+              830,
+              352
+            ],
+            [
+              623,
+              352,
+              834,
+              353
+            ],
+            [
+              626,
+              353,
+              835,
+              354
+            ],
+            [
+              627,
+              354,
+              837,
+              355
+            ],
+            [
+              629,
+              355,
+              838,
+              356
+            ],
+            [
+              631,
+              356,
+              838,
+              357
+            ],
+            [
+              633,
+              357,
+              839,
+              358
+            ],
+            [
+              636,
+              358,
+              840,
+              359
+            ],
+            [
+              644,
+              359,
+              840,
+              360
+            ],
+            [
+              645,
+              360,
+              841,
+              361
+            ],
+            [
+              790,
+              361,
+              841,
+              362
+            ],
+            [
+              790,
+              362,
+              842,
+              363
+            ],
+            [
+              792,
+              363,
+              843,
+              365
+            ],
+            [
+              794,
+              365,
+              843,
+              367
+            ],
+            [
+              795,
+              367,
+              843,
+              369
+            ],
+            [
+              796,
+              369,
+              843,
+              370
+            ],
+            [
+              797,
+              370,
+              843,
+              371
+            ],
+            [
+              799,
+              371,
+              842,
+              372
+            ],
+            [
+              801,
+              372,
+              837,
+              373
+            ],
+            [
+              803,
+              373,
+              835,
+              374
+            ],
+            [
+              805,
+              374,
+              834,
+              375
+            ],
+            [
+              811,
+              375,
+              832,
+              376
+            ],
+            [
+              812,
+              376,
+              831,
+              377
+            ]
+          ],
+          "anchor": [
+            665,
+            397
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 8,
+          "crop_recipe": {
+            "tool": "tools/refine_fluid_frame_crops.py",
+            "seed": [
+              665,
+              210
+            ],
+            "cutoff": 8,
+            "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+          }
+        },
+        {
+          "name": "move_v1_03",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            397
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_04",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1552,
+            397
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_05",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_06",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_07",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_v1_08",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_01",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            405
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_02",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              444,
+              0,
+              887,
+              444
+            ]
+          ],
+          "anchor": [
+            665,
+            405
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_03",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            405
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_04",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1552,
+            405
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_05",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            830
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_06",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            830
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_07",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            830
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "attack_v1_08",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            830
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_01",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            411
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_02",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              444,
+              0,
+              887,
+              444
+            ]
+          ],
+          "anchor": [
+            665,
+            411
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_03",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            411
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_04",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1552,
+            411
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_05",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            847
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_06",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              625,
+              559,
+              642,
+              560
+            ],
+            [
+              625,
+              560,
+              645,
+              561
+            ],
+            [
+              625,
+              561,
+              647,
+              562
+            ],
+            [
+              627,
+              562,
+              648,
+              563
+            ],
+            [
+              629,
+              563,
+              650,
+              564
+            ],
+            [
+              630,
+              564,
+              676,
+              565
+            ],
+            [
+              631,
+              565,
+              677,
+              566
+            ],
+            [
+              631,
+              566,
+              678,
+              567
+            ],
+            [
+              631,
+              567,
+              679,
+              568
+            ],
+            [
+              631,
+              568,
+              680,
+              569
+            ],
+            [
+              630,
+              569,
+              680,
+              570
+            ],
+            [
+              627,
+              570,
+              681,
+              571
+            ],
+            [
+              626,
+              571,
+              681,
+              573
+            ],
+            [
+              618,
+              573,
+              682,
+              574
+            ],
+            [
+              615,
+              574,
+              682,
+              575
+            ],
+            [
+              608,
+              575,
+              682,
+              576
+            ],
+            [
+              606,
+              576,
+              682,
+              577
+            ],
+            [
+              605,
+              577,
+              683,
+              579
+            ],
+            [
+              600,
+              579,
+              683,
+              580
+            ],
+            [
+              597,
+              580,
+              684,
+              581
+            ],
+            [
+              595,
+              581,
+              684,
+              582
+            ],
+            [
+              594,
+              582,
+              684,
+              583
+            ],
+            [
+              593,
+              583,
+              684,
+              584
+            ],
+            [
+              591,
+              584,
+              693,
+              585
+            ],
+            [
+              589,
+              585,
+              700,
+              586
+            ],
+            [
+              588,
+              586,
+              702,
+              587
+            ],
+            [
+              586,
+              587,
+              703,
+              588
+            ],
+            [
+              586,
+              588,
+              704,
+              589
+            ],
+            [
+              584,
+              589,
+              705,
+              590
+            ],
+            [
+              582,
+              590,
+              705,
+              591
+            ],
+            [
+              582,
+              591,
+              706,
+              592
+            ],
+            [
+              581,
+              592,
+              722,
+              593
+            ],
+            [
+              580,
+              593,
+              723,
+              594
+            ],
+            [
+              578,
+              594,
+              724,
+              595
+            ],
+            [
+              577,
+              595,
+              725,
+              596
+            ],
+            [
+              575,
+              596,
+              738,
+              597
+            ],
+            [
+              573,
+              597,
+              747,
+              598
+            ],
+            [
+              572,
+              598,
+              748,
+              599
+            ],
+            [
+              569,
+              599,
+              752,
+              600
+            ],
+            [
+              568,
+              600,
+              755,
+              601
+            ],
+            [
+              567,
+              601,
+              756,
+              602
+            ],
+            [
+              566,
+              602,
+              756,
+              603
+            ],
+            [
+              566,
+              603,
+              757,
+              604
+            ],
+            [
+              565,
+              604,
+              760,
+              605
+            ],
+            [
+              563,
+              605,
+              761,
+              606
+            ],
+            [
+              561,
+              606,
+              763,
+              607
+            ],
+            [
+              559,
+              607,
+              764,
+              608
+            ],
+            [
+              558,
+              608,
+              766,
+              609
+            ],
+            [
+              556,
+              609,
+              786,
+              610
+            ],
+            [
+              555,
+              610,
+              787,
+              611
+            ],
+            [
+              554,
+              611,
+              788,
+              612
+            ],
+            [
+              553,
+              612,
+              790,
+              613
+            ],
+            [
+              550,
+              613,
+              791,
+              614
+            ],
+            [
+              549,
+              614,
+              792,
+              615
+            ],
+            [
+              547,
+              615,
+              794,
+              616
+            ],
+            [
+              545,
+              616,
+              796,
+              617
+            ],
+            [
+              544,
+              617,
+              797,
+              618
+            ],
+            [
+              544,
+              618,
+              798,
+              619
+            ],
+            [
+              543,
+              619,
+              800,
+              620
+            ],
+            [
+              541,
+              620,
+              801,
+              621
+            ],
+            [
+              541,
+              621,
+              802,
+              622
+            ],
+            [
+              540,
+              622,
+              803,
+              623
+            ],
+            [
+              539,
+              623,
+              805,
+              624
+            ],
+            [
+              537,
+              624,
+              805,
+              625
+            ],
+            [
+              535,
+              625,
+              806,
+              626
+            ],
+            [
+              535,
+              626,
+              807,
+              627
+            ],
+            [
+              534,
+              627,
+              808,
+              628
+            ],
+            [
+              533,
+              628,
+              810,
+              629
+            ],
+            [
+              531,
+              629,
+              811,
+              630
+            ],
+            [
+              528,
+              630,
+              813,
+              631
+            ],
+            [
+              527,
+              631,
+              814,
+              632
+            ],
+            [
+              525,
+              632,
+              815,
+              633
+            ],
+            [
+              524,
+              633,
+              816,
+              634
+            ],
+            [
+              523,
+              634,
+              817,
+              635
+            ],
+            [
+              522,
+              635,
+              818,
+              636
+            ],
+            [
+              521,
+              636,
+              818,
+              637
+            ],
+            [
+              520,
+              637,
+              819,
+              638
+            ],
+            [
+              519,
+              638,
+              820,
+              639
+            ],
+            [
+              519,
+              639,
+              821,
+              640
+            ],
+            [
+              518,
+              640,
+              822,
+              641
+            ],
+            [
+              517,
+              641,
+              822,
+              642
+            ],
+            [
+              517,
+              642,
+              823,
+              643
+            ],
+            [
+              515,
+              643,
+              824,
+              644
+            ],
+            [
+              514,
+              644,
+              825,
+              645
+            ],
+            [
+              513,
+              645,
+              826,
+              646
+            ],
+            [
+              512,
+              646,
+              827,
+              647
+            ],
+            [
+              512,
+              647,
+              828,
+              648
+            ],
+            [
+              511,
+              648,
+              829,
+              649
+            ],
+            [
+              510,
+              649,
+              830,
+              651
+            ],
+            [
+              510,
+              651,
+              831,
+              652
+            ],
+            [
+              509,
+              652,
+              832,
+              653
+            ],
+            [
+              508,
+              653,
+              832,
+              654
+            ],
+            [
+              508,
+              654,
+              833,
+              655
+            ],
+            [
+              507,
+              655,
+              833,
+              656
+            ],
+            [
+              505,
+              656,
+              835,
+              657
+            ],
+            [
+              505,
+              657,
+              836,
+              658
+            ],
+            [
+              504,
+              658,
+              836,
+              659
+            ],
+            [
+              504,
+              659,
+              837,
+              660
+            ],
+            [
+              504,
+              660,
+              838,
+              661
+            ],
+            [
+              504,
+              661,
+              839,
+              662
+            ],
+            [
+              504,
+              662,
+              840,
+              663
+            ],
+            [
+              504,
+              663,
+              841,
+              664
+            ],
+            [
+              503,
+              664,
+              841,
+              665
+            ],
+            [
+              503,
+              665,
+              844,
+              666
+            ],
+            [
+              502,
+              666,
+              845,
+              667
+            ],
+            [
+              502,
+              667,
+              849,
+              668
+            ],
+            [
+              501,
+              668,
+              850,
+              669
+            ],
+            [
+              501,
+              669,
+              849,
+              670
+            ],
+            [
+              500,
+              670,
+              849,
+              671
+            ],
+            [
+              499,
+              671,
+              849,
+              672
+            ],
+            [
+              499,
+              672,
+              848,
+              674
+            ],
+            [
+              500,
+              674,
+              848,
+              675
+            ],
+            [
+              498,
+              675,
+              848,
+              676
+            ],
+            [
+              497,
+              676,
+              848,
+              678
+            ],
+            [
+              497,
+              678,
+              847,
+              682
+            ],
+            [
+              496,
+              682,
+              847,
+              683
+            ],
+            [
+              495,
+              683,
+              847,
+              685
+            ],
+            [
+              494,
+              685,
+              847,
+              689
+            ],
+            [
+              496,
+              689,
+              848,
+              690
+            ],
+            [
+              495,
+              690,
+              847,
+              691
+            ],
+            [
+              495,
+              691,
+              848,
+              692
+            ],
+            [
+              495,
+              692,
+              849,
+              693
+            ],
+            [
+              495,
+              693,
+              850,
+              694
+            ],
+            [
+              495,
+              694,
+              852,
+              695
+            ],
+            [
+              495,
+              695,
+              853,
+              696
+            ],
+            [
+              495,
+              696,
+              854,
+              697
+            ],
+            [
+              495,
+              697,
+              855,
+              698
+            ],
+            [
+              495,
+              698,
+              856,
+              700
+            ],
+            [
+              495,
+              700,
+              857,
+              701
+            ],
+            [
+              496,
+              701,
+              858,
+              702
+            ],
+            [
+              496,
+              702,
+              859,
+              703
+            ],
+            [
+              496,
+              703,
+              860,
+              704
+            ],
+            [
+              496,
+              704,
+              861,
+              705
+            ],
+            [
+              496,
+              705,
+              862,
+              706
+            ],
+            [
+              496,
+              706,
+              863,
+              707
+            ],
+            [
+              496,
+              707,
+              864,
+              708
+            ],
+            [
+              496,
+              708,
+              865,
+              709
+            ],
+            [
+              496,
+              709,
+              867,
+              710
+            ],
+            [
+              497,
+              710,
+              867,
+              711
+            ],
+            [
+              498,
+              711,
+              868,
+              712
+            ],
+            [
+              499,
+              712,
+              869,
+              713
+            ],
+            [
+              500,
+              713,
+              869,
+              716
+            ],
+            [
+              500,
+              716,
+              868,
+              717
+            ],
+            [
+              500,
+              717,
+              867,
+              718
+            ],
+            [
+              501,
+              718,
+              867,
+              719
+            ],
+            [
+              501,
+              719,
+              866,
+              721
+            ],
+            [
+              502,
+              721,
+              865,
+              722
+            ],
+            [
+              503,
+              722,
+              865,
+              723
+            ],
+            [
+              503,
+              723,
+              864,
+              724
+            ],
+            [
+              506,
+              724,
+              862,
+              725
+            ],
+            [
+              507,
+              725,
+              861,
+              726
+            ],
+            [
+              508,
+              726,
+              858,
+              727
+            ],
+            [
+              509,
+              727,
+              857,
+              728
+            ],
+            [
+              509,
+              728,
+              855,
+              729
+            ],
+            [
+              510,
+              729,
+              854,
+              730
+            ],
+            [
+              512,
+              730,
+              853,
+              731
+            ],
+            [
+              513,
+              731,
+              852,
+              732
+            ],
+            [
+              513,
+              732,
+              850,
+              733
+            ],
+            [
+              514,
+              733,
+              845,
+              734
+            ],
+            [
+              515,
+              734,
+              842,
+              735
+            ],
+            [
+              517,
+              735,
+              840,
+              736
+            ],
+            [
+              518,
+              736,
+              839,
+              737
+            ],
+            [
+              519,
+              737,
+              839,
+              738
+            ],
+            [
+              521,
+              738,
+              838,
+              739
+            ],
+            [
+              525,
+              739,
+              837,
+              740
+            ],
+            [
+              530,
+              740,
+              836,
+              741
+            ],
+            [
+              533,
+              741,
+              835,
+              742
+            ],
+            [
+              537,
+              742,
+              835,
+              743
+            ],
+            [
+              538,
+              743,
+              834,
+              744
+            ],
+            [
+              537,
+              744,
+              834,
+              745
+            ],
+            [
+              537,
+              745,
+              836,
+              747
+            ],
+            [
+              537,
+              747,
+              837,
+              748
+            ],
+            [
+              537,
+              748,
+              838,
+              749
+            ],
+            [
+              537,
+              749,
+              839,
+              750
+            ],
+            [
+              537,
+              750,
+              840,
+              751
+            ],
+            [
+              537,
+              751,
+              842,
+              752
+            ],
+            [
+              537,
+              752,
+              844,
+              753
+            ],
+            [
+              537,
+              753,
+              846,
+              754
+            ],
+            [
+              537,
+              754,
+              847,
+              755
+            ],
+            [
+              536,
+              755,
+              850,
+              756
+            ],
+            [
+              536,
+              756,
+              852,
+              757
+            ],
+            [
+              536,
+              757,
+              853,
+              758
+            ],
+            [
+              537,
+              758,
+              854,
+              759
+            ],
+            [
+              536,
+              759,
+              860,
+              760
+            ],
+            [
+              536,
+              760,
+              864,
+              761
+            ],
+            [
+              535,
+              761,
+              867,
+              762
+            ],
+            [
+              535,
+              762,
+              869,
+              763
+            ],
+            [
+              534,
+              763,
+              870,
+              764
+            ],
+            [
+              533,
+              764,
+              871,
+              765
+            ],
+            [
+              533,
+              765,
+              872,
+              766
+            ],
+            [
+              533,
+              766,
+              873,
+              768
+            ],
+            [
+              533,
+              768,
+              874,
+              770
+            ],
+            [
+              533,
+              770,
+              875,
+              771
+            ],
+            [
+              533,
+              771,
+              876,
+              772
+            ],
+            [
+              533,
+              772,
+              877,
+              773
+            ],
+            [
+              533,
+              773,
+              878,
+              775
+            ],
+            [
+              534,
+              775,
+              879,
+              777
+            ],
+            [
+              535,
+              777,
+              880,
+              779
+            ],
+            [
+              536,
+              779,
+              880,
+              780
+            ],
+            [
+              539,
+              780,
+              880,
+              781
+            ],
+            [
+              544,
+              781,
+              880,
+              782
+            ],
+            [
+              545,
+              782,
+              879,
+              783
+            ],
+            [
+              546,
+              783,
+              874,
+              784
+            ],
+            [
+              547,
+              784,
+              873,
+              785
+            ],
+            [
+              712,
+              785,
+              872,
+              786
+            ],
+            [
+              715,
+              786,
+              871,
+              787
+            ],
+            [
+              715,
+              787,
+              870,
+              788
+            ],
+            [
+              717,
+              788,
+              869,
+              789
+            ],
+            [
+              717,
+              789,
+              854,
+              790
+            ],
+            [
+              718,
+              790,
+              768,
+              791
+            ],
+            [
+              719,
+              791,
+              768,
+              792
+            ],
+            [
+              720,
+              792,
+              767,
+              793
+            ],
+            [
+              721,
+              793,
+              762,
+              794
+            ],
+            [
+              723,
+              794,
+              762,
+              795
+            ],
+            [
+              724,
+              795,
+              761,
+              796
+            ],
+            [
+              725,
+              796,
+              759,
+              797
+            ],
+            [
+              727,
+              797,
+              756,
+              798
+            ],
+            [
+              733,
+              798,
+              755,
+              799
+            ],
+            [
+              734,
+              799,
+              737,
+              800
+            ]
+          ],
+          "anchor": [
+            665,
+            847
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 8,
+          "crop_recipe": {
+            "tool": "tools/refine_fluid_frame_crops.py",
+            "seed": [
+              665,
+              650
+            ],
+            "cutoff": 8,
+            "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+          }
+        },
+        {
+          "name": "hit_defend_v1_07",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            847
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "hit_defend_v1_08",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            847
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_01",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            425
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_02",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              444,
+              0,
+              887,
+              444
+            ]
+          ],
+          "anchor": [
+            665,
+            425
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_03",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            425
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_05",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_04",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              1590,
+              222,
+              1593,
+              223
+            ],
+            [
+              1591,
+              223,
+              1595,
+              224
+            ],
+            [
+              1591,
+              224,
+              1596,
+              225
+            ],
+            [
+              1592,
+              225,
+              1598,
+              226
+            ],
+            [
+              1544,
+              226,
+              1599,
+              227
+            ],
+            [
+              1536,
+              227,
+              1601,
+              228
+            ],
+            [
+              1535,
+              228,
+              1603,
+              229
+            ],
+            [
+              1529,
+              229,
+              1604,
+              230
+            ],
+            [
+              1528,
+              230,
+              1605,
+              231
+            ],
+            [
+              1525,
+              231,
+              1606,
+              232
+            ],
+            [
+              1525,
+              232,
+              1607,
+              233
+            ],
+            [
+              1522,
+              233,
+              1607,
+              234
+            ],
+            [
+              1520,
+              234,
+              1608,
+              235
+            ],
+            [
+              1519,
+              235,
+              1608,
+              236
+            ],
+            [
+              1519,
+              236,
+              1609,
+              237
+            ],
+            [
+              1517,
+              237,
+              1609,
+              238
+            ],
+            [
+              1515,
+              238,
+              1609,
+              239
+            ],
+            [
+              1512,
+              239,
+              1610,
+              240
+            ],
+            [
+              1396,
+              240,
+              1623,
+              241
+            ],
+            [
+              1395,
+              241,
+              1623,
+              242
+            ],
+            [
+              1396,
+              242,
+              1624,
+              243
+            ],
+            [
+              1394,
+              243,
+              1624,
+              244
+            ],
+            [
+              1390,
+              244,
+              1624,
+              245
+            ],
+            [
+              1389,
+              245,
+              1625,
+              246
+            ],
+            [
+              1388,
+              246,
+              1625,
+              248
+            ],
+            [
+              1387,
+              248,
+              1625,
+              249
+            ],
+            [
+              1386,
+              249,
+              1625,
+              250
+            ],
+            [
+              1381,
+              250,
+              1625,
+              251
+            ],
+            [
+              1379,
+              251,
+              1625,
+              252
+            ],
+            [
+              1377,
+              252,
+              1625,
+              253
+            ],
+            [
+              1376,
+              253,
+              1626,
+              254
+            ],
+            [
+              1374,
+              254,
+              1626,
+              255
+            ],
+            [
+              1372,
+              255,
+              1625,
+              256
+            ],
+            [
+              1370,
+              256,
+              1625,
+              257
+            ],
+            [
+              1369,
+              257,
+              1625,
+              258
+            ],
+            [
+              1367,
+              258,
+              1624,
+              259
+            ],
+            [
+              1366,
+              259,
+              1625,
+              261
+            ],
+            [
+              1366,
+              261,
+              1639,
+              262
+            ],
+            [
+              1368,
+              262,
+              1642,
+              263
+            ],
+            [
+              1367,
+              263,
+              1642,
+              264
+            ],
+            [
+              1366,
+              264,
+              1656,
+              265
+            ],
+            [
+              1364,
+              265,
+              1683,
+              266
+            ],
+            [
+              1364,
+              266,
+              1685,
+              267
+            ],
+            [
+              1363,
+              267,
+              1686,
+              268
+            ],
+            [
+              1363,
+              268,
+              1688,
+              269
+            ],
+            [
+              1362,
+              269,
+              1690,
+              270
+            ],
+            [
+              1361,
+              270,
+              1691,
+              271
+            ],
+            [
+              1361,
+              271,
+              1693,
+              272
+            ],
+            [
+              1360,
+              272,
+              1694,
+              273
+            ],
+            [
+              1359,
+              273,
+              1696,
+              274
+            ],
+            [
+              1359,
+              274,
+              1698,
+              275
+            ],
+            [
+              1359,
+              275,
+              1699,
+              276
+            ],
+            [
+              1359,
+              276,
+              1700,
+              277
+            ],
+            [
+              1358,
+              277,
+              1702,
+              278
+            ],
+            [
+              1358,
+              278,
+              1703,
+              279
+            ],
+            [
+              1357,
+              279,
+              1704,
+              280
+            ],
+            [
+              1357,
+              280,
+              1705,
+              281
+            ],
+            [
+              1356,
+              281,
+              1707,
+              282
+            ],
+            [
+              1356,
+              282,
+              1708,
+              283
+            ],
+            [
+              1355,
+              283,
+              1709,
+              284
+            ],
+            [
+              1355,
+              284,
+              1710,
+              285
+            ],
+            [
+              1355,
+              285,
+              1711,
+              286
+            ],
+            [
+              1354,
+              286,
+              1712,
+              287
+            ],
+            [
+              1354,
+              287,
+              1714,
+              288
+            ],
+            [
+              1354,
+              288,
+              1715,
+              289
+            ],
+            [
+              1353,
+              289,
+              1716,
+              290
+            ],
+            [
+              1353,
+              290,
+              1718,
+              291
+            ],
+            [
+              1353,
+              291,
+              1719,
+              292
+            ],
+            [
+              1353,
+              292,
+              1720,
+              293
+            ],
+            [
+              1353,
+              293,
+              1722,
+              294
+            ],
+            [
+              1353,
+              294,
+              1724,
+              296
+            ],
+            [
+              1353,
+              296,
+              1725,
+              297
+            ],
+            [
+              1355,
+              297,
+              1728,
+              298
+            ],
+            [
+              1355,
+              298,
+              1729,
+              299
+            ],
+            [
+              1355,
+              299,
+              1730,
+              300
+            ],
+            [
+              1355,
+              300,
+              1731,
+              302
+            ],
+            [
+              1355,
+              302,
+              1732,
+              303
+            ],
+            [
+              1355,
+              303,
+              1733,
+              304
+            ],
+            [
+              1355,
+              304,
+              1734,
+              305
+            ],
+            [
+              1355,
+              305,
+              1735,
+              306
+            ],
+            [
+              1355,
+              306,
+              1736,
+              307
+            ],
+            [
+              1356,
+              307,
+              1737,
+              308
+            ],
+            [
+              1356,
+              308,
+              1738,
+              309
+            ],
+            [
+              1357,
+              309,
+              1738,
+              310
+            ],
+            [
+              1359,
+              310,
+              1738,
+              311
+            ],
+            [
+              1360,
+              311,
+              1739,
+              312
+            ],
+            [
+              1361,
+              312,
+              1739,
+              313
+            ],
+            [
+              1362,
+              313,
+              1739,
+              314
+            ],
+            [
+              1366,
+              314,
+              1741,
+              315
+            ],
+            [
+              1367,
+              315,
+              1741,
+              316
+            ],
+            [
+              1368,
+              316,
+              1741,
+              317
+            ],
+            [
+              1369,
+              317,
+              1741,
+              318
+            ],
+            [
+              1369,
+              318,
+              1742,
+              319
+            ],
+            [
+              1370,
+              319,
+              1743,
+              320
+            ],
+            [
+              1372,
+              320,
+              1743,
+              321
+            ],
+            [
+              1379,
+              321,
+              1743,
+              322
+            ],
+            [
+              1379,
+              322,
+              1744,
+              323
+            ],
+            [
+              1380,
+              323,
+              1744,
+              324
+            ],
+            [
+              1380,
+              324,
+              1745,
+              325
+            ],
+            [
+              1380,
+              325,
+              1746,
+              326
+            ],
+            [
+              1381,
+              326,
+              1747,
+              328
+            ],
+            [
+              1381,
+              328,
+              1748,
+              330
+            ],
+            [
+              1382,
+              330,
+              1748,
+              331
+            ],
+            [
+              1383,
+              331,
+              1749,
+              332
+            ],
+            [
+              1386,
+              332,
+              1749,
+              333
+            ],
+            [
+              1388,
+              333,
+              1750,
+              334
+            ],
+            [
+              1444,
+              334,
+              1751,
+              335
+            ],
+            [
+              1444,
+              335,
+              1754,
+              337
+            ],
+            [
+              1444,
+              337,
+              1753,
+              338
+            ],
+            [
+              1444,
+              338,
+              1754,
+              339
+            ],
+            [
+              1443,
+              339,
+              1754,
+              342
+            ],
+            [
+              1442,
+              342,
+              1754,
+              343
+            ],
+            [
+              1442,
+              343,
+              1753,
+              344
+            ],
+            [
+              1441,
+              344,
+              1752,
+              347
+            ],
+            [
+              1440,
+              347,
+              1752,
+              349
+            ],
+            [
+              1439,
+              349,
+              1751,
+              351
+            ],
+            [
+              1438,
+              351,
+              1751,
+              352
+            ],
+            [
+              1437,
+              352,
+              1750,
+              354
+            ],
+            [
+              1436,
+              354,
+              1751,
+              355
+            ],
+            [
+              1435,
+              355,
+              1753,
+              356
+            ],
+            [
+              1435,
+              356,
+              1754,
+              357
+            ],
+            [
+              1434,
+              357,
+              1755,
+              358
+            ],
+            [
+              1432,
+              358,
+              1755,
+              360
+            ],
+            [
+              1431,
+              360,
+              1756,
+              362
+            ],
+            [
+              1430,
+              362,
+              1757,
+              363
+            ],
+            [
+              1429,
+              363,
+              1757,
+              364
+            ],
+            [
+              1428,
+              364,
+              1758,
+              365
+            ],
+            [
+              1427,
+              365,
+              1758,
+              366
+            ],
+            [
+              1427,
+              366,
+              1759,
+              367
+            ],
+            [
+              1426,
+              367,
+              1759,
+              368
+            ],
+            [
+              1426,
+              368,
+              1760,
+              369
+            ],
+            [
+              1425,
+              369,
+              1761,
+              370
+            ],
+            [
+              1425,
+              370,
+              1762,
+              371
+            ],
+            [
+              1424,
+              371,
+              1763,
+              372
+            ],
+            [
+              1424,
+              372,
+              1764,
+              373
+            ],
+            [
+              1423,
+              373,
+              1765,
+              374
+            ],
+            [
+              1422,
+              374,
+              1766,
+              376
+            ],
+            [
+              1422,
+              376,
+              1767,
+              377
+            ],
+            [
+              1422,
+              377,
+              1768,
+              382
+            ],
+            [
+              1423,
+              382,
+              1768,
+              383
+            ],
+            [
+              1424,
+              383,
+              1766,
+              384
+            ],
+            [
+              1423,
+              384,
+              1766,
+              385
+            ],
+            [
+              1424,
+              385,
+              1764,
+              386
+            ],
+            [
+              1424,
+              386,
+              1763,
+              387
+            ],
+            [
+              1424,
+              387,
+              1761,
+              388
+            ],
+            [
+              1425,
+              388,
+              1760,
+              389
+            ],
+            [
+              1425,
+              389,
+              1758,
+              390
+            ],
+            [
+              1426,
+              390,
+              1758,
+              391
+            ],
+            [
+              1426,
+              391,
+              1757,
+              392
+            ],
+            [
+              1427,
+              392,
+              1758,
+              393
+            ],
+            [
+              1428,
+              393,
+              1758,
+              394
+            ],
+            [
+              1430,
+              394,
+              1758,
+              395
+            ],
+            [
+              1432,
+              395,
+              1759,
+              396
+            ],
+            [
+              1433,
+              396,
+              1759,
+              397
+            ],
+            [
+              1443,
+              397,
+              1760,
+              398
+            ],
+            [
+              1558,
+              398,
+              1760,
+              399
+            ],
+            [
+              1558,
+              399,
+              1761,
+              400
+            ],
+            [
+              1567,
+              400,
+              1762,
+              401
+            ],
+            [
+              1569,
+              401,
+              1763,
+              402
+            ],
+            [
+              1608,
+              402,
+              1763,
+              403
+            ],
+            [
+              1619,
+              403,
+              1763,
+              404
+            ],
+            [
+              1626,
+              404,
+              1764,
+              405
+            ],
+            [
+              1628,
+              405,
+              1764,
+              406
+            ],
+            [
+              1629,
+              406,
+              1764,
+              407
+            ],
+            [
+              1631,
+              407,
+              1764,
+              408
+            ],
+            [
+              1632,
+              408,
+              1764,
+              409
+            ],
+            [
+              1633,
+              409,
+              1764,
+              410
+            ],
+            [
+              1633,
+              410,
+              1763,
+              411
+            ],
+            [
+              1634,
+              411,
+              1763,
+              412
+            ],
+            [
+              1634,
+              412,
+              1757,
+              413
+            ],
+            [
+              1635,
+              413,
+              1756,
+              414
+            ],
+            [
+              1637,
+              414,
+              1755,
+              415
+            ],
+            [
+              1639,
+              415,
+              1740,
+              416
+            ],
+            [
+              1640,
+              416,
+              1686,
+              418
+            ],
+            [
+              1641,
+              418,
+              1686,
+              421
+            ],
+            [
+              1642,
+              421,
+              1686,
+              422
+            ],
+            [
+              1643,
+              422,
+              1686,
+              424
+            ],
+            [
+              1644,
+              424,
+              1682,
+              425
+            ],
+            [
+              1645,
+              425,
+              1682,
+              426
+            ],
+            [
+              1647,
+              426,
+              1681,
+              427
+            ],
+            [
+              1649,
+              427,
+              1680,
+              428
+            ],
+            [
+              1655,
+              428,
+              1675,
+              429
+            ],
+            [
+              1672,
+              429,
+              1674,
+              430
+            ]
+          ],
+          "anchor": [
+            1552,
+            425
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 8,
+          "crop_recipe": {
+            "tool": "tools/refine_fluid_frame_crops.py",
+            "seed": [
+              1552,
+              310
+            ],
+            "cutoff": 8,
+            "reason": "Exclude disconnected neighboring source-pose fragments; retain whole hound."
+          }
+        },
+        {
+          "name": "death_v1_06",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_07",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "death_v1_08",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            832
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_01",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              0,
+              0,
+              444,
+              444
+            ]
+          ],
+          "anchor": [
+            222,
+            419
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_02",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              444,
+              0,
+              887,
+              444
+            ]
+          ],
+          "anchor": [
+            665,
+            419
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_03",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              887,
+              0,
+              1330,
+              444
+            ]
+          ],
+          "anchor": [
+            1109,
+            419
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_04",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              1330,
+              0,
+              1774,
+              444
+            ]
+          ],
+          "anchor": [
+            1552,
+            419
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_05",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              0,
+              444,
+              444,
+              887
+            ]
+          ],
+          "anchor": [
+            222,
+            866
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_06",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              444,
+              444,
+              887,
+              887
+            ]
+          ],
+          "anchor": [
+            665,
+            866
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_07",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              887,
+              444,
+              1330,
+              887
+            ]
+          ],
+          "anchor": [
+            1109,
+            866
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "support_v1_08",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "rects": [
+            [
+              1330,
+              444,
+              1774,
+              887
+            ]
+          ],
+          "anchor": [
+            1552,
+            866
+          ],
+          "scale": 0.45,
+          "anchor_notes": "Fixed row paw-contact plane; shared scale preserves crouch and lift.",
+          "alpha_noise_cutoff": 0
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 130,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 110,
+          "loop": true
+        },
+        "attack": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 110,
+          "loop": false,
+          "contact_frame": 4
+        },
+        "hit": {
+          "indices": [
+            24,
+            25,
+            26,
+            27
+          ],
+          "frame_msec": 115,
+          "loop": false
+        },
+        "defend": {
+          "indices": [
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "hold_last": true
+        },
+        "death": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "reviewed_order_reason": "Lower shoulders before fully prone frame; no rise back up after reaching floor."
+        },
+        "cast": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47
+          ],
+          "frame_msec": 120,
+          "loop": false,
+          "contact_frame": 4
+        }
+      },
+      "accepted_clips": [
+        "idle",
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast"
+      ],
+      "preserve_clips": [],
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Native 128px review: articulated canine alert idle, coordinated four-legged running poses, jaw lunge/recovery, recoil/low guard, physical howl and grounded collapse. Removed three foreign source fragments and moved the low-shoulder gasp before the fully prone pose."
+      },
+      "provenance": [
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.png",
+          "source_sha256": "86e74cfc87f67ed34677dd37759afa9f57f7fb329aa1f373e903241d9bbc938e",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/death_v1.prompt.txt",
+          "prompt_sha256": "2ceab3593f9568f625925625fdd525c7caf69af7ea6cffe6c71e465953f18891",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-8f8a1bba-37e9-4feb-8352-c235afd4c267.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.png",
+          "source_sha256": "e4c65cabaac949e10ea1ad21dd0a2c9a647b70d7fb7984d4620e7710913b085f",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/move_v1.prompt.txt",
+          "prompt_sha256": "173dc7a2407f7bd0bb669f3f04fa46157e3e03119f90673c0fd874a05ae2ee33",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-274286bd-92b5-494e-83d3-37ef23f3cda9.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.png",
+          "source_sha256": "4513f03636283cf3aa66c96dbabb4c477c367b86b0a7927a6ae0780e9c6ee76e",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/attack_v1.prompt.txt",
+          "prompt_sha256": "72b8a3a9a74f0b626cfa166f1356d1767edfb28cf871b4e402411f800b4a98fd",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-bb60506f-6f0e-43d1-a6b6-4fbd3b4eefc7.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.png",
+          "source_sha256": "08f0b7e09b1bff66f270d2c2a800fc3e8d430f29c65ab99f92ab7607a2d7169c",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/idle_v1.prompt.txt",
+          "prompt_sha256": "e5c5a4abeedc5b0df2bc9bfd1c17e62c5ab0f59c67763e7bb920780cab9fee8e",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-bc6fd887-15c4-4373-a789-be2d09a26bc1.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.png",
+          "source_sha256": "9db1d3a8dfd75db5c0cd00fb71fecc92b3acee00433cab0f5dcade52784a4c4f",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/hit_defend_v1.prompt.txt",
+          "prompt_sha256": "894042835d89498283294d285981185c06f33a2da6667bdab49bb1de51bdcfc7",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-8abdb8c0-a1ba-4012-af09-0ea42d7495f6.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        },
+        {
+          "generator": "built_in_image_gen",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.png",
+          "source_sha256": "e3d94ea50d86e6c06011e20ca04f88657f93bd275884dde6b0e610f6487a62a6",
+          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_fenhound_runners/support_v1.prompt.txt",
+          "prompt_sha256": "eeaa5ee1f34ed3c4113888c553a784170ec1ad7e91474d9568826ad32fb2a54b",
+          "reference": "art/units/source/curated/unit_neutral_fenhound_runners.png",
+          "reference_sha256": "4e8095c1f44ef4cfc7c6a9588c4f8bc9a43e51ac3ec0140091c5af29818db4ca",
+          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-6f9cc51c-3e31-406d-8749-f322484cb31b.png",
+          "output_size": [
+            1774,
+            887
+          ]
+        }
+      ],
+      "preserved_accepted_clips": []
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "unit_id": "unit_neutral_sporelamp_tossers",
+  "frames": [
+    {
+      "clip": "ranged",
+      "frame": 4,
+      "seed": [
+        210,
+        180
+      ],
+      "reason": "Runtime owns detached flask; retain empty release hand and held lantern."
+    }
+  ]
+}

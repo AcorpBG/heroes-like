@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png": "7318e8b4570f12d4c803cf61650f4f0e08803fe6e96eb119271fa8ae496250fd",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.png": "496f5782ab88ea56b4c7f376d47e92dbed6102cbbfae1f338060336904f526fa",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png": "2771dfde1ab204a61b95968c989bc65877f83a9d9fbac567913e11731c0cfef5",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.png": "c36fd1afaf6161a30de0418a8c983aa5820d39085f54121c705f0368aa5f7238",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.png": "aef643c645d83fac0e4ed4aa5b68cd779819e1c72b4e1358e8a5c08e3ab6a0f1",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png": "802e9ef232b2b3abfae936a0cc613b2d9c43468d25d1df8dd185eb0206ce3940",
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png": "b9c144f1f2425ca13809b9e9d82841dba33a58a5d514b46eea435dab007e1ab9"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "death",
+    "cast"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: loader and gunner arm articulation, loader close-range jab, mounted crossbow release/reload, crew recoil/crouched guard, grounded crew/equipment collapse and gunner rally signal. Crew transport movement remains unfinished."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "dd01d9844549ceea3db1d8961846d18111d5c73f2a4220e0d93b8afcf22bdbcc",
+  "atlas_sha256": "75766d29522a3b37da71a5c104da724c09f8261e14220f7576032784e3fe70cb",
+  "texture_bytes_rgba": 28297728
+}

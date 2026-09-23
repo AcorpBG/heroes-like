@@ -1,0 +1,30 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/attack_v1.png": "90bb880c2f8421df63d405f8037141940cd493ea3188a7d512807a0aab6e615b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/reactions_v1.png": "b3abd10474d0007ead406f327bde4c90c5527483ff6950f27e847563c318ec92",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/death_v2.png": "e348133de1a81ed6c683da9828f90abaaaf4de0001c2d87657c1f1cee16b4667",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers/cast_v1.png": "e076749b47e15e5752f0674582c859ecaa906acee3b83b426fcfcd23221ab800"
+  },
+  "accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native 128px review: retained articulated hammer idle; overhead swing with impact and recovery, recoil/brace, kneeling grounded collapse and free-hand physical rally. Walk repeats leading leg and remains withheld."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "ec76809aa1d8dc067a7a3586dc466fe7851e1e4077fe5afab8b432b7224ef497",
+  "atlas_sha256": "ca3d04c688b717d1e6c328f92ba896f0a0b2bb66656ce1f345fe1c7010e0066e",
+  "texture_bytes_rgba": 16174080
+}
