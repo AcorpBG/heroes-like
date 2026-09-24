@@ -1,0 +1,96 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/idle_v1.png",
+      "sha256": "291bc7273a9d765714113cf08d50488cb07a40a97ffc8378fea0d014a2ac9ca3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "707b3d713171d56701fb9ce2d14633b7114d90b70003f7e32840b7ebdc1f3ce0",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-36b0b274-96ae-4497-b703-a257a0314a49.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/attack_v1.png",
+      "sha256": "28ecd414e45ddd9a8a293f1a196985e806fe86daf04c8cd692a77f5521de4356",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "8be165705b53657bcc4989e04c69bb03f8c057b2ca6daa5964a90b34d09771e3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-aa9b9b0d-da18-4411-a048-116b7b309972.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/reactions_v1.png",
+      "sha256": "9142c3950a199ca3ecd285e5a945c0a98f5716c5a807d98862ef34364baaa0f0",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "4eb12c9dc67c06d68c100393590a07a73b2366456025e2daabfe92aad9a44e26",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-13178e8a-682a-4e78-a25a-799473566fd7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/cast_v1.png",
+      "sha256": "62ed543059266a5161496a2c4f107b408b01f9fa25bff199c7392f79ae704a47",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "588758e7b400926e3b0dc33acba59d2196f1e4754ad30b856abb4c393d1549fa",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-67326018-9243-4377-a133-5002a6f8e440.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png",
+      "sha256": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "4042bc381b890763c8d07a791e2b43e2a454429a2cb786065f98e2521933a44e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-96f57676-b9ee-41f6-b157-1c2680e9ddb3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_v1.png",
+      "sha256": "377ede2ac8dff712d2201f6f5a3e2e6ec83f319a4bce3b6b39c83c43707b4cc5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "f6c4b7d23c79031644700c43abe88074d755a923f31fd81194099b08abba410a",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a096848e-8938-47c2-af55-26eef2ab1c48.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_far_v1.png",
+      "sha256": "0b89731d621a667c080f57c85f5406c13e94cf8ffd4bc71e7227533324cbccf5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "b4c900d7f3f2bcdad995ef0dc9c2fc6b3fa95d1ac9747c947a7a355de6119efd",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b3818ceb-8fbf-4bf5-9aca-2884bfec677b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/identity_reference.png",
+          "sha256": "a82d3e94d11608d41c83ed0c36ee91523ce197c8b54e865e5f2b24ffe38df347"
+        }
+      ]
+    }
+  ]
+}
