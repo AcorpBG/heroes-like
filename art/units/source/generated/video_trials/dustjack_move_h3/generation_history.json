@@ -1,0 +1,884 @@
+{
+  "prompt": [
+    28,
+    "a273589a-5500-4cac-8377-6d61fedb8328",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dustjack_walk_input_magenta.png"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. The exact young human Dustjack Blades from the references performs one complete reciprocal WALK IN PLACE cycle. Preserve his youthful face, short tousled brown hair, brass goggles on forehead, teal scarf, tan trousers, leather belts and brown armored boots, metal knee guards, single large shoulder pauldron on IMAGE RIGHT, brown gloves and exactly TWO short broad steel knives, one in each hand. Both hands stay firmly closed on their original handles, blade tips point downward and outward safely, wrists and elbows swing a little counter to the legs. Do not swap blades or add fingers, arms, weapons or metal ornaments. Begin with the leg under the IMAGE-RIGHT shoulder pauldron reaching forward, sole angled toward viewer, opposite leg trailing as first reference. First half: plant the extended boot, shift weight naturally over it, lift the OTHER boot from its trailing position, bend that knee, pass it beneath the hips, then extend this opposite leg forward to match the midpoint reference. Second half: plant the midpoint leading boot, lift the first boot behind, bend and pass it under the body, extend it forward to return to the initial contact pose. Both feet must take turns advancing, supporting and trailing; never repeatedly hop or shuffle on one leg. The planted foot travels back relative to the centered torso as the body would advance on a treadmill. Natural heel contact, toe-off and knee flexion, slight weight transfer; no running jumps, high-knee marching or oversized strides. Keep the two boots on separate consistent contact lanes; legs must not fuse or exchange knee armor. Keep identical torso height, limb lengths, blade length, grips, camera and perspective. Small secondary scarf and tunic movement only. No body translation across canvas, turning toward viewer, camera motion, zoom or global resizing. One coherent full two-step cycle and match first pose at the end. Entire body and blades remain inside frame. Background remains perfectly flat SOLID MAGENTA RGB(255,0,255), no ground, floor, shadow, gradients, scenery, smoke, glow, particles, text or motion blur.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "4",
+            0
+          ],
+          "last_frame": [
+            "4",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "17",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092411
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "dustjack_move_h3/original",
+          "format": "mp4",
+          "format.codec": "h264"
+        }
+      },
+      "15": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "filename_prefix": "dustjack_move_h3/frames/decoded"
+        }
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dustjack_walk_middle_magenta.png"
+        }
+      },
+      "17": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "frame_idx": 61,
+          "image": [
+            "16",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "dustjack_walk_h3",
+      "create_time": 1790260101198
+    },
+    [
+      "15",
+      "14"
+    ]
+  ],
+  "outputs": {
+    "15": {
+      "images": [
+        {
+          "filename": "decoded_00001_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00002_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00003_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00004_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00005_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00006_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00007_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00008_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00009_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00010_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00011_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00012_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00013_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00014_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00015_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00016_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00017_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00018_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00019_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00020_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00021_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00022_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00023_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00024_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00025_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00026_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00027_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00028_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00029_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00030_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00031_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00032_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00033_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00034_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00035_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00036_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00037_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00038_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00039_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00040_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00041_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00042_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00043_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00044_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00045_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00046_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00047_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00048_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00049_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00050_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00051_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00052_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00053_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00054_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00055_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00056_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00057_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00058_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00059_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00060_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00061_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00062_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00063_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00064_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00065_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00066_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00067_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00068_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00069_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00070_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00071_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00072_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00073_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00074_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00075_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00076_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00077_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00078_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00079_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00080_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00081_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00082_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00083_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00084_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00085_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00086_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00087_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00088_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00089_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00090_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00091_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00092_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00093_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00094_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00095_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00096_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00097_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00098_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00099_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00100_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00101_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00102_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00103_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00104_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00105_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00106_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00107_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00108_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00109_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00110_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00111_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00112_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00113_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00114_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00115_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00116_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00117_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00118_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00119_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00120_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00121_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00122_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00123_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00124_.png",
+          "subfolder": "dustjack_move_h3\\frames",
+          "type": "output"
+        }
+      ]
+    },
+    "14": {
+      "images": [
+        {
+          "filename": "original_00001_.mp4",
+          "subfolder": "dustjack_move_h3",
+          "type": "output"
+        }
+      ],
+      "animated": [
+        true
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a273589a-5500-4cac-8377-6d61fedb8328",
+          "timestamp": 1790260101199
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "a273589a-5500-4cac-8377-6d61fedb8328",
+          "timestamp": 1790260101213
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a273589a-5500-4cac-8377-6d61fedb8328",
+          "timestamp": 1790260226424
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "15": {
+      "node_id": "15",
+      "display_node": "15",
+      "parent_node": null,
+      "real_node_id": "15"
+    },
+    "14": {
+      "node_id": "14",
+      "display_node": "14",
+      "parent_node": null,
+      "real_node_id": "14"
+    }
+  }
+}

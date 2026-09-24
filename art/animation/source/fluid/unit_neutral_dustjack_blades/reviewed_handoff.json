@@ -805,8 +805,429 @@
           "scale": 0.4,
           "anchor_notes": "Absolute source ground coordinates; common body scale. Explicit row split for tall death starts and wide corpses; no equal-cell clipping.",
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            486
+          ],
+          "scale": 0.4166666666666667,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "idle": {
           "indices": [
@@ -887,136 +1308,102 @@
           "frame_msec": 110,
           "loop": false,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/original_lossless.mkv",
+          "sha256": "a027cde8a6c55d9e7c0151037020060dd173348902bc1b2bb53676ecd4f14d74"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/original.json",
+          "sha256": "698aaaaeb1da6164633d1616514a9adae8b071a566928656f2d3b44790e8b59e"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/workflow_api.json",
+          "sha256": "b55b7d4acd10343582e45d6c7a55219d75392916c118f49ba4e3976c493257f1"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/prompt.txt",
+          "sha256": "49c8a1af79f647092923be6b7aaf31239ef31490b96b408ab5585517043cacea"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/reference.json",
+          "sha256": "2aa2718385608f04909f75143827a5332417dbe41676cf346f51df982b425de5"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte.json",
+          "sha256": "9a0f8169a2fa8bce0db7b692d578821e0e6d8237b9218fdee5336f0080e31ab7"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Accepted blue-v2 H3 movement after chronological review of all124 frames, enlarged blade/grip/face/boot edges on light and dark, and native Godot battle overview.20 observed frames40-78 every2 at60ms form a1200ms reciprocal two-step cycle: each boot advances, plants and passes, with both knives held correctly and stable goggles/scarf/pauldron identity. Fixed guide scale.48, extraction.20/.48 and anchor480,486 preserve body registration. First magenta/lime attempt rejected for edge halos; originals retained.128 candidate checks passed. Six earlier accepted actions retained; no full suite or continuous manual game playtest."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png": 0.4,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_040.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_042.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_044.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_046.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_048.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_050.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_052.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_054.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_056.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_058.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_060.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_062.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_064.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_066.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_068.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_070.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_072.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_074.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_076.png": 0.4166666666666667,
+        "art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_078.png": 0.4166666666666667
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "idle",
         "attack",
         "hit",
         "defend",
         "death",
-        "cast"
-      ],
-      "preserve_clips": [],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Godot128 overview reviewed: two-blade windup/slash/recovery, crossed-blade guard, recoil, arms-open physical support, quiet wrist/shoulder idle and continuous collapse. Movement withheld: apparent repeated leading boot still requires correction."
-      },
-      "provenance": [
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png",
-          "source_sha256": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.prompt.txt",
-          "prompt_sha256": "dc6c7763c9e8aa9197786c671779a98cb09cc1fd76b5477426f64249968cda12",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-0cde7f87-a88f-4b35-ab5a-a7a714994623.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.png",
-          "source_sha256": "80552354149093d26cef1406480fd5a55e0520e4ca8b536338bec59626daacd7",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_v1.prompt.txt",
-          "prompt_sha256": "0cf32269cd8dcd650b6f247857d3225ca7410d0c66b0e99ff5abba3e1cc59380",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-3ad7a490-5762-4ccd-8e3e-dd2a69c104ce.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png",
-          "source_sha256": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.prompt.txt",
-          "prompt_sha256": "6310726466227a01e20b98fe899e014ad3a5526eeac7b68b4571ea9ad49ca34a",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-52ee9002-4e36-4c99-b53c-bfe9d230a73b.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.png",
-          "source_sha256": "c74092fec888c65e45959543caf134d22e0fb2f5a8c805fb0dcf5598671d3176",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/idle_v1.prompt.txt",
-          "prompt_sha256": "b4fb08adcf268912f7ad43c64f1b7ef9635176017fd4fb9239b54dc1d2d27aab",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-2489fb76-b6c5-4b48-b262-a7dd60d81810.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png",
-          "source_sha256": "3e90f8531e27c3b21ddc51c41985751b95402ba3af5e5728c18ee9019273a5bb",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.prompt.txt",
-          "prompt_sha256": "08ffbf96301ba0a27e418ad45a63fdd040d1612ee4c0d168d20eb3d443a87315",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-1c7fb338-261c-425f-a8f6-89b31a4b6ee7.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v1.png",
-          "source_sha256": "e8aa11663ecc0dfef6126b1b39827e64c254b489966fe8346b34dbc10d24bc34",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v1.prompt.txt",
-          "prompt_sha256": "05c367e8b312f49dae5e4e8bbfe4847d8dea20600d50f0fdf8383978d36f028e",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-6f2f8741-e246-49f7-8886-10f9d661bbe4.png",
-          "output_size": [
-            1774,
-            887
-          ],
-          "rejected_reason": "Clipped raised blade"
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v2.png",
-          "source_sha256": "4d11adb686bc128085bb7bafd51ccc96ae1101540df16e4d739b1761719af503",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v2.prompt.txt",
-          "prompt_sha256": "242304058f1a867984b14a1452e314f3ad501ba97ac6554beb4e4f59297183f0",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-81f0e4a4-ba4e-436b-b629-4e4973df4d66.png",
-          "output_size": [
-            1774,
-            887
-          ],
-          "rejected_reason": "One blade disappears in intermediate salute"
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png",
-          "source_sha256": "d2dbbd5b511dcc6998c85d4502b9166e61c9d9542fa4b4b8ec0986ceb973533f",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.prompt.txt",
-          "prompt_sha256": "d4af1fffbe5d4b09bcf9685cf0406a357081f2026968966b500a0312a45c3b05",
-          "reference": "art/units/source/curated/unit_neutral_dustjack_blades.png",
-          "reference_sha256": "6efcd457c65043cb4583d1813c97b7a030165eca3e879bdeb8671f167a6acd2d",
-          "generation_output": "C:/Users/acorp/.codex/generated_images/01a0ccb2-5c25-7d61-be0a-b4e5dca27370/exec-3c4d2b30-2504-4301-8fc8-318b38799e8b.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        }
+        "cast",
+        "move"
       ]
     }
   ]

@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "dustjack_walk_input_blue.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. The exact young human Dustjack Blades from the references performs one complete reciprocal WALK IN PLACE cycle. Preserve his youthful face, short tousled brown hair, brass goggles on forehead, teal scarf, tan trousers, leather belts and brown armored boots, metal knee guards, single large shoulder pauldron on IMAGE RIGHT, brown gloves and exactly TWO short broad steel knives, one in each hand. Both hands stay firmly closed on their original handles, blade tips point downward and outward safely, wrists and elbows swing a little counter to the legs. Do not swap blades or add fingers, arms, weapons or metal ornaments. Begin with the leg under the IMAGE-RIGHT shoulder pauldron reaching forward, sole angled toward viewer, opposite leg trailing as first reference. First half: plant the extended boot, shift weight naturally over it, lift the OTHER boot from its trailing position, bend that knee, pass it beneath the hips, then extend this opposite leg forward to match the midpoint reference. Second half: plant the midpoint leading boot, lift the first boot behind, bend and pass it under the body, extend it forward to return to the initial contact pose. Both feet must take turns advancing, supporting and trailing; never repeatedly hop or shuffle on one leg. The planted foot travels back relative to the centered torso as the body would advance on a treadmill. Natural heel contact, toe-off and knee flexion, slight weight transfer; no running jumps, high-knee marching or oversized strides. Keep the two boots on separate consistent contact lanes; legs must not fuse or exchange knee armor. Keep identical torso height, limb lengths, blade length, grips, camera and perspective. Small secondary scarf and tunic movement only. No body translation across canvas, turning toward viewer, camera motion, zoom or global resizing. One coherent full two-step cycle and match first pose at the end. Entire body and blades remain inside frame. Background remains the same perfectly uniform saturated DEEP BLUE chroma key backdrop RGB(0,0,255) in every frame. Never change this blue backdrop. No ground, floor, shadow, gradients, scenery, smoke, glow, particles, text or motion blur.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092412
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "dustjack_move_h3_blue_v2/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "dustjack_move_h3_blue_v2/frames/decoded"
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "dustjack_walk_middle_blue.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "frame_idx": 61,
+      "image": [
+        "16",
+        0
+      ]
+    }
+  }
+}

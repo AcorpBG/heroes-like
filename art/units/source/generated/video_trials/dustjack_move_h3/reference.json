@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_dustjack_blades",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "near_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_contacts_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            887,
+            887
+          ]
+        ],
+        "anchor": [
+          492,
+          867
+        ],
+        "scale": 0.48
+      },
+      "source_sha256": "3d8674a841abde501201c7e52037fa0513c31751e853d896e7844e1e81474a39",
+      "input_file": "input_magenta.png",
+      "input_sha256": "ee4d10de9b01922f0b07a2102caf98ac0151a809da3ab521e760850cfddaa8c0",
+      "runtime_source_scale": 0.2
+    },
+    {
+      "source_frame": {
+        "name": "far_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/move_contacts_v1.png",
+        "rects": [
+          [
+            887,
+            0,
+            1774,
+            887
+          ]
+        ],
+        "anchor": [
+          1287,
+          867
+        ],
+        "scale": 0.48
+      },
+      "source_sha256": "3d8674a841abde501201c7e52037fa0513c31751e853d896e7844e1e81474a39",
+      "input_file": "middle_magenta.png",
+      "input_sha256": "4e05261dfc7e6a9b3641e6034307a661f90b87fcad995fe9d521f5baab14102d",
+      "runtime_source_scale": 0.2
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    486
+  ],
+  "input_source_scale": 0.48,
+  "output_scale": 0.4166666666666667
+}

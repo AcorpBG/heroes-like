@@ -8,7 +8,27 @@
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/attack_v1.png": "2c87228a8f11728450dc1c09f3511a93cb47cc80ff8e163bfaea2e07307163fc",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/hit_defend_v1.png": "3e90f8531e27c3b21ddc51c41985751b95402ba3af5e5728c18ee9019273a5bb",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/death_v1.png": "0abc8e13a99a7d166ece471ff2260093915a221da5f773ba2ed8384d8853e2a3",
-    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png": "d2dbbd5b511dcc6998c85d4502b9166e61c9d9542fa4b4b8ec0986ceb973533f"
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_dustjack_blades/support_v3.png": "d2dbbd5b511dcc6998c85d4502b9166e61c9d9542fa4b4b8ec0986ceb973533f",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_040.png": "add3e0407f5bdc245282f7bebdea50b0d1efe8380e559dcd0318bb63144913f8",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_042.png": "8c435b79e4030ec2cea4409365229e9e882c0ea113f6f748958aa7a16058e859",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_044.png": "2308e2f06231c2c18c4db975cfb2a05263aefe5cb7bd15236155b6a0bf4c1a08",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_046.png": "08b378139cc75a4dd40261fe19836a965784e7608b4bdc15aef90e9f02b96619",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_048.png": "09ab19faab105981b9eaea6bb0180c0f74ae3c5af220d9df46de27b5dd469298",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_050.png": "9bd00d82fefe331fbce54c0c25a4a5de23232b6a402467f0b89e560d4d9b407a",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_052.png": "edecc4297ffb0ae88704915556c1984de8c809d92ca332db75ab717a45a0f041",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_054.png": "4bf6d06a00df354a13efd3340f1bac6540f632fa5eccf88fd27a3dc4d8ce56cc",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_056.png": "eb38278b79b62db904308c517d5eeef9a288e9cbfb13c6d0786f9e879bdd7d01",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_058.png": "7b478439f46470d5c6b1874d0909708505833fb61efa0f1a055b49adab53047b",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_060.png": "a8bbf9d1639fa9c9a42178592b5890a53bb7325b8a8a5c2a5dc395cd1a2ac76f",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_062.png": "83aca0b5f087624e34759727ef87bcff18a59312cb73e463602f0b2b7b0fcd43",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_064.png": "90586908b2b03c38957c1743fa31aaef58ea12e08799b77fce83025a05a5fe41",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_066.png": "94757b6b685ed79c2cd8ffb3132496b154951cca0cbb8f2addaf82452ce460d1",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_068.png": "320ab47e4fc34561c373f18ba29d8445e1096139fec78343182afb02fcfc75f7",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_070.png": "ed0d068cb453dc3a0061236dc629eb35e97f848c874220bfb512f0a092ddb71f",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_072.png": "c3f7800b76e2a6f41c15d8c073e78832cfd881754f0ecb949b9c00f2c4f3eb37",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_074.png": "698241ec947926e77f47c1a2e8257cc06e3ace95f596d79f20894fab6e3aa3d8",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_076.png": "c7539656eb973ea6ec69137ba6994eb41ede5e9625654025c29fa84fa8e958ee",
+    "res://art/units/source/generated/video_trials/dustjack_move_h3/blue_v2/matte/rgba_078.png": "a38351f64ba3e157168743a2d5056085e177fbd0446ccafe222fc144afee73a2"
   },
   "accepted_clips": [
     "idle",
@@ -16,13 +36,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Godot128 overview reviewed: two-blade windup/slash/recovery, crossed-blade guard, recoil, arms-open physical support, quiet wrist/shoulder idle and continuous collapse. Movement withheld: apparent repeated leading boot still requires correction."
+    "notes": "Accepted blue-v2 H3 movement after chronological review of all124 frames, enlarged blade/grip/face/boot edges on light and dark, and native Godot battle overview.20 observed frames40-78 every2 at60ms form a1200ms reciprocal two-step cycle: each boot advances, plants and passes, with both knives held correctly and stable goggles/scarf/pauldron identity. Fixed guide scale.48, extraction.20/.48 and anchor480,486 preserve body registration. First magenta/lime attempt rejected for edge halos; originals retained.128 candidate checks passed. Six earlier accepted actions retained; no full suite or continuous manual game playtest."
   },
-  "atlas_sha256": "c12728f03ac33814522540d0ffd24052c02e066738fadc2034aa9a2b225ad48c",
-  "texture_bytes_rgba": 11796480,
-  "baseline_atlas_sha256": "8ad6db39c52f23e9eb457a71569c36cf4c1b4f5aeb6c573f7862a6500e335e20"
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "8ad6db39c52f23e9eb457a71569c36cf4c1b4f5aeb6c573f7862a6500e335e20",
+  "atlas_sha256": "dd74e27434551cf009f7144ef8d87e6e77f71a4eed74ad26520ab27e00fc4c8e",
+  "texture_bytes_rgba": 13547520
 }
