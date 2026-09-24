@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_sumpstone_guards",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_00",
+        "clip": "move",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_00.png",
+        "rects": [
+          [
+            0,
+            0,
+            744,
+            765
+          ]
+        ],
+        "anchor": [
+          382,
+          761
+        ],
+        "scale": 0.5
+      },
+      "source_sha256": "a65446c1553f46e1eec6edc0da6f6643bfe76c285affd3de008c22a7b66921e1",
+      "input_file": "input_green.png",
+      "input_sha256": "637b0ea8b0b78058d7a95b70e43090d7aea8ecdec7b7f6dabb4e268c7b1ca8e5",
+      "runtime_source_scale": 0.212
+    },
+    {
+      "source_frame": {
+        "name": "move_01",
+        "clip": "move",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/move_contacts_v2_01.png",
+        "rects": [
+          [
+            0,
+            0,
+            731,
+            760
+          ]
+        ],
+        "anchor": [
+          366,
+          756
+        ],
+        "scale": 0.5
+      },
+      "source_sha256": "55db2bd2801b5a1b65bc08e41cdb2f514dd04acc1011d5d89399c51ed1fea6df",
+      "input_file": "middle_green.png",
+      "input_sha256": "d74d1532410a7b39dbcd655451eb3a2fe20e47e3f67a6cff20f713880a4f55f8",
+      "runtime_source_scale": 0.212
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "input_source_scale": 0.5,
+  "output_scale": 0.424
+}
