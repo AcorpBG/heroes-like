@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "step_rear_left",
+        "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-left.png",
+        "rects": [
+          [
+            0,
+            0,
+            1293,
+            1216
+          ]
+        ],
+        "anchor": [
+          670,
+          1183
+        ],
+        "scale": 0.36
+      },
+      "source_sha256": "a1b6e1c60aad388cfbfa4eae3ae5cf89523edc8d14ad2f0a3c1ca2afd62fa29f",
+      "input_file": "input_magenta.png",
+      "input_sha256": "359ca44bafecf84d3a5c49a6383c254702dfa0ff833fb8ed16b3e7864296ce8f",
+      "runtime_source_scale": 0.185
+    },
+    {
+      "source_frame": {
+        "name": "step_rear_middle",
+        "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-rear-middle.png",
+        "rects": [
+          [
+            0,
+            0,
+            1293,
+            1216
+          ]
+        ],
+        "anchor": [
+          670,
+          1183
+        ],
+        "scale": 0.36
+      },
+      "source_sha256": "68be4d53d62929a4819525f7362b20942d5cd3f738e00a9d78e4e9d218093601",
+      "input_file": "middle_magenta.png",
+      "input_sha256": "55da75bdfebbf572015ca6a9d5422a61fd950f8323bb2c22c74c2cb3eb2fff25",
+      "runtime_source_scale": 0.185
+    },
+    {
+      "source_frame": {
+        "name": "step_fore_left",
+        "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-left.png",
+        "rects": [
+          [
+            0,
+            0,
+            1293,
+            1216
+          ]
+        ],
+        "anchor": [
+          670,
+          1183
+        ],
+        "scale": 0.36
+      },
+      "source_sha256": "c0d907fb82865434802b7dbc2478a4bb8b5c0c936c3e8c5664852175b8549160",
+      "input_file": "quarter_magenta.png",
+      "input_sha256": "6a8bb43f119801300300449580be9060a65cb159b735743e682bc8f8eb9a285b",
+      "runtime_source_scale": 0.185
+    },
+    {
+      "source_frame": {
+        "name": "step_fore_right",
+        "source": "art/animation/source/poses/unit_thornwake_worldroot_bastion/continuity-alpha/step-fore-right.png",
+        "rects": [
+          [
+            0,
+            0,
+            1293,
+            1216
+          ]
+        ],
+        "anchor": [
+          663,
+          1183
+        ],
+        "scale": 0.36
+      },
+      "source_sha256": "16f2261bbb356a80e53a009326a860c062fd10e5641f80d58d81510b7d164d6e",
+      "input_file": "threequarter_magenta.png",
+      "input_sha256": "b5944d31acdd714c3e7c07e99306ffeb672947e6ea2554415653cf6811249b07",
+      "runtime_source_scale": 0.185
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    465
+  ],
+  "input_source_scale": 0.36,
+  "output_scale": 0.513888888888889
+}
