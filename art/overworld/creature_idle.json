@@ -6936,33 +6936,37 @@
     "unit_thornwake_thornwhip_carriers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_thornwhip_carriers_veteran.png",
       "frame_size": [
-        304,
-        250
+        295,
+        258
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        118.0,
-        239
+        148.0,
+        246
       ],
-      "painted_extent": 288,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_thornwhip_carriers_veteran.png",
+      "painted_extent": 279,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_thornwhip_carriers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        138,
-        1,
-        442,
-        251
+        136,
+        34,
+        431,
+        292
       ],
-      "source_sha256": "3803e14a42efdf243f86dd3b5d72262fb1b76a4aa6cac7b709557ad04bec5bca",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_thornwhip_carriers_veteran/provenance.json",
-      "sha256": "fbae163920d4f97296dc620a5ca4232a738d5b027ae372e1364cf458625d5798"
+      "source_sha256": "88b00261a28c34606b674724c4d6e55a13b6a572df0b3b82915379f0e9c2c31e",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_thornwhip_carriers_veteran/provenance.json",
+      "sha256": "d7bd53fa81230a8d3125ddff0c3674ed003719501c1af8f1b61d9f3e1eb0d3c6"
     },
     "unit_thornwake_bramblekite_needlers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_bramblekite_needlers_veteran.png",

@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_thornwake_thornwhip_carriers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/idle_v1.png": "114bf05c64672f0ef9bb1b5dfc8ef6199d784d70b8126df136d19fd7a46cddf3",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/move_near_v1.png": "dcdbe6cbce0416d5a9db385181dd6cfc3ccf4ddfcd1b97ad94ea07ee78f8b1bd",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/move_far_v1.png": "9abbb0c5422840ba3227f77f42c00d58f5f9f560cb05da169af500fedae1ad71",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/attack_v1.png": "2dd739f72c1e9c8f780a7723e0555776e6ceb22728349416fe3896b7abb8c3dc",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/attack_windup_v1.png": "1eeef1726fbe2b1febcb12d7f69799b4495ce04a5f3830b5509439a154b2744b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/reactions_v1.png": "b2f979256ff6c3fbc9ae33f7ac6864d47bbf47e582cf3fdad8cff13cbd4da740",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/cast_v1.png": "c9f47eb44a089bfd112072d49894f673471f7469fc16367088f9c3f924cf7848",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/cast_peak_v1.png": "58acf74cadbbbc9dbea4522d89075c1f5e01e619d6eab8974d29de83d6975f88",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/death_v1.png": "1233a4bd3eb06893582935ef659cd8bc3ccc145a43a18e16c7dd9768a06e8e69"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original paintings and ordered native Windows Godot phases at actual 128px scale: 48 original poses, visible coil-hand idle, reciprocal near/far gait, continuous far-handed whip attack, dedicated recoil and held guard, corrected empty near-hand physical support, eight-stage collapse and grounded final corpse with dropped whip. Rejected repeated-leg move draft and grip-swapped attack/support poses are excluded. One fixed scale per master and anatomical ground anchors; no synthetic articulation or within-clip duplicates. Candidate 116 checks pass, including timing, fast/reduced motion and unchanged simulation. Continuous playback, Linux and a manual playtest are not claimed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "3803e14a42efdf243f86dd3b5d72262fb1b76a4aa6cac7b709557ad04bec5bca",
+  "atlas_sha256": "88b00261a28c34606b674724c4d6e55a13b6a572df0b3b82915379f0e9c2c31e",
+  "texture_bytes_rgba": 34289024
+}
