@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_ferrychain_lashers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/idle_v1.png": "e1894b255580cd700db189dadc1070b16d02635453bddad05f974ded021af735",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/attack_v1.png": "7195fb55fc86f1727aa0f064c3bebe63387a2c9d5744e19a406bbd3a3a4541e3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/reactions_v1.png": "537d52d38589394e00e006a2f522ffc825d78c159bec253c92f360e053b03b8f",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/cast_v1.png": "c11451883f3eb275744313434dcfa639f650e2cbcdf29bd3d86df02e2a1a8d31",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/death_v2.png": "e9009189855001ba1cae67873a0bb796adb09a84b8f41554186bc374c4c11204",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/move_cross_v1.png": "9740a2d6c60a76e510b7882fcc1f5ed0040c8e2521dbba9a2ba936c49808bdea",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_ferrychain_lashers_veteran/move_v1.png": "71c086aa1768a833ad964ac125b71d117a54ab4fbee71c2550bb99a610188961"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "All 48 original Chainmaster poses reviewed at native battle scale; paired hooks retained through articulated actions, corrected reciprocal gait and grounded collapse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "2586e6f4a5f998cead169315a5938b5ac1103b12e4d9b06c5b877a3363aa0bed",
+  "atlas_sha256": "2c51e80fb88f6fd82fa25bec7eb2d7a25d673ebaaf09ec58efa915545d1dd357",
+  "texture_bytes_rgba": 22391040
+}
