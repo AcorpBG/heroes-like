@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_contact",
+        "clip": "move",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/move_v1.png",
+        "rects": [
+          [
+            96,
+            0,
+            465,
+            373
+          ]
+        ],
+        "anchor": [
+          270,
+          355
+        ],
+        "scale": 0.95,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cd0fd3d59029373795732309909a3bc865ceb4663b6301d83f30c4d90a657c1f",
+      "input_file": "input_magenta.png",
+      "input_sha256": "dacf2af95e2be6b4553c4a6ec0d60ecfbb89a6f3cfc77df13d7329c9dd8c5799",
+      "runtime_source_scale": 0.57
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale",
+  "output_scale": 0.6
+}

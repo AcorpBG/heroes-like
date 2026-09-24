@@ -1,0 +1,206 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "canopy_move_input_magenta.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "This exact massive bark-and-root forest golem walks heavily IN PLACE through three full reciprocal stride cycles. Preserve its two huge wooden arms and fists, two thick root legs with spread woody toes, rhino-like branching horn crown, amber seams, vines, moss and white lichen plates. Original three-quarter RIGHT-facing view, stable face and fixed body scale. Near and far root legs alternately swing forward to the RIGHT, plant, bear the body weight, push off and pass. Root feet lift clear of one another during passing. Near leg leads at0/41/82/123; far leg leads halfway between. Arms swing modestly in opposition while horns stay rigid to the head and vines follow gently. Heavy grounded steps, not a hop. Anatomical root stays centered for engine-driven movement. Locked orthographic camera, no camera movement or world travel. Exactly two legs and two arms; no new branches or equipment. Entire creature and horns remain in frame. Clean opaque painted sprite, no motion blur. Background remains a single stationary solid magenta matte color identical to the guide throughout.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 41,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "18": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "17",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 82,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "18",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092452
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "canopy_h3/move_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "canopy_h3/move_v1/frames/decoded"
+    }
+  }
+}
