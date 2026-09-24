@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/idle_v1.png": "40dfef731400d72c1862e20ebe20de1b805d7a4a3843968ad0a3e5b1903ab84b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/corrections_v1.png": "eaefb0ad38e82b96a93c0e3651556ca9459e58fc558e32bce71c6bd1dcb32ed6",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/attack_v1.png": "226be46283472dc1e9cf18c054b48dc494e5d848fc6d6d510a750b23b0fd1574",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/reactions_v1.png": "1a679846ae098cf2eee866d3b0c94e35d138ce75b396b7bb0a7a16127130d84e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/cast_v1.png": "e5625060ffb5c6978ed9ea1ac180f705025582f6eea657bf18af0cc1d6b65185",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/death_v1.png": "cac2049be6db31ccb2f15914f6a4edf428c387f0e0a90865837d734bd4d6f07e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/move_v1.png": "b501e6a8d5086185ac50912abc3fdd4138e9694d31efa18a1551a8c62f72cc9d"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Original 48-pose Tollreaper set reviewed at native battle scale; corrected sickle count, visible arms and reciprocal gait, stable anatomy and grounded corpse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "e6c426fb7338ec1bc0b818c91f21e4cad1f2b1314bd5f47919ee3b4fd568e4c2",
+  "atlas_sha256": "5547b701582804b71018eb2f792736b0edaa5f82f058cb317d06b1607703e511",
+  "texture_bytes_rgba": 24266368
+}
