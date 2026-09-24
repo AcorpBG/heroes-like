@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "near_contact_v1",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/near_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1093,
+            1438
+          ]
+        ],
+        "anchor": [
+          570,
+          1404
+        ],
+        "scale": 0.265,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8a58d5b457896fb6c672f0b3ae790c17a16d15fff14b9ac5d7225d5a7486c289",
+      "input_file": "input_green.png",
+      "input_sha256": "92435bc5b1409a8b1c78540e4142ecc8b6ddb2b516e485d5bbc4e000aca0d6dd",
+      "runtime_source_scale": 0.158
+    },
+    {
+      "source_frame": {
+        "name": "far_contact_v1",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/far_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1093,
+            1438
+          ]
+        ],
+        "anchor": [
+          587,
+          1414
+        ],
+        "scale": 0.265,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "db4aa7d68cd47bd4ba98c112e09777dd6155539b7cda6f05507b4d73d3362f82",
+      "input_file": "far_green.png",
+      "input_sha256": "82a0804101bf27f9cd65ab5dde76915c9871fa5b0bd58fa2c7db60497bb8e02d",
+      "runtime_source_scale": 0.158
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.265,
+  "output_scale": 0.5962264150943396
+}

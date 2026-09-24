@@ -1,0 +1,24 @@
+[
+  {
+    "image": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/near_contact_v1.png",
+    "sha256": "8a58d5b457896fb6c672f0b3ae790c17a16d15fff14b9ac5d7225d5a7486c289",
+    "prompt": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/near_contact_v1.prompt.txt",
+    "prompt_sha256": "5844333baf0d044204a4b3f4bd32e4df54dcb9c1d22cb52b65a50e7574f4cf07",
+    "reference": "art/units/source/generated/video_trials/zenith_move_h3/identity_reference.png",
+    "reference_sha256": "dde39eb700f953057bd09c79a761fff3da3b683d7c7971a9bfaf19afc7ab83f1",
+    "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1a78789a-2427-4f30-8c52-9ecd61825cba.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit"
+  },
+  {
+    "image": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/far_contact_v1.png",
+    "sha256": "db4aa7d68cd47bd4ba98c112e09777dd6155539b7cda6f05507b4d73d3362f82",
+    "prompt": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/far_contact_v1.prompt.txt",
+    "prompt_sha256": "5ce428e523cab3cc793ebd35d7b46a311e92db72195e6bc5eaf62f20c1d0c558",
+    "reference": "art/units/source/generated/video_trials/zenith_move_h3/key_guides/near_contact_v1.png",
+    "reference_sha256": "8a58d5b457896fb6c672f0b3ae790c17a16d15fff14b9ac5d7225d5a7486c289",
+    "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-766a554f-7861-4533-a807-3b0243252fe8.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit"
+  }
+]
