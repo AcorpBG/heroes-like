@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_rimebell_skyrakers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_00",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_00.png",
+        "rects": [
+          [
+            0,
+            0,
+            424,
+            259
+          ]
+        ],
+        "anchor": [
+          177,
+          276
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "f0f09142ec6dd58056ba8b4e016d8466bc9cd1a3d630997a82681020225b61ca",
+      "input_file": "input_green.png",
+      "input_sha256": "48976c893d819b8286d68866fb48e02f39cffebc6f1553df4a29bb631c2dad2d",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    450
+  ],
+  "input_source_scale": 1.0,
+  "output_scale": 0.5
+}
