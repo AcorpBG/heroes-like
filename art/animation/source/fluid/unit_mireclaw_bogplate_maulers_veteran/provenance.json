@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/idle_v2.png": "8fb47504b16fa746ea4f28f323f416e202684dae6a5d9aaab50b24291017d1fa",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/attack_v1.png": "f4c174a624e4ee397471d647f3c7c9d073044297e51a19b657e010aa6f625bd5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/reactions_v1.png": "e824a7d7d12721170fc2d274734e6b629d2940998377f09b051325d3f21933e1",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/cast_v1.png": "6b2bbf84a141c79cb47a39d5b827bb711be7db67ac20a36e3b13c173e3b11606",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/death_v1.png": "2b85a947d1d4a1704135600f353aa3dd467d074e6a3a1a852eec1131393f0ea3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_cross_v1.png": "dc0baad1b8cdb426eaba36c2fd00973fa44291752f9d21d3115eb89f1b572d20",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_v1.png": "6fbd7bdd4e55c3177334e1fd33fc312186b36cbed337028da7fe0eab90cb56ab"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed 48 original paintings at native 128px battle scale: articulated two-handed maul handling, overhead attack/recovery, shaft brace, battle cry, grounded collapse and corrected alternating gait. Eight masters preserved, seven used, fixed anatomical scale and no repeated frame padding."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "426a1a185305f9468c3090a3dc4372f6d5cad475a0e14be801dd19ffe8220e25",
+  "atlas_sha256": "439459890ed40fbc496fd83e023be86d942c97c6daa4fcd420fc6f8d68240651",
+  "texture_bytes_rgba": 24598784
+}

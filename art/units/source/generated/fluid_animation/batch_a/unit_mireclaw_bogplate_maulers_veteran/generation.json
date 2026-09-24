@@ -1,0 +1,109 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/idle_v2.png",
+      "sha256": "8fb47504b16fa746ea4f28f323f416e202684dae6a5d9aaab50b24291017d1fa",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/idle_v2.prompt.txt",
+      "prompt_sha256": "997c80e4273bbb3bd1800fb3e61e26b3b29c66c6e184c164107fd6feaabe6580",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-798ccaf1-69ea-4c4d-8d7e-ba3342cb44d6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/attack_v1.png",
+      "sha256": "f4c174a624e4ee397471d647f3c7c9d073044297e51a19b657e010aa6f625bd5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "faefa2c97f9daa6d48019fa6d7bb6e97f16a758531459232ac62ec649ea58b23",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b4f840ef-9c19-42a2-a326-e9be1cee5581.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/reactions_v1.png",
+      "sha256": "e824a7d7d12721170fc2d274734e6b629d2940998377f09b051325d3f21933e1",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "820e65173824a9fde6a077613740de5f920a774bfb3964564e5e5ea8c5d6e6bb",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-01668f92-c255-4b7d-8486-3dc75c6cf729.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/cast_v1.png",
+      "sha256": "6b2bbf84a141c79cb47a39d5b827bb711be7db67ac20a36e3b13c173e3b11606",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "daadde21f1c4643d44db3c317c45d068b7116d4e0d205f3f6f090c5b883cccde",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4471eb46-e9c5-4b5d-b6ed-64cdd50893be.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/death_v1.png",
+      "sha256": "2b85a947d1d4a1704135600f353aa3dd467d074e6a3a1a852eec1131393f0ea3",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "12c8831c2794ee7a78bb50737f1c9d40b04601a9ad42bf52f3c85f742dc0d92e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a4af5a03-2cf6-4f1e-b034-83705d7f8d75.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_v1.png",
+      "sha256": "6fbd7bdd4e55c3177334e1fd33fc312186b36cbed337028da7fe0eab90cb56ab",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "404d5af7a6d5570d1e21d88f69a06d453fe6380dc571fd5618bb18074a9ff282",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-80f377a2-b812-4d87-9a22-429b40a3cfb7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_near_v1.png",
+      "sha256": "88c11fe1de4c0026207e91dd132455ef3f94ad74229f0edf01aa7af7cf6eb990",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "8551fa10e450c76fa3c3a13eedb00fcd1c22b0ecf3b7c7210e06765650685a31",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-268aff69-6328-46ff-a708-c266b51c7b4c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_cross_v1.png",
+      "sha256": "dc0baad1b8cdb426eaba36c2fd00973fa44291752f9d21d3115eb89f1b572d20",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/move_cross_v1.prompt.txt",
+      "prompt_sha256": "c971b27b4121dd0052605f8b132dce654b2ffad420e7f92bb9ae0050943f6478",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-1d2464c0-5b4f-47db-a5fc-37c7e4334116.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_bogplate_maulers_veteran/identity_reference.png",
+          "sha256": "9cfbc003e7a35a947cd6e40f0504f3992de3865d07a0b218d6c51fb278e5e431"
+        }
+      ]
+    }
+  ]
+}
