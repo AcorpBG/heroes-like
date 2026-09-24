@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "rimebell_flight_input_green (1).png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter LEFT-facing fantasy strategy sprite camera. Animate this exact original Rimebell Skyraker flying IN PLACE through two complete natural wingbeat cycles, returning to the reference wing pose. Preserve its ice-white and cobalt-blue feather armor, swept narrow beaked crest, shadowed face, luminous blue chest and ONE long tapering ice-vapor tail trailing to IMAGE RIGHT. Exactly FOUR feather-fins: two large upper wings attached at shoulders and two smaller lower feather-fins attached along flanks, with exactly TWO separate forward curled rake talons beneath the chest. The upper pair lift with bent leading joints, spread feather tips, sweep down to push air, fold slightly during recovery and lift again; the near and far wings remain on their own sides and never merge or become extra wings. Lower pair counterbalance the upper wingbeats with smaller distinct delayed strokes, retaining clear layered feather edges. Both curled talons stay tucked under the chest, gently flex with the wing strokes, never becoming walking legs, hands or extra claws. Tail flows as a coherent tapered icy ribbon with modest delayed curl, staying attached to the same rear body; no new particles, snow, glowing floor or separate smoke clouds. Keep face, beak, crest and chest volume anatomically unchanged. Body core remains centered at original position and size, with only slight natural pitch; movement comes from articulated wings/talons/tail, not whole-sprite bobbing. Remain three-quarter LEFT-facing throughout, no turning to front, right or back, no travel, landing, attacks, camera pan, zoom or perspective changes. All four complete fins and feather tips, crest, talons and complete tail remain safely inside frame. Background is perfectly uniform PURE GREEN RGB(0,255,0), no ground, shadow, gradients, text, motion blur or scenery.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092427
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "rimebell_move_h3/framed_v2/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "rimebell_move_h3/framed_v2/frames/decoded"
+    }
+  }
+}

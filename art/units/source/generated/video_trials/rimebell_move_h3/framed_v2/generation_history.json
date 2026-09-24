@@ -1,0 +1,862 @@
+{
+  "prompt": [
+    44,
+    "4c116f05-16a4-4a92-85a4-6f73bde9275a",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "rimebell_flight_input_green (1).png"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter LEFT-facing fantasy strategy sprite camera. Animate this exact original Rimebell Skyraker flying IN PLACE through two complete natural wingbeat cycles, returning to the reference wing pose. Preserve its ice-white and cobalt-blue feather armor, swept narrow beaked crest, shadowed face, luminous blue chest and ONE long tapering ice-vapor tail trailing to IMAGE RIGHT. Exactly FOUR feather-fins: two large upper wings attached at shoulders and two smaller lower feather-fins attached along flanks, with exactly TWO separate forward curled rake talons beneath the chest. The upper pair lift with bent leading joints, spread feather tips, sweep down to push air, fold slightly during recovery and lift again; the near and far wings remain on their own sides and never merge or become extra wings. Lower pair counterbalance the upper wingbeats with smaller distinct delayed strokes, retaining clear layered feather edges. Both curled talons stay tucked under the chest, gently flex with the wing strokes, never becoming walking legs, hands or extra claws. Tail flows as a coherent tapered icy ribbon with modest delayed curl, staying attached to the same rear body; no new particles, snow, glowing floor or separate smoke clouds. Keep face, beak, crest and chest volume anatomically unchanged. Body core remains centered at original position and size, with only slight natural pitch; movement comes from articulated wings/talons/tail, not whole-sprite bobbing. Remain three-quarter LEFT-facing throughout, no turning to front, right or back, no travel, landing, attacks, camera pan, zoom or perspective changes. All four complete fins and feather tips, crest, talons and complete tail remain safely inside frame. Background is perfectly uniform PURE GREEN RGB(0,255,0), no ground, shadow, gradients, text, motion blur or scenery.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "4",
+            0
+          ],
+          "last_frame": [
+            "4",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092427
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "rimebell_move_h3/framed_v2/original",
+          "format": "mp4",
+          "format.codec": "h264"
+        }
+      },
+      "15": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "filename_prefix": "rimebell_move_h3/framed_v2/frames/decoded"
+        }
+      }
+    },
+    {
+      "client_id": "rimebell_flight_h3",
+      "create_time": 1790272042715
+    },
+    [
+      "15",
+      "14"
+    ]
+  ],
+  "outputs": {
+    "15": {
+      "images": [
+        {
+          "filename": "decoded_00001_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00002_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00003_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00004_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00005_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00006_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00007_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00008_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00009_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00010_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00011_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00012_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00013_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00014_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00015_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00016_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00017_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00018_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00019_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00020_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00021_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00022_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00023_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00024_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00025_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00026_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00027_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00028_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00029_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00030_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00031_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00032_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00033_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00034_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00035_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00036_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00037_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00038_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00039_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00040_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00041_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00042_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00043_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00044_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00045_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00046_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00047_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00048_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00049_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00050_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00051_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00052_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00053_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00054_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00055_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00056_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00057_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00058_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00059_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00060_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00061_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00062_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00063_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00064_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00065_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00066_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00067_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00068_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00069_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00070_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00071_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00072_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00073_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00074_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00075_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00076_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00077_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00078_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00079_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00080_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00081_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00082_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00083_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00084_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00085_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00086_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00087_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00088_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00089_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00090_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00091_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00092_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00093_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00094_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00095_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00096_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00097_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00098_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00099_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00100_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00101_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00102_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00103_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00104_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00105_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00106_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00107_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00108_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00109_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00110_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00111_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00112_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00113_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00114_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00115_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00116_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00117_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00118_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00119_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00120_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00121_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00122_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00123_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00124_.png",
+          "subfolder": "rimebell_move_h3\\framed_v2\\frames",
+          "type": "output"
+        }
+      ]
+    },
+    "14": {
+      "images": [
+        {
+          "filename": "original_00001_.mp4",
+          "subfolder": "rimebell_move_h3\\framed_v2",
+          "type": "output"
+        }
+      ],
+      "animated": [
+        true
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "4c116f05-16a4-4a92-85a4-6f73bde9275a",
+          "timestamp": 1790272042716
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "4c116f05-16a4-4a92-85a4-6f73bde9275a",
+          "timestamp": 1790272042723
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "4c116f05-16a4-4a92-85a4-6f73bde9275a",
+          "timestamp": 1790272155493
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "15": {
+      "node_id": "15",
+      "display_node": "15",
+      "parent_node": null,
+      "real_node_id": "15"
+    },
+    "14": {
+      "node_id": "14",
+      "display_node": "14",
+      "parent_node": null,
+      "real_node_id": "14"
+    }
+  }
+}

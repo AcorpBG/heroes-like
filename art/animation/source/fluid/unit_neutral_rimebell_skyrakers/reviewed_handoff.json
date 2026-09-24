@@ -613,8 +613,555 @@
           ],
           "scale": 0.53,
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_047",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_049",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_053",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_055",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            425
+          ],
+          "scale": 0.625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "attack": {
           "indices": [
@@ -684,19 +1231,72 @@
           "loop": false,
           "static_frame": 0,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
         }
       },
-      "preserve_clips": [
-        "idle"
-      ],
-      "accepted_clips": [
-        "attack",
-        "hit",
-        "defend",
-        "death",
-        "cast",
-        "idle"
-      ],
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/original_lossless.mkv",
+          "sha256": "5823cb89990e29f97bdb4d3139ed94f477591e2f23888271bdf2854c9068f6e4"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/original.json",
+          "sha256": "ac1b5626173cba74f08f128ff922bff7bfdf291736733b4d3904fca98a3fa63b"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/workflow_api.json",
+          "sha256": "5f9f113cf83c484d1234385d119c1f414400223798826eb4b072c94b4169b711"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/prompt.txt",
+          "sha256": "d9ec23ed816ee579c07042dc3d05c4ec95188679c176862027d91ae96f912fbf"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/reference.json",
+          "sha256": "f832b0c8b2549ee8e1ff41f7c6c7b8c7813ba73cdc1ec4b4c0678783e49de147"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte.json",
+          "sha256": "92ef7d33efd65cfede6bf7e4d7c6a3db852386c5633d5934282e7d3a76ddb042"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Coordinator inspected all124 chronological source frames, enlarged light/dark32-59 anatomy and alpha, and seam57/58/32. Full upper-wing rise, spread downstroke, folded recovery and lift; smaller lower feather-fins lag, two talons flex beneath stable chest, one attached ice tail curls. No frame-edge clipping in selected32-57.26 original consecutive poses at42ms give1092ms loop, approximately1083ms source cycle. Fixed .5/.8 extraction and anchor480,425 preserve original .5 body scale and hover reference. Ordered-frame/render/runtime review; continuous browser playback remains unavailable through the blocked route, no manual game playtest claimed. Autonomous publication per owner direction. Actual Godot battle-scale overview inspected against accepted combat poses;124 candidate checks passed."
+      },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_00.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_01.png": 0.5,
@@ -706,14 +1306,14 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_05.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_06.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/attack_v1_07.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_00.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_01.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_02.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_03.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_04.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_05.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_06.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/move_v2_07.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_00.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_02.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_04.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_06.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_01.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_03.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_05.png": 0.53,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_07.png": 0.53,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_00.png": 0.53,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_01.png": 0.53,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/death_v1_02.png": 0.53,
@@ -730,21 +1330,43 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_05.png": 0.53,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_06.png": 0.53,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/cast_v1_07.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_00.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_02.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_04.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_06.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_01.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_03.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_05.png": 0.53,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_rimebell_skyrakers/extracted/reactions_v1_07.png": 0.53
-      },
-      "source_scale_reason": "Fixed per-original resolution: square move/attack sheets show approximately460px resting width at0.50; portrait reaction/death/support sheets about430px resting width at0.53. Target about230px resting wingspan matching inherited runtime; all poses of original share scale, no per-pose normalization.",
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: retained wing/talon idle, forward claw strike and recovery, feather-wrapped guard, recoil, grounded collapse and wing-raised call. Locomotion remains held for body-scale continuity review against the other clips."
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_032.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_033.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_034.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_035.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_036.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_037.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_038.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_039.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_040.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_041.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_042.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_043.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_044.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_045.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_046.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_047.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_048.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_049.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_050.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_051.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_052.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_053.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_054.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_055.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_056.png": 0.625,
+        "art/units/source/generated/video_trials/rimebell_move_h3/framed_v2/matte/rgba_057.png": 0.625
       },
       "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast",
+        "move",
         "idle"
       ]
     }
