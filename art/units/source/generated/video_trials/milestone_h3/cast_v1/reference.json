@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_neutral_milestone_bucklers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "cast_00",
+        "clip": "cast",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            378
+          ]
+        ],
+        "anchor": [
+          315,
+          373
+        ],
+        "scale": 0.9384615384615385,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc48a9ac263f6370d8746b775ada2a183741c55e136e976e4ef4adc43de4e65f",
+      "input_file": "input_magenta.png",
+      "input_sha256": "cd5100ef59156bf1c134b1dcf78797fefd508ba681f693ed0117bf0c5d2d6651",
+      "runtime_source_scale": 0.61
+    },
+    {
+      "source_frame": {
+        "name": "cast_02",
+        "clip": "cast",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_milestone_bucklers/cast_v1.png",
+        "rects": [
+          [
+            0,
+            365,
+            512,
+            762
+          ]
+        ],
+        "anchor": [
+          315,
+          753
+        ],
+        "scale": 0.9384615384615385,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc48a9ac263f6370d8746b775ada2a183741c55e136e976e4ef4adc43de4e65f",
+      "input_file": "peak_magenta.png",
+      "input_sha256": "56eaa7a97802ace8cb3545e1bef65b62b594bbccc70afe0e84dd6f4924ddbadd",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale",
+  "output_scale": 0.65
+}

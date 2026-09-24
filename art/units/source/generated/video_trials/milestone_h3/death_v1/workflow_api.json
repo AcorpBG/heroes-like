@@ -1,0 +1,218 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "milestone_death_input_magenta.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "This exact adult bearded male infantry soldier: short dark brown hair, cream scarf, rust-red quilted tunic, steel shoulder plates, navy trousers, brown gloves and boots, leather belt pouches. One rigid rectangular navy wooden shield with brass rim, vertical brass stripe and round boss stays on the far image-right forearm. The near image-left hand grips the same short wooden spear with one steel leaf-shaped head. Exactly two arms, hands and legs; no duplicate weapons. Original three-quarter RIGHT-facing orthographic view and body proportions. Perform one continuous defeat and collapse. From ready, shoulders slump and both knees buckle; descend onto knees by42. Then lean and roll onto the shield side toward RIGHT, lowering head and torso until lying on the ground by86. The shield falls flat beside and beneath the head; the spear hand lowers the same rigid short spear onto the ground, steel tip pointing LEFT. End fully motionless on the side in the reference corpse pose. Never rise again. Both legs fold naturally, no extra limbs, no floating or upright discarded equipment. Preserve face, clothing and scale through the fall. Locked camera; grounded local fall with no camera movement. Entire body and equipment stay in frame. No gore, particles or motion blur. Single solid stationary magenta background identical to the guides throughout.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "20",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "milestone_death_peak_magenta.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 42,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "16",
+        0
+      ]
+    }
+  },
+  "20": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "milestone_death_corpse_magenta.png"
+    }
+  },
+  "19": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "17",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 86,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "20",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "19",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092455
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "milestone_h3/death_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "milestone_h3/death_v1/frames/decoded"
+    }
+  }
+}
