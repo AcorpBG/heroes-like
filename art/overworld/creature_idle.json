@@ -3729,22 +3729,22 @@
       "painted_extent": 184,
       "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_emberpack_lobbers.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
         5,
         6,
         7,
-        8,
-        9,
-        10,
-        11,
-        12
+        8
       ],
       "source_crop": [
         44,
-        37,
+        9,
         199,
-        237
+        209
       ],
-      "source_sha256": "74933698c79151705c7670934b28427668a49340ed75c9d829e28e314871a30c",
+      "source_sha256": "147445175c97aaf2f179e548261bc0960be7e84bdc54ab1a3b39359c68f374a5",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_emberpack_lobbers/provenance.json",
       "sha256": "f945cfcfc273d6a84d9bba6c7c10b78c38a30645d02885292eb2f39a1ccbbf58"
     },

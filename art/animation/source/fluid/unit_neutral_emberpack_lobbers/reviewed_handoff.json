@@ -977,8 +977,681 @@
           "scale": 0.4,
           "anchor_notes": "Absolute source ground reference, common body scale; segmented attack crop retains crossing sling without neighbor contamination.",
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_094",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.43333333333333335,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "idle": {
           "indices": [
@@ -1074,8 +1747,119 @@
           "frame_msec": 110,
           "loop": false,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "frame_msec": 55,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/original_lossless.mkv",
+          "sha256": "83fdbbc89de3db4b7984abb64e450d843bf1c7e6b3902366e2bedfac84234fe8"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/original.json",
+          "sha256": "5046da533452ca9bdaeb06f9c28d8482eaac66c1ea14ba948d53871cf8561df8"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/workflow_api.json",
+          "sha256": "55bbc84313cef879ad52e0a880b8f0ff8098f8ef00e806fabf748cbe8f5de60a"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/prompt.txt",
+          "sha256": "1370960d009171b2695cc9db6cf6772845b46287048165b34691bde27f5c7e53"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/reference.json",
+          "sha256": "47eaaa86a8f2f0d501969c7666abd27da5deff528f3317d06832e440e296b763"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte.json",
+          "sha256": "bba74c4608a45a622d8e3f3ea4101b66ca361889eb549ee9549268d0ece078ab"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Coordinator reviewed all124 chronological frames, enlarged dark/light anatomy, explicit32/92/94/96 loop seam and native Godot battle-scale overview. Rejected first H3 take for opposite-direction body yaw; repaired guide keeps right-facing hips, knees and torso. Near buckled boot and far boot alternate contact/support/passing; one connected sling stays clear of feet and basket/flask remains strapped.32 observed sourceframes32-94 at55ms form1760ms cycle; .195/.45 extraction retains roughly180px original body at fixed anchor480,475.156 candidate checks passed. Ordered-frame and runtime review; continuous browser playback unavailable, no manual game playtest claimed. Owner directed autonomous review/publication. Preserve seven earlier actions and map idle."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png": 0.4,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_032.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_034.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_036.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_038.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_040.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_042.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_044.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_046.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_048.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_050.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_052.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_054.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_056.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_058.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_060.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_062.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_064.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_066.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_068.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_070.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_072.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_074.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_076.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_078.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_080.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_082.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_084.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_086.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_088.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_090.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_092.png": 0.43333333333333335,
+        "art/units/source/generated/video_trials/emberpack_move_h3/facing_v2/matte/rgba_094.png": 0.43333333333333335
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "idle",
         "attack",
@@ -1083,138 +1867,9 @@
         "defend",
         "death",
         "cast",
-        "ranged"
-      ],
-      "preserve_clips": [],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review of revised ranged release: anticipatory sling wind-up, empty release hand and recovery without a baked traveling projectile. Previously accepted clips retained; repeated-leading-foot movement remains unfinished."
-      },
-      "provenance": [
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png",
-          "source_sha256": "d40115a7984dcc44ce857f6c1db0913e3574dc895cdb9d4d3a5397f785ad165e",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.prompt.txt",
-          "prompt_sha256": "fa398bab559d9c29e4919d759209df913c6936c979b8a8af051378b1c4e13d19",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-8ebf1b8c-c723-4957-8283-95297ee06194.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.png",
-          "source_sha256": "60ae4d60ea4fce3c7c4fd8b071913f409b86c50dd7392b15b12dc60328716082",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/move_v1.prompt.txt",
-          "prompt_sha256": "2999d49cf0707895114911c243b994924ffdb64ff19abf0b18e2f537f2933ab5",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-5f4a1e8c-6b12-4cf8-896e-0cf053a922bd.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png",
-          "source_sha256": "737fef43385dc510e37ec29682d6d42cb9a17ddc0a5ce136e76885d9397846a0",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.prompt.txt",
-          "prompt_sha256": "5ec21ac4ca01c8c9a14d4da1b7ce0c44359cff68aa1477ba97346e5c5ea94f46",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ab0a5ad1-2bfd-4650-8425-97ba9b7b6b02.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png",
-          "source_sha256": "aa4b208ca2a33227106bf9d1cfc0cc90fcafe2369e6c05a4527dfdf8d44dea25",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.prompt.txt",
-          "prompt_sha256": "fae1e8909b8ddbc39ae79a86e3fcbfb6554d55dbd70bf2391216e4b5ba5e3561",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-77ec8c06-c0d2-494e-8a92-5b7cbb9d07a3.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png",
-          "source_sha256": "f97cd61d44fae7edce189fffaf4a783dbcbb3cd83705e0c7dc8d60b52a5e4cb6",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.prompt.txt",
-          "prompt_sha256": "9f9dedec5b4ad4465bd779dad4b8df4a33fe6feffa76ee55600b4369acd37a66",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-48765ba0-b51e-4e3c-ac8c-400ee6b1c834.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png",
-          "source_sha256": "dd411048e84366dc90d3cd6c4cf45aea65e460784a61680c0771357dc66a4c44",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.prompt.txt",
-          "prompt_sha256": "db61a8119acce29574d4d17a9fe98dae894171abdd85c31177597813617829bc",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-31154420-74dc-48ff-a3b5-e39259870563.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.png",
-          "source_sha256": "cd20f2b681d6915246537ac506762002aa50f12271a7c1d904a452481e74dd8d",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.prompt.txt",
-          "prompt_sha256": "10eba7e38f7bb0125d5ccfb1df9f6ac7943be7aa8298ecfa55659428e193bc74",
-          "reference": "art/units/source/curated/unit_neutral_emberpack_lobbers.png",
-          "reference_sha256": "61b5ce3e445496092a833ff1eab4eb4b37c2c04ab881f9ec31f7c7e6d8290ead",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-65b96bde-d208-4239-8c48-4791776c1489.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png",
-          "source_sha256": "e3a1db8bbc542bb09c21f6dda9979e9bb2c638ff26763333ddcd399da502be9d",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.prompt.txt",
-          "prompt_sha256": "0cf4f8f7087ab361ea1cd847fff26c910877d2029fc35839a18701d445c83f86",
-          "reference": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v1.png",
-          "reference_sha256": "cd20f2b681d6915246537ac506762002aa50f12271a7c1d904a452481e74dd8d",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-81f2425d-6d6a-4297-be9a-2ec7267e999c.png",
-          "purpose": "Remove baked detached projectile; runtime supplies projectile",
-          "output_size": [
-            1774,
-            887
-          ]
-        }
-      ],
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/idle_v1.png": 0.4,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/attack_v1.png": 0.4,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/hit_defend_v1.png": 0.4,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/death_v1.png": 0.4,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/support_v1.png": 0.4,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_emberpack_lobbers/ranged_v2.png": 0.4
-      },
-      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
-      "preserved_accepted_clips": []
+        "ranged",
+        "move"
+      ]
     }
   ]
 }
