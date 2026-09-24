@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_near_diagonal",
+        "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1501,
+            1047
+          ]
+        ],
+        "anchor": [
+          772,
+          947
+        ],
+        "scale": 0.4
+      },
+      "source_sha256": "8a84a1dcb1dca1605757692faef34f4b62eb44855746591d0242a2a1f631186c",
+      "input_file": "input_cyan.png",
+      "input_sha256": "9299d4f291ac0f036f5a745c344a314e766a7e8b41867c1f2765ba28d7fecf4f",
+      "runtime_source_scale": 0.214
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_diagonal",
+        "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-far-diagonal-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1501,
+            1047
+          ]
+        ],
+        "anchor": [
+          776,
+          1018
+        ],
+        "scale": 0.4
+      },
+      "source_sha256": "e6299b24370d6734526f7825e9ce3aeee26262fdbecef92fe6402b92ea27ee89",
+      "input_file": "middle_cyan.png",
+      "input_sha256": "aaaa34b3ccbc59b87c3860d4e3fe8796c37be90e08c5b4d160d106327472e1d2",
+      "runtime_source_scale": 0.214
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "input_source_scale": 0.4,
+  "output_scale": 0.5349999999999999
+}
