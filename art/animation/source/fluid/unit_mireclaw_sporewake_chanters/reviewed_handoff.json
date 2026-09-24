@@ -917,8 +917,492 @@
           ],
           "scale": 0.69,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.47878787878787876,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "idle": {
           "indices": [
@@ -1019,18 +1503,69 @@
           "loop": false,
           "static_frame": 0,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
         }
       },
-      "accepted_clips": [
-        "idle",
-        "attack",
-        "ranged",
-        "hit",
-        "defend",
-        "death",
-        "cast"
-      ],
-      "preserve_clips": [],
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/original_lossless.mkv",
+          "sha256": "12f579c71aca7b8993d68f08e0b4e5379542c36dc40a06bf3df71d9d37e3eef8"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/original.json",
+          "sha256": "2277802e3026cfc90d58c9395e947f9e1f00dc3b91c54dee0b63bcc1a315602a"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/workflow_api.json",
+          "sha256": "458275ba3f881847c6736563305ae5fbd1a96a7512d75d7cd122c111185ee668"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/prompt.txt",
+          "sha256": "605a22e14605aa86bb9a6d33da270b5af31bbb690ffb1d0f4c9d0ce4d1b4ab10"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/reference.json",
+          "sha256": "c74ab0a508eb6f707176d603cba4e07ae8433970b3eebe302fe31e4aa51e60ac"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/sporewake_move_h3/matte.json",
+          "sha256": "8ea2041b668667a5154f5284527b6e20f0879cc68d9611173cf8827d3db798c8"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all 124 chronological source frames, enlarged anatomy and alpha on light/dark grounds, and Godot battle-scale phases against accepted idle. Select source0-44 every2 frames: 23 observed poses at42ms (966ms loop) show reciprocal boot contacts, bent-knee passing and weight transfer with one rigid antler staff, stable hand grips and one attached chain censer. Purple cloth survives cyan matting. Original .158 walk scale and fixed anchor480,490 retained through .33 guide scale; no synthetic/reversed frames or per-frame stabilization. H3 repeated the requested cycle three times; only the first complete cycle is used. Visually near-matched seam difference .038 vs median adjacent .102 supports loop selection. Seven prior actions and map idle preserved. Candidate147 focused checks passed; no full suite, continuous manual game playtest or Linux execution claimed."
+      },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_0.png": 0.6,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/idle_v1_1.png": 0.6,
@@ -1048,6 +1583,14 @@
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_5.png": 0.6,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_6.png": 0.6,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/attack_v1_7.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_0.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_1.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_2.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_3.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_4.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_5.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_6.png": 0.64,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_7.png": 0.64,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_0.png": 0.6,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_1.png": 0.6,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/reactions_v1_2.png": 0.6,
@@ -1072,24 +1615,41 @@
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_5.png": 0.69,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_6.png": 0.69,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/cast_v1_7.png": 0.69,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_0.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_1.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_2.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_3.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_4.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_5.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_6.png": 0.64,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters/extracted/ranged_v1_7.png": 0.64
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_000.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_002.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_004.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_006.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_008.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_010.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_012.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_014.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_016.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_018.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_020.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_022.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_024.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_026.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_028.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_030.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_032.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_034.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_036.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_038.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_040.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_042.png": 0.47878787878787876,
+        "art/units/source/generated/video_trials/sporewake_move_h3/matte/rgba_044.png": 0.47878787878787876
       },
-      "source_scale_reason": "Each master has one fixed drawing scale across all its poses. Idle/attack/reactions use 0.60, death 0.495, cast 0.69 and ranged 0.64 to register their differently sized painted figures to the original approximately 226-pixel standing silhouette at reference height 256. Derived extracted images copy unchanged source pixels, so inherit exactly their master scale. No per-pose body normalization or deformation is performed.",
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: lantern-arm articulation, staff melee swing, hand-directed spore release, distinct lantern invocation, recoil/guard and progressive grounded collapse. Deficient movement is not approved."
-      },
-      "unfinished_clips": [
+      "preserved_accepted_clips": [],
+      "accepted_clips": [
+        "idle",
+        "attack",
+        "ranged",
+        "hit",
+        "defend",
+        "death",
+        "cast",
         "move"
-      ],
-      "preserved_accepted_clips": []
+      ]
     }
   ]
 }

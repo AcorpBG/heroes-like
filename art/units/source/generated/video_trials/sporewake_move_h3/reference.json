@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "step_right",
+        "source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-alpha/step-right-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1124,
+            1399
+          ]
+        ],
+        "anchor": [
+          645,
+          1360
+        ],
+        "scale": 0.33
+      },
+      "source_sha256": "19b12d44487d446f7343cbe117a3182e72cb9c4c5d337b31c8b7d68e4969b3cd",
+      "input_file": "input_cyan.png",
+      "input_sha256": "20f2528f0a03793e2077998d9316e30f476813403b9a37f6ec7d5884babc23b0",
+      "runtime_source_scale": 0.158
+    },
+    {
+      "source_frame": {
+        "name": "step_left",
+        "source": "art/animation/source/poses/unit_mireclaw_sporewake_chanters/continuity-alpha/step-left-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1124,
+            1399
+          ]
+        ],
+        "anchor": [
+          645,
+          1360
+        ],
+        "scale": 0.33
+      },
+      "source_sha256": "ffc2dc4bc6ace3d9255a7ef9decfb1b948d26d21c4d77fd1a12d91f20a7f39d2",
+      "input_file": "middle_cyan.png",
+      "input_sha256": "6ee4091334ae30f235098d8d7aef17770f161fd746393ec4efa64034a688090c",
+      "runtime_source_scale": 0.158
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "input_source_scale": 0.33,
+  "output_scale": 0.47878787878787876
+}
