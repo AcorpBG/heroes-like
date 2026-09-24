@@ -7006,33 +7006,37 @@
     "unit_thornwake_sporeglass_menders_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_sporeglass_menders_veteran.png",
       "frame_size": [
-        221,
-        250
+        217,
+        254
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        95.0,
-        238
+        103.0,
+        245
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_sporeglass_menders_veteran.png",
+      "painted_extent": 238,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_sporeglass_menders_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        161,
-        2,
-        382,
-        252
+        45,
+        -1,
+        262,
+        253
       ],
-      "source_sha256": "41e56e3eeda3b1678b29405105abe1ff70fc4e40dcd892225d32c8dc8baeda8c",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_sporeglass_menders_veteran/provenance.json",
-      "sha256": "b57f20e46bfa58120b87e46fb9dfa4ac067f9254c5bd5d0136628d121d25ccc9"
+      "source_sha256": "daf1bdf0f261721201d4041fe199d55bc9e61cd458899125638e3c5fb463047e",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_sporeglass_menders_veteran/provenance.json",
+      "sha256": "d46204dd3b5ac80a30ee7f50baebf67bfa198998e8640feeb3611f94d73a255a"
     },
     "unit_thornwake_seedshield_wardens_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedshield_wardens_veteran.png",

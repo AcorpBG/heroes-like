@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "generations": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v1.png",
+      "image_sha256": "9ee013398561f9ae12fd1c4cf964f5e2d2fcfcae47bb1914c893c38c8cbf2445",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "fb023042c1db78ef6cbd22cc17f71aa34d1798aceafcdcc006f01094cbe8638b",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-fb62b46f-6852-49d3-9b72-e4d753202702.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ],
+      "rejected": true,
+      "reason": "Clipped canopy and bottom boots; no selected poses."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v2.png",
+      "image_sha256": "58cb00b809537dab3f2949d8f96036b0c8656401de4ae8f5ba738f6dd708ec3b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v2.prompt.txt",
+      "prompt_sha256": "1db849b2d8f19fabb0d049cefb4db5df000ffd04fad2e4179a7f99acd546d34a",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5d1ae1a3-dc01-4edd-8a58-6898360419e1.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/attack_v1.png",
+      "image_sha256": "cafaa450c90330c2509592c8d424165196fa7d4722e9711303d24a903be6ff1c",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "2fa296de5fc54799084e0eacc2cb3860caf9bec32fa239d2bbce9a082368c437",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b488a59c-1635-4a45-8d9e-b04cdaf12fee.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/ranged_v1.png",
+      "image_sha256": "8592d4961cb8aae2b948d7566129c92ad854c084c6681ab90d89f9e74f259627",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "af2e1b4d38c0179a54375aeabf5d6dcf10801aa6c4da6e743094c3c90637456f",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-51f2b61f-bd2e-4ec3-9af4-1cf9df887813.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/reactions_v1.png",
+      "image_sha256": "a94a8165391c2b2eceb98f7dabe665efcffd8cba4328c88ad4535686110f8d2d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "d25978420d42c94166f2dec60077d7a6e5b6c904b207eeac0dc1346b6b68ee53",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5133818a-aab9-46bc-a780-175ae86c4225.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/cast_v1.png",
+      "image_sha256": "5e0e503faef383f4b18158ce75c4a758e9cfc7901e06192f672f6de34602972d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "d8ab441c3ca6c30021cd26344038a243e72142aedf5e2f98029851d254162909",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7865b1fc-0d0b-4927-b5ef-1bee154259b4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v1.png",
+      "image_sha256": "9e042ee9df5782c03d190757c5bd37ac816c7ef09ecb04f1ddff586ce5845486",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "b89b24eb84c9f7e9ae61bbc67572b619ab6142c1629a74e4c8c882ccf0c71cdc",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-11daf08b-1216-4e65-991e-581db48f541e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ],
+      "rejected": true,
+      "reason": "Near leg insufficiently exposed under apron; native review repeats ambiguous leading-leg silhouette."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_far_v1.png",
+      "image_sha256": "cecb5d351db026d52b1c474b7688568f932b52b1c1d5bbab887d9771d17b94b7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "ee26d4fd6af68c5f0f85d13f172e65c4d80289dd6842ea2bf823bc650435d86c",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d4c95cec-ef0a-4e79-bbe5-6d6eba22c6a6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/death_v1.png",
+      "image_sha256": "fa19fdbac3a55e55644acd0f0cfde5fa9baff5aed23968325e501c65fcb55157",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "b6eb50ee0b3e4b4f056082a75f989dcdf4295b174847f3491d670e9285583962",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c34b4e43-7795-48b1-baca-75e4a0eef985.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v2.png",
+      "image_sha256": "8464bd764eb098389964de7c1138d0b1de35ab2263ea29d2b2b046313aacddbf",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v2.prompt.txt",
+      "prompt_sha256": "1f20f913123af326b2a078c5686e9c0e00d151e2b4f4f61ab48266882112f0f2",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-176aa853-52eb-408f-a935-b55e9539fe9f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/move_near_v1.png",
+          "sha256": "dcdbe6cbce0416d5a9db385181dd6cfc3ccf4ddfcd1b97ad94ea07ee78f8b1bd"
+        }
+      ],
+      "rejected": true,
+      "reason": "Correct foreground near-leg topology, but cells1-3 borrow ivory root shin armor from motion reference. Requires costume correction."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v3.png",
+      "image_sha256": "7b3b9c958233877c380690c656f2d1fabd6051c9bd75ead2f9de943f21469a75",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v3.prompt.txt",
+      "prompt_sha256": "7b38dabff9d7a801969558851d0d3259850076ed553fa8f351614092dec21c8c",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-0c19cdbc-5ed9-4cd6-b4d8-79923ac8c50c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/identity_reference.png",
+          "sha256": "d3625d466aff2ab93b4d45166655b70712e691a1c1ec8b9c4dfce44c18e5f2b9"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v2.png",
+          "sha256": "8464bd764eb098389964de7c1138d0b1de35ab2263ea29d2b2b046313aacddbf"
+        }
+      ]
+    }
+  ]
+}
