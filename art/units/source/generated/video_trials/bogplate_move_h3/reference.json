@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "source_frame": {
+    "name": "move_contact_a",
+    "source": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+    "rects": [
+      [
+        0,
+        0,
+        1210,
+        1300
+      ]
+    ],
+    "anchor": [
+      600,
+      1260
+    ],
+    "scale": 0.36
+  },
+  "source_sha256": "c7f29ff947d2f1123d0160b268c1942f53ef7e4c7324341b6ed710818f43ae2b",
+  "input_sha256": "44eca8eda3fb54d30173ef508da88a252b7c9f70ed60e318e37331ce4cbb77f0",
+  "input_source_scale": 0.36,
+  "runtime_source_scale": 0.17,
+  "output_scale": 0.47222222222222227,
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "canvas": [
+    960,
+    544
+  ]
+}

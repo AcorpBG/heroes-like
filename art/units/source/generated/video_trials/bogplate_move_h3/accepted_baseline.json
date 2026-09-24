@@ -1,0 +1,170 @@
+{
+  "id": "unit_mireclaw_bogplate_maulers",
+  "unit_id": "unit_mireclaw_bogplate_maulers",
+  "name": "Bogplate Maulers",
+  "faction_id": "faction_mireclaw",
+  "tier": 3,
+  "role": "melee",
+  "motif": "melee",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_mireclaw_bogplate_maulers.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_mireclaw_bogplate_maulers.png",
+  "curated_source_sha256": "c77d8b089bf4a8aa352825621db0a65efac291bb5ada040a67feb13d73150ecd",
+  "pose_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_bogplate_maulers.png",
+  "pose_frame_size": {
+    "width": 312,
+    "height": 288
+  },
+  "pose_columns": 5,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "loop": true,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "loop": true,
+      "frame_msec": 180,
+      "static_frame": 0
+    },
+    "dead": {
+      "indices": [
+        36
+      ],
+      "frames": 1,
+      "frame_msec": 100,
+      "loop": false,
+      "static_frame": 0,
+      "authored_timing": true
+    },
+    "attack": {
+      "indices": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "frame_msec": 90,
+      "loop": false,
+      "static_frame": 0,
+      "contact_frame": 4,
+      "frames": 8,
+      "authored_timing": true
+    },
+    "hit": {
+      "indices": [
+        21,
+        22,
+        23,
+        24
+      ],
+      "frame_msec": 90,
+      "loop": false,
+      "static_frame": 0,
+      "frames": 4,
+      "authored_timing": true
+    },
+    "defend": {
+      "indices": [
+        25,
+        26,
+        27,
+        28
+      ],
+      "frame_msec": 90,
+      "loop": false,
+      "static_frame": 3,
+      "frames": 4,
+      "authored_timing": true
+    },
+    "death": {
+      "indices": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "frame_msec": 110,
+      "loop": false,
+      "static_frame": 0,
+      "frames": 8,
+      "authored_timing": true
+    },
+    "cast": {
+      "indices": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "frame_msec": 90,
+      "loop": false,
+      "static_frame": 0,
+      "contact_frame": 4,
+      "frames": 8,
+      "authored_timing": true
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack"
+  },
+  "pose_provenance": "res://art/animation/source/fluid/unit_mireclaw_bogplate_maulers/provenance.json",
+  "pose_review_status": "accepted_selected_fluid_clips",
+  "pose_ground_margin": 12,
+  "pose_reference_height": 256,
+  "pose_source_facing": "right",
+  "pose_accepted_clips": [
+    "attack",
+    "hit",
+    "defend",
+    "death",
+    "cast",
+    "idle"
+  ]
+}

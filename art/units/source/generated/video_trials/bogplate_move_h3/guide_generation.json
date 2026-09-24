@@ -1,0 +1,21 @@
+{
+  "tool": "built_in_image_gen",
+  "reference": "art/animation/source/poses/unit_mireclaw_bogplate_maulers/continuity-alpha/walk-phase-0-crossing-corrected-green.png",
+  "reference_sha256": "c7f29ff947d2f1123d0160b268c1942f53ef7e4c7324341b6ed710818f43ae2b",
+  "outputs": [
+    {
+      "image": "art/units/source/generated/video_trials/bogplate_move_h3/opposed_contact_v1.png",
+      "sha256": "6380dd247275346767022e2289e452b1b62ffdd293f2a5bd63f994bcead0aa3b",
+      "prompt": "opposed_contact_v1.prompt.txt",
+      "prompt_sha256": "cb462b5a0f1f7d198d3dfedeb99964f8d9b51e25dd741287c53351c572e29972",
+      "review": "rejected: repeats near leg leading"
+    },
+    {
+      "image": "art/units/source/generated/video_trials/bogplate_move_h3/opposed_contact_v2.png",
+      "sha256": "92467870d52d5ac09bdb737fcf4a5ae5cee41f96da1f88e2d5a062930ee7f01d",
+      "prompt": "opposed_contact_v2.prompt.txt",
+      "prompt_sha256": "76b899a2381ac31cc68bb1fb79116fc2dcd538c3bde70d5024157a9ea440edd0",
+      "review": "opposed contact guide: near knee now behind on image left; far boot forward, upper body and rigid hammer retained"
+    }
+  ]
+}
