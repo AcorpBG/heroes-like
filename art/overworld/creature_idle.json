@@ -6193,33 +6193,37 @@
     "unit_mireclaw_bogplate_maulers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_bogplate_maulers_veteran.png",
       "frame_size": [
-        312,
-        250
+        323,
+        258
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        100.0,
-        238
+        107.0,
+        250
       ],
-      "painted_extent": 296,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_bogplate_maulers_veteran.png",
+      "painted_extent": 307,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_bogplate_maulers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        156,
-        2,
-        468,
-        252
+        105,
+        30,
+        428,
+        288
       ],
-      "source_sha256": "426a1a185305f9468c3090a3dc4372f6d5cad475a0e14be801dd19ffe8220e25",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_bogplate_maulers_veteran/provenance.json",
-      "sha256": "31825188472df816242fb71fda55845469734d092d89428f42fa478ff5d8e2bb"
+      "source_sha256": "439459890ed40fbc496fd83e023be86d942c97c6daa4fcd420fc6f8d68240651",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_bogplate_maulers_veteran/provenance.json",
+      "sha256": "d0e544e5d17798925d370eb3d15a5dfc3c5e58ac940902dcd9b97831bc4b0e5c"
     },
     "unit_mireclaw_ferrychain_lashers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_ferrychain_lashers_veteran.png",
