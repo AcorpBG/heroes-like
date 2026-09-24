@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png": "ef83dd73fa9194110ad2b9c57d682ef284487d5088a51c3ca0eb8a434f33d6ee",
+    "res://art/units/source/generated/fluid_animation/comparison_20260924/astra/near_half_v2.png": "f362f8ff3874af57c2ecd7437594f7b6222819620a3bfce3e2639264271c3a7d",
+    "res://art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v3.png": "59c76a3bd50f6dc9754c70ae48079d0646dfb93279aeb69daea7e2e4cb162404",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_v1.png": "91c63cdc82dc0bc917be2773da24d83c1197fc04b9156eed854f74de206ee372",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_windup_correction_v1.png": "621780d1419758cc3c478cae5753ff33e10eb569f20a993d372adcfbdb51cbd0",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/reactions_v1.png": "06fe5f6316bddca38bee8ec6720f422db701ac12e68c63b76a66afac810dca33",
+    "res://art/units/source/generated/fluid_animation/comparison_20260924/astra/cast_cycle_v1.png": "6f1c4661fbee731f5276581c9a50e9ce6195e802ba17c59b353a27c8c85d0225",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/death_v1.png": "2175e0ecf308dd1ed004e6458bd4d02db3487b093106e2e9834fd56c2eae90ce",
+    "res://art/units/source/generated/fluid_animation/comparison_20260924/astra/death_middle_v2.png": "bc30d56b30447aadab84f197cfa240989565c8334f30e406d7296f568fcfaffc"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Parent independently inspected original sources and Windows Godot 128px/64px ordered phases. Accepted revised near/far gait with contacts at indices2/6, coherent low-hand idle and physical support, inherited dual-sickle attack/reactions, and nine-pose collapse retaining both dropped weapons. One source-wide anatomical scale per original. All seven actions approved; no continuous viewing or manual playtest claimed. Astra comparison revision1 selected; Luna and Sol candidates remain unpublished."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "398790d0af45363d37c00b825c30d3695c23c408e5d34bda368a61ca696591e9",
+  "atlas_sha256": "e98e07ebe13a923afc6c43eb3567e49f0a606938dd538f4174c9fe98f0075860",
+  "texture_bytes_rgba": 18969600
+}

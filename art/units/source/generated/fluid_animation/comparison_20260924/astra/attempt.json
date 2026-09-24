@@ -1,0 +1,89 @@
+{
+  "model": "gpt-6-astra",
+  "effort": "high",
+  "start_utc": "2026-09-24 06:22:48 UTC",
+  "new_generation_calls": 9,
+  "shared_generation_calls": 12,
+  "status": "ready-for-parent-review",
+  "claimed_ready_actions": [
+    "idle",
+    "move",
+    "attack",
+    "cast",
+    "hit",
+    "defend",
+    "death"
+  ],
+  "unresolved_defects": [],
+  "selected_masters": [
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/cast_cycle_v1.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/death_middle_v2.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_half_v2.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v3.png"
+  ],
+  "reference_only_masters": [
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_key_v1.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_contact_v2.png"
+  ],
+  "first_complete_candidate_utc": "2026-09-24 06:37:31 UTC",
+  "first_submission_elapsed_seconds": 883,
+  "parent_review_rounds": 1,
+  "usage": "unavailable",
+  "focused_checks": {
+    "assertions": 117,
+    "failures": 0,
+    "native_platform": "Windows",
+    "native_godot": "4.6.2",
+    "ordered_128px_phases_inspected": true,
+    "ordered_64px_phases_inspected": true,
+    "continuous_playback_observed": false,
+    "manual_playtest": false,
+    "linux_execution": false
+  },
+  "rejected_masters": [
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/move_cycle_v1.png",
+    "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v2.png"
+  ],
+  "retained_reference_only": [
+    "near_key_v1.png",
+    "near_contact_v2.png"
+  ],
+  "limitations": [
+    "No continuous playback observation",
+    "No live overworld shader observation",
+    "No Linux run",
+    "Parent independent acceptance pending"
+  ],
+  "first_submission_handoff_finished_utc": "2026-09-24 06:39:05 UTC",
+  "cleanup": {
+    "removed_bytes": 344658,
+    "removed_files": 3,
+    "scope": "Disposable source inspection crops only",
+    "rebuildable": true,
+    "preview_retention": "Explicit comparison review requirement"
+  },
+  "review_round_1_started_utc": "2026-09-24 06:40:32 UTC",
+  "review_round_1_candidate_utc": "2026-09-24 06:49:51 UTC",
+  "review_round_1_elapsed_seconds": 559,
+  "review_round_1_new_calls": 4,
+  "review_round_1_focused_checks": {
+    "assertions": 117,
+    "failures": 0,
+    "native_move_and_death_phases_inspected": true
+  },
+  "first_submission_outcome": "Rejected by parent: ambiguous gait and missing dropped blade in death crop",
+  "movement_contact_sources": {
+    "near": {
+      "native_index": 2,
+      "source": "near_half_v2.png",
+      "source_cell": 2
+    },
+    "far": {
+      "native_index": 6,
+      "source": "far_half_v3.png",
+      "source_cell": 2
+    }
+  },
+  "review_round_1_handoff_finished_utc": "2026-09-24 06:50:49 UTC"
+}

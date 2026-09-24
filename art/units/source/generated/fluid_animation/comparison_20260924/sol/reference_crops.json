@@ -1,0 +1,38 @@
+[
+  {
+    "source": "art/animation/source/poses/unit_thornwake_seedcutters_veteran/unit_thornwake_seedcutters_veteran-alpha.png",
+    "source_sha256": "bbaad87cc22cea9b89ac33bd9b7c2ef61c86cc3e3436586662744fd7c5d5624a",
+    "crop": [
+      0,
+      0,
+      627,
+      627
+    ],
+    "output": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+    "output_sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+  },
+  {
+    "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+    "source_sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab",
+    "crop": [
+      0,
+      0,
+      627,
+      357
+    ],
+    "output": "art/units/source/generated/fluid_animation/comparison_20260924/sol/identity_upper_reference.png",
+    "output_sha256": "329f332ee9eaa92db34826070e82cb9507c661a8cb3045d529fbfbb3e298383f"
+  },
+  {
+    "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_near_v1.png",
+    "source_sha256": "abece6feead0ff9feebd7adb68f9d5113c0ebf304ad0e03107afad28543f4a82",
+    "crop": [
+      180,
+      220,
+      650,
+      510
+    ],
+    "output": "art/units/source/generated/fluid_animation/comparison_20260924/sol/lensbearer_near_leg_pose_reference.png",
+    "output_sha256": "34a2846992c0f395c93a0d768c7856f42fd7f1e9e591c61321a58cc7e18792ad"
+  }
+]

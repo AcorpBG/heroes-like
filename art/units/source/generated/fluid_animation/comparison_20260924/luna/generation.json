@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "generations": [
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_phases_v1.png",
+      "image_sha256": "8284618e697522d46182a1ba63a4eb49736739b581ce23c3e5ec7f73d3423c5a",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_phases_v1.prompt.txt",
+      "prompt_sha256": "955baa543bf7ffbbbc77a2b2ca8bff7a766ab190683ff635e69bd7563e52cc46",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-cc940717-39ad-42f6-84e7-6468db15e1fa.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "pose_depth_and_phase",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "pending_visual_inspection",
+      "attempt_name": "move_near_phases_v1",
+      "visual_review": "All four cells lead with the far/image-right leg; no reciprocal crossover.",
+      "rejected_for_gait": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_anchor_v1.png",
+      "image_sha256": "484db5c2dadbe12e7b76abce8f9f2f2c593be75d77b4f2f0a5f8e492571eaea4",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_anchor_v1.prompt.txt",
+      "prompt_sha256": "fc8d6fd95f7b31cf3445afa50b5db32c4fae1f87a91dcec1871a39eaa1ebcfa4",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-ca166895-f840-44a2-983b-27b0703bb617.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "edit_target_identity",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "leg_depth_pose_guide",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "pending_visual_inspection",
+      "attempt_name": "move_anchor_v1",
+      "visual_review": "Tabard remains in front of the thighs; no near-leg foreground overlap.",
+      "rejected_for_gait": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+      "image_sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.prompt.txt",
+      "prompt_sha256": "c58e2a60ca95c8f1eabe4f6d2c1008235fe0b5ba01be6d9e0a8e795a37095e45",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-0439fbce-6169-4238-baa2-5ee74b4d19eb.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "edit_target_pose_only",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style_equipment",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "provisional_near_leg_topology_anchor",
+      "attempt_name": "move_pose_first_v1",
+      "visual_review": "One qualifying near-thigh crossover pose only; preserved as a reference, not packed as movement.",
+      "provisional_reference_only": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_variants_v1.png",
+      "image_sha256": "db63f24d678ee4da46471f7fd0211f709a8fbf01fe5aeda2f4a7db934451cb4d",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_variants_v1.prompt.txt",
+      "prompt_sha256": "d935e59c059561edae0aeab639189435317f9937a6ff5f638bbfbad6517ba368",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-174f19c9-03f7-4bb6-9961-aaa95cd23f59.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "near_leg_topology_and_character_pose",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "pending_visual_inspection",
+      "attempt_name": "move_near_variants_v1",
+      "visual_review": "One of four cells retains the crossover; the remaining cells revert to tabard-front/far-leg topology, so the sheet is not a gait.",
+      "qualifying_cells": [
+        1
+      ],
+      "qualifying_cells_packed": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v1.png",
+      "image_sha256": "b858634f8554ade4a05fbab66027d1da2beb5e71d1601ce07d62ee2cf3b8f576",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v1.prompt.txt",
+      "prompt_sha256": "b9d0e0eca484fe937098bb3f8318f12e633850c008b53c6242ac9c7e12816fed",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-7cc7bc98-6673-40c5-80f1-1a31fdb8fe1d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "near_leg_crossover_pose_edit_target",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style_equipment",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "pending_visual_inspection",
+      "attempt_name": "move_near_contact_v1",
+      "visual_review": "Near-heel contact edit returns to tabard-front/far-leg topology.",
+      "rejected_for_gait": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v2.png",
+      "image_sha256": "f81456ad0bd573f5221515dbf0703662794d53c5540f2daebdcfec2d42d283d4",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v2.prompt.txt",
+      "prompt_sha256": "5a0d4ea33e4c03e2ad0f5d41941ba46f156d1f44bf61897c7ecc564c59f823b2",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d213-dc2f-70a2-be7d-f21814d42801/exec-562df1aa-7daa-4e8a-8137-b7928528630f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "single_edit_target",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        }
+      ],
+      "selected_for_candidate": false,
+      "review_status": "pending_visual_inspection",
+      "attempt_name": "move_near_contact_v2",
+      "visual_review": "Single-image edit likewise leaves the tabard in front; no reciprocal loading/contact phases.",
+      "rejected_for_gait": true
+    }
+  ]
+}

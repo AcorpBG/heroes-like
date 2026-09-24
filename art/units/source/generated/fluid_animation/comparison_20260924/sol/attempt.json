@@ -1,0 +1,20 @@
+{
+  "model": "gpt-6-sol",
+  "effort": "xhigh",
+  "start_utc": "2026-09-24 06:22:34 UTC",
+  "first_complete_candidate_utc": "2026-09-24 06:52:24 UTC",
+  "review_rounds": [{"at_utc": "2026-09-24 06:55:22 UTC", "accepted": false, "feedback": ["near gait thigh still emerges below tabard and second-half design changes", "idle low-wide to high single-hand jump", "death middle body scale too large and missing dropped blade at index5", "physical support arms-wide to unrelated grip jump"]}],
+  "finish_utc": "2026-09-24 07:06:23 UTC",
+  "first_submission_elapsed_seconds": 1790,
+  "total_elapsed_seconds": 2629,
+  "accepted_completion_elapsed_seconds": null,
+  "new_generation_calls": 10,
+  "shared_generation_sources": 12,
+  "selected_new_masters": ["move_near_v9.png (frozen evaluation handoff only; visually unaccepted)"],
+  "rejected_new_masters": ["move_near_v1.png", "move_near_v2.png", "move_near_v3.png", "move_near_v4.png", "move_near_v5.png", "move_near_v6.png", "move_near_v7.png", "move_near_v8.png", "move_near_v9.png (failed parent gait review)", "move_near_v10.png"],
+  "focus_check_results": ["six-clip shared-source recipe: 102 focused checks, zero failures, native 128px overview inspected", "eight-pose move v7 trial: 116 focused checks, zero failures, native 128px overview showed costume and blade change", "eight-pose move v8 trial: 116 focused checks, zero failures, native 128px overview inspected", "first complete candidate with move v9: 116 focused checks, zero failures, native 128px overview inspected", "post-review idle/support/death revision1a: 116 focused checks, zero failures, native 128px overview inspected", "10 exact submitted prompts, generation outputs, references and hashes verified; all seven handoff clips remain pending visual acceptance"],
+  "claimed_ready_actions": ["idle", "attack", "cast", "hit", "defend"],
+  "unresolved_defects": ["move: no source painting proves the pouch-side near thigh crossing in front of the central tabard; proposed near-half also differs in outfit silhouette from inherited far-half", "death: source-wide middle-fall scale 0.270 appears undersized relative to standing and final corpse at 128px; parent has not accepted it", "continuous playback and manual playtest unobserved"],
+  "usage_measurement": "unavailable",
+  "cleanup": {"removed_task_owned_probes": 5, "removed_bytes": 2132420, "rebuildable": true, "native_previews_preserved_for_parent": true}
+}
