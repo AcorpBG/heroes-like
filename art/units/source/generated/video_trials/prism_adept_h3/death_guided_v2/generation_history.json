@@ -1,0 +1,920 @@
+{
+  "prompt": [
+    52,
+    "90247cc1-0916-4b25-be75-00134d4cf89e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adept_death_input_green.png"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. This exact Prism Harrier, a young adult female fantasy crossbow soldier with ivory hood and blue lining, long dark hair, face looking RIGHT, gold-edged white and royal blue split tabard with gold sun star, dark leggings, two gold boots, gold/blue gloves, iridescent blue-gold crystal shoulder plates, crystal bolt pouch at her image-left hip. Exactly two arms, two hands and two legs. ONE rigid elaborate gold/blue crystal CROSSBOW held diagonally across her waist pointed toward image-right, trigger hand at image-left side of her chest and support hand beneath the forward stock. Keep original stock length, curved bow limbs, thin bowstring, central blue gem and crystal muzzle; no additional weapons, shield, staff, bolts, particles or flashes. One continuous non-graphic defeat and collapse from the supplied upright ready pose to the supplied fully grounded side-lying corpse. Slow heavy continuous physical fall over first THREE seconds. Ready to kneeling at frame34, roll down to supplied corpse by frame72, then rest. Brief recoil and loss of balance, BOTH knees bend and buckle, torso lowers naturally, one knee reaches ground, body tips down onto her side, shoulder then head settle onto folded arm, both legs come to rest sideways as in final guide. Keep head/torso size unchanged through fall. Crossbow is ONE rigid object retained by the same two hands as they lower it together; bow comes to rest flat on ground in front of body, never upright or floating. Cloth folds under body. Eyes close and face becomes motionless. All materials stay FULLY OPAQUE AND SHARP THROUGH EVERY FRAME including crossbow panels and solid gold bow limbs; NO ghosting, dissolves, transparency, motion smears, morphing or crossfades. Hands physically lower and rotate the crossbow together with the falling torso, never release it or drag it separately afterward. Bow is already resting in front when shoulder/head touch ground. No getting back up, fading, disappearing, dismemberment, blood, stretching anatomy, extra limbs or equipment duplication. Preserve intended local fall and grounded contact. Begin fall promptly; complete by final quarter and remain completely motionless at terminal corpse. No camera movement, zoom or perspective changes. Entire hood, both boots and complete weapon visible with generous margins. Background perfectly uniform PURE GREEN RGB(0,255,0), no floor, shadows, gradients, text or scenery.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "4",
+            0
+          ],
+          "last_frame": [
+            "16",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adept_death_corpse_green.png"
+        }
+      },
+      "17": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adept_death_kneel_green.png"
+        }
+      },
+      "18": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 34,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "17",
+            0
+          ]
+        }
+      },
+      "19": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "18",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 72,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "16",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "19",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092435
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "prism_adept_h3/death_guided_v2/original",
+          "format": "mp4",
+          "format.codec": "h264"
+        }
+      },
+      "15": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "filename_prefix": "prism_adept_h3/death_guided_v2/frames/decoded"
+        }
+      }
+    },
+    {
+      "client_id": "prism_adept_death_h3",
+      "create_time": 1790276339208
+    },
+    [
+      "15",
+      "14"
+    ]
+  ],
+  "outputs": {
+    "15": {
+      "images": [
+        {
+          "filename": "decoded_00001_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00002_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00003_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00004_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00005_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00006_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00007_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00008_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00009_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00010_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00011_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00012_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00013_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00014_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00015_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00016_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00017_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00018_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00019_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00020_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00021_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00022_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00023_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00024_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00025_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00026_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00027_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00028_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00029_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00030_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00031_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00032_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00033_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00034_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00035_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00036_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00037_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00038_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00039_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00040_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00041_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00042_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00043_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00044_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00045_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00046_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00047_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00048_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00049_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00050_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00051_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00052_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00053_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00054_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00055_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00056_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00057_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00058_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00059_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00060_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00061_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00062_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00063_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00064_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00065_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00066_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00067_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00068_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00069_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00070_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00071_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00072_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00073_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00074_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00075_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00076_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00077_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00078_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00079_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00080_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00081_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00082_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00083_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00084_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00085_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00086_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00087_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00088_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00089_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00090_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00091_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00092_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00093_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00094_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00095_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00096_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00097_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00098_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00099_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00100_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00101_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00102_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00103_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00104_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00105_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00106_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00107_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00108_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00109_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00110_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00111_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00112_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00113_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00114_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00115_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00116_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00117_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00118_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00119_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00120_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00121_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00122_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00123_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00124_.png",
+          "subfolder": "prism_adept_h3\\death_guided_v2\\frames",
+          "type": "output"
+        }
+      ]
+    },
+    "14": {
+      "images": [
+        {
+          "filename": "original_00001_.mp4",
+          "subfolder": "prism_adept_h3\\death_guided_v2",
+          "type": "output"
+        }
+      ],
+      "animated": [
+        true
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "90247cc1-0916-4b25-be75-00134d4cf89e",
+          "timestamp": 1790276339210
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "16",
+            "8",
+            "9"
+          ],
+          "prompt_id": "90247cc1-0916-4b25-be75-00134d4cf89e",
+          "timestamp": 1790276339222
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "90247cc1-0916-4b25-be75-00134d4cf89e",
+          "timestamp": 1790276461451
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "15": {
+      "node_id": "15",
+      "display_node": "15",
+      "parent_node": null,
+      "real_node_id": "15"
+    },
+    "14": {
+      "node_id": "14",
+      "display_node": "14",
+      "parent_node": null,
+      "real_node_id": "14"
+    }
+  }
+}
