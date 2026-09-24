@@ -35,7 +35,27 @@
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_04.png": "839ecf81e1d6468014f5997c0141dae3b2058c631d2db7622c6e98a62cee4044",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_05.png": "fde67d0ddbb29785c8f351d1c1ba9214adb660a742e0f75c2db2bf061fc9a097",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_06.png": "3f55315ebe60dc45120d68cf327d3bea955fe0706a09cde283b229b24a6e6f1a",
-    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png": "730fbc9495bf14006b0fd033cacbcab5286ca6841acc4e1c4dae9cde775c741f"
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_sumpstone_guards/prepared/cast_v2_07.png": "730fbc9495bf14006b0fd033cacbcab5286ca6841acc4e1c4dae9cde775c741f",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_040.png": "5d4fdd792656c968d475a5d6b7ec3a3298b4c52b0fe92e1c3d8fda675afeb70c",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_042.png": "6d3676f672471fe5caf4a4f345b0062e5544e892f01ddef77f3444651c1b93b5",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_044.png": "dd62b8bc94ee1815bc748db50ea6f5e1624eb83b665d283ec0c95b512d020bf4",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_046.png": "04ffd8eda551bcf6a31fdd36f9d84d0f79e0f359b5615777a00af16611769382",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_048.png": "b2d20ee26e5fe1642497ceec9686c4eba2c070c1004076ac90391ea9d7e389d4",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_050.png": "81e614d1c18ea35cf13b38c13af299deeb73ab9ac780bcc1c1cb9a7dae4f98cb",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_052.png": "2a3b123ff25302ab9b40fed1cb629c1511bf0aea2a82439de5d08487ce9f5f74",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_054.png": "c3d8a1968be1b580a635cd3cdc4538712451d8939ee9e8acad5c8e7c18f939f9",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_056.png": "8a6dae030bd601529633b63c3cd569ccb085bfdf22fc69820ea48703be20be80",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_058.png": "f95700cfe3c0ea3db7ae2c5e2b908a15407c19e22d98d692c74126796d5328a0",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_060.png": "07e3ef5dc3b1ca82d6a472a9cd887c1028600f71127d8fafc22a24d268e5ce91",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_062.png": "9978fe6d26e65ae6a6823d46066d605e8f1ec47e55e7245808d51645c9c6b358",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_064.png": "5a964a100da93153225f4f2e3bf5469a613a592ac179f1fce9bd6b41d64dc944",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_066.png": "dc12f790bca26ee78d87e0c8e7f32fa084973b1ab863acd301116e2f68724822",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_068.png": "1756441ce59507225b6967cc86d8db26750fba3220c795ebd1f5e5dc3f285ca9",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_070.png": "fbe277012b2681efc9caf98398b36bfe05a94c17eec6360412a9c82e3b09f11d",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_072.png": "6d7b646d968ae77defd7085b4d69b0f453b8aefb18d29f500abbf1d7ecdc829a",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_074.png": "7922fb80e56a497cf9ab3ebd33dfbb39353fa2a231371293ddd92c7e47a472f6",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_076.png": "bfc132133d883e9acabea906ea15c901e9d6163eba88712ead3ac767ea65cd9f",
+    "res://art/units/source/generated/video_trials/sumpstone_move_h3/matte/rgba_078.png": "48efd0636f0553ad3486f1335f5ac3748805e8c084cd10debe38316c09d08d42"
   },
   "accepted_clips": [
     "attack",
@@ -43,16 +63,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native review: articulated pick-hand idle, pick swing, shield brace, support salute and collapse accepted. Repaired gait alternates feet but contact and inbetween paintings visibly differ in color, so movement is withheld."
+    "notes": "Reviewed 124 chronological source frames, enlarged light/dark alpha samples and native battle-scale candidate overview. Selected second reciprocal walking cycle, source frames40-78 every2 at65ms,20 observed poses,1300ms loop. Both armored boots alternate contact/passing; red beard, headlamp, pick grip and rigid violet/cyan crystal shield retain identity. Fixed .424 extraction scale matches original .212 contact scale and accepted idle/attack. Pure-green matte preserves crystal colors without a colored fringe. Candidate116 focused checks pass. Preserve six earlier accepted actions and unchanged map idle. No manual game playtest or continuous playback claimed."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "8259c79e1f5c36015afbcd275b2ede678e4599fc7eed94d132a1b2868cf843b6",
-  "atlas_sha256": "5c77164a5f2cdce39ac94ebbb16ad497ea4a359dee2a388eb6e3dcf4d487915e",
-  "texture_bytes_rgba": 10723328
+  "atlas_sha256": "30c7fe8a4309b218838484e2a2e82ecf49f53848b5908a9db4d5993a173d6ae4",
+  "texture_bytes_rgba": 14531328
 }

@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sumpstone_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. The exact Sumpstone Guard dwarf in these references performs a heavy reciprocal WALK IN PLACE. Preserve the same stocky short-legged body, braided red beard, metal helmet with cyan circular headlamp, dark fractured stone plate armor with brass seams, blue tabard, violet/cyan shoulder crystals, exactly two armored legs and two arms. The hand on IMAGE LEFT holds the original short pickaxe shaft firmly throughout; keep both crystal pick tips rigid, equal original length and pointed as shown. The arm on IMAGE RIGHT carries the same tall kite-shaped crystal shield, with its original navy, cyan, white and violet faceted colors and brass rim. Shield remains rigidly strapped and gripped, never becomes part of the leg or doubles. Keep all crystal color, shape and placement consistent: no extra glow, sparkles or magical particles. Begin with the boot under the shield (IMAGE RIGHT) reaching forward, sole visible, opposite leg behind. Plant that boot heel then toe, load the weight, lift the other boot from behind, flex its knee, pass it beneath the hips, and extend it into the opposite forward contact at the midpoint guide. Then plant the midpoint leading boot and repeat with the other leg to return to the initial pose. Both legs must each perform contact, support, toe-off, passing and forward reach, not repeat the same boot. Short heavy steps with believable weight transfer, no hopping, exaggerated high knees, limb stretching or shuffling both feet together. The pick hand and shield arm articulate slightly at elbows to balance the armor but stay on the original grips, with no attacks or shield bash. Beard and tabard sway subtly. Torso remains centered with natural small weight shifts; camera and body scale are fixed. No turning, zoom, horizontal travel or perspective change. Keep every boot, pick tip, crystal and shield edge inside the canvas. Finish exactly in the first pose to complete a seamless two-step cycle. Background remains perfectly uniform PURE GREEN RGB(0,255,0) in every frame. Do not change this green backdrop. No floor, cast shadow, scenery, text, smoke, effects, gradients, motion blur or other objects.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092414
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "sumpstone_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "sumpstone_move_h3/frames/decoded"
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sumpstone_walk_middle_green.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "frame_idx": 61,
+      "image": [
+        "16",
+        0
+      ]
+    }
+  }
+}
