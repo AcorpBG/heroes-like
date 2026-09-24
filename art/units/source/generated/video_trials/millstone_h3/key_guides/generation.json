@@ -1,0 +1,37 @@
+[
+  {
+    "image": "art/units/source/generated/video_trials/millstone_h3/key_guides/release_v1.png",
+    "sha256": "9c6e9ef6eaf8755c1aed183aca467c5e23e634c6a9ac6a6aef16b0b8374c2a22",
+    "prompt": "art/units/source/generated/video_trials/millstone_h3/key_guides/release_v1.prompt.txt",
+    "prompt_sha256": "5c31a39c59c8bef7c5ae0831b4b5a09d2be0d846726d2e17ae40fa7cacc31617",
+    "reference": "art/units/source/generated/video_trials/millstone_h3/identity_reference.png",
+    "reference_sha256": "9aa980945f4969b4d680e1bfe0c23bbd546bc536a28f117f983b4facf6d2a746",
+    "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-835ac3ed-6b68-4d98-8800-4c7b25749552.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit"
+  },
+  {
+    "image": "art/units/source/generated/video_trials/millstone_h3/key_guides/walk_contacts_v1.png",
+    "sha256": "7fb32a8971d96f4a72fa9deed4293c6662b9604d986cbf93216498cc217452f4",
+    "prompt": "art/units/source/generated/video_trials/millstone_h3/key_guides/walk_contacts_v1.prompt.txt",
+    "prompt_sha256": "7646db41fa2a1cb222c8eb8b02badd59b02a9cfae648043101da7cdb9c04bcf3",
+    "reference": "art/units/source/generated/video_trials/millstone_h3/identity_reference.png",
+    "reference_sha256": "9aa980945f4969b4d680e1bfe0c23bbd546bc536a28f117f983b4facf6d2a746",
+    "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-74b26b15-f41e-4870-a9b3-6a417d5c285c.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit",
+    "review": "Both contacts repeat same leading leg; left contact usable as fixed three-quarter walking identity guide, right contact is not an opposite-leg guide."
+  },
+  {
+    "image": "art/units/source/generated/video_trials/millstone_h3/key_guides/prerelease_v1.png",
+    "prompt": "art/units/source/generated/video_trials/millstone_h3/key_guides/prerelease_v1.prompt.txt",
+    "prompt_sha256": "89a23fb32ff8406227b9b7c620e7f3bb80e15b06a32f6368d16cfff61a6c012c",
+    "reference": "art/units/source/generated/video_trials/millstone_h3/key_guides/release_v1.png",
+    "reference_sha256": "9c6e9ef6eaf8755c1aed183aca467c5e23e634c6a9ac6a6aef16b0b8374c2a22",
+    "review": "One compact loaded-sling anticipation key with exactly two hands, forearm-length parallel cords and one cup; source scale.195 to preserve body height.",
+    "sha256": "82224777c08beadf1a254bbd7c335002fdd82f044a53a160310e11240fccd813",
+    "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-abf2cc48-c1c8-4501-bf99-a9d27864e59e.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit"
+  }
+]
