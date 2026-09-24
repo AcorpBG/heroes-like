@@ -4569,22 +4569,22 @@
       "painted_extent": 225,
       "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_quenchspool_slingers.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
         5,
         6,
         7,
-        8,
-        9,
-        10,
-        11,
-        12
+        8
       ],
       "source_crop": [
         28,
-        -2,
+        18,
         266,
-        239
+        259
       ],
-      "source_sha256": "7273a12d8f4f7f1efa9af7c47ee9cfdd640ebaf1c63976c8a8f98dec7254e880",
+      "source_sha256": "8e879118d1ab13e59d3251651d31304701ff3fd25a10883a313889807cdee8a1",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_quenchspool_slingers/provenance.json",
       "sha256": "afdeeca15b2c6a6d2482c714042166a9fdeb52a9875e502a3aabdac8f11d6036"
     },

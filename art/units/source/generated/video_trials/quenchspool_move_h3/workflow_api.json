@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "quenchspool_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate the exact Quenchspool Slinger woman in the reference performing a steady reciprocal WALK IN PLACE for two complete left-right cycles and returning to the reference stance. Preserve her face, brown hair in high bun, round brass goggles on forehead, black scarf, brass shoulder plate and kneecaps, dark trousers, leather apron, tall strapped boots with brass toes, red rear cloth and the small backpack pressure vessel with its round gauge and hose. Exactly two human arms and two human legs. Both hands continuously carry the SAME brass cable reel across her torso: the hand at IMAGE RIGHT supports the near circular reel hub while the hand at IMAGE LEFT keeps its original crank knob grip. The reel is rigid, retains its dark coiled cable and brass circular flanges; no extra wheels, guns or machines. The single existing flexible cable runs from reel to the ONE glowing orange cylindrical canister hanging at lower IMAGE LEFT. Preserve canister size, black bands and end cap. It stays suspended above ground and may make only a small natural pendulum sway from walking. Cable remains connected at both ends; never split, detach, grow, disappear or swing across her face or legs. Keep warm orange glow inside the original canister without new fire, smoke or particles. This is walking while carrying equipment, not an attack, cast, release or winding demonstration. Legs must alternate: near boot reaches forward heel-first while far leg trails; plant and load near foot, flex far knee and swing far boot beneath hips into the opposite forward reach, plant far heel, transfer weight and let near boot trail then pass forward. Both legs each perform contact, support, toe-off and passing in chronological order, never keep the same knee always in front. Repeat the complete two-step cycle and return to the original stance. Small purposeful steps, knees below waist, feet stay grounded during support, no hopping or skating. Apron and rear cloth lag gently behind weight shifts. Torso stays centered at one constant scale, no horizontal travel, turning, zoom, camera or perspective motion. Keep every boot, cable bend and canister fully inside the image. Background stays perfectly uniform PURE GREEN RGB(0,255,0) throughout, with no floor, ground shadows, scenery, gradients, text, motion blur, duplicate limbs or objects.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092416
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "quenchspool_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "quenchspool_move_h3/frames/decoded"
+    }
+  }
+}
