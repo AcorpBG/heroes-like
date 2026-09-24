@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_veilmourn_dreamwake_tideglass_oracles",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "near_contact_v1",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/tideglass_move_h3/key_guides/near_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1029,
+            1528
+          ]
+        ],
+        "anchor": [
+          548,
+          1469
+        ],
+        "scale": 0.26,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e9e9b44fbe6f98388d98321a2764d5a0bbafa57dbdccd5e0bc5dfd5cc0f0c31d",
+      "input_file": "input_green.png",
+      "input_sha256": "021b47705fd492e9ae1c43d9601dac412a4a311f3c75d4ebc69ca2bc40a575f3",
+      "runtime_source_scale": 0.164
+    },
+    {
+      "source_frame": {
+        "name": "far_contact_v1",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/tideglass_move_h3/key_guides/far_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1029,
+            1529
+          ]
+        ],
+        "anchor": [
+          548,
+          1467
+        ],
+        "scale": 0.26,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fa3c8a0965b53a2738a05e246f0b76aa6b960ba3b073d34cca0f8109e52fe143",
+      "input_file": "far_green.png",
+      "input_sha256": "2aa83610018e65bef63b08360008e084f6e66891b2adcce62f3e7894182b534e",
+      "runtime_source_scale": 0.164
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.26,
+  "output_scale": 0.6307692307692307
+}
