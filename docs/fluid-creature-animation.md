@@ -24,6 +24,8 @@ Owner direction after the H3 comparison: use local MiniMax H3 video in ComfyUI a
 
 Store each unit's sources under its assigned batch directory. A durable `handoff.json` describes the unit ID, source image paths, exact frame rectangles, anatomical ground anchors, clip names and ordering, shared scale/reference size and timing recommendations. Runtime atlas preparation must preserve normal inherited Windows file permissions and bound texture dimensions; Linux paths and metadata must stay portable.
 
+Optional `pose_anchor_x` records the anatomical horizontal origin when a dense atlas cannot fit with symmetric transparent padding. The packer trims only empty margins before requiring another page; it never removes observed frames or shrinks anatomy to fit. Battle drawing reflects the anchor with enemy sprites, persistent corpses use the same origin, and overworld idle extraction subtracts its shared crop from that origin. Existing rows without the field retain a centered origin.
+
 ## Validation and retention
 
 Use focused clip/manifest, actual playback, grounding, reduced-motion/Fast and simulation/save checks. No full repository suite. A minimum frame count or a passing structural check is not visual acceptance. Document unfinished identities/clips honestly. Original asset masters, provenance, recipes, saves, backups and caches remain; remove task-owned temporary render previews, logs and probe profiles after inspection. Push coherent validated runtime/content slices to main, preserving unrelated existing work.

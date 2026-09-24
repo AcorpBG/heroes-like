@@ -149,6 +149,22 @@ func run():
 		var region:Rect2=Pose.region(row,"idle_hold",0,0,true)
 		var rect:Rect2=Pose.grounded_rect(Vector2(500,400),128,region,row)
 		check(is_equal_approx(rect.position.y+(region.size.y-row.pose_ground_margin)*128/row.pose_reference_height,400),"anatomical ground changed")
+		if row.has("pose_anchor_x"):
+			# Compare trimmed art against its equivalent old centered canvas.
+			# Both facings must put the same source pixel at the same world point.
+			var anchor:float=row.pose_anchor_x
+			var expanded_half:float=maxf(anchor,region.size.x-anchor)
+			var left_padding:float=expanded_half-anchor
+			var centered:Dictionary=row.duplicate(true);centered.erase("pose_anchor_x")
+			var expanded:=Rect2(Vector2.ZERO,Vector2(expanded_half*2,region.size.y))
+			var legacy_rect:Rect2=Pose.grounded_rect(Vector2(500,400),128,expanded,centered)
+			var pixel_scale:float=128.0/row.pose_reference_height
+			for mirrored in [false,true]:
+				var trimmed_rect:Rect2=Pose.grounded_rect(Vector2(500,400),128,region,row,mirrored)
+				for source_x in [0.0,anchor,region.size.x]:
+					var legacy_x:float=expanded.size.x-(source_x+left_padding) if mirrored else source_x+left_padding
+					var trimmed_x:float=region.size.x-source_x if mirrored else source_x
+					check(is_equal_approx(legacy_rect.position.x+legacy_x*pixel_scale,trimmed_rect.position.x+trimmed_x*pixel_scale),"trimmed atlas shifts source pixels when mirrored="+str(mirrored))
 	if not ranged_id.is_empty():
 		for mode in ["normal","fast"]:
 			SettingsService.set_reduced_motion_enabled(false)

@@ -100,7 +100,24 @@
     "res://art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_084.png": "498320bd168ac603664d38dba5a66b70a033470afb1488f02392767888fcb86a",
     "res://art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_088.png": "248e0d3e2e5d337756409e59cd8489e4d7dd9cb820ca02ce5eb1faeec227a266",
     "res://art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_092.png": "2db945d5e60dfaec08c8d360eee243d6b1bc509b514ed6a76663644d541d95a5",
-    "res://art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_096.png": "616ab00675d9341a08474a735ea156dafbf52683162007bc41b0aca0b6fd62b8"
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_096.png": "616ab00675d9341a08474a735ea156dafbf52683162007bc41b0aca0b6fd62b8",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_012.png": "c07ee562b0d568bddb03cb5e4a5804412838f11372eb76e554b1dedce6a4b598",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_016.png": "9b8857877884759016c17952815ccdd86d5d83c2f4fd59cc9e0b823ff9693936",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_020.png": "a18e523b0190ddcd96137b42ec326fa029ff63c7ddf1871ea126c18f62da9c31",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_024.png": "abdd31055088c037bc93735f6e59e7bff62f200e3db6b6ade8a6ae627bfe85c9",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_028.png": "e0abad5989695eeb7c7a5a27aa7ba43c138eebd2c024b82f6000406950538bb6",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_032.png": "09087db681c471b1180f42457092af049f61748befa7060dd7cc67e97d192498",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_036.png": "63f1782fc2f6f4505ebe8fc999c92db35e6081e6e24cebca42bdd59ce3868c13",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_040.png": "bfbe3d992362bac46bb7ad86cb0f6a3492269eacec1c56242d1e83761ed48f4e",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_048.png": "495146658e05cdea8c265c8bb9be4e0e6ce77887b0f9926771bb53a990e1aa5e",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_060.png": "2c6778440480360156c88426aeb3981d0d13831fcdfbc4c2c5ba063107d25327",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_072.png": "83c09833054d75c7cfd16081b85d49018bb655e8d53698e15d2b68c66d665f2f",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_080.png": "8649f9e48da68f9cd209b0a461fefff762acbdba976fe8d9356bb1e728595c59",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_084.png": "b878d4a40f4afa6ab24673b361b30b2d9139edb28bbe30ede5b047cc5642719c",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_088.png": "4680dcab0274c45be94fbda274c0084c092b35bd774331574d1905cb3bd50393",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_092.png": "173fa939ec7b0f7d371712b8eb513b7e80a23db8ea248b349d1ed29eb0d0bfc1",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_096.png": "9ad5c65a5ca893d82e11abf84ca20ae02b2f8f287ccea99dc83211bb1be42adf",
+    "res://art/units/source/generated/video_trials/luna_antlerloom_full/cast_v4/matte/rgba_108.png": "d062c1b4f7ba4f1de0633856191c138f7691900e5a9b83c5b2a7dd11a48a22bd"
   },
   "accepted_clips": [
     "idle",
@@ -108,14 +125,15 @@
     "attack",
     "hit",
     "defend",
-    "death"
+    "death",
+    "cast"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Coordinator reviewed original chronological H3 phases, alpha edges on light/dark grounds and native battle-scale sequence. Accept idle, reciprocal move_v2 gait, attack_v2 lunge with source56 contact, clean hit_v2 interval52-96 after excluded generated projectile, held defense and grounded collapse/corpse. Explicitly retimed for gameplay; source anatomy/scale and four-leg identity retained in selected samples. Cast remains unaccepted: v1 identity loss and v2/v3 incorrect guide dispatch/incomplete rally. Phase review and focused Windows checks are not a manual playtest or Linux validation."
+    "notes": "Coordinator completed cast_v4 using verified original-ready-only H3 endpoints, with no generated intermediate guide. Reviewed all 124 chronological source frames, enlarged alpha on light/dark backgrounds and native battle phases. Accept 17 observed support frames: planted chest/head lift, readable antler rally hold and recovery to ready; face, four-leg identity, branches, scale and foliage retained. RGB key despill preserves alpha. Deliberate1500ms timing with proportional source intervals; reduced motion holds rally peak. Six previously accepted clips preserved pixel-for-pixel with original anchors. Focused candidate 188 checks passed, including mirrored padding-trim anchor equivalence; no manual playtest or Linux execution claimed."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "8f4499e35a19eca289c72ec3a1b361ff283703238da9078c2ffc626a77b1abf1",
-  "atlas_sha256": "b155b9fbfff015be64a98f6569f35b0c6133a196fac5b6df90623e30a57fecb6",
-  "texture_bytes_rgba": 57125376
+  "atlas_sha256": "745312d1260abe5e9122a5ea0dc515d6cd890424c405c7987025f500916f7195",
+  "texture_bytes_rgba": 56609280
 }

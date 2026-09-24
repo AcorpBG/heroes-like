@@ -43,7 +43,7 @@ def extract(row):
         'frame_size': [fw, fh], 'frames': len(frames),
         'frame_msec': spec.get('frame_msec', 600),
         'static_frame': spec.get('static_frame', 0),
-        'ground_anchor': [width / 2 - crop[0], height - row.get('pose_ground_margin', 0) - crop[1]],
+        'ground_anchor': [row.get('pose_anchor_x', width / 2) - crop[0], height - row.get('pose_ground_margin', 0) - crop[1]],
         'painted_extent': max(right - left, bottom - top),
         'source_sheet': row['pose_sheet'], 'source_indices': indices,
         'source_crop': list(crop),

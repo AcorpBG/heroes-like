@@ -1,0 +1,168 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "first_guide.png"
+    }
+  },
+  "5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "last_guide.png"
+    }
+  },
+  "20": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked three-quarter right-facing orthographic camera. Every pixel outside the creature must remain the same perfectly flat pure magenta RGB(255,0,255) in every frame. Do not tint, animate, shade, gradient, relight or replace this background. No ground or shadow. The melee Antlerloom Strider gives a physical ally-rally support gesture, not a spell: gently lift chest and head a little, proudly angle the branching antlers slightly upward, hold briefly, then return to ready. All four hooves stay planted. Preserve exact identity, body scale and camera. No projectile, glow, ranged magic, weapon, other character or root translation. The supplied first, intermediate and last frames are the same original creature at one anatomical scale and ground reference. Preserve the guide proportions and interpolate only physically coherent motion between them. Keep full antlers and all four hooves inside frame. No scenery, text, haze or unrelated effects. Keep the pale ivory face and pointed muzzle continuously clear and identical; move only the neck base and chest slightly, without a deep bow or low-leg crouch. Keep every antler branch, rounded leafy pad and white blossom in exactly the same shape, size and count; do not lengthen branches or stretch foliage into blades. Preserve head and torso scale and all four planted legs.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "5",
+        0
+      ]
+    }
+  },
+  "25": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "20",
+        0
+      ]
+    }
+  },
+  "26": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092404
+    }
+  },
+  "27": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "28": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "29": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "26",
+        0
+      ],
+      "guider": [
+        "25",
+        0
+      ],
+      "sampler": [
+        "27",
+        0
+      ],
+      "sigmas": [
+        "28",
+        0
+      ],
+      "latent_image": [
+        "20",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "29",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "31": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "30",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "32": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "31",
+        0
+      ],
+      "filename_prefix": "luna_antlerloom_full/cast_v4/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "33": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "30",
+        0
+      ],
+      "filename_prefix": "luna_antlerloom_full/cast_v4/frames/decoded"
+    }
+  }
+}

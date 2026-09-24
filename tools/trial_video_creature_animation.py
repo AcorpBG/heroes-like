@@ -252,7 +252,7 @@ def process(out):
     for i,frame in zip(samples,frames):frame.save(folder/f'idle_{i:03d}.png')
     row=json.loads((out/'accepted_baseline.json').read_text(encoding='utf-8'))
     accepted=accepted_frames(row)
-    old_anchor=[row['pose_frame_size']['width']/2,row['pose_frame_size']['height']-row['pose_ground_margin']]
+    old_anchor=[row.get('pose_anchor_x',row['pose_frame_size']['width']/2),row['pose_frame_size']['height']-row['pose_ground_margin']]
     ratio=reference['runtime_source_scale']/reference['input_source_scale']
     a=[preview_pose(im,old_anchor,.5) for im in accepted]
     b=[preview_pose(im,reference['ground_anchor'],ratio*.5) for im in frames]
