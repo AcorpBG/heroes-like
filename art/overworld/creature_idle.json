@@ -251,37 +251,61 @@
     "unit_shard_guard": {
       "path": "res://art/overworld/runtime/creature_idle/unit_shard_guard.png",
       "frame_size": [
-        194,
-        246
+        248,
+        249
       ],
-      "frames": 8,
-      "frame_msec": 240,
+      "frames": 32,
+      "frame_msec": 83,
       "static_frame": 0,
       "ground_anchor": [
-        95.0,
-        233
+        154.0,
+        237
       ],
-      "painted_extent": 230,
+      "painted_extent": 233,
       "source_sheet": "res://art/animation/runtime/fluid/unit_shard_guard.png",
       "source_indices": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
       ],
       "source_crop": [
-        85,
-        19,
-        279,
-        265
+        26,
+        15,
+        274,
+        264
       ],
-      "source_sha256": "57d7439abb41613d9291e5566435ac74378b184f146f21ffcd2383e50545cad4",
+      "source_sha256": "33052e14283b4887586bfdf51bc1fd4fded318cc1dbe983effa965800da2d85d",
       "source_provenance": "res://art/animation/source/fluid/unit_shard_guard/provenance.json",
-      "sha256": "11b387e48ba0fa3f9599b6f27d526ea36d05c394bf40c2f9f47678bc16c93ad0"
+      "sha256": "676d9ff5656c7974163acc8db9802684635d5d010f65f4bfe3356b0ca684626d"
     },
     "unit_prism_adept": {
       "path": "res://art/overworld/runtime/creature_idle/unit_prism_adept.png",

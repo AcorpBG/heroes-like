@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "shard_guard_idle_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate this exact Shard Guard in ONE relaxed but alert READY IDLE cycle, returning to this identical stance. Preserve rigid white ivory plate armor with polished GOLD edges and BLUE crystal inlays, closed gold/blue visored helmet and tall angular gold crown crest, white embroidered tabard, belt, both gold boots, no exposed face. Exactly TWO arms and TWO legs. The sword-side hand at IMAGE LEFT holds ONE short rigid blue crystal sword with gold hilt angled down-left; the shield-side arm at IMAGE RIGHT supports ONE LARGE rigid tall kite shield with the original blue/white radial crystal panels and gold rim/central boss. Both boots stay planted in the original spots. Keep torso, hips and head scale and original three-quarter RIGHT camera. Meaningful limb articulation: sword elbow slowly bends to raise the blade from its low relaxed angle to a modest ready angle beside waist, the wrist makes a small controlled grip adjustment without sliding fingers along the hilt, then elbow and wrist ease back to low ready; shield forearm subtly flexes to draw the intact shield nearer the body and tilt it a little forward, then returns. Small shoulders/chest breathing and a slight attentive helmet nod accompany this natural arm movement. No attack, thrust, slash, contact, salute, casting, raised sword over head, combat brace or walking. Motion must be visible in the arms/weapon and shield, not just head bobbing or global sprite sway. Shield retains exact size, rigid outline, same crystal panel count and handle attachment. Sword stays one rigid blade, same length, same hilt and same grip. No extra hands, fingers, blades, armor changes, bending metal or clipping weapon into shield/legs. Tabard edges respond slightly to the arm/weight movement, no exaggerated flapping. Entire crown, shield, full sword tip, tabard and both boots stay safely inside frame. No body travel, floating, camera movement, zoom, rotation or perspective changes. Background is perfectly uniform PURE GREEN RGB(0,255,0), no floor, shadow, light halos, particles, glow bloom, gradients, text or scenery.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092431
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "shard_guard_h3/idle_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "shard_guard_h3/idle_v1/frames/decoded"
+    }
+  }
+}
