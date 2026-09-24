@@ -1,0 +1,26 @@
+[
+  {
+    "image": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/contacts_v1.png",
+    "sha256": "fdeb7fadb663824a7d3e898dc11ecebc8ebc062409534ee976c01761c7585156",
+    "prompt": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/contacts_v1.prompt.txt",
+    "prompt_sha256": "3c68c2818958dafe033bdad222368dd588137658f275c624d3a7fd16634c46a6",
+    "reference": "art/units/source/generated/video_trials/emberpack_move_h3/identity_reference.png",
+    "reference_sha256": "ec828b15e09788cb3c6ae7b9ad253f03f6e7817652d53e216640e66d911c9f1e",
+    "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-541bc640-a5db-4cfe-b57a-f9ffed46663f.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit",
+    "review": "Rejected as a contact pair: same leading leg in both. Alpha is valid after inspecting channels; dark background was invisible RGB, not opaque pixels."
+  },
+  {
+    "image": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/right_contact_v2.png",
+    "sha256": "16ada9bbdb41b5e40535ec498fdea1591efb12c423869ec387b46643e381507e",
+    "prompt": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/right_contact_v2.prompt.txt",
+    "prompt_sha256": "aa55d801677ee7775ab3459db95c1fd04e9c8d519c74096dec8b00c0974a36f4",
+    "reference": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/contacts_v1.png",
+    "reference_sha256": "fdeb7fadb663824a7d3e898dc11ecebc8ebc062409534ee976c01761c7585156",
+    "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5a38189b-c974-42ff-a122-267b8e9d53ce.png",
+    "tool": "image_gen.imagegen",
+    "mode": "edit",
+    "review": "Selected single guide: stable right-facing chest/pelvis/boots; usable alpha8 silhouette and shortened sling."
+  }
+]

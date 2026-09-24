@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_emberpack_lobbers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "right_contact_v2",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/emberpack_move_h3/key_guides/right_contact_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          750,
+          954
+        ],
+        "scale": 0.45,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16ada9bbdb41b5e40535ec498fdea1591efb12c423869ec387b46643e381507e",
+      "input_file": "input_green.png",
+      "input_sha256": "135603da33fbac592cca2fb56a2eba089cafcca87a074a8a2077bdb7adb85ee6",
+      "runtime_source_scale": 0.195
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.45,
+  "output_scale": 0.43333333333333335
+}

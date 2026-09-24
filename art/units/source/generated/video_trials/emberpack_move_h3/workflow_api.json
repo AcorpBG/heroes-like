@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "emberpack_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate the exact Emberpack Lobber man from the reference walking IN PLACE for two complete reciprocal left-right cycles and returning to the reference stance. Preserve his hooded face, perforated brass forehead plate, dark hood and leather coat, orange scarf and split orange coat tails, dark trousers, belts, brass belt cases, wrapped forearms and tall brown boots. Exactly two human arms, two human legs. Keep the ONE rigid strapped wicker-and-brass ember basket on his back with its glowing coals and attached brass side flask. No added backpack tanks, floating props or changes in basket shape. Hand at IMAGE LEFT continuously grasps the gathered straps of the ONE sling; its ember-filled pouch hangs outside the left leg at calf height, clear of boots and floor. Strap remains connected to the same grip and pouch, never duplicates, vanishes, lengthens or crosses between legs. Only gentle small outward sway; no throwing, firing, winding or release. Free hand at IMAGE RIGHT remains empty beside body, gently counter-swings with gait. Preserve contained warm ember glow in basket and sling pouch, without added smoke, flame jets, particles or projectile. Near boot reaches forward heel-first while far boot trails; near foot plants and supports body while far knee flexes and far boot passes beneath hips to the opposite forward contact. Far foot plants and accepts weight while near boot trails, passes, then reaches forward again. Both legs each show forward contact, load, toe-off and passing; never repeat the same leading leg. Modest deliberate stride, knees below waist, no hopping, skating, foot stretching or limb swaps. Coat tails gently lag behind the alternating steps. Torso stays centered at constant original size and original three-quarter facing, restrained shoulder counter-rotation only; no camera travel, zoom, turns to front or profile or body translation. Entire hood, basket, flask, both boots and sling pouch stay inside frame. Background remains perfectly uniform PURE GREEN RGB(0,255,0), with no floor, ground shadow, scenery, gradient, text, motion blur or other creatures.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092422
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "emberpack_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "emberpack_move_h3/frames/decoded"
+    }
+  }
+}
