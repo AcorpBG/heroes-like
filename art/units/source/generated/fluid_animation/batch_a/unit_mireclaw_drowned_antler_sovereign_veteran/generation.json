@@ -1,0 +1,83 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/idle_v1.png",
+      "sha256": "4995596368e8b725d29cf8dabb3f744b1fa3cc11ce6ff7cedf24c71bfa35e6f8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "c5a54431f9381be3f2228475e347cabcdfb774487f9821f76380d566dbfa66b5",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-fb4ec5cc-52ce-4b44-8048-e9bbafab6d14.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/attack_v1.png",
+      "sha256": "e1e4cb9590785cccf9adcab27f507087a3fec5ea44e63afe01bd97f2dfaa7d9d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "e9a02dcdaf047ab4ecd7d2a030fe7a6356883c79776713d3d5d85a2a506fdd76",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-619dd410-aec2-4894-a1b1-d50879ce68da.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/reactions_v1.png",
+      "sha256": "7411ec3eb8675c1e86b7d4a6efb5d887df35240ed4d014697c2e79ecf41bbb93",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "3b03ce146623f9d16e69e273d6f0ee76a04954b791c59f516e84cd2a9b928278",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c65798a4-43ac-441d-9835-abdf4f200bce.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/cast_v1.png",
+      "sha256": "2c6de5d146a3f49155b77951fb90613557288a63bb7fefabb3281bead19d1729",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "32350269a7f870d2e12b4780dfa1011b52e36d8e0c3f871d10fa5924bdd62ff3",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e12c53bf-66bf-47f2-896d-2493c7f38e54.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/death_v1.png",
+      "sha256": "4662e28ef761bc72edef1328edf5e53e3d66c06a636b680cf2683353d2e27423",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "6ad40ea504c9a62c64f55831024a1596099d486f2296ad467bba1a22af85e0e1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bd54f930-a392-40d5-a01b-5498d909a44d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/move_v1.png",
+      "sha256": "248a600521aaeedea38b90698e90b543c1869f3ae9bc7d9261c8500cc996218b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "454dbeeadefd84c4e882137a9adfac01c9a320e9cd05c5b67c876d77f0a47c6f",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-202feb51-d427-4ea1-92d7-ee0683db246a.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_drowned_antler_sovereign_veteran/identity_reference.png",
+          "sha256": "86f92556e4ccc4b6061e9b3645666e7b0195a9f7125ccd501fec46908fa8284c"
+        }
+      ]
+    }
+  ]
+}
