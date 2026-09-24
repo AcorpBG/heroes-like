@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/idle_v2.png": "58cb00b809537dab3f2949d8f96036b0c8656401de4ae8f5ba738f6dd708ec3b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_near_v3.png": "7b3b9c958233877c380690c656f2d1fabd6051c9bd75ead2f9de943f21469a75",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/move_far_v1.png": "cecb5d351db026d52b1c474b7688568f932b52b1c1d5bbab887d9771d17b94b7",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/attack_v1.png": "cafaa450c90330c2509592c8d424165196fa7d4722e9711303d24a903be6ff1c",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/ranged_v1.png": "8592d4961cb8aae2b948d7566129c92ad854c084c6681ab90d89f9e74f259627",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/reactions_v1.png": "a94a8165391c2b2eceb98f7dabe665efcffd8cba4328c88ad4535686110f8d2d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/cast_v1.png": "5e0e503faef383f4b18158ce75c4a758e9cfc7901e06192f672f6de34602972d",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders_veteran/death_v1.png": "fa19fdbac3a55e55644acd0f0cfde5fa9baff5aed23968325e501c65fcb55157"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original sources and ordered native Windows Godot phases at actual128px reference height:56 distinct paintings across8 actions, readable nozzle-hand idle, corrected reciprocal near/far gait, two-handed melee shove, aim/mist release/recovery, dedicated recoil/held guard, physical empty-hand support and continuous grounded collapse with tipped backpack and tethered sprayer. Original leaf/bark greaves restored after rejecting copied ivory armor; clipped idle and ambiguous near-walk drafts excluded. Fixed anatomical scale per source, planted-foot/body registration, no synthetic articulation or within-clip repeats. Final candidate132 checks pass for timing/normal/fast/reduced motion and unchanged simulation/save state. Continuous playback, Linux and manual playtest are not claimed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "41e56e3eeda3b1678b29405105abe1ff70fc4e40dcd892225d32c8dc8baeda8c",
+  "atlas_sha256": "daf1bdf0f261721201d4041fe199d55bc9e61cd458899125638e3c5fb463047e",
+  "texture_bytes_rgba": 18754560
+}
