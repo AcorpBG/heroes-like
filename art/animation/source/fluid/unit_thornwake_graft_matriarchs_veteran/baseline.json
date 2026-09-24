@@ -1,0 +1,86 @@
+{
+  "id": "unit_thornwake_graft_matriarchs_veteran",
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "name": "Orchardheart Matriarchs",
+  "faction_id": "faction_thornwake",
+  "tier": 6,
+  "role": "ranged",
+  "motif": "ranged",
+  "sprite_sheet": "res://art/animation/runtime/poses/unit_thornwake_graft_matriarchs_veteran.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "original_town_upgrade_art_v1",
+  "curated_source": "res://art/animation/source/poses/unit_thornwake_graft_matriarchs_veteran/unit_thornwake_graft_matriarchs_veteran-alpha.png",
+  "curated_source_sha256": "1f084da01f57eb62f0ffdb0485b6bdcf65a6036120eafe77de9ce2f23db92839",
+  "pose_sheet": "res://art/animation/source/fluid/unit_thornwake_graft_matriarchs_veteran/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_review_status": "original_upgrade_articulated_idle_and_actions",
+  "pose_provenance": "res://art/animation/source/poses/unit_thornwake_graft_matriarchs_veteran/provenance.json",
+  "pose_clips": {
+    "idle": {
+      "frames": 4,
+      "indices": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 2,
+      "indices": [
+        4,
+        5
+      ]
+    },
+    "hit": {
+      "frames": 1,
+      "indices": [
+        6
+      ]
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        7
+      ]
+    },
+    "death": {
+      "frames": 2,
+      "indices": [
+        6,
+        7
+      ]
+    }
+  },
+  "pose_aliases": {
+    "move": "idle",
+    "defend": "idle",
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_ground_margin": 16,
+  "pose_source_facing": "right",
+  "pose_reference_height": 256
+}
