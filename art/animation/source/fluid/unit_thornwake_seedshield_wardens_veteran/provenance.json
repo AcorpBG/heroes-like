@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_seedshield_wardens_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/idle_v1.png": "2bf196c7ee9798fb32d071a59f74619e08c9f844b7a1e06fdfd009908626ea3a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v3.png": "60619e3ba11cfc8419b357fa54c9dff3a1a8cd11561f7a32ae55c28eece06529",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_far_v1.png": "5bdbf926f271a4f1aa0fe0385d22d4ea4314bcb94949e20fced682acdc70713e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_v1.png": "fae06ab4db3b8c97869a662d2788547c5ae679265ab920937db0101faace07a5",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v2.png": "27ee67ab5c6374024300f68e3e8116324121949687026bfeffebef18bcf21ae8",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v3.png": "05f47de38474f6890a6dfe219e017ff48ca19ec1216d7fa24db88117fa6f6e09",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/reactions_v1.png": "9b91014820a4ba4747171d1f9d2746852295f7cdd0e01f02c37f0bd121331f0e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/cast_v1.png": "32415241fe498f80beedf6ea363201ee5d07b20344998b3b0c919e81cf2aecda",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_v1.png": "292936a6550b28ece3bcbf620a56d354b8abb1c4038fdc85f24899b475bf259a",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_middle_v1.png": "ff15ce9355e48bd5da545bcde36621e5125af240309fa7873eb111ceebd043e7"
+  },
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed original paintings and ordered Windows Godot phases at actual 128px reference height. Fifty distinct originals across seven actions: visible shield/staff arm idle; reciprocal near/far root-leg walk; lifted windup, thrust contact and recovery; four recoils; four dedicated guards; physical staff-and-shield salute; ten-stage collapse with staff release before the near palm braces on the ground, ending in grounded corpse. Antlered mask, bark/leaf anatomy, near-hand staff and far-arm heart shield retained. Rejected repeated far-leg near-walk v1, guide-costume v2, oversized windup v1 and contracted contact v2. Corrected near-walk v3 restores wooden thighs/root feet and removes copied cloak. Fixed scale per master; no duplicate/mirrored phases, warps or per-pose size normalization. Final candidate passes118 assertions. Ordered phase/timing inspection supports selected acceptance; continuous playback, Linux execution and a manual playtest are not claimed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "bed215a83954917b9023ebd251b9310fbcdeba90e711e09f204865eaf090990e",
+  "atlas_sha256": "46afe0eb02ff8d4a95c9c152582f7d8b0ba3ff3a938f131121b966fcb113bc82",
+  "texture_bytes_rgba": 24440832
+}
