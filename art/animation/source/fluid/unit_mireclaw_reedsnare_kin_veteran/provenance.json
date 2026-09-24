@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/attack_v1.png": "2a2f1e2342a1dacddcd3b6b412c1bd82ad878edf02a51e26465a0cede5c5c16a",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/reactions_v1.png": "4cab851a28911b3db3eb46b86d1218aae4641c0e1af3bbdf18ffb32d7a232887",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/cast_v1.png": "ff72d328495f4b37d38a05ead0c390bc22938636155db1e023e4a9da96d48d69",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/death_v1.png": "8b01aa2c7ad1ac6ab904df0ca56aec6c833e12f1b33448b4cf9ec85871c9e23b",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_near_v1.png": "ca8a9b1941f271ea6d6b2400c51c98211d166e17249e52a38380731e5b55dcf7",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_v1.png": "25510d5520ea9058f5a931c52bd80cb5680d69bb691f5b6d7ebb5585aca1550d"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "48 distinct original poses visually reviewed in native 128px battle rendering: rope-adjusting idle, hook thrust/recovery, recoil, coil guard, physical rally, grounded collapse with flat noose and corrected alternating near/far steps. Fixed anatomical scales and planted-foot anchors; correct coil/pole ownership, no padding or sprite warping. All source art and exact prompts retained. 116 candidate focused checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "231f54484e2b4f81cb00a4175350ed20b5655291d3ccb136e669d607f1f28dfe",
+  "atlas_sha256": "5fc64ff5e8de0c8f9eedb9b46b5f02505df3e88d2e62930727529833a95e5aa6",
+  "texture_bytes_rgba": 23030784
+}
