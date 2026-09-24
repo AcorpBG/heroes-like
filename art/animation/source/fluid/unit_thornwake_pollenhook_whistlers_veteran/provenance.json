@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_thornwake_pollenhook_whistlers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/idle_v1.png": "cfd549fc3e988077dbcde2f058d9ac41fdc38a3b07ba822fc872c9c859066512",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/attack_v1.png": "2dc6392de6dab8e7b7173207f0e6b84089268dd62f6e767e6a8e0efcc8ccbe7e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/attack_correction_v1.png": "e0070ee1cf48d44f2c217ed8fb885db310fbf6ec12c9fba1d90540fe95aea708",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/ranged_v1.png": "4c3a50daa761b3984eb7f46eb92b6ba0fba006a023daa0ace12a3b115ee1c113",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/reactions_v1.png": "9f56ea4b88e7fc8d20dee32ae04504ac2645f8faa2bb10ecb52e8184f28753d4",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/cast_v1.png": "8fe8f46496331349a76156cd8e6f5cdb82b6fc3488bfc90bdea68229f096bf97",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/death_v1.png": "d2c2b62a14a8b6d3ca02f4c589fddbf28bcf37db36d60d2a9b5caf6f42303076",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/death_correction_v1.png": "9e5b9a93a81329876390e156fab5ff23cbafc46724dfb3d7d3dd1d4d8b33ac85",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_pollenhook_whistlers_veteran/move_v1.png": "a2285f42f1d9116bb22899f2ed700f208ddd5d66bb6a82f141c2a9e6b0726536"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Bloomchime Whistler: native 128px review of articulated pipe idle/thrust, aimed pollen release, recoil/guard, physical support signal, reciprocal gait and grounded collapse. Nine masters, 56 entries/54 distinct paintings; malformed original poses excluded and dedicated grip/hand corrections retained. 132 focused candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "0bdc1c789728957f9e956bd5030631d435a3a3f172e5042665fd158914b637b3",
+  "atlas_sha256": "251dc3631726d8225c68a8b3d2e4d104dc8ae020c985b445c513a8cdb6d2f052",
+  "texture_bytes_rgba": 24883200
+}

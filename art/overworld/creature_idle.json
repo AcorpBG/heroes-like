@@ -6897,33 +6897,37 @@
     "unit_thornwake_pollenhook_whistlers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_pollenhook_whistlers_veteran.png",
       "frame_size": [
-        224,
-        250
+        219,
+        254
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        78.0,
-        239
+        82.0,
+        246
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_pollenhook_whistlers_veteran.png",
+      "painted_extent": 238,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_pollenhook_whistlers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        178,
-        1,
-        402,
-        251
+        98,
+        14,
+        317,
+        268
       ],
-      "source_sha256": "0bdc1c789728957f9e956bd5030631d435a3a3f172e5042665fd158914b637b3",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_pollenhook_whistlers_veteran/provenance.json",
-      "sha256": "02f6f9c1b54803d1ccb504deeac4ea7a8133b962b1441ef23d7645007e28e9e6"
+      "source_sha256": "251dc3631726d8225c68a8b3d2e4d104dc8ae020c985b445c513a8cdb6d2f052",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_pollenhook_whistlers_veteran/provenance.json",
+      "sha256": "e107e63869257c622035fd13d5f25f89a3f46b734407b88bc50d6cb978902fa5"
     },
     "unit_thornwake_thornwhip_carriers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_thornwhip_carriers_veteran.png",
