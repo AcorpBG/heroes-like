@@ -72,7 +72,7 @@ static func timed_frame(spec: Dictionary, elapsed: int) -> int:
 		time -= duration
 	return count - 1
 
-static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}) -> Rect2:
+static func grounded_rect(ground: Vector2, height: float, region: Rect2, animation: Dictionary = {}, flipped: bool = false) -> Rect2:
 	# Expanded transparent action envelopes retain the accepted creature scale.
 	# The reference height describes its original canvas, not its painted bounds.
 	var reference_height := maxf(1.0, float(animation.get("pose_reference_height", region.size.y)))
@@ -86,7 +86,11 @@ static func grounded_rect(ground: Vector2, height: float, region: Rect2, animati
 	# Legacy layouts without this optional metadata retain their original rect.
 	var margin := clampf(float(animation.get("pose_ground_margin", 0.0)), 0.0, maxf(0.0, region.size.y - 1.0))
 	var ground_offset := height * margin / maxf(1.0, region.size.y)
-	return Rect2(Vector2(ground.x - width * 0.5, ground.y - height + ground_offset), Vector2(width, height))
+	# Dense atlases may trim unused horizontal padding around a long lunge.
+	# Reflect the anatomical anchor with the art, including persistent corpses.
+	var anchor_x := float(animation.get("pose_anchor_x", region.size.x * 0.5))
+	if flipped: anchor_x = region.size.x - anchor_x
+	return Rect2(Vector2(ground.x - width * anchor_x / maxf(1.0, region.size.x), ground.y - height + ground_offset), Vector2(width, height))
 
 static func clip(animation: Dictionary, state: String, dead: bool = false) -> Dictionary:
 	var clips: Dictionary = animation.get("pose_clips", {})

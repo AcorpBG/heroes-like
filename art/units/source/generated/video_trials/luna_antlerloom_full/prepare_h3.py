@@ -74,13 +74,13 @@ def guide(which,folder,name):
  meta.update(path=path.relative_to(ROOT).as_posix(),sha256=sha(path),canvas=[W,H],background='flat magenta RGB 255,0,255',ground_anchor=list(INPUT_ANCHOR))
  return path,meta
 def base_action(action):
- for suffix in ('_v2','_v3'):
+ for suffix in ('_v2','_v3','_v4'):
   if action.endswith(suffix): return action[:-len(suffix)]
  return action
 def guide_plan(action):
  base=base_action(action)
  if action=='attack_v2': return (0,'attack_release',0)
- if action in ('cast_v2','cast_v3'): return (0,0)
+ if action in ('cast_v2','cast_v3','cast_v4'): return (0,0)
  return {
  'idle':(0,2,0), 'move':(0,GUIDE_FILES['move'],0), 'attack':(0,'attack_windup','attack_release',0),
  'hit':(0,'hit_recoil',0), 'defend':(0,GUIDE_FILES['defend'],GUIDE_FILES['defend']),
@@ -121,7 +121,7 @@ def prepare(action,seed):
  for i,source in enumerate(plan):
   p,m=guide(source,folder,names[i]); paths.append(p); meta.append(m)
  prompt=('Locked three-quarter right-facing orthographic camera. Every pixel outside the creature must remain the same perfectly flat pure magenta RGB(255,0,255) in every frame. Do not tint, animate, shade, gradient, relight or replace this background. No ground or shadow. '+PROMPTS[base]+' The supplied first, intermediate and last frames are the same original creature at one anatomical scale and ground reference. Preserve the guide proportions and interpolate only physically coherent motion between them. Keep full antlers and all four hooves inside frame. No scenery, text, haze or unrelated effects.')
- if action in ('cast_v2','cast_v3'): prompt+=' Keep the pale ivory face and pointed muzzle continuously clear and identical; move only the neck base and chest slightly, without a deep bow or low-leg crouch. Keep every antler branch, rounded leafy pad and white blossom in exactly the same shape, size and count; do not lengthen branches or stretch foliage into blades. Preserve head and torso scale and all four planted legs.'
+ if action in ('cast_v2','cast_v3','cast_v4'): prompt+=' Keep the pale ivory face and pointed muzzle continuously clear and identical; move only the neck base and chest slightly, without a deep bow or low-leg crouch. Keep every antler branch, rounded leafy pad and white blossom in exactly the same shape, size and count; do not lengthen branches or stretch foliage into blades. Preserve head and torso scale and all four planted legs.'
  if base=='move': prompt+=' Keep the original torso-to-head size and antler-to-shoulder size constant throughout. Root center stays at x=480 and planted support hoof baseline at y=492; no camera zoom, subject growth, whole-body widening or root drift. Show true reciprocal gait: near foreleg contacts while far foreleg passes, then far foreleg contacts while near foreleg passes; alternate hind-leg support in opposition.'
  (folder/'prompt.txt').write_text(prompt+'\n',encoding='utf-8')
  write(folder/'guides.json',dict(action=action,guides=meta,guide_plan=list(map(str,plan)),input_scale=INPUT_SCALE,runtime_scale=RUNTIME_SCALE,source_reference=f'art/animation/source/poses/{UNIT}/{UNIT}-alpha.png',source_sha256=sha(SOURCES/f'{UNIT}-alpha.png'),seed=seed))
@@ -148,7 +148,13 @@ def submit(action):
   req=urllib.request.Request(URL+'/upload/image',data=payload,headers={'Content-Type':'multipart/form-data; boundary='+boundary})
   with urllib.request.urlopen(req,timeout=60) as r:u=json.load(r)
   uploaded.append(u); graph[str(i)]['inputs']['image']='/'.join(x for x in (u.get('subfolder',''),u['name']) if x)
- write(folder/'workflow_api.json',graph); started=time.time(); result=request('/prompt',{'prompt':graph,'client_id':'luna_antlerloom_full'})
+ write(folder/'workflow_api.json',graph)
+ # Audit the exact uploaded graph before it reaches the queue.
+ expected_loads={str(4+i): '/'.join(x for x in (u.get('subfolder',''),u['name']) if x) for i,u in enumerate(uploaded)}
+ assert all(graph[k]['inputs']['image']==name for k,name in expected_loads.items())
+ assert graph['25']['inputs']['conditioning']==(['20',0] if len(uploaded)==2 else [str(18+len(uploaded)),0])
+ assert graph['29']['inputs']['latent_image']==['20',1]
+ started=time.time(); result=request('/prompt',{'prompt':graph,'client_id':'luna_antlerloom_full'})
  write(folder/'submission.json',dict(**result,started_unix=started,uploaded=uploaded,url=URL)); print(json.dumps(result))
 def status(action):
  folder=OUT/action; sub=json.loads((folder/'submission.json').read_text()); pid=sub['prompt_id']; h=request('/history/'+pid)
@@ -175,7 +181,7 @@ def collect(action):
  write(folder/'original.json',dict(frame_count=len(decoded),fps=24,size=[W,H],codec='FFV1/bgr0',source_frames_rgb_sha256=decoded,lossless_sha256=sha(video),workflow_sha256=sha(folder/'workflow_api.json'),collected_unix=time.time()))
  print(f'Collected {len(decoded)} lossless source frames for {action}')
 if __name__=='__main__':
- p=argparse.ArgumentParser();p.add_argument('verb',choices=['prepare','submit','status','collect','verify']);p.add_argument('action',choices=['idle','move','move_v2','attack','attack_v2','hit','hit_v2','defend','defend_v2','cast','cast_v2','cast_v3','death','death_v2']);p.add_argument('--seed',type=int,default=20260924)
+ p=argparse.ArgumentParser();p.add_argument('verb',choices=['prepare','submit','status','collect','verify']);p.add_argument('action',choices=['idle','move','move_v2','attack','attack_v2','hit','hit_v2','defend','defend_v2','cast','cast_v2','cast_v3','cast_v4','death','death_v2']);p.add_argument('--seed',type=int,default=20260924)
  a=p.parse_args(); folder=prepare(a.action,a.seed) if a.verb=='prepare' else None
  if a.verb=='verify': print(json.dumps({'action':a.action,'valid':verify_prepared(a.action)}))
  if a.verb=='submit':submit(a.action)

@@ -73,7 +73,7 @@ def old_pose(sheet, row, index):
     bounds = cut.getchannel("A").getbbox()
     if not bounds:
         raise ValueError("existing pose is empty")
-    return cut.crop(bounds), (bounds[0]-w//2, bounds[1]-h+row.get("pose_ground_margin", 0))
+    return cut.crop(bounds), (bounds[0]-row.get("pose_anchor_x", w//2), bounds[1]-h+row.get("pose_ground_margin", 0))
 
 
 def clip_indices(spec, columns):
@@ -143,13 +143,22 @@ def pack_unit(entry, previous, output_dir):
     top = math.floor((min(y for p, (x, y) in poses)-4)/4)*4
     bottom = math.ceil((max(y+p.height for p, (x, y) in poses)+4)/4)*4
     width, height = half*2, bottom-top
+    anchor_x = half
     layouts = [(c, math.ceil(len(poses)/c)) for c in range(1, 33) if c*width <= 4096 and math.ceil(len(poses)/c)*height <= 4096]
+    if not layouts:
+        # Long attacks need more room on one side of the anatomical anchor.
+        # Recover only transparent padding before requiring another atlas page;
+        # original pixels, scale, frame count and contact positions stay intact.
+        left = math.floor((min(0, min(x for p, (x, y) in poses))-4)/4)*4
+        right = math.ceil((max(0, max(x+p.width for p, (x, y) in poses))+4)/4)*4
+        width, anchor_x = right-left, -left
+        layouts = [(c, math.ceil(len(poses)/c)) for c in range(1, 33) if c*width <= 4096 and math.ceil(len(poses)/c)*height <= 4096]
     if not layouts:
         raise ValueError(f"{uid}: original envelope cannot fit 4096 atlas; needs authored split pages, never shrink creature")
     columns, rows = min(layouts, key=lambda cr: (cr[0]*cr[1], abs(cr[0]*width-cr[1]*height)))
     atlas = Image.new("RGBA", (columns*width, rows*height))
     for i, (pose, (x, y)) in enumerate(poses):
-        atlas.paste(pose, (i % columns*width+half+x, i//columns*height+y-top))
+        atlas.paste(pose, (i % columns*width+anchor_x+x, i//columns*height+y-top))
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir/f"{uid}.png"
     # Direct destination write inherits the workspace ACL on Windows. Never
@@ -160,6 +169,10 @@ def pack_unit(entry, previous, output_dir):
                   pose_frame_size=dict(width=width, height=height), pose_ground_margin=bottom,
                   pose_reference_height=reference_height, pose_source_facing=facing,
                   pose_aliases=aliases, pose_provenance="original_fluid_animation")
+    if anchor_x != width//2:
+        result["pose_anchor_x"] = anchor_x
+    else:
+        result.pop("pose_anchor_x", None)
     review = dict(entry.get("visual_review", {"status":"pending"}))
     return dict(unit_id=uid, animation=result, sources=sources, visual_review=review,
                 replaced_clips=list(entry["clips"]), accepted_clips=entry.get("accepted_clips", []),

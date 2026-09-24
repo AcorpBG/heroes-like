@@ -60,7 +60,16 @@ def process(action):
  if len(frames)!=124:raise ValueError(f'{action} decoded {len(frames)} source frames, expected 124')
  hashes=[]; bg_meta=[]
  for i,rgb in enumerate(frames):
-  im,meta=key(rgb); p=mat/f'rgba_{i:03}.png'; im.save(p); hashes.append(sha(p)); bg_meta.append(meta)
+  im,meta=key(rgb)
+  if action=='cast_v4':
+   # This original palette contains no magenta. Remove residual key-color
+   # spill from RGB only; retain the extracted alpha and all fine branches.
+   pixels=np.array(im,dtype=np.int16)
+   spill=np.maximum(0,np.minimum(pixels[:,:,0],pixels[:,:,2])-pixels[:,:,1])
+   pixels[:,:,0]-=spill; pixels[:,:,2]-=spill
+   im=Image.fromarray(pixels.astype('uint8'),'RGBA')
+   meta['despill']='subtract max(0,min(R,B)-G) from R and B; alpha unchanged; no magenta in original palette'
+  p=mat/f'rgba_{i:03}.png'; im.save(p); hashes.append(sha(p)); bg_meta.append(meta)
  # Every fourth observed source frame in temporal order. The sheet is a review aid, not a pose count.
  chosen=list(range(0,124,4)); cell=(240,168); sheet=Image.new('RGB',(cell[0]*5,cell[1]*7),(38,45,34)); d=ImageDraw.Draw(sheet)
  for n,i in enumerate(chosen):
@@ -98,8 +107,10 @@ def build(selected_path):
   count=len(selections[action]['source_frames'])
   clips[action]=dict(indices=list(range(offset,offset+count)),frame_msec=int(selections[action].get('frame_msec',83)),loop=action in ('idle','move'),static_frame=count-1 if action in ('defend','death') else 0)
   sel=selections[action]
+  if 'frame_durations_msec' in sel: clips[action]['frame_durations_msec']=sel['frame_durations_msec']
   if action in ('attack','cast'):
    contact=int(sel['contact_source_frame_index']); clips[action]['contact_frame']=min(range(count),key=lambda j:abs(int(sel['source_frames'][j])-contact))
+   if action=='cast': clips[action]['static_frame']=clips[action]['contact_frame']
   offset+=count
  frames=[]
  for action in actions:
@@ -108,7 +119,7 @@ def build(selected_path):
   for source_i in sel['source_frames']:
    folder=BASE/sel.get('source_directory',action); src=folder/'matte'/f'rgba_{int(source_i):03}.png'
    frames.append(dict(name=f'{action}_h3_{int(source_i):03}',clip=action,source=src.relative_to(ROOT).as_posix(),rects=[[0,0,960,544]],anchor=[480,492],scale=.890625,alpha_noise_cutoff=0,video_frame=int(source_i),video_time_seconds=round(int(source_i)/24,6)))
- handoff=dict(schema_version=1,units=[dict(unit_id=UID,reference_height=REFERENCE_HEIGHT,source_facing='right',alpha_noise_cutoff=0,frames=frames,clips=clips,source_scale_reason='All action footage is 960x544 decoded H3 pixels. The prepared source guide uses 0.5 original-pixel scale while the original pose recipe uses 0.4453125; applying 0.890625 to H3 output preserves the original 256px anatomical reference and fixed ground anchor [480,492]. No per-pose scale or bounding-box stabilization.',provenance=dict(tool='local_comfyui_minimax_h3',actions=provenance),visual_review=dict(status='pending',notes='Candidate contains six visually reviewed action clips; cast/support remains excluded after repeated workflow dispatch failure and incomplete result. Idle is the same authored loop suitable for battle and overworld use.'))])
+ handoff=dict(schema_version=1,units=[dict(unit_id=UID,reference_height=REFERENCE_HEIGHT,source_facing='right',alpha_noise_cutoff=0,frames=frames,clips=clips,source_scale_reason='All action footage is 960x544 decoded H3 pixels. The prepared source guide uses 0.5 original-pixel scale while the original pose recipe uses 0.4453125; applying 0.890625 to H3 output preserves the original 256px anatomical reference and fixed ground anchor [480,492]. No per-pose scale or bounding-box stabilization.',provenance=dict(tool='local_comfyui_minimax_h3',actions=provenance),visual_review=dict(status='pending',notes=selection_document.get('review_note','Candidate requires independent visual acceptance; idle is shared with overworld playback.')))])
  out=BASE/'handoff.json';write(out,handoff);write(BASE/'selection_review.json',{'actions':selections,'excluded_actions':selection_document.get('excluded_actions',{}),'source_scale':.890625});print(out)
 
 if __name__=='__main__':

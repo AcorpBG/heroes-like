@@ -145,33 +145,52 @@
       "frame_msec": 83,
       "loop": false,
       "meaningful_phase_review": "Starts ready, then buckles/falls frame40 through grounded corpse96; samples fast collapse64\u201388, retimed83ms/frame (~1.33s), final corpse persistent."
-    }
-  },
-  "excluded_actions": {
+    },
     "cast": {
-      "status": "excluded_after_bounded_reassessment",
-      "attempts": [
-        {
-          "action": "cast",
-          "prompt_id": "4342205b-f808-49bf-9cb3-cad6c9e7f14b",
-          "runtime_seconds": 134,
-          "reason": "Face/muzzle disappears and antlers stretch into tall leaf blades during repeated low bow/crouch."
-        },
-        {
-          "action": "cast_v2",
-          "prompt_id": "1eb08fa5-0070-4da2-a2f1-998b00e59b7c",
-          "runtime_seconds": 123,
-          "reason": "Text added intact face/rigid branch constraints, but workflow dispatch retained generated support middle guide; output remains a sustained low crouch without readable proud rally."
-        },
-        {
-          "action": "cast_v3",
-          "prompt_id": "60261834-7385-4a21-b202-3e5e29a4f5ec",
-          "runtime_seconds": 123,
-          "reason": "Intended original-ready endpoints were not applied because duplicated whitelist dispatch bug persisted; actual graph again contains generated support middle guide. Result has only subtle incomplete support gesture."
-        }
+      "source_directory": "cast_v4",
+      "source_frames": [
+        12,
+        16,
+        20,
+        24,
+        28,
+        32,
+        36,
+        40,
+        48,
+        60,
+        72,
+        80,
+        84,
+        88,
+        92,
+        96,
+        108
       ],
-      "blocked_reason": "Required original-guide plan was not executed due repeated helper dispatch mismatch; no further generation was authorized after the bounded correction. Preserve captured originals and provenance; no cast clip is handed off."
+      "frame_msec": 60,
+      "frame_durations_msec": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        120,
+        180,
+        180,
+        120,
+        60,
+        60,
+        60,
+        60,
+        180,
+        60
+      ],
+      "contact_source_frame_index": 40,
+      "meaningful_phase_review": "Ready12; planted chest/head rise16-40; proud antler rally peak40-72; recovery80-108. Original-only endpoints, no generated middle guide. Uneven source intervals retain proportional holds at 0.36x source duration; 1500ms gesture. Four-leg identity, face, antler branches and terminal ready inspected across all124 frames; RGB-only key spill removal preserves alpha."
     }
   },
+  "excluded_actions": {},
   "source_scale": 0.890625
 }

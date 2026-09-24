@@ -12,10 +12,8 @@
     "defend": 10,
     "death": 16,
     "dead": 1,
-    "overworld_idle_reuses": "idle"
-  },
-  "excluded_actions": {
-    "cast": "No clip accepted; three generations are preserved above. A repeated guide-plan dispatch mismatch left the requested original-ready-only cast v3 plan unexecuted."
+    "overworld_idle_reuses": "idle",
+    "cast": 17
   },
   "attempts": [
     {
@@ -137,6 +135,17 @@
       "prompt": "cast_v3/prompt.txt",
       "workflow": "cast_v3/workflow_api.json",
       "original_video": "cast_v3/original_lossless.mkv"
+    },
+    {
+      "action": "cast_v4",
+      "operator": "coordinator_solo_followup",
+      "prompt_id": "a9d4254a-caa0-4dd3-8a92-12e1d479dcae",
+      "runtime_seconds": 123.857,
+      "status": "success",
+      "reason": "Accepted17 observed frames after actual original-only guide plan: planted head/chest lift, antler rally hold and recovery. Every source frame, matte and native battle phases reviewed. RGB key despill preserves alpha. Six previously accepted clips unchanged.",
+      "prompt": "cast_v4/prompt.txt",
+      "workflow": "cast_v4/workflow_api.json",
+      "original_video": "cast_v4/original_lossless.mkv"
     }
   ],
   "review_rebuild": "Run process_h3.py process <attempt> to rebuild extracted frames and review previews; rejected nonuniform-background attempts may deliberately fail the matte safety check.",
@@ -147,12 +156,16 @@
       "attack",
       "hit",
       "defend",
-      "death"
+      "death",
+      "cast"
     ],
-    "support": "unfinished",
-    "candidate_assertions": 161,
-    "published_assertions": 165,
+    "support": "completed_by_coordinator_solo_followup",
+    "candidate_assertions": 188,
+    "published_assertions": 192,
     "continuous_manual_playtest": false,
     "linux_execution": false
+  },
+  "rejected_support_history": {
+    "cast": "No clip accepted; three generations are preserved above. A repeated guide-plan dispatch mismatch left the requested original-ready-only cast v3 plan unexecuted."
   }
 }

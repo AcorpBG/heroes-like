@@ -2986,8 +2986,9 @@ func _draw_stack_tokens(hex_layout: Dictionary, stack_cells: Dictionary) -> void
 			var frame_size := _stack_standee_size(radius, stack).y
 			var frame_region := _animation_frame_region_for_stack(stack)
 			var animation := ContentService.get_unit_animation(String(stack.get("unit_id", "")))
-			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation)
-			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, BattleUnitPose.facing_flip(animation, side), Color(1.0, 1.0, 1.0, 0.96))
+			var flip := BattleUnitPose.facing_flip(animation, side)
+			var frame_rect := BattleUnitPose.grounded_rect(ground_center, frame_size, frame_region, animation, flip)
+			_draw_stack_art_region(animation_sheet, frame_rect, frame_region, flip, Color(1.0, 1.0, 1.0, 0.96))
 		elif art_source == "resting_battle_standee":
 			_draw_stack_art(battle_standee, _stack_standee_rect(center, radius, stack), side == "enemy", Color(1.0, 1.0, 1.0, 0.99))
 		elif art_source == "resting_battle_icon":
@@ -3048,8 +3049,9 @@ func _battle_corpse_entries(hex_layout: Dictionary) -> Array:
 		var extent := _stack_standee_size(radius, stack).y
 		var center := _hex_center(cell, hex_layout) + _body_center_offset(stack, cell, hex_layout)
 		var ground_y := center.y + radius * STACK_STANDEE_GROUND_OFFSET_FACTOR
-		var rect := BattleUnitPose.grounded_rect(Vector2(center.x, ground_y), extent, region, animation)
-		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":BattleUnitPose.facing_flip(animation, String(stack.get("side", "")))})
+		var flip := BattleUnitPose.facing_flip(animation, String(stack.get("side", "")))
+		var rect := BattleUnitPose.grounded_rect(Vector2(center.x, ground_y), extent, region, animation, flip)
+		entries.append({"battle_id":String(stack.get("battle_id", "")), "texture":texture, "rect":rect, "region":region, "flip":flip})
 	return entries
 
 func _active_mapped_status_effects(stack: Dictionary) -> Array:
