@@ -1,0 +1,150 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+      "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b2110286eb924f57b532dc7dc4735749068f87c51c5e3d595264b494a7724d85",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-12f7af34-c997-4d3f-b301-1d44c7cef312.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/attack_v1.png",
+      "sha256": "38f8882fcaeee6ca486d3b28534848385bdc063bab3cceb13fd84da5234ef1fd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "716498c2edf46d5b51042b549410065fe3076dd1d1a0720cf2778813549d796b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9ff4a008-feec-44e4-b82b-06952ea01125.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/ranged_v1.png",
+      "sha256": "079aad25d2348b633b7276c2e24d9f7a7cefd3bc6bb5ef03ce2230ea85fa0b56",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "9666054f56c3038d05d6c700b0f4c2faad751bf39052109f3edab7489d7981d8",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-f49633d9-465f-43f0-a184-a35a0e59aa03.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/reactions_v1.png",
+      "sha256": "5a155b9de25c9850d1491fe4d082593f0010c0008f65192be7e63c4867ea50c5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "2e2be1fbd56ef844d2aa3a011c2c11d391fc18dc1a2bd58248b6304670702083",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-643df076-4fb1-4165-b2a5-62daa631279c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/cast_v1.png",
+      "sha256": "11acfd8d7677242d52f686f13d14c80e253e13d583b0128200c91ea86db888ed",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "187a456afba945525c4a2773afb3e9fdb11ffd58997ec808e0b17b063c6687f1",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ae785a09-d162-4823-8626-6267022810b2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png",
+      "sha256": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "6e0c226e6f3e7c8dae65d9820b76c54e82b178e9b573f3620553829477ff52bf",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-250f0180-df54-42fa-bad9-7c42dd0d0dd2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_v1.png",
+      "sha256": "281ffb35f1e23e69b9f2b420d384b40f14796e9c986bb0bd63f7b0aec7421af4",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "37089392465894bd7ea4fef5e7561765e4f315f30714559a167184894eeaaf45",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4d79d5a6-632a-4950-a753-792e208076c0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/identity_reference.png",
+          "sha256": "306dd8e4d7d5d474e2808773a45bd4d4722c0501db12cf89b64c7c32df868883"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png",
+          "sha256": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v1.png",
+      "sha256": "a89fc09b0b2d5bfb33ca90f2e71db1fdb636726ee75b8c407767810f2adfd073",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "84cf6ab1707e0cfb9c2773fa756d27f2339d1629a6b0d728984d5e126f1b287b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-5a3692b2-4175-4750-9fa5-834974aefef5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/near_step_reference.png",
+          "sha256": "fef7d4959de03f48b15ab1864280b8cb9bc95e65c5050a4b0deb98d49e14627d"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v2.png",
+      "sha256": "8256680db59d38a54b018cb4d8ef64386121a47e2a120a1bb3050ee10aa48c62",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v2.prompt.txt",
+      "prompt_sha256": "4397df83b9d654185013332edd401046438262f6c93c8ee67ab573a18a62bc2e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-86db6cdc-8394-435d-8300-5f67446027fa.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/near_step_reference.png",
+          "sha256": "fef7d4959de03f48b15ab1864280b8cb9bc95e65c5050a4b0deb98d49e14627d"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v1.png",
+          "sha256": "a89fc09b0b2d5bfb33ca90f2e71db1fdb636726ee75b8c407767810f2adfd073"
+        }
+      ]
+    }
+  ]
+}
