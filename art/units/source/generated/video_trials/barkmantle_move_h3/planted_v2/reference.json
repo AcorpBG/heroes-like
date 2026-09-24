@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_thornwake_barkmantle_rams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_near_diagonal",
+        "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-near-diagonal-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1501,
+            1047
+          ]
+        ],
+        "anchor": [
+          772,
+          947
+        ],
+        "scale": 0.4
+      },
+      "source_sha256": "8a84a1dcb1dca1605757692faef34f4b62eb44855746591d0242a2a1f631186c",
+      "input_file": "input_cyan.png",
+      "input_sha256": "0aa6cade3a202e2f7c1a9e852b8bb19af63ca3016525ddff53188b13aa6ddab2",
+      "runtime_source_scale": 0.214
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_diagonal",
+        "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/walk-far-diagonal-magenta.png",
+        "rects": [
+          [
+            0,
+            0,
+            1501,
+            1047
+          ]
+        ],
+        "anchor": [
+          776,
+          1018
+        ],
+        "scale": 0.4
+      },
+      "source_sha256": "e6299b24370d6734526f7825e9ce3aeee26262fdbecef92fe6402b92ea27ee89",
+      "input_file": "middle_cyan.png",
+      "input_sha256": "98b79c8b39345f9f7bf4e1ae5b436a617e94b404adb2f234d173f0691a0cbd60",
+      "runtime_source_scale": 0.214
+    },
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_thornwake_barkmantle_rams/continuity-alpha/original.png",
+        "rects": [
+          [
+            0,
+            81,
+            395,
+            356
+          ]
+        ],
+        "anchor": [
+          209,
+          343
+        ],
+        "scale": 1.4953271028037387
+      },
+      "source_sha256": "080fb428a56f86fba082912da5a07abf1205068713154553347c8201d014aaff",
+      "input_file": "planted_cyan.png",
+      "input_sha256": "208a44abcb4a18f404f188f7605bd3c67798e26c82c6092ffd05befd0a8034e4",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    465
+  ],
+  "input_source_scale": 0.4,
+  "output_scale": 0.5349999999999999
+}

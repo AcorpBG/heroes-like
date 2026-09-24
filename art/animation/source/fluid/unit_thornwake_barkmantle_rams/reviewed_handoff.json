@@ -5,7 +5,6 @@
       "unit_id": "unit_thornwake_barkmantle_rams",
       "reference_height": 256,
       "source_facing": "right",
-      "alpha_noise_cutoff": 8,
       "frames": [
         {
           "name": "attack_v1_00",
@@ -614,8 +613,660 @@
           ],
           "scale": 0.68,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_100",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "move_h3_104",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "move_h3_108",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "move_h3_112",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "move_h3_116",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "move_h3_120",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            465
+          ],
+          "scale": 0.5349999999999999,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "attack": {
           "indices": [
@@ -684,35 +1335,124 @@
           "frame_msec": 120,
           "loop": false,
           "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/original_lossless.mkv",
+          "sha256": "e14cb6d1dc44e37a9aba953a03b3e8b3bb585838f91dbfa9a765b50a6417e519"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/original.json",
+          "sha256": "1b31c28d9ff294d71251e7cbfc3b9415bfae1cf82bcae28cdfd65857f2d68f34"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/workflow_api.json",
+          "sha256": "3935387243df21bb6c115aff399a2a79bca737bb71fceaad2cd05c33891b4997"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/prompt.txt",
+          "sha256": "b4b27d2fc856cdad04e59ae7103282daa4d0c0e55a5c738dcb7c8f223d68786a"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/reference.json",
+          "sha256": "4e63b198b61890ad979b40cadd2548ff1f81171c025890d98dc0a0fa3096c392"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte.json",
+          "sha256": "0611a1a00010edd4123328b941011f850304a6600cc63369f3481a2efadd2982"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all124 corrected source frames chronologically, enlarged limb/identity/alpha phases on light and dark grounds, and Godot battle-scale movement against retained idle. Accept31 observed poses source0-120 every4,42ms,1302ms loop: four distinct root legs alternate diagonal lifting and planted support with shoulder/hip weight transfer and rigid horned head. Rejected first video for near-front leg overextension/paw growth; corrected graph pins original planted stance at30/92 and opposite diagonal at61. Original runtime .214/input .4 anatomical scale and fixed anchor480,465 preserved, without per-frame stabilization, warping or synthetic/reversed frames. Visual loop boundary near-matched, difference .019 vs adjacent median .078. Preserve six previously accepted actions and original map idle. Candidate127 focused checks passed; no full suite, continuous manual game playtest or Linux execution claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/attack_v1.png": 0.7,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/hit_defend_v1.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/death_v1.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/cast_v1.png": 0.68,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_000.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_004.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_008.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_012.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_016.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_020.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_024.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_028.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_032.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_036.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_040.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_044.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_048.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_052.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_056.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_060.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_064.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_068.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_072.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_076.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_080.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_084.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_088.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_092.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_096.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_100.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_104.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_108.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_112.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_116.png": 0.5349999999999999,
+        "art/units/source/generated/video_trials/barkmantle_move_h3/planted_v2/matte/rgba_120.png": 0.5349999999999999
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
       "accepted_clips": [
         "attack",
         "hit",
         "defend",
         "death",
         "cast",
-        "idle"
-      ],
-      "preserve_clips": [
-        "idle",
-        "move"
-      ],
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/attack_v1.png": 0.7,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/hit_defend_v1.png": 0.65,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/death_v1.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_barkmantle_rams/cast_v1.png": 0.68
-      },
-      "source_scale_reason": "Original generation sheets render the same anatomical body at different fixed resolutions. Uniform scale for all poses of each source is calibrated against the current approximately 200px high, 290px wide idle. Attack 0.70, reaction/guard 0.65, death 0.80 (smaller drawn body), support 0.68. No per-pose scale or deformation.",
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Game-scale review: horn/foreleg idle, horn thrust and recoil, lowered brace, support rear and full grounded collapse. Dedicated locomotion remains unfinished."
-      },
-      "unfinished_clips": [
-        "move"
-      ],
-      "preserved_accepted_clips": [
+        "move",
         "idle"
       ]
     }

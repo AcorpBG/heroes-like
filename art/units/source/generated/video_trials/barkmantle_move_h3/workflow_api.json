@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "barkmantle_walk_input_cyan.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate this EXACT original Barkmantle Ram, a heavy four-legged wooden forest beast, trotting IN PLACE with alternating diagonal support. Preserve the broad low barrel torso, layered ivory birch-bark plates, mossy olive wood, amber sap nodules, red vine bindings and two red patterned hanging flank ribbons. Preserve the same rigid horned wooden head on image RIGHT, with the same number and shape of horns. Exactly FOUR articulated wooden legs and FOUR broad root paws, always attached at the same two shoulders and two hips. No new limbs or merging limbs. The foreground front leg emerges from the large center-right shoulder; the foreground hind leg is on image LEFT. The two far legs remain behind the body. Start in the supplied near-diagonal pose. Lower the lifted near-front and far-hind paws, load weight onto that diagonal pair, then bend and lift the other pair: far-front and near-hind. Reach the supplied opposite diagonal support pose at the midpoint. Lower that pair, transfer weight, and return the near-front and far-hind pair through bent-joint passing and forward reach to precisely the first pose at the end. One complete natural heavy trot cycle, with clear lifted-paw clearance and flat weight-bearing root-paw contacts. Never slide all four paws together or use only head bobbing. Keep hips and shoulders centered horizontally, no travel, turning or change of perspective. Feet alternate lift, swing, planting and pushing off. Small anatomical weight transfer only; torso never inflates, shrinks or liquefies. Birch plates and amber nodules stay attached; red ribbons settle with slight secondary motion. Head remains rigid, no ramming or attack. No magic, glow, particles, smoke, detached debris or new props. Locked camera with identical scale and framing, entire horns and root paws inside frame. Every background pixel stays a perfectly SOLID FLAT CYAN RGB(0,255,255) plate throughout. Never change background hue or brightness. No ground plane, cast shadow, floor, scenery, text, blur or camera movement.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092408
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "barkmantle_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "barkmantle_move_h3/frames/decoded"
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "barkmantle_walk_middle_cyan.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "frame_idx": 61,
+      "image": [
+        "16",
+        0
+      ]
+    }
+  }
+}

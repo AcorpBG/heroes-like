@@ -1,0 +1,6 @@
+{
+  "status": "rejected",
+  "reason": "Near-front paw overextends toward camera and grows during first half stride; selected bounds approach within three pixels of the image bottom. No opaque pixels actually intersect the last row.",
+  "bottom_clipped_source_frames": [],
+  "correction": "Use original planted stance at frame30/92, retain opposite-diagonal midpoint61, fixed guide anchor480,465 and short-step instruction."
+}
