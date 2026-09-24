@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "hit",
+  "seed": 2026092523,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          1350,
+          385,
+          1420,
+          420
+        ],
+        [
+          1175,
+          420,
+          1420,
+          697
+        ],
+        [
+          1175,
+          697,
+          1268,
+          713
+        ],
+        [
+          1295,
+          697,
+          1420,
+          713
+        ]
+      ],
+      "anchor": [
+        1300,
+        710
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8,
+      "crop_reason": "Exclude adjacent lower-row pike tip in the empty gap between the hit pose boots; retain both legitimate boots."
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      78,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "The pikeward bends his knees and briefly leans his shoulders backward, pulling his held shield closer. He then straightens to his initial ready stance. Keep his original face, red plume, clothes, armor, body size, shield and rigid hooked pike unchanged. Only the pikeward moves. Locked camera. Plain solid green RGB(0,255,0) studio plate, unchanged throughout. No effects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          176,
+          483
+        ],
+        "scale": 0.7230769230769231,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ff08eae2e19246b6e4403e7c0928a47d5ffa365bf4274f0fc8e920add7c5b29a",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "eebca4bdb4f633320d711fded3fb1315dd9a3dd58996a4c1e70fc346c01d6e68",
+      "runtime_source_scale": 0.47
+    },
+    {
+      "source_frame": {
+        "name": "hit",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+        "rects": [
+          [
+            1350,
+            385,
+            1420,
+            420
+          ],
+          [
+            1175,
+            420,
+            1420,
+            697
+          ],
+          [
+            1175,
+            697,
+            1268,
+            713
+          ],
+          [
+            1295,
+            697,
+            1420,
+            713
+          ]
+        ],
+        "anchor": [
+          1300,
+          710
+        ],
+        "scale": 0.923076923076923,
+        "alpha_noise_cutoff": 8,
+        "crop_reason": "Exclude adjacent lower-row pike tip in the empty gap between the hit pose boots; retain both legitimate boots."
+      },
+      "source_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "4bd1a8f03e324babe913482a5162a5fb1464015ba0ca801c2fba69fccc217c02",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

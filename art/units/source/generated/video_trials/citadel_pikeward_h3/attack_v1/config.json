@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "attack",
+  "seed": 2026092521,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          382,
+          100,
+          407
+        ],
+        [
+          0,
+          407,
+          325,
+          714
+        ]
+      ],
+      "anchor": [
+        195,
+        710
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_1",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          410,
+          810,
+          716
+        ],
+        [
+          810,
+          470,
+          878,
+          537
+        ]
+      ],
+      "anchor": [
+        537,
+        710
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      50,
+      2
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One deliberate pike thrust: ready, draw the polearm back with shoulder and elbow, lunge forward and thrust horizontally to the right, then retract and return to ready. Preserve the single rigid hooked pike and its length, two hands only with correct grips, shield strapped on the far forearm. Original face, red plume, armor and body size. Fixed right-facing camera. Plain solid green RGB(0,255,0) background, no effects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

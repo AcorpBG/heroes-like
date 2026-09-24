@@ -1,0 +1,78 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "move",
+  "seed": 2026092520,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          820,
+          0,
+          1030,
+          398
+        ]
+      ],
+      "anchor": [
+        926,
+        390
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_opposed_v2",
+      "source": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1665,
+          944
+        ]
+      ],
+      "anchor": [
+        837,
+        877
+      ],
+      "scale": 0.265,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      41,
+      0
+    ],
+    [
+      61,
+      1
+    ],
+    [
+      82,
+      0
+    ],
+    [
+      102,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One smooth in-place marching walk repeated three times. Alternate both legs through heel contact, weight bearing, knee bend and passing. Keep the long rigid hooked pike upright in the near hand and the strapped shield on the far arm. Original red-plumed helmet, armor, tabard, shield design and body proportions stay unchanged. Fixed right-facing camera. Plain solid green RGB(0,255,0) background remains unchanged.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "source_note": "Legacy contacts repeat the near leg. Original generated open stance used as guide; trace both legs in the resulting video before acceptance, not merely endpoint resemblance."
+}
