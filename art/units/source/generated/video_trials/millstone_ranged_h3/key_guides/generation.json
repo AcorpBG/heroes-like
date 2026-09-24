@@ -1,0 +1,33 @@
+{
+  "tool": "built-in image_gen",
+  "purpose": "Original underarm sling key poses replacing failed overhead control; preserve generated alpha",
+  "guides": [
+    {
+      "path": "art/units/source/generated/video_trials/millstone_ranged_h3/key_guides/backswing_v1.png",
+      "sha256": "8ec770cfe93db331c9ac8746df0bdd89487db28e8303ff20a2d4cd55227de5d1",
+      "reference": "art/units/source/generated/video_trials/millstone_h3/key_guides/prerelease_v1.png",
+      "reference_sha256": "82224777c08beadf1a254bbd7c335002fdd82f044a53a160310e11240fccd813",
+      "prompt": "backswing_prompt.txt",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1fb10ad4-93df-405d-aa94-6b8c8df02ded.png",
+      "prompt_sha256": "eedd3369dd8c3fd3c9b188f3916feb08dc59ded9015b7dcf1278b36debee6d41"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/millstone_ranged_h3/key_guides/release_v1.png",
+      "sha256": "b14b45d27a126de5d74a4194e114020dfdb6432c56917265e6ef2ec73e815e6e",
+      "reference": "art/units/source/generated/video_trials/millstone_ranged_h3/key_guides/backswing_v1.png",
+      "reference_sha256": "8ec770cfe93db331c9ac8746df0bdd89487db28e8303ff20a2d4cd55227de5d1",
+      "prompt": "release_prompt.txt",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-130ae720-f948-4804-bc55-e2cb15a55fa1.png",
+      "prompt_sha256": "187ff173ab7ebb0c9e4d89c22611d549afc2ce68baddeb854259be198bab1c31"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/millstone_ranged_h3/key_guides/swing_v1.png",
+      "sha256": "1e392cb4ed5e87079dc92159ac34daf15394f3190881a4a62c453ab9a6bf1dac",
+      "reference": "art/units/source/generated/video_trials/millstone_ranged_h3/key_guides/backswing_v1.png",
+      "reference_sha256": "8ec770cfe93db331c9ac8746df0bdd89487db28e8303ff20a2d4cd55227de5d1",
+      "prompt": "swing_prompt.txt",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7fa648e7-1310-4f1e-bbee-62fdb3465e30.png",
+      "prompt_sha256": "32dc0232801cad24234f3c9ef60ae148b6257633520759df03ce4d4a9d19de44"
+    }
+  ]
+}
