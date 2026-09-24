@@ -6383,33 +6383,37 @@
     "unit_mireclaw_drowned_antler_sovereign_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",
       "frame_size": [
-        406,
-        250
+        419,
+        256
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        245.0,
-        238
+        257.0,
+        248
       ],
-      "painted_extent": 390,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_drowned_antler_sovereign_veteran.png",
+      "painted_extent": 403,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_drowned_antler_sovereign_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        11,
-        2,
-        417,
-        252
+        27,
+        8,
+        446,
+        264
       ],
-      "source_sha256": "56d6ee515ed56b897341a40e2d568da52d16bb95bd592b4718a31b06bdde15b0",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_drowned_antler_sovereign_veteran/provenance.json",
-      "sha256": "5def85e34604ecdf1ce20c8376168c3624902de58305caa4f0faa221b82b214b"
+      "source_sha256": "a0743aa8029585cda6a8d4aaeca616b8bc8ca9ff765b64501ad4000785d2ce12",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_drowned_antler_sovereign_veteran/provenance.json",
+      "sha256": "4dd3136db870a2b9884a69ad0e479025322fb1c89e33df311e5118e360d235fc"
     },
     "unit_shard_guard_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_shard_guard_veteran.png",
