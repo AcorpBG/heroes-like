@@ -1,0 +1,862 @@
+{
+  "prompt": [
+    36,
+    "cabafa52-28d7-40ef-8b21-f87e69a2a111",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "fenbell_walk_input_blue.png"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate the EXACT Fenbell Chainstalker in the reference performing a quiet reciprocal WALK IN PLACE for two complete left-right cycles and returning to the original ready stance. Preserve lean humanoid anatomy, pale carved wooden mask with dark eye openings, dark face wrap, shaggy olive/yellow reed hood and mantle with teal strands at IMAGE RIGHT, dark worn leather wraps, rope belt, wrapped boots and existing red bindings. Exactly two humanlike legs and two arms; no tail, wings or new anatomy. Keep the SAME weapon topology at all times: the hand at IMAGE LEFT holds the original small bronze bell and linked chain; that single chain runs down to ONE large bronze crescent hook held ahead and clear of the boots. The hand at IMAGE RIGHT retains the spare chain coil without releasing it. One bell, one hook, one connected leading chain, one spare coil. Bell body and crescent hook retain their exact shape, size and bronze material. Both hands stay on their original grips. Small natural dangling sway only, never throw, swing in an attack arc, ring overhead, duplicate or lose the bell/hook, create floating links or attach a chain to the boots. Take restrained crouched steps: near boot reaches forward heel-first as far leg trails, plant near heel/toes and transfer weight, far knee flexes and far boot passes beneath hips then reaches into the opposite forward contact, plant far boot and let near leg trail and pass forward again. Both legs each visibly perform contact, support, toe-off and passing; never hold the same forward knee throughout. Repeat a complete two-step cycle and return to the starting stance. Knees remain low, soles support body weight, no hopping, skipping, floating, skating or scissor crossing. Bell and hooked chain stay lifted enough to avoid touching ground or feet, with only modest arm balancing. Reeds softly trail the motion while preserving their shapes and olive/yellow/teal palette. Stable mask and proportions. Keep torso centered at constant scale; no world travel, camera movement, zoom, turning or perspective change. Entire boots, reeds, bell and hook remain inside the canvas. Background stays perfectly uniform PURE BLUE RGB(0,0,255) throughout all frames. Never change the pure BLUE backdrop to green, yellow, cyan, magenta or any other color. No floor, cast shadows, scenery, gradients, text, smoke, magical particles, motion blur or extra objects.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "4",
+            0
+          ],
+          "last_frame": [
+            "4",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092419
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "fenbell_move_h3/blue_v2/original",
+          "format": "mp4",
+          "format.codec": "h264"
+        }
+      },
+      "15": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "filename_prefix": "fenbell_move_h3/blue_v2/frames/decoded"
+        }
+      }
+    },
+    {
+      "client_id": "fenbell_walk_h3",
+      "create_time": 1790266536669
+    },
+    [
+      "15",
+      "14"
+    ]
+  ],
+  "outputs": {
+    "15": {
+      "images": [
+        {
+          "filename": "decoded_00001_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00002_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00003_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00004_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00005_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00006_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00007_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00008_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00009_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00010_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00011_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00012_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00013_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00014_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00015_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00016_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00017_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00018_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00019_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00020_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00021_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00022_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00023_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00024_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00025_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00026_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00027_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00028_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00029_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00030_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00031_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00032_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00033_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00034_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00035_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00036_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00037_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00038_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00039_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00040_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00041_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00042_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00043_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00044_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00045_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00046_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00047_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00048_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00049_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00050_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00051_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00052_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00053_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00054_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00055_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00056_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00057_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00058_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00059_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00060_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00061_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00062_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00063_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00064_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00065_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00066_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00067_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00068_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00069_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00070_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00071_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00072_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00073_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00074_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00075_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00076_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00077_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00078_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00079_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00080_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00081_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00082_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00083_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00084_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00085_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00086_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00087_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00088_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00089_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00090_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00091_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00092_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00093_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00094_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00095_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00096_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00097_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00098_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00099_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00100_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00101_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00102_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00103_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00104_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00105_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00106_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00107_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00108_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00109_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00110_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00111_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00112_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00113_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00114_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00115_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00116_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00117_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00118_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00119_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00120_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00121_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00122_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00123_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00124_.png",
+          "subfolder": "fenbell_move_h3\\blue_v2\\frames",
+          "type": "output"
+        }
+      ]
+    },
+    "14": {
+      "images": [
+        {
+          "filename": "original_00001_.mp4",
+          "subfolder": "fenbell_move_h3\\blue_v2",
+          "type": "output"
+        }
+      ],
+      "animated": [
+        true
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "cabafa52-28d7-40ef-8b21-f87e69a2a111",
+          "timestamp": 1790266536670
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "cabafa52-28d7-40ef-8b21-f87e69a2a111",
+          "timestamp": 1790266536677
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "cabafa52-28d7-40ef-8b21-f87e69a2a111",
+          "timestamp": 1790266653351
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "15": {
+      "node_id": "15",
+      "display_node": "15",
+      "parent_node": null,
+      "real_node_id": "15"
+    },
+    "14": {
+      "node_id": "14",
+      "display_node": "14",
+      "parent_node": null,
+      "real_node_id": "14"
+    }
+  }
+}
