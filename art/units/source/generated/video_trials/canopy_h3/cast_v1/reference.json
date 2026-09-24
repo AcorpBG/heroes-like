@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_thornwake_canopy_rammers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "cast_v1_00",
+        "clip": "cast",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/cast_v1.png",
+        "rects": [
+          [
+            137,
+            23,
+            457,
+            372
+          ]
+        ],
+        "anchor": [
+          265,
+          372
+        ],
+        "scale": 0.9166666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b1cf478622a02cf83fdec048148a9e074ef58baef0e26bb791f4e98f6d1ff10d",
+      "input_file": "input_magenta.png",
+      "input_sha256": "f7373e97a95519383f463c74622111e5775fc626d3867a017947a0d223598103",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "cast_v1_02",
+        "clip": "cast",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_canopy_rammers/cast_v1.png",
+        "rects": [
+          [
+            136,
+            410,
+            457,
+            755
+          ]
+        ],
+        "anchor": [
+          265,
+          755
+        ],
+        "scale": 0.9166666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b1cf478622a02cf83fdec048148a9e074ef58baef0e26bb791f4e98f6d1ff10d",
+      "input_file": "peak_magenta.png",
+      "input_sha256": "db394a342eb73757754b61b50188be8673d44d060b1df2677d8bd1b12d8c723b",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale",
+  "output_scale": 0.6
+}
