@@ -6761,33 +6761,37 @@
     "unit_sunvault_zenith_lensbearers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_zenith_lensbearers_veteran.png",
       "frame_size": [
-        238,
-        249
+        241,
+        258
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        101.0,
-        238
+        106.0,
+        250
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_zenith_lensbearers_veteran.png",
+      "painted_extent": 242,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_zenith_lensbearers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        155,
-        34,
-        393,
-        283
+        98,
+        26,
+        339,
+        284
       ],
-      "source_sha256": "3ac35570a682d384512fe2e639ec139b8fec5859bec841ea792fece8a096f1e4",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_zenith_lensbearers_veteran/provenance.json",
-      "sha256": "e67c2405489e0138fe2e6587a250fe7ff9bdbd0089ebe3a7aecb55fc2b8de4b1"
+      "source_sha256": "d78c8108ad9781cf8e6c4cd127a26b2cb16339bed2c334667dc230e39b2eb66c",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_zenith_lensbearers_veteran/provenance.json",
+      "sha256": "4ef755c4268f9a46c8fa4fedf55f5be26b67054519ead26d2f7a00512b740c14"
     },
     "unit_sunvault_aurora_ballistae_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_sunvault_aurora_ballistae_veteran.png",

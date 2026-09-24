@@ -1,0 +1,109 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/idle_v1.png",
+      "sha256": "5aea9a94768dd6e89d144e003c5ad7ad192989461619e874d4d9b3d9ff5d139b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "9d3f46397bd2e70fae2d5b6782d17aafa15d3c8068e38b44a8318996187c7945",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6cee6d6d-c252-4427-b30d-87b14c8d50ad.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/attack_v1.png",
+      "sha256": "a3e329fb17148d5471f14617c8a412ea5cf66323b5c55c80e65750a738b8ec09",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "35250c0023802123c9faee401e9371caee72fa4b7bac50d112ee5219c53d5e50",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-033a8824-a795-4722-9e72-ab1ac070c677.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/ranged_v1.png",
+      "sha256": "7f80e01ee294df00cb390c16c4ce6590f0abe1801f10894f6b11d3189d876418",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "d9def86685100a82efe111e33cca29fa022cae23893e67193d3bbc80ed332426",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d94b3e9a-4b1f-4542-ae63-f4d943ea1c9b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/reactions_v1.png",
+      "sha256": "4e8ccebf7c52185b0d91187d7e4c4745744056d8a6aebcd9eaf1c047cc119e86",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "2d246be0525f2b59787367225df7a8b9f2fdd98419cbdc39a5a1d7e198f0a919",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-dd229b79-06d7-45c2-8beb-3a7c9d097a65.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/cast_v1.png",
+      "sha256": "396e523237a67d2c1d03a7b2e2ddd18ead731cac4d648232899dcdb98f7d4e37",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "6a03a3806abdac41df852ae83b8df5c67e927923235cda336c980bddf75cc2f6",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-0f668e82-b329-4648-8584-c9b371cc2cb6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/death_v1.png",
+      "sha256": "558c0a9cea79a1fd69c506ce2b1e37f5cc3680ce58fbbad607fcebc3d213ed5e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "274efdfe1431555662acd000c227a390736a8da09c51f4f5959eba086fc079f6",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b1d2e2a3-77c7-462a-904a-d6ba036eb103.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_v1.png",
+      "sha256": "f384fbf4e16e830cbca47eb62e49c170a820c53f36e9c0d570a02531343e407e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "234913faf9262e93c8cd6e226e98914c4e56c5bf41398cb16ff78c69f0b05743",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6672b70d-9bc4-4ec1-9ee6-29543a70d137.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/identity_reference.png",
+          "sha256": "14e25b050a190a2d50f1800a5eea66d200ca73f64e6e9dc7481ee4905fdc74b4"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_near_v1.png",
+      "sha256": "abece6feead0ff9feebd7adb68f9d5113c0ebf304ad0e03107afad28543f4a82",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "39ccc0491076ed7fa525b57376a8e5e27d0bd74f26dadbcb86113752dc9e5065",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c8762c24-392f-41eb-8c62-55a21df36635.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        }
+      ]
+    }
+  ]
+}

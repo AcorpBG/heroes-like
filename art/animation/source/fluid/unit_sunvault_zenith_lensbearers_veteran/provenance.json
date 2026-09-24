@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_sunvault_zenith_lensbearers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/idle_v1.png": "5aea9a94768dd6e89d144e003c5ad7ad192989461619e874d4d9b3d9ff5d139b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/attack_v1.png": "a3e329fb17148d5471f14617c8a412ea5cf66323b5c55c80e65750a738b8ec09",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/ranged_v1.png": "7f80e01ee294df00cb390c16c4ce6590f0abe1801f10894f6b11d3189d876418",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/reactions_v1.png": "4e8ccebf7c52185b0d91187d7e4c4745744056d8a6aebcd9eaf1c047cc119e86",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/cast_v1.png": "396e523237a67d2c1d03a7b2e2ddd18ead731cac4d648232899dcdb98f7d4e37",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/death_v1.png": "558c0a9cea79a1fd69c506ce2b1e37f5cc3680ce58fbbad607fcebc3d213ed5e",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_near_v1.png": "abece6feead0ff9feebd7adb68f9d5113c0ebf304ad0e03107afad28543f4a82",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/move_v1.png": "f384fbf4e16e830cbca47eb62e49c170a820c53f36e9c0d570a02531343e407e"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Horizon Arbiter: native 128px review of two-handed staff idle/thrust, lens ranged release, hit/guard, raised support, reciprocal gait with corrected foreground steps, grounded collapse. 56 entries and 54 distinct original paintings across eight masters; two correctly scaled ready paintings replace oversized attack recovery across clips only. 132 focused candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "3ac35570a682d384512fe2e639ec139b8fec5859bec841ea792fece8a096f1e4",
+  "atlas_sha256": "d78c8108ad9781cf8e6c4cd127a26b2cb16339bed2c334667dc230e39b2eb66c",
+  "texture_bytes_rgba": 28984320
+}
