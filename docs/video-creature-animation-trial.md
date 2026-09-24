@@ -1,4 +1,6 @@
-# Heartseed Warden: local video animation trial
+# Local video creature animation trials
+
+## Heartseed Warden
 
 Owner-requested comparison against the accepted painted idle. After reviewing the trial, the owner selected local MiniMax H3 as the main workflow for all creature animations. The trial candidates themselves do not replace live game assets or increase the accepted-unit count.
 
@@ -31,3 +33,27 @@ Sources and exact prompts/workflows are under `art/units/source/generated/video_
 The magenta matte is appropriate to this creature's green/brown/ivory/amber palette. It is not a general segmentation model for creatures with magenta body parts, detached projectiles, smoke or translucent effects. The connected-subject cleanup is specific to this single-body idle. Opaque reference round-trip error is about 1.69 RGB levels and 2.85 alpha levels out of 255; that check measures the matte on its known input, not semantic correctness of generated video.
 
 The guided candidate's complete atlas is 28,510,720 uncompressed RGBA bytes versus 24,440,832 for the accepted complete atlas (packing layout also changes). Both fit the existing 4096 limit. Neither passing packing checks nor having more frames establishes smooth or correct animation. Source and ordered native phases were inspected; the comparison files provide temporal playback for owner review. No continuous manual game-playback or full-suite result is claimed.
+
+
+## Antlerloom Striders: GPT6-Luna High production trial
+
+One explicitly authorized Luna/high worker attempted the seven required actions for `unit_thornwake_stagknot_runners_veteran`, which had no accepted animation overhaul. Six actions were published after substantial coordinator review and correction. Support remains unfinished; this is a partial creature delivery, not autonomous full-creature completion.
+
+| Published clip | Observed frames | Hold per frame |
+|---|---:|---:|
+| Idle / overworld idle | 16 | 125 ms |
+| Move | 26 | 42 ms |
+| Attack | 17 | 70 ms |
+| Hit | 12 | 60 ms |
+| Defend | 10 | 70 ms |
+| Death | 16 | 83 ms |
+
+The corpse uses the final grounded death frame. Source anatomy uses one fixed scale and ground anchor; the 3696 x 3864 battle atlas stays below the 4096 texture limit. Frames are observed video samples, without synthetic interpolation, reversal or duplicate padding. The source directory is `art/units/source/generated/video_trials/luna_antlerloom_full`; `prepare_h3.py` records action-specific guides and validates submitted wiring, while `process_h3.py` extracts transparent frames and rebuilds the candidate from `selection.json`. Published provenance and the reviewed handoff are under `art/animation/source/fluid/unit_thornwake_stagknot_runners_veteran`.
+
+Twelve H3 renders produced 1,488 original frames, taking about 24 minutes 49 seconds in the generation service, excluding guides, extraction, review, correction and integration. Originals, captured workflows, prompts and guide hashes remain preserved, including rejected generations. All decoded source-frame hashes were independently verified. Video source directories are excluded from Godot import through `.gdignore`; only published runtime textures need engine import.
+
+Coordinator interventions included correcting latent wiring, inconsistent guide scale, alpha noise, slow gameplay timing and attack contact (source frame 56, rather than 72). Rejected attempts included scale growth, an unsuitable changing background, damaged head/antlers and an unwanted detached hit object. The accepted hit interval begins after that object disappears. Idle, gait, attack recovery, held guard and grounded collapse were reviewed in chronological native-scale phases, with alpha edges checked on light and dark backgrounds.
+
+Support is the explicit remaining gap. The first cast changed face/antler identity; subsequent casts lacked a clear rally gesture. Luna also twice failed to dispatch the requested original-ready-only guide plan: the captured final workflow still contained the generated midpoint. The helper was corrected afterward, but that intended guide plan has not been rendered or accepted. Captured historical workflows remain unchanged. This trial supports using Luna with close technical and visual supervision; it does not establish unattended reliability or a general model ranking.
+
+Focused Windows candidate checks passed 161 assertions; published live-asset checks passed 165 after Godot import, including battle poses, timing modes, corpse persistence and overworld idle frames. No full repository suite, continuous manual playtest or Linux execution is claimed. Temporary contact sheets, validation renders, logs, profiles and unselected extracted PNGs are disposable and rebuildable from the retained source/tooling. Cleanup retained all twelve lossless originals, original MP4s, guides, provenance and 97 selected transparent frames; removed previews and unselected extractions can be rebuilt with the per-action process command.

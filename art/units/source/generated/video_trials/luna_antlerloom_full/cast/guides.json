@@ -1,0 +1,88 @@
+{
+  "action": "cast",
+  "guides": [
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "frame": "idle_0",
+      "rect": [
+        168,
+        34,
+        554,
+        543
+      ],
+      "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+      "source_scale": 0.5,
+      "source_anchor": [
+        349,
+        542
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/cast/first_guide.png",
+      "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    },
+    {
+      "kind": "imagegen_key_pose",
+      "file": "antlerloom_support_rally.png",
+      "source_sha256": "e25a2737d51af011107b83918afc1b939584788191389b731d814f561b299057",
+      "placement_scale": 0.2,
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/cast/middle_guide.png",
+      "sha256": "9cbd23393d0bc1d1dce77710fc60c03eec8b3602e063cb92323c0cc22e14b47a",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    },
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "frame": "idle_0",
+      "rect": [
+        168,
+        34,
+        554,
+        543
+      ],
+      "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+      "source_scale": 0.5,
+      "source_anchor": [
+        349,
+        542
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/cast/last_guide.png",
+      "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    }
+  ],
+  "guide_plan": [
+    "0",
+    "antlerloom_support_rally.png",
+    "0"
+  ],
+  "input_scale": 0.5,
+  "runtime_scale": 0.890625,
+  "source_reference": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+  "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+  "seed": 202609246
+}

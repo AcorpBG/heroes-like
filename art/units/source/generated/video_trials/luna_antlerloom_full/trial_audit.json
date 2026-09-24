@@ -1,0 +1,158 @@
+{
+  "trial": "GPT-6-Luna High / local MiniMax H3 one-action-at-a-time full creature animation attempt",
+  "service": "http://127.0.0.1:8189",
+  "fps": 24,
+  "output_frames_per_attempt": 124,
+  "candidate_handoff": "handoff.json",
+  "selected_actions": {
+    "idle": 16,
+    "move": 26,
+    "attack": 17,
+    "hit": 12,
+    "defend": 10,
+    "death": 16,
+    "dead": 1,
+    "overworld_idle_reuses": "idle"
+  },
+  "excluded_actions": {
+    "cast": "No clip accepted; three generations are preserved above. A repeated guide-plan dispatch mismatch left the requested original-ready-only cast v3 plan unexecuted."
+  },
+  "attempts": [
+    {
+      "action": "idle",
+      "prompt_id": "efa91479-764b-4b2f-8051-b435c4d4091f",
+      "runtime_seconds": 129.421,
+      "status": "success",
+      "reason": "Viable: subtle head/neck articulation and settled foliage; keyed alpha reviewed on dark/light, four-leg silhouette retained.",
+      "prompt": "idle/prompt.txt",
+      "workflow": "idle/workflow_api.json",
+      "original_video": "idle/original_lossless.mkv"
+    },
+    {
+      "action": "move",
+      "prompt_id": "613dfbff-648d-4a6a-a732-6d7b457b4d63",
+      "runtime_seconds": 120.202,
+      "status": "success",
+      "reason": "Rejected: .25 guide normalization caused visible torso/whole-body growth and root shift through generated midpoint.",
+      "prompt": "move/prompt.txt",
+      "workflow": "move/workflow_api.json",
+      "original_video": "move/original_lossless.mkv"
+    },
+    {
+      "action": "move_v2",
+      "prompt_id": "d3beed89-e33f-4917-9fcf-eb989f4c3ced",
+      "runtime_seconds": 121.455,
+      "status": "success",
+      "reason": "Selected frames 37\u201387: .20 fixed source-specific guide scale, stable body proportions/root, reciprocal foreleg gait; loop endpoints visually near-matched.",
+      "prompt": "move_v2/prompt.txt",
+      "workflow": "move_v2/workflow_api.json",
+      "original_video": "move_v2/original_lossless.mkv"
+    },
+    {
+      "action": "attack",
+      "prompt_id": "b00a2d51-dc78-42dd-9164-a07261365b74",
+      "runtime_seconds": 124.656,
+      "status": "success",
+      "reason": "Rejected: flat magenta background changed to cyan/orange/green mid-video; unsafe to chroma-key around foliage.",
+      "prompt": "attack/prompt.txt",
+      "workflow": "attack/workflow_api.json",
+      "original_video": "attack/original_lossless.mkv"
+    },
+    {
+      "action": "attack_v2",
+      "prompt_id": "0986fde8-30c2-4746-b633-3d54c791b142",
+      "runtime_seconds": 123.237,
+      "status": "success",
+      "reason": "Selected frames 24\u201392: one contact guide between matching ready endpoints; clear anticipation, head/antler jab, recovery. Background still shifts palettes, so matte uses robust uniform corner plates, edge projection, connected component cleanup, and native-size dark/light review.",
+      "prompt": "attack_v2/prompt.txt",
+      "workflow": "attack_v2/workflow_api.json",
+      "original_video": "attack_v2/original_lossless.mkv"
+    },
+    {
+      "action": "hit",
+      "prompt_id": "4a8a7510-9baf-4f54-bdb8-48a443bb0d2e",
+      "runtime_seconds": 118.759,
+      "status": "success",
+      "reason": "Rejected: severe head/antler tear at frames 32\u201340.",
+      "prompt": "hit/prompt.txt",
+      "workflow": "hit/workflow_api.json",
+      "original_video": "hit/original_lossless.mkv"
+    },
+    {
+      "action": "hit_v2",
+      "prompt_id": "bb1e838c-e0e0-4f10-b411-18f26467a916",
+      "runtime_seconds": 120.031,
+      "status": "success",
+      "reason": "Selected frames 52\u201396: rigid-antler constraints improve head integrity; omit frames 0\u201348 containing detached incoming bright object; remaining sequence shows recoil, hoof return, and recovery.",
+      "prompt": "hit_v2/prompt.txt",
+      "workflow": "hit_v2/workflow_api.json",
+      "original_video": "hit_v2/original_lossless.mkv"
+    },
+    {
+      "action": "defend",
+      "prompt_id": "4b783790-25d7-4e44-a240-deeabe65c4cf",
+      "runtime_seconds": 122.206,
+      "status": "success",
+      "reason": "Selected transition 0\u201336 plus final frame123: planted low guard is held through final pose; repeated source hold excluded.",
+      "prompt": "defend/prompt.txt",
+      "workflow": "defend/workflow_api.json",
+      "original_video": "defend/original_lossless.mkv"
+    },
+    {
+      "action": "death",
+      "prompt_id": "9d5b8212-181b-4123-acae-cee8b8751578",
+      "runtime_seconds": 128.637,
+      "status": "success",
+      "reason": "Selected frame0 and frames40\u201396: buckling, fast side fall, grounded corpse; final is persistent dead frame. Ground baseline remains y492\u2013494.",
+      "prompt": "death/prompt.txt",
+      "workflow": "death/workflow_api.json",
+      "original_video": "death/original_lossless.mkv"
+    },
+    {
+      "action": "cast",
+      "prompt_id": "4342205b-f808-49bf-9cb3-cad6c9e7f14b",
+      "runtime_seconds": 134.708,
+      "status": "success",
+      "reason": "Rejected: face/muzzle disappears and antlers stretch into tall leafy blades during bow/crouch.",
+      "prompt": "cast/prompt.txt",
+      "workflow": "cast/workflow_api.json",
+      "original_video": "cast/original_lossless.mkv"
+    },
+    {
+      "action": "cast_v2",
+      "prompt_id": "1eb08fa5-0070-4da2-a2f1-998b00e59b7c",
+      "runtime_seconds": 123.032,
+      "status": "success",
+      "reason": "Rejected as intermediate: corrected face/branch text but sustained crouch and no proud rally; still used generated support middle guide due dispatch bug.",
+      "prompt": "cast_v2/prompt.txt",
+      "workflow": "cast_v2/workflow_api.json",
+      "original_video": "cast_v2/original_lossless.mkv"
+    },
+    {
+      "action": "cast_v3",
+      "prompt_id": "60261834-7385-4a21-b202-3e5e29a4f5ec",
+      "runtime_seconds": 122.778,
+      "status": "success",
+      "reason": "Excluded: intended original-ready-only guide plan was not executed due repeated plan-dispatch whitelist bug; actual graph still used generated support middle. Result remains an incomplete subtle rally.",
+      "prompt": "cast_v3/prompt.txt",
+      "workflow": "cast_v3/workflow_api.json",
+      "original_video": "cast_v3/original_lossless.mkv"
+    }
+  ],
+  "review_rebuild": "Run process_h3.py process <attempt> to rebuild extracted frames and review previews; rejected nonuniform-background attempts may deliberately fail the matte safety check.",
+  "publication": {
+    "accepted_clips": [
+      "idle",
+      "move",
+      "attack",
+      "hit",
+      "defend",
+      "death"
+    ],
+    "support": "unfinished",
+    "candidate_assertions": 161,
+    "published_assertions": 165,
+    "continuous_manual_playtest": false,
+    "linux_execution": false
+  }
+}

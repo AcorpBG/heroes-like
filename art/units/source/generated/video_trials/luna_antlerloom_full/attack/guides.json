@@ -1,0 +1,128 @@
+{
+  "action": "attack",
+  "guides": [
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "frame": "idle_0",
+      "rect": [
+        168,
+        34,
+        554,
+        543
+      ],
+      "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+      "source_scale": 0.5,
+      "source_anchor": [
+        349,
+        542
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack/first_guide.png",
+      "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    },
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "frame": "attack_windup",
+      "rect": [
+        118,
+        22,
+        615,
+        600
+      ],
+      "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+      "source_scale": 0.5,
+      "source_anchor": [
+        252,
+        599
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack/windup_guide.png",
+      "sha256": "5e1f4ed51c9a3afb00d484a1773b9182f666185278a2d0387a871de924b459fd",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    },
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+      "frame": "attack_release",
+      "rect": [
+        11,
+        208,
+        655,
+        596
+      ],
+      "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+      "source_scale": 0.5,
+      "source_anchor": [
+        318.5,
+        595
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack/contact_guide.png",
+      "sha256": "90d7e59469278e8169f5628377a3f57fb0d94fea324f35554f751602739813b8",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    },
+    {
+      "kind": "original_pose_guide",
+      "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+      "frame": "idle_0",
+      "rect": [
+        168,
+        34,
+        554,
+        543
+      ],
+      "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+      "source_scale": 0.5,
+      "source_anchor": [
+        349,
+        542
+      ],
+      "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack/last_guide.png",
+      "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+      "canvas": [
+        960,
+        544
+      ],
+      "background": "flat magenta RGB 255,0,255",
+      "ground_anchor": [
+        480,
+        492
+      ]
+    }
+  ],
+  "guide_plan": [
+    "0",
+    "attack_windup",
+    "attack_release",
+    "0"
+  ],
+  "input_scale": 0.5,
+  "runtime_scale": 0.890625,
+  "source_reference": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+  "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+  "seed": 2026092403
+}
