@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_original_contact",
+        "clip": "idle",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            443,
+            445
+          ]
+        ],
+        "anchor": [
+          221,
+          438
+        ],
+        "scale": 0.9,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f99a2b8a6cc25acd9b4ef010493439cf2b29ecf4cec2d2bdb96453b1306f2151",
+      "input_file": "input_green.png",
+      "input_sha256": "57eadc3e8bc060af1f151831584e9a10a222f27d1c036d948f6fff7ffdd3501c",
+      "runtime_source_scale": 0.4
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.9,
+  "output_scale": 0.4444444444444445
+}

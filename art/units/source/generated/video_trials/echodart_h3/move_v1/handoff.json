@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_echodart_casts",
+      "reference_height": 256,
+      "source_facing": "left",
+      "frames": [
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        }
+      ],
+      "alpha_noise_cutoff": 0,
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "source_scale_reason": "Original Echodart painting uses .4 runtime scale; input.9 and extraction.4/.9 with fixed anchor480,475 preserve body and equipment scale. No per-frame size normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/original_lossless.mkv",
+          "sha256": "16da52aa2e6e64950baebb066e69993c2e0c7b66ba3af628fbd8c8bf132da94a"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/original.json",
+          "sha256": "0c9fc445bbc03044f5971492a2d22f6e067dcb51b892fcb358b3c47db49b887d"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/workflow_api.json",
+          "sha256": "dbf46d860cc488cc32e466d18b2da522829c46cd87761f46afdb7b9c2944e0bf"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/prompt.txt",
+          "sha256": "1fc59149167a2e95724bdd2f270d2a2d07e84ad036db9e80d3edbb59db628c7b"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/reference.json",
+          "sha256": "dc68b8faa6bef4efc4840bbaea3cb4cb94094ee66c0e69da6a5874f3af0f4f4e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte.json",
+          "sha256": "a5fa77c18cd579f3a077164a5950b89397019474e186a00cb70c21bf298c8343"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All 124 original frames reviewed chronologically, with enlarged second-cycle anatomy and dark/light alpha. Near armored leg leads at42, loads and recedes46, passes49-55; opposite leg advances58-63 while near leg trails64-67; passing70-76 returns near leg forward79-82. Both crossbow grips and rigid limbs remain stable, scarf and ponytail follow naturally. Selected20 observed frames42-80 at60ms=1200ms. Seam80/82/42 retains contact and silhouette. Ordered-frame review, not continuous playback; native review pending."
+      }
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "echodart_move_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "This exact adult female Echodart crossbow scout: dark brown high ponytail, blue crystal hair clasp, gray scarf and trailing torn gray cloth, dark leather armor and boots with bronze trim and small cyan-blue crystals, belt pouches and cyan bolts at the hip. Exactly two arms, two hands and two legs. Keep one rigid short bronze-and-dark-wood crossbow with its cyan front tip, two rigid limbs and string. Both original hand grips stay attached: one hand supports the front stock and the other holds the rear grip. Preserve the original three-quarter LEFT-facing view, face, proportions and equipment. Walk briskly IN PLACE through three full reciprocal cycles. Near and far legs alternately lead toward LEFT, bend past each other, plant heels and push off toes. Both boot toes point left. Near-leg contact at0/41/82/123, opposite-leg contact halfway between. Keep the crossbow held securely across the lower chest in both hands while elbows absorb the stride; shoulders counter-turn modestly without changing the camera view. Ponytail and cloth trail gently. No shooting or reloading. Anatomical root stays centered for engine-driven travel. Fixed scale, locked orthographic camera, no camera movement or world travel. Entire crossbow, ponytail, hands and boots remain inside the frame. Clean opaque sprite, no motion blur or ghosting. Background is one solid stationary green color, exactly like the reference, throughout.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 41,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "16",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 82,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092450
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "echodart_h3/move_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "echodart_h3/move_v1/frames/decoded"
+    }
+  }
+}
