@@ -1,3 +1,6 @@
 # Generated source prompts are provenance records with byte-level hashes.
 # Preserve their original line endings on Windows and Linux.
 art/units/source/generated/town_upgrades/**/*.prompt.txt -text
+# Video workflow JSON and prompts are hash-bound generation provenance.
+art/units/source/generated/video_trials/**/*.json -text
+art/units/source/generated/video_trials/**/prompt.txt -text
