@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_mireclaw_sporewake_chanters_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/idle_v1.png": "c2ef91d3aaec015d9067e2cb8d34876cd581ef39952e5ec79514032d02138900",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/attack_v1.png": "38f8882fcaeee6ca486d3b28534848385bdc063bab3cceb13fd84da5234ef1fd",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/ranged_v1.png": "079aad25d2348b633b7276c2e24d9f7a7cefd3bc6bb5ef03ce2230ea85fa0b56",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/reactions_v1.png": "5a155b9de25c9850d1491fe4d082593f0010c0008f65192be7e63c4867ea50c5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/cast_v1.png": "11acfd8d7677242d52f686f13d14c80e253e13d583b0128200c91ea86db888ed",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/death_v1.png": "516466a67a13323b4472b47e335685a35282ea57879921b27f1775a0eaeb28cf",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_near_v2.png": "8256680db59d38a54b018cb4d8ef64386121a47e2a120a1bb3050ee10aa48c62",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_sporewake_chanters_veteran/move_v1.png": "281ffb35f1e23e69b9f2b420d384b40f14796e9c986bb0bd63f7b0aec7421af4"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "56 distinct original poses reviewed in native 128px battle rendering: articulated lantern idle, crook strike/recovery, aimed censer release, raised-lantern chant, recoil/guard, grounded collapse and corrected alternating steps. Anatomical contact anchors preserve feet while loose staff and bells settle in foreground. Mask, mantle and prop grips retained; original sources/prompts preserved. 132 focused candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "afcff37a52d7df8341c9c81a18ede06747818b22cf3bfa3df2f97339c6e4e51d",
+  "atlas_sha256": "4dd2e15f58cc5117464f2ba6fec4706a60837aaaa3378cbfd0e8b84d87a7ae4e",
+  "texture_bytes_rgba": 25804800
+}

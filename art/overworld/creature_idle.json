@@ -6306,33 +6306,37 @@
     "unit_mireclaw_sporewake_chanters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_sporewake_chanters_veteran.png",
       "frame_size": [
-        213,
-        250
+        194,
+        253
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
-        238
+        92.0,
+        245
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_sporewake_chanters_veteran.png",
+      "painted_extent": 237,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_sporewake_chanters_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        159,
-        2,
-        372,
-        252
+        100,
+        11,
+        294,
+        264
       ],
-      "source_sha256": "afcff37a52d7df8341c9c81a18ede06747818b22cf3bfa3df2f97339c6e4e51d",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_sporewake_chanters_veteran/provenance.json",
-      "sha256": "21f4c7640c9a36ba61af527f749a3acb9837eaf5cde43ebc3cb525626d814ad0"
+      "source_sha256": "4dd2e15f58cc5117464f2ba6fec4706a60837aaaa3378cbfd0e8b84d87a7ae4e",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_sporewake_chanters_veteran/provenance.json",
+      "sha256": "33872a2e7fff77bac5e8cd860a6bf155795cbf7bd7b783c6e77f2782394b0a42"
     },
     "unit_mireclaw_fenbell_chainstalkers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_fenbell_chainstalkers_veteran.png",
