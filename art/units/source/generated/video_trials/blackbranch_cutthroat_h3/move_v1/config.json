@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "clip": "move",
+  "seed": 2026092530,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          765,
+          0,
+          1020,
+          390
+        ]
+      ],
+      "anchor": [
+        927,
+        385
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One exact Blackbranch Cutthroat, human adult with green ragged hood, brown leather armor and leg wraps, brass details, dark hair, one curved hooked short blade in near hand at image left and one small wooden brass-rimmed round buckler on far forearm at image right. Exactly two arms and two legs, same face and body proportions, fixed right-facing three-quarter orthographic camera. Uniform flat magenta RGB(255,0,255) background unchanged, no effects, no extra figures or weapons. A quiet in-place reciprocal walking cycle, alternating both legs, blade and buckler steady. Complete three full walking cycles: the near leg comes forward across the body while the far leg pushes back, then the far leg advances while the near leg pushes back. Alternate which knee is in front; do not repeatedly lead with the same leg or slide both feet together. Keep the body locally centered and preserve the weapon and buckler.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "source_note": "Two generated opposite-contact proposals failed to establish an unambiguous reversed lead. Reassessed control: use H3 reciprocal motion from original matching endpoints without repeatedly pinning the same-leg midpoint. Accept only after tracing both legs through the generated footage."
+}

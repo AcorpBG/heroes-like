@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_blackbranch_cutthroat",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_045",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/original_lossless.mkv",
+          "sha256": "98e960a3332a4d198ef5def2623966fc0b10670b0305b8d3f6161bfa09036212"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/original.json",
+          "sha256": "43c8770f1876ed65491ad2019ecd95b8486c26fe320745c9b23c41a0aa8cbf0a"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/workflow_api.json",
+          "sha256": "038695907143b9ccdc9d0fbad7461e3fc8aa2a5d0225d7ae8018c50c012ec622"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/prompt.txt",
+          "sha256": "87d799b07332f7c12fd913d4592693284dc31061951ae1aa50c8188ebf275670"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/reference.json",
+          "sha256": "ff111af06ee58a4e2aed899b484dff85327da2fcf0d288ce32e96f9700a50247"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/hit_v1/matte.json",
+          "sha256": "6bbcc8c40516b5d963025c0df34bc417e428f0df9571dee881c12cedade29718"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Clean recovery interval only, well after arrow/particles are gone; join_hit.py supplies clean recoil from v2. Early v1 effect frames rejected."
+      }
+    }
+  ]
+}

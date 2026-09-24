@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "clip": "cast",
+  "seed": 2026092535,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        187,
+        498
+      ],
+      "scale": 0.45,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "signal_v1",
+      "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/signal_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        850,
+        866
+      ],
+      "scale": 0.31,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      58,
+      1
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One physical rally signal by the exact green-hooded Blackbranch Cutthroat: raise the near hand and its short curved hooked blade above his shoulder, hold, then lower to ready. Buckler stays on the far forearm, both feet planted, same human body proportions and face. One blade with the same short curved shape, one round buckler, two arms and legs. Locked right-facing three-quarter camera. Uniform flat magenta RGB(255,0,255), no effects or magic.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

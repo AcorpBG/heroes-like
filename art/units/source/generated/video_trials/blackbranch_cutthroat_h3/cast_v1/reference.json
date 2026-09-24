@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_blackbranch_cutthroat/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          187,
+          498
+        ],
+        "scale": 0.6923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "987a9cfde4aa0ba6937d5ad9d0a37931e7a4e841946a1fe07a99c8c57e7a5e43",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "b4c1fa0a736390712185e90f8a58d184dc9df38505ded451b55bb93c17f6f919",
+      "runtime_source_scale": 0.45
+    },
+    {
+      "source_frame": {
+        "name": "signal_v1",
+        "source": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/signal_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          850,
+          866
+        ],
+        "scale": 0.4769230769230769,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5b9bd6ab90de89361fe03cc12cfe4b739b1050091688711b6b68da69fbd3aeaf",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "3f9770bd97c389798f40f72c675d845dac5d722b09127b2e683cc6804959edd6",
+      "runtime_source_scale": 0.31
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

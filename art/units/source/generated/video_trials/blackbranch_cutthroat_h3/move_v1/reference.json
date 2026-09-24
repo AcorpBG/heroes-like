@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_0",
+        "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+        "rects": [
+          [
+            765,
+            0,
+            1020,
+            390
+          ]
+        ],
+        "anchor": [
+          927,
+          385
+        ],
+        "scale": 0.8461538461538461,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32ca6c043d6c4abc6cbac5ba1ce951660ca72ef4a14b579b59f52eade040977d",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "fa54625979e8a00f3126de402c859f3cc88c03263c38b7f73793c289e971cf1e",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

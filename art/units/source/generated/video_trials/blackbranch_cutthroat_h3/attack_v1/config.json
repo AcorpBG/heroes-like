@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "clip": "attack",
+  "seed": 2026092531,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        187,
+        498
+      ],
+      "scale": 0.45,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          20,
+          394,
+          316,
+          749
+        ]
+      ],
+      "anchor": [
+        180,
+        741
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_1",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          410,
+          782,
+          505
+        ],
+        [
+          340,
+          505,
+          760,
+          730
+        ]
+      ],
+      "anchor": [
+        530,
+        722
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      50,
+      2
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One exact Blackbranch Cutthroat, human adult with green ragged hood, brown leather armor and leg wraps, brass details, dark hair, one curved hooked short blade in near hand at image left and one small wooden brass-rimmed round buckler on far forearm at image right. Exactly two arms and two legs, same face and body proportions, fixed right-facing three-quarter orthographic camera. Uniform flat magenta RGB(255,0,255) background unchanged, no effects, no extra figures or weapons. From ready, draw the blade arm back, lunge and slash forward at chest height, then recover to the original ready. Maintain the same curved blade length and shape, fingers on the same hilt, buckler held by the far arm.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

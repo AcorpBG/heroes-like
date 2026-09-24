@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_blackbranch_cutthroat",
+  "clip": "hit",
+  "seed": 2026092533,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        187,
+        498
+      ],
+      "scale": 0.45,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_blackbranch_cutthroat/alpha/poses.png",
+      "rects": [
+        [
+          1155,
+          391,
+          1400,
+          730
+        ]
+      ],
+      "anchor": [
+        1275,
+        725
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      78,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One exact Blackbranch Cutthroat, human adult with green ragged hood, brown leather armor and leg wraps, brass details, dark hair, one curved hooked short blade in near hand at image left and one small wooden brass-rimmed round buckler on far forearm at image right. Exactly two arms and two legs, same face and body proportions, fixed right-facing three-quarter orthographic camera. Uniform flat magenta RGB(255,0,255) background unchanged, no effects, no extra figures or weapons. React to one impact with a brief upper-body recoil behind the raised buckler, knees bend, then recover fully to the original standing ready. Keep the same blade in the near hand. No incoming weapon or projectile.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}
