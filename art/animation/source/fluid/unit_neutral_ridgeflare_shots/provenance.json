@@ -43,7 +43,27 @@
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_04.png": "9edfbccb9ce4a396914153749850c44b917fd3212c468e11dd6b47fbe2bae8ce",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_05.png": "62f8d1526ca923469cfb3d2948be14ca441fad6ebed9b7afb626b2c8b0570f0b",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_06.png": "ac770bd2bf87e5d07bcd6cdedc758fe25685f0d0e2cc50764c8c00afc0f6f12f",
-    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_07.png": "75642f894159ca4e740e64cecc59c7b372c9beb2076e37862c4313df175578ff"
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/cast_v1_07.png": "75642f894159ca4e740e64cecc59c7b372c9beb2076e37862c4313df175578ff",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_040.png": "2474109f828ae4c2dfb55b37f03ad62144249243955e65f86fad2c758fd6b377",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_042.png": "0c69f7f02a102010a5194557ebfe3e882787ea9faf929f4917fbf98788527611",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_044.png": "b2ea011df35b995487778ebf96ccd345e02f17b6148bcb5273f669f83e9f7924",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_046.png": "42ff8a48410f92d50f48d35dacce730db6ad9a9dd77be7065ea57385e928435d",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_048.png": "2e77164e8598718e1410c3e22c0f12d57d835e893645dffb6636bbfb860bbef1",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_050.png": "e86cbdcddaabc63740a0c0b4052ede9bcbc668c4e25a52469bdaf1dbb7676460",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_052.png": "740691be481b87ea115baee9ee034fbaa49b2aa054c6feb32047ba61af60fa9f",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_054.png": "969d07457760d9a121acc541b359da23bc0feeafde721175b0036a11bbd45cca",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_056.png": "51b170c3d0a71d92147660b14cb72eaf200fc940cc63e454d50410630b8afb75",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_058.png": "7f2fe81e3b9a2d4e3dca6aa48987d02121bf507e0d68d2f4e3e88555d2e43b88",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_060.png": "53a39bc48c28856098d9dce7537a1f05fd7e049052abe4440b80b785c2bc0a57",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_062.png": "bc93b54ee303d73dd30ed96c4475ee1a50b73c0a8e8a5557dbe51f952fba36d6",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_064.png": "bdcfb2737367f0038b8782a09adea51ea534a92a25bc5f04fe1211eb9d90110c",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_066.png": "17f3097274f03b3377e2f8a9754ebf8d18db82052b69ad613ab222c3b6876c58",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_068.png": "8b39aaaefdd301fe9f49bb9c47ad01230e7e882106d282e0b3b4954141f33a70",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_070.png": "875dd9b854c974ab505e0f36be6b0a8148b2b36158f5064faceab2821109c83e",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_072.png": "febd505b3bf6d1bf3d7aca4cbd3c78f9880a79e8ce06a8ed317e189fad95858a",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_074.png": "0ba3fdcff4a4918d7df8a77f0c2883d5a23336b2fa2490b3932084d81113e5a0",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_076.png": "4c7e65606baa93a57a3c0e04155a56973b87251bfb244a08b104aab2c2571fb6",
+    "res://art/units/source/generated/video_trials/ridgeflare_move_h3/matte/rgba_078.png": "723b301075794c2a5fb09f4cb791ff3c36557652d8e4ce43f871bf0c1ffc0270"
   },
   "accepted_clips": [
     "attack",
@@ -52,16 +72,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Game-scale review: clear crossbow arm idle, punch, bolt release/reload, crouch guard and grounded collapse. Movement repeats a leading-leg phase and remains unaccepted."
+    "notes": "Coordinator reviewed124 chronological source frames, enlarged light/dark anatomy and crossbow edges, loop boundary40/80 and native battle-scale candidate overview. Both legs alternate contact/support/passing; compact crossbow retains original grip.20 observed source frames40-78 at70ms,1400ms loop; fixed original .56 scale and anchor480,475.134 focused candidate checks passed. Owner additionally reviewed original video and requested publication. Preserve seven earlier clips and map idle. No manual game playtest or Linux validation claimed."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "f833a1923d68c40dff2cbf10acd1d64454fbd8f9aa0b7eadb956049f2093d9eb",
-  "atlas_sha256": "cbbb2d1c1c54649edbddebc244e30e54530f77c372e79b35f4a7468dc1c06d74",
-  "texture_bytes_rgba": 12586496
+  "atlas_sha256": "19b5813cdbe523c36240506d1d8c1dbce565c2826bd3ae62fa43d4e12081774c",
+  "texture_bytes_rgba": 16056320
 }
