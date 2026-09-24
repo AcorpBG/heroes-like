@@ -1,0 +1,11 @@
+# Quenchspool Slingers H3 movement
+
+`unit_brasshollow_quenchspool_slingers`: 17 observed source frames 34–66 every second frame, at 70 ms each (1,190 ms). Both boots exchange contact and passing while the original reel stays in the two crank/hub grips. The single cable remains attached to one suspended orange canister, which follows the steps with pendulum sway. No duplicate padding, reverse poses, interpolation or whole-body warping is used. The roughly 1,417 ms source cycle is deliberately accelerated for gameplay travel.
+
+The source is the first accepted `idle_v1` painting, used at both video endpoints. Older repeated-leg walking sheets remain unpublished. `reference.json` preserves the exact original source rectangle, alpha threshold, boot anchor and hashes. Input scale is 1.0 on a 960×544 canvas at (480,475); extraction uses a constant 0.58 matching the accepted idle. Individual frames are never resized or shifted according to their changing bounds.
+
+The local MiniMax H3 graph used seed 2026092416, 20 steps and 124 frames at 24 fps. Generation took approximately 136 seconds. Pure green keeps the warm brass/orange equipment distinct from the matte. The original FFV1 video preserves every decoded RGB frame; original MP4, guides, prompt, workflow, hashes and generation history retain provenance. `produce.py process` reconstructs every keyed frame, `review` reconstructs chronological sheets, and `build` reconstructs the candidate handoff. Do not resubmit or overwrite the original job.
+
+Review covered all 124 chronological source frames, enlarged anatomy/alpha samples on light/dark grounds and the Godot battle-scale overview. The seven earlier actions preserve all 48 poses with identical pixels, offsets and timing; overworld idle is byte-identical. Focused validation and acceptance are recorded in the runtime provenance/tracker. Continuous playback remains unverified: the local browser playback route was blocked earlier by browser URL policy, and no workaround was attempted. No manual game playtest, Linux validation or full suite is claimed. The source handoff remains a pending rebuild recipe.
+
+Keep the original video, art/provenance and 17 selected RGBA frames. Unselected extractions, temporary review/render/import files and hash-verified duplicate server outputs are rebuildable and removed after delivery.

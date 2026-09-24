@@ -6140,8 +6140,366 @@
           ],
           "scale": 0.46,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.58,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "idle": {
           "indices": [
@@ -6241,8 +6599,89 @@
           "frame_msec": 130,
           "loop": false,
           "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64
+          ],
+          "frame_msec": 70,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/original_lossless.mkv",
+          "sha256": "ca63d657e32fa5960987867d96bb06d3267b42e8ca79a3229bf392833bf32d6b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/original.json",
+          "sha256": "057609772d3f5cda6384c13c4ff3a38d337f723f5ff382457a423a8f7ed07fcf"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/workflow_api.json",
+          "sha256": "c5a1f8932876ad41611925388e066e399f7dbeb5271721fee2af05b912778b6a"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/prompt.txt",
+          "sha256": "71246053cdcfdf4eaa0ea7f522fbc0edf75b09a6154d5044fda15263f96a2cc0"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/reference.json",
+          "sha256": "9b9ec3859efcf424b78702a68ec67031ad8bd62bfb6fbb774bbebb675e55f9a1"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/quenchspool_move_h3/matte.json",
+          "sha256": "cbc72a039a8d8849da47bf1951344fc586fb2cc694b4d4b55c9cf527d8506515"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all124 chronological source frames, enlarged light/dark alpha/anatomy samples and native Godot battle-scale candidate.17 observed frames34-66 every2 at70ms form1190ms reciprocal walk. Both boots exchange forward contact and passing; original face, bun, goggles, brass armor, gauge and apron remain consistent. Two hands retain crank/hub grips; single cable remains connected to one rigid glowing canister, suspended clear of boots with pendulum sway. Fixed.58 scale and anchor480,475 match accepted idle.139 candidate focused checks pass. Preserve seven earlier actions and overworld idle. Continuous playback/manual game playtest not claimed; local browser playback route was previously blocked by browser URL policy."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.png": 0.58,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png": 0.46,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_034.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_036.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_038.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_040.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_042.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_044.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_046.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_048.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_050.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_052.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_054.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_056.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_058.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_060.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_062.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_064.png": 0.58,
+        "art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_066.png": 0.58
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "idle",
         "attack",
@@ -6250,24 +6689,9 @@
         "hit",
         "defend",
         "cast",
-        "death"
-      ],
-      "preserve_clips": [],
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/idle_v1.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/move_v2.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/attack_v1.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png": 0.58,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png": 0.46
-      },
-      "source_scale_reason": "One fixed scale per source: .58 for ~350px standing action bodies, .46 for death source whose initial body is ~450px. Maintains previous runtime ~206px body; no individual pose scaling.",
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: articulated spool-arm idle, tethered canister melee strike/recovery, separate release/reload, recoil/brace, physical rally and grounded collapse. Neighboring pose fragments excluded and actual boot-contact anchors corrected. Repeated-leg walk remains withheld."
-      },
-      "preserved_accepted_clips": []
+        "death",
+        "move"
+      ]
     }
   ]
 }

@@ -9,7 +9,24 @@
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/ranged_v1.png": "b506bcc26f806788b2d827b22061c21c69b716047a3e61786993e5a0b3e6187e",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/reactions_v1.png": "2fd0d3000e3612c2443f85e6147258b6fd31ca82cabc7dc52ef2fc9e8db2d18f",
     "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/cast_v1.png": "9bf90e169081d7db03864b08f7efe577bf861f9b33e10438fca7d3e350834033",
-    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png": "6d7c0be4e0a82eaf39ee4061ba210d6ff5910704914815abc0abcf9250cf3fa3"
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_quenchspool_slingers/death_v1.png": "6d7c0be4e0a82eaf39ee4061ba210d6ff5910704914815abc0abcf9250cf3fa3",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_034.png": "02d82bda8af8526798e91ca359a420eb92741e89cef6aa7885b65e29a87a935e",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_036.png": "ed72c98857027c170fe199ce1bb336f83e87b680cb1de913fe941b3ee301745f",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_038.png": "96b7dbe8cf42a0e74bfd431c70851406620f1f1bfc69b8cad43c922781479491",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_040.png": "ef824ffc160924562536048dc1492f3f13ef75c4a479ebe2209f5e41ad3c665d",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_042.png": "ff96bb9316e0fb81b595e029a0a7787cded3996c1edc0225a62397d9f82df911",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_044.png": "9240f708076b62d96642982bf7200b21ce9fec51b2f020c3d4d03467f320c15d",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_046.png": "160b8aec90f5067d47e1f474bee9b86e5830648de818c1b36e0cc7aa261fb0fa",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_048.png": "0f2bb9962dd224b69d7f513efae4772261c912996c4708dfcc0ae8e1597b4e23",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_050.png": "faefd8f7b50cd91135fb53705ecd0f9603e646c9d7842804cc1df85fa88e8916",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_052.png": "2217ccb1cce258c91034df8e0d76c8a52e7b1d82c0564ba654873d930683dae4",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_054.png": "cb89e7ec4659cefecfd23414a4dea23d68f4cc8aea1baa510b71cee2fbeb712b",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_056.png": "99e827831a8956dbb4c83acf2882247f43ad9a41e9ccc55bfe76e265e4b1c8bc",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_058.png": "e507a84ca6488d4e002bf958bc43ab2c911950a815a585e382c730ba139e0222",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_060.png": "a5fc072da46fb208e8afa1c65996e611ca1c8247e5ed725d23129f47380f3cfa",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_062.png": "bce472ce8dc1e3304a1d21df82efab18ea5c5d4064faa6b9fbd1f65758aa4e82",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_064.png": "d9afc397a98c5bea27d5b9bc25e3ea7367dea2ad4de7fb4caaa2ed5b727b7fde",
+    "res://art/units/source/generated/video_trials/quenchspool_move_h3/matte/rgba_066.png": "bc7086d2a717eba4630935a6871f08ed13b4c8065e37aeb3ed679bc65d56ae12"
   },
   "accepted_clips": [
     "idle",
@@ -18,14 +35,15 @@
     "hit",
     "defend",
     "cast",
-    "death"
+    "death",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: articulated spool-arm idle, tethered canister melee strike/recovery, separate release/reload, recoil/brace, physical rally and grounded collapse. Neighboring pose fragments excluded and actual boot-contact anchors corrected. Repeated-leg walk remains withheld."
+    "notes": "Reviewed all124 chronological source frames, enlarged light/dark alpha/anatomy samples and native Godot battle-scale candidate.17 observed frames34-66 every2 at70ms form1190ms reciprocal walk. Both boots exchange forward contact and passing; original face, bun, goggles, brass armor, gauge and apron remain consistent. Two hands retain crank/hub grips; single cable remains connected to one rigid glowing canister, suspended clear of boots with pendulum sway. Fixed.58 scale and anchor480,475 match accepted idle.139 candidate focused checks pass. Preserve seven earlier actions and overworld idle. Continuous playback/manual game playtest not claimed; local browser playback route was previously blocked by browser URL policy."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "945e485216ab8e0b3f99ab65abcaf5ac3c21d04e4144ea39e310cff9fa4175fa",
-  "atlas_sha256": "7273a12d8f4f7f1efa9af7c47ee9cfdd640ebaf1c63976c8a8f98dec7254e880",
-  "texture_bytes_rgba": 17535744
+  "atlas_sha256": "8e879118d1ab13e59d3251651d31304701ff3fd25a10883a313889807cdee8a1",
+  "texture_bytes_rgba": 23248896
 }
