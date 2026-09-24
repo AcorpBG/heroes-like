@@ -5,7 +5,6 @@
       "unit_id": "unit_sunvault_zenith_lensbearers",
       "reference_height": 256,
       "source_facing": "right",
-      "alpha_noise_cutoff": 8,
       "frames": [
         {
           "name": "attack_v1_00",
@@ -766,8 +765,429 @@
           ],
           "scale": 0.58,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.5962264150943396,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "attack": {
           "indices": [
@@ -852,8 +1272,96 @@
           "frame_msec": 110,
           "loop": false,
           "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59
+          ],
+          "frame_msec": 70,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/original_lossless.mkv",
+          "sha256": "6ce9061e3136fdfa2a97ed75d8b423199848dbf042e61e9ef35e10417e346f30"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/original.json",
+          "sha256": "ffa42cb24ee134cc94a32a8c4e18779b4061756f83111c13cfb4c86a50bdeb5d"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/workflow_api.json",
+          "sha256": "30c544475ed943a62b3999cdf0399d5f41aa102f33690feb572c05a5a908fabc"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/prompt.txt",
+          "sha256": "e3ff2b4c28ad1bfbfb68c100f59dd4ae539e65048fd9b757369bf793fd58d709"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/reference.json",
+          "sha256": "0beb499ae4fad2ebef34ddd90fc4631c44538319e60be61e0f11014e646721e1"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte.json",
+          "sha256": "e44155748729640ae3d73615e443fbfbb23b1ba08283c7c4e1c9f57f314fc5b2"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Coordinator reviewed all124 chronological source frames and enlarged light/dark40-80 anatomy/alpha. Round near knee leads40-48, passes52-56, trails60-72 and returns78-80; smaller far knee leads60-68. Both boots lift and plant reciprocally; two original hand grips, one rigid lens gun and separate back orb/prisms remain stable. Selected40-78 every2:20 observed poses at70ms,1400ms loop retimed from approximately1667ms source cycle. Seam78/80/40 checked. Fixed .158/.265 scale and anatomical anchor480,475 preserve approximately220px original body height. Ordered-frame review; continuous browser playback remains unavailable through the blocked preview route and no manual game playtest is claimed. Autonomous publication per owner direction. Actual Godot battle-scale overview inspected;132 candidate checks passed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.png": 0.59,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.png": 0.49,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png": 0.58,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_040.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_042.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_044.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_046.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_048.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_050.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_052.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_054.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_056.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_058.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_060.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_062.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_064.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_066.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_068.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_070.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_072.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_074.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_076.png": 0.5962264150943396,
+        "art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_078.png": 0.5962264150943396
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
       "accepted_clips": [
         "attack",
         "ranged",
@@ -861,28 +1369,7 @@
         "defend",
         "death",
         "cast",
-        "idle"
-      ],
-      "preserve_clips": [
-        "idle",
-        "move"
-      ],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Game-scale review: articulated weapon idle, lens thrust, charged release, guard, physical support and grounded collapse. Movement remains unaccepted due repeated leading foot."
-      },
-      "unfinished_clips": [
-        "move"
-      ],
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/attack_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.png": 0.49,
-        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.png": 0.59,
-        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png": 0.58
-      },
-      "source_scale_reason": "Different source sheets were generated at differing fixed character render sizes. Each entire source has one anatomical scale: attack and hit/defend 0.60, death 0.49 (larger standing reference), ranged 0.59, cast 0.58; calibrated to the existing approximately 218px standing silhouette at reference_height 256. No per-pose resizing or deformation.",
-      "preserved_accepted_clips": [
+        "move",
         "idle"
       ]
     }

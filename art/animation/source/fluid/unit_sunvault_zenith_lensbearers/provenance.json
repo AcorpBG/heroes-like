@@ -8,7 +8,27 @@
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/ranged_v1.png": "4e7a97f2e1e04ca23c4d9c5622762d422324d961afa18cd38119df74ab97f581",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/hit_defend_v1.png": "585ba3870ba0d8eab6ed2b1327acd55985641484495de5254896147c9098795e",
     "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/death_v1.png": "681752de01cc78dab052ce675bf97b52a21875ca0f2dab503a22f4e2773fe739",
-    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png": "db122cd017c87e06296b2949ba6fe8ff78d07afc5109a58872c9bd67fd833b63"
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers/cast_v1.png": "db122cd017c87e06296b2949ba6fe8ff78d07afc5109a58872c9bd67fd833b63",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_040.png": "37de6a21cf8f76350960ec3724838afcee29f3cec148ab238a9e01cea621e418",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_042.png": "6537d1e08e4daea5fa198db736ad068e6b61639f74d058925dbee59f4837fda4",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_044.png": "701387774d79a5b2015a24abf90a94d57befac73d728cb4d34e3f28254d2e9c1",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_046.png": "769fc39002ce1e5e70e48cfd722aa6ed0c18f33d6849c0f339795e3880bd8c3d",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_048.png": "24b06c081d3edbb39bba24b150f472270eaf40a2c67fafa0764bb437406d143e",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_050.png": "fe71136efddca2d9f30ef9afb267d6ff53e9ac1f95c35886e39823fe30bdff37",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_052.png": "eced773551eb9da283f034c95ddb9744ed2ed21e5818496f3ce29d5e80771694",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_054.png": "4bdba53d97045476b9b5cbdb7eaafb3bbe95e56b7938b839761de5cbcd8cc87b",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_056.png": "b282da5f6c1861e9b18c08d6c53a7b73ce863288562a71858b70bacfa801b74e",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_058.png": "57e5d15eb8a8f6217eabd226f9bdd2407e8486dce45e696281c121f805c7fc37",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_060.png": "c8df16b06bb01e8ce22cbbc3b066b50807938581d6a611c79deadcf8f1ffc8dd",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_062.png": "d3d07ccafbc6343850b81b9c8f8ba065ed92a4f5bb5fbf9ed0e0d68ac5c40f4d",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_064.png": "9b7b6112b2e26093cc99077ce5de3cc163c5de7c721c2c5cc9a1497f97648884",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_066.png": "d94e2bccdc807535f493c6d41b470e4b6d4dc871c994663ddda9ab81de75909b",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_068.png": "f751fef42cd0a84e69cbcfec45d9951f4829e7104813c06aa7b75a3c8323299e",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_070.png": "963ed0abe266fa515735145c7fead2ff48ae1e28f18da9b29b2c73154de66418",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_072.png": "6e147a222e88a6e57a99a97947a6c7c9c63543ff2893abcf4d95e7e718f352c7",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_074.png": "1649047b8534c0102ee1d93593ffaabb77233552fe700f0a9bea3322ad571cc6",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_076.png": "04f94017ead1fcc3b8fb5f1c0f5380457346ae2967200aa09ef268cdfd46fd93",
+    "res://art/units/source/generated/video_trials/zenith_move_h3/guided_v2/matte/rgba_078.png": "78cd56de204396b6ae698ac064c4fcff454d18e3bbda329ccb2aa0f36826b46b"
   },
   "accepted_clips": [
     "attack",
@@ -17,16 +37,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Game-scale review: articulated weapon idle, lens thrust, charged release, guard, physical support and grounded collapse. Movement remains unaccepted due repeated leading foot."
+    "notes": "Coordinator reviewed all124 chronological source frames and enlarged light/dark40-80 anatomy/alpha. Round near knee leads40-48, passes52-56, trails60-72 and returns78-80; smaller far knee leads60-68. Both boots lift and plant reciprocally; two original hand grips, one rigid lens gun and separate back orb/prisms remain stable. Selected40-78 every2:20 observed poses at70ms,1400ms loop retimed from approximately1667ms source cycle. Seam78/80/40 checked. Fixed .158/.265 scale and anatomical anchor480,475 preserve approximately220px original body height. Ordered-frame review; continuous browser playback remains unavailable through the blocked preview route and no manual game playtest is claimed. Autonomous publication per owner direction. Actual Godot battle-scale overview inspected;132 candidate checks passed."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "ec34f2f9e7c4494654cbcf0338cde0823be3626a97e128a9e32e2c8daa179417",
-  "atlas_sha256": "be7c4107515129d9ff32d62c3c80d75b59d7175efe1c44ec998c6dfaee8bd355",
-  "texture_bytes_rgba": 23887872
+  "atlas_sha256": "b87f0b1544fd3c5495b3ba5254037fa4e2a1e2eb4ab0d9ae6cfeedd16da79256",
+  "texture_bytes_rgba": 30965760
 }

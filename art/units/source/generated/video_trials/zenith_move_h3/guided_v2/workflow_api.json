@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "zenith_walk_input_green (1).png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate this exact Zenith Lensbearer walking IN PLACE through ONE slow complete reciprocal cycle, starting in the near-leg-forward reference, reaching the supplied far-leg-forward guide at the midpoint, then returning to the same near-leg-forward contact at the end. Preserve pale face and swept white hair, blue crystal eye lens, navy blue/gold cloak and coat, white split tabard, silver-and-gold leg armor and boots, dark gloves. Exactly two arms and two legs. Both hands keep their ORIGINAL separate grips on the ONE long horizontal gold-and-silver lens weapon aimed toward image RIGHT at waist/chest height. Keep the rigid straight barrel, gold rings, bright blue internal crystal, and ONE front angular gold lens cage around its blue glass sphere. No recoil, firing, charging, spellcasting, duplicated lens cages, extra guns or changing weapon length. Rear hand holds rear grip and forward hand supports barrel; hands never merge or swap. Preserve the separate small vertical blue orb on gold stem behind his head and angular prism plates on back: they stay attached and do not become a second held weapon. All blue light remains contained in the original optics; no beams, particles or new effects. Both feet must alternate: near boot reaches forward toward IMAGE RIGHT and plants heel then sole while far leg trails; far knee bends and far boot swings under pelvis to opposite forward heel contact; far foot plants and supports body while near foot trails, passes and reaches forward again. Each leg shows forward contact, support, heel lift and passing, never repeating only one leading leg. Controlled modest stride while carrying a heavy rigid instrument. No hopping, skating, boot stretching or foot swaps. Torso, pelvis and knees keep original RIGHT-facing three-quarter orientation; do not turn body left or to front/profile. Small natural shoulder motion, weapon remains rightward and steady. Cloak and tabard gently lag with footsteps. Same anatomy/body scale and centered pelvis throughout; no world travel, camera pan, zoom or perspective changes. Entire hair, back orb, weapon tip, cloak and both boots stay inside frame. Background perfectly uniform PURE GREEN RGB(0,255,0) throughout, no floor, shadow, gradient, text, blur or scenery.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "zenith_walk_far_green.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 62,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "16",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092425
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "zenith_move_h3/guided_v2/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "zenith_move_h3/guided_v2/frames/decoded"
+    }
+  }
+}
