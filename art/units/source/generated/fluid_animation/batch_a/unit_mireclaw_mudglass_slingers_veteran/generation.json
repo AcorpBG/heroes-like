@@ -1,0 +1,171 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+      "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "2e86cbd1984ba549853f3a9ea4468426afc92f9861bb87545814513ff505a046",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-8257aeeb-3b9c-4a54-8b6f-1e7cb4c84775.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/attack_v1.png",
+      "sha256": "46602667d7f07da04fdc4ca8f6f4117e555fcf546a259a0e0da05bf73d0267df",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "40e97451fc6220eb7683e4d86db29681242aebc15a73507acdc091e51f9a5f72",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7a28985a-ffb1-44c3-8f30-df84e682200b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_v1.png",
+      "sha256": "88b2702766c48f7cee7c40c3f956e57c85d4996e34a41150cb8a58368ef84edc",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "df09c5765d78b03950bb1c9ce3ddd31b6a13efc1a553e1e5e6c357dd595c99b8",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-87a5bd89-2b2f-44de-921c-a0f4b3a01906.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/reactions_v1.png",
+      "sha256": "0d02879192c68e64ad9d299e6a7e08cee2780e4a1d47c8762e7087bf5d296bdd",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "943ce945d46ab923b38ae6c3306ed977cf1f086e55865e2ece6d90a26dc25e3e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-59c7e130-f7d1-48ce-b4f8-ea2df579fbed.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/cast_v1.png",
+      "sha256": "1552db72009e7c4f0817445a95f231116ea212af0597657df804eace2d01d7be",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "8f85878dd10063545ab27af89f6cffd98ede8a2081899ce7ff9fa9859fc61d2d",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c0ca2c8b-5d6d-4246-9cfc-5b0ea9addf06.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_v1.png",
+      "sha256": "cbe793087716be39ccd0ae5246a6d90e93a34db541ab3e01d7b577c77431f870",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "3f61cea9a4ecd793bd3a77acb4f39be3e89b2e8587f65158ad4c6b1a748475b3",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-42d60ffe-153f-466a-b195-3b9a4d7b562d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png",
+      "sha256": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "5409f717f675302183bf31d850d4fc6150edfbc9714e854a0ad5395d8ca65bc8",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-8bf949ab-84c6-4715-ac26-d41d41df242d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_cross_v1.png",
+      "sha256": "64b6ce4d21ffede8ef553df4e20269e163f7ee4efe156bc838d98be7a349f4fb",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_cross_v1.prompt.txt",
+      "prompt_sha256": "de320651c1ef887c7a270dcd91f7edd0a1aa3ed05094ebef988f3d2dc649dad0",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-57f4e91a-197a-4caa-8535-a66c0531e8b7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_v1.png",
+          "sha256": "cbe793087716be39ccd0ae5246a6d90e93a34db541ab3e01d7b577c77431f870"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_near_v1.png",
+      "sha256": "5c500090721355c5b6547d56101e3b5c15a0a948f14e124d9476ea0b277787ad",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "e7fd78012da4a09751cec790f79171071a1c5ff2b31ed6f28fb87e67faafe443",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-34df2f12-f627-470a-9743-47f64e1d0bf0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/near_step_reference.png",
+          "sha256": "a6fb6d478c84e6cb57d812d9fd6a115b9cec89235b376c715508c478606b05e7"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_recovery_v1.png",
+      "sha256": "9b91adc549c81ea5ea14c25be30763c040072fbb452ff46880cbc1603cf35b6e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_recovery_v1.prompt.txt",
+      "prompt_sha256": "7e4fe9f4dc1cc7d9ffbb2edc59f2284818fe304069f2b230e4a4d77f9165956b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6b79f956-6249-4ef0-b9e3-875142c33f1e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/identity_reference.png",
+          "sha256": "5fabd3edc0404e47032c2f8b693b52eef5f67057cc3ed74950cb4b8d8186e528"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png",
+          "sha256": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549"
+        }
+      ]
+    }
+  ]
+}
