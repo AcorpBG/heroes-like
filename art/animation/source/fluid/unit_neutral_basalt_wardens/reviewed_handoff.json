@@ -613,8 +613,429 @@
           ],
           "scale": 0.63,
           "alpha_noise_cutoff": 8
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.59,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "attack": {
           "indices": [
@@ -684,22 +1105,66 @@
           "loop": false,
           "static_frame": 0,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
+          "frame_msec": 70,
+          "loop": true,
+          "static_frame": 0
         }
       },
-      "accepted_clips": [
-        "attack",
-        "hit",
-        "defend",
-        "death",
-        "cast",
-        "idle"
-      ],
-      "preserve_clips": [
-        "idle"
-      ],
-      "unfinished_clips": [
-        "move"
-      ],
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/original_lossless.mkv",
+          "sha256": "e036995e28acfec48e6be9e18513ba595e073ab8e8924f9f5266235c85e40969"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/original.json",
+          "sha256": "adcaaf3872bb3b61ded5c92b6a590101ef1e744c4c5a3a217335d9650c21b707"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/workflow_api.json",
+          "sha256": "ef33a66efc48f905ec71b6d28e4bdbd4e07e51a75bda5e160622dda42bdc131e"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/prompt.txt",
+          "sha256": "a9a7954aece53136a6f023d8bce32dcab54084fbc051150318b526df1bf227de"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/reference.json",
+          "sha256": "b70259848b62b334be7402805ce47654a3933cfef33c253c910e1736de8bf39d"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/basalt_move_h3/matte.json",
+          "sha256": "1e832b92d5894e814afcc38516bc8b4e5ffc995c759f91fd2c714c84daa2be22"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all124 chronological source frames, enlarged light/dark anatomy/alpha samples and native Godot battle-scale candidate.20 observed frames40-78 every2 at70ms form1400ms reciprocal armored walk. Shield-side boot emerges forward while opposite boot lifts behind; both legs exchange support/passing. Original face, hair, armor, lowered mace grip and angular copper-banded pavise remain coherent; shield retains rigid shape and clears ground. Fixed.59 source scale and anchor480,475 match accepted ready body.118 candidate focused checks pass. Preserve six earlier accepted actions and overworld idle. Continuous playback/manual game playtest not claimed; local browser playback route was previously blocked by browser URL policy."
+      },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png": 0.59,
         "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_1.png": 0.59,
@@ -732,14 +1197,38 @@
         "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_4.png": 0.63,
         "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_5.png": 0.63,
         "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_6.png": 0.63,
-        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": 0.63
-      },
-      "source_scale_reason": "All poses from a given original master share its fixed scale: attack/reactions 0.59, death 0.55, cast 0.63. These register different source drawing sizes to the existing 220px standing silhouette within reference height 256. Exact connected-alpha extracts inherit master scale; no per-pose size changes or warping.",
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: retained mace/shield arm idle, mace swing with follow-through, weighted shield guard, recoil, grounded collapse and weapon salute. Movement remains unfinished."
+        "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": 0.63,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_040.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_042.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_044.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_046.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_048.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_050.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_052.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_054.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_056.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_058.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_060.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_062.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_064.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_066.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_068.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_070.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_072.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_074.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_076.png": 0.59,
+        "art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_078.png": 0.59
       },
       "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "attack",
+        "hit",
+        "defend",
+        "death",
+        "cast",
+        "move",
         "idle"
       ]
     }

@@ -35,7 +35,27 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_4.png": "a39ee52262f64aa15f1b89870658c880b38505d9880df21ea936f0affc40b9e9",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_5.png": "a5fcb575afae91ecbbc0315d23dd114cb25b1f2728d15ed22b3a9170a746bc2f",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_6.png": "b53780ae570079612bba4101325aff3417f10c724ee7578dac57f2b12463f536",
-    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": "4fd64da1e57adf8d083e0d9e201951b37a423eb27f66ab4048375d9a8dcb23e3"
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/cast_v1_7.png": "4fd64da1e57adf8d083e0d9e201951b37a423eb27f66ab4048375d9a8dcb23e3",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_040.png": "eee23ee86e86e228966056e261b8f5123b1313ddff96e0a5da9019270183542c",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_042.png": "15384aba489b4791413a5fdf3a5fc950f6958631d81d7ddbdc6cc5108efe99bb",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_044.png": "07106928e3acc14060bacb2f8f3671246049ada785817f668c035d74773b9cb4",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_046.png": "7ab61ebab95344187cc932e8dd1cfb54ff77b26cc0bbb7d874a7db1870a7fef9",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_048.png": "1828052c126c4809d7263f32c5ba1e1238b21e3d2ad5d6c2e4600c147796b2e2",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_050.png": "647c49638a3f55a6142a8212a0478d45d8a1f3b10ce365e94b92fb5a66c91c86",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_052.png": "d33d3a372def5b95e2fda3708d661b68d888f7a690126d7eaaa1d7ec925411a6",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_054.png": "ab2be279ba3f8a3a08ceca6d62898f4a9f57f23633f7d47a70b756476ffb5af5",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_056.png": "c6cb3e8f825c9c14d0340a2c18281e1dbcb2adfdaafdb77404fcf0286950af99",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_058.png": "68420a806c62941df88100c66872037f6e9d01191a6b3b14ba0bcf3ef5cecee9",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_060.png": "90c917d1e9e180e4f4f14ce3f17e52f8e0b6d58eed8ddad6015e92a434f4601a",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_062.png": "7dae3b89f25e8e6d273d092e7db08473838f59a102686461b05a2da46b00186d",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_064.png": "d2c93a87258f3abe4fffd3fa5869b7fd6dcf35a8adcb5d3461de38da256ad6bb",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_066.png": "0951219753233d1b9d096fadbdb549e797cd0363ca61e9e98cda0b1016ab2675",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_068.png": "afbd494cbbdd66cc40f867acaa591968b2509a6c3736fe60239726399b3d5b7d",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_070.png": "61eb80dccdcfdc371ffc4bc4772f8d30a26e2c2381549047780a973cdc7045f1",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_072.png": "7f492330b5e4cda0129220650b5cd742ad8ee1a210caa0f2a037cabdc2686c6f",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_074.png": "53fdd011942c3125fbaab3a5ef6eba3a61135e0a4748c4bea9166b6d30520b71",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_076.png": "c296b813d4fcf725077c7d310820c6a52e7020432299d0891d5b437d35183673",
+    "res://art/units/source/generated/video_trials/basalt_move_h3/matte/rgba_078.png": "8e1f471039ad56ee1c59b84ab5f01e75090dcd47cef01de4429a47ee2ce3b8df"
   },
   "accepted_clips": [
     "attack",
@@ -43,16 +63,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: retained mace/shield arm idle, mace swing with follow-through, weighted shield guard, recoil, grounded collapse and weapon salute. Movement remains unfinished."
+    "notes": "Reviewed all124 chronological source frames, enlarged light/dark anatomy/alpha samples and native Godot battle-scale candidate.20 observed frames40-78 every2 at70ms form1400ms reciprocal armored walk. Shield-side boot emerges forward while opposite boot lifts behind; both legs exchange support/passing. Original face, hair, armor, lowered mace grip and angular copper-banded pavise remain coherent; shield retains rigid shape and clears ground. Fixed.59 source scale and anchor480,475 match accepted ready body.118 candidate focused checks pass. Preserve six earlier accepted actions and overworld idle. Continuous playback/manual game playtest not claimed; local browser playback route was previously blocked by browser URL policy."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "f4878aa7beb38f6b0b5b48bc3c5da5869a51ec867e0bf9f29b19cbd9f095b8c3",
-  "atlas_sha256": "24f370b4b375496838eeaa8f5f1b412e3df24a2c1b3f331d6037e070996c734f",
-  "texture_bytes_rgba": 13507200
+  "atlas_sha256": "9f1c9c55bc25462ab6d594d7239045cbae71f73c77579983cca34202e971e850",
+  "texture_bytes_rgba": 19756800
 }
