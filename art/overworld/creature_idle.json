@@ -6321,33 +6321,37 @@
     "unit_mireclaw_fenbell_chainstalkers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_fenbell_chainstalkers_veteran.png",
       "frame_size": [
-        298,
-        250
+        295,
+        261
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        135.0,
-        237
-      ],
-      "painted_extent": 282,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_fenbell_chainstalkers_veteran.png",
-      "source_indices": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "source_crop": [
-        121,
-        3,
-        419,
+        143.0,
         253
       ],
-      "source_sha256": "e6c426fb7338ec1bc0b818c91f21e4cad1f2b1314bd5f47919ee3b4fd568e4c2",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_fenbell_chainstalkers_veteran/provenance.json",
-      "sha256": "0567ed9f51cb57b3b1b9d0fa5e369f63a83ec12735b41f12beb9dbb995d354c0"
+      "painted_extent": 279,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_fenbell_chainstalkers_veteran.png",
+      "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "source_crop": [
+        69,
+        15,
+        364,
+        276
+      ],
+      "source_sha256": "5547b701582804b71018eb2f792736b0edaa5f82f058cb317d06b1607703e511",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_fenbell_chainstalkers_veteran/provenance.json",
+      "sha256": "3766d9eb85fa0e19fd616d0a7a85403572484c48b547fbe8da3f1effeae44413"
     },
     "unit_mireclaw_gorefen_rippers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_gorefen_rippers_veteran.png",

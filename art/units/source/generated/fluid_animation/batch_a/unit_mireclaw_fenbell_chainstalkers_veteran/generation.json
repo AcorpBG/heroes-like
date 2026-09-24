@@ -1,0 +1,96 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/idle_v1.png",
+      "sha256": "40dfef731400d72c1862e20ebe20de1b805d7a4a3843968ad0a3e5b1903ab84b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "0ff6ed89dc9fe52a90b8693d05d21cd69466cd12528a73cd2deb616144390e5e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-297da8a1-588f-42c1-8dd9-57a26cc360b6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/attack_v1.png",
+      "sha256": "226be46283472dc1e9cf18c054b48dc494e5d848fc6d6d510a750b23b0fd1574",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "d07934b8fd7649c683a95be130218ba32e0dc15bcf5e6ef0fa757261941a619d",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7ec04202-5789-4c01-8637-d67642c66595.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/corrections_v1.png",
+      "sha256": "eaefb0ad38e82b96a93c0e3651556ca9459e58fc558e32bce71c6bd1dcb32ed6",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/corrections_v1.prompt.txt",
+      "prompt_sha256": "0c210a6441f422b8a6fbb19dc2d1eb6b12036636fd7830838b1c9477c4de4eda",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-70490035-3bba-416b-943e-e87311d041f5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/reactions_v1.png",
+      "sha256": "1a679846ae098cf2eee866d3b0c94e35d138ce75b396b7bb0a7a16127130d84e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "61728ac89bf049515b1b6d560754abac7afae66a2d590f32553ebf2098c14ad1",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-43f0ce39-6d82-47da-a16e-d7a1c0ac31bf.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/cast_v1.png",
+      "sha256": "e5625060ffb5c6978ed9ea1ac180f705025582f6eea657bf18af0cc1d6b65185",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "9636d3f57dd3df6c9fc1b25e6de3019eca680111b79259098467ca4ddaa0f086",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c6c8cb79-3250-4e9b-b786-a9c272b794bc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/death_v1.png",
+      "sha256": "cac2049be6db31ccb2f15914f6a4edf428c387f0e0a90865837d734bd4d6f07e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "e0cc0457962ac6f67067885774d507cf7aa8d6cec084024fca03aaf98062515c",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4582fc05-f0ac-4cb7-b51f-92735de136dc.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/move_v1.png",
+      "sha256": "b501e6a8d5086185ac50912abc3fdd4138e9694d31efa18a1551a8c62f72cc9d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "1a0030be4d0a8be90e2973c7f8a6158f6b4685c12fb38f5b5f26f05ce800bf5e",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bbf4b46b-606e-4e83-9497-1cb8de57ed73.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers_veteran/identity_reference.png",
+          "sha256": "8b354e0ec81a1dbb83842ceef5203917cddeaa7ac5e932e83fe217ede6d18c22"
+        }
+      ]
+    }
+  ]
+}
