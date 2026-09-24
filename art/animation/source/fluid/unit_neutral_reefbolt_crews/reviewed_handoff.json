@@ -929,8 +929,429 @@
           ],
           "scale": 0.6,
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5357142857142857,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "idle": {
           "indices": [
@@ -1031,8 +1452,96 @@
           "loop": false,
           "static_frame": 0,
           "contact_frame": 4
+        },
+        "move": {
+          "indices": [
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67
+          ],
+          "frame_msec": 65,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/original_lossless.mkv",
+          "sha256": "6babf30bcc07a06dbbf2821e0bdb2960ed234f7f88df5a1a5322276fe4644636"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/original.json",
+          "sha256": "cdd3705bb039f99dd5e6776223d7912211386d32150538e5d74f759b6336df20"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/workflow_api.json",
+          "sha256": "9afd1b1a7c128560baa6d35ffc8c0d7b21a98de738bb33b9a287946fab0007fa"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/prompt.txt",
+          "sha256": "ad01ba4a8c6f19585c1efa102be2370b56cc659a81ffb359fdefca620ec3e189"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/reference.json",
+          "sha256": "d77ab737d08a586bb1136766c7480dbc00bb23715af1bd1e85c185ea815df4e6"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/reefbolt_move_h3/matte.json",
+          "sha256": "632e7cdf22a7bc163407a51a3a5001b3f678df59c93c524f368e341da2436fdb"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Accepted H3 transport movement after chronological review of all124 source frames, enlarged four-hand/four-leg and tripod/weapon details against light/dark, and Godot battle-size comparison with accepted idle.20 observed frames40-78 every2 at65ms form a1300ms cycle. Both crew members alternate supporting and passing boots; gunner maintains both stock grips, loader carries tripod with both hands, basket remains attached, all three rigid tripod legs stay lifted. Original .225 runtime/.42 input scale, source anatomical anchors and fixed video anchor480,480 retained.144 candidate checks passed. Seven earlier accepted actions preserved; no full suite, continuous manual game playtest or Linux execution."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.png": 0.49,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.png": 0.54,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png": 0.6,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_040.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_042.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_044.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_046.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_048.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_050.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_052.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_054.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_056.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_058.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_060.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_062.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_064.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_066.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_068.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_070.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_072.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_074.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_076.png": 0.5357142857142857,
+        "art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_078.png": 0.5357142857142857
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "idle",
         "attack",
@@ -1040,26 +1549,9 @@
         "hit",
         "defend",
         "death",
-        "cast"
-      ],
-      "preserve_clips": [
+        "cast",
         "move"
-      ],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: loader and gunner arm articulation, loader close-range jab, mounted crossbow release/reload, crew recoil/crouched guard, grounded crew/equipment collapse and gunner rally signal. Crew transport movement remains unfinished."
-      },
-      "source_scale_by_image": {
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/attack_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.png": 0.54,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_v2.png": 0.6,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/idle_return_v1.png": 0.49
-      },
-      "source_scale_reason": "Fixed painting-resolution normalization, not per-pose resizing. Main 2x4 sheets paint the standing crew about 360 px tall (0.60); reaction sheet paints its neutral crew about 400 px tall (0.54); separate 2x2 idle-return sheet paints crew about 440 px tall (0.49). Each original source uses one identical scale across every selected pose. New target standing height is about 216 px within reference_height 256; runtime visual review remains pending.",
-      "preserved_accepted_clips": []
+      ]
     }
   ]
 }
