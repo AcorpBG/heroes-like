@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "ashdart_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy game sprite camera. Animate the EXACT female Ashdart Stalker in the reference performing a natural reciprocal WALK IN PLACE for two complete walking cycles, then settling back into the original ready stance. Preserve her youthful face, black ponytail, round brass goggles on forehead, orange scarf and ragged orange cape, brown leather armor, metal knee guards, calf straps, two human legs and two human arms. Keep the original long dark wooden blowpipe held low at waist height with BOTH hands maintaining their original grips, rightward pointing muzzle, brass bands and hanging orange feather. Keep its length and straight rigid shape constant. Never aim, shoot, stretch, double or exchange the blowpipe, and never turn it into a sword or rifle. The quiver remains on her back. Beginning in the shown ready stance, take smooth alternating steps: NEAR leg advances heel-first while FAR leg trails; plant the near boot and transfer weight; far knee flexes and swings beneath hips then advances ahead while NEAR leg moves behind; plant far heel and transfer weight; swing NEAR boot beneath hips to its next forward reach. Repeat the complete left-right cycle once more. Both legs visibly exchange front and back roles with heel strike, support, toe-off and passing, never bounce on one forward knee or slide both legs together. Keep knees below waist, no skipping or high kicking. The arms subtly flex to balance while both hands keep the blowpipe at waist level. Cape tips, scarf and ponytail follow with modest lag. Preserve body proportions, stable head size and natural small hip weight shifts. Keep torso centered: no world travel, camera motion, zoom, turning, perspective changes or global sprite bobbing. All feet, feathers, cape and muzzle stay fully inside the canvas. Return to the identical original ready stance at the end. The background remains perfectly flat PURE GREEN RGB(0,255,0) throughout. No scenery, floor, cast shadow, lighting change, smoke, particles, text, extra equipment, motion blur or extra limbs.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092415
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "ashdart_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "ashdart_move_h3/frames/decoded"
+    }
+  }
+}

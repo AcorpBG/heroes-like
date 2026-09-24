@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_ashdart_stalkers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_0",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_ashdart_stalkers/extracted/attack_v1_0.png",
+        "rects": [
+          [
+            0,
+            0,
+            351,
+            380
+          ]
+        ],
+        "anchor": [
+          176,
+          379
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "901f3a803d182c215fa50102d971f955d362dd164eb8f9d2d9dd4d90478f21c6",
+      "input_file": "input_green.png",
+      "input_sha256": "39f3598a330ccfcb3854405defb2951cde14dd41528764bb4570f26eaeab343e",
+      "runtime_source_scale": 0.54
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 1.0,
+  "output_scale": 0.54
+}
