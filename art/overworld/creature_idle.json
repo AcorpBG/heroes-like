@@ -7210,33 +7210,37 @@
     "unit_brasshollow_scrip_haulers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_scrip_haulers_veteran.png",
       "frame_size": [
-        197,
-        249
+        210,
+        257
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        88.0,
-        238
+        101.0,
+        249
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_scrip_haulers_veteran.png",
+      "painted_extent": 241,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_scrip_haulers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        168,
-        50,
-        365,
-        299
+        123,
+        35,
+        333,
+        292
       ],
-      "source_sha256": "a628d73a1e8b3471ce3c62b66b351465126121c32fc4a6958161d44ab7c10a01",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_scrip_haulers_veteran/provenance.json",
-      "sha256": "10309baf9e6928d9a7f400230c30765e4c90a1146de77fd071acb5a13c42ecf3"
+      "source_sha256": "d8ffa958663749ef1c394fe29ef9bac0a3c89d6cf6901b780632bb4df9319c05",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_scrip_haulers_veteran/provenance.json",
+      "sha256": "9732edac5cb3476210eae892d00c987dcd6bf0230bea9086c3c84594b84709eb"
     },
     "unit_brasshollow_tallyspring_throwers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_tallyspring_throwers_veteran.png",

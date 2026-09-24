@@ -1,0 +1,96 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.png",
+      "sha256": "9621de1052bcdd9215c358635b7d3d112dc8db39ac04016b57ef94ff38c85407",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "ee18e9566cfd47ffe5824c8e9ec1110d41c3e0e5c0b4307fb56ec69115acd636",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c3335f8d-dd2a-4740-92bc-fc9acdc3c244.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/attack_v1.png",
+      "sha256": "1647e7261fe493956d95b3412887840e20e562267641a6c66789de81181a4f4f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "c562a37db3d2e8872abb171ce6ee04cc1662547e7cc35ddadae0b54e294cc3fd",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-1f297510-a078-4d52-9f25-190043559e7f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/reactions_v1.png",
+      "sha256": "4da317b2b90fbc64a786993020ce3ae89c06866185daab90032aa5e2e97571d2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "cdfbf3ad7b3a2f1d36b3aabde35f75f8a8d4a9bc66790d266c3af1b5d4930094",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-2b18c724-2e0d-4d23-bd9d-cb2886e7933d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/cast_v1.png",
+      "sha256": "8b6fa8771f843046617dcbe24945e48676310a375ca639993464193b3982d6e9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "64a1722cd88ed25d97e64e7208c7e818f272bd09001d463c45c914c43658cd7c",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-455c559a-b32a-4d90-80f8-9bf3c88ddea6.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/death_v1.png",
+      "sha256": "237676123ae2fa1319cc0cd8c61aec8302db04d2e00622231dd04eac775a9563",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "43ecce1e1c3c32e4592f2352def57210003207df00631dd4604e2a9a5b29d9d9",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9738b15a-ae0f-4d36-be65-7bf60742a1de.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_v1.png",
+      "sha256": "b45e734d4bf98d588352b15280eef8bdeeb026b5aac46a719b3eb13cfb5736ad",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "e1bc673567c8021be0484c0a65f9436886baf972d3096fa41965a7bc891d13cf",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-0e3b4ce2-0e9c-4a80-8cbd-83640bab018b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_near_v1.png",
+      "sha256": "85cf0b9f2ff4cda3374a93f7aff7012b4fae5ca5a62895f6e850ad54d9c5e6d8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "4e1dff5a618ba260ed5447acb0e60dd9817d3085d373140d262cab847d70f98c",
+      "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9fe48157-16b3-46ec-8bfc-44b55ad08a81.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/identity_reference.png",
+          "sha256": "6391cf65adb2e655fc58e4eb964edb8703a7942b3ee84712df86055adb6e899c"
+        }
+      ]
+    }
+  ]
+}
