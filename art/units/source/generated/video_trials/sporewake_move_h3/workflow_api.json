@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sporewake_walk_input_cyan.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. This exact masked swamp priest walks IN PLACE with two alternating legs, holding exactly one antler-topped wooden staff in the hand on image LEFT and one brass censer hanging from three chains held by the hand on image RIGHT. Keep the skull mask, purple face scarf, brown dreadlocks, leaf shoulder mantle, purple embroidered cloth, pendants, two boots, staff and censer unchanged. Perform ONE complete smooth reciprocal walking cycle: begin in the supplied first pose with the boot on image RIGHT lifted forward and the image LEFT boot supporting. Lower the forward boot onto the same ground baseline, transfer weight onto it, then bend and lift the opposite knee into the supplied middle pose at half time. Lower that boot, transfer weight onto it, and bring the first boot through a bent-knee passing phase back to the exact first pose. Alternate both legs through lifting, passing, foot contact, loading and push-off. Feet never merge or swap sides. Keep hips centered at the same horizontal location, no travel or turning. Staff stays a single rigid straight wooden shaft with identical antler crown at its TOP and a plain wooden BOTTOM. The staff hand maintains its grip; subtle elbow motion lifts and plants the staff naturally. The other hand keeps holding the same chain junction. The heavy brass bowl sways gently below that hand with all chains attached, never multiplying, vanishing or replacing a foot. No spell, smoke, glow, particles or weapon attack. Cloth and pendants settle naturally with the gait. Constant body and equipment size; no camera movement, zoom, cuts, perspective changes or whole-body sliding. Entire antlers, staff, bowl and both boots stay inside frame. The background remains a PERFECTLY SOLID FLAT CYAN RGB(0,255,255) plate for every frame. Do not change its hue or brightness. No ground plane, floor, cast shadow, scenery, text, blur, extra limbs or new props.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092407
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "sporewake_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "sporewake_move_h3/frames/decoded"
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "sporewake_walk_middle_cyan.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "frame_idx": 61,
+      "image": [
+        "16",
+        0
+      ]
+    }
+  }
+}
