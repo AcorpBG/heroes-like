@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "move",
+  "seed": 2026092510,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-a.png",
+      "rects": [
+        [
+          310,
+          10,
+          905,
+          1285
+        ]
+      ],
+      "anchor": [
+        605,
+        1270
+      ],
+      "scale": 0.175,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_2",
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-b.png",
+      "rects": [
+        [
+          230,
+          10,
+          1010,
+          1245
+        ]
+      ],
+      "anchor": [
+        610,
+        1235
+      ],
+      "scale": 0.183,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      41,
+      0
+    ],
+    [
+      61,
+      1
+    ],
+    [
+      82,
+      0
+    ],
+    [
+      102,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The same bearded River Guard infantryman, brass kettle helmet, red quilted coat and scarf, ivory sash, brown gloves and boots, oval red-blue-ivory wave-painted shield with brass rim and boss on his far image-right forearm, one long rigid hooked spear in his near image-left hand. Exactly two arms and legs, stable face, hand grips, shield emblem and spear length. Fixed right-facing three-quarter orthographic camera, body scale and lighting. Original painted fantasy strategy sprite. Entire character and equipment remain inside frame. One stationary pure magenta background identical to guides, no scenery, shadows, blur, trails or new objects. Walk smoothly in place with alternating near and far legs: heel contact, loading, passing, opposite heel contact. Keep upper body facing right, shield held securely, spear upright with same hand grip and length. Gentle natural shoulder and cloth sway, no sliding or hopping. Three repeating steps/cycles across124frames."
+}

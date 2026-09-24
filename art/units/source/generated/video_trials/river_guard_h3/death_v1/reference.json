@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_river_guard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            425,
+            510
+          ]
+        ],
+        "anchor": [
+          269,
+          498
+        ],
+        "scale": 0.6615384615384615,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1e6dac55fce1ee86fcf873a197e10fa855ea0f9efb20f7fdf0c37202166d914f",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "32c6d23ff5a8c602734e3b4225984b23e79676a8bc707786fee51a4f6393d92b",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "death_0",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+        "rects": [
+          [
+            0,
+            0,
+            704,
+            724
+          ]
+        ],
+        "anchor": [
+          410,
+          600
+        ],
+        "scale": 0.4923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1fd1c2e36941ccedb5ce46b479f9c4c30407ee7dac994a293a85644c4cfefe5b",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "3968c089cbc0719b2b0adc3306c6a4417d5cb07ad7b3893a38bfaa41e86f6f36",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "death_1",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+        "rects": [
+          [
+            704,
+            0,
+            1420,
+            724
+          ]
+        ],
+        "anchor": [
+          1050,
+          606
+        ],
+        "scale": 0.4923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1fd1c2e36941ccedb5ce46b479f9c4c30407ee7dac994a293a85644c4cfefe5b",
+      "input_file": "guide_2_magenta.png",
+      "input_sha256": "304055fe0a2b6fc41719e7a03f28315f0f492ebd21cae45572a8c5ac8ec664c3",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+        "rects": [
+          [
+            1420,
+            0,
+            2172,
+            724
+          ]
+        ],
+        "anchor": [
+          1840,
+          619
+        ],
+        "scale": 0.4923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1fd1c2e36941ccedb5ce46b479f9c4c30407ee7dac994a293a85644c4cfefe5b",
+      "input_file": "guide_3_magenta.png",
+      "input_sha256": "ce872fef6e0442936ec6fde2cf36cf38b4a894d4b3e4b3eac2e7a68a6e4f011b",
+      "runtime_source_scale": 0.32
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

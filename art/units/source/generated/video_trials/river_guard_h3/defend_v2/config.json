@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "defend",
+  "seed": 2026092518,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/defend.png",
+      "rects": [
+        [
+          0,
+          0,
+          950,
+          887
+        ]
+      ],
+      "anchor": [
+        510,
+        837
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      52,
+      1
+    ],
+    [
+      86,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "This guard steadily lowers into a protective brace, with shield raised in front of his chest and spear angled back. His elbows and knees bend naturally; the guard settles and holds still through the end. Original anatomy, face, shield and rigid spear remain unchanged, fixed camera and body size. The background is uniform pure GREEN RGB(0,255,0) and never changes color.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

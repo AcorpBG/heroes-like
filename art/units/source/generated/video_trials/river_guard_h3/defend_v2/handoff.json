@@ -1,0 +1,285 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_river_guard",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "frame_msec": 65,
+          "loop": false,
+          "static_frame": 9,
+          "frame_durations_msec": [
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            140
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/original_lossless.mkv",
+          "sha256": "410475eced8ec1d235a365332729e64f57fc197dfc1c97e7be385265fda7f4da"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/original.json",
+          "sha256": "700f926187bddb7aa89a6f5052f5f7d67a525ac09796a7480cf790d7717294de"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/workflow_api.json",
+          "sha256": "4dd6bec09834b9568f9d6ce5e5e10728bd0175a11921e4b2bc06a3c32a1bf181"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/prompt.txt",
+          "sha256": "81daf424a9cfcd013d2d0eafc73dfa8d7442aacf55c3db92a7b583be7cfb2021"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/reference.json",
+          "sha256": "2f4f7cf4e369a408b73a5242a6d289b97f3ed958313abb9a5af40298d2fee45d"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/defend_v2/matte.json",
+          "sha256": "45d6dc146a8020624b0a4b1aa20a012285b02f9c1f2a2a6c6036b1544f6ab732"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "All 124 chronological frames reviewed; green plate key remains stable. Enlarged spear grip, shield brace and planted feet; shoulders/elbows/knees articulate into a distinct held defensive stance. Ten original poses, 725ms entry/settle, hold last. No continuous playback claimed; native candidate/live checks passed (180/194)."
+      }
+    }
+  ]
+}

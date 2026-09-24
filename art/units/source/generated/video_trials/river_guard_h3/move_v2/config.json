@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "move",
+  "seed": 2026092516,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-a.png",
+      "rects": [
+        [
+          310,
+          10,
+          905,
+          1285
+        ]
+      ],
+      "anchor": [
+        605,
+        1270
+      ],
+      "scale": 0.175,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "move_2",
+      "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-b.png",
+      "rects": [
+        [
+          230,
+          10,
+          1010,
+          1245
+        ]
+      ],
+      "anchor": [
+        610,
+        1235
+      ],
+      "scale": 0.183,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      41,
+      0
+    ],
+    [
+      61,
+      1
+    ],
+    [
+      82,
+      0
+    ],
+    [
+      102,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One smooth in-place walk cycle repeated three times by this exact spear-and-shield guard, with alternating legs, heel contact, weight transfer and passing. Shield and rigid spear keep the same grips, length and design. Preserve face, clothes, body size and right-facing camera. No camera movement or new objects. Flat solid magenta background remains exactly the same throughout."
+}

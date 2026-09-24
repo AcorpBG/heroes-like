@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_river_guard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            425,
+            510
+          ]
+        ],
+        "anchor": [
+          269,
+          498
+        ],
+        "scale": 0.6615384615384615,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1e6dac55fce1ee86fcf873a197e10fa855ea0f9efb20f7fdf0c37202166d914f",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "32c6d23ff5a8c602734e3b4225984b23e79676a8bc707786fee51a4f6393d92b",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "attack_0",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/attack.png",
+        "rects": [
+          [
+            0,
+            0,
+            610,
+            744
+          ]
+        ],
+        "anchor": [
+          345,
+          697
+        ],
+        "scale": 0.5230769230769231,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7cd0658213b869f9e4204681b4ddaf8f81d9200e11ee6cfd3733c2055f949939",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "a157fa91fd4f8afe92a8dc06785dfef719a4e23d78f368c8ca566df1af18e130",
+      "runtime_source_scale": 0.34
+    },
+    {
+      "source_frame": {
+        "name": "attack_1",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/attack.png",
+        "rects": [
+          [
+            610,
+            0,
+            1675,
+            350
+          ],
+          [
+            610,
+            350,
+            1500,
+            744
+          ]
+        ],
+        "anchor": [
+          1040,
+          697
+        ],
+        "scale": 0.5230769230769231,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7cd0658213b869f9e4204681b4ddaf8f81d9200e11ee6cfd3733c2055f949939",
+      "input_file": "guide_2_magenta.png",
+      "input_sha256": "cf5772a0ef6a84343a87c589f7ebc4bde185bd41bc9fe8ffe79945323bf2b652",
+      "runtime_source_scale": 0.34
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

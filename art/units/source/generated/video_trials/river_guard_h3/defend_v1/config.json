@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "defend",
+  "seed": 2026092512,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/defend.png",
+      "rects": [
+        [
+          0,
+          0,
+          950,
+          887
+        ]
+      ],
+      "anchor": [
+        510,
+        837
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      52,
+      1
+    ],
+    [
+      86,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "This exact guard lowers into a defensive brace, raises the same oval shield to protect his upper body, and angles the spear back in his other hand. Real knee and elbow movement. Reach the guard by frame52, hold it to the end. No attack. Preserve anatomy, rigid spear length and grips, shield design, size and fixed right-facing camera. Background stays completely flat solid magenta throughout."
+}
