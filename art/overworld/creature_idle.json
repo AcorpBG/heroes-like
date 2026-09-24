@@ -7272,33 +7272,37 @@
     "unit_brasshollow_rivet_hounds_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_rivet_hounds_veteran.png",
       "frame_size": [
-        287,
-        248
+        323,
+        229
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        139.0,
-        237
+        152.0,
+        221
       ],
-      "painted_extent": 271,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_rivet_hounds_veteran.png",
+      "painted_extent": 307,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_rivet_hounds_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        117,
-        3,
-        404,
-        251
+        28,
+        27,
+        351,
+        256
       ],
-      "source_sha256": "c6ba922416abee7e79ae2723acab7ea012b7f024d42bf98769594e6c4deddac8",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_rivet_hounds_veteran/provenance.json",
-      "sha256": "b4723da85edc74b8a316ced139660598955d406e4a2090b9cb32780ee5ed1509"
+      "source_sha256": "4a0f8f4439b9f4e8a6ea6f53e59cb149b706b9d6456942592078b802315391a5",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_rivet_hounds_veteran/provenance.json",
+      "sha256": "bca19fb4ab5b5e53e4a0aa52a2fba78c35fd10e43a4163375471f537b731b6b3"
     },
     "unit_brasshollow_quenchspool_slingers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_brasshollow_quenchspool_slingers_veteran.png",
