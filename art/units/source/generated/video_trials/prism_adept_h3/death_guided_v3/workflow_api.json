@@ -1,0 +1,302 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. This exact Prism Harrier, a young adult female fantasy crossbow soldier with ivory hood and blue lining, long dark hair, face looking RIGHT, gold-edged white and royal blue split tabard with gold sun star, dark leggings, two gold boots, gold/blue gloves, iridescent blue-gold crystal shoulder plates, crystal bolt pouch at her image-left hip. Exactly two arms, two hands and two legs. ONE rigid elaborate gold/blue crystal CROSSBOW held diagonally across her waist pointed toward image-right, trigger hand at image-left side of her chest and support hand beneath the forward stock. Keep original stock length, curved bow limbs, thin bowstring, central blue gem and crystal muzzle; no additional weapons, shield, staff, bolts, particles or flashes. One continuous non-graphic defeat and collapse from the supplied upright ready pose to the supplied fully grounded side-lying corpse. Slow heavy continuous physical fall from exhaustion following supplied keyframes exactly: ready0, buckled knees18, kneeling34, lowered sideways50, head on forearm66, motionless flat corpse84. No startle, attack, weapon drawing, bowstring pulling or firing. No new gesture. BOTH hands stay attached to the same crossbow stock/grips as it lowers with torso. BOTH knees bend and buckle, torso lowers naturally, one knee reaches ground, body tips down onto her side, shoulder then head settle onto folded arm, both legs come to rest sideways as in final guide. Keep head/torso size unchanged through fall. Crossbow is ONE rigid object retained by the same two hands as they lower it together; bow comes to rest flat on ground in front of body, never upright or floating. Cloth folds under body. Eyes close and face becomes motionless. All materials stay FULLY OPAQUE AND SHARP THROUGH EVERY FRAME including crossbow panels and solid gold bow limbs; NO ghosting, dissolves, transparency, motion smears, morphing or crossfades. Hands physically lower and rotate the crossbow together with the falling torso, never release it or drag it separately afterward. Bow is already resting in front when shoulder/head touch ground. No getting back up, fading, disappearing, dismemberment, blood, stretching anatomy, extra limbs or equipment duplication. Preserve intended local fall and grounded contact. Begin fall promptly; complete by final quarter and remain completely motionless at terminal corpse. No camera movement, zoom or perspective changes. Entire hood, both boots and complete weapon visible with generous margins. Background perfectly uniform PURE GREEN RGB(0,255,0), no floor, shadows, gradients, text or scenery.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "16",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_corpse_green.png"
+    }
+  },
+  "17": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_kneel_green.png"
+    }
+  },
+  "20": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_buckle_green.png"
+    }
+  },
+  "21": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_side_green.png"
+    }
+  },
+  "22": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "prism_adept_death_elbow_green.png"
+    }
+  },
+  "23": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 18,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "20",
+        0
+      ]
+    }
+  },
+  "24": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "23",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "17",
+        0
+      ]
+    }
+  },
+  "25": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "24",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 50,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "21",
+        0
+      ]
+    }
+  },
+  "26": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "25",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 66,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "22",
+        0
+      ]
+    }
+  },
+  "27": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "26",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 84,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "16",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "27",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092436
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "prism_adept_h3/death_guided_v3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "prism_adept_h3/death_guided_v3/frames/decoded"
+    }
+  }
+}

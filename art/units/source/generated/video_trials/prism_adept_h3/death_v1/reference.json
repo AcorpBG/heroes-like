@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_prism_adept",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_00",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/attack_v1.png",
+        "rects": [
+          [
+            136,
+            7,
+            459,
+            384
+          ]
+        ],
+        "anchor": [
+          285,
+          380
+        ],
+        "scale": 0.9500000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a7d13aad02b5a4068d25dca4100d44a25f169d4919641f3c283f9723381aabfd",
+      "input_file": "input_green.png",
+      "input_sha256": "2d34a8c45dc3041ecdc30da6c63fb05bfd7c620d9ca8447ffe2ab1a29a7ef710",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "grounded_corpse",
+        "clip": "death",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_prism_adept/death_v2.png",
+        "rects": [
+          [
+            570,
+            1130,
+            1136,
+            1385
+          ]
+        ],
+        "anchor": [
+          850,
+          1332
+        ],
+        "scale": 0.8550000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5491385409e677c9a80da8c8c3133e1e3fb3684664ef2d22214bc72663a61204",
+      "input_file": "corpse_green.png",
+      "input_sha256": "b30c6cad114a5eefa0743d3924378ab15ddb35773e51834995091bdce9fb712b",
+      "runtime_source_scale": 0.54
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.95,
+  "output_scale": 0.631578947368421
+}

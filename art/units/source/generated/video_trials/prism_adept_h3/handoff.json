@@ -1,0 +1,1424 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_prism_adept",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.6311475409836066,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_002",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "death_h3_004",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "death_h3_006",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.631578947368421,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        }
+      ],
+      "alpha_noise_cutoff": 0,
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 37
+        }
+      },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move": {
+          "original_lossless.mkv": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/original_lossless.mkv",
+            "sha256": "bd4ead25194b182f39b99af73c21eace962d8c3bea8369dc219cc404ecdc0bf6"
+          },
+          "original.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/original.json",
+            "sha256": "54e4527ea6610ba63f5290867575bb3bd2d1ac74587546ab56e5a8caab9aca0e"
+          },
+          "workflow_api.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/workflow_api.json",
+            "sha256": "5247e744f4459f9b49f29624c125b87a6576c6527def07b7432a3714f8767f7e"
+          },
+          "prompt.txt": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/prompt.txt",
+            "sha256": "ab4d249117972d85e8a53a42f84c6b41e92271194fe93916bff935b311dcc212"
+          },
+          "reference.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/reference.json",
+            "sha256": "056bfce42a834c3100f6b4673cfbf54c231cb505050fb040a8cc971adc6e97fd"
+          },
+          "matte.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte.json",
+            "sha256": "fd8b17c60bec6ce85b81a29fb7ce0822a4d2ea8b87b79a0fe51f3e5bca11744c"
+          }
+        },
+        "death": {
+          "original_lossless.mkv": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/original_lossless.mkv",
+            "sha256": "81d0ea9cf3faa88d5e844cdd6df93d6ec61c85fe202d97689db7101cb6aef780"
+          },
+          "original.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/original.json",
+            "sha256": "1e5db4df9fb708ef997aa6baa96a05af134dd29888559f18400db3dfc2585c5e"
+          },
+          "workflow_api.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/workflow_api.json",
+            "sha256": "2b94c3a5737823c3b423a579afecde3af3b977de835ce400a531f372b395fff9"
+          },
+          "prompt.txt": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/prompt.txt",
+            "sha256": "fd926aefaa7e7a3c1e1f4060d8a5b3c0f759da6db25afa456cf9be275262f7d6"
+          },
+          "reference.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/reference.json",
+            "sha256": "f7c260d905796254100ab9cbdef4363183ed02f32affbe460fb24265047edf7c"
+          },
+          "matte.json": {
+            "path": "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte.json",
+            "sha256": "2a326b28483fde72c344e6c2642f39d04513574988464a899e2eed90c44f5933"
+          }
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all124 chronological frames, enlarged40/44/48/52/56/60/64/68/72/76/78/80 on light/dark plates. Dark near leg leads40-48, passes52, trails56-68 while ivory-fronted far leg leads, passes72 and returns forward76-80. Two hands stay on separate crossbow grips; full rigid crystal/gold crossbow, hood and shoulder crystals retained, cloth follows stride.20 observed poses40-78 every2 at60ms produce1200ms loop retimed from1667ms source cycle; seam78/80/40 inspected. Original .385 guide scale matches accepted .6 body height; input.61 and extraction.385/.61, fixed anatomical anchor975,1217 to480,475. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Autonomous acceptance per owner direction. Reviewed all124 chronological frames plus enlarged0/12/18/20/34/50/54/58/62/66/70/74 on light/dark grounds. Ready lowers weapon and buckles knees12-20, kneeling pause retains grips through50, body lowers sideways54-66 and head/shoulder settle70-74. Complete opaque crossbow remains attached and rests in front; no firing/drawing gesture or floating weapon.38 observed poses0-74 every2 at50ms give1900ms collapse retimed from approximately3167ms source interval. Final source74 supplies persistent corpse. Original .6 ready and .54 corpse/kneeling anatomical scales through fixed .6/.95 extraction, common480,475 ground; no pose-bound normalization. Five intermediate guides at18/34/50/66/84 fix the prior two rejected takes. Ordered-frame/native-render review, not continuous browser playback; no manual playtest claimed. Coordinator owns acceptance/publication."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_040.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_042.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_044.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_046.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_048.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_050.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_052.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_054.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_056.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_058.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_060.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_062.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_064.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_066.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_068.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_070.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_072.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_074.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_076.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/move_v1/matte/rgba_078.png": 0.6311475409836066,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_000.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_002.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_004.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_006.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_008.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_010.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_012.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_014.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_016.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_018.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_020.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_022.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_024.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_026.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_028.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_030.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_032.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_034.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_036.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_038.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_040.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_042.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_044.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_046.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_048.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_050.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_052.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_054.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_056.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_058.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_060.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_062.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_064.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_066.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_068.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_070.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_072.png": 0.631578947368421,
+        "art/units/source/generated/video_trials/prism_adept_h3/death_guided_v3/matte/rgba_074.png": 0.631578947368421
+      }
+    }
+  ]
+}
