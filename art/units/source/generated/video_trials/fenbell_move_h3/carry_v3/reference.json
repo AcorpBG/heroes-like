@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_mireclaw_fenbell_chainstalkers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "carry_clear_v1",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/fenbell_move_h3/key_guides/carry_clear_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          885,
+          921
+        ],
+        "scale": 0.42,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3aa5e3b767dd69e3b2c36549523c31c487c605af7dbed3812b310acf6be260de",
+      "input_file": "input_blue.png",
+      "input_sha256": "6bec4a39927a7fdfc395aa8a99277f7567c036aa9964f1954d37c5c2e0e81fda",
+      "runtime_source_scale": 0.25
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.42,
+  "output_scale": 0.5952380952380952
+}

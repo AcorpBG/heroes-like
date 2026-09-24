@@ -1,0 +1,11 @@
+{
+  "status": "rejected",
+  "reason": "Background changes from magenta to green by frame14; green key would remove or contaminate olive/teal reed identity. Original lossless video retained; no clips published.",
+  "failed_frame": 14,
+  "observed_corner_rgb": [
+    24.5,
+    221.0,
+    15.5
+  ],
+  "correction": "New pure-blue plate; retain all original pixels/generation provenance."
+}

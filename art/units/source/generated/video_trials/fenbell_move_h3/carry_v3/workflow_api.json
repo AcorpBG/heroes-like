@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "fenbell_walk_input_blue (1).png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate the EXACT masked Fenbell Chainstalker in this reference walking IN PLACE with smooth reciprocal steps, two full left-right cycles, then return to the reference stance. Preserve pale carved wood mask and dark eye slits, olive/yellow reed hood/mantle and teal strands, leather wraps, red bindings, rope belt, boots, lean humanoid body, two arms and two legs. Keep the corrected CARRY CONFIGURATION: IMAGE LEFT hand holds the small bronze bell and gathered short chain. The ONE bronze crescent hook hangs vertically below that hand OUTSIDE the entire left edge of the body beside the upper thigh, far above boot soles. Maintain clear background gap between hook and nearest thigh/knee/boot in every frame. The short chain is gathered, always connected and never extends across the legs. IMAGE RIGHT hand keeps the original spare chain coil. One bell, one rigid crescent hook, one spare coil; exact original shapes, materials and size. Hands retain their grips. Arms carry the equipment beside the torso without attacking, throwing, winding, lifting overhead or swapping hands. Hook may make only slight outward sway on the left of the body and must never travel inward toward legs, across torso, or down to boot level. Near boot reaches forward and plants heel then toe while far foot trails; transfer weight, swing far boot past the planted leg into the opposite forward contact, plant it and let near foot trail, pass and reach forward again. Both legs visibly alternate contact, support, toe-off and passing. Repeat a complete two-step cycle and return to the first pose. Knees below waist, restrained purposeful gait, natural ankle flexion, no hopping, skating, scissor steps or limb stretching. Reeds softly lag with movement. Torso stays centered at one constant scale. Preserve mask/face/gear identity without morphing. Fixed camera, no turning, zoom, world travel or perspective changes. Entire reeds, boots, coil, bell and hook inside frame. Background remains perfectly uniform PURE BLUE RGB(0,0,255) throughout, never green, cyan, magenta or yellow. No floor, ground shadows, scenery, text, particles, smoke, magic or motion blur.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092420
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "fenbell_move_h3/carry_v3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "fenbell_move_h3/carry_v3/frames/decoded"
+    }
+  }
+}
