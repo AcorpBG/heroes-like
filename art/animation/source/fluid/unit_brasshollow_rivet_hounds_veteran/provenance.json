@@ -1,0 +1,31 @@
+{
+  "unit_id": "unit_brasshollow_rivet_hounds_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/idle_v1.png": "2a65d948c71dba5ef76dc82ee6a5ff1bc906d4855a5f74249481920ac2285f7a",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/attack_v1.png": "e71a588b82496cca8931c1edaeed506299c12e81650a74171e293d8023e050c1",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/reactions_v1.png": "ac2f4489d232d26c4052b130bf17d2eed3bda08b41eece163d8a8b37c1241e72",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/cast_v1.png": "775b881244a57c4f12e553f8b34c8b01edcebcd3e311371054f9aba745562fe8",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/death_v1.png": "f0a1d72eb560cd0d3a2d9344df36c85f0418c592701e2b175167ee3cf25fee80",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_rivet_hounds_veteran/move_v1.png": "ccbc2e74de268b77e573c272870297d577cdb0bb4595c1f97f3bf35b53813aa0"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "48 original Seambreaker Hound paintings reviewed at native Godot battle scale; articulated four-leg gait, clamp attack, alert support and grounded collapse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "c6ba922416abee7e79ae2723acab7ea012b7f024d42bf98769594e6c4deddac8",
+  "atlas_sha256": "4a0f8f4439b9f4e8a6ea6f53e59cb149b706b9d6456942592078b802315391a5",
+  "texture_bytes_rgba": 18063360
+}
