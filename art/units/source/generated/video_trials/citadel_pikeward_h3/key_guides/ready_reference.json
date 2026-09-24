@@ -1,0 +1,28 @@
+{
+  "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+  "recipe": {
+    "source_frame": {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.7230769230769231,
+      "alpha_noise_cutoff": 8
+    },
+    "source_sha256": "ff08eae2e19246b6e4403e7c0928a47d5ffa365bf4274f0fc8e920add7c5b29a",
+    "input_file": "guide_0_magenta.png",
+    "input_sha256": "eebca4bdb4f633320d711fded3fb1315dd9a3dd58996a4c1e70fc346c01d6e68",
+    "runtime_source_scale": 0.47
+  },
+  "reference_sha256": "d0c61eb98e06d598f18c9c7fbac849eeb7fa54d5e4ae6fa22c1b454fe16d465f"
+}

@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "defend",
+  "seed": 2026092522,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          810,
+          540,
+          1161,
+          720
+        ],
+        [
+          883,
+          462,
+          1161,
+          540
+        ]
+      ],
+      "anchor": [
+        949,
+        710
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      86,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "The pikeward bends his knees and lowers into a protective crouched brace behind the same raised shield, lowering his rigid hooked pike horizontally. Settle and hold that guard through the end. Preserve original face, red plume, armor, shield design, two arms/two legs and body size. Fixed right-facing camera. Uniform solid green RGB(0,255,0) studio background remains unchanged. No effects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

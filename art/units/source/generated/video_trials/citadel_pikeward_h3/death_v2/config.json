@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "death",
+  "seed": 2026092526,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          22,
+          802,
+          347,
+          1065
+        ]
+      ],
+      "anchor": [
+        185,
+        1055
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_1",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+      "rects": [
+        [
+          347,
+          850,
+          715,
+          1060
+        ]
+      ],
+      "anchor": [
+        516,
+        1049
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_left_v1",
+      "source": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/dead_left_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        835,
+        752
+      ],
+      "scale": 0.275,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "The pikeward loses strength, sinks onto a knee, drops onto his side and settles fully on the ground. The same shield and rigid hooked pike lower with his arms and rest on the ground with him. End in the exact grounded corpse pose and remain still. Exactly two arms and two legs, original helmet plume, armor and proportions throughout, fixed camera. Plain solid green RGB(0,255,0) background remains unchanged. No effects. During the final side fall the head stays at image left and the feet at image right. Lower the supporting elbow and head gently, keep both legs together, no turning or rolling over.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

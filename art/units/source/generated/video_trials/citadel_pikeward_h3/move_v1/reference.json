@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_0",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+        "rects": [
+          [
+            820,
+            0,
+            1030,
+            398
+          ]
+        ],
+        "anchor": [
+          926,
+          390
+        ],
+        "scale": 0.923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "1fa997cf3cabbc1377033351f8df591684a81a9a4e8eefe3b3df3c674e7ea126",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "move_opposed_v2",
+        "source": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          837,
+          877
+        ],
+        "scale": 0.4076923076923077,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3b8b135895479058780454e83555b8118612725d1aff3d7f4e5fe7a7332b75f3",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "8993f467fbf8cb1d61595a453b22d7d70a7c266b9a338be148af1ee9ab3eba43",
+      "runtime_source_scale": 0.265
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

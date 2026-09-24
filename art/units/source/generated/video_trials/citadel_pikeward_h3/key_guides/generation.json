@@ -1,0 +1,45 @@
+{
+  "tool": "built-in image_gen",
+  "guides": [
+    {
+      "path": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v1.png",
+      "sha256": "783709f538784ee21f78f67655450678cf0a354204ec74b1d942ac52bcbbdd4e",
+      "reference": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_reference.png",
+      "reference_sha256": "ecc13b07a664193c01bffd6016d3a5aed3d39387e417822a34e485f59987960b",
+      "prompt": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v1.prompt.txt",
+      "prompt_sha256": "3cf4d49ed46d1237a4ec254cd305f54f0cf199be93c017b45f28b471e13403e8",
+      "tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-437f4b44-e8c8-409c-a6a1-f7ecf17a26e7.png",
+      "status": "excluded_repeated_contact"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v2.png",
+      "sha256": "3b8b135895479058780454e83555b8118612725d1aff3d7f4e5fe7a7332b75f3",
+      "reference": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v1.png",
+      "reference_sha256": "783709f538784ee21f78f67655450678cf0a354204ec74b1d942ac52bcbbdd4e",
+      "prompt": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/move_opposed_v2.prompt.txt",
+      "prompt_sha256": "858efa0a89010a73fab52afedaa3b4ee64bb578f87747d098f5d42fcf3fad35b",
+      "tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-efacb256-d3f9-4a20-910f-34b178d25c96.png",
+      "status": "selected_reciprocal_stride_guide_reviewed"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/salute_v1.png",
+      "sha256": "39ad05e3da515b08bbf55ca1125534765e079e69276d4faacbb792c5e643a8d9",
+      "reference": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/ready_reference.png",
+      "reference_sha256": "d0c61eb98e06d598f18c9c7fbac849eeb7fa54d5e4ae6fa22c1b454fe16d465f",
+      "prompt": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/salute_v1.prompt.txt",
+      "prompt_sha256": "7126403743e52bfea4fb0a0c3b60ec589d1aa1013aaac3bb0beec9d335b16111",
+      "tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-fc117b87-0d90-47f7-96f2-a8e970ec86d6.png",
+      "status": "selected_support_guide"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/dead_left_v1.png",
+      "sha256": "1f77443eb0e585a5e298de2667f465628855a720a3986cb61076d817d61ff90b",
+      "reference": "art/units/source/generated/video_trials/citadel_pikeward_h3/death_v1/guide_2_rgba.png",
+      "reference_sha256": "c9add2a5da27b0d93af1b0a41ea129719ca4b4959b02ac1040a1dd9ce4de7814",
+      "prompt": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/dead_left_v1.prompt.txt",
+      "prompt_sha256": "1165a41ae05cd7f9065e229fc8a89fb973b8794da8273e01091aade0f6352d5e",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5e6b2695-418e-4b7e-928b-805536057541.png",
+      "status": "corrected_left_head_corpse_guide"
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "clip": "cast",
+  "seed": 2026092525,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        176,
+        483
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "salute_v1",
+      "source": "art/units/source/generated/video_trials/citadel_pikeward_h3/key_guides/salute_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1665,
+          944
+        ]
+      ],
+      "anchor": [
+        838,
+        865
+      ],
+      "scale": 0.35,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      58,
+      1
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One proud rally salute by this exact pikeward: lift the single long hooked pike upright above his shoulder with the near arm, hold, then lower it to ready. Feet planted, shield held steadily by the far arm. Preserve the same rigid pike and length, exactly two arms and legs, helmet plume, face, armor and body size. Fixed right-facing camera, plain solid green RGB(0,255,0) background unchanged throughout. No effects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

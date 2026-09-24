@@ -83,29 +83,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        69.0,
+        69,
         234
       ],
       "painted_extent": 230,
-      "source_sheet": "res://art/animation/runtime/poses/unit_citadel_pikeward.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_citadel_pikeward.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        187,
-        14,
-        348,
-        260
+        75,
+        74,
+        236,
+        320
       ],
-      "source_sha256": "3ef1ed150e9ed0f53bd7eb65f2fafdecbd3a411e93571f47edab1bcf2c90e69d",
-      "source_provenance": "res://art/animation/source/poses/unit_citadel_pikeward/provenance.json",
+      "source_sha256": "9d30c1fb230199efa84ecbcd9a48d2ac731e02c0d846a6cbf35aaeea69bf924d",
+      "source_provenance": "res://art/animation/source/fluid/unit_citadel_pikeward/provenance.json",
       "sha256": "4d74082b4ad8b67393d7680d71784784de57f904e0db534d3468b641480ea644"
     },
     "unit_blackbranch_cutthroat": {

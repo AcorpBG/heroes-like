@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_citadel_pikeward",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          176,
+          483
+        ],
+        "scale": 0.7230769230769231,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ff08eae2e19246b6e4403e7c0928a47d5ffa365bf4274f0fc8e920add7c5b29a",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "eebca4bdb4f633320d711fded3fb1315dd9a3dd58996a4c1e70fc346c01d6e68",
+      "runtime_source_scale": 0.47
+    },
+    {
+      "source_frame": {
+        "name": "death_0",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+        "rects": [
+          [
+            22,
+            802,
+            347,
+            1065
+          ]
+        ],
+        "anchor": [
+          185,
+          1055
+        ],
+        "scale": 0.923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "157ade0aaa51284814838a557dd34747c86053c4ce183b701f2d5a78625b1cd7",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "death_1",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+        "rects": [
+          [
+            347,
+            850,
+            715,
+            1060
+          ]
+        ],
+        "anchor": [
+          516,
+          1049
+        ],
+        "scale": 0.923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "input_file": "guide_2_magenta.png",
+      "input_sha256": "90bbf40cc001d270c1a9d64d64a72d2641e8c08e1ac27a36e9a4876a5778679c",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_citadel_pikeward/alpha/poses.png",
+        "rects": [
+          [
+            714,
+            909,
+            1223,
+            1060
+          ]
+        ],
+        "anchor": [
+          947,
+          1046
+        ],
+        "scale": 0.923076923076923,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16eedd517ad36a14c2d6d39562720f039ec989550bf99bb61b614a8dd99350d1",
+      "input_file": "guide_3_magenta.png",
+      "input_sha256": "b65e3a872407e2b6208f36cd04bc901ee62a7cbf2b5a8e53cf1d56fd052a0695",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
