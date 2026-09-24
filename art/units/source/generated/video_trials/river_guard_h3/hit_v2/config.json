@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "hit",
+  "seed": 2026092517,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend_1",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/defend.png",
+      "rects": [
+        [
+          950,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1380,
+        837
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      78,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One quick startled flinch by this guard: shoulders jerk backward, knees flex and the same held shield pulls closer to his chest, then he straightens and returns to ready. A natural brief full-body recoil. Only this single guard exists in the scene. Keep all original anatomy, clothing, shield and rigid spear unchanged. No external event is depicted. Fixed camera and body scale. Uniform solid magenta background throughout.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

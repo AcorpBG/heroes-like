@@ -1,0 +1,88 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "attack",
+  "seed": 2026092511,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_0",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/attack.png",
+      "rects": [
+        [
+          0,
+          0,
+          610,
+          744
+        ]
+      ],
+      "anchor": [
+        345,
+        697
+      ],
+      "scale": 0.34,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_1",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/attack.png",
+      "rects": [
+        [
+          610,
+          0,
+          1675,
+          350
+        ],
+        [
+          610,
+          350,
+          1500,
+          744
+        ]
+      ],
+      "anchor": [
+        1040,
+        697
+      ],
+      "scale": 0.34,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      50,
+      2
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "The same bearded River Guard infantryman, brass kettle helmet, red quilted coat and scarf, ivory sash, brown gloves and boots, oval red-blue-ivory wave-painted shield with brass rim and boss on his far image-right forearm, one long rigid hooked spear in his near image-left hand. Exactly two arms and legs, stable face, hand grips, shield emblem and spear length. Fixed right-facing three-quarter orthographic camera, body scale and lighting. Original painted fantasy strategy sprite. Entire character and equipment remain inside frame. One stationary pure magenta background identical to guides, no scenery, shadows, blur, trails or new objects. Perform one spear thrust toward screen RIGHT: bend knees and draw spear back, rotate the shoulder and elbow, lunge forward and extend the rigid spear horizontally, then retract and return to the ready stance. Shield braces on the other arm. Clear anticipation, fast thrust and natural recovery. No throwing, spear bending or weapon duplication."
+}

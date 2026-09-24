@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_river_guard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            425,
+            510
+          ]
+        ],
+        "anchor": [
+          269,
+          498
+        ],
+        "scale": 0.6615384615384615,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1e6dac55fce1ee86fcf873a197e10fa855ea0f9efb20f7fdf0c37202166d914f",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "db7db304036c51e7b7e46de475652bcee4105b843a77c59f5dffbf8fb6815d3d",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "defend_0",
+        "source": "art/animation/source/poses/unit_river_guard/alpha/defend.png",
+        "rects": [
+          [
+            0,
+            0,
+            950,
+            887
+          ]
+        ],
+        "anchor": [
+          510,
+          837
+        ],
+        "scale": 0.4153846153846154,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0877d6d1714decda887aadd01a2657f3c4fc501f7ccc735b5b5dbe49d15e83a3",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "f3b52466d5474af74cdba5753ed9468f20ec54bd2f48714020a1aa03c36694c6",
+      "runtime_source_scale": 0.27
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

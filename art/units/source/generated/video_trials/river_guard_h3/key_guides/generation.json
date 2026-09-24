@@ -1,0 +1,25 @@
+{
+  "tool": "built-in image_gen",
+  "guides": [
+    {
+      "path": "art/units/source/generated/video_trials/river_guard_h3/key_guides/salute_v1.png",
+      "sha256": "0c7435b316d7cbd760f550f6b493cfda186dec9fa22d8485662fa742e9a89983",
+      "reference": "art/units/source/curated/unit_river_guard.png",
+      "reference_sha256": "95e7c9fc8dfddeebe0d5cd7439347dc1e6538b4d0e1f52584dac8cbaf76354eb",
+      "prompt": "art/units/source/generated/video_trials/river_guard_h3/key_guides/salute_v1.prompt.txt",
+      "prompt_sha256": "39b98f00fd4dbb021ad4cb5fe5bc7b674e95b312d95bd653ae252ef0ba4a0e9d",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-81446033-540e-414f-9777-e5891c824183.png",
+      "status": "excluded_short_spear_and_edge_tip"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/river_guard_h3/key_guides/salute_v2.png",
+      "sha256": "3d0c8fcdc4ece46368baffb8b691bf80565634051bfa6d80868afbfcb2472c9d",
+      "reference": "art/units/source/generated/video_trials/river_guard_h3/key_guides/salute_v1.png",
+      "reference_sha256": "0c7435b316d7cbd760f550f6b493cfda186dec9fa22d8485662fa742e9a89983",
+      "prompt": "art/units/source/generated/video_trials/river_guard_h3/key_guides/salute_v2.prompt.txt",
+      "prompt_sha256": "22344082a807aeb7ecc59415dd5b26a3734643e80af8fa21ba80ecec23dd9ae1",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1f51ad0a-bb57-4798-a8d9-45ea893b63d9.png",
+      "status": "selected_corrected_full_length_spear"
+    }
+  ]
+}

@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_river_guard",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_001",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.041666666666666664
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_005",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "move_h3_007",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_011",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "move_h3_013",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_017",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "move_h3_019",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_023",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "move_h3_025",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/original_lossless.mkv",
+          "sha256": "f4b15c4beb5cd813be1350c75878efc6bdb628dd904d8af35652aadacda741a0"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/original.json",
+          "sha256": "319747ab68f27f0d60af42841afb100f522d7e174405c676f4a6b99c9fd5a5d0"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/workflow_api.json",
+          "sha256": "72a680c50caddcc98e697e207ea16c96456bd32129f94ad021879001e71939ce"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/prompt.txt",
+          "sha256": "40cc79e8b08d6d9930c3cdb563d0d13c84a5fa65ab36ce938727a3573d328222"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/reference.json",
+          "sha256": "dc4eaed54e4433e04df3c95fc9b23b93db9a784bbb7147cabf80245bbf3d70a6"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/river_guard_h3/move_v2/matte.json",
+          "sha256": "a8cf8bc582993a97981a6df6bbca84585611c82343bb6ca3d096a2122bcd7e2b"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "All 124 chronological frames reviewed; enlarged reciprocal foot contacts, passing poses and source37-41/0-3 loop seam. Select one complete cycle, omit repeated subsequent cycles. Twenty distinct original poses at 50ms; coherent rigid spear/shield grip and fixed camera/body scale. No continuous playback claimed; native candidate/live checks passed (180/194)."
+      }
+    }
+  ]
+}

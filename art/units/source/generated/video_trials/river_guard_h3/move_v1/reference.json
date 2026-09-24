@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_river_guard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_0",
+        "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-a.png",
+        "rects": [
+          [
+            310,
+            10,
+            905,
+            1285
+          ]
+        ],
+        "anchor": [
+          605,
+          1270
+        ],
+        "scale": 0.2692307692307692,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "12f15cd8a8f274a0fc510b55c87db9d0053443b131c43fbb6915a3e1b9f98baa",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "e0ec8285dc47fdc18563e322cb1939d30497e35e55e00e898ec7fccc8f077c5b",
+      "runtime_source_scale": 0.175
+    },
+    {
+      "source_frame": {
+        "name": "move_2",
+        "source": "art/animation/source/poses/unit_river_guard/workflow-v2/contact-b.png",
+        "rects": [
+          [
+            230,
+            10,
+            1010,
+            1245
+          ]
+        ],
+        "anchor": [
+          610,
+          1235
+        ],
+        "scale": 0.2815384615384615,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "70276ad4ad27c952535141563594bb9a962ef2d02247872659bddbf68373d667",
+      "input_file": "guide_1_magenta.png",
+      "input_sha256": "97e102edea677d062412935fab659e09137ace7ce745cd2824b2a8a83b12757d",
+      "runtime_source_scale": 0.183
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

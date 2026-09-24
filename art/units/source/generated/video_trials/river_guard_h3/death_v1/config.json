@@ -1,0 +1,100 @@
+{
+  "unit_id": "unit_river_guard",
+  "clip": "death",
+  "seed": 2026092515,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_river_guard/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          510
+        ]
+      ],
+      "anchor": [
+        269,
+        498
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+      "rects": [
+        [
+          0,
+          0,
+          704,
+          724
+        ]
+      ],
+      "anchor": [
+        410,
+        600
+      ],
+      "scale": 0.32,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_1",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+      "rects": [
+        [
+          704,
+          0,
+          1420,
+          724
+        ]
+      ],
+      "anchor": [
+        1050,
+        606
+      ],
+      "scale": 0.32,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_river_guard/alpha/death_dead.png",
+      "rects": [
+        [
+          1420,
+          0,
+          2172,
+          724
+        ]
+      ],
+      "anchor": [
+        1840,
+        619
+      ],
+      "scale": 0.32,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "This exact guard continuously collapses: standing to one knee, seated hip, then gently onto his side on the ground. Spear and shield lower naturally and settle flat beside him. Final body and equipment remain still. Preserve face, clothes, anatomy and size; no standing up, fading, duplicate weapons or hovering equipment. Fixed camera. Flat solid magenta background remains unchanged throughout."
+}
