@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_basalt_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_0",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_basalt_wardens/extracted/attack_v1_0.png",
+        "rects": [
+          [
+            0,
+            0,
+            297,
+            374
+          ]
+        ],
+        "anchor": [
+          148,
+          373
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "70b25a64ae186710800c98f5991cd9b52a4e092526eae37facfbc0612e6bea58",
+      "input_file": "input_green.png",
+      "input_sha256": "0ee2dc68b0772fb310e51f78296b3aa3c604134e2d9d8581313a57faf1592655",
+      "runtime_source_scale": 0.59
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 1.0,
+  "output_scale": 0.59
+}

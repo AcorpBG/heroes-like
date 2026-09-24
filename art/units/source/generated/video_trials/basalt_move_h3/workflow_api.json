@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "basalt_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy game sprite camera. Animate the EXACT Basalt Warden in the reference performing a deliberate reciprocal armored WALK IN PLACE for two complete left-right cycles, then returning to the same ready stance. Preserve the original youthful human face, shoulder-length dark brown hair, grey scarf and layered tabard, black iron armor, brown leather straps/pouches and armored boots. Exactly two human arms and two human legs. The hand at IMAGE LEFT firmly carries the same short mace low beside the hip: dark angular metal head, brown shaft, same grip, length and proportions. The arm at IMAGE RIGHT carries the SAME tall black basalt pavise shield with its original angular split top, copper bands/straps and cracked stone face. Keep the shield a rigid plane strapped to the forearm, fixed shape and thickness; its lower tip stays above ground and does not become a third leg. Shield arm may flex modestly for carrying weight, but never spin, squash, grow, fold or duplicate it. No attack, shield bash, weapon salute, spellcasting or new magic. Begin at the original stance. Near boot advances heel-first while far leg trails, plant near heel and toe and load the weight; far knee bends, far boot swings beneath hips and extends into the opposite forward step, visibly emerging below the shield. Plant far heel, transfer weight, then near leg passes and reaches forward again. Both legs must each perform forward reach, contact, stance, toe-off and passing, taking turns leading instead of repeating the same forward knee. Repeat one more full alternating cycle. Short firm purposeful steps, natural hip/knee/ankle flexion and weight transfer; no bouncing, hopping, skating, exaggerated high knees or crossing legs like scissors. Keep the shield-side boot readable during its forward contact without moving the shield out of character. The mace remains lowered with a restrained elbow swing and hair/tabard react subtly. Torso centered at constant body scale, no world travel, camera motion, zoom, turning or perspective change. All shield tips, mace head, hair and boots remain inside the canvas. End exactly in the first stance. Background must remain perfectly uniform PURE GREEN RGB(0,255,0) in every frame. No scenery, ground/floor, cast shadows, text, smoke, particles, lighting changes, motion blur or additional objects.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092417
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "basalt_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "basalt_move_h3/frames/decoded"
+    }
+  }
+}
