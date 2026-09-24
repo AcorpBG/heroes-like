@@ -1,0 +1,884 @@
+{
+  "prompt": [
+    30,
+    "0cd551bd-fffc-485f-9b84-fd8d52eb0dd7",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "4": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reefbolt_walk_input_magenta.png"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate the exact two-person Reefbolt Crew carrying its lifted tripod-mounted crossbow and bolt basket, walking IN PLACE in a seamless reciprocal two-step cycle. EXACTLY TWO humans, FOUR human legs and FOUR human arms total. Tall bearded gunner behind and on image RIGHT wears teal brimmed helmet with brass star, teal naval coat, black trousers, brown boots and gloves. Shorter braided woman on image LEFT wears teal bandana and coat, dark trousers and brown boots, with the full bolt basket strapped at her back/left hip. Preserve both distinct faces and costumes. The man holds the crossbow firmly with BOTH hands in the same positions: rear handle and forward stock. The woman holds the front tripod beam firmly with BOTH hands exactly as shown. These are load-bearing grips, never release, multiply or swap them. All THREE wooden rope-bound tripod legs stay rigidly joined to their original central hub and LIFTED CLEAR of the ground throughout walking. The crossbow stays pointed RIGHT, with the same brass crank, wooden stock, bow arms, string and coral-tipped bolt; no firing, reloading, changing bolt count or weapon transformation. The basket and its contents move attached to her body, never float separately. Both crew members take small coordinated alternating steps: first lower their raised feet, transfer weight onto those boots, lift the opposite boots from behind, bend knees and pass beneath hips, extend forward and plant; then exchange roles and complete the next step to return to the starting pose. Both left and right human legs must each take a turn reaching, supporting, lifting and passing. No repeated same-leg shuffle, no sliding the pair across frame and no bouncing without leg articulation. Keep four leg attachments and lengths, face shape, torso size, weapon dimensions and camera exactly consistent. Natural subtle shoulder/elbow compliance under the shared weight, and slight coat and basket sway only. Do not swing tripod legs like creature limbs. Do not plant or drag the tripod feet. Whole team remains centered for engine-driven travel; no turning, zoom, perspective change or camera motion. Keep all boots, bolt tip and tripod inside frame. End in the first pose for a seamless loop. Background remains perfectly flat SOLID MAGENTA RGB(255,0,255) throughout; no floor, cast shadow, scenery, smoke, effects, glow, text, motion blur or added objects.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "4",
+            0
+          ],
+          "last_frame": [
+            "4",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "17",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092413
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "11": {
+        "class_type": "VAEDecode",
+        "inputs": {
+          "samples": [
+            "10",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ]
+        }
+      },
+      "13": {
+        "class_type": "CreateVideo",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "fps": 24.0,
+          "bit_depth": 8
+        }
+      },
+      "14": {
+        "class_type": "SaveVideo",
+        "inputs": {
+          "video": [
+            "13",
+            0
+          ],
+          "filename_prefix": "reefbolt_move_h3/original",
+          "format": "mp4",
+          "format.codec": "h264"
+        }
+      },
+      "15": {
+        "class_type": "SaveImage",
+        "inputs": {
+          "images": [
+            "11",
+            0
+          ],
+          "filename_prefix": "reefbolt_move_h3/frames/decoded"
+        }
+      },
+      "16": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reefbolt_walk_middle_magenta.png"
+        }
+      },
+      "17": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "frame_idx": 61,
+          "image": [
+            "16",
+            0
+          ]
+        }
+      }
+    },
+    {
+      "client_id": "reefbolt_walk_h3",
+      "create_time": 1790261796684
+    },
+    [
+      "15",
+      "14"
+    ]
+  ],
+  "outputs": {
+    "15": {
+      "images": [
+        {
+          "filename": "decoded_00001_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00002_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00003_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00004_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00005_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00006_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00007_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00008_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00009_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00010_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00011_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00012_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00013_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00014_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00015_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00016_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00017_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00018_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00019_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00020_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00021_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00022_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00023_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00024_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00025_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00026_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00027_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00028_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00029_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00030_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00031_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00032_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00033_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00034_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00035_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00036_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00037_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00038_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00039_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00040_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00041_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00042_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00043_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00044_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00045_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00046_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00047_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00048_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00049_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00050_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00051_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00052_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00053_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00054_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00055_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00056_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00057_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00058_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00059_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00060_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00061_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00062_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00063_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00064_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00065_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00066_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00067_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00068_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00069_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00070_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00071_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00072_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00073_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00074_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00075_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00076_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00077_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00078_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00079_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00080_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00081_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00082_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00083_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00084_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00085_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00086_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00087_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00088_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00089_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00090_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00091_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00092_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00093_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00094_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00095_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00096_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00097_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00098_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00099_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00100_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00101_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00102_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00103_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00104_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00105_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00106_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00107_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00108_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00109_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00110_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00111_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00112_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00113_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00114_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00115_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00116_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00117_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00118_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00119_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00120_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00121_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00122_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00123_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        },
+        {
+          "filename": "decoded_00124_.png",
+          "subfolder": "reefbolt_move_h3\\frames",
+          "type": "output"
+        }
+      ]
+    },
+    "14": {
+      "images": [
+        {
+          "filename": "original_00001_.mp4",
+          "subfolder": "reefbolt_move_h3",
+          "type": "output"
+        }
+      ],
+      "animated": [
+        true
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "0cd551bd-fffc-485f-9b84-fd8d52eb0dd7",
+          "timestamp": 1790261796685
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "0cd551bd-fffc-485f-9b84-fd8d52eb0dd7",
+          "timestamp": 1790261796698
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "0cd551bd-fffc-485f-9b84-fd8d52eb0dd7",
+          "timestamp": 1790261927240
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "15": {
+      "node_id": "15",
+      "display_node": "15",
+      "parent_node": null,
+      "real_node_id": "15"
+    },
+    "14": {
+      "node_id": "14",
+      "display_node": "14",
+      "parent_node": null,
+      "real_node_id": "14"
+    }
+  }
+}

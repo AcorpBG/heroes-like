@@ -2819,14 +2819,14 @@
       "painted_extent": 343,
       "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_reefbolt_crews.png",
       "source_indices": [
+        1,
+        2,
         3,
         4,
         5,
         6,
         7,
-        8,
-        9,
-        10
+        8
       ],
       "source_crop": [
         6,
@@ -2834,7 +2834,7 @@
         329,
         357
       ],
-      "source_sha256": "75766d29522a3b37da71a5c104da724c09f8261e14220f7576032784e3fe70cb",
+      "source_sha256": "bbd6c0a7a6fc74302293330332b8b5ec01a5c679763337743cf4701d939e7949",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_reefbolt_crews/provenance.json",
       "sha256": "29cfdeaacb5a5402cb0062f3ce091f5b4153d8297663b3b664afec1af5d97425"
     },

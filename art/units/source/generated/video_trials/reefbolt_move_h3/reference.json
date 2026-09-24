@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_reefbolt_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "crew_carry_passing",
+        "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-passing-tripod.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1120
+          ]
+        ],
+        "anchor": [
+          607,
+          1086
+        ],
+        "scale": 0.42
+      },
+      "source_sha256": "ca5517f467834c8a93d1766ff057f2ca60314d5b819cbab4eb27b3463d4038c4",
+      "input_file": "input_magenta.png",
+      "input_sha256": "f1b58d359e9b0a3c15fbdcde8b8afe2d190596c28ea6ff5b64058e439aef007c",
+      "runtime_source_scale": 0.225
+    },
+    {
+      "source_frame": {
+        "name": "crew_carry_opposite_attempt",
+        "source": "art/animation/source/poses/unit_neutral_reefbolt_crews/continuity-alpha/carry-opposite-lowered-draft.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1100
+          ]
+        ],
+        "anchor": [
+          607,
+          1060
+        ],
+        "scale": 0.42
+      },
+      "source_sha256": "e87961d0b20c0f6f32388f446eadc84f59ad10873a582e601fb8155d744e05ab",
+      "input_file": "middle_magenta.png",
+      "input_sha256": "5236fb43861b7333ef4ddc563aab2635a7e11fd1c829a07aae55c841470e5fbe",
+      "runtime_source_scale": 0.225
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "input_source_scale": 0.42,
+  "output_scale": 0.5357142857142857
+}

@@ -10,7 +10,27 @@
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/ranged_v1.png": "c36fd1afaf6161a30de0418a8c983aa5820d39085f54121c705f0368aa5f7238",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/reactions_v1.png": "aef643c645d83fac0e4ed4aa5b68cd779819e1c72b4e1358e8a5c08e3ab6a0f1",
     "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/death_v1.png": "802e9ef232b2b3abfae936a0cc613b2d9c43468d25d1df8dd185eb0206ce3940",
-    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png": "b9c144f1f2425ca13809b9e9d82841dba33a58a5d514b46eea435dab007e1ab9"
+    "res://art/units/source/generated/fluid_animation/batch_d/unit_neutral_reefbolt_crews/cast_v1.png": "b9c144f1f2425ca13809b9e9d82841dba33a58a5d514b46eea435dab007e1ab9",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_040.png": "ccf5de6d00bb3087a10254d6f28977d10d8fca4372fe182dc854262258a3b8d1",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_042.png": "ea13e13931e92b0ba1b04d8cd91a34a8930d4b230ca5ebee982074532767f342",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_044.png": "4d9128a60392fefbbc00d31e6234ebbdaf9609e236fa122faa1b28d034ad0fee",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_046.png": "4c5fee29949c62fff2472955b158e44c3a191830eb60034eb67da5181f504ff7",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_048.png": "ca88b96aae7694162c3b1c8e772e72c6573f4297791ada0fdc05dd6bca73ca16",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_050.png": "6ed4bf803eeb51f7c872c7ab572338d7fb5042c7dfa73ec9a2de3633a9af80f2",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_052.png": "244cd5fda71174498e150bceb72a98cf0773cd1feaf4cc3ceeef0ae22bcbac67",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_054.png": "9abd4c938b777f4e0f93e2d4e9cd2c328497225051eca3908b5d92c186f471c4",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_056.png": "647e742d23051ab4bebdb1f4357201ad268e988c66eaf3432831e345929a299a",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_058.png": "bc1cde5facbb0f25d9917712929a764ecec6c5b9511d699f4091491459196fca",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_060.png": "cf4452b8e9589d00e2d1b9923af8c173dbbefba03059fde3fbc3a17cb0134956",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_062.png": "181f5a1bc00b21c0c1564b6b02dd469c5a8749829367ce9a20dd3be491015e0b",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_064.png": "716bf904b93da13ddb0cfc8faab25087ab81205e2812e24eb6ad10351032ae5e",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_066.png": "f3e659cba64db66a4303eb4d9fa47c81787c3287822629a8bed2e1fc71d6faa9",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_068.png": "5b52b237a4e2e6e59424d0646b4cf2d8404e9191232163577ae5418249b68097",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_070.png": "15baf60a27865da45974c3f1836d9a4efa66f73644ccb40889bf77304bdd41f5",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_072.png": "714110f890ff08746d0bd7a687e5988531d48ccc6c6b00ae810bf9ba5b756017",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_074.png": "7edd8a8944b459d30d5cd5897f46852e5da33a794de495f8be66c8d15d6cb554",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_076.png": "35d71bc48c762d28d4c243d40058837b7614ef6166fd718d689ba5fa8d83e77a",
+    "res://art/units/source/generated/video_trials/reefbolt_move_h3/matte/rgba_078.png": "958661f8e1c130eb07184e99c4e49469009b67596cc0dacf68fbcb2acf23faa5"
   },
   "accepted_clips": [
     "idle",
@@ -19,14 +39,15 @@
     "hit",
     "defend",
     "death",
-    "cast"
+    "cast",
+    "move"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: loader and gunner arm articulation, loader close-range jab, mounted crossbow release/reload, crew recoil/crouched guard, grounded crew/equipment collapse and gunner rally signal. Crew transport movement remains unfinished."
+    "notes": "Accepted H3 transport movement after chronological review of all124 source frames, enlarged four-hand/four-leg and tripod/weapon details against light/dark, and Godot battle-size comparison with accepted idle.20 observed frames40-78 every2 at65ms form a1300ms cycle. Both crew members alternate supporting and passing boots; gunner maintains both stock grips, loader carries tripod with both hands, basket remains attached, all three rigid tripod legs stay lifted. Original .225 runtime/.42 input scale, source anatomical anchors and fixed video anchor480,480 retained.144 candidate checks passed. Seven earlier accepted actions preserved; no full suite, continuous manual game playtest or Linux execution."
   },
   "preserved_accepted_clips": [],
   "baseline_atlas_sha256": "dd01d9844549ceea3db1d8961846d18111d5c73f2a4220e0d93b8afcf22bdbcc",
-  "atlas_sha256": "75766d29522a3b37da71a5c104da724c09f8261e14220f7576032784e3fe70cb",
-  "texture_bytes_rgba": 28297728
+  "atlas_sha256": "bbd6c0a7a6fc74302293330332b8b5ec01a5c679763337743cf4701d939e7949",
+  "texture_bytes_rgba": 36682240
 }
