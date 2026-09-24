@@ -6228,33 +6228,37 @@
     "unit_mireclaw_ferrychain_lashers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_ferrychain_lashers_veteran.png",
       "frame_size": [
-        227,
-        249
+        247,
+        256
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        109.0,
-        238
+        122.0,
+        248
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_ferrychain_lashers_veteran.png",
+      "painted_extent": 240,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_ferrychain_lashers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        147,
-        2,
-        374,
-        251
+        82,
+        12,
+        329,
+        268
       ],
-      "source_sha256": "2586e6f4a5f998cead169315a5938b5ac1103b12e4d9b06c5b877a3363aa0bed",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_ferrychain_lashers_veteran/provenance.json",
-      "sha256": "a39cc710841061c521645c4ddb45a2115b9563b533c43643c2c852a95eb67aea"
+      "source_sha256": "2c51e80fb88f6fd82fa25bec7eb2d7a25d673ebaaf09ec58efa915545d1dd357",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_ferrychain_lashers_veteran/provenance.json",
+      "sha256": "e2cde4adefb5e071aee2b1275c875ad5d2ff0ad0bbe2e9a655e5e7fb5f5b0143"
     },
     "unit_mireclaw_mireglass_reedcasters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_mireglass_reedcasters_veteran.png",
