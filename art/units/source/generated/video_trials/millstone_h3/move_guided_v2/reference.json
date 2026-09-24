@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "grounded_contact",
+        "clip": "move",
+        "source": "art/units/source/generated/video_trials/millstone_h3/key_guides/walk_contacts_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            768,
+            1024
+          ]
+        ],
+        "anchor": [
+          406,
+          958
+        ],
+        "scale": 0.4083333333333333,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7fb32a8971d96f4a72fa9deed4293c6662b9604d986cbf93216498cc217452f4",
+      "input_file": "input_magenta.png",
+      "input_sha256": "c88fcb41ec2f4a89f4293103964751c5f11c7c1358524d394bebd7c43194f683",
+      "runtime_source_scale": 0.245
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.6,
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale"
+}

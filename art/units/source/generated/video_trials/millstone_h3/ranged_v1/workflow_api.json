@@ -1,0 +1,190 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "millstone_ranged_input_magenta.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic fantasy strategy sprite camera. Keep this exact adult female Millstone Slinger: brown hair in small bun, green cloth headband and neck scarf, off-white rolled-sleeve tunic, loose moss-green trousers, brown lace-up leather boots, brown forearm bracers and apron, belt pouches of gray stones, diagonal leather bandolier with gray stones. Face and body remain three-quarter RIGHT-facing. Exactly two arms, two hands and two legs. ONE plain brown leather sling with two flexible cords and one small leather cup belongs only to her image-left hand; no bow, staff, shield, sword or extra limbs. All straps and pouches remain attached. One physical sling throw and complete recovery toward IMAGE RIGHT. Start sling low, free hand briefly positions a stone inside leather cup (stone is concealed). Sling hand raises elbow behind shoulder, accelerates the same two-cord sling overhead around wrist as in midpoint guide; free arm aims right. Torso and shoulder rotate into a strong forward release: sling hand releases ONLY the release cord while retaining retention cord, cup opens, single loose end follows through; then wrist and elbow lower and collect both ends back into original ready grip. Keep sling attached to original hand throughout, consistent cord length and single cup; no duplicate sling or floating circular ring. Distinct windup, release and recovery. No visible flying projectile or stone trail because game renders projectile separately. Both feet planted with natural weight transfer. No magic, effects, beams, extra weapons or repeated throws. Fixed body scale and ground reference, no camera motion, pan, zoom or perspective change. Entire head, both hands, all sling cords and both boots stay within frame. Perfectly flat PURE MAGENTA RGB(255,0,255) background, no floor, shadows, gradients, text, scenery, motion blur or translucent ghosting.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "millstone_ranged_peak_magenta.png"
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "16",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "17",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092440
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "millstone_h3/ranged_v1/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "millstone_h3/ranged_v1/frames/decoded"
+    }
+  }
+}

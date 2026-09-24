@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_00",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/attack_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            387
+          ]
+        ],
+        "anchor": [
+          260,
+          379
+        ],
+        "scale": 0.9833333333333333,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6ff38497016b49d82f13ce994ad1004bb4d161befe6902720bf273053a0dd122",
+      "input_file": "input_magenta.png",
+      "input_sha256": "31dcf9a3212c5377f077c992085fca6d88453de9453947f7c08468943819cd7b",
+      "runtime_source_scale": 0.59
+    },
+    {
+      "source_frame": {
+        "name": "hit_01",
+        "clip": "hit",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/reactions_v1.png",
+        "rects": [
+          [
+            512,
+            753,
+            1024,
+            1128
+          ]
+        ],
+        "anchor": [
+          837,
+          1120
+        ],
+        "scale": 0.9166666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9e483de144db8939887830fb2eafd972480919daf3058c494a7264b73fbdabc0",
+      "input_file": "peak_magenta.png",
+      "input_sha256": "b16355d307023dedc11ce2b12e6eec0b0fc626cd31da67a7ad627e8c530d93f9",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.6,
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale"
+}

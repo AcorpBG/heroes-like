@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_neutral_millstone_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "ranged_00",
+        "clip": "ranged",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            388
+          ]
+        ],
+        "anchor": [
+          275,
+          381
+        ],
+        "scale": 0.9666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ba6e26b06cd8de4ab9eb22f9d379c7397621a89942b796a5fd0af71ffab1a775",
+      "input_file": "input_magenta.png",
+      "input_sha256": "f3302bb39bd0d616e9a5ee0cca315ef8987156a5f1fc02d9326b028bf45d07fc",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "name": "ranged_02",
+        "clip": "ranged",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_millstone_slingers/ranged_v2.png",
+        "rects": [
+          [
+            0,
+            388,
+            512,
+            779
+          ]
+        ],
+        "anchor": [
+          275,
+          775
+        ],
+        "scale": 0.9666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ba6e26b06cd8de4ab9eb22f9d379c7397621a89942b796a5fd0af71ffab1a775",
+      "input_file": "peak_magenta.png",
+      "input_sha256": "eefa00e11b288d414589aad3f7fc4b70b2294c3c57c484d3e4c6f2ca91bc472f",
+      "runtime_source_scale": 0.58
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.6,
+  "input_scale_rule": "Each guide source_frame.scale equals runtime_source_scale / output_scale"
+}
