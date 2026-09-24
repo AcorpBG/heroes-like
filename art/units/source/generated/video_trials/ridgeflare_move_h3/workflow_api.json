@@ -1,0 +1,162 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "ridgeflare_walk_input_green.png"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter RIGHT-facing fantasy strategy sprite camera. Animate this exact red-haired Ridgeflare Shot woman walking IN PLACE for two complete reciprocal left-right cycles. Preserve her face, red ponytail, brass goggles on forehead, red scarf, rusty orange coat with white fur collar/cuffs, split red and gold coat tails, blue-grey trousers, one brass kneecap at IMAGE LEFT, strapped brown boots, leather belts, quiver of red-fletched bolts behind shoulder and rolled blanket. Exactly two human arms and two human legs. Hand at IMAGE RIGHT holds ONE compact brass and dark wood crossbow by its existing stock grip, pointing down and outward beside the hip. Keep both curved crossbow limbs, string and rigid stock intact; do not lengthen, bend, duplicate, drop or fire it. Other hand at IMAGE LEFT stays empty and naturally bent near chest. Both arms may make only gentle carrying motion. No attack, spell, firing, reloading or aiming. Legs alternate clearly: near boot reaches forward heel-first while far leg trails; near foot plants and supports body while far knee bends, far boot swings under hips to the opposite forward contact; plant far foot and transfer support while near boot trails, passes and comes forward again. Each leg performs forward contact, loading, toe-off and passing; never keep the same leg leading. Modest grounded stride, toes and soles coherent, no hopping, sliding, twisting or leg stretching. Coat tails and ponytail gently lag behind steps. Keep pelvis centered with no world travel; only restrained natural shoulder counter-rotation, chest retains original three-quarter facing, no turn toward camera or side profile. Keep same body size, proportions, camera and facial identity throughout. All equipment, hair and boots fully within canvas. Return naturally to first reference stance. Background stays perfectly uniform PURE GREEN RGB(0,255,0) throughout with no floor, shadow, scenery, particles, text, blur, gradients or other people.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "4",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092421
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "ridgeflare_move_h3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "ridgeflare_move_h3/frames/decoded"
+    }
+  }
+}

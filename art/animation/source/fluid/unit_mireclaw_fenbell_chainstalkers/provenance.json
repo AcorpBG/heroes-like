@@ -8,7 +8,26 @@
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/attack_anticipation_v1.png": "300d3c4b1e95d8855c75783ac940f4e283684946d4cfcf7fc03cf9f7447144b9",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/reactions_v1.png": "138e9ae1d6f5ed3c0fcb40b899155de8d3fde3ed39e03de3fad5d5164ddb64fc",
     "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/death_v1.png": "0662038bf098cb6378c7f05607753cdd73cc0031a82b20a0f85a885758ab6806",
-    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/cast_v1.png": "e847afe357f706e7e182fe7b0cde3920437afc1979843a06fc7fa5e5fe69cae5"
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_fenbell_chainstalkers/cast_v1.png": "e847afe357f706e7e182fe7b0cde3920437afc1979843a06fc7fa5e5fe69cae5",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_044.png": "9dd6f11922277ccb9ab057cd0270b7d1ac4274826e8fe2294bc40b3273870e1e",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_046.png": "a5c9b617472de46c951be3e06f8036dfa07254cfcab7f15be591ac69ecddcf36",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_048.png": "b69cd9a2cc16c381f6e85aa04a35d28fe5f46738d0358f8d3b9fa2fe8d1a4b73",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_050.png": "135b029dc6d1b48124e58e6e3c321de7adeee18aed17b147a01feea0dd1b6c21",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_052.png": "4a936ec9e66760797492adfce7dae891b50abdea7abec5147793aaee3f626cab",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_054.png": "2fee79b9277f8094f66508263afa5cd90d26bb9138b5885e1c0b3f9d019eac84",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_056.png": "25ec16884ca52d88370c6351078bed1b282bda0e35bcaec6374946eb6893f051",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_058.png": "988bcf91a7a8ce61d30082ce4ac29e246e8ac5b6b3ba347dd1b8d9cebb23d9ac",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_060.png": "50d93efd0dcecef330ca6355f98f9d59de1479113f3872e4a1ebc669b823105b",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_062.png": "68925a7e6f0e9cd600574feb3a2ad67dbab003bd92d8740e6a7878fbe22f615c",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_064.png": "a4dd33cac9ca2ee1854bc77a87b6e5f87e2eeffc8341170536ff6ab9f3145d06",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_066.png": "d389df47ae88b6d70f4208b24cff098dac35c27671b86c5631c8562c9e8754a3",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_068.png": "3001b29da98401c1dff256fd8bc25178e085c5830e8203522d674227cdd7cdee",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_070.png": "082a96ec176bb3271c00bb8b3eab47a407b32c95d3b5ea12a4b25125d0db7cff",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_072.png": "912927cfb8ab120b7c274ab010cf73cca8fb799958f96f7d68c1d3953e7eebd8",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_074.png": "01fdd7962ca142ec3c281e9322cd136155a5c89f70d6379d1336ce36157e7fcf",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_076.png": "380cc0dcb9a32834a8a85635626d6be4fac62fb06bc90c8a11e3c714905c591a",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_078.png": "dd2cdf24ac0e0b3935e03b3e7adf027156dc1046fa5b79b90e18f64afcb16992",
+    "res://art/units/source/generated/video_trials/fenbell_move_h3/carry_v3/matte/rgba_080.png": "9e15a7f87ce1fe37ae00e4571ced4d449b392bb0009d7f4db3621a78448d0ffe"
   },
   "accepted_clips": [
     "attack",
@@ -16,16 +35,17 @@
     "defend",
     "death",
     "cast",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Native 128px review: retained chain/bell arm idle, continuous hooked-chain sweep and recovery, dedicated guard/recoil, grounded collapse and bell-arm rally. Walk does not show a clear reciprocal stride and remains withheld."
+    "notes": "Owner reviewed the original H3 walking video and confirmed the shoulder turn looks natural and hook clears the legs; explicitly requested publication. Coordinator reviewed all124 chronological source frames, enlarged light/dark anatomy and native battle-scale candidate rendering.19 observed source frames44-80 at70ms form reciprocal1330ms gait, hook held clear of boots; fixed .25/.42 source scale.117 candidate checks passed. Preserve six earlier accepted actions and original map idle. Owner motion review is source-video review, not a manual game playtest."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "578568efd7b218fd0da2bcb79891ad0d6b50b7044b56aef81413aada4094810f",
-  "atlas_sha256": "750fe0c46af25850045c9a770f60bba905858b77091e6e50bd33519299a79c6a",
-  "texture_bytes_rgba": 19537920
+  "atlas_sha256": "69d57cb6e5d7a19f91da8fc161f2ff355b6eec03a6787f15b437e4695778fcb3",
+  "texture_bytes_rgba": 26457600
 }

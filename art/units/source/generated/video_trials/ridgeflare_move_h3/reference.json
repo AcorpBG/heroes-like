@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_ridgeflare_shots",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_00",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_ridgeflare_shots/extracted/attack_v1_00.png",
+        "rects": [
+          [
+            0,
+            0,
+            258,
+            361
+          ]
+        ],
+        "anchor": [
+          129.0,
+          361
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "946e604f5355f62e7da1046400363ff43957d5d096c3882a75cbecab84742788",
+      "input_file": "input_green.png",
+      "input_sha256": "9328ebd568d34297be077886fb8576c14d094d4c50531290120acf541034ecad",
+      "runtime_source_scale": 0.56
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 1.0,
+  "output_scale": 0.56
+}
