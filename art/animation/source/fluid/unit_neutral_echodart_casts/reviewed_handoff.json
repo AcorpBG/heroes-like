@@ -805,8 +805,1479 @@
           "scale": 0.4,
           "anchor_notes": "Absolute source ground reference, fixed shared body scale, explicit row split preserves full collapse.",
           "alpha_noise_cutoff": 0
+        },
+        {
+          "name": "idle_h3_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_002",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "idle_h3_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "idle_h3_006",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "idle_h3_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "idle_h3_010",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "idle_h3_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_014",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "idle_h3_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "idle_h3_018",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "idle_h3_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "idle_h3_022",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "idle_h3_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_026",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "idle_h3_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "idle_h3_030",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "idle_h3_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "idle_h3_034",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "idle_h3_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_038",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "idle_h3_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "idle_h3_042",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "idle_h3_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "idle_h3_046",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "idle_h3_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_050",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "idle_h3_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "idle_h3_054",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "idle_h3_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "idle_h3_058",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "idle_h3_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_062",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "idle_h3_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "idle_h3_066",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "idle_h3_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "idle_h3_070",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "idle_h3_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_074",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "idle_h3_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "idle_h3_078",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "idle_h3_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "idle_h3_082",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "idle_h3_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_086",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "idle_h3_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "idle_h3_090",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "idle_h3_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "idle_h3_094",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "idle_h3_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_098",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.4444444444444445,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
         }
       ],
+      "alpha_noise_cutoff": 0,
       "clips": {
         "attack": {
           "indices": [
@@ -887,122 +2358,211 @@
           ],
           "frame_msec": 120,
           "loop": false
+        },
+        "idle": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89
+          ],
+          "frame_msec": 83,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
         }
       },
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/original_lossless.mkv",
+          "sha256": "16da52aa2e6e64950baebb066e69993c2e0c7b66ba3af628fbd8c8bf132da94a"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/original.json",
+          "sha256": "0c9fc445bbc03044f5971492a2d22f6e067dcb51b892fcb358b3c47db49b887d"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/workflow_api.json",
+          "sha256": "dbf46d860cc488cc32e466d18b2da522829c46cd87761f46afdb7b9c2944e0bf"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/prompt.txt",
+          "sha256": "1fc59149167a2e95724bdd2f270d2a2d07e84ad036db9e80d3edbb59db628c7b"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/reference.json",
+          "sha256": "dc68b8faa6bef4efc4840bbaea3cb4cb94094ee66c0e69da6a5874f3af0f4f4e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/echodart_h3/move_v1/matte.json",
+          "sha256": "a5fa77c18cd579f3a077164a5950b89397019474e186a00cb70c21bf298c8343"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Autonomously reviewed all 248 original chronological video frames, enlarged anatomy/alpha and loop seams, then actual Godot native overview at gameplay scale. Idle has visible two-arm crossbow lowering and return with planted feet; walking has reciprocal leg contacts, clear boot separation, stable two-handed rigid crossbow and cloth follow-through. Fixed ground anchor and original .4 source scale retained. Candidate186 checks passed, including Normal/Fast/reduced-motion. Review used ordered frames and native renders, not continuous browser playback or manual playtest. Preserve six previously accepted actions."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png": 0.4,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png": 0.4,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_000.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_002.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_004.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_006.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_008.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_010.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_012.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_014.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_016.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_018.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_020.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_022.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_024.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_026.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_028.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_030.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_032.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_034.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_036.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_038.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_040.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_042.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_044.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_046.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_048.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_050.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_052.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_054.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_056.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_058.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_060.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_062.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_064.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_066.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_068.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_070.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_072.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_074.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_076.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_078.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_080.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_082.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_084.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_086.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_088.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_090.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_092.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_094.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_096.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/idle_v1/matte/rgba_098.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_042.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_044.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_046.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_048.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_050.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_052.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_054.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_056.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_058.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_060.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_062.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_064.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_066.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_068.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_070.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_072.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_074.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_076.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_078.png": 0.4444444444444445,
+        "art/units/source/generated/video_trials/echodart_h3/move_v1/matte/rgba_080.png": 0.4444444444444445
+      },
+      "preserved_accepted_clips": [],
       "accepted_clips": [
         "attack",
         "ranged",
         "hit",
         "defend",
         "cast",
-        "death"
-      ],
-      "preserve_clips": [],
-      "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Native 128px review: crossbow butt strike and recovery, aim/release/recovery, recoil/crouched brace, free-hand physical signal and grounded collapse accepted. Idle arms are too static; walk lacks clear reciprocal legs and is withheld."
-      },
-      "provenance": [
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.png",
-          "source_sha256": "322880aaad795054ba747f0f77b01a8974b155fe5d416947969705fca642cdc0",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/death_v1.prompt.txt",
-          "prompt_sha256": "27d0f6af8eee3488c9d7293b8bf01ffbd4f64d80e31809691c3ac099988edb4d",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ec194580-830d-4779-8313-34471950253a.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
-          "source_sha256": "d6dcca58008be8cf28b33f06babad4cb665d8263b4881085ced4323f0704f5ac",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.prompt.txt",
-          "prompt_sha256": "75c20fe1b5f3d0c308969c74b8948d5ff615f5b1dcf7e2df235adc55376a231c",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-ee149d39-952e-4d0e-a7bf-26929b599201.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.png",
-          "source_sha256": "5f6ae1438aa8ce86548916da13c82c742a3547a7a98f469ee1bd01a3ede9885c",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/attack_v1.prompt.txt",
-          "prompt_sha256": "9801e828df55b9b84def6c1c49ea4148588bf0e82117c27de07fa34ad3e27736",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-e1ede49d-9198-4302-b8fc-fcaa562771e8.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.png",
-          "source_sha256": "f99a2b8a6cc25acd9b4ef010493439cf2b29ecf4cec2d2bdb96453b1306f2151",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/idle_v1.prompt.txt",
-          "prompt_sha256": "32797962cd33570d8875cd1c6ed01d70b1eefb72ad33457acfbe4b2378e3ef20",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-79ce213c-ac40-48c0-a8d8-eeb89db3e013.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.png",
-          "source_sha256": "a1c8ed08dfe540586be33a1ebd5f7b3e703f8c7fbef4d7688b8f26eb92186d7a",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/hit_defend_v1.prompt.txt",
-          "prompt_sha256": "76a68ddc7c56ba9a1362c262865d76d015d3002b649e80ced671ec406411ef29",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-169e43a5-0a45-4d80-829d-8c981bcefe7c.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.png",
-          "source_sha256": "1bc3a18f28e7c5c488881eb40ccc9926c2ac87f6f11401eaabd62fad758f2765",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/support_v1.prompt.txt",
-          "prompt_sha256": "62d3e14ba8b2434305400d69d085453b28e51d34c541d7e85862bb008ad5119b",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1a926726-1a7a-4d72-a71c-1129a98c655b.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        },
-        {
-          "generator": "built_in_image_gen",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.png",
-          "source_sha256": "d9cf1dc97742b2b44ef992c9707d2b3f5ba42c89b54f6450713d4afd59f6a514",
-          "exact_prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/ranged_v1.prompt.txt",
-          "prompt_sha256": "ce420fa6b0922c933962f02332eb0b50630e5252865f294828fc9ddf81d3d39e",
-          "reference": "art/units/source/curated/unit_neutral_echodart_casts.png",
-          "reference_sha256": "3a1e253742e5c6895823287ffa73ca8fbd734e2da7b94fb28b58307df8c8f621",
-          "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0ccb2-5c25-7d61-be0a-b4e5dca27370\\exec-1c9bc743-1795-4a52-b0dd-6e55a2629b5a.png",
-          "output_size": [
-            1774,
-            887
-          ]
-        }
-      ],
-      "preserved_accepted_clips": []
+        "death",
+        "idle",
+        "move"
+      ]
     }
   ]
 }

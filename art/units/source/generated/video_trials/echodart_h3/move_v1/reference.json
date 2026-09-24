@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_neutral_echodart_casts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "move_original_contact",
+        "clip": "move",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_echodart_casts/move_v1.png",
+        "rects": [
+          [
+            1330,
+            0,
+            1773,
+            445
+          ]
+        ],
+        "anchor": [
+          1551.5,
+          438
+        ],
+        "scale": 0.9,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d6dcca58008be8cf28b33f06babad4cb665d8263b4881085ced4323f0704f5ac",
+      "input_file": "input_green.png",
+      "input_sha256": "45c88c2bd0e353c99d2b19d3c3d22c06a16f7b5266a6276dead338b6cb975bbf",
+      "runtime_source_scale": 0.4
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.9,
+  "output_scale": 0.4444444444444445
+}
