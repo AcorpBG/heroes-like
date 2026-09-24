@@ -6360,33 +6360,37 @@
     "unit_mireclaw_gorefen_rippers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_gorefen_rippers_veteran.png",
       "frame_size": [
-        400,
-        253
+        391,
+        277
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        253.0,
-        238
+        222.0,
+        269
       ],
-      "painted_extent": 384,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_gorefen_rippers_veteran.png",
+      "painted_extent": 375,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_gorefen_rippers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        3,
-        18,
-        403,
-        271
+        22,
+        55,
+        413,
+        332
       ],
-      "source_sha256": "4246f067058ae3a74392959791c0e8710db39ea1bb9be875278c718fd1afc6c5",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_gorefen_rippers_veteran/provenance.json",
-      "sha256": "2bd3c76ac21e9035d24a9c5bd57a2ac54cabfa5ffbbb3451f50ed18a5b825ab0"
+      "source_sha256": "ebb41e19c904a1eb92115400e19d0096735979493d2e99ac82a929f58581d687",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_gorefen_rippers_veteran/provenance.json",
+      "sha256": "5004c1868ffa07133f3c4c50891d194a3e88c4b81923c71eedf14963805a6617"
     },
     "unit_mireclaw_drowned_antler_sovereign_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_drowned_antler_sovereign_veteran.png",

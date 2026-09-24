@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/idle_v1.png": "291bc7273a9d765714113cf08d50488cb07a40a97ffc8378fea0d014a2ac9ca3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/attack_v1.png": "28ecd414e45ddd9a8a293f1a196985e806fe86daf04c8cd692a77f5521de4356",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/reactions_v1.png": "9142c3950a199ca3ecd285e5a945c0a98f5716c5a807d98862ef34364baaa0f0",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/cast_v1.png": "62ed543059266a5161496a2c4f107b408b01f9fa25bff199c7392f79ae704a47",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/death_v1.png": "01d5c80b54cb957bb2986d386613173a9aac4638f625e78394eaad9293ae2f85",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_v1.png": "377ede2ac8dff712d2201f6f5a3e2e6ec83f319a4bce3b6b39c83c43707b4cc5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers_veteran/move_far_v1.png": "0b89731d621a667c080f57c85f5406c13e94cf8ffd4bc71e7227533324cbccf5"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Original 48-pose Packlord set reviewed at native battle scale, with dedicated four-limb gait, forepaw/jaw idle, bite recovery, roar and grounded collapse."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "4246f067058ae3a74392959791c0e8710db39ea1bb9be875278c718fd1afc6c5",
+  "atlas_sha256": "ebb41e19c904a1eb92115400e19d0096735979493d2e99ac82a929f58581d687",
+  "texture_bytes_rgba": 32137728
+}
