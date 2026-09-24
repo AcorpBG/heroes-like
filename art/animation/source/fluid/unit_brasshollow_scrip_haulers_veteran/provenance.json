@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/idle_v1.png": "9621de1052bcdd9215c358635b7d3d112dc8db39ac04016b57ef94ff38c85407",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/attack_v1.png": "1647e7261fe493956d95b3412887840e20e562267641a6c66789de81181a4f4f",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/reactions_v1.png": "4da317b2b90fbc64a786993020ce3ae89c06866185daab90032aa5e2e97571d2",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/cast_v1.png": "8b6fa8771f843046617dcbe24945e48676310a375ca639993464193b3982d6e9",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/death_v1.png": "237676123ae2fa1319cc0cd8c61aec8302db04d2e00622231dd04eac775a9563",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_near_v1.png": "85cf0b9f2ff4cda3374a93f7aff7012b4fae5ca5a62895f6e850ad54d9c5e6d8",
+    "res://art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers_veteran/move_v1.png": "b45e734d4bf98d588352b15280eef8bdeeb026b5aac46a719b3eb13cfb5736ad"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Native battle review: six dedicated chop paintings return through two original shared ready poses to avoid source recovery size growth; no repeated painting within a clip. Articulated idle, shield brace, salute, grounded collapse and corrected reciprocal gait. Seven masters, 46 distinct paintings, 48 clip frame entries."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "a628d73a1e8b3471ce3c62b66b351465126121c32fc4a6958161d44ab7c10a01",
+  "atlas_sha256": "d8ffa958663749ef1c394fe29ef9bac0a3c89d6cf6901b780632bb4df9319c05",
+  "texture_bytes_rgba": 25639936
+}
