@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/idle_v1.png": "69992a7a7303adea9ac1df45e60e26ecd44df7d3893e6dcacc47916763791a4e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/attack_v1.png": "fab3a4ddb8eb5f77f3e8b5e0866b81d132e9b91da71c066d4f9d169487a426d4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/ranged_v1.png": "db815c7e21ee469d86d4c759e4ccfaf9b01b53dc9fdcdac296dbec7262bffae0",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/reactions_v1.png": "ddd85dcdabbc905359053dc78f10a0aadfde0db22c62ee194f085d71ee1024c4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/cast_v1.png": "03c0fa7e2f0e54b3285d171bf4b146779baf425498a1e4adcaa443a340e93418",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/death_v1.png": "8d156117fe4f94fa8439a8fd01ba8a12020d1c311943497e1af8792b594e5845",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/death_ground_v1.png": "50f3f2f8b804535b49edc0135fe17f18230a75c9cea0d412235c14f5c92162b7",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters_veteran/move_v1.png": "84d535a14ab90b50dcc74f5f3e92f51dc4c05702de281c4df59cca635e8c43fd"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "56-frame Dissonant set reviewed at native battle scale; distinct melee/ranged/support gestures, held staff, alternating steps and grounded chimes on collapse. Two ready paintings shared across actions, never duplicated within a clip."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "98878dfb4ee281bce9891ebb654bcb26cacde6a4b900248ef5f744cf3b8d829c",
+  "atlas_sha256": "08ca52e8e1c54618fd5d585edbac62c165c922fcba3cdbb5cbe8a537d7eda3bf",
+  "texture_bytes_rgba": 28753920
+}
