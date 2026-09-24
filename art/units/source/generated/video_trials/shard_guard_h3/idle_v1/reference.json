@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_shard_guard",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "attack_00",
+        "clip": "attack",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_shard_guard/attack_v1.png",
+        "rects": [
+          [
+            113,
+            12,
+            414,
+            384
+          ]
+        ],
+        "anchor": [
+          280,
+          382
+        ],
+        "scale": 0.95,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4257f33760125433b46464eabd4bf42660e0f9d3671fc58f1532cbde1eb4d8c2",
+      "input_file": "input_green.png",
+      "input_sha256": "19aa9f5170d61432adadcd1dd2b1c140c0c713c1dd6554b476e2534d841195b0",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "input_source_scale": 0.95,
+  "output_scale": 0.6421052631578947
+}
