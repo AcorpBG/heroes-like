@@ -1,0 +1,369 @@
+{
+  "unit_id": "unit_thornwake_seedcutters_veteran",
+  "model": "GPT-6 Luna",
+  "reasoning_effort": "xhigh",
+  "start_utc": "2026-09-24 06:23:05 UTC",
+  "first_complete_candidate_utc": null,
+  "review_revisions": [
+    {
+      "round": 1,
+      "recorded_utc": "2026-09-24 07:28:58 UTC",
+      "parent_feedback": {
+        "idle": "The arm transition remained abrupt. The original-painting reorder is preserved, but idle is pending visual acceptance.",
+        "cast": "Recovery now uses cast_v1 source index 6, previously rejected for merged grips; do not accept this recovery.",
+        "death": "Middle correction head/torso scale and the dropped-blade continuity are improved in native samples.",
+        "move": "Remains omitted and unqualified; no genuine reciprocal phases."
+      },
+      "changes_applied": [
+        "Reordered original idle paintings to place the wide pose before an overhead and shoulder-level settling pair.",
+        "Switched cast recovery index 6 from the cross-action idle painting to the adjacent cast_v1 painting; parent review keeps it pending.",
+        "Set one global 0.310 scale for all frames from death_middle_correction_v1 and seeded the separate dropped sickle at source pixel (900, 1210) in death index 5."
+      ],
+      "native_check": {
+        "result": "passed",
+        "assertions": 102,
+        "failures": 0,
+        "preview": ".artifacts/amberhook_model_comparison/luna/review_round1/unit_thornwake_seedcutters_veteran-overview.png"
+      },
+      "new_generation_calls": 0,
+      "status": "correction_round_closed_with_idle_cast_and_move_pending"
+    }
+  ],
+  "finish_utc": "2026-09-24 07:33:27 UTC",
+  "new_generation_calls": 6,
+  "shared_source_calls": 12,
+  "selected_shared_masters": [
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/idle_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/attack_windup_correction_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/reactions_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/cast_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/death_v1.png",
+    "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/death_middle_correction_v1.png"
+  ],
+  "rejected_shared_masters": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_v1.png",
+      "reason": "Reuses far/image-right leading-leg topology; no foreground near-thigh crossover."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_near_v1.png",
+      "reason": "Inherited movement drafts still fail the near/far leg depth criterion as a complete cycle."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_near_correction_v1.png",
+      "reason": "Correction repeats the same far/image-right leading leg; not packed."
+    }
+  ],
+  "focused_checks": [
+    {
+      "check": "prepare.py lineage and geometry validation",
+      "result": "passed",
+      "details": "Verified exact original identity crop pixels and SHA; all seven used shared source sheets, prompts and their references matched generation.json; all crop regions in bounds, per-sheet scale fixed, alpha cutoff <=16; stable unit_id explicit; wrote 40-frame six-clip handoff."
+    },
+    {
+      "check": "focused native Godot candidate check",
+      "result": "passed",
+      "assertions": 102,
+      "failures": 0,
+      "command": "python tests/fluid_creature_animation_regression.py --godot D:/Games/godot/Godot_v4.6.2-stable_win64_console.exe --handoff art/units/source/generated/fluid_animation/comparison_20260924/luna/handoff.json --contacts-only --overview-only --render --output .artifacts/amberhook_model_comparison/luna/candidate",
+      "render": "Native 128px battle and 64px map phase samples for idle, attack, hit, defend, cast, death; .artifacts/amberhook_model_comparison/luna/candidate/unit_thornwake_seedcutters_veteran-overview.png",
+      "limitations": "No continuous playback or manual game playtest observed. Godot log has root-certificate-store and GLES3 MSAA warnings, but native render and assertions completed."
+    },
+    {
+      "check": "individual native action phase inspection",
+      "result": "visually_reviewed_sampled_phases",
+      "files": [
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-idle.png",
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-attack.png",
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-hit.png",
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-defend.png",
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-cast.png",
+        ".artifacts/amberhook_model_comparison/luna/phases/unit_thornwake_seedcutters_veteran-death.png"
+      ],
+      "observed": "Ordered phase samples and displayed timestamps; no continuous playback inference."
+    },
+    {
+      "check": "parent review round 1 corrected native Godot phase render",
+      "result": "passed",
+      "assertions": 102,
+      "failures": 0,
+      "command": "python tests/fluid_creature_animation_regression.py --godot D:/Games/godot/Godot_v4.6.2-stable_win64_console.exe --handoff art/units/source/generated/fluid_animation/comparison_20260924/luna/handoff.json --contacts-only --render --output .artifacts/amberhook_model_comparison/luna/review_round1",
+      "observed": "Corrected idle order, cast recovery crop, death-middle global sheet scale and explicit separated blade component at (900, 1210) in 128px battle/64px map samples. Parent confirms death scale and blade continuity improved; parent still rejects idle quality and cast recovery.",
+      "continuous_playback_observed": false,
+      "manual_playtest_observed": false,
+      "preview_overview": ".artifacts/amberhook_model_comparison/luna/review_round1/unit_thornwake_seedcutters_veteran-overview.png",
+      "preview_action_samples": ".artifacts/amberhook_model_comparison/luna/review_round1/unit_thornwake_seedcutters_veteran-*.png"
+    }
+  ],
+  "claimed_ready_actions": [
+    "attack",
+    "hit",
+    "defend",
+    "death"
+  ],
+  "unresolved_defects": [
+    "Movement is omitted: no 8-frame reciprocal gait. Only move_pose_first_v1.png qualifies as a near-thigh crossover; opposite-side contact, loading and passing are unsupported.",
+    "Idle arm transitions remain abrupt after the source-painting reorder and are pending visual acceptance.",
+    "Cast recovery now uses cast_v1 source index 6, which parent review identifies as previously rejected for merged grips; the recovery remains pending.",
+    "Continuous playback and a manual in-game playtest were not observed; only original sheets and native Godot sampled phases were inspected.",
+    "The generated candidate patch retains the historical move -> idle alias, which is not a movement clip."
+  ],
+  "generation_attempts": [
+    {
+      "name": "move_near_phases_v1",
+      "started_utc": "2026-09-24 06:33:38 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_phases_v1.prompt.txt",
+      "status": "rejected",
+      "finished_utc": "2026-09-24 06:35:32 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_phases_v1.png",
+      "output_sha256": "8284618e697522d46182a1ba63a4eb49736739b581ce23c3e5ec7f73d3423c5a",
+      "prompt_sha256": "955baa543bf7ffbbbc77a2b2ca8bff7a766ab190683ff635e69bd7563e52cc46",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "pose_depth_and_phase",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        }
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 449019,
+      "pixel_count": 1572516,
+      "transparent_percent": 71.45,
+      "bytes": 1477124,
+      "strategy": "Four-pose reference guided sheet; all lead with the same far leg."
+    },
+    {
+      "name": "move_anchor_v1",
+      "started_utc": "2026-09-24 06:39:42 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_anchor_v1.prompt.txt",
+      "status": "rejected",
+      "strategy": "Single edited frame; tabard occludes both thighs.",
+      "finished_utc": "2026-09-24 06:41:47 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_anchor_v1.png",
+      "output_sha256": "484db5c2dadbe12e7b76abce8f9f2f2c593be75d77b4f2f0a5f8e492571eaea4",
+      "prompt_sha256": "fc8d6fd95f7b31cf3445afa50b5db32c4fae1f87a91dcec1871a39eaa1ebcfa4",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "edit_target_identity",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "leg_depth_pose_guide",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        }
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 415039,
+      "transparent_percent": 73.61,
+      "bytes": 1122963
+    },
+    {
+      "name": "move_pose_first_v1",
+      "started_utc": "2026-09-24 06:43:27 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.prompt.txt",
+      "status": "provisional_pose_reference_only",
+      "strategy": "Accepted movement crop used as pose target; one correct crossing, no cycle.",
+      "finished_utc": "2026-09-24 06:45:10 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+      "output_sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f",
+      "prompt_sha256": "c58e2a60ca95c8f1eabe4f6d2c1008235fe0b5ba01be6d9e0a8e795a37095e45",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_zenith_lensbearers_veteran/near_step_reference.png",
+          "role": "edit_target_pose_only",
+          "sha256": "08283460036ca2384e31829a957420290dcce46c89a8723ff60ec54bfb6190af"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style_equipment",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "dimensions": [
+        1265,
+        1244
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 394505,
+      "transparent_percent": 74.93,
+      "bytes": 1120735,
+      "visual_result": "Near thigh clearly crosses in front of the central green tabard; far leg passes behind and plants at screen-left; both sickles remain separately gripped."
+    },
+    {
+      "name": "move_near_variants_v1",
+      "started_utc": "2026-09-24 06:47:23 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_variants_v1.prompt.txt",
+      "status": "rejected_as_cycle_one_cell_qualifies",
+      "strategy": "Pose-first four-cell sheet; only cell 1 retains the crossing.",
+      "finished_utc": "2026-09-24 06:49:04 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_variants_v1.png",
+      "output_sha256": "db63f24d678ee4da46471f7fd0211f709a8fbf01fe5aeda2f4a7db934451cb4d",
+      "prompt_sha256": "d935e59c059561edae0aeab639189435317f9937a6ff5f638bbfbad6517ba368",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "near_leg_topology_and_character_pose",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "dimensions": [
+        1243,
+        1265
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 470913,
+      "transparent_percent": 70.05,
+      "bytes": 1548355
+    },
+    {
+      "name": "move_near_contact_v1",
+      "started_utc": "2026-09-24 06:52:10 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v1.prompt.txt",
+      "status": "rejected",
+      "strategy": "Near contact from crossover anchor; tabard remains foreground.",
+      "finished_utc": "2026-09-24 06:54:07 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v1.png",
+      "output_sha256": "b858634f8554ade4a05fbab66027d1da2beb5e71d1601ce07d62ee2cf3b8f576",
+      "prompt_sha256": "b9d0e0eca484fe937098bb3f8318f12e633850c008b53c6242ac9c7e12816fed",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "near_leg_crossover_pose_edit_target",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "role": "identity_style_equipment",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 427000,
+      "transparent_percent": 72.85,
+      "bytes": 1196614
+    },
+    {
+      "name": "move_near_contact_v2",
+      "started_utc": "2026-09-24 06:54:37 UTC",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v2.prompt.txt",
+      "status": "rejected",
+      "strategy": "Single-target edit; no reciprocal contact or loading topology.",
+      "finished_utc": "2026-09-24 06:57:21 UTC",
+      "output": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v2.png",
+      "output_sha256": "f81456ad0bd573f5221515dbf0703662794d53c5540f2daebdcfec2d42d283d4",
+      "prompt_sha256": "5a0d4ea33e4c03e2ad0f5d41941ba46f156d1f44bf61897c7ecc564c59f823b2",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+          "role": "single_edit_target",
+          "sha256": "e13cd05e3e0ae83e5e37aeebd790728b49f4909b2e3636a11f0403f97cff411f"
+        }
+      ],
+      "dimensions": [
+        1265,
+        1243
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "pixels_alpha_gt_16": 411873,
+      "transparent_percent": 73.81,
+      "bytes": 1139195
+    }
+  ],
+  "rejected_generated_masters": [
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_phases_v1.png",
+      "reason": "All four figures still read with one leg advancing screen-right; no reliable leg-depth/cycle evidence from the grid."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_anchor_v1.png",
+      "reason": "Green tabard stayed in front of both thighs; near-leg foreground overlap still missing."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_near_contact_v2.png",
+      "reason": "Central green tabard remains in front of near thigh; forward leg crosses only beneath/around the tabard and remains a one-sided stride."
+    }
+  ],
+  "provisional_move_pose_anchor": "art/units/source/generated/fluid_animation/comparison_20260924/luna/move_pose_first_v1.png",
+  "six_call_gait_checkpoint": {
+    "status": "blocked_after_reassessment",
+    "only_qualifying_source": "move_pose_first_v1.png",
+    "reason": "Six new image calls yielded one valid crossing pose, but no coherent opposite contact, loading and passing phases; rejected masters remain archived with prompts and hashes."
+  },
+  "candidate_scope": "Frozen after parent review: four actions ready for parent scoring; idle, cast, and move remain pending or omitted. Full seven-action unit is incomplete.",
+  "first_bounded_submission_utc": "2026-09-24 07:07:07 UTC",
+  "first_bounded_submission_elapsed": "44m 02s from task start",
+  "action_disposition": {
+    "ready_for_parent_scoring": {
+      "attack": "Eight native samples show windup, rising dual-sickle action, contact/follow-through and recovery; corrected windup preserves both grips.",
+      "hit": "Four native samples show recoil and return to grounded ready posture.",
+      "defend": "Four native samples show guard transitions and finish on a held crossed-sickle brace.",
+      "death": "After one fixed 0.310 correction-sheet scale and an explicit dropped-blade component seed, parent review confirms improved size continuity and separate sickles in native samples."
+    },
+    "pending": {
+      "idle": "Original paintings were reordered, but parent round 1 still finds abrupt arm changes; not accepted.",
+      "cast": "Recovery uses cast_v1 original source index 6, previously rejected for merged grips; not accepted.",
+      "move": "Omitted. Only one near-thigh crossover pose qualifies; opposite-side contact, loading and passing are absent. The test patch move-to-idle alias is not authored movement."
+    },
+    "unit_complete": false,
+    "continuous_playback_observed": false,
+    "manual_playtest_observed": false
+  },
+  "generation_cost_measurement": "Unavailable; do not infer token or credit savings.",
+  "status": "blocked_after_parent_review_round_1",
+  "final_handoff_sha256": "9cbcdbd18491ee16cedd11a5fc296febf65f4052c6d062ac77c979b5e3174c95",
+  "cleanup": {
+    "removed_test_only_files": 12,
+    "recovered_bytes": 7953887,
+    "removed": [
+      "Godot console/engine logs",
+      "temporary candidate_patch.json files",
+      "rebuildable packed atlas copies"
+    ],
+    "retained": "All native overview and per-action phase PNG previews plus focused gait/death source inspection crops for parent review.",
+    "rebuildable": true,
+    "active_assigned_godot_process": "none when targeted cleanup ran"
+  }
+}

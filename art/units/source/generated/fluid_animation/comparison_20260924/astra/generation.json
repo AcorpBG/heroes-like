@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "generations": [
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_key_v1.png",
+      "image_sha256": "a40230260e1cc7a48e03052d3e0ee3c5f621f43e4b3cf6a70859b087ab45a7f4",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_key_v1.prompt.txt",
+      "prompt_sha256": "820dba294355ad8bcf6b1e64a2f1f3dc34b74814dee9338d7dcd6f85298eb97c",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-9fd7a2af-2945-401c-9481-e68f5e2b0151.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false,
+      "purpose": "Anatomical near-leg reference, retained as source",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/move_cycle_v1.png",
+      "image_sha256": "c3fb995bc99c5d37d9b8af52103b2c9b7ed9da268d17d5c5eafe243c4f03c51e",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/move_cycle_v1.prompt.txt",
+      "prompt_sha256": "3cff60232e6bda4e1a15e1275722c76587c1f2e3aa27696e78769beb282865a3",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-da4816ea-5217-4004-8b3c-7ed0eb65e7e5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_key_v1.png",
+          "sha256": "a40230260e1cc7a48e03052d3e0ee3c5f621f43e4b3cf6a70859b087ab45a7f4"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false,
+      "purpose": "Parent rejected ambiguous repeated contact topology in first submission.",
+      "rejected": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.png",
+      "image_sha256": "ef83dd73fa9194110ad2b9c57d682ef284487d5088a51c3ca0eb8a434f33d6ee",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/idle_cycle_v1.prompt.txt",
+      "prompt_sha256": "f3e163418bf6395c65528728901783bfc522405a2571175bf80390b704254f78",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-1d4cbd7e-7f8d-4480-877b-b5ab1c8126a8.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": true,
+      "purpose": "Selected original animation paintings",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/cast_cycle_v1.png",
+      "image_sha256": "6f1c4661fbee731f5276581c9a50e9ce6195e802ba17c59b353a27c8c85d0225",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/cast_cycle_v1.prompt.txt",
+      "prompt_sha256": "ebb70ec9f640f31a081f524be126c4b1afcdaf8ad114cf8086cb016ffcf5799b",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-2fca02dd-31f8-4045-93ed-d98b0a036ab3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": true,
+      "purpose": "Selected original animation paintings",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/death_middle_v2.png",
+      "image_sha256": "bc30d56b30447aadab84f197cfa240989565c8334f30e406d7296f568fcfaffc",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/death_middle_v2.prompt.txt",
+      "prompt_sha256": "01c41460421ee3a449424b13d8155bbc5cc6b51132d0fc5eea4563e722eccac6",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-81eab64d-79a4-4d10-8a61-335c5ab8b0fa.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/death_middle_correction_v1.png",
+          "sha256": "1b710cdd623187e082ecf62739736ba92b3da8854ebd46188d40960954d336e5"
+        }
+      ],
+      "selected_for_candidate": true,
+      "purpose": "Selected original animation paintings",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_contact_v2.png",
+      "image_sha256": "32c2d3fd344b70867223db79bc79c7fcd30b3fb3cd9de0e969fdabf647eedfb1",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_contact_v2.prompt.txt",
+      "prompt_sha256": "825629838741c2f22191eac107ddb09a6ff0c60a5fb29e877c88b26404f5c7b0",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-afdb1ac8-5985-4d64-9b86-ff1b8e027a62.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_key_v1.png",
+          "sha256": "a40230260e1cc7a48e03052d3e0ee3c5f621f43e4b3cf6a70859b087ab45a7f4"
+        }
+      ],
+      "selected_for_candidate": false,
+      "purpose": "Anatomical near-leg reference, retained as source",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_half_v2.png",
+      "image_sha256": "f362f8ff3874af57c2ecd7437594f7b6222819620a3bfce3e2639264271c3a7d",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_half_v2.prompt.txt",
+      "prompt_sha256": "e040be43d4306a12987a50ccbde53fb7943f1bfcc2eb189091f23f58d775d8ee",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-e2393ab3-b706-409d-adc6-7792a49f3a29.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_contact_v2.png",
+          "sha256": "32c2d3fd344b70867223db79bc79c7fcd30b3fb3cd9de0e969fdabf647eedfb1"
+        }
+      ],
+      "selected_for_candidate": true,
+      "purpose": "Selected original animation paintings",
+      "rejected": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v2.png",
+      "image_sha256": "98fadd611aa6e0c2c47aaf7a52a9c43414e95626d36451bb2bf8eeaee15862a8",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v2.prompt.txt",
+      "prompt_sha256": "16814b120474d7e67f1dd79422c11602bb94a41998e877dcb2710a3db9442556",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-e63d8100-8865-4f72-8467-6ed19353aec7.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/astra/near_half_v2.png",
+          "sha256": "f362f8ff3874af57c2ecd7437594f7b6222819620a3bfce3e2639264271c3a7d"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_v1.png",
+          "sha256": "5545c5d29b13ba26d7240e171e0d57d2c0a0a411d00763a6879684e8b9f287b0"
+        }
+      ],
+      "selected_for_candidate": false,
+      "purpose": "Rejected: copied foreground-thigh topology instead of requested far half-cycle.",
+      "rejected": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v3.png",
+      "image_sha256": "59c76a3bd50f6dc9754c70ae48079d0646dfb93279aeb69daea7e2e4cb162404",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/astra/far_half_v3.prompt.txt",
+      "prompt_sha256": "d8b1a37bd91d8e4973c01e5e56978f0ca4f858b122fc88230dab2a42e40d0a91",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-8906-7660-aba1-2a03312802ba/exec-55541c1c-b2fd-477a-bf52-49e4a81fbe6e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_v1.png",
+          "sha256": "5545c5d29b13ba26d7240e171e0d57d2c0a0a411d00763a6879684e8b9f287b0"
+        }
+      ],
+      "selected_for_candidate": true,
+      "purpose": "Selected original animation paintings",
+      "rejected": false
+    }
+  ],
+  "reused_generation_lineage": {
+    "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/generation.json",
+    "sha256": "e6caaa880f547d539b2d0527a054220f79c644208bd2b0847949b8368859118f"
+  }
+}

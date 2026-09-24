@@ -1,0 +1,195 @@
+{
+  "schema_version": 1,
+  "generations": [
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v1.png",
+      "image_sha256": "475c6f920e165deb83e2c3da1855b294abbc4f57bfabce41944c83fff6ab98ba",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v1.prompt.txt",
+      "prompt_sha256": "880ab90ad3eda2bb417990ad545d3deee09184b23244efdb84af3f2ced703bbb",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-ed234148-000e-4b13-b2ee-3c321e27939c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/move_v1.png",
+          "sha256": "5545c5d29b13ba26d7240e171e0d57d2c0a0a411d00763a6879684e8b9f287b0"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v2.png",
+      "image_sha256": "b778e2e68efe71547a89cfeb8f6a6b81e58763a21e1d6056fec1bcac4824eebb",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v2.prompt.txt",
+      "prompt_sha256": "483f21b32b9f8f64395ff1e203504b32a3e78f1e4a9f5031d0ff52d99b5c499e",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-96f683c5-7c9b-42a1-9638-f317403684a0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/near_leg_geometry_reference.png",
+          "sha256": "2079015227d07a2494b24d27aafe23d8f89da99523ea0af4e58aac5faee8eced"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v3.png",
+      "image_sha256": "31d52eb158d5b352107bee5cf513a05cbe0a868f9d652e770d7dd0aa9c81cf5c",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v3.prompt.txt",
+      "prompt_sha256": "396b7723db454dc2fe6a05ea6d9be123c2fb3f81e5e286da77e59babb90dae10",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-b34a104a-3e85-4c83-990b-1f156e1406bb.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v2.png",
+          "sha256": "b778e2e68efe71547a89cfeb8f6a6b81e58763a21e1d6056fec1bcac4824eebb"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/near_leg_geometry_reference.png",
+          "sha256": "2079015227d07a2494b24d27aafe23d8f89da99523ea0af4e58aac5faee8eced"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v4.png",
+      "image_sha256": "3437b387cd43d571820bc362624a738872fab4ee9fec4ff66a0110fd2399691e",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v4.prompt.txt",
+      "prompt_sha256": "211aab40e09cc59eb067014a45d132a6faf186ca25757919ba1661e3c008cd26",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-266711cd-3f0d-4237-bc1b-f33b725b03c4.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/identity_upper_reference.png",
+          "sha256": "329f332ee9eaa92db34826070e82cb9507c661a8cb3045d529fbfbb3e298383f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/near_leg_geometry_reference.png",
+          "sha256": "2079015227d07a2494b24d27aafe23d8f89da99523ea0af4e58aac5faee8eced"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v5.png",
+      "image_sha256": "2765f1a08c31d0a105d413ad65574dc07d50397892b98291edf5917f2d580de7",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v5.prompt.txt",
+      "prompt_sha256": "d9ab310423fe9bd2ee230767ecf9cc80791d8519ae68099a30730c3ba5d229ba",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-84dd1f3f-5c1c-4d83-b58a-9650736b19e9.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/identity_upper_reference.png",
+          "sha256": "329f332ee9eaa92db34826070e82cb9507c661a8cb3045d529fbfbb3e298383f"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/lensbearer_near_leg_pose_reference.png",
+          "sha256": "34a2846992c0f395c93a0d768c7856f42fd7f1e9e591c61321a58cc7e18792ad"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v6.png",
+      "image_sha256": "f13e15b978287eaea9132bd9c3daf19ad871e995d47ed4bd7252a2d4fd9715d6",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v6.prompt.txt",
+      "prompt_sha256": "e85dd2082c1ff3f7ba0b990ff51e5320858771d580040063557268af00d1da9a",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-b5c0458c-8d22-4142-9a3d-3cb559d7227b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v5.png",
+          "sha256": "2765f1a08c31d0a105d413ad65574dc07d50397892b98291edf5917f2d580de7"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v7.png",
+      "image_sha256": "f61bb82c0710a656089221c2d187766125d0951eb0cd0e5b444c584683322048",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v7.prompt.txt",
+      "prompt_sha256": "a02146655c6695fa095a1bc3b3940f3121c2fe21630f6fbf3384e1844264cb38",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-6e78586c-253e-4039-a04a-a5df6ae68c80.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v5.png",
+          "sha256": "2765f1a08c31d0a105d413ad65574dc07d50397892b98291edf5917f2d580de7"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v8.png",
+      "image_sha256": "e967716b3d1d09437cb460e4ad3f53c048eccc56332397835d125ff8d9aa9704",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v8.prompt.txt",
+      "prompt_sha256": "b91cad83522b0f67e6d10734b010274b2be7179225975bcf3b365d1363f818e4",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-eb7619af-baf0-4a1b-80d7-44d9599e2340.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v7.png",
+          "sha256": "f61bb82c0710a656089221c2d187766125d0951eb0cd0e5b444c584683322048"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters_veteran/identity_reference.png",
+          "sha256": "2e5ee844acc0c3461ca0cef6e30df48d65fb978bedba63b06f9cf9a9435fc4ab"
+        }
+      ],
+      "selected_for_candidate": false
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v9.png",
+      "image_sha256": "fd0f704e6e0f8f6e4af1faca2bbc41c44bfbaec1e87d5bf6a1a34332269d13c6",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v9.prompt.txt",
+      "prompt_sha256": "3f1d70e4296dcd41046e3e257c43e7caf809f0d329e75b0545a1e3caca52c1b5",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-998a0a0c-2801-48db-997e-6ac87408ae01.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v8.png",
+          "sha256": "e967716b3d1d09437cb460e4ad3f53c048eccc56332397835d125ff8d9aa9704"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v8_occlusion_guide.png",
+          "sha256": "b26124ed97207760f4031621db423a0eac59b0254b8a510490b6e799ef5b0953"
+        }
+      ],
+      "selected_for_candidate": true
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v10.png",
+      "image_sha256": "ea693d928726ad046e13525cc01fd62e66df3c66cc88deb69862c2541a30f401",
+      "prompt": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v10.prompt.txt",
+      "prompt_sha256": "1618ac32630668d755d0531844cbeb8307dc5b5bc0c8f1e9df9c9c3b3d822c42",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0d214-36df-73a1-859a-2362814f17f1/exec-7851fefb-9d85-408c-8c9f-bfe5bb8c1f1b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v9_overpaint_guide.png",
+          "sha256": "ddb8e53d13e607972b1050b3c9182163657121facc66f34159b9a164a8506aa3"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/comparison_20260924/sol/move_near_v9.png",
+          "sha256": "fd0f704e6e0f8f6e4af1faca2bbc41c44bfbaec1e87d5bf6a1a34332269d13c6"
+        }
+      ],
+      "selected_for_candidate": false
+    }
+  ]
+}

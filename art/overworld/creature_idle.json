@@ -6866,33 +6866,37 @@
     "unit_thornwake_seedcutters_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedcutters_veteran.png",
       "frame_size": [
-        228,
-        249
+        218,
+        256
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        109.0,
-        238
+        95.0,
+        246
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_seedcutters_veteran.png",
+      "painted_extent": 240,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_seedcutters_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        147,
-        2,
-        375,
-        251
+        57,
+        34,
+        275,
+        290
       ],
-      "source_sha256": "398790d0af45363d37c00b825c30d3695c23c408e5d34bda368a61ca696591e9",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_seedcutters_veteran/provenance.json",
-      "sha256": "b49551c48b64ca1874902134d714d26cad253ec183802f551aecd9e4f3695038"
+      "source_sha256": "e98e07ebe13a923afc6c43eb3567e49f0a606938dd538f4174c9fe98f0075860",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_seedcutters_veteran/provenance.json",
+      "sha256": "5ef7e5f883a74bb7e68d92673b87aec25973464bffb646121b90a734f04b2566"
     },
     "unit_thornwake_pollenhook_whistlers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_pollenhook_whistlers_veteran.png",
