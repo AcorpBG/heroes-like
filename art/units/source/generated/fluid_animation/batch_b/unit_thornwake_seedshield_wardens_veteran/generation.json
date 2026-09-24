@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "generations": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/idle_v1.png",
+      "image_sha256": "2bf196c7ee9798fb32d071a59f74619e08c9f844b7a1e06fdfd009908626ea3a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "683010e0b85309758621d09492ce17349c57065f5532f52d50b72f27ada806c4",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-68d03595-ad8b-42fd-bfd3-a67f996a0ecd.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_v1.png",
+      "image_sha256": "fae06ab4db3b8c97869a662d2788547c5ae679265ab920937db0101faace07a5",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "28de845de8890c72f032e583940e229eb876c993ba0bb1691f1701d69530888c",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d9b6bdc6-64d9-499d-b538-d102e69e26c3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v1.png",
+      "image_sha256": "294d2fa35bc4e3703a8c1e904a4f1d33d548d2797d0cb80dc945b60b0a17e453",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v1.prompt.txt",
+      "prompt_sha256": "016e48f1df96b5151473a54ceff72eb007ee90af88e0428ff043a0c68e48d546",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-33a68bea-54f9-4241-9f32-b9f2ba322f33.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ],
+      "review": "Rejected: excessive staff length."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/reactions_v1.png",
+      "image_sha256": "9b91014820a4ba4747171d1f9d2746852295f7cdd0e01f02c37f0bd121331f0e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "ecff723fa26cba90d567024dd8e8a9a1efd034d63e3aeb560201ed703a74327d",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c5405180-fbf4-4677-ab84-518a1def3206.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/cast_v1.png",
+      "image_sha256": "32415241fe498f80beedf6ea363201ee5d07b20344998b3b0c919e81cf2aecda",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "5af15b3d8abeccb6d464cf699b262d5b5b7a9c5ff835e26b0eba1f598ff6fa09",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-372de9eb-e66e-4705-80f1-15571f36989f.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v1.png",
+      "image_sha256": "7fc0e8bd4367b116247a29f582bcc93baeac4bec1cd8adc63e9ecfefa1bb3f09",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "44ae78ca58d9a2a6577c0b939606855dd5d56baf6b56753973cb725ccbb64161",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-caf3a0ec-4dd6-42d6-aad8-586f633d6be5.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ],
+      "review": "Rejected: near-leg gait not distinguishable from far half."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_far_v1.png",
+      "image_sha256": "5bdbf926f271a4f1aa0fe0385d22d4ea4314bcb94949e20fced682acdc70713e",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_far_v1.prompt.txt",
+      "prompt_sha256": "c88b58d94ec470e00ecc143629b3c40376dd8884515d30c466a5f5b7162cc3e0",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-e4cf7fb1-b68e-4c84-822b-9b360b1da976.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_v1.png",
+      "image_sha256": "292936a6550b28ece3bcbf620a56d354b8abb1c4038fdc85f24899b475bf259a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "0133fc7bee55ac57baf0232a525a5abca9a80144b687acf3fbee9c67964e0c68",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-9e5ed4f6-e962-4c30-86b7-c90e75e2078b.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_middle_v1.png",
+      "image_sha256": "ff15ce9355e48bd5da545bcde36621e5125af240309fa7873eb111ceebd043e7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/death_middle_v1.prompt.txt",
+      "prompt_sha256": "2de5f987f9d480e15c7eb8829fce1bc35c154a5b5ea696438abd05178bf2e729",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-a926318b-33f7-43fa-bb7a-310de6139df0.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v2.png",
+      "image_sha256": "27ee67ab5c6374024300f68e3e8116324121949687026bfeffebef18bcf21ae8",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v2.prompt.txt",
+      "prompt_sha256": "6c13d7a0025eafa60a34264d6b288451f0e2f14d8a010abb676ca817119f614d",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-bd430b48-4e91-4569-914a-af2fc92d6a95.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_windup_v1.png",
+          "sha256": "294d2fa35bc4e3703a8c1e904a4f1d33d548d2797d0cb80dc945b60b0a17e453"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v2.png",
+      "image_sha256": "bfa06752a373fed581d9f68a5060607e03cb2cec78c538937c140978f6cc6e94",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v2.prompt.txt",
+      "prompt_sha256": "2479a75d137a6b3502890aff9203a95af9ea675fc2baa807c8c0d80c98a359a2",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-16deabae-e35c-44ea-9aa3-5cd678e7a4e2.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_v1.png",
+          "sha256": "fae06ab4db3b8c97869a662d2788547c5ae679265ab920937db0101faace07a5"
+        }
+      ],
+      "review": "Rejected: correction contracted the striking hand."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v3.png",
+      "image_sha256": "05f47de38474f6890a6dfe219e017ff48ca19ec1216d7fa24db88117fa6f6e09",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/attack_contact_v3.prompt.txt",
+      "prompt_sha256": "0902c5084ea7ea5cb75649e6e11f51dbcf525b0398916dd2b4529ca2682a9aa5",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-9a7e538c-50f3-4b4a-9d17-42bc208c6b96.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v2.png",
+      "image_sha256": "b2294f41ca168a19711036ca11583901a8fb0c4a4df399b29fdf8888f891266f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v2.prompt.txt",
+      "prompt_sha256": "97ca34a91a868660e77b463d370fd83543e2cada3355d02c52d032afed2c8273",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-52512841-7b88-4e9c-9965-b3c47ddeec70.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_thornwhip_carriers_veteran/move_near_v1.png",
+          "sha256": "dcdbe6cbce0416d5a9db385181dd6cfc3ccf4ddfcd1b97ad94ea07ee78f8b1bd"
+        }
+      ],
+      "review": "Motion reference only: wrong human cloak and boots."
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v3.png",
+      "image_sha256": "60619e3ba11cfc8419b357fa54c9dff3a1a8cd11561f7a32ae55c28eece06529",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v3.prompt.txt",
+      "prompt_sha256": "ca9bf09adf6a5b31292ae5fcd7e94a438db91c3f3303b43578a927b9aebec7df",
+      "tool": "builtin_image_gen",
+      "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ac8a942b-62ca-487f-96c3-1161b8592f54.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/identity_reference.png",
+          "sha256": "a5ad463e7ea29d2077864b514f295828dd562e653eca3fa31076dd2efa4460ba"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedshield_wardens_veteran/move_near_v2.png",
+          "sha256": "b2294f41ca168a19711036ca11583901a8fb0c4a4df399b29fdf8888f891266f"
+        }
+      ]
+    }
+  ]
+}

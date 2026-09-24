@@ -7041,33 +7041,37 @@
     "unit_thornwake_seedshield_wardens_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedshield_wardens_veteran.png",
       "frame_size": [
-        210,
-        249
+        188,
+        255
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        81.0,
-        238
+        91.0,
+        244
       ],
-      "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_seedshield_wardens_veteran.png",
+      "painted_extent": 239,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_seedshield_wardens_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        175,
-        2,
-        385,
-        251
+        113,
+        12,
+        301,
+        267
       ],
-      "source_sha256": "bed215a83954917b9023ebd251b9310fbcdeba90e711e09f204865eaf090990e",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_seedshield_wardens_veteran/provenance.json",
-      "sha256": "0080681eafc89f3297e942aff493c00d2d568bac6d4590158ede582af9f9d3f4"
+      "source_sha256": "46afe0eb02ff8d4a95c9c152582f7d8b0ba3ff3a938f131121b966fcb113bc82",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_seedshield_wardens_veteran/provenance.json",
+      "sha256": "ac9718f26f687cec0d38547ce313f2ec9e1f3f10732e7fce7929754d10ce3f0d"
     },
     "unit_thornwake_barkmantle_rams_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_barkmantle_rams_veteran.png",
