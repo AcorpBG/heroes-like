@@ -122,25 +122,25 @@
         218
       ],
       "painted_extent": 214,
-      "source_sheet": "res://art/animation/runtime/poses/unit_blackbranch_cutthroat.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_blackbranch_cutthroat.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        187,
-        30,
-        332,
-        260
+        79,
+        50,
+        224,
+        280
       ],
-      "source_sha256": "50c7ed6ba36589007f1652699d864e159885f379cb7c3f31c4694f53df53c9af",
-      "source_provenance": "res://art/animation/source/poses/unit_blackbranch_cutthroat/provenance.json",
+      "source_sha256": "1c7ba0c3bd71c0475a73d4586472fe73382cfb6aa069bdfc28db5b5fc73c10f0",
+      "source_provenance": "res://art/animation/source/fluid/unit_blackbranch_cutthroat/provenance.json",
       "sha256": "e1f74e5f7132d6b9814bf5a5bd29ce4a3cf693edd6bed77dc137873e92610aeb"
     },
     "unit_mire_slinger": {

@@ -1,0 +1,35 @@
+{
+  "tool": "built-in image_gen",
+  "guides": [
+    {
+      "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_opposed_v1.png",
+      "sha256": "341d9cecfe4dc7e0b3e8762692218f544f22fa155e24f7336a2a7d7e57da06fe",
+      "reference": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_reference.png",
+      "reference_sha256": "254de12d07faa267f96ae13f55078fae2336f92068ba5f63693cd455e09c3209",
+      "prompt": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_opposed_v1.prompt.txt",
+      "prompt_sha256": "53f2606971dabb75fe68a988a43188cd53c44642e8a0435f415079749b10cf19",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-219d22cc-d19c-4865-a483-637e5557d97e.png",
+      "status": "excluded_same_lead"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_opposed_v2.png",
+      "sha256": "221573f191def5e22a76339226106f1decc27c49da1516709b7db973677719c1",
+      "reference": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_opposed_v1.png",
+      "reference_sha256": "341d9cecfe4dc7e0b3e8762692218f544f22fa155e24f7336a2a7d7e57da06fe",
+      "prompt": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/move_opposed_v2.prompt.txt",
+      "prompt_sha256": "4fa706d9819517793f46a0d89e5af87b3f430865379bacb153617dbfd89feac6",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c119c966-2205-4757-90a9-3dcf35dabcd5.png",
+      "status": "excluded_unclear_leg_reversal"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/signal_v1.png",
+      "sha256": "5b9bd6ab90de89361fe03cc12cfe4b739b1050091688711b6b68da69fbd3aeaf",
+      "reference": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/ready_reference.png",
+      "reference_sha256": "abfdc26cd288b8872913b6d53e4015613c8d26177e52074b0f6305ee492b2306",
+      "prompt": "art/units/source/generated/video_trials/blackbranch_cutthroat_h3/key_guides/signal_v1.prompt.txt",
+      "prompt_sha256": "5474105817a9499f2ed42327519a05910fd8b6a86c8f5718b6e9239b8ecc482d",
+      "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ed21f40b-7cef-42a6-af13-c2894ba02410.png",
+      "status": "selected_physical_support_guide"
+    }
+  ]
+}
