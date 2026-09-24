@@ -7188,33 +7188,37 @@
     "unit_thornwake_graft_matriarchs_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_graft_matriarchs_veteran.png",
       "frame_size": [
-        256,
-        249
+        239,
+        261
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 160,
       "static_frame": 0,
       "ground_anchor": [
-        119.0,
-        238
+        133.0,
+        253
       ],
-      "painted_extent": 240,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_graft_matriarchs_veteran.png",
+      "painted_extent": 245,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_graft_matriarchs_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        137,
-        2,
-        393,
-        251
+        31,
+        7,
+        270,
+        268
       ],
-      "source_sha256": "672b4254f7dd2d2d492705e8371afde2003b16fe3ec3f57a328a660c7f8a912d",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_graft_matriarchs_veteran/provenance.json",
-      "sha256": "160eb96f5aff1a54918564373b3dfd0f3a7ba2e1a05fb4082cec9e3a41c636f2"
+      "source_sha256": "b279f9c019ef140fcd3beed9bd0491ab41a477f344c1f03e6eb6378f6c25a77b",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_graft_matriarchs_veteran/provenance.json",
+      "sha256": "3dc6fd3dd9755f8ae42e7df3334636603ecb2bc1a31382039972fdc1a7b54342"
     },
     "unit_thornwake_worldroot_bastion_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_worldroot_bastion_veteran.png",

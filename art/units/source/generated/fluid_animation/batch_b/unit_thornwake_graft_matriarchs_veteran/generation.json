@@ -1,0 +1,160 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png",
+      "sha256": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "bfbcda4e3092e5bcd1ad1076fe0685b97783e63624a514c0aa832e5eebc91608",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e3ee0d77-4aef-46d8-99e3-cb8370a7b34d.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/attack_v1.png",
+      "sha256": "39b873d414f8affea161b26a9fbfd2f1dd2d047c48559ca8baf33ea2a6a1fb01",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "5e6e6a5dcbe9f14d88d52d2eba8dc2de711ffcd186d540d8c4cb1c6bbd6211ff",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d198ceb6-a994-4391-9ff4-28eaff6cfd94.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/ranged_v1.png",
+      "sha256": "4647e8e8813195263af4d84a4f4074d45846a285093dd16065691c0eb564c3b2",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/ranged_v1.prompt.txt",
+      "prompt_sha256": "2866dbc2f607623108fc2d53cb9fe89833e570fe2ce21ea1d1d37ba0cbc35fbb",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-66d4e783-9b7e-4796-abb9-ea8632f6f26e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/ranged_v2.png",
+      "sha256": "71e1c58f7a3d715e695bc542b185b58fb3d94b5042503975885fc9219c7bdf01",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/ranged_v2.prompt.txt",
+      "prompt_sha256": "1dc0953759e9b75f06a7635031a50232a5a1d18c836383ff0cd45ba1fdba0d01",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-00b0f39d-c47c-410c-a5b2-36d59d697625.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png",
+          "sha256": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/reactions_v1.png",
+      "sha256": "c03ec40cdf4a6115df24fb83d26ab3be29a1d2c156d08b43b78a6cb04e43fad9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "f82d407c4b1d65f881b5aa400a508efe66bc3d25b905f44b74ff64f365bc2aa7",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-7d7f814c-f1a6-4509-80ea-a378e72efaf1.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/cast_v1.png",
+      "sha256": "2a08d1c6ea04168661bd8200d6664c9c7eb14be1f0285e6a317080752adfc20f",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "2de90ffa6f7c4f2b1f2e2a6f7a1b63dd684854f4a22be92c8214fafb772937d4",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-b4897c0c-544f-44f7-b63a-ea56d936e675.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/death_v1.png",
+      "sha256": "86f773dbe7f193a43719c5c89711b7cbd82f21fafa51f383db487402fd79623b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "5d499c2c73c4f695774dfefb2518bc0dff761d56f39aa91d65ad715afd0fa80e",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e2b9cffe-8b15-441d-a7aa-a0f41785c486.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_v1.png",
+      "sha256": "58747ed5c0373e6a3bc713740c1a8b92a147f72d275baf9b220c7d02f579597b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "f8a3999f8ae37526be96fae68a3ec6e4f53089200405dc91c2e346a826de4dd5",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c51134c7-a977-4a73-b784-13fcd2f44e4c.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v1.png",
+      "sha256": "3cd85f063720f66a40e7b44a46c93edc54b805579ccf8217c22b221fddedc57a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "f025e07b5849596e1cd92b24425a357af9d657af27aa5aa9a6a6a204411d61bb",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-5ef9bf7a-96d9-4267-a8e0-d4b8560efcb3.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/near_step_reference.png",
+          "sha256": "8863b52f1d2cba8d8cfac4a2c2de8e4955bb57532b3c5e36ebafdda9a4cc5ffa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v2.png",
+      "sha256": "984b1e1192bca3e41cfc51f8982f45e339d117adf926ef8d8a72f29c38b1a755",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v2.prompt.txt",
+      "prompt_sha256": "a3065721233e1072339e9329d9023b574a7754a2ab1e0f34f5150d1bb4f78386",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-d4355f84-1690-45a4-88c7-626b9b1e1a98.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png",
+          "sha256": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v3.png",
+      "sha256": "4ee9ca4c9da157414c2d81154b15e179a8aee09491db166fbaca035efebb29d9",
+      "prompt": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v3.prompt.txt",
+      "prompt_sha256": "be9b491cb7a24d804cfbd7bda165807588051d157fe3978fc25f25e6b03cf192",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e8646408-7f36-425d-8b68-046782b12964.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v2.png",
+          "sha256": "984b1e1192bca3e41cfc51f8982f45e339d117adf926ef8d8a72f29c38b1a755"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/identity_reference.png",
+          "sha256": "cb140bc57581d31d9efb18763d7db8a09d3c4042dd348d796d0d53a793bf9f17"
+        }
+      ]
+    }
+  ]
+}

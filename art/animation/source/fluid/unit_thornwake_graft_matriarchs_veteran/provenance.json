@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/idle_v1.png": "601ce49544647fd5c4e722ebb3d7fb75c445da6df76d22e661466904dc4847e6",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/attack_v1.png": "39b873d414f8affea161b26a9fbfd2f1dd2d047c48559ca8baf33ea2a6a1fb01",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/ranged_v2.png": "71e1c58f7a3d715e695bc542b185b58fb3d94b5042503975885fc9219c7bdf01",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/reactions_v1.png": "c03ec40cdf4a6115df24fb83d26ab3be29a1d2c156d08b43b78a6cb04e43fad9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/cast_v1.png": "2a08d1c6ea04168661bd8200d6664c9c7eb14be1f0285e6a317080752adfc20f",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/death_v1.png": "86f773dbe7f193a43719c5c89711b7cbd82f21fafa51f383db487402fd79623b",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_near_v3.png": "4ee9ca4c9da157414c2d81154b15e179a8aee09491db166fbaca035efebb29d9",
+    "res://art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs_veteran/move_v1.png": "58747ed5c0373e6a3bc713740c1a8b92a147f72d275baf9b220c7d02f579597b"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Orchardheart Matriarch: native 128px review of four-arm idle, branch swat, braced living-bow release, hit/guard, seed healing, reciprocal root-fan gait and grounded collapse. 56 entries and 55 distinct paintings from eight selected masters, eleven originals retained. Rejected arm loss and overlong leg drafts excluded; one ready painting shared across clips. 132 focused candidate checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "672b4254f7dd2d2d492705e8371afde2003b16fe3ec3f57a328a660c7f8a912d",
+  "atlas_sha256": "b279f9c019ef140fcd3beed9bd0491ab41a477f344c1f03e6eb6378f6c25a77b",
+  "texture_bytes_rgba": 22986240
+}
