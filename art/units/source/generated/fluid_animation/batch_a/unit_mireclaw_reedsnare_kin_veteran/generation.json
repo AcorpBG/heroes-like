@@ -1,0 +1,116 @@
+{
+  "tool": "builtin_image_gen",
+  "sources": [
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+      "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.prompt.txt",
+      "prompt_sha256": "b4470424cce13da3be1741b2c84a47449fb6ee0cf110065d100017b366c6222b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-dcd82403-650d-47e5-98e6-06cec168b539.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/attack_v1.png",
+      "sha256": "2a2f1e2342a1dacddcd3b6b412c1bd82ad878edf02a51e26465a0cede5c5c16a",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/attack_v1.prompt.txt",
+      "prompt_sha256": "2f9e24a40b38abf64e30db67423dc1fa82b84ca4cb7b0d3637205a9df6044d3b",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-ca75327d-4102-472e-8d20-c39fd9947737.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+          "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/reactions_v1.png",
+      "sha256": "4cab851a28911b3db3eb46b86d1218aae4641c0e1af3bbdf18ffb32d7a232887",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/reactions_v1.prompt.txt",
+      "prompt_sha256": "51a44012435639d4262b815dc633566b637aa7f8304ab0b42d38d18e7310f7e2",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-e5259a03-27c8-45e1-a12f-0a090223177e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+          "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/cast_v1.png",
+      "sha256": "ff72d328495f4b37d38a05ead0c390bc22938636155db1e023e4a9da96d48d69",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/cast_v1.prompt.txt",
+      "prompt_sha256": "f0127433653b1df8986eb6d6cc613c889545772f5a12c216b9bcfeedfd0a289f",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-80dd853c-f2ee-48d8-9181-c6c1a43f523e.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+          "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/death_v1.png",
+      "sha256": "8b01aa2c7ad1ac6ab904df0ca56aec6c833e12f1b33448b4cf9ec85871c9e23b",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/death_v1.prompt.txt",
+      "prompt_sha256": "056f0d3023fec1586742a3b143a2f5e68a0736e419bacbd1626e06285609327f",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-a80fe5b4-20ab-4473-8479-637ce28fc432.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+          "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_v1.png",
+      "sha256": "25510d5520ea9058f5a931c52bd80cb5680d69bb691f5b6d7ebb5585aca1550d",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_v1.prompt.txt",
+      "prompt_sha256": "082a3cfbef8189d6782bcf45da30184c2bce2cb20fe2dcb825009bd9e3bdcf11",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-bc486453-15f5-4ebb-95b7-bc5993164981.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/identity_reference.png",
+          "sha256": "dbb97812009416393e3d501a9abc09d01b93bc92b4473f8284d1950b359a02c7"
+        },
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/idle_v1.png",
+          "sha256": "ad00baf8135c8602f3755d8d4d02754667739897ef893e32ab4f7796eb5076fa"
+        }
+      ]
+    },
+    {
+      "image": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_near_v1.png",
+      "sha256": "ca8a9b1941f271ea6d6b2400c51c98211d166e17249e52a38380731e5b55dcf7",
+      "prompt": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/move_near_v1.prompt.txt",
+      "prompt_sha256": "a6f7a5f1301491f2015b26a72278b7e0544bc6c53755e497ee5aabf8291cf4ef",
+      "generation_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-9ae19f82-f71a-4e03-a3d1-6291ba193827.png",
+      "references": [
+        {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin_veteran/near_step_reference.png",
+          "sha256": "e71636e4b470c00385fed1b6e03c8d539a133233069592c897f34edcd8798f02"
+        }
+      ]
+    }
+  ]
+}
