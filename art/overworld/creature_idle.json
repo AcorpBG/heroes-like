@@ -6127,33 +6127,37 @@
     "unit_mireclaw_mudglass_slingers_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_mudglass_slingers_veteran.png",
       "frame_size": [
-        175,
-        250
+        159,
+        258
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 8,
+      "frame_msec": 155,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
-        238
+        83.0,
+        250
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_mudglass_slingers_veteran.png",
+      "painted_extent": 242,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_mudglass_slingers_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
       ],
       "source_crop": [
-        159,
-        2,
-        334,
-        252
+        109,
+        22,
+        268,
+        280
       ],
-      "source_sha256": "8d67d64da75e6be38976d7da7df3bf0334fafd0b0690f3df7a1bd48ad2f328f7",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_mudglass_slingers_veteran/provenance.json",
-      "sha256": "9f13c819e029f6fe3c13afa116a00643854ea5dca0039f59cc80ac517c43f7ca"
+      "source_sha256": "2619f422e5f1f8ded5c01a9126d52b8ef6d83e0fa7fdbb1c079e60a540f18efe",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_mudglass_slingers_veteran/provenance.json",
+      "sha256": "ed8ed5ea53a0e6250823daad12fe63f0f70167529cc2bee6088fe71d0c6a3270"
     },
     "unit_gorefen_ripper_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_gorefen_ripper_veteran.png",

@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers_veteran",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/idle_v1.png": "14ddfba017b578160f7be61e7187a492afabdb20f82266aceea7f39f7f849549",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/attack_v1.png": "46602667d7f07da04fdc4ca8f6f4117e555fcf546a259a0e0da05bf73d0267df",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_v1.png": "88b2702766c48f7cee7c40c3f956e57c85d4996e34a41150cb8a58368ef84edc",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/ranged_recovery_v1.png": "9b91adc549c81ea5ea14c25be30763c040072fbb452ff46880cbc1603cf35b6e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/reactions_v1.png": "0d02879192c68e64ad9d299e6a7e08cee2780e4a1d47c8762e7087bf5d296bdd",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/cast_v1.png": "1552db72009e7c4f0817445a95f231116ea212af0597657df804eace2d01d7be",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/death_v1.png": "52f95547887e008bc5fdf3563c48cbde5481b392c8e533ea1f47dadd42048358",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_near_v1.png": "5c500090721355c5b6547d56101e3b5c15a0a948f14e124d9476ea0b277787ad",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers_veteran/move_v1.png": "cbe793087716be39ccd0ae5246a6d90e93a34db541ab3e01d7b577c77431f870"
+  },
+  "accepted_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "move"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "57 original poses reviewed at native 128px battle size: articulated masked slinger idle, fist strike, nine-pose load/sling release/reload, hit/guard, physical rally, grounded collapse and corrected alternating foreground/background gait. Fixed source scales and ground anchors; sling stays in wrapped near hand. Rejected masters retained with provenance. 133 candidate focused checks passed."
+  },
+  "preserved_accepted_clips": [],
+  "baseline_atlas_sha256": "8d67d64da75e6be38976d7da7df3bf0334fafd0b0690f3df7a1bd48ad2f328f7",
+  "atlas_sha256": "2619f422e5f1f8ded5c01a9126d52b8ef6d83e0fa7fdbb1c079e60a540f18efe",
+  "texture_bytes_rgba": 26173440
+}
