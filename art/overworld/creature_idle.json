@@ -7146,33 +7146,45 @@
     "unit_thornwake_stagknot_runners_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_stagknot_runners_veteran.png",
       "frame_size": [
-        241,
-        250
+        289,
+        260
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 16,
+      "frame_msec": 125,
       "static_frame": 0,
       "ground_anchor": [
-        100.0,
-        238
+        98.0,
+        245
       ],
-      "painted_extent": 234,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_stagknot_runners_veteran.png",
+      "painted_extent": 273,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_stagknot_runners_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16
       ],
       "source_crop": [
-        156,
-        34,
-        397,
-        284
+        166,
+        11,
+        455,
+        271
       ],
-      "source_sha256": "8f4499e35a19eca289c72ec3a1b361ff283703238da9078c2ffc626a77b1abf1",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/provenance.json",
-      "sha256": "fc1791276c509d1096053ea63474114f99b2f5899e52fe0d6dd4f8de05603208"
+      "source_sha256": "b155b9fbfff015be64a98f6569f35b0c6133a196fac5b6df90623e30a57fecb6",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_stagknot_runners_veteran/provenance.json",
+      "sha256": "6c9afa6ce12274a25341b2033e83bd37f553179412d4af34f2085fe62a912fee"
     },
     "unit_thornwake_seedglass_cantors_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_thornwake_seedglass_cantors_veteran.png",

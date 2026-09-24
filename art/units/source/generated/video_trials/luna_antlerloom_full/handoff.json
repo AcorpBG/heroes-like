@@ -1,0 +1,3711 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_stagknot_runners_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "alpha_noise_cutoff": 0,
+      "frames": [
+        {
+          "name": "idle_h3_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.333333
+        },
+        {
+          "name": "idle_h3_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.666667
+        },
+        {
+          "name": "idle_h3_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.333333
+        },
+        {
+          "name": "idle_h3_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.666667
+        },
+        {
+          "name": "idle_h3_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.333333
+        },
+        {
+          "name": "idle_h3_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.666667
+        },
+        {
+          "name": "idle_h3_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.333333
+        },
+        {
+          "name": "idle_h3_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.666667
+        },
+        {
+          "name": "idle_h3_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333
+        },
+        {
+          "name": "idle_h3_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666667
+        },
+        {
+          "name": "idle_h3_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.541667
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.708333
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.791667
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_047",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.958333
+        },
+        {
+          "name": "move_h3_049",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.041667
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_053",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.208333
+        },
+        {
+          "name": "move_h3_055",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.291667
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_059",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.458333
+        },
+        {
+          "name": "move_h3_061",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.541667
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "move_h3_065",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.708333
+        },
+        {
+          "name": "move_h3_067",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.791667
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "move_h3_071",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.958333
+        },
+        {
+          "name": "move_h3_073",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.041667
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_077",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.208333
+        },
+        {
+          "name": "move_h3_079",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.291667
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_083",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.458333
+        },
+        {
+          "name": "move_h3_085",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.541667
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.833333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.166667
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.333333
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.666667
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.833333
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.166667
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.333333
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.666667
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.833333
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.166667
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.333333
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.666667
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.833333
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.166667
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.333333
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.666667
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.833333
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_004",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.166667
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.666667
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.833333
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.833333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.166667
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.333333
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.666667
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.833333
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.166667
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.333333
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.666667
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.833333
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            492
+          ],
+          "scale": 0.890625,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 125,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58
+          ],
+          "frame_msec": 70,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 7
+        },
+        "hit": {
+          "indices": [
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80
+          ],
+          "frame_msec": 70,
+          "loop": false,
+          "static_frame": 9
+        },
+        "death": {
+          "indices": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96
+          ],
+          "frame_msec": 83,
+          "loop": false,
+          "static_frame": 15
+        }
+      },
+      "source_scale_reason": "All action footage is 960x544 decoded H3 pixels. The prepared source guide uses 0.5 original-pixel scale while the original pose recipe uses 0.4453125; applying 0.890625 to H3 output preserves the original 256px anatomical reference and fixed ground anchor [480,492]. No per-pose scale or bounding-box stabilization.",
+      "provenance": {
+        "tool": "local_comfyui_minimax_h3",
+        "actions": {
+          "idle": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/prompt.txt",
+            "prompt_sha256": "64945105deaaf2ea59fcebd78b93a3ee9e63417c04b19d829b9b5de748345b3f",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/workflow_api.json",
+            "workflow_sha256": "8241473d841553ec0d211bc51f04b57474a203d16a8b9b1cc4e45704f19101a6",
+            "submission": {
+              "prompt_id": "efa91479-764b-4b2f-8051-b435c4d4091f",
+              "number": 9,
+              "node_errors": {},
+              "started_unix": 1790247040.2965717,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/original_lossless.mkv",
+            "original_sha256": "53651a6f97f2314b1bdb3c17f0bbbc8b2e125c47da1f348dd03d2c24d38fab9a",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "ca85fb2563f774152091acb858311d9ef76a82a4fc8f6852b5af9e11c994306c",
+                "5812d42effeca2993baab3fb9b8fbedc0b0f51d55c4d8e20154493aee4658799",
+                "0d88aab07b0762b9813d5030a69ee8fc70dbc6a07ab9ff4f3dab6751dcb73a99",
+                "45f494e561965354fa8ecf6d1172c5cc41be90f0a2bbf342ce1ea79a82cf4fa9",
+                "6dab7d59b596dc6ffbe705262444600d739504f9b548f31a7348fcd376e25cee",
+                "ac64a4b2bd1e300eb90463191d9dc7c89d9f21042599de1769ab469307207909",
+                "aa2b2bf45d2705deb6eb6b1cb4bbb9670a4aab498e08dbd98b100132100dfaa4",
+                "fdfa75e37e5110930e81ed9ed1c5d7f4e1c86a7e8083f4bea22d6b39926b6bbf",
+                "b5963a1440b8d0c95a4e8ebed357edfaff6a2255465fe0c86962bbb481788f91",
+                "bd618182fdc0262f22b538f1e4a77e86f3782ea38096611cf2f5c0d290b00471",
+                "58932d159b5ed49893accdfbcb2114055ec4e3a71e878df39c8ecb5163a4a7f7",
+                "ab8f3ca9f34ef5a9bd36fa1eaaa0ccc385d18468c8f9c1b47f169cd24bcd339a",
+                "2b3e623a871311684c61c851802b5db069093d9f507685b7e590e12c7e60755b",
+                "0ff71d1a2825fe642fe63d99ebc3a46dd030838da59cf1d9b4baddd1d9729056",
+                "8cf96d217cafa821ff144431844e37a4e1efabb2bbc858d6613f9917a1d3fc10",
+                "35029ca3eea54f53d828e1a5c62466fd8ed692c1b5e2acebfb5b955c6017a825",
+                "3fe69eccb799cab6a82eca922fe3201eab083e1fb346047133875de2eddc9466",
+                "f372a4cf6a1398570f63d74305b3741a31b2e155a49ec9e81d991bd5743542c9",
+                "3c3b106971fc12313c663e0eb02f803c4719c9aa677b81d4429be7a25973b148",
+                "e0c68327ef34518bb182d72f14b8041f68e502e9d30f0a0a9a917a76434701a1",
+                "42219dc2e53beb757f4c855104ef56a1fb66458daadff7acac151a3096864900",
+                "7198a4561586ec88f36611e7fc1121e3c2b9e4128b29bf7b782c1a0f4c321b9d",
+                "abfe0d7fb48f9749d9875fb2f81d56e5f3a247aa9bc940af2b3717fa5888ef3a",
+                "bb7af125f1473f9295276691da7bbdb143210f2abf6f55989d3ed0394da6e3c4",
+                "7aa8fb3ed509159951b51ee5c3d9be70fffff9d618bd322a88a8f9ab91722f44",
+                "8002c6f2e4ab38b2523e558926b5063574bee459e9629a5e44ff544d408c47d3",
+                "eb0713c5537e5377e35365bf349be40e71514056a3f1e8e2ca4b081f424ce791",
+                "a3c23f0be23d65efb77b2d73c54a31a1f5ea34e6460051c7141b8b70dea6198f",
+                "e1b1bde6554002a1fb2f8eb3d137b38488b047aabd9c12a3d9ae088cf77bb736",
+                "e05b600219ce016cd179a6e43b523206645c4dea07b3b00d7160539a27e945fb",
+                "c8a0a695effd1615a7463cbe7eda0e002427fa6e4a7560dc2f2998e4f449c421",
+                "f4dc63cbd1122399b22c01b171ae34e50eec44187714bc6036819629db90d163",
+                "14155a90c43d63b2117cbae9455748a1f393348dd2a5cdd54c7655c8db695f2f",
+                "14e3ec42573510d29786cd8cd31bcea5eaf2097d3851a8b08e6c048815557d24",
+                "d5397cc002f4e000adfe021f7c10b7b0d5e00ce587083a3adf47d8f61ab5537e",
+                "7c77087dd5134e45cfb5bab7b5d1b38b6b2b1d4cf2c814e84231425b8ea26e30",
+                "ef2fdcf34163f91a381c8fc882ffd1097bd0aedeff1dc320c881dd16622b3c11",
+                "da8ebb6a9d5e34b3c3cd18770c80663ecd4d13be164a54b256c1750420d8a55f",
+                "5ce543cdb6876dc8d11eaea601b10881423816de8fa8a7738916107a19ea1c37",
+                "9bb48baee27f5c540a2e6e312a027aff112fdda9d70404c706fb4123945c2290",
+                "5bd627d6caf9006da56f8f31d9fa7e4e23cfaf9604634173ced108fc8eca5389",
+                "4d402f9f21bf72caf84c42a367c04e590a839048322135d7317be99f77a121fd",
+                "7594e4c28470f4588833557996d7e2ba8231d1ead4d6cde78c80184828c74307",
+                "9b32a125723278bfd6f1948ffcee3f6d09839a77ab77f35892328380007adffd",
+                "b01f4c34fe7e6379436c3e700296f37a3b3504da2c15850879694d8af6021f26",
+                "c565f841d6557cad15afd532daa703f62292f5bccf8511c6d264a35d3decd455",
+                "8bb5648445697cde98383699c3f21d6883883be996a96ff41cb15e1e59061a84",
+                "42a9ca3c1b8fe8fd4d30ec67b75c5196bda25e3a4f087a44c446e3a9cdac3baa",
+                "431f48fc7bd706879336ee3ed4df277f8b0016198734666bfa3e3669eb6e158d",
+                "e119a91805ae64f4669a5113c20f7aaac5714da6bf772f1cc79403a9fec3e29b",
+                "e844b9464fccb9167cdafb3f2c57a0ab4c60916462d2e0c5594c27a9198cb02a",
+                "707dcecfdbe4bf95310365cbefe3c9cb4a52fd0749bd6aebcdef551317a9d5c1",
+                "fb28ad2534cd02e97c382c3df309b2cf56b8a5177ac9bcfb1358715af7e9d167",
+                "ddd2dd8ec5d521f895566a2a33a0e2efdb63a6955c6f19354b29e9dc51b7345b",
+                "10f6e3b656204776f9145cf9610cfa999355188a36ec8123e57dc782f6b8c20c",
+                "9d0485fe2be64157b6832191f271ad073f376c453671c3ed452ac16d3b025a0e",
+                "be0a5f0c58c2c76f94cb6ba1e4a0f03a07293cec9be0927822b7f609832607ce",
+                "21321fac886b5f1d1e668520105139fe036755e8884a343d85f949182d8b7939",
+                "3a919f7320a6c3eed2d50dc21710e1b5d18b4ddeba64830d388b4a2582201a08",
+                "9f0bd2d80aa316d2a4b289141ea03cb5c4e7533322c4857f9dfe8e126dd2c897",
+                "961942506f71f88a008f0a992ac5b802d5542434d2414d3929561b79f177f81e",
+                "26604b618d65fa1e6e78236cf6765bcccdcd904572c3d3ec8a5707db86ec9a5d",
+                "f76582707c242465345cdab88980dc6db18c1cf47596f3cda39389dd790cbc05",
+                "c55663f7e7069f99ee15781ac467ca4807aacb602b3297a7df7d7e0f805ba954",
+                "9770e845c26dc1e02a598543a6c5843c59a6d3effd4c4617b700619affe1538c",
+                "66ea11157d4939367b84bbba15068ddd1fa264a098693a4999a0630394bce716",
+                "428ef6898775235ad68f1c1dcf498386bdf6f9b30df18561a84d88476fd81cb2",
+                "ebee8fa3134dbd038bd0841b88baf77b5cacaaa54a31e5190234c948376feb42",
+                "3c5e24868df8d5e56283968c12a4921880a3e6e05f4503a351e1fe344280a3a7",
+                "99d4f1ee3d2455dfb4cc2b767acc4ac20544e35280c8641ad29a9243d77fdcd6",
+                "3022d7bc16f0a4c3edf61badbbcb8361367c047f786dbd9e98cd30b620168b70",
+                "f1cf2c7c840cbbbdbbe4a39c5082c3b13b8fd3a0c4cd4508788fcb1a9495665f",
+                "f1589e6b984b41d00a32a94dc785fb77a160a004992022fc0b11ed29160156fe",
+                "403a881fae7dca384ea5fc6989f1c9e2066d3362962c7de73fdba50a2b81ee9d",
+                "f049fffa933f8e624a1d34cf2c93e752a013df9b73166ff788f157f4d0ac82aa",
+                "3783e46acd7a7b5db41573afeef37295c274e5c64c281d60f6992e70d45970cc",
+                "77be3b46e9234b471bbf38b4777d526bd96e7fa7c6dd5aaec4cffcd7357a3b13",
+                "5736c021390e19e7ef4ac0b02f65d41f6f1b4284f1b8309a801c8782f82e0187",
+                "e98966d071751cc4378fc6ec926e3aa10ee0249b7695192dd45000245d9ee72a",
+                "f07e2b13d0f5839050f73a358e04195312a167dc7b3d7d9db562b536f7178de8",
+                "17577c7aa337345027f29d368689ed268a4aa89fd60db5d4911e00b2c243f59e",
+                "f5c80e9f34a51eea6a9feb695f8aff805da0f98ca3b0876108ae1390d464865a",
+                "a7e5d882b395b308f8ebf42de5514abc67412a442598348385cb4697d4f5f177",
+                "646a53bcc7fa36d543a9f19de1914832db238f26926085111fc14738919db565",
+                "31a3703048f13120212d923ea688dcfcc22a822b615271efbc60851d70ca8900",
+                "a03f1b3601e5ce8366f85fa7c7b57d5bc8ad5757378a82f141060fb431794209",
+                "57c29f54de6853b5b4ef0f55b56e5dc04e58d2aa247afd7a9333697cad4769e3",
+                "a9f6e2957707bafccb6baf4fa439648d306107b0615bbe106c676c13415cb0f7",
+                "cbe814f62c0e10e19f01a9a24e3abb99576d52a9cd495c61b93d019b5ab3cc72",
+                "ef79c782b90f38d8a27a447a3ec1126f900bc3848de8382952602323b3b037be",
+                "11447b17c31d5bb7c6ff1e6c4ca8851821fde9118dc011d3e3c9fc7c000a074b",
+                "ebe66147b36b2c214d167fc0af98d77058910278e62b3e61a0cba03d25412fbe",
+                "073a250e16c4329a67622cf914af51857c704b1e6876ef8fad589e1d44d57ad1",
+                "4ebdfbebea7af35bcb231f949a7a8ed7417f961e23d97e6cabf00ba4f9c98ca9",
+                "4de5576c85cb28330f3f9d7cf03c13d384a2f1512e748ba17d9ef34f507c36bb",
+                "bc70ff985c6b6306ef4f79cddf1671600ac86d56a72bd08ea2b058f329919d64",
+                "64f9107c285b684b40b180fd43ecabcbf4ce7ac7942aaebd74de2c666e9d6cde",
+                "d5b5f1dc549916b6d508c28d4d56e6031659a65f709537eadee9894863c5bef6",
+                "7219fde63c6cce6cdb9941f97b57c139e980849273efd16bc4b669df59841322",
+                "ca261bfeea6bb2c0b0dfd5bbaa67c52bfcbfab0aa339edcd1aad58e29d52262a",
+                "e57db437bf48949fe202f3ab0f4285b1a940ec6e592c95357d12cdc19d20e889",
+                "c06edbac38454612843fc9751836cf0f2c554fb9ce7879b783543cb6ed0a08df",
+                "a9de3e548653fe4e15197fd0c17871121145f6c80f38a1de889db119646c3f04",
+                "6b351adb1b8e98209ee8bf13549282ca3a7b89235a83a0521180774a5a281779",
+                "c0afb3b7a2c74f792df46a0df2c07fdc2c0c96d291e1cee95b70be42ea1aa1c1",
+                "4f41ab02cfe20fc11bd5fde891d8de8be00cb5465b43790e054195cfd8b8b70a",
+                "97cceb6ed48116f5ef454f43cd23f91daec97e8139dfc4c82c3d189fcb295ba6",
+                "8a104011cd182de4852d4a68f836289ef42d7f62dc67d3a72a6b4d09678caf53",
+                "1714aa655088858a14693d1c146defa35977dcae4ccf81bc3a04e37a53703547",
+                "cd23f6b689affaeb0978e4f28f9a71f506e2c4c86dd5b3a830672f4038efc2bf",
+                "71b0fc2217635eefb737fcc65615a11a643814289b44e2a1acfc97b4994a6413",
+                "f1f334f2ba1c3988c5506c69ffbd584eee99142cf829bc760c0fd90f81a9c243",
+                "c95e09fbe52ffe96c44c3b2d29abdfe19e3f04acd5e292685c6407e09ad8c170",
+                "d0f854cd724c08c29b11265ab81b7388a3fe50825f9b147f25eb610f782f4d34",
+                "b9f931441abf9f4fd39eeff76323252e2019bb26c1ae9209d387bf2ec5ca9bef",
+                "4cf677c19f41e6f5d7354cd585dc9007b388520df20bdac8c784c494d1f3a1fb",
+                "fbdd230b6a4ebd5cb1c48bf56eddc7e33c4a66f42a6ee628ba98ec21c2aca785",
+                "cbbebf8e96365d4f6bbf161d74daf9d2251ca17c9122c473ac3782636184489a",
+                "79067760ea87a885b5d6af6f3ba0dab21a072ded5d1db4c3524a6bbed3981c3b",
+                "0425f21d62a7a51d586a3bd281cdc5df568efa70aafd34db84836bd7de1cf34c",
+                "eaf84290fcbddc28f07a83deb3df53cf982e679a540dd50ca0fdb7319d86274b",
+                "9c612079ae2e0703f94ddecad4fd5b6204ce5138c6f13c1e8234de8a09e69b5d",
+                "4af7661f707ec187293e25284d5d2b017a624a3d2eea4820e8fb85bdf4f9cd67",
+                "49840a5bda57ac0346b7ec9af3e2f1203da01b99750d3c01c5bdee7b6c6fb8cc"
+              ],
+              "lossless_sha256": "53651a6f97f2314b1bdb3c17f0bbbc8b2e125c47da1f348dd03d2c24d38fab9a",
+              "workflow_sha256": "8241473d841553ec0d211bc51f04b57474a203d16a8b9b1cc4e45704f19101a6",
+              "collected_unix": 1790247244.0187628
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_2",
+                "rect": [
+                  160,
+                  55,
+                  554,
+                  568
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  354.5,
+                  567
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/middle_guide.png",
+                "sha256": "f04278e59a2d73005c26ea22c04f4cd60d987fe89d4f81bc0ef5e6232fa25177",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/last_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/idle/matte.json"
+          },
+          "move": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/prompt.txt",
+            "prompt_sha256": "ea7ef2190571dbaafd6235551c9ae79ae5e03a4fc7582f1095b1072353fc632b",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/workflow_api.json",
+            "workflow_sha256": "963a975e7b2e5f47aa8aae5c98c5c89b99ee48f0feec64a0c9eec421ae0af880",
+            "submission": {
+              "prompt_id": "d3beed89-e33f-4917-9fcf-eb989f4c3ced",
+              "number": 13,
+              "node_errors": {},
+              "started_unix": 1790248375.4959486,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide (3).png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/original_lossless.mkv",
+            "original_sha256": "b4c8ce4ae132d3098d407cc3dd42e36725b28b5cf90bc75b4853f75b2ff1d7b4",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "6706a071aba82bbcbc78ca694e716539b1bc50888efdf4a912860dbab928a002",
+                "6fe76451ab4d6b2a7a11a42803f7da2f8e74e8379abdc5bee7fc80f7157e4321",
+                "fd434aff9aa05b87ed7afd44025a48d40e89f35005ddaf3fb565b5144f76533e",
+                "a7f66010296877ef96c40e044cd9c69ad9247ee1df3e6dfebabe730e6b880e6c",
+                "ec140445265f9f0bc023721b2f6747dd6105eb7d8b9618a859a8743bfc2f0276",
+                "fdda485efe44f1daa515a1d1b6ecdc7a470404015dfe01159e7848cedf9aa375",
+                "2afe07d533ec7a3e4a51aff4d68f09f70456260d156373a451ccd5d472b0d22a",
+                "e64d72734a5396f8f95dcee026d1850ecf6e75d3d7d54a8cc3e348bd5d94b939",
+                "2db8f6339c58c3904743115a5258f6204b3be52b531f67ba872686380e6d167f",
+                "0a0c17c108737484a5d124ccdb34dc467b74b5f4d1e26933a0fa151d8ed06de8",
+                "5c361da4db9a2318223abbba7b843842b948f831034d682532125189f0230d38",
+                "1d8807170e129c0823723f49f69d5513a1160e79c2cd9b9e88ab389323a2c47c",
+                "b6a672443b44e4b14cee68262687de27d8ef73fba4ad129db2ddbcc2088b2a21",
+                "bf46e1c72049be1f9e554fadb3aa8e324a136401dd00e5fd1e2d19121f2e22eb",
+                "a7aad10d43ce111d63c11b9911737e9d33dcd5c941041e372d1d16d9697c87a9",
+                "6208654919044b79401d7ae1b5b08e8ac4c53d21d55c6e8f400db8e8d37f2c7f",
+                "bdc616749c367952badc04aba71a8b1eb24c2a90b507e56031f53c6659373074",
+                "14b086c2cbfda23a5a2b50b937521d760c80ad9f5daf0044199767654736eca1",
+                "f129cf5e7d5af00e6e9ee7ec81748683b100c556ce7dc6d7921440549a7da7df",
+                "308e49f220818c46806690604a3ea7d83a6f76f4eeea819d929e108f9422b60f",
+                "e1f5403f14838467d04083c41d4fa78a1a65dade62c07e13bf4310ed0099ba7c",
+                "1cb291aaa3236004271efd1126d1838ac3b0a4665b8bbb6f2859d367ba494019",
+                "e9e66862f0e7e9a25c7e951862204b011718ee36685906b520bb50c016c97505",
+                "e904675b2cc4b60cd3e461b0b5670fda3b8dffd52acf26024fe6a6f0b91a577d",
+                "b766f02da5c7118101395e8747ffb15888c3e75271150745df1d5a4572f79326",
+                "b464605031fece394902e2163d99fa3c4acfbb5104d5448ea5d138ab2d2a8f56",
+                "7e82719b0a6af285fc9525596ee36a644b320326c134b77cdf99f17dc226109c",
+                "b0780916621d5cd1b33979c8f95085646e5ac3c08f465ff724fa3dfc798f0b3d",
+                "01f6889ff1a8ec314759c1649296ef643f79091ce650477d23d467ffe2c3520c",
+                "cdbb3d31ff28511cd19cbff9b412e276ecfaa33f1dacd94ffd46a519fe590815",
+                "5f3bbd40667d862ef780792d843c30e8466939c36b9ef396bd91eaee7eeaf937",
+                "bd68b6aebfde1aab91f0165a089ee192b92f591ba818081f0b694d1bdd525090",
+                "cddbe3866df96f793f313a61d8a29d425f05be0d38fbe7474e4dfabb1d5cadad",
+                "20946a63d501178e85490bc59b025adb301ab3a6c2d32f221a335cda88c17719",
+                "76bc308814f2cabed80ac21259024c695edb81f280ffa339c87487521906cb9f",
+                "d4557483ebb4019f77422c416b56fe829628351fe8aae27bd749b1b9b8260692",
+                "8f590912dcef5e1e8b54664685445c81abbebc4654d64f5d9a9028fb30e2e42c",
+                "35b268b8b8b982ebf365064cb33bfb824ee08d2229b0e81815e707d9cda4f957",
+                "dd11420e627fda6bf425406c34a6b4296939a0dad3cdad6a5c7a065c91c06520",
+                "fa06d9970af72155057d5401e00d10a20c34354210e6f2adbb6624eb143c2f5f",
+                "7836dda75b392c3819af476ece191e24365d041d5d12e5efc8f5415673c4927b",
+                "3b945ca2ca186095d6e6fd6b0010434154d769a1044361b38bfa21320f1ce6ad",
+                "07a759473db6ec74b729b22be2c278f3c0f15dbfed001cf799436a7aaefbc659",
+                "7642bd554937c2e1339527be2b19982d5b9426fb469852e9935a5618fd92d398",
+                "d27155483d69d941d50d8649547e0feabedfde28325fd5f8e7847c29eb2d99a9",
+                "c534c3557a67b66535fc53abdee479d926e70569ef2ff85d7052abdee33b0198",
+                "9c413dcc8a92c70735931dfb6952e192a1fcbcc091f50f2f118e6726bc34027b",
+                "bab1488c68bb2b67e3d7f4c1748a366f23f1dce91cb0e9123293ea029c1d6138",
+                "a7c99eeddb3d5839a5c5091c352e29fb4d66e66a26f9881cc0d5530d1d8e2d82",
+                "7f9708561149c9aa43da477b2c258175bc96eea94a2eae6ab3acd13d81b21bb4",
+                "70f1eabe80145643a77b6be1be1f32b6f0cad82fd877eed636d5ccdd073774cf",
+                "6ca46846b6d5fd166aaf99f3a847b488c108ec0d7381faffcd6c371df0a2bcc9",
+                "993535d49b2a49412c4104ac019befc42061552e9dff6bcbaf24aad998923471",
+                "81b9032bdf8e35e846eb0c7b247c940ef476d1bb8f485e2bc0ca77c893c5a17f",
+                "18ebed2a044306ea280632dd1918d2b0eb3cad0d13fa490f4772760df1f092f2",
+                "2757c657944ae780ac9016e7fa106d61db371c3a1e0a5ab8dc227dadaeb5eff3",
+                "a9a769b05a9d48d83552ac47d0db5395e196a05a48dfd283cfeaf16a0f758b7b",
+                "5cc4cdd3132dd11c2dabb179ae497b819ef31de6b4752168579e42f8ab3ba1f8",
+                "c74d0742e85159a3b8824082fa634a4e0b0fdb6e6dabedcdb7bcbb54b1d1d671",
+                "2d701b2a3c917b91cf95d1cf9389d7b3e4732ec59d30fa977ac2c6aad9f597be",
+                "d1f4bce99f1855ec00b1e9d2d20dd4874db93983661b0fe9fd521cb35f150dc4",
+                "2a73eef11fa97f98ad8efe4fa5b87e9b96bcfbfbcb5382cba9b7d76397ed2d23",
+                "ec185b4cf9b8261f578040df706c72fac5cbe1976bf0c88f89e9a9937f556a31",
+                "967d7b293d409007036424341b5047fed4655dfd49b56d8f4fc5dd546c1c09df",
+                "b406857f15afc67215a0d7b420a57df7a3e101aea78a0b9764e0bd0319657a9d",
+                "b6500cff834470bc242d44b079fb4049fd27e85d5e6915d8b42105bfd788d2e1",
+                "9c93b36d04be73955efb3dd6b82ea224072ecd937f44a7ee601da18bcc33094f",
+                "ade1b91c77feafd9f1ea6047a0648d1e9e053b5eea0b72b501e27f6cdcd1e92b",
+                "195317f44e139391d27c343844f8c49d1800b4094d4c4d3c2af42ff682105e1c",
+                "256fa47e5e60dd09ff2d6b42d902b7d4c131450f095b7ac8fd5d5c3fe2248dde",
+                "25db869cbc6e03678fb4461e2817858f7d8ae6e6263754f91c8bcd4715fbd834",
+                "9074e99b6d181e844d1ab1f4fe0e2319e6ebe3ea4908747ea4d1311d2c907b03",
+                "b53c0cdc5d905ca330bd8c4b36b649fbb06a3c768d44b0915d331a35044f2229",
+                "43002bb2756e95078750359cf3ef1939002cd4e391e860c189a1f9c56e30c677",
+                "d5ac27f3f9816637147c5cb89e922c9550e62b5af8899ba689ad1f582b87574e",
+                "b6c5723967fa5d4721718ef86ef39479449930367dbb62724a4602cfdc5e0788",
+                "46284ada8efafde7c11c85af4bd608316d99183f30f9755e2366e1f909cf122c",
+                "98b37b1d84ec80f08c23bd3f36069432da44acb06d89cffc7f58679fc4298781",
+                "1de05bce9b3d4080411c54e99cc15941f812d43430734bddf6b07ef1877f62d3",
+                "d73fd8b4306cd54b0e14f5ee985b0e4722ec6e0d9235400447915f26c21e2935",
+                "cb52ff3b19fa994ac91a793bc541523c2f4f8760f8986a14ef96dd29c247b309",
+                "991ea2b677fd567d333e0e3edc8fbddff2dddc1bd996de6f3965c019bb6adb51",
+                "379d5cbdc13fceac9f3191b7bce06646c0fc3c9a45396b98dfa675a1d2c6cf67",
+                "7cfa3156d8ddf44979a18a534ebd4d2d0f750ce22d2016158656a1c444638ffe",
+                "ce53efac5e2e56032f9824edd836edf06a738d56b77eb75eec2c16a4da0851e9",
+                "91701ed8775dc817668a840cf8d030e00315c7c49452d768ddda688d5d4a160b",
+                "6774b318e3e62386a9503d6644eb2576485e36ae2811f1ecf017cc0dea9c1825",
+                "8e31b88a608198bcce49bdead54972111bc1c49f1a1262e611c438c7aca1e197",
+                "48662a066d885fa7040d8b3f842d5e962648d9ef551e09931ddfce4419c9d750",
+                "2e0cf44c9c7ff87cdd3044b9bac2cd6a62f715c57a8050f43ec7e7981154b93b",
+                "509df387af374af234d4c0ca7a183a454eed619f170cadba5c456c45b4e29e1d",
+                "530678ef4b291749b744c890dba6e916f53f57285af8e43e3eec07fc67cd7b11",
+                "5dd82dd850c4040ff71428b9bcf2f91a295adc5c26bd003eb28d279590adf3b8",
+                "ad3bd5580a09b756b61309811c8592e2f8e872e2c666e373dc6e8a6cc6013c60",
+                "995af1c1032b4d1b11727e3ec98a270d6f2b678eff6824bd5eeeba9e6e877f55",
+                "56a92a57169b64fd5f8b819c6a6f93c66d4fbdd57de88a65f7eff6549a8c3469",
+                "2bcd47825fdec0b0f91eabe9110c0fd4815f92a16bdf7374cf1d7253d6114b98",
+                "8cb3175de16981fe0eda7535f20a8c2cb066b5228b18fce47fa3074ec554981e",
+                "bdb573c77ddd716176209f202c6baee7c75689ac84d6a193059da55eea1f886e",
+                "58eb884f7172d44e4f5b5777bda1369dcecb32f741fc7a00381b490262ecaf92",
+                "eaadb726a4cbb77f9b177dbf38d197002f9f86533b8ecc4596182e2300f4bee2",
+                "36832b99f69fbb1339e1c3601587e8236e4a708e687bf7e308dfbad23c3eb585",
+                "fcd9e70b966a608d9aee162e8b336f9e41fde27d37e2b2d1871ee3bd456079fb",
+                "69c76f0f015218d32d1dfa900ebd21ec5c3f639299e66f743a4f4c670b870a9f",
+                "7e12306c140aa13ca8d3d818fdaa08d606ff5ae39c581df755e48b3f6c46e8e3",
+                "48ffa19cc61d96b4e8e90c99d9bd7076806457e1c80ba526b1653da1bbc1b2c5",
+                "d4aac985e560c8f9696f527f594750f59c105f397e4a095b9081b4f783798cef",
+                "2cac506ace738fe6524908068a27b61e6d75912453f92d807e5177632213ef90",
+                "53ba0b6a405d0026f481aeee8248a5e34f1803b52856d62fd18b23364e9e9172",
+                "efeded12dc26fe831d45fcb1da870b27310b1bea9ddd60cd48abc0d0204934b5",
+                "874e1ecf7c28d472b65cec636fce7aad5d7ed9da2d20e34816d623f383b962af",
+                "72db185c70b99b8508560ee8d2a25eedf9f53302fb9614e06e4727ac949cc634",
+                "fad59e8fd78e755d831e918ceb620eccdab811f4f91059a8b966943642c4f57c",
+                "38f81ee13f72bdecaff86d1a195d48c8bed4144d3c9e7899a8ed8a1b3c097233",
+                "3fc5a54cab0d2fb701e2b017323ca8666943ce456a76f1278d661c2d6d7bc3da",
+                "27c69f6a3d8636abb96b636557c5ec354b23e3a037b994d3b8236848008ed091",
+                "8f8e5ad2d0646b17beff413ddce58b4370f11aff5c0eb2c3f2844e93318c501e",
+                "4fe47ca92204fdcbe565ad8f8e68630dbd7672cae27f2e9f0b4413cc9cda108c",
+                "4ea37eaea247c2b3cf4822d1ffdcda200a59710cbc1042ba52c5a4e33b46ea9d",
+                "fc78879a26028361788745e951ffb256a34c9f9f270a5a024c8bda4b436ade23",
+                "68da2b669279852b9ac2f4b2b2248e792a385dbaf693f3946ac50f35e0517c90",
+                "6317371ef215af7ba544e4c772914f86f7a76c8e51466ecd4f5deceb3157f370",
+                "bf7b49108fcc3446e9eb68895c01bc155eaede8c9097703af87596bd1ec46f47",
+                "f1b157013739f5a20bc5e003a15aec886a876d3dcfac4427c0fd1b7b08e78bee"
+              ],
+              "lossless_sha256": "b4c8ce4ae132d3098d407cc3dd42e36725b28b5cf90bc75b4853f75b2ff1d7b4",
+              "workflow_sha256": "963a975e7b2e5f47aa8aae5c98c5c89b99ee48f0feec64a0c9eec421ae0af880",
+              "collected_unix": 1790248521.919634
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "imagegen_key_pose",
+                "file": "antlerloom_move_stride.png",
+                "source_sha256": "7d86534fa38148b4bfd118ff10f687c91125867029225dc15ab8cff03f600258",
+                "placement_scale": 0.2,
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/middle_guide.png",
+                "sha256": "a9c87c727c64bb1147a7036bd31a86908bedca80fc2837f24759a16248f41e08",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/last_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/move_v2/matte.json"
+          },
+          "attack": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/prompt.txt",
+            "prompt_sha256": "79e08c7f476c40ec0b697738d4a1537f94d840f4d81036da4e833bd1c70c6e9c",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/workflow_api.json",
+            "workflow_sha256": "8e4beecbe57a1a5beba92753f4458a16f4053179ff171da2e1d64265eac32e76",
+            "submission": {
+              "prompt_id": "0986fde8-30c2-4746-b633-3d54c791b142",
+              "number": 14,
+              "node_errors": {},
+              "started_unix": 1790248553.5382638,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide (4).png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/original_lossless.mkv",
+            "original_sha256": "538042badb7da658bcb3b88b254c450af7f2af1e86637858260551c8e79a14a1",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "64d13bc411e0932b9e1ca0b5d4176e17ce14098ef3bdbeedcf3bce7c9d9f7c66",
+                "e7e2b8950308924e0cf8987bc4120c417d444e109d147ee6136f008c09c30919",
+                "5855c0b77b0eb74c3ebeebe0c85038b2a7ac4593d5bad1692b9e616e09302d14",
+                "6ff793a37f3dd536b079a9c70a53064ddad0dddb2e14e16a7454846d8eca46d4",
+                "57109ec4bee09a6ebb840dc6b99d982664a2324f6afca5502af776d16f40ee4a",
+                "d534594e8eac1e02b6180196ab9b3ed88a1cf69f2dc97a4981d90d21ff67198c",
+                "2f84af339d6956192ec0c22c728f17d15e72eaeb79b287654ae2171f80c382a6",
+                "edcdabc79ecb1115ac07c88616c59d449a52c6feda769418119ab6f0172ab999",
+                "be367eec00ff6ab80b70bec14e43acfbc57f866fc94918e02a55cf756fdfe213",
+                "752a7d3a1191ee3aca33b0add930a6c2733ede9155d5c1ee6dcc4fc3acbbda21",
+                "acd8d8155304f84fdcbd9b3c932f2714822360a3a4e0631023a613aecf0700e9",
+                "648c59eef7244f54e1f964be1bd2283f28aecb4333e24072b24273731822cc98",
+                "09a7c1b57fb181cd5d7f63bac9c1e15764b093cd91cb2c9af93d5c62a3b5213e",
+                "ceae4f54baf7f6a6f31b15a48a5e56f0620fc013b762c8de0795c024857c39aa",
+                "083a81e720825cc90a7e35fc73794ebfd60c438020d1877e0a08a0a27db95d70",
+                "4e1f3dc4a847f408a1bae8da5d86bc57dda2d53837de4a7a327e7c2104caf3ca",
+                "fc4469e42575f74cdd759149cb541ca62b45f08c6bd07f29b976ddf8c3d99d72",
+                "29a3743a6b1cf3e11e51051c9987451814575ef04b7550df27d8fc54042d49ed",
+                "7b2703b88e0e64c76d5b32bac2b2b2f2c937149168714593fa59f4c378f44322",
+                "8b7ae3910795b44493593ac41ccac9964866076565f1ada3cd3a7311dfd2eaa9",
+                "c23f72e97dd5d61cafe578dd07aebd2e87938a6a66bc4177dda9294381daa130",
+                "9981587dee49417df0da4882e114869d9f796d3dc0d870eac92a36f061d85caa",
+                "702c006ebfff9c7f4369fee88627784054d234dc48261fbba1e7c8ae716c2b46",
+                "cbf8063a7e47bbeef76ca14be5ed8eb7407a283f5b25289f5398097123a31447",
+                "f6c41bfa6a82a2a1747c4635a9f73bf7f9d5a22999ae51af70942f333990e936",
+                "8692486a5d99b1c2ea24ea35e871746f06b50040fade6dc19e5032a51d4dd325",
+                "bbb35f390f6172b364fcd71ba378ad02d8cd097240a573955a9d3a15143c29da",
+                "95f5b39d2f28d06b063da77be6c975790e486b6f3efefbe45829bd78d9488cef",
+                "a792fccdadab5ee99438c803ffefc7e08fa1765718e5f1e2da4071817c7c1e9c",
+                "7679cae27fa7f256745ce381539518767b019024c0652150d73cb5db4f5d7391",
+                "9589886c4a7485204f635653168c8e30853949478ae12650982e36a8a7462a07",
+                "4cb79ed6b015c856133b2ec976054a5fd21acab4dff1c9e84bd677481f9f182b",
+                "ff0691e214a6b2a2f8ff725ab6950c452bf3659d5ddbb616e95cb0940cb53fb3",
+                "3c07a804de07a63ad887e81cd7996915b5168000adbe85cca0ad41b741d28b21",
+                "3097dfee890693db6d378c55e644a79874fe902bccf2ae4300b6836a01bf3a9b",
+                "85851ac5d1ed0495cf2d72d4053f491c588deaafe9e38d685f9eab17c4965640",
+                "11f34d05e052bf6fb85c777066e662ea682bb4fd4f66952707cd9859d920942a",
+                "ea5cf5aabc6fae00a352db38cfcdc08220630591fa1ac8ffc8612d20b85c812b",
+                "e840c9fc0efacbee81311a77bcc180bdbefcd982f886d161836e55c3fdd62162",
+                "1acc35f8ebf8498bc19567167a89ac307618e1e6c29a0990fe75b2118c5dcf86",
+                "9e607a55a6bc3b3a2e3db80cd37c521a3373370fe18b497be18d84f926672cfe",
+                "9e42fe106c064132a5a5e28637c4d3a594b80da6e626b5a9869ba6dad6a206f9",
+                "d9f632653b701b338037f4eeaf15951f6b5af30bb6d845d0875ae24f5090a860",
+                "0a7422dd3f1c66834371e97354cdde35987dda843a94f528e437160727c0bda3",
+                "464bbff1b7920dd2abe5eaa16c730309fa4daf99a8f41920414b66b12c34cf75",
+                "d55ccc6c4610a7714758a03208f7fd6d6086df3d343f4df984078edcaf2a73be",
+                "769e84af8a378429864115dc322fb5a6d86f6e3946adffd93f3f5e25c9c2ec46",
+                "8158f24f780ca9d8f51c83ded0f42cb13997b7f7f0fd3338a2fe44781edbb4e7",
+                "18f10f9763fcee2e12b8d30d4deeb025314ee54821eac84d6c39ee4657ad7bef",
+                "2bc0820e275f96cfb7a2b4fa11d49d20c4ef16f2b3b08225b01673ab94275340",
+                "bf8492a4d5a1cb4fd64df3ba8181d8873e8a38326d099c3d578f95f5b5c86aa6",
+                "f2e16d221ac418713466b48920c5c17cb1ec0fb811f6d6f0b7059e675726856b",
+                "595c2315284b4ead62af26f67c6bf3718853582b317c68161ba586145a1c1077",
+                "0c55690a8849de371b3c9be120b0055d395c24e052d1282b2fb752b196e9386f",
+                "8cd5accd653765a1aa21905a8af7151df6da9af430b8fa46835e73c7634c0947",
+                "dcbc592718d8f10a5c5bf343f234ca60fabeb201d90629f7d9b5abac9e2aaeb9",
+                "d4e9a23df02f3664f9ee26b9d66e777d5ab2b7a4e4b59b2884d78fe868c83573",
+                "afa548e223037fbaa296cbe7f5a3d62f093c3fc39217e5ab542ee3b54e3206bb",
+                "34880ff5e6976a4186de16ace8ee82f4e96b4cdd8e16d480d92b1c6a223b31e2",
+                "67158c3c6f4a3a6151af9182e424e57d09f74f1c0f29a4be3bc7c231481812e9",
+                "cc77d2623f375419124d117d2c54aa3d8d442d5949831f9a3d0753814c66261a",
+                "f982dc4eb2e3a84d302ab011ee9e93edb11360ecc8c84268b1a8f34749915e08",
+                "dcd4da9455dabcbcd31cbb60967e1512b5138527d8dba736be89bebbf8ae3189",
+                "d76133bbec5fd601a16a0591912446c33d11ca0238520c301785dba75d370fb1",
+                "24e2a959935a731b3bbaf2dc2149226d481878df66e930dc9feb36d5d122dbf4",
+                "60642764451ab6cb3260be4bf6a40ddcf2c33e1bcbc9a0cc4cf472d89cddae7b",
+                "82059d946cb1b59aa5a277edef03778fc3241aace74531f28c5e3e6592e7a5be",
+                "b28531018ec2966da05ec14671b867211c2f1a8a3e809d82356e1a3e049dfdf3",
+                "cb9d45082f2f6555f08785d1f0b35e521f2338809162237d7f3a4e36d7ec7570",
+                "2c79e2458482eb5dd96c35329bb19b512a6db9ef3bfe062c94fa7fd69fc80188",
+                "65888e03bb426214947151ed9641da5d2fc4c612dccefcedd3790f4c8409ab88",
+                "52cc4eeeff04a4d2ba5df4ed5490125d3670d2d6d4d0038cba08bdc0d2ccdec7",
+                "cd7429eb5f2f76cb91b13c85bc1a45ccf56b94788f0e2ec66e578c56ba6c08ad",
+                "cfd77964bdbc0269dad81416cb25a7c619d80d89bf7ee24bd6ceb2847344f1be",
+                "578c02d7e91c50dd1a95540b7d882b1c04070a61b132371152909aaa2917124e",
+                "a84cad2b4c8732f43bf51346e59186e947171b3c03242d82d2de75325c4e98f2",
+                "2a1d1e83d588e88cc86e6629161817146ec42a3214d8a440871a597804202133",
+                "e9aacb3bffacc74695bf5dd8e02c16175afef4afde7905a06e79b91460de5177",
+                "e3919e49dd10869f48bc1a84ea6715dce202b5f8c12ad92f8b68c52034654b04",
+                "e27279ce0912c65d731f8d2e08999aea00cbc5f5e67ae18346ce0e268cf931bf",
+                "894b3c7cddcd413f64b3fe30a639358eaa7ad6d10e1673ad978d0ff283cde9c2",
+                "67e823c7eb527fc6b2b1a58eded2e717510b1172f43dabee6aa3aaec98b6b9bd",
+                "d8143f0779b89da2e1c0fc90fdcf8398a9f0a11c0b719f283e89902c0c232355",
+                "af27d1e0ffcdd8bb1e656e86ad9df54208fddfb5f174dfb7002912c6547971b2",
+                "fbf897b165a72f2d7fdd111c5871e34664bcb7edb70e6c8275f71f1347c7e6e1",
+                "53375f4efdf261bfb3d031bd1a207b9bdf218b1adb136e944d4980da0735729e",
+                "86ce1990be902e9b0a36155be5d52a85fe381e216b1ec46da29c9fc35e6fc728",
+                "0e16826be3d42ec674c299d8e0796b3e79c5aa2a097c922ff5fa3eeeeff90614",
+                "9cc4ae634e6241f6ddd85bb2db80cf2893c3940ecff74656112ce8fc780963c6",
+                "f7358ee95c2abb4471af4fd78663af44be335cfda274b6befc66caec76991ce2",
+                "59b928838352e0d9d2bb194bc935ea30794ab2aa54ef81ed4ef9a7762c89376f",
+                "eaac64dc1d3dd8413ae4b4ab591124ae4494733a7f10382f9015d2230471d0d4",
+                "8d24e53b1284d3901543710384b50ee654eee827fd98205a0ac54ed4090b95c1",
+                "9edd47b8a644bb7d6846977983cb650e78a76d0ecb7ad04e7e1ebd72c5b13d73",
+                "1febd80b3bbae461e3e24b57267928b5bc98e78710c4618d6e0a0cfa50d9b5ab",
+                "4db6572c479416bd47de9cb0b2504090bac652e63056e54297cf975c1c207a00",
+                "4a009509a777fc07d15e009ded096622625fdb2fed6643a640b94f17198178c4",
+                "a3b9f0beddbb1fb4ad6dc73acc83d078ea52bcf022cc5e511d30dde0307093dc",
+                "69b9e39c7aeb8a2fe8dcebf08d203aeb893027e0ac6e78fd312c6cedc1f46913",
+                "b1aa2b70fda29cf2a7ba935b9f06fe50f037647cacca58b768e4ec1baf733f26",
+                "9818a69952471ef5bce3c99918388774fc0b25bb7d7685e2b7a2eb1f6a8d0c42",
+                "cf0ce5c40e3fa85d9ec594f19fb8b769b62c2ca03f4c052e556ab738803be8d1",
+                "4de822c44aa78ab6bb76ee60e6ded964e59b237b7574bf25aa8f60797003bc43",
+                "b79a7259d4231398e60e7ed8f38b0bb9b648fdb53de1ae03c44134aceb8817e8",
+                "4c893ad836e4001ad3c000dbff6cc9c612eb2e88d8bd534a828224435a4a40dd",
+                "8042a2f8f5ade283606a50ade7193ab6c3a07c8886d03e34057cd1cd96fa10c1",
+                "2ab1b8c3fbe0f1e2af368b02833151089603ba33637f9a53f460c9916999a880",
+                "6e56b118b29b138f408804c8bfccd5e180a894cc99b7dc19210cea93ffeb5181",
+                "e92bb77bf4691bfcbf585583155b76f108dea1261647e1a5ded85da7c6c0caa9",
+                "ad0caf0bde66ebea63c5c1974e62726b74f7d0847deedde3dbed0658def9fb42",
+                "8cc0b2d82a4b51a3c1feaf579062a2fa106183abda0cdff803a79d09d44eb9dc",
+                "f99dab018a552ddf1d4869e89dfe6c9d7977e18d8940f33e9ab117bcfceedf66",
+                "c762f67ec126692cea676f4bd96fd9e593b5bb6bb4e370c1149a462fc110c0dc",
+                "8019e664567c47c2bfda73b568f1fbf069d33e1d7b69ddab2248dd1abf778909",
+                "de78b8a5d34ef65456caa9bd8cc59a64dbc6d9e3e5271dacb3eec415329f0fdf",
+                "a7af01eef9f66bdb942485e5ed6177e7ec0c92909a00bb1fed1d2f3c82f28d3b",
+                "d10374e8e4ea0540a0de44905a4b7f79a24b9cf6a0dcfd4904d592fa06ae9d1b",
+                "aee328346a7af40043b26092aa86755d5591ff89f73b5669f4fe947a28b87994",
+                "9bf48fbc5574d1b1763c8ea3578fea3b95fd4ad1d4c66740c010b80ea07cf538",
+                "11d459df7ebc30a7a47db71f42325bdd0ad2f88d3775f76002bb14660c1d2a6e",
+                "5129d825e8db313516ef33e836361fb9a2fdd06042ebf0e2221a2189279abead",
+                "1eed179007134fbb5eb53e4c7ce79e2d92f7bab10d6d2a85a12183131617fb92",
+                "6b78e78d6b87d78fbf54045b12dca59e9f63637d243bdd4457506d2ec86e8344",
+                "52519e9dce7bcfdf258658350c3216014e838beeba915ee6a7c5ea2da8b00d54"
+              ],
+              "lossless_sha256": "538042badb7da658bcb3b88b254c450af7f2af1e86637858260551c8e79a14a1",
+              "workflow_sha256": "8e4beecbe57a1a5beba92753f4458a16f4053179ff171da2e1d64265eac32e76",
+              "collected_unix": 1790248702.815956
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+                "frame": "attack_release",
+                "rect": [
+                  11,
+                  208,
+                  655,
+                  596
+                ],
+                "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  318.5,
+                  595
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/middle_guide.png",
+                "sha256": "90d7e59469278e8169f5628377a3f57fb0d94fea324f35554f751602739813b8",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/last_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/attack_v2/matte.json"
+          },
+          "hit": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/prompt.txt",
+            "prompt_sha256": "5355716833e58d2c6d79e3fcaf2a911201b32f0ac5d6e3b1184da49100d4ef11",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/workflow_api.json",
+            "workflow_sha256": "d091d9ffae761a8d1dae778383bc2527263772a6dbb80241d53b17ef0f6df23f",
+            "submission": {
+              "prompt_id": "bb1e838c-e0e0-4f10-b411-18f26467a916",
+              "number": 16,
+              "node_errors": {},
+              "started_unix": 1790249193.373137,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide (2).png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/original_lossless.mkv",
+            "original_sha256": "aada7a899b1b1fb7aaa36da6aee44765de1bc588adffead8197571e2fe027c43",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "1adcdf62fd2a0d62a426841b6c0786097728ab784f8a9678e74e9e980eb4d2db",
+                "eb4db87ae35690f05086edb0f23c57140316ca8995b3baa998911b6c5ea0bce9",
+                "3c332e768f2028a778be34e2edb4e9cb365f6040f27750b86e5e9f719bf3f1eb",
+                "626d45ad733014e4eda687be52b834d0ec8a426d76d65d783712cb153c43a5cc",
+                "c6130ccfe20110162eb43dae5fe3b786b8500538ca2b0ea5aab67bfdb1e071d8",
+                "2fa095dd5701fc968bd170adb06c7fac05b6216b4b2ddb0a7c33f2055028d4a1",
+                "d99bfccb01c340c1fa51efb23b50e11da4a76b2b76fbc5d1cdfa2838adab88b5",
+                "29820ed8e8ca87ecf92e31fc32fc79320aefcaf6118802c2e7ca85aea53e08da",
+                "8a38a5b75c3e36a984c720c03b009523552389fddcbc5b4bafedffcddfc107fe",
+                "ea3c2fcb3f0b30d658fb65ea561b646b57730705b73c41fe7dc7ccfb642f559f",
+                "61a36644f9c5b0d2fdd0189d594ec83dd12bd74dfc60c406586071846f3327b9",
+                "2127d6fa9cc89cdb258b1a944e9c6ce0c9673bf1a2a5b7c26e10c722a6c3577c",
+                "f9dfb2bbe5c22d4d2b219d276aaddf704520b194b6de50071d934f1a05e1b2d3",
+                "3a71dcd219f0da6844a0631d24d3977c5d1ebfdf0a4b2d63989cb4e3b25d1271",
+                "8a7ab32667787914309dd1a1d8d37ceeab87d5b4acb42cb92592da0c3adffd2a",
+                "7f90e90732fcd2a892920a049f7519c59814c89de0f67fcdd86c81357cb623f8",
+                "a14284c3c66934247e8768b2385d41eae50ddec129e6e05af98f962b903b78a2",
+                "711625498458dbc140fd991535b7a5e0cb97cf0e5fba259f60be1c8aae789fa1",
+                "fc58f9fc7787f9ea0480f2ca21c7d600221635a0daffe3679c024b577c51bd18",
+                "4d81f923340fdcd2533e7ee3cdd99469ad86841ce53055c036e59b05a8fc025e",
+                "ae71e8816bbb8760ce3d64d6dd55bca1fb9848b725de10b9242fbdb8ffbaffe4",
+                "586d12ce61792fefdf6dd517c4ada5eb6cdd66df507cddaf6be15f0f96c75864",
+                "2751bed4add75c4ef6e20b17b8d39733429dbd6570c17fdda6e5b73fec863fd9",
+                "828809302667ab52870965f0fbb80e4ec4824b7d74edcabd2e7922cbe49951a7",
+                "1fa8555111b98b721fd521b4f316bcda495a2d0b3f591b785783f15684d8be48",
+                "c33b6c5cd81470ad294c8be057da207b1eef5ab16cb3e8247c7fc98c240a1b47",
+                "316d929bbce4e3c978426fbb8e5e37046b0966c23234418a0e1012e82570de9a",
+                "29fd96d7bbcc17c6d7029f82c805de8190741566d3651397f7bb3614af51626c",
+                "8b3df6e18e84f814b6ef59060342ae00ccaf8254613fd95381cf06118121ef34",
+                "48508defc4829355e25bd9a3fa417871a0eb5c31dd247580bea61890421b9274",
+                "9750ddbc05bd1f3bb8989b3391a8b1e2adbe47b78136d126f1c679395a1026de",
+                "5bdf323254d5b3262bc90aa3f98a3c40a7770afb60264d71ac53a2e0ed56e683",
+                "7996330ed47f24245aa4988209827d970a3bc18b0aa6e59462c6b05cc82d3f5a",
+                "199277c751d03924b219af8b764bd2e81750dc7e04cb9ac680947a18c907543f",
+                "58a351558631819c763c6d9d44297c18b3e87f20766fb90d0688742340e22ae2",
+                "c1733bbec2d8ffe625a03067fce0cc87a7a511d817d81c2884a4e50b5b9815d0",
+                "88b36ecfd1e4dc6ecd54da6b7c3ac44d5d9d0735bbf96580965b7b202ac848b2",
+                "b8b42383685baf1eeff570084b07275169c3f2bd95d70f18a9330298824c63d2",
+                "2d99d9e5ff798c153a2f592dc4b6fe4c13b7941af569712c674d09223912b940",
+                "c991a97cd59e65b15d41ffa9c475907613ec6a8f741657c710a97739adf610e0",
+                "9ff8a4f8ef0b0b98c47243548c54fb5cebb230469d2577531c6ebcd8ac2edc00",
+                "22f27aefc1b9840ae910b34ee5e1f4e363118c9221b431eb1d8cee43619e1dc4",
+                "1f1e63c0edbc280e50ec1b760f0ed00d080a283fb43fa408885f50a692a1402a",
+                "41f0cf9c94fdbc65193f432fd1f3c5c0d30bef972e618ffc03db49f6ce06cb55",
+                "b225218226a3402f406fc456ae85e347b932f679ba4710a825a2ac4bae491112",
+                "e5744a7a5d74bfa6eb442f52313310085c6377fec4c2150c46ac6e49c1142ee8",
+                "873db0ff7f40482d4bf8f23158c890be1c8a4f4dc167d7a909fa169b90678fda",
+                "e772d72a921d389404efd9fc70854c10fca63e07aa09ecf9650b8c4bae889ceb",
+                "f216642d5634a0af4762e36adefa9840531e4c8f1dd22a5375aa185c4a41a5fe",
+                "fdf168b743b6d77890acf466a54d0de5539c5a700fe9e5bd6034b12397c5789c",
+                "68eea0a4c009da853f86bcd06a631da1ebe95a0eac6e9f4dc5027a67cf173d03",
+                "f0e451a62f8681bfeeca7882f795369ef931261319b79bad5777c8e2f9fa2bbb",
+                "998cdf930f0c2d8a93aa353f9bc9cba346ef409c7f250ccfbb9027705db5c206",
+                "454366c38e03d5918348fd24bd6524fdc181d6cde6ec8f085a691f952b79c8f7",
+                "a27fa05cc4058836cea02ee961273588a6c7c118fdd829906a5511d38393f0af",
+                "6d7651eb5d74340d86913340b513d777f65d574e4e61ad27727c6beaca2327b9",
+                "a2953ee312b64d2c78056caaa8f44a2ef65fb999a88ebe9cab737b84576bb46d",
+                "38c6da917c905c462f1e277dbd0cc9101ae2a875e7991297f4570a15cbfed749",
+                "c4a600d87e804a123822793bbb0dda425d24c2dc765879ab476941e486f9eb97",
+                "ab72ec226fa55dd7856196ab06c4f81678537b04cf166deed32220a0fd605c89",
+                "a4185b99f441dc79b8d7b2ce3aeb060e105660c2b7f00c268696b9911aa9c9d4",
+                "4799210cf1e7c56af28c13feb13f6ce560a2e7eada2d5421d984ea7ac435f412",
+                "43a4ff599c67e8af25c454a30d2db431c6a382fcf875826ebb052b68d9a54eee",
+                "b4a326cdc5f513d974ac9561f7d838b2fa17da35bc3985c241295ef9ab2a787c",
+                "2ced6a39a30a6252927480355a701841815474187b2664a96fbb047444969344",
+                "96044ea7585d5453469d1c2161b90ccc6e29a1a35d83a56f2fe2ecf9836c63da",
+                "a47a4557d0ed1f09eea433886ae194eb2ad24fa571f82ec65ad656fe49d53e1f",
+                "4078254255c534248fea37cd0ccb87078dbc269a0a457167672ba5f50e092b64",
+                "3dc5fce292c95baa89929c7d75e35df08b04ff6dc545404f7e514dd8eb27e435",
+                "457915a15d37aa10bc04a16128639a5ccaebe5cd434ae95a17adc96b594b9319",
+                "66ce10c6c30bfa4febd80d93a58d078d337f8d21b864e57d5a2c34428aa3a16d",
+                "b8b6ed389443392c61bba798008750247454d80a13a8df3b48737fe4ed54b273",
+                "e00ab6e458fb875cab838179ae8996291825862272da2c3e9e7f169a1327b7d3",
+                "f0ed68f6d29f4e71e0a72d0025bbdb6432cf8d011b1ca4cc43977836e7722dbe",
+                "f5b9f0e513f1357759af6b5ea6080b45a8f1547534df09c279439901ba87e1f0",
+                "2f9c2263620c22f3a5829222a61dc57667f1c6cf0b344180e08c049e4bab9f7c",
+                "1248a892fc485af5fdba3d96f570c39b7ef689e22b6c123fcd241f83ee8db157",
+                "d1831125ff42cb5d10a10bfbf5c9abab5dea23b5e4882423039f24279681bc40",
+                "7ef0d09f46cdd86b97f6f220687f6c542d1411d9809bdd50a35a6d8d42e0540f",
+                "4417316e82f5f53764e8c9d3463fe0783e3e64d5909441dbb76ead096675d134",
+                "94996e20b0771bb8a7a781caeccb15436370e37bac8b31144df119eebd9eef82",
+                "f23c8a4266331645c76d3131eb2f8419a963d2216ae143d738be3d35f40b964a",
+                "04035cc42b5b21d8516cdb855e4e21033e3ebc01a1f856729790b0ddd81858a2",
+                "bf51158d70a8f1571497a770facb0f32a18e8fcb78a28905f512c48f59f244af",
+                "0f205b83f47c60677c9e70fc5f60d7637bbb6da328b2501d11755ff18baf598f",
+                "c93ce907ba4be34b931c08c47d17a9e56e36bf0f9ddb81c4b0bd56ba5c4ef482",
+                "7b9bcc85a48638ed72a0d3732a710427f5c539af6fa1acd5a081ec0782e47b6a",
+                "2e73ee27ff9698d37927fe4fcdc284c1fd6e923c376a0a8c2cab5a7488830a37",
+                "6993f7bc4ed50248db361095f6422b3264d0656c26ee4f2b3f29a4aae46001f8",
+                "0f4155b53e8201d1de0b5faa447030be286f9927de27acfb42935c47f6aebd93",
+                "cd1d51954c2554fe5e51825a6562520024d2a36c5348b17e33ed8dc131dfc97f",
+                "df6676d148b096d9fea784e4539151ebb4ec41874a697f8b08218bcd9a0e7d70",
+                "c79e9f35f7f69265d117ac354bc04c13c3dfeda12c9557c30ca8d9b246ef5a18",
+                "3190a00a40712377cd1e55a97e2b3fc2966e6cbb22f4712175a9838b4a41ab12",
+                "69f1d8223fbeace628d3553a0cb5ba73cbede24d069014c3f228dcced1e80625",
+                "8b2a626eceab14bcdb8961ee5a4ec29c6fdbb658d4f93ab115e93e42f3759e42",
+                "21a3a17d080abfe79843d9b689eaaf3a6710f3d807c81d8af3313fc16045f7a4",
+                "cc3c0b1ac87b07019401c54339e4c99c2dcf6c5b228747509ed8ba4f5088b1c4",
+                "67709ef09bcf84c064e9f45ecbe1a8a4b93d5c9077b6ddc879dcd8538b9b34ff",
+                "8ea610e98219ce2b180e2b3542f5213589820f221bb3d374e192844f284e4bda",
+                "7b2cfe530ab4069f2dba5101c90d85d5506c74460b0385dfd3eaa962891afb87",
+                "048b59af2f01d9d17df826a87a761b31933c1e5f7f8326af5d69b69db6dc43b2",
+                "d2ba946aff249fe24a1a855140d3240c2f8a9f16fd5946d3e1cc92007c3630ca",
+                "955f04e75d894af60970ca57aa7db71217817b7b0b81b1b23de0b97da0dfec98",
+                "381698ecb5d29f179b253d0acc8bcecf709efd5f18023a037c8bd5a43d1dedec",
+                "98c7275d6e2393e21639f4c19cd96acf5debc74c25765094be1408521b0f27c1",
+                "c01ddbb7af345b6ded0398596a303ec9db23a69a69862278d6646f229dfb8261",
+                "febf633fb2fb568deb92a5c699c4cbb912e8c1438a6c0a0f7952a5b1eae3e1cd",
+                "205a38d7fce23fbcad6053ad61855e9d431dd7232510148e43719b8bb654f184",
+                "244323450ba44c745609f7c1c6e847c02485f95d612693764fb52c0e79221b20",
+                "330072efdc7f30d8c54b4d96ecc4b25a29b5e4fb0c16c7c9b99025218032dd0c",
+                "282b1a0a2107b961e9480c0ad6335147b41b997fe8190b990064b8f9b8d9e052",
+                "f15c3dac6356296d1b4552bcf84c2c269ab36f5c2312f545531ed96fbf8092df",
+                "8999bb4da8826b61e3303f3c2534930499328997203f65cef17d0094f49f5e4d",
+                "816459a15a165455c34cb72c6d0cd114f57edd5696bce38e07180aad7b5d1435",
+                "ff75d1942b56b19f6ef2abdb79ecd83e817581e3342445237525d04efe282f7b",
+                "f51fb3348fc902139296e012689a15d163073d4a7022f5124320d523d743e664",
+                "376c9b297046d0103d30c9a76183d46b8a4ce825e627575f1b5352b6b34423c9",
+                "0ef916c6b44feebef611ef69fff4d09ffb841acebd03a6519a1e1d026c1e9d0b",
+                "263504f3b8b925c0f8fc5dba5dc37932922e8ac0493555890d6e138188110115",
+                "9a330d05e8a2fa5578f115b85c1b673d7547f146088a797e761b96dd715a80d5",
+                "761b010a6964e5ed91b1e2e45a45875d859a6971ebfcaa46129e8362051ea8ff",
+                "1a19d6bcce06db71dd6ecaf377788ba8a6a34f473ecee1409cf9b7481b4243fb",
+                "4ffa48945283238b54b129dbd255b8e8cb101e225ad8f381bd639afe60f704b0"
+              ],
+              "lossless_sha256": "aada7a899b1b1fb7aaa36da6aee44765de1bc588adffead8197571e2fe027c43",
+              "workflow_sha256": "d091d9ffae761a8d1dae778383bc2527263772a6dbb80241d53b17ef0f6df23f",
+              "collected_unix": 1790249326.8623276
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+                "frame": "hit_recoil",
+                "rect": [
+                  123,
+                  12,
+                  582,
+                  547
+                ],
+                "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  276.5,
+                  546
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/middle_guide.png",
+                "sha256": "65cb15fb08936a7f1235bd90cb3d83e9d20b463d497896f46623d1b6773904b0",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/last_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/hit_v2/matte.json"
+          },
+          "defend": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/prompt.txt",
+            "prompt_sha256": "194566f0d859ef63e8a360c3da40328b9d68ab2d28169c12adcc01b52bd42b61",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/workflow_api.json",
+            "workflow_sha256": "182ab8befa0e2b8fc83ecef48bde779bab427d821dba3838b2b120ae160bd5be",
+            "submission": {
+              "prompt_id": "4b783790-25d7-4e44-a240-deeabe65c4cf",
+              "number": 15,
+              "node_errors": {},
+              "started_unix": 1790248912.804329,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide (5).png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide (1).png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/original_lossless.mkv",
+            "original_sha256": "77b82edae17ccc0d33b27d933ad8377d6978e6e858d179e834e6c5ea5f0e85bf",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "20e965ac0c1d8c9af22e30e7676c128c57f41b74be3bb7a5334a70947d39f220",
+                "3c1bb721e5f6e90a9bc7004b0bda8e2478c28b5f09abbdf7bb2d95dbf4d71235",
+                "955a86c1571632d740a382277dcba6e2d5bb8d7ea49df5afb0b75f3948fe7908",
+                "92f3d7c7ca7d568146b6e486f9067413ed58f429aab483b8af5d50bcd304c8dd",
+                "51124713a0328f1544b63e74a0e2eec72fdb201c68ceb687a7a3d612c230d747",
+                "dc75809dea8bf188d9c32749c4463a20e9cd7da3f9b0700298fb0600e6c45a3a",
+                "0e647be75f7eff638a65caebf1dab6d385421496c050a9ecc0d8efc69cc92efc",
+                "6f2b259e96d382fd05dee7e0393a08a8c1fc5d2c635c220e3bdcf4a364697bdf",
+                "f432e8a06a90a9cc03f920b54529511f76a72ce6e5c8a0aae9a6979185fd4a23",
+                "6a3f00bee5b370956912e3ada9f65d1d9e725cc9b67655556af30650bfbf5f3f",
+                "9a6c0d4996ebad27b377e2110e761d34d3460ab71570403f9e7c7d18d60d47d5",
+                "e1074f66ba4c83cac736a48b3137efe7e6905172696a24fea5422f9819ba348f",
+                "43ff4e80ae65f6b906c638fcb2f822357cb21cb02efa7e5210f94a7267ddafba",
+                "7039d312e6f63811a39decdc1b67ddaff5b642358a936ba6c0ac7579f7c88dd3",
+                "c0a07991ce3cd75a8550f34de2c758de1c00e8d86e26e66a3fbcf3bbb7dbf0b4",
+                "f66366294d1369a95c8fd7f6ea3902a5805d4113f41a410cbaab8358d9c6a3f8",
+                "e63c9a97915c0acdd205cc641097f206befac481eebadb08fc45f7b8e2b8c350",
+                "978187c223504deb70f8b4c9de1a140027f8f3c14a06bb32d19bd883c504ded4",
+                "aa0b5e6523095ef957b0b912f3aa554604805a5f1d4429882d0085971f43b8a3",
+                "a67fb673267862bf7adc7f7b0e01147e6a815bd84c768e7c714db73033a43c7a",
+                "e176fafd5ac006247a19fcd7abb3cf8f67f0c96aeb0b105f335226067131db64",
+                "3a94832a6b41522eca7a28d419e2ab4aaba0b2f659dfd353a83ee9bd8b6eb760",
+                "2f7a71cac469ee94f779e1949265dabb55514a96bc7bd9fb6aba94c475cac6e3",
+                "7f98a4d4fef47bd2db27828cc11f21fb1e030dc3a20673148542d60206083994",
+                "71de1618ca7f5130d5f9963e1b01d7df963df9d7b2503595c132b94d9401b684",
+                "b4e9b1843cc6eb6727dff1b021f4b623e6f0c36d7ac3bea791e20ad48f74a67c",
+                "92bede27c2157fa42ec34faea942554652d7155cd1ffd2500fe9f01708bb6f1a",
+                "8d5eb9dd0d7e74ff166dfaa4dd4c9f1c3622b4a5e5ff9a73ee9020e7dfc2f1e8",
+                "682f832b24a4b0dc01498ca4698052e36e23d82a2b9176908503e27e55250b2d",
+                "6969e43c16f735627047c80bda6843209a04476aae0f6e900ca8834f4f55baf9",
+                "f55da957b96dd603993ba8b4e345ebf66dd96e40cbd64de9c661bb55353bc49a",
+                "c7f88434a83f4b97e387e3213e423c74a7f1f9531454caed32768968264d5691",
+                "cda121997a569e273f7b0f3310a6f94c72b1540902e53ee5a18e2e6cf21fc591",
+                "0a0e652c6e60519b0ee25a349c9957f2b3bbd01eaa509845e562365415793fc0",
+                "d2256da68c29dd7b8a5755891ac03b40de38cfa69780375b6f0b8ed00ffcf0b6",
+                "55af52bfec49d1ac37f4bb31aeb95dc9b7feff1112dcf30034294e6cf9a6dd42",
+                "eecb35171f290949568ba19ddae0779add0542b7226b0bbc67b5b3cc8cc04135",
+                "2b8286db0c982c3d0200aa5ade53d2c4e90f43c14654848e317c7b87a1d01aad",
+                "b16242d07f4fceb9d18c461d1f853c231afadba4d223a2f34868125b990aca2b",
+                "6bee810d6fce70c66d96158747381bc804eb07805e5c39168a3c6113a3800f79",
+                "b80fc57a8ec74345c45e6991992d20f23fdc7ddb1bf50ff4358108bcfcfee4a2",
+                "c4ee1eda97b9639bae3fffea132c99d408c141c668f4b69bc14e680291cbc178",
+                "0cb870e7ac920cf58527d7466edb1792870f8b3a97feab26f17eaf161c21e24a",
+                "b13e5c6181a61fe7e3e3ac4b5d779306f5eb4ce5bbe33db1c0c46e2e3c00524b",
+                "0fcc6b0cacde075236d3bb4e4dc2f32d001b969de182ba4778c38b4dccc6c576",
+                "96b6041a0a3edab113c14e9927991c479a029cb2540a38bf2913bd1008249c87",
+                "49aa0034ab1848363afb008a9ce023fc371d79aece4fe033093a7d48d0b83978",
+                "18e1e39b37bb68a48b870370da201325eedc9f87d7e1682471d3df3cdf265d7c",
+                "f73590171a5428f75c1a148659a516c1faf96efe1aaa55ff39481dbc0afa2f6b",
+                "0e27997b35b31c73dd65dbba7e9ccece9637242781b1537c1aafd9a5cf5f9617",
+                "1fcd24becf9eb2f71f1a081491206647d17e37ddac011bfad067a58f9dd54395",
+                "15b09b877e2d37f7b1915f62078bf809651794cd3349d26050ac8ab0476d273e",
+                "59df0dfe854dd78a84d1a6ccdec483503a6d3c66f493e56b2c386c13f1cfd8e9",
+                "b2d99c215b22a747fe6b1faf5c1c30b59248b072f1a941137a495697780baa3a",
+                "5eb9e48dd9fbdfd2fe94cd278f89d0601bdf2e23091c037c57b4ae75aac9523e",
+                "2b5ba446f5ff4cb6ffc69e9b782277dd69f915184d94acb64d1cd757fa3087fa",
+                "09f26018566f8a7723cf60892f10a5175a43992a4ecec5f2d2f4802a07aba7e2",
+                "2b22d1be7726f53e144d3fa06c660c1011731c81d43eaa6f8af875411fb2bdca",
+                "26ec57a9985890abe80687028fb3f4b81bff35d5564e3d6a65dc02bdacb0c414",
+                "139e53cbcd88bdd33074b89d023e03e308c4dac263a7bf75a031ffcb54da0127",
+                "2da60b7c5350672a00954c0931d7b866e43e41c515992eb81a8a3bcec678cf0c",
+                "a2fcb2fe7ebadd7ddd7eef572983fdf7ed6822f1cc73431f2f7f23743a959cd9",
+                "96dea999cfd5cab2eabd4bafc1c860dfd3269b63076fae537886cef0fd34478d",
+                "5284a8df807530a3e9aa323b455e536d046c7ff89c75d30c59b08405ca00afe0",
+                "b49305d58af54f81e9f94f22e7fa3109c97a9d486f20fa1701240a52efecdda9",
+                "b926073439dc9cffea90c9dbb8c54b33ee8a9c73f63d27b5a1334ba23e018073",
+                "ae7a96fcd22bf4bec46b6683f5a6b432ca3b0a78078a8078c0a2a015e3d98225",
+                "a918fc14470437f02f0d91cd788dba5a8520cc5c8070ebe738bd0256f120eb87",
+                "e9b39953b3ee275e76a8da1f7f763f045adf7f3ed55eca1cbaa5ff4a7236ced6",
+                "a91d1c91df7f8ef94a127ba1dbe5ba04623ede12ae1a4ee9c34dc47b1c5b6333",
+                "7d6de84d36ff7bb6ee71f1665e417276daca738b646a6013c292f93c7c12257e",
+                "c4defbc3a7d249e00703ee7513521a303c559ac0ee69fddf20c8a439f8b471c1",
+                "3b76b2f7e49f803b5d26aa251ccfb98e47a361aa2c7247091cdf16208f4afafe",
+                "6842efb8aa84be68ab5efb4fe78bfe999d6e086bb5d30c4772624651ba726fc5",
+                "03eb27e6cfa469492085775a19460729282345f6ed2de503e5e1169ee7b11414",
+                "815b23d870735bc8204551ff761a92d01bb4825e5e9e5ca8d94f5deac0467cc8",
+                "b689958f4237aeca74d5703baf39e0ab2a1f02a43f1b85bc97bb50c73c2f6b71",
+                "37a2609e86720a2cfe97b2527a512393856b4968b3c3bdb7d62f007b866476b7",
+                "8fcc263bb99968a72835fa5a6190679db5527728f6353fac84c9b03d436e120f",
+                "9ecc255d79a24747df7cfb82abde63493ca431ca5ea96f2261fdc659d00ce788",
+                "6b38de7b6268272af0f4146ccb3c436799f2fe125dedbfc11f37f7a98d366904",
+                "f290602b3c7d0b82041bdb8be2b8095201ecec5dd04b1f14e8f035ad3a3096bb",
+                "1cd789f77a977123e05b9824e72d89e0d14236921e97d7c9cecc8ac502bfeafc",
+                "97703dd4d80bd64b286996ae1333110eabff964c4fe82b77e7f700fb92aedf02",
+                "b2ca7d78b8d2d8709c4754a12ccf8471826a4e83bf0e7670fc67736278a2f0eb",
+                "fe8e8fef803f1ace376f76cfac9ad307619f82e48187138745d7aac42e08e501",
+                "7d1671baec72cea586ef3def3d89e810dd57c16e504a8e47658ddfa10df1243b",
+                "de64b519e2a6b83830cebf6b68a97f53a6619496521ab1209bcdb34ada75bda3",
+                "49e96447caeb4d9ec3486da4f00b10dcbf54d72109fc38eaa41a36e35d2f2560",
+                "93529842dcb55ea6dddac175ee25345259f337af30fd0602bc82f110ea014af2",
+                "6ac743ed8cb37349afa0b169b0006524214da21f04d224427ab0558aaab5f657",
+                "1068207521eedd6f243232e8caa63579828e5c225c4c57349b5f62cd045383ff",
+                "dec6428be187b23d1f2b491e5b06540a0a25098ee7fdc26c488fd05e1a4a7c7c",
+                "29881ce0b115f2330b512846438c6bfb4d95c153bd682c4ba1a1dadc2a058e7b",
+                "a2a1a83bd2a64a9c4a9c199d073d00b7cf946eea730ad5d5f7c0d958e5fc92ae",
+                "9ec8aea14fde9f3dfcda8da41ed8801ca799827483689290a20cb06f35f52500",
+                "952feb6557403fd018f6ffc5a4b2a95cdfb087ff181c178b421ab1aba9cb5e96",
+                "ad2533f5fa6b91624d3a87c1fc6eee732bd888991b58b7d0dc9ee3bd78f77b8c",
+                "feb577f12c9dd7b12ab337f36e53191b606d80d56c7f10ceee78738248d801da",
+                "1d2928bd226168ea3caf813865754f260630cfaa05cf30eb99d72416fe23c4fb",
+                "2efffbedf850171fb3d14c268edc09e2e7d844b1e454a9fb7f3e68385fc5d1c5",
+                "293bd3c009c398462a9d94281ab7be4f7b799ecf818d1ebe68c468369ac78f11",
+                "66ef12a65e77638c9e0f22714bf41571baebdfb5823dda6bee490e18a26e4292",
+                "035727b40201db7529f5214912efe6710482491f0296c3d5c86ced5b3942b47b",
+                "2a63669c1d0d212ca6a088db3a2c04f98e1c4931906b3cf3a3fe41f1ad4938bd",
+                "55b0ae82dc39ea70fc4aef7fa6198ccc15c2256c59ba0b37d61c39b7893b87a3",
+                "35abe3a3ed4cce835f97dbae319a7fa1b71d16d7281389ea34fe8b909d5d5e60",
+                "99a358f1addf34d50b1cbd8c722c1a1c23dfe4915895b8700277ff66264d5a73",
+                "9626ae26a8def845369b09259781b85dc841c3d31f8470e022ceb98a2c790b3d",
+                "092823a69ecc48055e20837a36d58670b122a67c402bd0f2491d09cd10f55a7a",
+                "620a56f69426ab22da8958a78b37e4d8afd3b0ea5d9c8d2307ae3e7370eb4c7c",
+                "fcabe2349489c62ae59e368ed5eef20ecfb9fd946b9fbb15a84e09c65b0647c4",
+                "41ba647ec6de60d88e0654587c6b5b6023ce57a7c587508a09c40507adf6e754",
+                "3bf81fa8f4d6bb177ed63d104bb13993b84ad15d6ce3922ffc4ca7db24273acd",
+                "cde337b2e3dd9deb795a31d001af19aa0dd3b47c185cfb65469389749b511cb7",
+                "8fd20bfc14b3c0986ff1c3486289a759bfde0e9e8fd5e626a002dc63ce29c3a4",
+                "6d6d80a680f6719ce20b968a03f54b61937bbc34cbf7ab8be389cf5e16dfbcd8",
+                "1f4295e936f680512451ceebf8e4fbd6f2a93990f66668770a4c2a5b1a6afcae",
+                "d5513bbd8c3d2c8cacfffbeeb132cabac1840428279adf9dcf4106dae91fb0d1",
+                "3a288eff9f90efa9229dbc38dd018c4e0316b77b22608bf30bdf1d4e6467c841",
+                "784c8f56537289f0f3fd5f87443f268d258cf96abe1634875cd2a8b7d77a3228",
+                "337f4283421c20cdddbb27bf1f52e711a0f8e594b50d39a7b662e30d87558a9a",
+                "27f5d8be343854ece03aa53cdabecf74a28d85dd8f2f32bb9c4fcf256b023c7a",
+                "beaf005ac9670e0323e55de25db47b90951f1ddef0aa0509e12db83c61c04d23"
+              ],
+              "lossless_sha256": "77b82edae17ccc0d33b27d933ad8377d6978e6e858d179e834e6c5ea5f0e85bf",
+              "workflow_sha256": "182ab8befa0e2b8fc83ecef48bde779bab427d821dba3838b2b120ae160bd5be",
+              "collected_unix": 1790249096.9473305
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "imagegen_key_pose",
+                "file": "antlerloom_defend_brace.png",
+                "source_sha256": "66959a2e6b68aa000a1539c6c34f6d8e0526a21cfc9274040c88644b0bcc362a",
+                "placement_scale": 0.2,
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/middle_guide.png",
+                "sha256": "f649c43df379cacfc13c8da8a5e21f39bbe532c04186366e1ab9bdea18acc2ec",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "imagegen_key_pose",
+                "file": "antlerloom_defend_brace.png",
+                "source_sha256": "66959a2e6b68aa000a1539c6c34f6d8e0526a21cfc9274040c88644b0bcc362a",
+                "placement_scale": 0.2,
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/last_guide.png",
+                "sha256": "f649c43df379cacfc13c8da8a5e21f39bbe532c04186366e1ab9bdea18acc2ec",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/defend/matte.json"
+          },
+          "death": {
+            "prompt_file": "art/units/source/generated/video_trials/luna_antlerloom_full/death/prompt.txt",
+            "prompt_sha256": "b146d992fcb26704e3a8aee006aee934cba29fff3136fc35dd7f9c33beb75f93",
+            "workflow": "art/units/source/generated/video_trials/luna_antlerloom_full/death/workflow_api.json",
+            "workflow_sha256": "8b25451b938c78126f9be7833c489e304b3ea1ee868810b64c0ea2d865aa3349",
+            "submission": {
+              "prompt_id": "9d5b8212-181b-4123-acae-cee8b8751578",
+              "number": 18,
+              "node_errors": {},
+              "started_unix": 1790249492.8454134,
+              "uploaded": [
+                {
+                  "name": "first_guide.png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "middle_guide (2).png",
+                  "subfolder": "",
+                  "type": "input"
+                },
+                {
+                  "name": "last_guide (2).png",
+                  "subfolder": "",
+                  "type": "input"
+                }
+              ],
+              "url": "http://127.0.0.1:8189"
+            },
+            "original": "art/units/source/generated/video_trials/luna_antlerloom_full/death/original_lossless.mkv",
+            "original_sha256": "f73fc94a87e3b00df33250a19eed4469c4d7f2f09aca12fa20d87387fc18dab6",
+            "original_meta": {
+              "frame_count": 124,
+              "fps": 24,
+              "size": [
+                960,
+                544
+              ],
+              "codec": "FFV1/bgr0",
+              "source_frames_rgb_sha256": [
+                "4de9e1ce5e1b2944114544007d7638637d934895b3524c56b14c3439589d7f7b",
+                "ebfa93874ebf1835571bf4509d3019380f79aef29c6417fdd67a7d1450866210",
+                "c4df34635c9da46f643bf61815a696c13c630d8f8975aa37dfc78c8603786bbe",
+                "e1a9fc82067852b320751fdf2020848bcde59ee1d3d28fd267d040cdfa2f6436",
+                "6658dc486f2bc246bbe3def154f15bcaf8b40b5a339690e0978b6a76aad7f3a5",
+                "47e00659293f1ef1d5b06996300e5219810d45ae0a7d3d9018695d8b350eebde",
+                "186d1fba3486002becb2a07742412aaedc80177259f077ef87351e388ba8a61b",
+                "8d3379837c48266d043510c84bc8c37dad21570074ddc216a1d6ccac3b39cfe3",
+                "3516078daee0828934631f40a5ad1c5300a550cfda9ac8f03d1b9ecadf10362c",
+                "3963e6c8776cdccbba7dd26580aacab586a8349496547dd814cb1ecd7aae2257",
+                "0aa12a921357e7c555a9c7c9fbc8c012902ca2fed1a252523444c3cbc6e8fa04",
+                "a120d49e180044d83efc9e8c278e6b2cb4e68812722710751a2be97b09fae0ca",
+                "e773d7ec68d0aa81491aefc4c3e870a3642aa19fa495fd80c85783e2871424a9",
+                "21f7dc9984863dff0e33f8e9ded967ccd16397b7e3f638085737e50e395aae80",
+                "c0cf27652b0e97f5e54f63f5b149c15fb83774d39052f5cbd24d833bbc6864f4",
+                "18313f0d39bb4d2a1c4a0a311bf29f2b4788c07a13a4e1348b7914d93df3d4a3",
+                "b597c89d82b4800e6915899ecb26ddeb9083a1550709200dced10ecf8760b536",
+                "0973042444c0207700a99d98411ab7dd12426078c3a881d4c0824c23c88db1df",
+                "f16e5aa3672f1c1705c3956f57dd16b3cf297735119971bdc5d1def049a7a9dc",
+                "ed3f2525afef2276cdb35ce8f4caf617f2339dd6839054931d301e0c0ba276a5",
+                "f1a61d1fa9e074ee4e4ab307b6ea6388f86d637e56b4601dc48e67a503be1587",
+                "05b46fcc43bcb91d3ee7acbc23cdd70a7cfb752ad3063862c548f0e66de3e2e7",
+                "eb381516722413db84ffb7d9fd9ae6e2433d9588ab6a3190b34bdc991810f315",
+                "3b5cae9be2367acc7f3a84bca2b35cabf85c97267e5e585d55f9fae5c355fc9e",
+                "287ed6a92f0b0c4499d16be35bf97e33da0d565f5a03921c8463412290c90f86",
+                "28127e8827a304aaffd70fbad85b0d8ce5e3f48bab558d3d06f9ccb5c8a11af9",
+                "399bd494e0067d6352f8604f10c2e39a8aace2d7ff286e4e07d6aca3a4d85def",
+                "f0105dbed62ef0379ca7f83b5d93985c8bd957241f256fded39bc25e00e61640",
+                "ca109ca213c22c7d8a96cb82d0cdfe21cb681b136b37bafaf9bbd434d3465839",
+                "4911d47ba2fc1cedf50c6322de4b136563181fcde1a6663edb11591c6631b5f1",
+                "9022b3f331c3197f95b30b0c3a02e76023d77c4c395bbc2323af3fad1e1513fd",
+                "5226e28fa4c57b613ce8b8feb0451ad77d63b63d8cc2712ecc7f76cbfe340898",
+                "46e602df2b4106b6b3d99c7c26e90a37815c76e4d67af2838a1267fd73c454ab",
+                "ac7e2df8bc74aa7ddc9c5c3b023458416dbdb36fd6b4467a1bb278960d78cc30",
+                "ebd26f5214126eabd7061be633ed41ff498572718fb505ba79876ac1b76efe97",
+                "82e759a06e2bb100fac253bd9960e0c824b0824ab6965865826366245c4d8fd0",
+                "3f4649d6999d5fa8b1ee2773f4873353514f11393fe41f8bb70f9422be5d176c",
+                "d642ca35fcb046d852e2c9df7599853fd552ab53b2a52b482176d363bdff4eb9",
+                "73399b3b28163c470c4a363d1af7ac0d8ab0a0b96c6b25ac67c3b694df243939",
+                "f5ea249c15e9ecbf94096e094ea81ef76365b36a96e1d286fd8dacc4824db055",
+                "d0064b4e2b71602da99c5a1e3428f25537f9cbc8ff342d49582e5be06bf0449f",
+                "b8eabe7123cf36671f759679af1447b3d11023efcd36f92a59f3b7713a7c9d34",
+                "7b58f3371cef1641056e364450b64177d7c4909a4567a68ac603774902d91320",
+                "5bf01cfd716a7b6c4c0a88eb37b881015ec26ad0618c85b4661b65a1d309ec38",
+                "fddc609594391f085fde94d2aea3c448fe8fec383694ef945ab85209d4a0a81a",
+                "7255690cc1f2bfd3769402a053e2d6fc55cfdbc56d3c3e8b98d8072cec8a29e4",
+                "8e728cd64acd821de6cea6e1f09d9ca05880fb562616da6f5a8427ae64a45450",
+                "ee80eff16469669d87c2a9de52a3cb3424982c25d8f78ba0e5bbe427be9a998d",
+                "0256b8919be07659d96271de96063d802ea8f2088f80f120d0fbd333e56ff110",
+                "ff86abdf7bd7af97ba601324048594ff2ccbb05dcfaaa666750eae32263d8e17",
+                "83cdeca2280080e2688ffa290a832fc0251c2130c1d9beb56e2079270f51622a",
+                "bc22d56d73c5c6a22b3ea72a34f58b411daaf2a66dcb72aad8188395323f36c4",
+                "7d3df62fd43f833da7b8f80f9a56caa36d6a6aefa4a560349c4288e33e508e3e",
+                "1901bbfbb0eb32abd29d3bae2688594b05d99d677cf73dea1575360b02664f7b",
+                "199330fd0aa455e708e8c7b170a70e172eb40b040e344891419f66a4962b190c",
+                "a45cb833f12069c4d31bf18e362fbbb621bb556dc43cb88d65869d8057b529b4",
+                "959f28367bd8d070fcf5f9dfe61d560f182901829f487c40890a51246b6cd301",
+                "ab97f2a4a62461970f7366ca566a3512255a18feeb5db5d6c5b1a4e88c959554",
+                "aef1b771bb8382beec286bfbe5b46e68aa8b6a6fd35ef53f3db0154fa05c7e28",
+                "4cba7262d019029a1e0517656f6ff41f3799a95ef65d2be821dc3299240bddc5",
+                "33d0deedca4bb9406f965a256038c366c7c1f9b7d2af43c8753dad1334b501b4",
+                "590ded102fd99c446c498e840eeed3e06ca91fb7ea141d3d5f27cb77052c8633",
+                "0deb9136d5abc9939ac19f7766622432f10bf4accff69768c60d771b0ee7a0d3",
+                "70442988f91e3e886ccf832e8e261f1f2d2815068c0dc418514ac0f9fbe1a9a0",
+                "680a24953ae492d046c31aa91db672e6253cfb963df11eab2b14f34b6e103d34",
+                "767e19e99a6451834e41304799a77602229bfa0067b624564f259307abb491db",
+                "ca11ea0f826d0c98fbccc2de896d0ad2379bbae5147a32553464e873491a8aad",
+                "93cc0e15129a99f98e5ea102e521752c8d34f243c6c1abc27f1db97adaef670e",
+                "028c73b3cb5122a9df452bda03fb8500e073b992aae63e6aacab045bd0800fed",
+                "71cd3b56f2102383352ae52c017b19f0706ff88974848fb709bf143bb8ed34a1",
+                "fbb91988ade748047d1b253760853fe01d918de5cc9b562e972d1c2a94d813a1",
+                "d7fbdcc461bc0d62c89e3a2b5bf5359952fab20736ca3b6fd5f1a1af1e8f1a3d",
+                "4128066a07c511d2821fd9e2fa8cb91c9b801920d3088cac4e4ed2ae78d0a42d",
+                "3945420d9ae5eb32e53a3f4a31208aa5de091c1e8905263d4f0e4019c1460608",
+                "95be1270ff77e49a74a1650610070c1103b25a13a48da2a0dd9e0ca16a7619ae",
+                "c6ae25b0c8611a3f037ca4c58d67b2db972af9a24b4b9e8815d719379427a134",
+                "e24651bf715301282be0dffc92fae14eb97443b4bcdf6397c5dfe7a34ac26e76",
+                "1406df4454079a04604b59c1a0b0bb4102e22150f6029d60495802cd0acdab34",
+                "5c190577a35b860d0c726a75f94b6d405de6421ef55dc86ddcdcf32a3b3fed1e",
+                "dbb48a3ccb24d9838c038512a84e6f5866407b02711764292442b70cebdc01aa",
+                "821f611bfe04452920bbd95545dc5df46c73b6a231519e40df48eec49c0d08fd",
+                "73dd82a2890e7a03d0c3b846eecec0457fc665df92522cc0fce0f1f05b912d2b",
+                "d95fbc0852b6fa850551b201ed6811be9c312d688bc6d9b2e1307a6c26b11a02",
+                "7da552034ebdb68af053a71e061056c2c1a7781ae2913f320e4c1168d93fe3a1",
+                "d32563f637c75634b8bb348cdcf04ec9910eb4489839509affa6b1e3ec0049fc",
+                "df24afd5c2102b1123863e944c1b68a95ebd529f87447922d06651b0344260be",
+                "5639b1fb6f9a782be7eae6a28eb06e56cf8ee1d1006191debdd6699b524e9da2",
+                "299d92e7aecb851ac60df3517e0f256e29f772781e486c3cbf7ca878fdb3e796",
+                "a8519200946dca8db448621483692ab5b0a64f1c8a5a101a82de8fda92ddc057",
+                "53867845cbb33fcfc7d557a36c7abd02a0b41bdf2216155babdd0086b836979b",
+                "3e12b2865b767717d609b41fcee16f7b59e5e482bd2a400d4f3ef08d4a80b15e",
+                "9a00d317cb9b6af6e546cc778f55299d39e047e5bc7901b585a889bc7faef4dc",
+                "6a337da5d183603820f5759ef03717c21d74e216e5c86014d9e79fb7f5ed9cfe",
+                "21d12b517f443038d1f5f1c6e53b76a62502a0430173eafc3fd0852dd0c37d93",
+                "2dd0a3744627aa78de133fc411793f9f0e09379e2daaf0cb95b1c4b8eed5c86a",
+                "96449d5a74bc00b5c1da55e089031eb3174403a75caec101bd909d72a71abfa8",
+                "4ac69c4ce98077de2d2a43894be6291d0379147e9f6eac14c542f9183666ce04",
+                "7bfe160493553e4e6ee20f09b31591ed1af01f3876cf101ed98bcf8798a8ffe8",
+                "ee088a44c6e991a6d84a3f641ad9509bd0c3980a2ce43d83f41a16f79c7bee3d",
+                "c1fd9f02a513c640adf62784f6b3063bee767d709405bd70c9f640d3705aea66",
+                "3cc5529317cb7bb98ba61d85d244090e4855ea3fbb60e7d9bbb4c5dff97d96d1",
+                "6b22d7746a209a9d1bcd16d690463b5856dcc1a96a5f77fc421c038f7e9e390c",
+                "bd774d3a868976d46bdc1c1431a5d1917d5aed7d87e89389383e50f7304218ab",
+                "cca56add95c9141e0b63128d7801943a5f230a52e7744b8e7ff325512915f903",
+                "d61c539ef3cfe7c8da92e66dee2592b68282ee323fb901148b42478dc4d76165",
+                "6856f25b9bfcb8ad6895d6fb8fc9b9761187b773002fe6f7236a17dd35127835",
+                "bfb6930a910a6dff8a5108d03d692794a1d626773522fcf1cb1af8220371c9db",
+                "52a3fed7df431ffd79b01a5cda7c071e4db1b47a784782d62938b3dab0eb39a6",
+                "06dc6fdb8355251184147b2385a3072ea0aafeef61a888520417de15ad953eb7",
+                "d40ae47b2c5381d69e3d676cb79e66eeb45df5d6eacf7d981996f62b0843f3fd",
+                "3360edd1dcfa75d871de30d9558e5369b171b3c4791de90a3fac92986c7f113c",
+                "6595c9cea11a25e9e5c6f18fa27702fa3ad6f782c8777a0882ad772a2230728d",
+                "a09b170cc8866cf062718dfcd0e1daaec835d858312a51abb87341fb95e93fac",
+                "b2afbd55b3b7ec9f70dabadbf045b2c7df5d7a1b6f07c3afbb4c33a656ff4a44",
+                "0d4854c2373234e3c84550e95e648d9007ee0df267adcf49b94b448ec242b0eb",
+                "533424e2a9d959573936f1628e18f98639cac85cb36444e378008872299b76f7",
+                "d94883f0426421337ac2d6176ffc6ee44f8bad7bd7b32917f4e0af0d745f8705",
+                "953515e7f38222ffe767c15b395e75d932349f33e60a1dadcabbcebe717b359f",
+                "c7a0b778e17ada68f9bedb40e1a5a6972a91b04c15bf1c4524000c4c01948a0b",
+                "706cc1b3db87445d86108b5ca7087ff513a789547f377708f208bd7794c0a7ba",
+                "72e37a521a53cf4843ca165abb7ba969e819dec5c342e5eefbea5adaf73c34fe",
+                "f4e4a0217a072552e6744e421874779635596b4f7489bd10eba4c41f1f22a382",
+                "9dd03b025da9feb6dd6b5757596dfb11b96cf21d5a15836fe51ddb2c9543a891",
+                "7a87fab9e6d0304279f44e700bb69f803186ea11ea4aa281286ca77afa8eab71"
+              ],
+              "lossless_sha256": "f73fc94a87e3b00df33250a19eed4469c4d7f2f09aca12fa20d87387fc18dab6",
+              "workflow_sha256": "8b25451b938c78126f9be7833c489e304b3ea1ee868810b64c0ea2d865aa3349",
+              "collected_unix": 1790249705.4197383
+            },
+            "guides": [
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran-alpha.png",
+                "frame": "idle_0",
+                "rect": [
+                  168,
+                  34,
+                  554,
+                  543
+                ],
+                "source_sha256": "60fa6f9f8f9f518336f1b761cbb980a783feca7510d041b4876f85af5432410f",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  349,
+                  542
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/death/first_guide.png",
+                "sha256": "aa754629df2cf3639e3f8c7d203a2ec31e875507604fd4652739516f09bcb694",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+                "frame": "hit_recoil",
+                "rect": [
+                  123,
+                  12,
+                  582,
+                  547
+                ],
+                "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  276.5,
+                  546
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/death/middle_guide.png",
+                "sha256": "65cb15fb08936a7f1235bd90cb3d83e9d20b463d497896f46623d1b6773904b0",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              },
+              {
+                "kind": "original_pose_guide",
+                "source": "art/animation/source/poses/unit_thornwake_stagknot_runners_veteran/unit_thornwake_stagknot_runners_veteran_actions-alpha.png",
+                "frame": "fallen",
+                "rect": [
+                  22,
+                  305,
+                  683,
+                  536
+                ],
+                "source_sha256": "dcec86f1360e1c65cacc57f6ddfd8bf454ff82085415bf8883f8968a85aa70a5",
+                "source_scale": 0.5,
+                "source_anchor": [
+                  347,
+                  534
+                ],
+                "path": "art/units/source/generated/video_trials/luna_antlerloom_full/death/last_guide.png",
+                "sha256": "ef41d4b67ce83d63aea30f8dc062304aeae01a04ab5a9edb1ba9e28ca7762823",
+                "canvas": [
+                  960,
+                  544
+                ],
+                "background": "flat magenta RGB 255,0,255",
+                "ground_anchor": [
+                  480,
+                  492
+                ]
+              }
+            ],
+            "matte": "art/units/source/generated/video_trials/luna_antlerloom_full/death/matte.json"
+          }
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Candidate contains six visually reviewed action clips; cast/support remains excluded after repeated workflow dispatch failure and incomplete result. Idle is the same authored loop suitable for battle and overworld use."
+      }
+    }
+  ]
+}

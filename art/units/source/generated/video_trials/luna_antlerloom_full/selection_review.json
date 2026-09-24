@@ -1,0 +1,177 @@
+{
+  "actions": {
+    "idle": {
+      "source_directory": "idle",
+      "source_frames": [
+        0,
+        8,
+        16,
+        24,
+        32,
+        40,
+        48,
+        56,
+        64,
+        72,
+        80,
+        88,
+        96,
+        104,
+        112,
+        120
+      ],
+      "frame_msec": 125,
+      "loop": true,
+      "meaningful_phase_review": "Sixteen full-cycle samples, retimed to125ms/frame (~2.0s) for a readable but active battle/overworld idle loop."
+    },
+    "move": {
+      "source_directory": "move_v2",
+      "source_frames": [
+        37,
+        39,
+        41,
+        43,
+        45,
+        47,
+        49,
+        51,
+        53,
+        55,
+        57,
+        59,
+        61,
+        63,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        81,
+        83,
+        85,
+        87
+      ],
+      "frame_msec": 42,
+      "loop": true,
+      "meaningful_phase_review": "Active reciprocal gait interval37\u201387 with near-matched endpoints; 26 samples retimed to42ms/frame (~1.09s per loop), no standing intro/outro."
+    },
+    "attack": {
+      "source_directory": "attack_v2",
+      "source_frames": [
+        24,
+        32,
+        36,
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        64,
+        68,
+        72,
+        76,
+        80,
+        84,
+        88,
+        92
+      ],
+      "frame_msec": 70,
+      "loop": false,
+      "contact_source_frame_index": 56,
+      "meaningful_phase_review": "Ready frame24, anticipation frames32\u201352, peak forward head/antler lunge/contact at56 (still at peak through60), then recovery through92. Retimed to70ms/frame for a ~1.19s tactical strike."
+    },
+    "hit": {
+      "source_directory": "hit_v2",
+      "source_frames": [
+        52,
+        56,
+        60,
+        64,
+        68,
+        72,
+        76,
+        80,
+        84,
+        88,
+        92,
+        96
+      ],
+      "frame_msec": 60,
+      "loop": false,
+      "meaningful_phase_review": "Starts at clean recoil/impact frame52 after detached incoming artifact disappears; 12 samples through ready settle at96, retimed60ms/frame (~0.72s), excludes trailing hold."
+    },
+    "defend": {
+      "source_directory": "defend",
+      "source_frames": [
+        0,
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32,
+        36,
+        123
+      ],
+      "frame_msec": 70,
+      "loop": false,
+      "meaningful_phase_review": "Transition samples0\u201336 plus final guard123; retimed70ms/frame (~0.70s), final pose persistent static guard."
+    },
+    "death": {
+      "source_directory": "death",
+      "source_frames": [
+        0,
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        64,
+        68,
+        72,
+        76,
+        80,
+        84,
+        88,
+        92,
+        96
+      ],
+      "frame_msec": 83,
+      "loop": false,
+      "meaningful_phase_review": "Starts ready, then buckles/falls frame40 through grounded corpse96; samples fast collapse64\u201388, retimed83ms/frame (~1.33s), final corpse persistent."
+    }
+  },
+  "excluded_actions": {
+    "cast": {
+      "status": "excluded_after_bounded_reassessment",
+      "attempts": [
+        {
+          "action": "cast",
+          "prompt_id": "4342205b-f808-49bf-9cb3-cad6c9e7f14b",
+          "runtime_seconds": 134,
+          "reason": "Face/muzzle disappears and antlers stretch into tall leaf blades during repeated low bow/crouch."
+        },
+        {
+          "action": "cast_v2",
+          "prompt_id": "1eb08fa5-0070-4da2-a2f1-998b00e59b7c",
+          "runtime_seconds": 123,
+          "reason": "Text added intact face/rigid branch constraints, but workflow dispatch retained generated support middle guide; output remains a sustained low crouch without readable proud rally."
+        },
+        {
+          "action": "cast_v3",
+          "prompt_id": "60261834-7385-4a21-b202-3e5e29a4f5ec",
+          "runtime_seconds": 123,
+          "reason": "Intended original-ready endpoints were not applied because duplicated whitelist dispatch bug persisted; actual graph again contains generated support middle guide. Result has only subtle incomplete support gesture."
+        }
+      ],
+      "blocked_reason": "Required original-guide plan was not executed due repeated helper dispatch mismatch; no further generation was authorized after the bounded correction. Preserve captured originals and provenance; no cast clip is handed off."
+    }
+  },
+  "source_scale": 0.890625
+}

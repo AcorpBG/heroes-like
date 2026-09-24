@@ -1,0 +1,196 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "first_guide.png"
+    }
+  },
+  "5": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "middle_guide.png"
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "last_guide.png"
+    }
+  },
+  "20": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked three-quarter right-facing orthographic camera. Solid flat magenta RGB(255,0,255) background, no ground or shadow. A locked-camera fantasy strategy battle idle loop of this exact Antlerloom Strider. Preserve the four-legged wooden stag, ivory bark face and armor, branching antlers with rounded green foliage and white blossoms, amber chest gem, pale-green hanging leaf panels, dark wood/vine legs and hooves, right-facing three-quarter camera and exact scale. All FOUR legs remain grounded at their same hoof spots. Make clearly visible anatomical idle articulation: slow neck/head raise and lower, jaw opens slightly once, subtle chest breathing, small antler foliage/leaves settle; no root translation. Return smoothly to the exact starting pose at the end. No walking or turning. The supplied first, middle and last frames are the same original creature at one anatomical scale and ground reference. Preserve the guides and interpolate only physically coherent motion between them. Keep full antlers and all four hooves inside frame. No scenery, text, haze or unrelated effects.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "4",
+        0
+      ],
+      "last_frame": [
+        "6",
+        0
+      ]
+    }
+  },
+  "21": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "20",
+        0
+      ],
+      "latent": [
+        "20",
+        1
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "frame_idx": 61,
+      "image": [
+        "5",
+        0
+      ]
+    }
+  },
+  "25": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "21",
+        0
+      ]
+    }
+  },
+  "26": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092401
+    }
+  },
+  "27": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "28": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "29": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "26",
+        0
+      ],
+      "guider": [
+        "25",
+        0
+      ],
+      "sampler": [
+        "27",
+        0
+      ],
+      "sigmas": [
+        "28",
+        0
+      ],
+      "latent_image": [
+        "20",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "29",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "31": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "30",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "32": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "31",
+        0
+      ],
+      "filename_prefix": "luna_antlerloom_full/idle/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "33": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "30",
+        0
+      ],
+      "filename_prefix": "luna_antlerloom_full/idle/frames/decoded"
+    }
+  }
+}
