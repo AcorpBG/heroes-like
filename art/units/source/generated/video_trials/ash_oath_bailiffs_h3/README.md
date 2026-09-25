@@ -17,7 +17,8 @@ absent from the original palette is keyed through measured alpha unmix and
 edge despill, retaining all disconnected solid subject components.
 
 Rebuild using `produce.py process TAKE`, `build TAKE` and `assemble` with
-`delivery.json`. Selections record observed frame indices and gameplay timing.
+`delivery.json`; rebuild the death composite with `assemble_death.py` after
+restoring its selected source mattes. Selections record exact indices and timing.
 Review covers all chronological originals, enlarged anatomy/equipment/grips,
 alpha and cycle boundaries, then native battle-scale phases. Continuous video
 playback and manual playtesting are not claimed. Focused offscreen checks only.
@@ -42,7 +43,7 @@ restored it but had an overlong shaft, and v3 shortens the shaft while retaining
 the kneeling anatomy, grip and registration. Only v3 guides death v2. All
 original corrected artwork and exact prompts/reference hashes are retained.
 
-## Published partial delivery
+## Published complete delivery
 
 | Action | Original frames | Frame duration | Total duration |
 | --- | ---: | ---: | ---: |
@@ -51,26 +52,49 @@ original corrected artwork and exact prompts/reference hashes are retained.
 | Defend | 18 | 50 ms | 900 ms |
 | Hit | 20 | 50 ms | 1000 ms |
 | Support/cast | 26 | 50 ms | 1300 ms |
+| Death | 52 | 45 ms kneeling, 40 ms lowering/fall | 2120 ms |
 
-108 original frames across five accepted actions. Melee contact is at 495 ms;
-support peak at 700 ms. Eight accepted articulated idle poses retain their
-exact pixels, offsets and 240 ms timing. The overworld PNG is byte-identical.
-Legacy death pixels, offsets and timing are also unchanged, but that action
-is not accepted as meeting the new quality goal. All other catalog rows are
-unchanged. Candidate and production atlas hashes match exactly.
+160 original H3 frames across six accepted actions. Melee contact is at 495 ms;
+support peak at 700 ms. Eight accepted articulated idle poses retain exact
+pixels, offsets and 240 ms timing. The overworld PNG is byte-identical. This
+follow-up replaces only death; the five previously published H3 actions retain
+exact pixels, offsets and timing. All other catalog rows are unchanged.
 
-Death remains unresolved: v2 still breaks the spear in frames 39-40. v3 removes
-intermediate guides, but fades/occludes the shaft behind the torso in frame 35
-before it reappears in the foreground in 36-38. Three original takes are kept;
-none is published. After two unsuccessful corrections, stop this setup. A new
-pass needs explicit anatomy-matched guides for the rigid spear lowering arc,
-with a visible grip and coherent equipment release; do not simply reroll seeds.
+## Death correction and selection
 
-The 3040x3264 atlas uses 39,690,240 decoded RGBA bytes. Focused offscreen checks:
-172 candidate and 186 live passed. Native battle-size phases and overworld idle
-were visually inspected. Original chronological frames supplied transition
-review; continuous video playback and a manual playtest are not claimed.
-Live roster: 115 complete, 2 partial, 117 remaining of 232. The overall animation
+Full death v2 breaks the spear in frames 39-40. v3 fades/occludes the shaft
+behind the torso in frame 35 before it reappears in the foreground. Neither
+full take is accepted. Only v2's valid standing-to-kneeling prefix is reused.
+After the two failed corrections, the control strategy changed: supply explicit
+60-degree and 25-degree spear guides for a separate kneeling lowering video,
+then generate a separate fall starting with that video's grounded spear pose.
+The rejected full originals remain available with their rejection records.
+
+`death_lowered_v4` has an overlong shaft and is unused. v5's entire figure was
+larger, so it uses one documented source-wide registration scale of .203 and
+anchor (834,833), matching the .31-scale angle guides. Video extraction always
+uses .8 and anatomical anchor (480,480); no per-frame anatomy normalization.
+All corrected guide originals, prompts and hashes are retained.
+
+`death_complete/selection.json` is the authoritative composite recipe:
+8 original death_v2 prefix frames, 23 death_lowering_v1 frames and 21
+death_settle_v1 frames. Lowering frames 36-64 contain an unnecessary repeated
+rotation and are excluded; frames 35 and 65 retain consecutive spear angles
+and a coherent grip. The fall retains release, weight shift, shield tipping,
+body contact and cloth settling. Prolonged holds and two near-held samples
+are omitted. No reversed frames, synthesized in-betweens, warps or duplicate
+padding are used. The final corpse is also the persistent dead pose.
+
+Review covered complete chronological originals, enlarged equipment/anatomy,
+alpha against light/dark surfaces, interval joins and native battle-size phases.
+Continuous video playback and manual playtesting are not claimed.
+
+The first 54-frame death selection exceeded the atlas limit by two poses. The
+reviewed 52-frame selection retains scale and fits a 3952x3952 atlas using
+62,473,216 decoded RGBA bytes. Focused checks: 226 candidate and 240 live passed;
+Godot import succeeded. Candidate and published atlas hashes match exactly.
+Overworld idle was visually inspected and verified byte-identical.
+Live roster: 116 complete, 1 partial, 116 remaining of 232. The overall animation
 goal remains active. No full repository suite was run.
 
 Original videos, generated guides, prompts, workflows and selected transparent

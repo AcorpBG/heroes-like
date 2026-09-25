@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "lowered_spear_ready_to_fall",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowering_v1/matte/rgba_123.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0
+      },
+      "source_sha256": "21b24b6e0d2bb2fbd23077d6bdba8d88614794bfa962d46bd5d04422f933213d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "38d60c9e9dee51fa2b6d0421c8296c4eb4f0f7d61681f53d04a14ac42b8a8500",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "grounded_corpse",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_v2/guide_4_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0
+      },
+      "source_sha256": "031333e95b6ee36f67dd37f8280fc8c30de1bf60ab3782e476d3527ad86f058b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c51d2c5add737d1f47c5e1a46335abf7ceb763ef6dbc7dbde3a54810d5314682",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

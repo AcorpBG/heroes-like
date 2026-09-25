@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c8943781-6b97-4aa5-93a1-7c963ff1023a.png",
+  "image": "death_angle_60_v1.png",
+  "image_sha256": "0e031d0034ede991c4157ed315a1527e54885ed9b53e4ed5f09d67290cfe2cbd",
+  "prompt": "death_angle_60_v1.prompt.txt",
+  "prompt_sha256": "348937529345264ffc08ebcbea66f844f27c253dc458d45f0f1144477456b260",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v3.png",
+      "sha256": "e0af5070ffe80fafe6751a5aba8050924127571faa2c35f18b7499b677260a3f"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_v2/guide_1_rgba.png",
+      "sha256": "f491d497d78647f85f38c4a9f0c5f9f4547e905d233f4acace6e7dc158a7c54f"
+    }
+  ],
+  "review": "Single original kneeling Bailiff, preserved anatomy/shield/body scale, one rigid hooked spear with blunt butt. Raised hand differs from requested coordinates but is anatomically coherent. Guides share near-identical pole length; final horizontal guide must match it."
+}

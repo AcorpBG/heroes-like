@@ -1,0 +1,110 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "kneeling_upright",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_v2/guide_1_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0
+      },
+      "source_sha256": "f491d497d78647f85f38c4a9f0c5f9f4547e905d233f4acace6e7dc158a7c54f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ed593cd86492cb88ed08f4103c24dd6759e3bce54ccac4faacb1a6dc51e5e678",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "name": "death_angle_60_v1",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_angle_60_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          850,
+          811
+        ],
+        "scale": 0.38749999999999996,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0e031d0034ede991c4157ed315a1527e54885ed9b53e4ed5f09d67290cfe2cbd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "fde25fe7562b44a9def9b999a9ed41b305fa94d12765daaad4a8dcfd6ae26eb8",
+      "runtime_source_scale": 0.31
+    },
+    {
+      "source_frame": {
+        "name": "death_angle_25_v1",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_angle_25_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          850,
+          811
+        ],
+        "scale": 0.38749999999999996,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e27ef1409c89aa0c49c2f9622b169f0f8df9543b5c9cd77ccbe615691618f85c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b6609d54c9abaecdea5d74cdb558ec210f667e1961df8c44715c774bc04d6dee",
+      "runtime_source_scale": 0.31
+    },
+    {
+      "source_frame": {
+        "name": "death_lowered_v5",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v5.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          834,
+          833
+        ],
+        "scale": 0.25375,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "472900c4a388eabbae14f99bd73aecbe08501fa13b900d7e5486c462e1631363",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1aeb9ff141bec9691f20a8e64231094a95377bea43d63b7f5d07af07d9acbf74",
+      "runtime_source_scale": 0.203
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
