@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "lowered_spear_ready_to_fall",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowering_v1/matte/rgba_123.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "grounded_corpse",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_v2/guide_4_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 2026093702,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. Begin ALREADY kneeling, with the spear horizontal on the ground in front of her knees, as the first guide. Slowly release the grounded spear from her gloved hand; it remains a single rigid straight spear on the ground in the foreground for the entire video. The woman then loses support and tips onto her screen-right side, gently lowering the pavise flat under her shoulder and head, settling into the final grounded corpse. Boots remain to the left, head to the right. Continuous articulated hip, knee, shoulder and elbow motion over the full five seconds. No long freeze then sudden pose change. Exactly two real arms and two real legs, same armor, face and bun throughout. The spear is already DOWN: never lift it, swing it, hide it, change its length, bend it or pass it behind the body. Preserve one pointed hooked end and one blunt brass butt. Final body, shield and spear all rest naturally on the ground. No new equipment or resurrection."
+}

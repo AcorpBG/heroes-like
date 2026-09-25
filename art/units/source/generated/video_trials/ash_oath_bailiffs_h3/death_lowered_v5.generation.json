@@ -1,0 +1,15 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-6baf741a-36cc-44fd-aca9-75e7efb4c2ee.png",
+  "image": "death_lowered_v5.png",
+  "image_sha256": "472900c4a388eabbae14f99bd73aecbe08501fa13b900d7e5486c462e1631363",
+  "prompt": "death_lowered_v5.prompt.txt",
+  "prompt_sha256": "0e877527f43d223c47d29c1c1d57f2d229dbd417450a544260067b6dda6a7e32",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_angle_25_v1.png",
+      "sha256": "e27ef1409c89aa0c49c2f9622b169f0f8df9543b5c9cd77ccbe615691618f85c"
+    }
+  ],
+  "review": "Generator enlarged the entire kneeling figure about1.53x. Register the entire source once at scale .203, anchor [834,833], matching head/boot/knee landmarks to the .31-scale angle guides. The spear then matches their approximately250-video-pixel length. No per-frame or equipment-only rescaling."
+}

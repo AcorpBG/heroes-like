@@ -1,0 +1,100 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "kneeling_upright",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_v2/guide_1_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8
+    },
+    {
+      "name": "death_angle_60_v1",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_angle_60_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1665,
+          944
+        ]
+      ],
+      "anchor": [
+        850,
+        811
+      ],
+      "scale": 0.31,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_angle_25_v1",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_angle_25_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1665,
+          944
+        ]
+      ],
+      "anchor": [
+        850,
+        811
+      ],
+      "scale": 0.31,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_lowered_v5",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v5.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        834,
+        833
+      ],
+      "scale": 0.203,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      72,
+      2
+    ]
+  ],
+  "seed": 2026093701,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. The woman is ALREADY kneeling on the ground and remains kneeling. Animate only the continuous careful lowering of her spear from upright to horizontal on the ground in front of her knees. Slowly articulate shoulder, elbow and wrist to rotate the rigid spear through the angled guides, then lower her gloved hand to the ground with the same shaft in its grip. Keep the whole straight spear, its blunt brass butt and single hooked silver point clearly visible at every angle. No bending, dissolving, shortening, duplicated spear or swapping ends. Exactly the same near weapon hand grips it throughout; opposite hand stays on the shield. No collapse, standing, extra movement, magic or disappearing props. The torso may bow very slightly as the arm lowers but stays same size and remains kneeling. Continuous smooth motion throughout the five seconds, no fast pose changes or long freezes. End at the final horizontal grounded weapon pose."
+}

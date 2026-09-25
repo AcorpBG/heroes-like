@@ -1,0 +1,75 @@
+{
+  "segments": [
+    {
+      "take": "death_v2",
+      "source_frames": [
+        0,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "frame_msec": 45
+    },
+    {
+      "take": "death_lowering_v1",
+      "source_frames": [
+        0,
+        16,
+        20,
+        24,
+        28,
+        32,
+        34,
+        35,
+        65,
+        67,
+        69,
+        71,
+        73,
+        75,
+        77,
+        79,
+        82,
+        85,
+        88,
+        91,
+        96,
+        104,
+        123
+      ],
+      "frame_msec": 40
+    },
+    {
+      "take": "death_settle_v1",
+      "source_frames": [
+        3,
+        6,
+        10,
+        16,
+        24,
+        32,
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        62,
+        64,
+        66,
+        68,
+        70,
+        72,
+        74,
+        78,
+        90
+      ],
+      "frame_msec": 40
+    }
+  ],
+  "review_note": "Reviewed original chronological frames and enlarged joins: standing to kneeling, rigid spear lowering, hand release and shield-supported side fall. Remove unwanted repeated overhead rotation at lowering 36-64 and long held poses. No reversal, synthesized interpolation, pose warping or duplicate padding. Native battle-size composite accepted after 226 candidate and 240 published checks; six prior accepted clips retain exact pixels, offsets and timing. Omit two near-held samples (lowering 8 and settle 82) to preserve original scale within the 4096 atlas limit."
+}

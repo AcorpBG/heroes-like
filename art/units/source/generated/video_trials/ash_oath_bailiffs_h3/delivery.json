@@ -4,7 +4,8 @@
     "attack_v3",
     "defend_v1",
     "hit_v2",
-    "cast_v2"
+    "cast_v2",
+    "death_complete"
   ],
-  "remaining_gap": "Death: continuous rigid spear lowering and fall; three rejected takes preserved. Legacy death remains unchanged and unaccepted."
+  "death_recipe": "death_complete/selection.json: 52 original samples, 2120 ms; preserve all other accepted clips."
 }
