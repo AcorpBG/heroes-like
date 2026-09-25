@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v3",
+    "attack_v2",
+    "defend_v1",
+    "hit_v2",
+    "cast_v2",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Coordinator autonomously reviewed all124 chronological original frames for each selected take, enlarged identity/grips/rope/alpha and every packed phase in offscreen Godot at128px reference height. Accept six dedicated actions: reciprocal walking cycle, two-handed thrust/recovery, held crouching guard, continuous recoil/recovery, raised-pole physical rally and grounded collapse/corpse. Preserve all eight original articulated idle poses and timing. Fixed anatomical scale/anchor, stable palette and intact two-prong pole; failed hue-cycling and snap-transition takes excluded. Candidate187 focused checks passed (plus24 initial movement checks). No continuous video playback or manual game playtest claimed."
+  }
+}

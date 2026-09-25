@@ -682,25 +682,25 @@
         233
       ],
       "painted_extent": 229,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_reedsnare_kin.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        144,
-        3,
-        367,
-        248
+        60,
+        27,
+        283,
+        272
       ],
-      "source_sha256": "6bd1b1b2669f809e037f5af565a06a7443f2a3378230502cb8f178bf06a16b91",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_reedsnare_kin/provenance.json",
+      "source_sha256": "64f9e3bce7ae266409da7db7943117732ff6f4492c1ea0286cc5808b12684f78",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_reedsnare_kin/provenance.json",
       "sha256": "9293f2b1b1b3873411aec0d1602645a9ab743783314cc8d067892463b3e5a778"
     },
     "unit_mireclaw_mudglass_slingers": {

@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Source backdrop cycles magenta through red, yellow, green and blue; these overlap clothing and skin. Do not chroma-key away creature material or publish this take. Original video and latent retained.",
+  "correction": "move_v2 adds explicit constant-backdrop constraints and an original midpoint guide to keep the palette pinned."
+}

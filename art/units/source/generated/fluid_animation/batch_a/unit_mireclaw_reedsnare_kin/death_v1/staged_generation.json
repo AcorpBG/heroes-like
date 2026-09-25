@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "766e416ead92b486850a892a65fd68c98584de72f1554e5fd38b9b5ae2d59db7",
+  "latent_sha256": "57a4bfceeaa824a3c86d6636b3b17fbcfab2bb9c852c52d1df9d8d40c6e9e710",
+  "decode_workflow_sha256": "5c2b0efc055971dda247e1a31ee827038fcd7398e00ece6ddb5bdd55eaafa4a3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedsnare_kin_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32218546176,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

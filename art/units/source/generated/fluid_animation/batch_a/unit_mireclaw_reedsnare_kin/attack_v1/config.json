@@ -1,0 +1,90 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1.05,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1.05,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      62,
+      2
+    ],
+    [
+      106,
+      0
+    ]
+  ],
+  "seed": 925302,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked camera, original richly painted fantasy strategy game sprite on a perfectly uniform flat vivid MAGENTA RGB(255,0,255) background, magenta also between limbs and inside the hanging rope loop. No environment, ground shadow, text or particles. One Reedsnare Kin human swamp hunter: brown hair tied in a small topknot with loose side locks, olive green layered leather tunic and leggings, ochre-yellow reed fringe on shoulders and knees, wrapped brown-green boots, rope coil attached at the IMAGE LEFT hip. Exactly TWO human arms and TWO legs. Both bare hands hold ONE straight wooden trapping pole with exactly TWO curved bronze fork tips pointing IMAGE RIGHT. One weighted rope loop hangs beneath the fork; its small dark weight stays attached to the rope. The image-left hand holds the rear shaft near the hip, the image-right hand holds the forward shaft before the fork. Preserve both fixed grips, original pole length, fork tips, rope coil, clothing, face and limb count. The pole remains a rigid solid object and never changes into a spear, bow or gun. Stable three-quarter right-facing view, no camera motion or zoom. Full figure, boots and whole pole remain visible at the same anatomical scale throughout. Perform ONE two-handed horizontal fork thrust toward IMAGE RIGHT. From ready, bend the elbows to draw the rigid pole backward and load the rear leg. Then extend BOTH arms together and lunge into the forward contact guide with the fork well ahead of the body. Keep both hands gripping the SAME points on the shaft, with the front hand always closer to the fork. The pole and its fork translate together without bending or changing length. The attached rope loop trails the thrust and settles. Pull the pole back and return naturally to the original ready stance. One distinct wind-up, one thrust/contact and one recovery. No spinning, overhead swing, repeated stabs, detached projectiles, extra arms or magic."
+}

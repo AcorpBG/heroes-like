@@ -5,3 +5,6 @@ art/units/source/generated/town_upgrades/**/*.prompt.txt -text
 art/units/source/generated/video_trials/**/*.json -text
 art/units/source/generated/video_trials/**/prompt.txt -text
 art/units/source/generated/video_trials/**/*.prompt.txt -text
+# Reedsnare H3 delivery lives in its assigned production batch; preserve hashes.
+art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/**/*.json -text
+art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/**/prompt.txt -text

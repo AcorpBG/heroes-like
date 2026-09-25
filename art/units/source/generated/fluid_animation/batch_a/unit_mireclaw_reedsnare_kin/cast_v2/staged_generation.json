@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a8bcec83d43cbd4ebe0775a8c49ad2a9ddd1c4b30ece6f7e35643b1fcbd3a545",
+  "latent_sha256": "211e84f3ed6e345d11cf7ad51d07ccecf39c3ad663d3f95fd79c8fdc8b6b9db1",
+  "decode_workflow_sha256": "7dea9b6a5780eb335113c5cc64eb6b16991481dbbfa2928d08893b2e960a33a9",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedsnare_kin_h3\\cast_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32218546176,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

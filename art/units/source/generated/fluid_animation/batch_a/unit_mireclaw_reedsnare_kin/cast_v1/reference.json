@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_mireclaw_reedsnare_kin",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_reedsnare_kin.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6bd1b1b2669f809e037f5af565a06a7443f2a3378230502cb8f178bf06a16b91",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b1dc500c4a9d6098e2033efdb290e2387edf6d72d61264e766b402b259748083",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
