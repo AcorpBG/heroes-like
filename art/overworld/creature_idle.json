@@ -927,25 +927,25 @@
         213
       ],
       "painted_extent": 208,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_shard_wardens.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        165,
-        35,
-        351,
-        259
+        61,
+        15,
+        247,
+        239
       ],
-      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_shard_wardens/provenance.json",
+      "source_sha256": "5135489a05cd72d2c0af8c9a0de8fabb1a59af3ba2da4d1b9bb0ab620e552b54",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_shard_wardens/provenance.json",
       "sha256": "018d583f6a929e584f18fea716bc2549d8e2ae431acb465a93ed954fda2c8cfc"
     },
     "unit_sunvault_prism_adepts": {

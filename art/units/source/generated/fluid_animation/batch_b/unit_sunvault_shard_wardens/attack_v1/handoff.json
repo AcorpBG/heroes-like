@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_shard_wardens",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_087",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_089",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_091",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/original_lossless.mkv",
+          "sha256": "f80f5a354dad9b86e82a999c58cfeb60a91b8d38ef584a239769551e3c755e02"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/original.json",
+          "sha256": "e8551067dd23c06f8d4b7eb46f486cbea10dff45db7f30b135e6a88a12b95846"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/workflow_api.json",
+          "sha256": "5beca71f9fc7398b6d266194b8c8b33b37d8e1872baa3d68a75f4e2da7c167c2"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/prompt.txt",
+          "sha256": "54a4f8e1c65b063f78bcf25bf60b6c9353f24d09bd04d870e6ce0f0756fbdb4d"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/reference.json",
+          "sha256": "2607c79f37a5dac8d7a160848337b31465ef0cf3cbe9998bceddd01c5faf41b2"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/matte.json",
+          "sha256": "c27cf39f9a35404c608270ac1941c66dbe077a94e4c605ec4fc5706eaee41962"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/staged_generation.json",
+          "sha256": "b32dc803c5b05bad6ef4740d3d8b4b085f14e8b6a1765a0a2ed9f558b901f700"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/sampling_workflow_api.json",
+          "sha256": "e8fd15d8e5fc9fd4dd4bb1277c8e1bbc871c5ec4fd12d56dfa97b0bd9d05746e"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/sampling_submission.json",
+          "sha256": "63a5f20a568dad3d5276d7045512868394fc419ff4c6204cba0144fcbbfa5cc1"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/sampling_history.json",
+          "sha256": "d3b2201de1bf18d8cc878875d5851ff2487f0318d4c76751a548aa7bec49f000"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/attack_v1/original.latent",
+          "sha256": "0102c8e951d188d32ac63e4128865fa1f27663dfb2afbbbd4cc0c41115a6d2ab"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Two separately reviewed original anticipation0..30 and recovery86..104 segments only. The magical-looking contact interval32..38 is excluded. Not a standalone action: delivery.json joins the corrected physical strike."
+      }
+    }
+  ]
+}

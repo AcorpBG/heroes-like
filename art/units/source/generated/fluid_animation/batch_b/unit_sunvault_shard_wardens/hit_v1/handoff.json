@@ -1,0 +1,443 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_shard_wardens",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_075",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_077",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_079",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "frame_durations_msec": [
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            90,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/original_lossless.mkv",
+          "sha256": "324b97ef63c8f1b2c5ca71f66cd632114576a7a54dc3fa32f18fdfd694420390"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/original.json",
+          "sha256": "b01f601b429ca3224029c764ddb6c90e2644c49c6ed8f30f9a54f018987c5a2d"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/workflow_api.json",
+          "sha256": "ce56feecc23e2ae2f05cc59bf8bcbd8ff4b21e38abf3ee4c4af8c6bbd4efb85e"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/prompt.txt",
+          "sha256": "1034b46128d9f24ad4b3ac996c3bdd2973ab0d99a030fe123aea0c51bb5ab3e9"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/reference.json",
+          "sha256": "130813e6c703c74572ce5370325ce7ee8b1934aee97f36dbdacb9b8923c80b1c"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/matte.json",
+          "sha256": "d062f20a259ac1fc9a32865f29e66de9c90c60549f262ffa86bd379523a86d3b"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/staged_generation.json",
+          "sha256": "fe2705ac3a9dd4737756c2936e656640dc89c678a3134a2836f6296d51e463e7"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/sampling_workflow_api.json",
+          "sha256": "c8c28df41fc3614c60b233183baa75125890117c63ae87e7c780fbedf95ccf8a"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/sampling_submission.json",
+          "sha256": "9e665eb0e44b6800144703a1a72bc8608245f0a9088ae44f51ee4ab1935b5c0c"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/sampling_history.json",
+          "sha256": "271a9733d72a7921e6fd9f01955e4e08b9f881788ed4f04b191920ce2ca413ec"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/hit_v1/original.latent",
+          "sha256": "380ad6f6d191eb5ffe86b655a93dcf12162ebe4507a03590692b51ea19b3b7c7"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames reviewed chronologically and enlarged on light/dark grounds. Continuous shoulder/head recoil19..26 and recovery74..80 preserve two arms/legs, fixed mace grip and single forearm shield. Trim the long stable recoil plateau27..73 instead of padding the clip; retain90ms at peak26 and40ms other phases (690ms total). No reversed frames or abrupt reset; native review pending."
+      }
+    }
+  ]
+}

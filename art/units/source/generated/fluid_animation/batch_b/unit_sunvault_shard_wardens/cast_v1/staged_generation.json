@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f3f63b8aaf70d3a3ec6f27cbb1dae04c4e7c48748968e34ae853a7b9b8033a1e",
+  "latent_sha256": "1bb5a5f8f4566db87c23584b2aad42211b347a933740f5fb57d108cb0ebb9896",
+  "decode_workflow_sha256": "e0141824820f12fcdd265dc1a8b31683577cda64eec77f50771f54718e69b5c7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "shard_wardens_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19819336000,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

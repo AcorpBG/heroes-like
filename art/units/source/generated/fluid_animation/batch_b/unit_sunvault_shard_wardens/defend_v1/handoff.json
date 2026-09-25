@@ -1,0 +1,397 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_shard_wardens",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 13,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            120
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/original_lossless.mkv",
+          "sha256": "f539c9af73dbd46864a247e9684c5c0ca793573bf8ba55348760043d63502c07"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/original.json",
+          "sha256": "e18e6338169d361e0d6b3e83fafd7f968c7626358897b95490edaa52f86de562"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/workflow_api.json",
+          "sha256": "2a4af808183f1f8c32a0c3edc78ad9f916b666faa8978f2d4f6599d107313c85"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/prompt.txt",
+          "sha256": "e91b98477bdb3718f022df88808882014f599be6506bdecdb4962ce42b3c11d8"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/reference.json",
+          "sha256": "169d7baaa010aca239d556fc97bb823b7af0b06ee29c343617c70206736ba580"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/matte.json",
+          "sha256": "14e22baec37c523e440b104a46110ef3a4339cf62b9581a442170c4e58e9a55f"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/staged_generation.json",
+          "sha256": "c6608b46cb2b4e79db1a663c7cb68a11e3fb43c13a50ca2b1142e9ebea61d733"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/sampling_workflow_api.json",
+          "sha256": "891283364beee5bde386bd2805fbd2dffad6f884497da975c7afd89ea932a882"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/sampling_submission.json",
+          "sha256": "260592b03a382d99125bb4fe7b333bc5f9c38d747b6b2efa709b051c15fb8c6f"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/sampling_history.json",
+          "sha256": "c74c2c7e12f7448626526220f613945378cf8f7c400bb2d3a08ac48ecab868fb"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/defend_v1/original.latent",
+          "sha256": "f9458662ce8d5157fb6050f1bb6971728776f10d5e7df53f69062086d0bf8f58"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames inspected chronologically: continuous knee bend and shield-forward brace through25..38, followed by held guard. Original face, short mace head/shaft, left-arm shield and two-leg anatomy stay consistent. Long startup/final holds trimmed; final guard retains120ms authored settle and persists during defend. Enlarged/native review pending."
+      }
+    }
+  ]
+}

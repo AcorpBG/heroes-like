@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    30,
+    "ff522da9-d4d0-4a8d-8d70-35706a4c2073",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic camera, original richly painted fantasy strategy sprite on perfectly uniform vivid GREEN RGB(0,255,0). Identical flat background everywhere including limb gaps, no scenery, shadows, text, particles or colored lighting. One human male guard with short swept brown hair and exposed face, white plate armor edged in gold, blue scarf and blue split tabard, small violet triangular gems on chest and knee plates, brown gloves and armored boots. Exactly two arms and two legs. His RIGHT hand, on IMAGE LEFT in the ready pose, grips one SHORT brown-shafted mace with a solid white/gold cylindrical hammer head and blue gem ends. His LEFT forearm, on IMAGE RIGHT, supports one tall pointed kite shield with white panels, gold rim and blue/violet faceted crystal panels. The shield remains attached to that same forearm; the mace remains in the same right-hand grip throughout. No sword, staff, new weapon, duplicate shield or helmet. Preserve shield height/width, mace shaft length and hammer head, face, armor and all materials without morphing or hue changes. Stable three-quarter RIGHT-facing view, full body and equipment visible, unchanged anatomical scale, fixed camera with no zoom or rotation. Lower into a guarded stance continuously: knees bend, shield arm brings the large kite shield forward to protect the chest, mace arm lowers beside the hip without releasing its grip. Brace both planted feet and hold the final shield guard. No attack, shield throw, kneeling collapse or return to upright at the end.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 925902
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "shard_wardens_defend_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "shard_wardens_defend_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "shard_wardens_h3/defend_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "shard_wardens_h3",
+      "create_time": 1790347802827
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "shard_wardens_h3\\defend_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "ff522da9-d4d0-4a8d-8d70-35706a4c2073",
+          "timestamp": 1790347803189
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "ff522da9-d4d0-4a8d-8d70-35706a4c2073",
+          "timestamp": 1790347803201
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "ff522da9-d4d0-4a8d-8d70-35706a4c2073",
+          "timestamp": 1790347966483
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
