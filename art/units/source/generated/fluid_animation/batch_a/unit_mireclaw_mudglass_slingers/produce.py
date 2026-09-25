@@ -176,7 +176,7 @@ def build(out,c):
  for k in ['contact_frame','frame_durations_msec']:
   if k in s:clip[k]=s[k]
  entry=dict(unit_id=c['unit_id'],reference_height=256,source_facing='right',frames=frames,clips={c['clip']:clip},alpha_noise_cutoff=0,source_scale_reason='One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.',provenance={n:dict(path=(out/n).relative_to(ROOT).as_posix(),sha256=sha(out/n)) for n in ['original_lossless.mkv','original.json','workflow_api.json','prompt.txt','reference.json','matte.json']},visual_review=dict(status='pending',notes=s['review_note']))
- for n in ['extraction_settings.json','staged_generation.json','sampling_workflow_api.json','sampling_submission.json','sampling_history.json','original.latent']:
+ for n in ['runtime_profile.json','extraction_settings.json','staged_generation.json','sampling_workflow_api.json','sampling_submission.json','sampling_history.json','original.latent']:
   if (out/n).exists():entry['provenance'][n]=dict(path=(out/n).relative_to(ROOT).as_posix(),sha256=sha(out/n))
  write(out/'handoff.json',dict(schema_version=1,units=[entry]))
 

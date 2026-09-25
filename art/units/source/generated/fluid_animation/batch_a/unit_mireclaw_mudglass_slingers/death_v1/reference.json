@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "da38902aa8f65628acdc2ddedb26219b20753c5cd248a672078ae9a279e5e70b",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.2874999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "364538f2ade1e4c253e0dd16ba63b5f61cafebab30805c03939af78703450e90",
+      "runtime_source_scale": 1.03
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1260
+        ],
+        "scale": 1.2874999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "4ca328c090c93edc6ef6e119ea16df714e5787cc5076b08b2699f60daa97e5ac",
+      "runtime_source_scale": 1.03
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
