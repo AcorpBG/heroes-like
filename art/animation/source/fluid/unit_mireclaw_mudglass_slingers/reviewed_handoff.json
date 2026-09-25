@@ -1685,6 +1685,1560 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 78,
           "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_061",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_089",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_v1_ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_v1_ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_v1_ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_v1_ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_v1_ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_v1_ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_throw_v2_ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_v1_ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_v1_ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_v1_ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_v1_ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_v1_ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_v1_ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_v1_ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_v1_ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "ranged_v1_ranged_h3_118",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
         }
       ],
       "clips": {
@@ -1796,6 +3350,117 @@
           "frame_msec": 83,
           "loop": true,
           "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11
+        },
+        "ranged": {
+          "frame_msec": 55,
+          "contact_frame": 24,
+          "indices": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141
+          ],
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153
+          ],
+          "frame_msec": 65,
+          "loop": false,
+          "static_frame": 11,
+          "frame_durations_msec": [
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            65,
+            140
+          ]
         }
       },
       "alpha_noise_cutoff": 0,
@@ -1980,11 +3645,199 @@
         "move_v2_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/original.latent",
           "sha256": "ed8c62e79c14b9b3ee4d71444475c36d282d811effd0a8fd8c6fba55e58c6ced"
+        },
+        "attack_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/original_lossless.mkv",
+          "sha256": "556f3ba06a15df3a656982cb47b3d8e74927a5f93204aec5d6ee4644878041b9"
+        },
+        "attack_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/original.json",
+          "sha256": "90ce0f0e3b0ce8836011df6164bb1d78e34d39d0ac6ddacdb84ccf71536c101e"
+        },
+        "attack_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/workflow_api.json",
+          "sha256": "1da9399884916456e920c62c8e7d2ff5efdd735cd6e3ad0e403aeab6fa46702e"
+        },
+        "attack_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/prompt.txt",
+          "sha256": "8ef4b484736a6b0ed017058d3d5a2e37f8629152aa7363e3c71b71648c2e6e25"
+        },
+        "attack_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/reference.json",
+          "sha256": "3c4cc1402c4729dced898ded00f65639305c2f81eaae1fb7da04b5e9497a8744"
+        },
+        "attack_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte.json",
+          "sha256": "90cfb8e705eb62a27858dc49804618fe74c03a5387075d8aade5a43c3aec13c3"
+        },
+        "attack_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/runtime_profile.json",
+          "sha256": "a1d59ffb2e3b42e9e2fd07679ab65fdf6e2f1fbc77f52c3c5798eed30b117ea6"
+        },
+        "attack_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/staged_generation.json",
+          "sha256": "9b618d1eb4dc010a9f12512889fee6ab1c3665339abc70a7be3832d90a8db0f6"
+        },
+        "attack_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/sampling_workflow_api.json",
+          "sha256": "b98ba08cdef108e483fa4597826365942ff506282df091454aa5eeaf2cb99035"
+        },
+        "attack_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/sampling_submission.json",
+          "sha256": "e9ae20acae0d1c55a7b29ba7370e1f91ecb45b2f5aa0b161a4d3e4f812206074"
+        },
+        "attack_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/sampling_history.json",
+          "sha256": "42c306178203844024bf0623fd751456fcdf765839d99dd43906ff75fd008fbc"
+        },
+        "attack_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/original.latent",
+          "sha256": "94a7b25e9b52da6de73353c313d43a623b12f2a07a59a5ba8e1da6bf608869e8"
+        },
+        "defend_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/original_lossless.mkv",
+          "sha256": "3de881cdd449ee4f95d769d7ff254f7621f3977a981ac40142bd3258e93f9c89"
+        },
+        "defend_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/original.json",
+          "sha256": "59688644cbbea7f6a72f68e31b2fa4069aec1f32f09e8beb4f2b9f8c98fb9cb9"
+        },
+        "defend_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/workflow_api.json",
+          "sha256": "c2b680eb266618c41feb46f24aa34548740747b530f01abdfe3e46152b91fdbc"
+        },
+        "defend_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/prompt.txt",
+          "sha256": "61079f92efde7da38d01a523094a55493ab181136e8401cfcf2babd4cd850b53"
+        },
+        "defend_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/reference.json",
+          "sha256": "08ad67dce8c57bfc84938102515da9df7e5217614fcc6c3c2641997c9ed2ddbd"
+        },
+        "defend_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte.json",
+          "sha256": "c0399754f56719082d4b717bfad8d8b2140293d8cfb7ea79bc73ad6c571d0eae"
+        },
+        "defend_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/runtime_profile.json",
+          "sha256": "a1d59ffb2e3b42e9e2fd07679ab65fdf6e2f1fbc77f52c3c5798eed30b117ea6"
+        },
+        "defend_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/staged_generation.json",
+          "sha256": "c0d0baaa14482620326c107946e2d7f1b94e8b687792fed25e6169117d557194"
+        },
+        "defend_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/sampling_workflow_api.json",
+          "sha256": "9492e58be6d8059d96167994aad97499d79b219556ccebcb9571caf35d8667ee"
+        },
+        "defend_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/sampling_submission.json",
+          "sha256": "e4d23f5d24341b796aef43b06bff737fb1688987fbbefe8b1443f8565445bb0c"
+        },
+        "defend_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/sampling_history.json",
+          "sha256": "6273623e605e0a8e710b02db53a828fb26ede11f29b3b8f53cf4f165755b05f2"
+        },
+        "defend_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/original.latent",
+          "sha256": "c7cc3e282a4e72e9ae4f80675fba3573ec6f23d09b56bc90c906d7864cd44dee"
+        },
+        "ranged_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/original_lossless.mkv",
+          "sha256": "51fecd61dd7f6657a4ba400e43b92a91a5fcd3a0122265ee5ae7fbc5f243285f"
+        },
+        "ranged_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/original.json",
+          "sha256": "87e2a9751134dc7ec00655f5b2c91a003d4ede85cfdbf90ebebdbc80d0a3f54d"
+        },
+        "ranged_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/workflow_api.json",
+          "sha256": "5b4db3d4f6ae366c858a79a0aa8891bd9e46b2223f86c1c1b784ac80b41f8ca7"
+        },
+        "ranged_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/prompt.txt",
+          "sha256": "3ea4d2c05d180c3e474f846130bdeccb67814524b555b351b7d5be83c08db894"
+        },
+        "ranged_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/reference.json",
+          "sha256": "caff3f7a947bfb55b1cb0dd224b04493c59ec7c0225245c82291d36ed0e35d68"
+        },
+        "ranged_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte.json",
+          "sha256": "d6805b3a839415ca6120d5372449005b70925d70f683407f84a1b2c4bb00da69"
+        },
+        "ranged_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/staged_generation.json",
+          "sha256": "bad0201bdc0b1f262308d9a93862b07544b1ea2756ab0373421dfbeb16b5df86"
+        },
+        "ranged_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/sampling_workflow_api.json",
+          "sha256": "9d40d0ed2a0365928740aced4aa9a6f9a87de2272f78e38a63b29892741a8e8c"
+        },
+        "ranged_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/sampling_submission.json",
+          "sha256": "59c79349b368385dd622e11cac38515bd4760d42944402bdd3db8aa453ac23d3"
+        },
+        "ranged_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/sampling_history.json",
+          "sha256": "c6584c468e18d562c03a4075d9f031468e02a960953426e1fc206387d772c1fe"
+        },
+        "ranged_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/original.latent",
+          "sha256": "c1cd31d15062e2cd4b265e558048ecf51533b8d32d0228bb8b5d274032255c17"
+        },
+        "ranged_throw_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/original_lossless.mkv",
+          "sha256": "82b89d5173fe01fd2b95a884d6ccb3bb75e5890134260926d81058581567feff"
+        },
+        "ranged_throw_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/original.json",
+          "sha256": "967e5c3c9582a70a72e06d679e16258b8324ba17eb427187bbeea3f1db68ed7c"
+        },
+        "ranged_throw_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/workflow_api.json",
+          "sha256": "8b9bb57b009b616a6b53d35e87afbdcd799143fdd8c4ca881eb73ba4c7e6673f"
+        },
+        "ranged_throw_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/prompt.txt",
+          "sha256": "0b7e5f876be95588f532431f45165e4e0c87f4319f0779e6343f560c85cd6310"
+        },
+        "ranged_throw_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/reference.json",
+          "sha256": "d8a326d5c3dcafd8599ddf485cdf15e5c5f8aba0afdcb0d8df01a159b6a4b934"
+        },
+        "ranged_throw_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte.json",
+          "sha256": "d04ab6f5e002bbc6cca2d54f1a7104a09c783fcf05ac4e7b828116226597330b"
+        },
+        "ranged_throw_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/runtime_profile.json",
+          "sha256": "a1d59ffb2e3b42e9e2fd07679ab65fdf6e2f1fbc77f52c3c5798eed30b117ea6"
+        },
+        "ranged_throw_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/staged_generation.json",
+          "sha256": "c5099ae17ef49d92cab26e19ed9143e3e2d2557315ab54989c0c2e35ebf31439"
+        },
+        "ranged_throw_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/sampling_workflow_api.json",
+          "sha256": "f06935c7a91e354396a56ab15b0affe3308cadcb9b4924438c7b4326cb0950d6"
+        },
+        "ranged_throw_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/sampling_submission.json",
+          "sha256": "8c9fa5f9b98dea4e6c3fad97749ca798ebc4506a18653f5721acc46fcd9c712f"
+        },
+        "ranged_throw_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/sampling_history.json",
+          "sha256": "ceb6d558dbd16a7a08d01b35b64afa20fb43db9be2e45f2e4efabdfb83bcac07"
+        },
+        "ranged_throw_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/original.latent",
+          "sha256": "8123c893cf6811d102b81c1971845154fed5183749a8ecb633aa844120606366"
         }
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Autonomously reviewed all 124 chronological original walking frames, enlarged anatomy and sling, reciprocal foot contacts, 78-to-40 loop boundary, and all 20 packed phases in offscreen Godot at native scale. Movement approved at 83ms per frame. Previous hit, support, death/corpse and eight-pose 240ms idle retained. No continuous playback or manual game playtest claimed."
+        "notes": "Autonomous review: all chronological originals, enlarged anatomy/equipment/alpha, loaded-pose and release/recovery joins, gait loop boundary and every native-scale offscreen Godot phase. Melee keeps sling image-left while free fist punches; ranged uses one pouch/two cords and original loading/recovery around corrected throw; defense bends continuously into held forearm guard. Compact storage preserves original pixels, scale and anatomical offsets. Original eight-pose240ms idle and prior hit/support/death/movement retained. No continuous playback or manual game playtest claimed."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_000.png": 0.8,
@@ -2066,7 +3919,81 @@
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/matte/rgba_072.png": 0.8,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/matte/rgba_074.png": 0.8,
         "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/matte/rgba_076.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/matte/rgba_078.png": 0.8
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/move_v2/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_013.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_061.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_089.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/attack_v2/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_throw_v2/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_102.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_104.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_106.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_112.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/ranged_v1/matte/rgba_118.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/defend_v2/matte/rgba_040.png": 0.8
       },
       "preserved_accepted_clips": [
         "idle"
@@ -2076,6 +4003,9 @@
         "cast",
         "death",
         "move",
+        "attack",
+        "ranged",
+        "defend",
         "idle"
       ]
     }

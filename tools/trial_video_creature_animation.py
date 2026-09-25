@@ -229,6 +229,15 @@ def matte(rgb):
 def accepted_frames(row):
     atlas=Image.open(ROOT/row['pose_sheet'].removeprefix('res://')).convert('RGBA')
     w=row['pose_frame_size']['width'];h=row['pose_frame_size']['height'];cols=row['pose_columns']
+    if row.get('pose_frame_rects'):
+        from integrate_fluid_creature_animation import old_pose
+        frames=[]
+        for i in row['pose_clips']['idle']['indices']:
+            pose,(x,y)=old_pose(atlas,row,i)
+            frame=Image.new('RGBA',(w,h))
+            frame.paste(pose,(row.get('pose_anchor_x',w//2)+x,h-row.get('pose_ground_margin',0)+y))
+            frames.append(frame)
+        return frames
     return [atlas.crop(((i%cols)*w,(i//cols)*h,(i%cols+1)*w,(i//cols+1)*h)) for i in row['pose_clips']['idle']['indices']]
 
 

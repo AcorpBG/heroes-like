@@ -1,0 +1,10 @@
+{
+  "service": "local_comfyui_minimax_h3",
+  "extra_server_arguments": [
+    "--disable-dynamic-vram",
+    "--reserve-vram",
+    "4"
+  ],
+  "reason": "Use supported estimate-based model loading after long stalls in dynamic loading. Same model files, seeds,124-frame24fps960x54420-step generation settings and separate original-latent decode.",
+  "acceptance": "No automatic acceptance; chronological/enlarged/native review required."
+}

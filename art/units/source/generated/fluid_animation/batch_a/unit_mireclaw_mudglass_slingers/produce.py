@@ -193,7 +193,22 @@ def assemble():
   attack['clips']={'attack':dict(indices=list(range(len(attack['frames']))),frame_msec=delivery['attack_frame_msec'],contact_frame=delivery['attack_contact_frame'],loop=False,static_frame=0)}
   attack['provenance']={f'{i}_{k}':v for i,part in enumerate(parts) for k,v in part['provenance'].items()}
   unit=combine(unit,attack)
- unit['provenance']={f'{take}_{k}':v for take in delivery['takes']+delivery.get('attack_segments',[]) for k,v in json.loads((SOURCE_DIR/take/'handoff.json').read_bytes())['units'][0]['provenance'].items()}
+ sequence_takes=[]
+ for name,sequence in delivery.get('clip_sequences',{}).items():
+  parts={take:json.loads((SOURCE_DIR/take/'handoff.json').read_bytes())['units'][0] for take in dict.fromkeys(f['take'] for f in sequence['frames'])}
+  sequence_takes.extend(parts)
+  assembled=dict(next(iter(parts.values())));assembled['frames']=[]
+  seen=set()
+  for source in sequence['frames']:
+   take,index=source['take'],source['video_frame'];assert (take,index) not in seen;seen.add((take,index))
+   frame=next(f for f in parts[take]['frames'] if f['video_frame']==index)
+   assert frame['clip']==name
+   assembled['frames'].append(dict(frame,name=f'{take}_{frame["name"]}'))
+  assembled['clips']={name:dict(sequence['timing'],indices=list(range(len(assembled['frames']))),loop=False,static_frame=0)}
+  assembled['provenance']={f'{take}_{k}':v for take,part in parts.items() for k,v in part['provenance'].items()}
+  unit=combine(unit,assembled)
+ all_takes=dict.fromkeys(delivery['takes']+delivery.get('attack_segments',[])+sequence_takes)
+ unit['provenance']={f'{take}_{k}':v for take in all_takes for k,v in json.loads((SOURCE_DIR/take/'handoff.json').read_bytes())['units'][0]['provenance'].items()}
  unit['preserved_accepted_clips']=['idle'];unit['visual_review']=delivery.get('visual_review',dict(status='pending',notes='Selected Mudglass Slingers H3 actions; native review required. Seven dedicated actions; preserve the reviewed original eight-pose idle.'))
  write(SOURCE_DIR/'handoff.json',dict(schema_version=1,units=[unit]))
 

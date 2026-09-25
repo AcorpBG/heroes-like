@@ -72,7 +72,9 @@ function draw(){if(!texture)return;$('main').style.gridTemplateColumns=`repeat(a
  ctx.fillStyle=$('#back').value;ctx.fillRect(0,0,cw,ch);
  ctx.strokeStyle='#9ba8ad';ctx.beginPath();ctx.moveTo(0,h*scale);ctx.lineTo(cw,h*scale);ctx.stroke();
  const groundOffset=Math.max(0,Math.min(h-1,row.pose_ground_margin??0))*scale;
- ctx.save();if($('#flip').checked!==(row.pose_source_facing==='left')){ctx.translate(cw,0);ctx.scale(-1,1)}ctx.drawImage(texture,x,y,w,h,0,groundOffset,cw,h*scale);ctx.restore();
+ ctx.save();if($('#flip').checked!==(row.pose_source_facing==='left')){ctx.translate(cw,0);ctx.scale(-1,1)}
+ if(row.pose_frame_rects){const [rx,ry,rw,rh]=row.pose_frame_rects[idx],a=row.pose_region_anchors[`${rx},${ry}`];ctx.drawImage(texture,rx,ry,rw,rh,((row.pose_anchor_x??w/2)-a[0])*scale,(h-a[1])*scale,rw*scale,rh*scale)}
+ else ctx.drawImage(texture,x,y,w,h,0,groundOffset,cw,h*scale);ctx.restore();
  p.out.textContent='Frame '+(f+1)+'/'+p.indices.length+' · atlas '+idx+' · '+(p.spec.loop?'loop':'one-shot');
  }}
 function tick(t){if(last!==null&&playing)elapsed+=Math.min(t-last,100)*Number($('#speed').value);last=t;draw();requestAnimationFrame(tick)}

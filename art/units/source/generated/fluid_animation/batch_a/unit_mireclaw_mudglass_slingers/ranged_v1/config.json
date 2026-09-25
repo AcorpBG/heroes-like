@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "clip": "ranged",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 32,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 1.03,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        748
+      ],
+      "scale": 1.03,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1.03,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1.03,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      49,
+      2
+    ],
+    [
+      70,
+      3
+    ],
+    [
+      98,
+      4
+    ]
+  ],
+  "seed": 925603,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked camera, original richly painted fantasy strategy game sprite on a perfectly uniform flat vivid GREEN RGB(0,255,0) background. The background stays the identical solid green throughout, including inside sling cords and between limbs. No scenery, colored lighting, shadows, text or particles. One adult human female Mudglass Slinger, brown hair in a long loose ponytail with yellow reed ornaments, green cloth scarf covering mouth and nose, olive and brown layered leather clothing, ochre-yellow reed fringe on both shoulders and legs, brown wrapped boots, small round pale shell charms across belt, one brown ammunition pouch at IMAGE RIGHT hip. Exactly TWO arms and TWO legs. The IMAGE LEFT hand holds the two dark leather cords of ONE small traditional sling; its single brown/gold leather pouch hangs below that hand. The IMAGE RIGHT hand is the free hand, normally near her belt pouch. Preserve the same face, scarf, hair, shoulder fringe, belt charms, sling cords and pouch, and boots. No staff, bow, shield, sword, extra sling, duplicated hand or additional limb. Stable three-quarter RIGHT-facing camera, no camera rotation, zoom or root translation. Full figure and sling remain visible at the same anatomical scale throughout. No background hue cycling or transitions. Perform ONE traditional sling throw toward IMAGE RIGHT. The free IMAGE RIGHT hand seats a stone into the sling pouch, then returns toward the belt. The IMAGE LEFT sling hand lifts above the head and swings the loaded sling through a clear overhead arc. At release the throwing arm follows through toward IMAGE RIGHT, one cord end releases so the two cords open into the supplied trailing empty sling pose. The projectile itself is NOT drawn: the game supplies the flying stone separately. After release, recover the loose cord with the free hand, bring the sling back down and return to the ready pose. Keep one pouch and two flexible cords, with the same throwing hand throughout. No bow, gun, extra sling, duplicated cord bundles, free-flying painted rock or magic. Show all intervening arm motion continuously."
+}

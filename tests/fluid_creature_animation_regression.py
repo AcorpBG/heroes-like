@@ -108,7 +108,8 @@ func run():
 			for change in patch.units:
 				var row:Dictionary=change.animation
 				var imported:Texture2D=load(row.pose_sheet)
-				check(imported.get_width()==row.pose_frame_size.width*row.pose_columns,"stale imported battle atlas "+change.unit_id)
+				var expected_size:Dictionary=row.get("pose_sheet_size",{"width":row.pose_frame_size.width*row.pose_columns,"height":imported.get_height()})
+				check(imported.get_width()==int(expected_size.width) and imported.get_height()==int(expected_size.height),"stale imported battle atlas "+change.unit_id)
 				var canvas:=Control.new();canvas.size=Vector2(1280,400);add_child(canvas)
 				var batch=Batch.new();batch.begin(canvas)
 				batch.record(&"draw_rect",[Rect2(0,0,1280,400),Color(.12,.16,.1)])
@@ -148,8 +149,17 @@ func run():
 			if name=="ranged":ranged_id=change.unit_id
 		var region:Rect2=Pose.region(row,"idle_hold",0,0,true)
 		var rect:Rect2=Pose.grounded_rect(Vector2(500,400),128,region,row)
-		check(is_equal_approx(rect.position.y+(region.size.y-row.pose_ground_margin)*128/row.pose_reference_height,400),"anatomical ground changed")
-		if row.has("pose_anchor_x"):
+		if row.has("pose_frame_rects"):
+			for packed_region in row.pose_frame_rects:
+				var storage:=Rect2(packed_region[0],packed_region[1],packed_region[2],packed_region[3])
+				var origin:Array=row.pose_region_anchors["%d,%d" % [int(storage.position.x),int(storage.position.y)]]
+				for mirrored in [false,true]:
+					var drawn:Rect2=Pose.grounded_rect(Vector2(500,400),128,storage,row,mirrored)
+					var ax:float=storage.size.x-float(origin[0]) if mirrored else float(origin[0])
+					check((drawn.position+Vector2(ax,float(origin[1]))*128.0/row.pose_reference_height).is_equal_approx(Vector2(500,400)),"compact frame anatomical anchor changed")
+		else:
+			check(is_equal_approx(rect.position.y+(region.size.y-row.pose_ground_margin)*128/row.pose_reference_height,400),"anatomical ground changed")
+		if row.has("pose_anchor_x") and not row.has("pose_frame_rects"):
 			# Compare trimmed art against its equivalent old centered canvas.
 			# Both facings must put the same source pixel at the same world point.
 			var anchor:float=row.pose_anchor_x
@@ -281,6 +291,8 @@ func run():
 		check(not shell._perform_action("defend").get("ok",false),"shell accepted input mid animation")
 		var deadline:=Time.get_ticks_msec()+20000
 		var capture_count:=0
+		var phase_captures:Array[Image]=[]
+		var captured_poses:=[]
 		var seen_attack_frames:=[]
 		while shell._action_playback_in_progress and Time.get_ticks_msec()<deadline:
 			await get_tree().process_frame
@@ -290,14 +302,18 @@ func run():
 				if not record.is_empty() and record.get("event_id","")=="battle_unit_melee_attack":
 					var pose_index:int=Pose.timed_frame(ContentService.get_unit_animation(attack_id).pose_clips.attack,Pose.elapsed_msec(record,Time.get_ticks_msec()))
 					if pose_index not in seen_attack_frames:seen_attack_frames.append(pose_index)
-					if capture_count<3 and pose_index in [0,2,4]:
+					if capture_count<3 and pose_index in [0,2,4] and pose_index not in captured_poses:
 						await RenderingServer.frame_post_draw
-						get_viewport().get_texture().get_image().save_png(OS.get_environment("FLUID_OUTPUT").path_join("battle-phase-"+str(capture_count)+".png"))
+						phase_captures.append(get_viewport().get_texture().get_image())
+						captured_poses.append(pose_index)
 						capture_count+=1
+		# PNG encoding/disk IO must not stall the clock being observed.
+		for i in range(phase_captures.size()):
+			phase_captures[i].save_png(OS.get_environment("FLUID_OUTPUT").path_join("battle-phase-"+str(i)+".png"))
 		check(not shell._action_playback_in_progress,"shell animation queue did not finish")
 		check(rendered.to_dict()==committed,"shell presentation changed committed saved simulation")
 		check(shell._battle_board_view.focus_mode==Control.FOCUS_ALL,"shell did not restore focus")
-		check(seen_attack_frames.size()==int(ContentService.get_unit_animation(attack_id).pose_clips.attack.frames),"shell did not show every authored attack pose including recovery")
+		check(seen_attack_frames.size()==int(ContentService.get_unit_animation(attack_id).pose_clips.attack.frames),"shell did not show every authored attack pose including recovery; observed="+str(seen_attack_frames))
 		var guard_session=fixture()
 		var guard:Dictionary=BattleRules.perform_presented_action(guard_session,"defend")
 		shell._session=guard_session

@@ -94,6 +94,7 @@ Expected ownership boundaries:
 - Overworld scenery may compose compatible neighboring blocked bodies into shared visual patches, independent of source-record boundaries. Patch bases must use existing blocked cells; overlapping art stays in the presentation/fog layer and must not modify native placements, paths, collision, simulation RNG or saves.
 - Battle state, initiative, stack actions, spells/status, exits, and post-battle sync: `BattleRules.gd`.
 - Battle body geometry is shared by rules, AI and presentation through `BattleFootprint.gd`. Explicit content profiles supply new stacks' one/two-cell footprints and visual scale; these fields persist in battle saves, while legacy battles without them retain one-cell occupancy. Raster pose clips and dead poses remain presentation metadata, not simulation state.
+- Creature atlas storage may use legacy grids or explicit packed rectangles with original anatomical anchors. Storage layout must preserve source pixels, scale, timing, mirrored grounding and corpse position; it must not enter simulation or save state.
 - Tactical enemy decisions: `BattleAiRules.gd`.
 - Town construction, recruitment, study, garrison, market, defense, and town summaries: `TownRules.gd`.
 - Heroes, command, roster, transfer, town-defender eligibility/force assembly, recruitment, progression, and carryover-safe hero state: `HeroCommandRules.gd`, `HeroProgressionRules.gd`.

@@ -201,6 +201,9 @@ func run()->void:
 					var center:Vector2=board._hex_center(cell,layout)+board._body_center_offset(casualty,cell,layout)
 					var expected_ground:float=center.y+float(layout.radius)*board.STACK_STANDEE_GROUND_OFFSET_FACTOR
 					var authored_line:float=corpse.rect.position.y+corpse.rect.size.y*(1.0-float(animation.get("pose_ground_margin",0))/float(animation.pose_frame_size.height))
+					if animation.has("pose_region_anchors"):
+						var origin:Array=animation.pose_region_anchors["%d,%d" % [int(corpse.region.position.x),int(corpse.region.position.y)]]
+						authored_line=corpse.rect.position.y+corpse.rect.size.y*float(origin[1])/corpse.region.size.y
 					check(is_equal_approx(authored_line,expected_ground),"corpse uses transparent canvas padding instead of authored ground line")
 					check(corpse.flip==(String(animation.get("pose_source_facing","right"))!="left"),"enemy corpse source-facing transform lost")
 				check(corpse_found,"candidate's own persistent corpse missing: "+unit_id)
