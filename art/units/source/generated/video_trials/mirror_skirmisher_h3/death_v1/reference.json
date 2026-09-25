@@ -1,0 +1,201 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            358
+          ],
+          [
+            0,
+            358,
+            385,
+            360
+          ],
+          [
+            0,
+            360,
+            386,
+            361
+          ],
+          [
+            0,
+            361,
+            387,
+            362
+          ],
+          [
+            0,
+            362,
+            388,
+            363
+          ],
+          [
+            0,
+            363,
+            389,
+            364
+          ],
+          [
+            0,
+            364,
+            390,
+            365
+          ],
+          [
+            0,
+            365,
+            391,
+            366
+          ],
+          [
+            0,
+            366,
+            392,
+            367
+          ],
+          [
+            0,
+            367,
+            393,
+            368
+          ],
+          [
+            0,
+            368,
+            394,
+            369
+          ],
+          [
+            0,
+            369,
+            395,
+            370
+          ],
+          [
+            0,
+            370,
+            396,
+            374
+          ],
+          [
+            0,
+            374,
+            395,
+            375
+          ],
+          [
+            0,
+            375,
+            389,
+            376
+          ],
+          [
+            0,
+            376,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          467
+        ],
+        "scale": 0.65,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95de30e201d92366c93df9df166a6c8f63b78ab0ebc4f85885312f272fa43354",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2af557dba5a58a493f41513c3b7bc8bce8d98614dbc86afcb0b1c806fde731ee",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "kneel",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            933,
+            303,
+            1254
+          ]
+        ],
+        "anchor": [
+          161,
+          1248
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1e0416e8aa443d83dda1753251289900197e9ea80ea3be8f94eab8460a52ca4d",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "fall",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            303,
+            933,
+            608,
+            1254
+          ]
+        ],
+        "anchor": [
+          480,
+          1248
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "995d81656a9b1e5e0ca1c4ec54247a1423ca566fea4223c19a5ff1a75bfebe7d",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            923,
+            1050,
+            1254,
+            1220
+          ]
+        ],
+        "anchor": [
+          1089,
+          1220
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "c584479a7bc46dc81322b343f0bf1f7ae9ffe156729aa546b77bc73579aa60b1",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

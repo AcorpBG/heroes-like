@@ -1,0 +1,128 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "clip": "cast",
+  "seed": 2026092585,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          358
+        ],
+        [
+          0,
+          358,
+          385,
+          360
+        ],
+        [
+          0,
+          360,
+          386,
+          361
+        ],
+        [
+          0,
+          361,
+          387,
+          362
+        ],
+        [
+          0,
+          362,
+          388,
+          363
+        ],
+        [
+          0,
+          363,
+          389,
+          364
+        ],
+        [
+          0,
+          364,
+          390,
+          365
+        ],
+        [
+          0,
+          365,
+          391,
+          366
+        ],
+        [
+          0,
+          366,
+          392,
+          367
+        ],
+        [
+          0,
+          367,
+          393,
+          368
+        ],
+        [
+          0,
+          368,
+          394,
+          369
+        ],
+        [
+          0,
+          369,
+          395,
+          370
+        ],
+        [
+          0,
+          370,
+          396,
+          374
+        ],
+        [
+          0,
+          374,
+          395,
+          375
+        ],
+        [
+          0,
+          375,
+          389,
+          376
+        ],
+        [
+          0,
+          376,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        467
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Mirror Skirmisher, an armored human with a fully closed pointed gold-and-blue helmet, long flowing white ponytail, white tabard and blue/silver plate armor with gold trim. Two arms and two armored legs. A small oval faceted blue-white buckler is strapped to the far left forearm. The near right hand grips one continuous blue spear shaft with exactly two gold-mounted blue diamond tips, one at each end. Long iridescent blue-white ribbons trail behind. All equipment retains original size and shape. Fixed right-facing three-quarter orthographic camera, same anatomical scale and grounded body anchor. Perfectly uniform solid bright green RGB0,255,0 chroma background stays identical throughout. Only the single character moves; surrounding space stays blank and still. A physical rally salute: keep the spear lowered across the waist in the near right hand, raise the empty far left fist and its attached small buckler above shoulder height, hold briefly, then lower that same forearm to return to ready. Both boots remain planted. The buckler stays strapped to the forearm and the two spear tips remain unchanged. A clear arm gesture with natural ribbon follow-through.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

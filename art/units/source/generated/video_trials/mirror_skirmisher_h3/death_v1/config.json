@@ -1,0 +1,195 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "clip": "death",
+  "seed": 2026092584,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          358
+        ],
+        [
+          0,
+          358,
+          385,
+          360
+        ],
+        [
+          0,
+          360,
+          386,
+          361
+        ],
+        [
+          0,
+          361,
+          387,
+          362
+        ],
+        [
+          0,
+          362,
+          388,
+          363
+        ],
+        [
+          0,
+          363,
+          389,
+          364
+        ],
+        [
+          0,
+          364,
+          390,
+          365
+        ],
+        [
+          0,
+          365,
+          391,
+          366
+        ],
+        [
+          0,
+          366,
+          392,
+          367
+        ],
+        [
+          0,
+          367,
+          393,
+          368
+        ],
+        [
+          0,
+          368,
+          394,
+          369
+        ],
+        [
+          0,
+          369,
+          395,
+          370
+        ],
+        [
+          0,
+          370,
+          396,
+          374
+        ],
+        [
+          0,
+          374,
+          395,
+          375
+        ],
+        [
+          0,
+          375,
+          389,
+          376
+        ],
+        [
+          0,
+          376,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        210,
+        467
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "kneel",
+      "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          933,
+          303,
+          1254
+        ]
+      ],
+      "anchor": [
+        161,
+        1248
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "fall",
+      "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+      "rects": [
+        [
+          303,
+          933,
+          608,
+          1254
+        ]
+      ],
+      "anchor": [
+        480,
+        1248
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+      "rects": [
+        [
+          923,
+          1050,
+          1254,
+          1220
+        ]
+      ],
+      "anchor": [
+        1089,
+        1220
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Mirror Skirmisher, an armored human with a fully closed pointed gold-and-blue helmet, long flowing white ponytail, white tabard and blue/silver plate armor with gold trim. Two arms and two armored legs. A small oval faceted blue-white buckler is strapped to the far left forearm. The near right hand grips one continuous blue spear shaft with exactly two gold-mounted blue diamond tips, one at each end. Long iridescent blue-white ribbons trail behind. All equipment retains original size and shape. Fixed right-facing three-quarter orthographic camera, same anatomical scale and grounded body anchor. Perfectly uniform solid bright green RGB0,255,0 chroma background stays identical throughout. Only the single character moves; surrounding space stays blank and still. Knees weaken and lower into a kneel, then topple forward onto the side, head settling at screen left and boots at screen right as in the final reference. The spear lowers with the near hand to lie horizontally on the ground in front, both diamond tips visible. Ponytail and ribbons settle around the body. Finish motionless on the ground with both arms and legs naturally folded.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

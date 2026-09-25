@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            638,
+            0,
+            923,
+            322
+          ]
+        ],
+        "anchor": [
+          781,
+          318
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "749a6d4c8145a16bf2616dc45e730f3244cab757631a5ea2adfb28ad7ce12817",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

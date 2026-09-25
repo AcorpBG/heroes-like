@@ -1,0 +1,183 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            358
+          ],
+          [
+            0,
+            358,
+            385,
+            360
+          ],
+          [
+            0,
+            360,
+            386,
+            361
+          ],
+          [
+            0,
+            361,
+            387,
+            362
+          ],
+          [
+            0,
+            362,
+            388,
+            363
+          ],
+          [
+            0,
+            363,
+            389,
+            364
+          ],
+          [
+            0,
+            364,
+            390,
+            365
+          ],
+          [
+            0,
+            365,
+            391,
+            366
+          ],
+          [
+            0,
+            366,
+            392,
+            367
+          ],
+          [
+            0,
+            367,
+            393,
+            368
+          ],
+          [
+            0,
+            368,
+            394,
+            369
+          ],
+          [
+            0,
+            369,
+            395,
+            370
+          ],
+          [
+            0,
+            370,
+            396,
+            374
+          ],
+          [
+            0,
+            374,
+            395,
+            375
+          ],
+          [
+            0,
+            375,
+            389,
+            376
+          ],
+          [
+            0,
+            376,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          467
+        ],
+        "scale": 0.65,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95de30e201d92366c93df9df166a6c8f63b78ab0ebc4f85885312f272fa43354",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2af557dba5a58a493f41513c3b7bc8bce8d98614dbc86afcb0b1c806fde731ee",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "guard",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            321,
+            633,
+            638,
+            933
+          ]
+        ],
+        "anchor": [
+          480,
+          925
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "efc6fcc53613f2e33915840f0a2964607e361289f1ea296b5f488b10379e4792",
+      "runtime_source_scale": 0.7
+    },
+    {
+      "source_frame": {
+        "name": "block",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            638,
+            633,
+            923,
+            933
+          ],
+          [
+            923,
+            839,
+            948,
+            895
+          ]
+        ],
+        "anchor": [
+          781,
+          925
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "dda17eea2bfaa8a3495ff5d5f10c4907dc0f352c6e85041cb3fa22a430ebd1c1",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
