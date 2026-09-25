@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4cf28c950c952492a87396dd7b14374fcb8eb4959a767c665eabb3f707ce75d7",
+  "latent_sha256": "8e2af6b4b8529054769342f1a7bca6ac577ce42e75bfed48e41c9da123d565c5",
+  "decode_workflow_sha256": "2dd1a6d0ed5db35ce7d068c8442721e501921b02b93dc894a6598272cede1624",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mudglass_slingers_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

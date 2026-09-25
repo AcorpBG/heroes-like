@@ -1,41 +1,45 @@
 # Mudglass Slingers H3 source motion
 
-Partial production: the18-frame H3 hit/recovery clip is reviewed and published.
-Movement, melee, sling throw, defense, support and death remain in progress.
-Preserve the reviewed eight-pose articulated idle and
-its map artwork/timing. Replace movement, melee punch, sling throw, defense,
-hit, physical rally support and death/corpse with reviewed original H3 motion.
+Partial production: hit 18, physical rally/support 17, death 25 plus its final
+corpse, and reciprocal walking 20 are reviewed and published. Melee punch, sling
+throw and defense remain in progress. Preserve the original eight-pose articulated idle, 240ms timing
+and byte-exact map artwork, plus every accepted H3 frame during later additions.
 
 Identity: adult human slinger with long brown ponytail, green face scarf, olive
 leather, yellow reed fringe, pale belt charms and brown boots. Image-left hand
 owns the single two-cord leather sling; image-right hand is free and loads it.
 The runtime owns the flying projectile. No painted duplicate projectile.
 
-Original older action poses use one fixed scale of 1.03 to match the newer idle
-body (220 versus 226 pixels in the ready references). All extracted frames use
-scale 0.8 and ground anchor [480,480], including the corpse. No per-frame size
-normalization, reversed frames, artificial interpolation or synthesized poses.
-The saturated green guide plate is separated from original olive material;
-the 32-unit protected foreground band preserves opaque clothing colors.
+Original older action guides use one fixed scale of 1.03 to match the newer idle
+body (220 versus 226 pixels in ready references). Extracted frames use scale 0.8
+and ground anchor [480,480], including the corpse. No per-frame normalization,
+reversed frames, artificial interpolation or synthesized poses. The green plate
+uses a 32-unit protected foreground chroma band to retain opaque olive material.
 
-configure.py defines original pose guides and action briefs. Submitted take
-folders are immutable. stage_video.py saves the original sampled video latent,
-releases encoder/denoiser/cache, then decodes separately with VAE. Models/settings:
-local MiniMax H3 at 960x544, 124 frames/24fps, 20 res_multistep/simple steps,
-256/64 spatial and 16/4 temporal tiled decoding. Preserve videos, latents, prompts,
-guides, hashes and source-frame provenance for accepted and rejected takes.
+configure.py records the original guides and action briefs. Submitted take
+folders are immutable. stage_video.py saves the original video latent, releases
+large models, then decodes separately. batch_stage.py can retain model caches
+across a sampling batch before a VAE-only decode pass. Local MiniMax H3 settings:
+960x544, 124 frames at 24fps, 20 res_multistep/simple steps; tiled decoding 256/64
+spatial and 16/4 temporal. Preserve originals, latents, prompts, guides and hashes.
 
-Review is autonomous: chronological original frames, enlarged anatomy/cords/alpha,
-loop/segment joins and actual-size offscreen Godot phases. Do not claim continuous
-video playback or a manual game playtest from these checks. Focused tests only.
+Selections and timing are explicit in each selection.json. Hit condenses the long
+settled reaction hold 24..62. Support condenses the chest-level fist hold; death
+retains each knee-collapse and side-fall transition while shortening held kneeling
+and corpse intervals. Walking uses original frames 40..78 in steps of two, 83ms
+per phase, with the 78-to-40 cycle boundary checked against original frame 80.
+All selected frames are original observations at one scale.
 
-Hit selection: original frames0,4,6,7,8,9,10,12,18,24,62,66,70,74,78,82,86,90
-at55ms per frame. The long settled hold24..62 is condensed with its join reviewed.
-The one-leg move, sling-transferring melee, duplicated-sling throwing interval and
-color-cycling defense are excluded. Defense chroma calibration was tested but
-left colored edge fringes; it remains rejected. Original failed videos are retained.
+Rejected sources remain excluded: move_v1 repeats one leading leg; attack_v1
+moves the sling into the punching hand; ranged_v1 duplicates the sling during the
+overhead interval; defend_v1 cycles background colors. Its calibrated chroma trial
+still left colored fringes, so it remains rejected rather than eroding artwork.
 
-Validation for this partial delivery:21 candidate and35 imported-live focused checks
-passed. All231 other battle/map rows, unmodified old action pixels, eight idle
-paintings/240ms timing and the overworld PNG remained exact; candidate/live atlases
-are pixel-identical. Focused offscreen Windows Godot checks only; no full suite.
+Review is autonomous: complete chronological originals, enlarged anatomy/cords/
+alpha, segment joins and every packed phase in offscreen Godot at 128px reference
+height. No continuous video playback or manual game playtest is claimed.
+Hit delivery passed 21 candidate and 35 imported-live focused checks. The combined
+hit/support/death candidate passed 67 focused checks; the imported-live delivery passed 81.
+Adding movement passed 89 combined-candidate and 103 imported-live focused checks.
+Other 231 battle/map rows, all previously accepted pixels and timing, untouched actions
+and the map PNG were preserved exactly. The corpse equals the final death frame. No full suite or Linux runtime check was run.

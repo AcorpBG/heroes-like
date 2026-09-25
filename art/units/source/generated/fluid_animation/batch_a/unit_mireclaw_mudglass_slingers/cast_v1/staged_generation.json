@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "85793d715529ae768e0ec0168a95cd40cab994a2843113da045bafbbcafcd6c3",
+  "latent_sha256": "e6b38a2b79ddcf41313e8dd465c6ef940622e605bbe0f89e748074173ada2011",
+  "decode_workflow_sha256": "c8c417e27851c8b245418311bd9d8aa59ba44e4e28133857b4d190ed07607fba",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mudglass_slingers_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

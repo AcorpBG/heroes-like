@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            256
+          ]
+        ],
+        "anchor": [
+          1280,
+          236
+        ],
+        "scale": 1.2874999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1b308bae97dd77f3c57dc515b2bd331a255bb25632f3f50a55a3eed6e9a34eeb",
+      "runtime_source_scale": 1.03
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
