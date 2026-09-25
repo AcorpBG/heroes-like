@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-134f599a-e85d-4131-b916-2f0f3ffdf3f5.png",
+  "image": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/support_peak_corrected.png",
+  "image_sha256": "a08e55d8a3d1cac152d41de93fcf867718139fa114381a8ca6c752844895313b",
+  "prompt": "support_peak_corrected.prompt.txt",
+  "prompt_sha256": "3cc1f32cbc6985cb65bcd8844c444e39934884eedd4fb54d89b32b5a378d43fc",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/cast_v1/matte/rgba_049.png",
+      "sha256": "a0c204c79d9d883137d2ec3012089f493d8dba98583394f6b761dce1755d81fe"
+    }
+  ],
+  "registration": {
+    "anchor": [
+      848,
+      830
+    ],
+    "scale": 0.453,
+    "reason": "One source-wide scale: corrected standing body from head420 to foot830 matches232 video pixels at extraction0.8; fixed scale0.453, foot contact830. Master1666x944. No per-frame resizing."
+  }
+}

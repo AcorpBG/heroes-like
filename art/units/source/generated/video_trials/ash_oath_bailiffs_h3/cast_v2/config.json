@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "cast",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          301,
+          348
+        ],
+        [
+          102,
+          348,
+          301,
+          383
+        ]
+      ],
+      "anchor": [
+        183,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "corrected_support_peak",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/support_peak_corrected.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        848,
+        830
+      ],
+      "scale": 0.453,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      54,
+      1
+    ]
+  ],
+  "seed": 2026093504,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. Physical support signal by a nonmagical guard. From ready, lift the gripped spear vertically a short distance in an authoritative salute, raise the shield slightly, nod once, then lower the spear and shield back to ready. Clearly flex the elbows and shoulders. Both hands retain their existing equipment grips. No magic, particles, extra hands, weapons or pointing fingers. Raise the spear smoothly into the exact salute guide then lower it smoothly. Both shaft ends retain the reference construction: one silver hooked spearpoint above and one BLUNT rounded brass ferrule below. The lower end is not a blade or spike; never sharpen or taper it. No extra pointed ends. Slow continuous shoulder and elbow articulation throughout."
+}

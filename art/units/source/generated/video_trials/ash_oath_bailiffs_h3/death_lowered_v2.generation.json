@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-3aec6397-46bc-4623-82ce-7a1a2d053b0e.png",
+  "image": "death_lowered_v2.png",
+  "image_sha256": "9070b29cede5c5bbd70f11d838d2c059aae561ba2274d8121f21c7e37b0d6ec2",
+  "prompt": "death_lowered_v2.prompt.txt",
+  "prompt_sha256": "3bd667cba8f481bab08f91f16f110d5d8a0d8496acc6c5e34dd1997f6c2cb2ca",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v1.png",
+      "sha256": "dfde8b9d217db2a32d37fd525668cf812c520bb09eb642d669835279a1b4baef"
+    },
+    {
+      "path": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131"
+    }
+  ],
+  "review": "v1 excluded because hook was absent; v2 restores original backward hook and retains original pose and grips."
+}

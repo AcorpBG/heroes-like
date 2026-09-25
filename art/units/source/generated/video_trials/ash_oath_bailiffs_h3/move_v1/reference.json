@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_far_contact",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            771,
+            0,
+            985,
+            383
+          ]
+        ],
+        "anchor": [
+          875,
+          374
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "bf60446754877f4afd5e8f9d0f44fa42c0c57414914b9fe01ed2228873d0469e",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_passing",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-b-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          547,
+          1370
+        ],
+        "scale": 0.19249999999999998
+      },
+      "source_sha256": "ba78bf1db0a5f92046c8edcc29c55f0150c5615eee91a1885768625c48da9091",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f37ef526c3c977f6985a21c3598758fc541997f20640c5a9c9cec5141f5149e7",
+      "runtime_source_scale": 0.154
+    },
+    {
+      "source_frame": {
+        "name": "walk_near_landing",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-near-landing-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          547,
+          1370
+        ],
+        "scale": 0.19249999999999998
+      },
+      "source_sha256": "8a7598b56813850d86201ebd6a29d2db26e63bc768c79b727aca9f1f9d1d4e5c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bd82bcb1dbd0836e29c286d100d5c5590c3be8943fc04313e0effaa4d62a5250",
+      "runtime_source_scale": 0.154
+    },
+    {
+      "source_frame": {
+        "name": "walk_far_passing",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-a-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1145,
+            1374
+          ]
+        ],
+        "anchor": [
+          581,
+          1270
+        ],
+        "scale": 0.2125
+      },
+      "source_sha256": "5735b314896aa3910b05cafbe14c71ef98f2ffe27ad90d1fb17f4492386ae669",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "919b7eefae1adf5edb9ea1cfeca2a988aa4a1bb7f07d17018621c7845a4e39de",
+      "runtime_source_scale": 0.17
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

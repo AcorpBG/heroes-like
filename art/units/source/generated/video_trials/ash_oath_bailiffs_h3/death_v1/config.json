@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          301,
+          348
+        ],
+        [
+          102,
+          348,
+          301,
+          383
+        ]
+      ],
+      "anchor": [
+        183,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          362,
+          727,
+          642,
+          1061
+        ]
+      ],
+      "anchor": [
+        501,
+        1037
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          644,
+          818,
+          1063,
+          1061
+        ]
+      ],
+      "anchor": [
+        860,
+        1037
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          1060,
+          846,
+          1448,
+          1061
+        ]
+      ],
+      "anchor": [
+        1274,
+        1037
+      ],
+      "scale": 0.56
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      64,
+      2
+    ],
+    [
+      95,
+      3
+    ]
+  ],
+  "seed": 2026093405,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. One continuous defeat and collapse. Knees buckle; sink to the kneeling guide, tip and descend onto the right-facing side, lay the pavise flat under the shoulder and head. Weapon hand lowers the spear onto the foreground ground, point facing right. Finish lying completely grounded as the final corpse guide, two legs folded behind to the left, head to the right on the shield. Keep the same body size, cloak, two arms, two legs and one spear. No resurrection or disappearing equipment."
+}

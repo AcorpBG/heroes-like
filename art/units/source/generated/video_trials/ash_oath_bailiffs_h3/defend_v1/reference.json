@@ -1,0 +1,73 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            50,
+            0,
+            301,
+            348
+          ],
+          [
+            102,
+            348,
+            301,
+            383
+          ]
+        ],
+        "anchor": [
+          183,
+          374
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "81463ae3673d5a0ada030560a2ba0bfbd239a02be176b1257eeb08d6d6bf45c6",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "defend",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            1190,
+            382,
+            1410,
+            520
+          ],
+          [
+            1148,
+            520,
+            1410,
+            726
+          ]
+        ],
+        "anchor": [
+          1271,
+          710
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "617f6cc9fb275cb4472bc71ff40a4d176507669dcdd25ded5a016d30c539927d",
+      "runtime_source_scale": 0.56
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

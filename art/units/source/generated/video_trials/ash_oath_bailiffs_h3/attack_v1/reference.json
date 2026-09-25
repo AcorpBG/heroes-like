@@ -1,0 +1,96 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            50,
+            0,
+            301,
+            348
+          ],
+          [
+            102,
+            348,
+            301,
+            383
+          ]
+        ],
+        "anchor": [
+          183,
+          374
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "81463ae3673d5a0ada030560a2ba0bfbd239a02be176b1257eeb08d6d6bf45c6",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "attack_windup",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            345,
+            389,
+            728,
+            640
+          ],
+          [
+            345,
+            640,
+            661,
+            726
+          ]
+        ],
+        "anchor": [
+          494,
+          713
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "142489fdd05b28cd3e52c8ad942999d590d8ebd903c1d4f5ae517612079739d0",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "attack_release",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/attack-release-length-corrected-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1686,
+            933
+          ]
+        ],
+        "anchor": [
+          571,
+          855
+        ],
+        "scale": 0.27875
+      },
+      "source_sha256": "d68175d97a111ba91455e497a322d3e3859cf7792a41d3ce46686d11701c6f91",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c618e951bfd50f1f1b6d53734d799058dce8669de24a195b0e3ef8734b4268c8",
+      "runtime_source_scale": 0.223
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

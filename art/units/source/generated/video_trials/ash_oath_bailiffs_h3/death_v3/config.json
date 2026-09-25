@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          301,
+          348
+        ],
+        [
+          102,
+          348,
+          301,
+          383
+        ]
+      ],
+      "anchor": [
+        183,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          1060,
+          846,
+          1448,
+          1061
+        ]
+      ],
+      "anchor": [
+        1274,
+        1037
+      ],
+      "scale": 0.56
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 2026093605,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. One continuous slow controlled defeat lasting the full five seconds. Her knees buckle, torso slowly sinks down; she lowers the same rigid spear diagonally in front of her, gently lays it flat onto the foreground ground, then tips onto her right side and rests her head on the fallen pavise. Finish as the grounded corpse reference with boots to the left and head to the right. Keep the pole and head attached as one rigid straight object through every angle. The entire spear remains clearly visible in the foreground throughout. Blunt brass butt at one end, silver hooked point at the other. The spear never dissolves, bends, teleports, duplicates or passes behind her torso. Continuous articulated shoulders, elbows, hips and knees; two real arms and two real legs only. Do not freeze in an intermediate kneeling pose; spend the full duration on the descent, lowering equipment and settling. No resurrection. No change in equipment or body size."
+}
