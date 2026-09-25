@@ -1,0 +1,383 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_beacon_lectors",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/original_lossless.mkv",
+          "sha256": "905dc09730e60ce6dd21eaaba4cefd4a3753e637617d79f39ac57bebd73c74f2"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/original.json",
+          "sha256": "7d7e10822aa57fe8e9c074ded9becd327b180dddb792ada2a427e9fa6a22e555"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/workflow_api.json",
+          "sha256": "6b37f644808dc17670e67b12b8f898dda428c19275aed6692ab3b4c65717c194"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/prompt.txt",
+          "sha256": "607f24e0a4e0be872a6d564ab1074efc5e3d3dcede453859e1c6d292269f625d"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/reference.json",
+          "sha256": "3eb6217840e6c724ab39e97b3822c6a409c1c6ce11b17f47553cbac2367dff5b"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/hit_v3/matte.json",
+          "sha256": "40c9d3ef4d96f985da73b644eb878ad7d0cf5f5660863d4c2f4bd78d8c647feb"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Complete124-frame chronology: knees flex, shoulders/chin recoil and free left arm opens, then recover. Both boots planted; right grip and straight bell/lantern staff stable. No incoming objects or baked effects. Trim long holds for825ms gameplay reaction; native review pending."
+      }
+    }
+  ]
+}

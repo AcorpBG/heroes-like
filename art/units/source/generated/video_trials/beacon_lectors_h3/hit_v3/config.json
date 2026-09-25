@@ -1,0 +1,59 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1264
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+      "rects": [
+        [
+          512,
+          512,
+          1024,
+          768
+        ]
+      ],
+      "anchor": [
+        768,
+        752
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "seed": 25925025,
+  "prompt": "One solitary original fantasy woman with tied brown hair, ivory and red split robe, scarf, silver knee armor and brown gloves and boots, holding the same complete straight bell-and-lantern staff in her RIGHT hand on screen LEFT. Her LEFT hand on screen RIGHT is free. Locked elevated three-quarter camera facing right, full body at fixed scale on uniform flat vivid green background. Both boots stay planted. A brief physical acting exercise: she bends her knees, leans her shoulders backward and tilts her chin up, opening her free left elbow and hand. She then smoothly brings her shoulders forward, lowers her chin and left hand, and straightens her knees to the initial ready position. The motion starts immediately, reaches the supplied leaning-back reference, then gently recovers. The right arm holds her straight staff upright continuously, with the single bell and amber lantern attached throughout. The actor and her own clothing and equipment are the only content in the otherwise completely empty green image. Continuous small anatomical motion, constant identity, stable body size and ground contact."
+}
