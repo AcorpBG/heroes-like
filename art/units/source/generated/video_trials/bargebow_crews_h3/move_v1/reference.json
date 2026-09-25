@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_far_contact",
+        "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/alpha/poses.png",
+        "rects": [
+          [
+            625,
+            5,
+            915,
+            317
+          ]
+        ],
+        "anchor": [
+          756,
+          307
+        ],
+        "scale": 0.7999999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7da53a218e05307ba8ec493a48778c8f6e3277aceee6b19655b04b9cd781f30d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c30472e2a27b7f51c2c13e47e56e710ef214389bf11e06ac01e8025dcb53ee2a",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
