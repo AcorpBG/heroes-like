@@ -1312,25 +1312,25 @@
         229
       ],
       "painted_extent": 224,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_stagknot_runners.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        139,
+        51,
         7,
-        362,
+        274,
         247
       ],
-      "source_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_stagknot_runners/provenance.json",
+      "source_sha256": "054f59f086b7ae0c9327238bd7048c5778fafe51425ebe57130947ef2fbfbd0d",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_stagknot_runners/provenance.json",
       "sha256": "0609bcb172859a171d527e103fc45dcd64f58db214102a1b17017460e2fc3d7f"
     },
     "unit_thornwake_graft_matriarchs": {

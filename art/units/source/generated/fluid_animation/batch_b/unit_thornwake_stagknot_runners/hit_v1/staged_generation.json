@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ed57c63f20870ce66bca5170840e8d3fe656de06ed1d7a29bcf9093e6eebdc63",
+  "latent_sha256": "1819f3e98623250ed310ab893d48e740a3f128e616b8047cd4c0150fc5eb73a7",
+  "decode_workflow_sha256": "361f98105f2f70a9496bbde6e1c6bc75f09d90126abd0f5e3c38107387f7da8b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "stagknot_h3\\hit_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17441353728,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

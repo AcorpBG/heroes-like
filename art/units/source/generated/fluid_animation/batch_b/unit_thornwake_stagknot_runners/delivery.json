@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "defend_v1",
+    "hit_v1",
+    "cast_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all744 chronological original frames, enlarged four-leg/antler/streamer details, complete22-frame gallop and seam, action hold trims and hit/death joins, then all174 selected phases and original8-frame260ms idle at native128px reference height in Godot. Four-legged bark anatomy, red harness, amber medallion, paired antlers and pale streamers remain readable. Dedicated ram, held guard, recoil/recovery, physical support and grounded corpse are distinct. Candidate240 checks pass. No continuous video playback, manual game playtest or Linux execution claimed."
+  }
+}
