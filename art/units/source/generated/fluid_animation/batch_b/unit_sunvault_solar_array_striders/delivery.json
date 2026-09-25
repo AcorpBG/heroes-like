@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "defend_v1",
+    "hit_v3",
+    "cast_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Coordinator reviewed every original chronological frame, enlarged machinery on light/dark backgrounds, the gait seam, recoil trim join and all selected native battle phases. Four jointed legs, three rigid panels and four lenses remain coherent. Dedicated ram, lowered guard, clean recoil/recovery, physical support bow and grounded collapse are readable. Reject hit_v1/v2 effect flashes; use guided hit_v3. Preserve original eight articulated idle poses and 260ms timing plus exact overworld idle. Continuous video preview was unavailable; no manual game or Linux test claimed. Focused complete candidate:218 checks, zero failures."
+  }
+}

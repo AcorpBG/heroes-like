@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 22,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        248
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        248
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      68,
+      2
+    ]
+  ],
+  "seed": 926201,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera, original richly painted fantasy strategy sprite on a perfectly flat vivid GREEN RGB(0,255,0) background. One ivory, gold and deep-blue mechanical quadruped strider. Exactly FOUR articulated metal legs: near front, far front, near rear, far rear. Each leg has fixed gold-and-ivory armor plates, blue circular joint bearings and one broad pointed triangular metal foot. Far limbs may be naturally occluded behind near limbs, but stay attached to their own chassis joints. The compact ivory chassis has gold sun engravings and short hanging blue cloth strips. On top is the original rigid inclined array of three blue triangular sail-like panels in gold frames, one large round blue lens in a gold ring, and the gold forward curved bracket carrying exactly three smaller round lenses. Preserve all original rigid equipment, plates, leg lengths, lens sizes, panel count and gold braces. No human rider or humanoid arms. The entire machine faces three-quarter image right, remains the same anatomical size, and stays fully visible. The camera, lighting and flat empty green backdrop stay fixed. The blue lenses remain solid painted glass. Only the original machine and its cloth are visible. Walk in place through coherent reciprocal quadruped strides. Lift, swing forward and plant the four separate feet in staggered near/far phases. Each knee bearing rotates physically and the matching upper leg carries weight. The chassis remains centered for game travel; the rigid array stays attached above it, with only small suspension movement. Cloth follows the gait. Finish in the original starting contact phase."
+}

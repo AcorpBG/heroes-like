@@ -1,0 +1,130 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "50bb603b040f1ad0cb655ad7e1bcd7c2f92caf14aff517c79fcb5049b1b5345e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a00c1e6d771586395221bdca760c09215ff268a4263213db0ed522681f4c22e0",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_018.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "46fcb98ca9b1c5daf55b56fd82f21ccfccbb5a3cd6e9a5e205f19bfaaafa7b45",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "070bc1adebb69182100de09a8ef5456e75701e21942b62d5aa45bf75811157c5",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_020.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "0d4ffe5f144d027fe27a122d0efe10f12a0e847e02051b9b49c236210a176a2a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "61f3b32bef01cd26337eca955ff646e58019277135e0f7799ad9337abe773203",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_024.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "783064c2a2bbefa233077f4313f76693a91f19f529fbcf7ca528f5b802871fe0",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "36bcb0ea41067141edfb092e40a5a178363b1cc89a3a6a15a7d310c5b917c7ea",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_032.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "1f88956c4a35c65fec18a089fd8b7bf7d2342340cad29117b140d5106195325e",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "e1af950338681816f1275b2450af8336f24647cbbd35de285df66ef2c24ea961",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
