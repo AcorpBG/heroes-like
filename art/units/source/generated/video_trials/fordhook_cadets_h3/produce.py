@@ -1,4 +1,4 @@
-"""Rebuild original Aurora Ballista H3 takes and pending candidates."""
+"""Rebuild original Fordhook Cadets H3 takes and pending candidates."""
 import argparse
 import hashlib
 import json
@@ -54,9 +54,9 @@ def prepare(out,c):
   '10':node('SamplerCustomAdvanced',noise=['7',0],guider=['6',0],sampler=['8',0],sigmas=['9',0],latent_image=['5',1]),
   '11':node('VAEDecode',samples=['10',0],vae=['3',0]),
   '13':node('CreateVideo',images=['11',0],fps=24,bit_depth=8),
-  '14':node('SaveVideo',video=['13',0],filename_prefix=f'aurora_ballista_h3/{out.name}/original',**{'format':'mp4','format.codec':'h264'}),
-  '15':node('SaveImage',images=['11',0],filename_prefix=f'aurora_ballista_h3/{out.name}/frames/decoded')}
- for i in range(len(refs)):graph[str(30+i)]=node('LoadImage',image=f'aurora_ballista_{out.name}_guide_{i}.png')
+  '14':node('SaveVideo',video=['13',0],filename_prefix=f'fordhook_cadets_h3/{out.name}/original',**{'format':'mp4','format.codec':'h264'}),
+  '15':node('SaveImage',images=['11',0],filename_prefix=f'fordhook_cadets_h3/{out.name}/frames/decoded')}
+ for i in range(len(refs)):graph[str(30+i)]=node('LoadImage',image=f'fordhook_cadets_{out.name}_guide_{i}.png')
  previous='5'
  for i,(frame,ref) in enumerate(c['guides']):
   k=str(40+i);graph[k]=node('MiniMaxH3AddGuide',positive=[previous,0],latent=['5',1],frame_idx=frame,vae=['3',0],image=[str(30+ref),0]);previous=k
@@ -74,12 +74,12 @@ def submit(out,c):
  q=request(URL,'/queue');assert not q['queue_running'] and not q['queue_pending'],'Server busy; queue untouched'
  g=json.loads((out/'workflow_api.json').read_bytes());uploaded={}
  for i in range(len(c['references'])):
-  name=f'aurora_ballista_{out.name}_guide_{i}.png';boundary='----AuroraBallistaH3'
+  name=f'fordhook_cadets_{out.name}_guide_{i}.png';boundary='----FordhookCadetsH3'
   data=(f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="{name}"\r\nContent-Type: image/png\r\n\r\n'.encode()+(out/f'guide_{i}_chroma.png').read_bytes()+f'\r\n--{boundary}--\r\n'.encode())
   req=urllib.request.Request(URL+'/upload/image',data=data,headers={'Content-Type':'multipart/form-data; boundary='+boundary})
   with urllib.request.urlopen(req,timeout=60) as r:item=json.load(r)
   uploaded[str(30+i)]=item;g[str(30+i)]['inputs']['image']='/'.join(v for v in [item.get('subfolder',''),item['name']] if v)
- write(out/'workflow_api.json',g);start=time.time();r=request(URL,'/prompt',dict(prompt=g,client_id='aurora_ballista_h3'))
+ write(out/'workflow_api.json',g);start=time.time();r=request(URL,'/prompt',dict(prompt=g,client_id='fordhook_cadets_h3'))
  write(out/'submission.json',dict(**r,started_unix=start,url=URL,uploaded=uploaded));print(json.dumps(r))
 
 def key(rgb):
@@ -94,8 +94,8 @@ def key(rgb):
  is_green=green>magenta
  bgc=green if is_green else magenta
  if bgc<80:raise ValueError(f'unsafe insufficiently separated chroma backdrop {bg}')
- # This ballista contains blue, white and gold but no green
- # material. Use a green plate to preserve iridescent blue-white armor. Measure the actual uniform source plate; never
+ # This cadet contains red, brown, steel and brass but no green
+ # material. Measure the actual uniform source plate; never
  # infer opaque subject geometry or accept spatially varying backgrounds.
  chroma=a[:,:,1]-np.maximum(a[:,:,0],a[:,:,2]) if is_green else np.minimum(a[:,:,0],a[:,:,2])-a[:,:,1]
  alpha=np.clip(1-chroma/bgc,0,1)
@@ -111,7 +111,7 @@ def key(rgb):
  out=np.dstack([color,alpha*255]).astype('uint8');out[out[:,:,3]<8]=0
  # Retain every >8-alpha connected creature component that contains at least
  # one confidently opaque pixel. This removes disconnected plate noise while
- # keeping bow limbs, strings, wheel spokes and fallen mechanism parts attached
+ # keeping pole tips, shield edges, limbs and fallen equipment attached
  # to their own solid pixels.
  mask=out[:,:,3]>=8; labels,n=label(mask,structure=np.ones((3,3),dtype=np.uint8))
  solid=np.unique(labels[out[:,:,3]>=128]); keep=np.zeros(n+1,dtype=bool);keep[solid]=True;keep[0]=False
@@ -127,13 +127,13 @@ def process(out,c):
   for i,frame in enumerate(video.decode(video=0)):
    if not any(a<=i<=b for a,b in intervals):hashes.append(None);details.append(dict(excluded=True));continue
    im,detail=key(frame.to_image().convert('RGB'))
-   if detail['mode']!='flat_green_chroma_unmix':raise ValueError('Backdrop changed to a color unsafe for iridescent blue armor; reject this interval')
+   if detail['mode']!='flat_green_chroma_unmix':raise ValueError('Backdrop changed to a color unsafe for red uniform and steel equipment; reject this interval')
    p=out/'matte'/f'rgba_{i:03}.png';im.save(p);hashes.append(sha(p));details.append(detail)
  assert len(hashes)==124
- write(out/'matte.json',dict(frames=124,fps=24,rgba_sha256=hashes,background_frames=details,recipe='Measured uniform green plate absent from ballista palette; corner spread<=10, chroma separation>=80; color-specific alpha unmix and edge-only despill; alpha>=8 regions retained when containing alpha>=128 pixels. Original geometry unchanged.'))
+ write(out/'matte.json',dict(frames=124,fps=24,rgba_sha256=hashes,background_frames=details,recipe='Measured uniform green plate absent from cadet palette; corner spread<=10, chroma separation>=80; color-specific alpha unmix and edge-only despill; alpha>=8 regions retained when containing alpha>=128 pixels. Original geometry unchanged.'))
 
 def review(out,c):
- target=ROOT/'.artifacts/aurora_ballista_h3'/out.name;target.mkdir(parents=True,exist_ok=True)
+ target=ROOT/'.artifacts/fordhook_cadets_h3'/out.name;target.mkdir(parents=True,exist_ok=True)
  for part in range(2):
   sheet=Image.new('RGB',(1600,1760),(30,40,30));d=ImageDraw.Draw(sheet)
   for j,i in enumerate(range(part*62,(part+1)*62)):
@@ -156,7 +156,7 @@ def assemble():
  unit=None
  for take in json.loads((SOURCE_DIR/'delivery.json').read_bytes())['takes']:
   unit=combine(unit,json.loads((SOURCE_DIR/take/'handoff.json').read_bytes())['units'][0])
- unit['preserved_accepted_clips']=['idle'];unit['visual_review']=dict(status='pending',notes='Six selected H3 clips; native review required. Preserve original accepted articulated idle. Movement remains unaccepted; three rejected rolling takes retained.')
+ unit['preserved_accepted_clips']=['idle'];unit['visual_review']=dict(status='pending',notes='Selected Fordhook H3 actions; native review required. Preserve original accepted articulated idle.')
  write(SOURCE_DIR/'handoff.json',dict(schema_version=1,units=[unit]))
 
 if __name__=='__main__':

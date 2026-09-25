@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-a-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          565,
+          1188
+        ],
+        "scale": 0.21375,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b6aac986b0adb5f2b0b8fbb2d0868bdd62c0be5716dd7efe9e9ef27cc58dece2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "716558fa7bfd0f50826aae61ae89bf66eee65e027a67cc6329a7b9a382543206",
+      "runtime_source_scale": 0.171
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

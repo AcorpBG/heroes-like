@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-a-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          565,
+          1188
+        ],
+        "scale": 0.21375,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b6aac986b0adb5f2b0b8fbb2d0868bdd62c0be5716dd7efe9e9ef27cc58dece2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "716558fa7bfd0f50826aae61ae89bf66eee65e027a67cc6329a7b9a382543206",
+      "runtime_source_scale": 0.171
+    },
+    {
+      "source_frame": {
+        "name": "walk_passing_a",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-a-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          538,
+          1187
+        ],
+        "scale": 0.21375,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d5d67c2b09d2e96782f199433fb06fab4b5e77b3b64c78472d1fb83f492d0343",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "aad6e8704e3b8662f5174b928eb89247b6e233ed833738429cfd11116179c04a",
+      "runtime_source_scale": 0.171
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_b",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-b-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          552,
+          1160
+        ],
+        "scale": 0.21999999999999997,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "433fbb5c3131952a6d2b2e4c1f5f078041f6bf377669997475d77ad2a63f8705",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a308435b59ac6885db1e3d54741f17fda0ccaf209264b98c8081041e6c781e70",
+      "runtime_source_scale": 0.176
+    },
+    {
+      "source_frame": {
+        "name": "walk_passing_b",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-b-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          470,
+          1192
+        ],
+        "scale": 0.21375,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a8c3d6f48030b34bccd687ca23d4f47aae01f2feca46f6d092faed3af9ec3dd2",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "2f7bbe62d5f232ba8a54065a1609e4b71d34f319d8b2368edb1f3294220b6014",
+      "runtime_source_scale": 0.171
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

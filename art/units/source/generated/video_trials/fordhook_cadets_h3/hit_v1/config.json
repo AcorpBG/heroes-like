@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "clip": "hit",
+  "seed": 2026093003,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        164,
+        474
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+      "rects": [
+        [
+          254,
+          695,
+          303,
+          718
+        ],
+        [
+          0,
+          718,
+          303,
+          1086
+        ]
+      ],
+      "anchor": [
+        147,
+        1040
+      ],
+      "scale": 0.57,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      44,
+      1
+    ],
+    [
+      82,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Fordhook Cadet, a young human male soldier with short dark brown hair, red domed brass-rimmed helmet, red gold-edged coat, two small steel shoulder plates, brown gloves, trousers and boots with brass shin straps. Exactly two arms and two legs. His left arm holds the single round wooden shield with brass rim and central boss. His right gloved hand grips the single straight brown polearm shaft below its silver pointed hooked spear blade; preserve this original blade and shaft length. Fixed right-facing three-quarter camera, full body, original proportions and body size, centered grounded root. Uniform bright green RGB0,255,0 fills all empty surroundings throughout. One brief impact recoil: torso and head lean back, knees flex, left arm keeps the shield and right hand keeps the spear firmly held. Catch balance and return to the original ready stance. Both boots remain supported on the ground. No falling or dropping equipment.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

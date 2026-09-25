@@ -1,0 +1,81 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          164,
+          474
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0fffb24b680532a2f3ee459d30cae01172a16007649d27de8d40f69317fd7add",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "82943f316d85f936f67fe44dc290ba765cfd9de07cd332c60eca4baa944ed669",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "defend",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+        "rects": [
+          [
+            1370,
+            345,
+            1448,
+            375
+          ],
+          [
+            1210,
+            375,
+            1448,
+            490
+          ],
+          [
+            1190,
+            490,
+            1448,
+            600
+          ],
+          [
+            1135,
+            600,
+            1448,
+            718
+          ]
+        ],
+        "anchor": [
+          1285,
+          708
+        ],
+        "scale": 0.7124999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ef4c1ca709a3707d6c29da744e6e4409388a1d380409d46f9371a3b99c075f49",
+      "runtime_source_scale": 0.57
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          164,
+          474
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0fffb24b680532a2f3ee459d30cae01172a16007649d27de8d40f69317fd7add",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "82943f316d85f936f67fe44dc290ba765cfd9de07cd332c60eca4baa944ed669",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "attack_brace",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-brace-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          555,
+          1050
+        ],
+        "scale": 0.28125,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "96d4a6fdb5068b20002225f4fc239133b4f23b37ace5da5fb7917d0fc93dc1cb",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "072db68288bd12a0b52c7f9d878d8d5a72cd7e26c3cc4f0b14d36dc90bc23099",
+      "runtime_source_scale": 0.225
+    },
+    {
+      "source_frame": {
+        "name": "attack_release",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-release-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          575,
+          900
+        ],
+        "scale": 0.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "49ad356836f8ad4a233cb1a8e8614496e9af1db7de12051182610e8985e8dde6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1c94d43287ed5330d8fb68094bebb7298cb46b789e28618055667063760cad30",
+      "runtime_source_scale": 0.24
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

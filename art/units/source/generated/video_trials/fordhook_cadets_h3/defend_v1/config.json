@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "clip": "defend",
+  "seed": 2026093002,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        164,
+        474
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+      "rects": [
+        [
+          1370,
+          345,
+          1448,
+          375
+        ],
+        [
+          1210,
+          375,
+          1448,
+          490
+        ],
+        [
+          1190,
+          490,
+          1448,
+          600
+        ],
+        [
+          1135,
+          600,
+          1448,
+          718
+        ]
+      ],
+      "anchor": [
+        1285,
+        708
+      ],
+      "scale": 0.57,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      86,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Fordhook Cadet, a young human male soldier with short dark brown hair, red domed brass-rimmed helmet, red gold-edged coat, two small steel shoulder plates, brown gloves, trousers and boots with brass shin straps. Exactly two arms and two legs. His left arm holds the single round wooden shield with brass rim and central boss. His right gloved hand grips the single straight brown polearm shaft below its silver pointed hooked spear blade; preserve this original blade and shaft length. Fixed right-facing three-quarter camera, full body, original proportions and body size, centered grounded root. Uniform bright green RGB0,255,0 fills all empty surroundings throughout. Raise the shield on the left forearm in front of the chest, bend the knees and plant both boots in the original braced guide. Keep right hand on the spear and the spear angled upward beside the shield. Settle into the final guarded stance and hold it.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}
