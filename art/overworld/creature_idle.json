@@ -597,29 +597,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        127.0,
+        127,
         197
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_sluicefire_lindworms.png",
       "source_indices": [
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        129,
-        51,
-        358,
-        259
+        81,
+        35,
+        310,
+        243
       ],
-      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_sluicefire_lindworms/provenance.json",
+      "source_sha256": "ebac015297e86665372feb3c25eaff7ed8d41f263e1e520e667caf60a199c92f",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_sluicefire_lindworms/provenance.json",
       "sha256": "480bf95919b5bb962fc44a460f01a66694e9e52c66cc1b8d4d618f49581a396e"
     },
     "unit_embercourt_charter_colossus": {

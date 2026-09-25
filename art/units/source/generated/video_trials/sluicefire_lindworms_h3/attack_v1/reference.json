@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e8fc64a4194893364602222b7604cbaed2f574e0cd81873197654791acddbdcc",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            0,
+            256,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          504
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "53d8cf9f27d16644aec4f12beb6b87eb1feede7f713036d29ef19a9dde97e386",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            512,
+            256,
+            1024,
+            512
+          ]
+        ],
+        "anchor": [
+          768,
+          504
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "982b3e2e55b3b1a1af7dec4bafe69909a73edd7d0424babc39d46b30f2ceb161",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

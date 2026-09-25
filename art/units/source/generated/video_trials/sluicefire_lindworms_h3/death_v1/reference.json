@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e8fc64a4194893364602222b7604cbaed2f574e0cd81873197654791acddbdcc",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8d66af5183587d29f1ffb6d0ead5e5f30700f144254184be411dbcb6565a8710",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "474b21d6f4be1d7e85fba1daadf993d2f19b32a66423e7a15290912d0d8e38df",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+        "rects": [
+          [
+            1024,
+            512,
+            1536,
+            768
+          ]
+        ],
+        "anchor": [
+          1280,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c3739a3c034ee357f40bce1f83019cd91c5469f2ca007f8c22bc84bda5f1e9ba",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "20e52720d974b5e3f8324f2545a6bab87da5f2e9b58490e368b5c8d45e505a86",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
