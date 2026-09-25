@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_aurora_ballista/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            387,
+            522
+          ]
+        ],
+        "anchor": [
+          211,
+          441
+        ],
+        "scale": 0.7145176470588236,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ef63049a28434c0092b178d1de27ff09e2b10de48d1429f8804a466b9bb4125a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "45c1fccdcda467c29e1b372724373409fcbc0dc96e46f319d7e188d6df620bde",
+      "runtime_source_scale": 0.60734
+    },
+    {
+      "source_frame": {
+        "name": "ranged_draw",
+        "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+        "rects": [
+          [
+            629,
+            315,
+            950,
+            619
+          ]
+        ],
+        "anchor": [
+          790,
+          615
+        ],
+        "scale": 0.8470588235294118,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "44141a5bb157ca892b61e3b9f7cc708ba37366a6bddfac5d1034495cc92cd390",
+      "runtime_source_scale": 0.72
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release",
+        "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+        "rects": [
+          [
+            950,
+            315,
+            1254,
+            619
+          ]
+        ],
+        "anchor": [
+          1102,
+          615
+        ],
+        "scale": 0.8470588235294118,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1e6db82fa9d494163cfec66de4f8ec9fc8aa078837b1eb3b85d0148287165870",
+      "runtime_source_scale": 0.72
+    },
+    {
+      "source_frame": {
+        "name": "ranged_recovery",
+        "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            933,
+            315,
+            1240
+          ]
+        ],
+        "anchor": [
+          158,
+          1235
+        ],
+        "scale": 0.8470588235294118,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1fb9ace0db7147683bc46d27240e11c7df7ef914de5e4fb280d13523d8b5db49",
+      "runtime_source_scale": 0.72
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.85,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

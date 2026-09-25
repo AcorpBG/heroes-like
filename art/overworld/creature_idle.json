@@ -391,25 +391,25 @@
         232
       ],
       "painted_extent": 227,
-      "source_sheet": "res://art/animation/runtime/poses/unit_aurora_ballista.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_aurora_ballista.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        133,
-        16,
-        372,
-        259
+        33,
+        4,
+        272,
+        247
       ],
-      "source_sha256": "2313102ee6985f5966309ebb38e1fa9e469341960f620899ca6d38e8ccfe66a1",
-      "source_provenance": "res://art/animation/source/poses/unit_aurora_ballista/provenance.json",
+      "source_sha256": "9910dc9481156c662f3747ec972e038a6726d478a12096bd8356f0b774458e8d",
+      "source_provenance": "res://art/animation/source/fluid/unit_aurora_ballista/provenance.json",
       "sha256": "2061c7e22128ca843117826c9ca33ba7ddc0af3af778bf2c2f75c4d8b3380c9a"
     },
     "unit_embercourt_fordhook_cadets": {

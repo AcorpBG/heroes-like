@@ -1,0 +1,113 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "ranged",
+  "seed": 2026092592,
+  "scale": 0.85,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_aurora_ballista/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          522
+        ]
+      ],
+      "anchor": [
+        211,
+        441
+      ],
+      "scale": 0.60734,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_draw",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          315,
+          950,
+          619
+        ]
+      ],
+      "anchor": [
+        790,
+        615
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_release",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          950,
+          315,
+          1254,
+          619
+        ]
+      ],
+      "anchor": [
+        1102,
+        615
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_recovery",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          933,
+          315,
+          1240
+        ]
+      ],
+      "anchor": [
+        158,
+        1235
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      49,
+      1
+    ],
+    [
+      55,
+      2
+    ],
+    [
+      70,
+      3
+    ],
+    [
+      94,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Aurora Ballista, a compact unmanned fantasy mechanical crossbow carriage. Preserve its rigid navy-blue and ivory chassis, ornate gold trim, blue-and-gold spoked wheels, two visible hinged gold-and-white outrigger supports, two broad iridescent blue-white crystal bow limbs, taut gold bowstrings and straight central guide rail. At the rear stands the original tall pointed blue/gold housing with an oval crystal lens and a diamond crystal crown. Fixed right-facing three-quarter orthographic camera, same machine size, same centered chassis anchor. It remains a mechanical machine with all existing rigid parts connected at their original pivots. Uniform solid bright green RGB0,255,0 fills every surrounding pixel throughout; only the single machine moves. Mechanical dry-cycle demonstration of the crossbow. The winding latch draws the original gold string toward the rear along the rail, the two crystal bow limbs flex slightly under tension, then the latch releases and the string snaps forward once. The rail carriage recoils briefly and resets to ready. Show only the mechanism cycling; every pixel outside the existing machine silhouette stays plain green throughout. All crystal surfaces keep a constant restrained luminosity.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

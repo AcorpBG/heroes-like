@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "cast",
+  "seed": 2026092596,
+  "scale": 0.85,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_aurora_ballista/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          522
+        ]
+      ],
+      "anchor": [
+        211,
+        441
+      ],
+      "scale": 0.60734,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Aurora Ballista, a compact unmanned fantasy mechanical crossbow carriage. Preserve its rigid navy-blue and ivory chassis, ornate gold trim, blue-and-gold spoked wheels, two visible hinged gold-and-white outrigger supports, two broad iridescent blue-white crystal bow limbs, taut gold bowstrings and straight central guide rail. At the rear stands the original tall pointed blue/gold housing with an oval crystal lens and a diamond crystal crown. Fixed right-facing three-quarter orthographic camera, same machine size, same centered chassis anchor. It remains a mechanical machine with all existing rigid parts connected at their original pivots. Uniform solid bright green RGB0,255,0 fills every surrounding pixel throughout; only the single machine moves. A relay-calibration support action. Keep wheels and support feet planted. The central rail gently tilts upward on its existing axle hinge while the oval rear lens slowly brightens from pale blue to soft white-blue, then dims. Original bow limbs adjust subtly with the rail and return to ready. All light stays inside the existing lens and crystal surfaces; the surrounding empty green space remains exactly unchanged. One deliberate mechanical aiming and lens-calibration cycle.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "takes": ["attack_v1", "ranged_v1", "defend_v1", "hit_v1", "cast_v1", "death_v1"],
+  "remaining": ["move"],
+  "note": "Six selected actions; all three movement takes remain rejected. Preserve existing movement without expanding its acceptance."
+}

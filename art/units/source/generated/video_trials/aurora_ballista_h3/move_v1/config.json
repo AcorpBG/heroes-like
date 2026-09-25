@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "move",
+  "seed": 2026092590,
+  "scale": 0.85,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "roll_a",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Aurora Ballista, a compact unmanned fantasy mechanical crossbow carriage. Preserve its rigid navy-blue and ivory chassis, ornate gold trim, blue-and-gold spoked wheels, two visible hinged gold-and-white outrigger supports, two broad iridescent blue-white crystal bow limbs, taut gold bowstrings and straight central guide rail. At the rear stands the original tall pointed blue/gold housing with an oval crystal lens and a diamond crystal crown. Fixed right-facing three-quarter orthographic camera, same machine size, same centered chassis anchor. It remains a mechanical machine with all existing rigid parts connected at their original pivots. Uniform solid bright green RGB0,255,0 fills every surrounding pixel throughout; only the single machine moves. The outriggers stay folded clear of the ground. The carriage rolls steadily in place: existing wheel rims and gold spokes rotate continuously clockwise together through complete revolutions, with subtle working axle suspension. The chassis stays centered and level while wheels rotate; the bow and rear housing keep their original shape. Finish in the same wheel phase as the first frame.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "move",
+  "seed": 2026092690,
+  "scale": 0.85,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "roll_a",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      0
+    ],
+    [
+      64,
+      0
+    ],
+    [
+      96,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "Locked orthographic camera, this exact small illustrated wheeled carriage centered on a perfectly uniform solid bright green background. Only its two visible circular wheels animate: the gold star spokes steadily rotate clockwise inside the round dark tires. Both wheels turn together around fixed axle centers. The carriage body, folded fittings, crystal surfaces and upper assembly stay exactly like the reference, rigid and motionless. Repeating wheel rotation with the whole machine remaining in the same place and at the same size. All empty green surrounding space remains empty and unchanged. End with the original wheel orientation.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}
