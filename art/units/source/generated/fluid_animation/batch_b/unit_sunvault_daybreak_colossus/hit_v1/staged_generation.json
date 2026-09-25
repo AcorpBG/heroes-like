@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "80e46229e93e9ea30d7cb92286f9b4c7322c6b92eb19ae0e69da67e3b56d614d",
+  "latent_sha256": "b5579e26a71f55a9ff4bde717db7c5e1a92c63f42278bb72573950049ac88d7f",
+  "decode_workflow_sha256": "44ad383e53e8d3d2434d5cb532cd42906affc5c62aa8d6e0b4d40a299fa999d0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "daybreak_colossus_h3\\hit_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

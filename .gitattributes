@@ -32,3 +32,8 @@ art/animation/source/fluid/unit_sunvault_resonant_choristers/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/**/*.txt -text
 art/animation/source/fluid/unit_sunvault_solar_array_striders/*.json -text
+
+# Preserve hash-bound Daybreak Colossus H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_daybreak_colossus/**/*.txt -text
+art/animation/source/fluid/unit_sunvault_daybreak_colossus/*.json -text

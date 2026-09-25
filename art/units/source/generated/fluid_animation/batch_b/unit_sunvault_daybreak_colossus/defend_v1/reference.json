@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1272
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "000427d460707c05cef5b20d15a496ed569ccaf00efdf8465219eecca26a5b49",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ec17595bbbc10ce16ec245fdd32c7089737bbd6e70eab530723f6af1792fcb89",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "000427d460707c05cef5b20d15a496ed569ccaf00efdf8465219eecca26a5b49",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4bf5a9d0b6eba64f3b8bead4ce86d058c8104765d535ff34af1ed583e916253d",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

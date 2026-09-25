@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 40,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        248
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        248
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "seed": 927201,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera, richly painted original fantasy strategy sprite on a perfectly uniform vivid GREEN RGB(0,255,0) background. One ivory-and-gold mechanical quadruped with exactly FOUR articulated metal legs, circular bearing joints and claw-like gold-and-ivory metal feet. Far legs can be naturally occluded but remain attached to their own chassis joints. The compact armored chassis carries ONE long forward-facing cylindrical purple-glass cannon in a rigid gold cage with an orange round muzzle. Above it is one round golden sun lens, surrounded by the original gold spoked halo and pale blue leaf-shaped glass fins. Preserve the original cannon length, gold cage, four leg lengths and armor plates, purple central core, dangling core crystal, halo spokes and glass-fin arrangement. The machine faces three-quarter image right and stays fully visible at one fixed anatomical size. Same painted palette, lighting, centered body and flat empty green background in every frame. Walk in place with reciprocal staggered four-leg steps. Each foot lifts, swings through and plants while another carries the weight. Turn the original circular knee joints; keep every leg attached and let the original metal claws follow the foot. The chassis stays centered for engine-driven travel; cannon and halo stay attached with a slight suspension response. Finish in the original starting support phase."
+}
