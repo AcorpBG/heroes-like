@@ -1,0 +1,6 @@
+{
+  "reason": "Owner-job decode intentionally cancelled after confirmed VAEDecode stage under concurrent GPU/VRAM load. Retry retains sampled motion and guides and bounds decoding to16-frame512px tiles.",
+  "replacement_take": "attack_recovery_v5",
+  "sampled_nodes_complete": "10",
+  "terminal": "execution_interrupted at node11"
+}

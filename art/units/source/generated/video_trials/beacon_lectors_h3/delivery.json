@@ -6,5 +6,11 @@
     "defend_v2",
     "death_v1",
     "hit_v3"
-  ]
+  ],
+  "attack_segments": [
+    "attack_v1",
+    "attack_recovery_v5"
+  ],
+  "attack_frame_msec": 40,
+  "attack_contact_frame": 11
 }

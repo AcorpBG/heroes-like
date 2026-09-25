@@ -1,0 +1,17 @@
+{
+  "tool": "built-in image_gen",
+  "purpose": "Two original intermediate recovery guides; H3 still generates motion",
+  "original_sha256": "c9ff8619df8ac09937d1b223392db5f37647198d3b1f217e71a3d04a6b5a3dac",
+  "prompt_sha256": "00ec0d3e1b6d822db1c02a707d7bf26e0e849fe12552e207ea7fe96a31047940",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/beacon_lectors_h3/attack_v1/guide_2_chroma.png",
+      "sha256": "9d6054fe2079b345e81dc8006aded46c950aa680df77793a19431fc4b4f6671e"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/beacon_lectors_h3/attack_v1/guide_0_chroma.png",
+      "sha256": "364f64439123db0e5cbbca05ecd848cee6e1016b05c31d3b4c8a9bc757c56d4a"
+    }
+  ],
+  "rule": "Transparent original preserved; one fixed scale .36 for both figures, anatomical feet anchors, no per-frame normalization"
+}
