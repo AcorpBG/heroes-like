@@ -1,0 +1,297 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_gorefen_rippers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/original_lossless.mkv",
+          "sha256": "be6892833553f096f7408a8ee63511079dc4403dd1ed731bdf0474615670c1fd"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/original.json",
+          "sha256": "d0609618fa1cff8f16549fe968cef3b45ac982cefdb6e5a5015cbe4bbc8f1626"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/workflow_api.json",
+          "sha256": "7e5e6ffac07a90bb60986e4c6cf5eb819355fa178e2d1ef14ab8b88b1fb61ac7"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/prompt.txt",
+          "sha256": "89afcdabef2821eb0806a5360bae8fb084c22d19f11765aae0d0ac695299a8b1"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/reference.json",
+          "sha256": "87a39fdf2514d0b209e623d1e3aced71e3c4327ec9f906da69b083f6a63c1671"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/matte.json",
+          "sha256": "08396daad8350bd5eaf3aa5a1eae5769e4e432d5ef3675743bef3046310dbf40"
+        },
+        "extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/extraction_settings.json",
+          "sha256": "51c8ab8ba1c3b4b4ab743007047fabff21f3765f2f826082c817986a31d39667"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/staged_generation.json",
+          "sha256": "37c7c8dd8794088ccb86e1ad06536f7b3150c3ed0cf13de9fed816b871c140b4"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/sampling_workflow_api.json",
+          "sha256": "6eda90612ba7a8999b08d2968bad16755ee853b2cc9be87052ee7d61ac3beb3a"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/sampling_submission.json",
+          "sha256": "fb915665bf38507f4e489cc9ed4ea713d90808e40593c5d4ee87ae65d106996b"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/sampling_history.json",
+          "sha256": "088af1cec34a394b5de4f158eeb3f08b2b20eee39b440e2cec7a82a40c08040e"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/attack_v2/original.latent",
+          "sha256": "a1107d200ac412e5fef7a4e3fc1c0451dbbcb327779a31a9cba0a3e55199b01a"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Valid forward strike only. Exclude abrupt onset18->19 and recovery65->66. Enlarged frame review confirms stable skull/body dimensions through joint extension, jaw snap and foreclaw drive. Guide-matched joins to v1 preserve camera/scale; no synthetic motion."
+      }
+    }
+  ]
+}

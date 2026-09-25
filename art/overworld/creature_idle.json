@@ -853,7 +853,7 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        141.0,
+        141,
         234
       ],
       "painted_extent": 257,
@@ -870,11 +870,11 @@
       ],
       "source_crop": [
         203,
-        -2,
+        22,
         476,
-        243
+        267
       ],
-      "source_sha256": "ecb97c98b9b41e0aa7c381dfb479f64f2d39787734bf834537984633393273ae",
+      "source_sha256": "800a0ab4a194bab6c1f07c29864fb3625727529dc3c115a346007f5db63fb77b",
       "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_gorefen_rippers/provenance.json",
       "sha256": "ee82be8fe50f967105532b57250e93872d103e1c0dc76d79a4f5d8d4be4a2deb"
     },

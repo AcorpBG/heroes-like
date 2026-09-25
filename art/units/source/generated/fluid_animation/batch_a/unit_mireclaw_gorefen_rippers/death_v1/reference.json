@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "36ce99f9f964faf4531f7fef5f2721dfc38f33079275338123d64a77665f1488",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2e317d075100c97a2f21e689a915b936c8038ad457d65d97df2afdba688d6829",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6e7bdff1c1f684c4d30d68afe298fe6c6e85df597438e7ac06fa9f8642cc915d",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+        "rects": [
+          [
+            1024,
+            512,
+            1536,
+            768
+          ]
+        ],
+        "anchor": [
+          1280,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "55e2b1432498eaf454c401770b90d8d06aa07fe0b0c71d3fe4f04241133ddcbd",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b6f8a79379c6827ef3d6aa1700c0af042d07026303bdf357f37e056d42541eff",
+  "latent_sha256": "32e7fd060d5cba2145fb7508c85f24c6cd11d9a67db462d1338157616bd5c698",
+  "decode_workflow_sha256": "ae05cdf099e4b004565894c2b261bab658d3a99e15cf9c34b06361ea69142f25",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gorefen_rippers_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17376254272,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

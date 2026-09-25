@@ -1,0 +1,22 @@
+{
+  "source_frames": [
+    0,
+    10,
+    16,
+    22,
+    26,
+    28,
+    30,
+    31,
+    62,
+    66,
+    70,
+    76,
+    82,
+    88,
+    94,
+    102
+  ],
+  "frame_msec": 45,
+  "review_note": "Valid anticipation and recovery segments only; reject enlarged lunge40..54. These frames are not published standalone; attack sequence inserts the original-scale strike from v2."
+}

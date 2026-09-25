@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    20,
+    "7547bd5d-fcf9-4078-8d15-b09df0bcccff",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic camera, original richly painted fantasy strategy game sprite on a perfectly uniform vivid GREEN RGB(0,255,0) background. The background stays identical everywhere and throughout, including all gaps between claws and legs. No scenery, floor shadow, text, particles or colored lighting. One large muscular crocodilian quadruped: dark slate grey-brown pebbled scales, pinkish belly, long crocodile snout with ivory teeth, red quill crest along its head, neck and back, exactly ONE long curved tail with red fin spines. Tan rope harness and small ivory bone/fang fetishes hang over its back, chest and sides. Exactly FOUR legs with hooked dark claws, ONE head and ONE tail. Forelegs are beneath the shoulders toward IMAGE RIGHT; hindlegs beneath the pelvis toward IMAGE LEFT. Keep near and far legs anatomically distinct. Preserve the same skull, muzzle length, eyes, scales, crest, ropes, ornaments and claws. No rider, wings, humanoid arms, weapons, extra legs or magic. Stable three-quarter RIGHT-facing view, no camera motion, zoom or changes in anatomical scale. Full body and tail stay visible with ample margins. One distinct painful impact from IMAGE RIGHT. Start ready, then abruptly recoil the head BACK toward the shoulders and twist it slightly toward the viewer with jaws open in a startled snarl, matching the impact guide. The shoulders recoil and elbows bend while all four legs retain anatomical ownership and support. Then lower the jaw, untwist the neck, close the mouth and smoothly restore ready. The tail reacts only as secondary balance. Do NOT stretch the snout forward, wag the tail as the main action, attack, roar upward, jump or collapse. Show continuous shoulder and head recoil and recovery, not a long freeze or instantaneous reset.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 925821
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gorefen_rippers_hit_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gorefen_rippers_hit_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 98,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gorefen_rippers_h3/hit_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gorefen_rippers_h3",
+      "create_time": 1790345325018
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gorefen_rippers_h3\\hit_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "7547bd5d-fcf9-4078-8d15-b09df0bcccff",
+          "timestamp": 1790345325258
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "7547bd5d-fcf9-4078-8d15-b09df0bcccff",
+          "timestamp": 1790345325275
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "7547bd5d-fcf9-4078-8d15-b09df0bcccff",
+          "timestamp": 1790345503724
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
