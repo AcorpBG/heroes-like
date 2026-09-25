@@ -962,25 +962,25 @@
         224
       ],
       "painted_extent": 219,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_prism_adepts.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        183,
-        24,
-        350,
-        259
+        47,
+        0,
+        214,
+        235
       ],
-      "source_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_prism_adepts/provenance.json",
+      "source_sha256": "1a576c247c3cde207fdcef0125f7acdc01019086b9c34a27bd5c509429328686",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_prism_adepts/provenance.json",
       "sha256": "8ca08ec338586529d38ec794d965568e30dd363a88c2ee73045e126ff6dacbb0"
     },
     "unit_sunvault_mirror_duelists": {

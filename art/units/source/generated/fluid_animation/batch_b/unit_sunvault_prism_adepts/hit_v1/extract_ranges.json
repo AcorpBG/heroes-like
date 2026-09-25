@@ -1,0 +1,9 @@
+{
+  "inclusive_ranges": [
+    [
+      36,
+      123
+    ]
+  ],
+  "reason": "Original frames28..35 contain an unwanted beam before the actual recoil; reject the entire opening0..35. Preserve and inspect only the subsequent clean, continuous recoil and recovery. No erasing effects or weakening matte checks."
+}

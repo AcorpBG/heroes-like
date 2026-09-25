@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b86ceb7e41edd80daf1752016c9a589c4f632cc6221c20fe8369fbd28c5a6d80",
+  "latent_sha256": "611e01b1e4f6f7af99dc46be1a3c9a5bb93f43e56006268de0565bf7a5e90030",
+  "decode_workflow_sha256": "5b45d67d05dc7847dc4436970f118fca8912b00a619e9b3b5fc6b96fb72b3dc3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "prism_adepts_h3\\hit_recover_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

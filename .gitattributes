@@ -18,3 +18,7 @@ art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers
 # Preserve hash-bound Shard Warden H3 provenance byte-for-byte.
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_shard_wardens/**/*.txt -text
+
+# Preserve hash-bound Prism Adept H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/**/*.txt -text

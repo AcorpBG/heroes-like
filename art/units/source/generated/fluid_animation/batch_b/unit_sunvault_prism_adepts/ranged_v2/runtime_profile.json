@@ -1,0 +1,5 @@
+{
+  "reserve_vram_gib": 10,
+  "disable_dynamic_vram": true,
+  "reason": "Coexist with other GPU applications; previous 4 GiB-reserve attempt cancelled under sustained VRAM pressure. Same 960x544,124 frames,20 steps,original guides and seed."
+}

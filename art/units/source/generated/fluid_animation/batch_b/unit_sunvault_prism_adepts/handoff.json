@@ -1,0 +1,5182 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_prism_adepts",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_039",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_041",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_043",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_073",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_065",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_067",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_089",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_091",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_093",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_006",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_v1_hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_v1_hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_v1_hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_v1_hit_h3_039",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "hit_v1_hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_v1_hit_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_v1_hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_recover_v2_hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_lower_v2_death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_lower_v2_death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_lower_v2_death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_lower_v2_death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_lower_v2_death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_lower_v2_death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_lower_v2_death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_lower_v2_death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_lower_v2_death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_lower_v2_death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_lower_v2_death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_lower_v2_death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_lower_v2_death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_lower_v2_death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_lower_v2_death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_v1_death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_v1_death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_v1_death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_v1_death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_v1_death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_v1_death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_v1_death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_v1_death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_v1_death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_v1_death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_v1_death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_v1_death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_v1_death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_v1_death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_v1_death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_v1_death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_v1_death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_settle_v2_death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_settle_v2_death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_settle_v2_death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_settle_v2_death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_settle_v2_death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_settle_v2_death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_settle_v2_death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_settle_v2_death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_settle_v2_death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_settle_v2_death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_settle_v2_death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_settle_v2_death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_settle_v2_death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_settle_v2_death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_settle_v2_death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_settle_v2_death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_settle_v2_death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_settle_v2_death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_settle_v2_death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_settle_v2_death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "frame_msec": 85,
+          "loop": true,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 14,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            120
+          ]
+        },
+        "cast": {
+          "indices": [
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10,
+          "frame_durations_msec": [
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            130,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55,
+            55
+          ]
+        },
+        "attack": {
+          "indices": [
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 14,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            90,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45
+          ]
+        },
+        "ranged": {
+          "indices": [
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 13,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            90,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45
+          ]
+        },
+        "hit": {
+          "frame_msec": 40,
+          "indices": [
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143
+          ],
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "frame_msec": 45,
+          "indices": [
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195
+          ],
+          "loop": false,
+          "static_frame": 51
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/original_lossless.mkv",
+          "sha256": "a4af528e1a56cbe313887065559755483a38510d1d2049f763f9751d7c84d00f"
+        },
+        "move_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/original.json",
+          "sha256": "c881629a205dc1c31749bfba6bee6362a0440a911e6328808f24420dae1193b0"
+        },
+        "move_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/workflow_api.json",
+          "sha256": "476b272c39b2ac8e8aa4b6aa486e0c5b9b6fb5d338447bee945272a049214181"
+        },
+        "move_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/prompt.txt",
+          "sha256": "e6fc99b2b83ef9e9846f3db0bca084451ec51f47e2c76018c9f599de72e0c546"
+        },
+        "move_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/reference.json",
+          "sha256": "abc35ac226d265ca8902796563a280a7ee3374c4c452ef3daa93a769cf07f864"
+        },
+        "move_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte.json",
+          "sha256": "ede4f6188c1e9f6402898792b7d80923f5607b615b00da27a84e37c3857193f9"
+        },
+        "move_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "move_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/staged_generation.json",
+          "sha256": "11f7a31f5a362d85f0d7142e1c5b0927068c06af56091d985a7cca879e45b6f6"
+        },
+        "move_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/sampling_workflow_api.json",
+          "sha256": "b885d64812573b7eef8650b68452dd50b928c433f79cdc460761f1feb8c80913"
+        },
+        "move_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/sampling_submission.json",
+          "sha256": "43a49761d5f460aa1c05740c636a5516436c160a0b7273ffaff5248b8c1267ca"
+        },
+        "move_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/sampling_history.json",
+          "sha256": "7ca87285c01f1747370dd1d4c7d3fe34f609d15996ff4a737df5c5a33e3e21b3"
+        },
+        "move_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/original.latent",
+          "sha256": "45879366710bc6205c290b6d94b74be00fc4155c899caa446a53ffe71d1812c7"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/original_lossless.mkv",
+          "sha256": "748a5d4e4ae74a0a37b33fa92c718f426dfa173ab911fe108bdfbe8fd4350f85"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/original.json",
+          "sha256": "4173bca3bb2c60ddc209a14f2b87dce479e54407bd1eed61b92faec85f0ab784"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/workflow_api.json",
+          "sha256": "5f100b6af2cf45b3ffe37612f57fd090778ca61c24de6c6804ea2fc03a0c9b74"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/prompt.txt",
+          "sha256": "bf33af5f2fd6d160c8fd3382eacc921cc491585decd0287fad00395a32eceb3d"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/reference.json",
+          "sha256": "b9cb142893d06366e5bc30a2be04c6a457685c0768eb5567da0738beb2bbf03e"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte.json",
+          "sha256": "4771b5fb3439f4088411d9ed0b87a51e4d6a3f586ad4098f2f357c51f077b165"
+        },
+        "defend_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/staged_generation.json",
+          "sha256": "835c303468871f0b767958a6e7eb27a23dd8f26588fc7e513ee248136ed92dcf"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/sampling_workflow_api.json",
+          "sha256": "b8099d77156c6cdd997cce73ec1f0a92ef5e87b3feb61f3d3f57b3ba133a2e59"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/sampling_submission.json",
+          "sha256": "93700fae8f5d69e4854512ea1e583e182be8665dcf8d98f10821cdc81325f480"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/sampling_history.json",
+          "sha256": "e229442aae7e1ef00edf6f1f44e112804c330ec781ebb09c525d89618a4decb0"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/original.latent",
+          "sha256": "49c663936a355eb380189d860bb98486353545c9249515f9c67de9f7065a73a9"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/original_lossless.mkv",
+          "sha256": "f32ccfc3a992854c1277fd1f947d0456f04143b55b47f01f8ed1cf9c266c6977"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/original.json",
+          "sha256": "3c544b930e94097000f93a7629c18d64980126dfd554a7a62262fe674154c943"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/workflow_api.json",
+          "sha256": "d461408aa0fe8af3da5e83edab77e3d65579ea422d7e016b3cbe730dcb7ef821"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/prompt.txt",
+          "sha256": "39658b3ed5039d4b70eafcce598b2bcf6bbc3229d052a47d3cc7d15ba7ee37aa"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/reference.json",
+          "sha256": "f37ee91178545e1b570b6966ed6837557d348effe867e2d9a449c9c751b697f2"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte.json",
+          "sha256": "96edfd8203c21ac7a5c49aaf751f0bcb7f527ea56bc3d4536d34c5309adad84c"
+        },
+        "cast_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/staged_generation.json",
+          "sha256": "6099a2c9264eef4003780d3670906b1d5dc3f48f2cc0471c3046e6a2bca7cb47"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/sampling_workflow_api.json",
+          "sha256": "705b75dcdc348f6bb217b12c79a3ce854f72a08aba6a42e71b91500ab8937778"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/sampling_submission.json",
+          "sha256": "7cc938296663981b72d088e0a047fd2bc87c2b7a5c9aed7c4d70ab799b6cf1a9"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/sampling_history.json",
+          "sha256": "165aa62493c17fac2a0b57aaea96112932f73b8ccf0ff8b81c5110d99dfeb3fe"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/original.latent",
+          "sha256": "8c053fc148c3ef2e02c02a28e4abcde8c3442f62d0d8aa54509fd6f8db796d87"
+        },
+        "attack_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/original_lossless.mkv",
+          "sha256": "6d8ca6cc6db363e801e2e7e362244089c9d03672d540dfe5b1eeb215da13b35c"
+        },
+        "attack_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/original.json",
+          "sha256": "418d14093ade409eb465868045db70195c0e2a5074b2dc9f83cc1d018a945edc"
+        },
+        "attack_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/workflow_api.json",
+          "sha256": "bb71a894df6104906c313f5c2672c7eb92b8cae1128ae4f000fa001f50507261"
+        },
+        "attack_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/prompt.txt",
+          "sha256": "ac222a7383d1e5e0dd8c5ba9bc3fa65754cd97484132209a39ec2fc926989923"
+        },
+        "attack_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/reference.json",
+          "sha256": "8b24a44d1f5638d2ee083487138c60338918ef814a1f095fa26c18ffe1ed20c1"
+        },
+        "attack_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte.json",
+          "sha256": "54775ff0648f2c16835842692446a94a100b8702342315cb8f6cc2f8a377b9a1"
+        },
+        "attack_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "attack_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/staged_generation.json",
+          "sha256": "2be27ca95401eb74f90a8ba783232e58a0855f7dbb3640eb3d471f51a77a328d"
+        },
+        "attack_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/sampling_workflow_api.json",
+          "sha256": "6c15577fbf562643a339392f15fc7e38dac5af21a8424b6061a4d1d7d256ad42"
+        },
+        "attack_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/sampling_submission.json",
+          "sha256": "8aa1d0fb0df06a1f0319a6338b35a5f97dcb465f1257817e74dfd11a0ec87c65"
+        },
+        "attack_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/sampling_history.json",
+          "sha256": "b84f7e48a86bd711c5fa4dc81568695ef05b23cefc69dbbe184e9bf486528963"
+        },
+        "attack_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/original.latent",
+          "sha256": "4fbfef7244b2fdf77812f093860b23085c8c8f0287ba0282a6ae4ebd9264e898"
+        },
+        "ranged_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/original_lossless.mkv",
+          "sha256": "d6b34e3926554270cdd749f9ae020666e3b2213ecf4640e7fee167bd35aa0d2d"
+        },
+        "ranged_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/original.json",
+          "sha256": "5d8d9905692c961460c807dab1656fd775df194b8d5d3ed93b0d7db7e8b1a7c5"
+        },
+        "ranged_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/workflow_api.json",
+          "sha256": "c466ef2525528ada764f8f4c17197d800aa37dd8eef242d7273bfdcbb165b1b1"
+        },
+        "ranged_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/prompt.txt",
+          "sha256": "39b6af2f92f825d352b80ed2bdb418c23de8f811a4b609d2d290b057a9b0c31a"
+        },
+        "ranged_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/reference.json",
+          "sha256": "3f9ffdbae58899c2a5e2bb0ab46873b27f725c5a0dcea07ccc497218a44aefd4"
+        },
+        "ranged_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte.json",
+          "sha256": "9fc73196ccc8eee479c90680e108f4ecb14f0c88f77dc1d17ed668fd7af1bd79"
+        },
+        "ranged_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "ranged_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/staged_generation.json",
+          "sha256": "9ecb93edef2a656d2b771dce22b21848596f9d9cbf5bd5bad0e04eecdc016834"
+        },
+        "ranged_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/sampling_workflow_api.json",
+          "sha256": "f7e6ab10744fd87d8b4dcddb72ffb8c69e17afc02bcfae2d063b82300068a25e"
+        },
+        "ranged_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/sampling_submission.json",
+          "sha256": "0d411cc6677e798ddc3353a388dbf35ca874f2fe7a82c4745507c49365ca1031"
+        },
+        "ranged_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/sampling_history.json",
+          "sha256": "f2f009d5cac13f05bfd532048bf1bceef0acede07af9ec47b23f1f0cc5360504"
+        },
+        "ranged_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/original.latent",
+          "sha256": "c6c02504a39f508551981110f4f59dec823cf66df0d8b1b7ec66344bdee9686a"
+        },
+        "hit_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original_lossless.mkv",
+          "sha256": "1bd8f4bf35d04aca5ba96449bf6180fd276dbc96c18f76714269d0363b038303"
+        },
+        "hit_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original.json",
+          "sha256": "b223718e7d4684a8cf725080cd8f55c309131148d5633b3a545ab7e9da295034"
+        },
+        "hit_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/workflow_api.json",
+          "sha256": "877e26b6d7400516b6ce5fcbc0cc6c4b3dc95f438e372d27b38afb4a145d62c1"
+        },
+        "hit_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/prompt.txt",
+          "sha256": "c350af01feba4b509955480b6e0ee217728480bbb25a604a20db5e68d97613b0"
+        },
+        "hit_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/reference.json",
+          "sha256": "38df7051bd610cff95bf5242cb7e587fdff129e33b0c515e513269038ccb1419"
+        },
+        "hit_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte.json",
+          "sha256": "52d817a7f790edc5ebad8b51ab62ba8cb8b0ff1bbdc7250178a791f081fb0a08"
+        },
+        "hit_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "hit_v1_extract_ranges.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/extract_ranges.json",
+          "sha256": "bcc8f5cdee1565579d55823dd77dcf09697ac85cf5359214ad7bf23d05293ca9"
+        },
+        "hit_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/staged_generation.json",
+          "sha256": "599bfe63c5502e93d55f3588cc51eed0418cf69eceff318c233dbaf031e9e1c4"
+        },
+        "hit_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_workflow_api.json",
+          "sha256": "3bb1d46546722a2064bd12a17ee4322d84740d999c5828db625e0c8a91ddd5b0"
+        },
+        "hit_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_submission.json",
+          "sha256": "6f6e0432de668aafb5c820283e3c36a5e34665945b307386a8ef351d7da17265"
+        },
+        "hit_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_history.json",
+          "sha256": "f8eb9aa6baf6192fe468207c8673aaf8867511b3c14952974f4feca64223aafe"
+        },
+        "hit_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original.latent",
+          "sha256": "aa2d42250f54cb44250ebc451417313969060c4e935c6bc0515b85ce1febe4a6"
+        },
+        "hit_recover_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/original_lossless.mkv",
+          "sha256": "9e0d1cb7a7d00c88c29f42d0d094ed252471dfbcb2249965125b381ff5e50d61"
+        },
+        "hit_recover_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/original.json",
+          "sha256": "ede4a3ccc3081dfcccf661f7cad93355a8219fa320aa8a0cd24115efc8a91b93"
+        },
+        "hit_recover_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/workflow_api.json",
+          "sha256": "5b45d67d05dc7847dc4436970f118fca8912b00a619e9b3b5fc6b96fb72b3dc3"
+        },
+        "hit_recover_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/prompt.txt",
+          "sha256": "8adbd457d55c65fd303be32297e2b92217cb174f3452c1042a3651af5656259c"
+        },
+        "hit_recover_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/reference.json",
+          "sha256": "b7e6df14db1d9cedf2fd1a5f4a1fca2196ea06aabe526f1edb8f45f5e15cd579"
+        },
+        "hit_recover_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte.json",
+          "sha256": "1ad1b0f0fba262dabece48d359308cbdbe87eeaf23c5cfb3c182f989a1badc50"
+        },
+        "hit_recover_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "hit_recover_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/staged_generation.json",
+          "sha256": "c8a7944f8bb3a0e8d0386ab78b22ea86d6783b05ae89bdea7b591b45852e303c"
+        },
+        "hit_recover_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/sampling_workflow_api.json",
+          "sha256": "b86ceb7e41edd80daf1752016c9a589c4f632cc6221c20fe8369fbd28c5a6d80"
+        },
+        "hit_recover_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/sampling_submission.json",
+          "sha256": "02b4aba92570d620ee813e726978e3c405639e988c137841de5c8181aae69772"
+        },
+        "hit_recover_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/sampling_history.json",
+          "sha256": "a7b2f4165cc49519aedb5e307c95d3c9777be80e99ef2cb0f37dae5abf32be6b"
+        },
+        "hit_recover_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/original.latent",
+          "sha256": "611e01b1e4f6f7af99dc46be1a3c9a5bb93f43e56006268de0565bf7a5e90030"
+        },
+        "death_lower_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/original_lossless.mkv",
+          "sha256": "de45d2ab0f2817815d47dee122575a0949151545921fcb39c8285db60cbc5c39"
+        },
+        "death_lower_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/original.json",
+          "sha256": "33a80da2e34e5312a8dcc65d511c0b88488326f2134251760b6363df38638823"
+        },
+        "death_lower_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/workflow_api.json",
+          "sha256": "b52f12990723c74a957d53beb85dc188f1d09f92f8c26fdc3955f853cd757de0"
+        },
+        "death_lower_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/prompt.txt",
+          "sha256": "06fddcac7c47f584f5a19604a4eaa5e96067fd8fb7def1670cc0cc8aa5abdef9"
+        },
+        "death_lower_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/reference.json",
+          "sha256": "195fa26905d4228d0dc3b5740e1e7743641e8465160fd515d48d6ad509b2c28b"
+        },
+        "death_lower_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte.json",
+          "sha256": "9b9eee787ee421046bf68de62a5fafdfb9150f5b59175ac5b0c307c16a4c400f"
+        },
+        "death_lower_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "death_lower_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/staged_generation.json",
+          "sha256": "d2dad9bcf2c43a673b2270f94ba08dc254fd87a13b28471fba7e8fe001de9a84"
+        },
+        "death_lower_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/sampling_workflow_api.json",
+          "sha256": "a2ef5da522f9f49b738294d942d8c3e68879350120effe01da6da30017a5b84f"
+        },
+        "death_lower_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/sampling_submission.json",
+          "sha256": "bd7974f6817ce3f664eed3d2fe20a8cd7ca7cd416a94c356825ae36a35c5dce3"
+        },
+        "death_lower_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/sampling_history.json",
+          "sha256": "18c12d263e3b3aba81c475dcc2452244d7bb47eb44e79d156cfefc56ee313654"
+        },
+        "death_lower_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/original.latent",
+          "sha256": "090165515f31233e94375e28aaf72ceae3095ecdc9e02e1a9673dd7d16cb26a7"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/original_lossless.mkv",
+          "sha256": "ff4ee593f1d9fcb1ff5131cf396af81f832274220ec2d540a5d8db104aacc803"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/original.json",
+          "sha256": "28fc981f392a93806449a1096bd2bc06829a1bf4b184134bf144a009ad910430"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/workflow_api.json",
+          "sha256": "18fe3891e9bbeb43d771ccd713678d2c900715c9d2eef33254e3acaeab0ac46e"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/prompt.txt",
+          "sha256": "0349a181fe678956e5465704476432eff4c09bd8a77846d73e828f23bbbab0b8"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/reference.json",
+          "sha256": "55592ba49772f91f9c75497179b06e7adf0cd37a40b069e9a5c73f73c0765b4f"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte.json",
+          "sha256": "f22988dd346f28ea7519d2f54838ea4b5c5e4009d90509cd075e379a529e7511"
+        },
+        "death_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/staged_generation.json",
+          "sha256": "04c91daf5994e1188966eb979d2de6f55878c99d7a4c85fff60ac570bd0ff3fc"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/sampling_workflow_api.json",
+          "sha256": "d774d53379ce7e16eebabb7636cb45306620732442585fa580c8584d55af45ba"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/sampling_submission.json",
+          "sha256": "43305fa0b2f8ba2af612a8253a08a267955edee7f3c456185202d4827774e0af"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/sampling_history.json",
+          "sha256": "155d8e224c0bdbb9e2759c63300b55f5763734372e01b3a7a8ee6a1c5e55e66b"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/original.latent",
+          "sha256": "ac5be303b0ab5761da3d13427db37eda23b57268a661bd48121824c0f7768af6"
+        },
+        "death_settle_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/original_lossless.mkv",
+          "sha256": "ede491ef2b03615fed485fde553f57f55a9d10a95e49902d9ffd16c3493e52dd"
+        },
+        "death_settle_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/original.json",
+          "sha256": "10a61ffcc8dc7375358ef6c492a68cad7ac86394be79a2831ca3ac4b9f8de953"
+        },
+        "death_settle_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/workflow_api.json",
+          "sha256": "0b6b894195446e3385a0f2fae7abe89b86bd1d78a5b1b92b0acd980b778145e0"
+        },
+        "death_settle_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/prompt.txt",
+          "sha256": "e96a4da81258ee958bb829a6f370a3dbb027f0e0b56969ef681ef357f432c5fb"
+        },
+        "death_settle_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/reference.json",
+          "sha256": "80a540177c4f5ca0065302fe4fc0a046f05416c5e6b9ceae8b41236a2696dded"
+        },
+        "death_settle_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte.json",
+          "sha256": "d461c80c0af383b44eb0f611fa2fed6bb72d559846a41e698336a475f6c76adf"
+        },
+        "death_settle_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "death_settle_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/staged_generation.json",
+          "sha256": "b37a6712a0a495cb391f4064ca8c3b9395c62e7b437d89973f56f2460be9eb73"
+        },
+        "death_settle_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/sampling_workflow_api.json",
+          "sha256": "212506e17b5931160cf524084daa92e511ca3baea7807edd06feaa96287d2f42"
+        },
+        "death_settle_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/sampling_submission.json",
+          "sha256": "085491be1808c9657c48b751c55043f7230e6d9a98300fbbb758eeb14cba332d"
+        },
+        "death_settle_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/sampling_history.json",
+          "sha256": "e27698c8074aa8bcee75f1b9437f08a2b07e33b86d7c51fe3fd067b087ec0e30"
+        },
+        "death_settle_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/original.latent",
+          "sha256": "7c79c119ea3b7237a1804be4a226d5d4f4710b4376625f25ea817a037cb50a4f"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all chronological original source frames, enlarged grips/anatomy/alpha edges, gait seam, corrected joins and every native 128px battle phase; 270 focused candidate checks pass. 196 original H3 frames across seven dedicated actions: reciprocal gait, held low guard, two-handed instrument presentation, right fist punch/regrip, aimed ranged recoil, hit/recovery and continuous kneel/side-fall/grounded corpse. Exclude unwanted v1 attack/ranged effects, hit opening beam and abrupt recovery, cast pulse67..71 and abrupt v1 death transitions. Preserve exact eight-pose 240ms idle and map animation. Frame/phase review performed autonomously; continuous video preview was unavailable, and no manual gameplay test is claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/move_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/defend_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_073.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_075.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_077.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/cast_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_065.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_067.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_089.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_091.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_093.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_095.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/attack_v2/matte/rgba_102.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_006.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/ranged_v2/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_recover_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_lower_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_049.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_053.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_055.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/death_settle_v2/matte/rgba_072.png": 0.8
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

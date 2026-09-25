@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 56,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        248
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 925941,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera, original richly painted fantasy strategy sprite on uniform vivid GREEN RGB(0,255,0), including all limb gaps. One young adult human with short wavy brown hair, exposed clean-shaven face and gold goggles with violet lenses resting on the forehead. Exactly two arms and two legs. Long white split coat with gold edging and blue lining, white shoulder armor, brown belts and gloves, brown thigh leggings, white/gold knee plates with violet gems, brown boots, and a brown satchel with small blue/violet crystal instruments at the hip. One compact brass-and-gold crystal projector held across the waist pointing toward IMAGE RIGHT. It has a cylindrical rear, blue/violet round lenses, and one gold triangular frame with a solid blue/violet triangular prism at the front. This is one handheld instrument, not a staff or crossbow. RIGHT hand at the rear grip on IMAGE LEFT, LEFT hand under the front housing on IMAGE RIGHT. These are the only two hands. Maintain fixed housing length, triangular prism geometry, lenses, grips, coat, face, goggles and anatomy. Stable three-quarter RIGHT-facing view, full body visible, identical anatomical scale and ground registration, no camera zoom, pan or rotation. No scenery, cast shadow, text, lighting change, floating parts, muzzle flash, beam, projectile, particles, duplicate equipment or magical ring. Walk in place through two complete reciprocal walking cycles. Alternate both legs through forward contact, load, lift, passing and planting. Keep two distinct boots and knees, same torso position for engine travel. Hold the projector steadily in both hands; coat tails and satchel follow gently. Return naturally to the original contact phase, no hopping, sliding, leg merging or aiming."
+}

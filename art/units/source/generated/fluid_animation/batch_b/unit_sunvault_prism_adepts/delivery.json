@@ -1,0 +1,329 @@
+{
+  "takes": [
+    "move_v2",
+    "defend_v1",
+    "cast_v1",
+    "attack_v2",
+    "ranged_v2"
+  ],
+  "clip_sequences": {
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 37
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 38
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 39
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 41
+        },
+        {
+          "take": "hit_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 4
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 20
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_recover_v2",
+          "video_frame": 76
+        }
+      ],
+      "timing": {
+        "frame_msec": 40
+      }
+    },
+    "death": {
+      "frames": [
+        {
+          "take": "death_lower_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "death_lower_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 38
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 50
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 54
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 56
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 60
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 42
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 46
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 49
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 50
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 51
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 53
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 54
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 55
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 58
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 62
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 72
+        }
+      ],
+      "timing": {
+        "frame_msec": 45
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed all chronological original source frames, enlarged grips/anatomy/alpha edges, gait seam, corrected joins and every native 128px battle phase; 270 focused candidate checks pass. 196 original H3 frames across seven dedicated actions: reciprocal gait, held low guard, two-handed instrument presentation, right fist punch/regrip, aimed ranged recoil, hit/recovery and continuous kneel/side-fall/grounded corpse. Exclude unwanted v1 attack/ranged effects, hit opening beam and abrupt recovery, cast pulse67..71 and abrupt v1 death transitions. Preserve exact eight-pose 240ms idle and map animation. Frame/phase review performed autonomously; continuous video preview was unavailable, and no manual gameplay test is claimed."
+  }
+}
