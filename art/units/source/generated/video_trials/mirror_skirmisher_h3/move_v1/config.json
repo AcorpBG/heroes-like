@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "clip": "move",
+  "seed": 2026092580,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+      "rects": [
+        [
+          638,
+          0,
+          923,
+          322
+        ]
+      ],
+      "anchor": [
+        781,
+        318
+      ],
+      "scale": 0.7,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Mirror Skirmisher, an armored human with a fully closed pointed gold-and-blue helmet, long flowing white ponytail, white tabard and blue/silver plate armor with gold trim. Two arms and two armored legs. A small oval faceted blue-white buckler is strapped to the far left forearm. The near right hand grips one continuous blue spear shaft with exactly two gold-mounted blue diamond tips, one at each end. Long iridescent blue-white ribbons trail behind. All equipment retains original size and shape. Fixed right-facing three-quarter orthographic camera, same anatomical scale and grounded body anchor. Perfectly uniform solid bright green RGB0,255,0 chroma background stays identical throughout. Only the single character moves; surrounding space stays blank and still. Three full controlled walking-in-place cycles with alternating near and far knee leads, heel planting, toe push-off and passing feet. Keep the body centered. The near hand holds the spear diagonally across the waist while arms counter-swing and ponytail/ribbons follow naturally. End in the original gait phase, both spear tips visible.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

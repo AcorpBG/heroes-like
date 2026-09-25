@@ -1,0 +1,153 @@
+{
+  "unit_id": "unit_mirror_duelist",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_mirror_duelist/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            358
+          ],
+          [
+            0,
+            358,
+            385,
+            360
+          ],
+          [
+            0,
+            360,
+            386,
+            361
+          ],
+          [
+            0,
+            361,
+            387,
+            362
+          ],
+          [
+            0,
+            362,
+            388,
+            363
+          ],
+          [
+            0,
+            363,
+            389,
+            364
+          ],
+          [
+            0,
+            364,
+            390,
+            365
+          ],
+          [
+            0,
+            365,
+            391,
+            366
+          ],
+          [
+            0,
+            366,
+            392,
+            367
+          ],
+          [
+            0,
+            367,
+            393,
+            368
+          ],
+          [
+            0,
+            368,
+            394,
+            369
+          ],
+          [
+            0,
+            369,
+            395,
+            370
+          ],
+          [
+            0,
+            370,
+            396,
+            374
+          ],
+          [
+            0,
+            374,
+            395,
+            375
+          ],
+          [
+            0,
+            375,
+            389,
+            376
+          ],
+          [
+            0,
+            376,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          210,
+          467
+        ],
+        "scale": 0.65,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95de30e201d92366c93df9df166a6c8f63b78ab0ebc4f85885312f272fa43354",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2af557dba5a58a493f41513c3b7bc8bce8d98614dbc86afcb0b1c806fde731ee",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "thrust",
+        "source": "art/animation/source/poses/unit_mirror_duelist/alpha/poses.png",
+        "rects": [
+          [
+            923,
+            322,
+            1254,
+            633
+          ]
+        ],
+        "anchor": [
+          1089,
+          625
+        ],
+        "scale": 0.8749999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "468534c4ba27e66354644f3252ce0bbe0c039b639603f0301d9e9f7f9ee7e735",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "26ad1927e0982e34c11b9d91a0e1cb2c41ec5ee186e2b889f74f85ba8ad4e485",
+      "runtime_source_scale": 0.7
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
