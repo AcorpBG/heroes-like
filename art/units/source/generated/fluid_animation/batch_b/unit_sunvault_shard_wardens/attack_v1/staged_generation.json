@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e8fd15d8e5fc9fd4dd4bb1277c8e1bbc871c5ec4fd12d56dfa97b0bd9d05746e",
+  "latent_sha256": "0102c8e951d188d32ac63e4128865fa1f27663dfb2afbbbd4cc0c41115a6d2ab",
+  "decode_workflow_sha256": "5beca71f9fc7398b6d266194b8c8b33b37d8e1872baa3d68a75f4e2da7c167c2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "shard_wardens_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19586246976,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

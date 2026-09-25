@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_sunvault_shard_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "502580b530b49690041b6937ab0fe1aa6022aebdfaecfa829021fd4498854b3a",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "020e6379099485a2f4bec666cd4845b930e88bfb4d63c4a988af29bebb038307",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+        "rects": [
+          [
+            0,
+            768,
+            512,
+            1024
+          ]
+        ],
+        "anchor": [
+          256,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "02e628d94da5aed90b0a5b1f760b703779096388cb317a7571c4b42515137d2b",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_shard_wardens.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "074a4e56a969f019411e3b2f4898cec6a76a8783acc318f0e68667b36bb6107e",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "bda1a1c822abd17ed9f84b16c509c04210e7101676bf485db5c403366f8acf0a",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
