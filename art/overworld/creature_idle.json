@@ -192,25 +192,25 @@
         229
       ],
       "painted_extent": 225,
-      "source_sheet": "res://art/animation/runtime/poses/unit_bog_brute.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_bog_brute.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        169,
-        19,
-        342,
-        260
+        81,
+        43,
+        254,
+        284
       ],
-      "source_sha256": "6d5e9e4a6bf731322f4fffaaa21b7a978421f11204b6425db413803f9227ae3d",
-      "source_provenance": "res://art/animation/source/poses/unit_bog_brute/provenance.json",
+      "source_sha256": "d76ca139f334fa708d98650861ed55eadabdaeeaa2dfc1634128b745a751175a",
+      "source_provenance": "res://art/animation/source/fluid/unit_bog_brute/provenance.json",
       "sha256": "5f4f3e59de76a876d11c57303ebf01f0095c5cd5b4617800a660785aff6ba44d"
     },
     "unit_gorefen_ripper": {

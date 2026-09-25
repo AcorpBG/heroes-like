@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_bog_brute",
+  "clip": "move",
+  "seed": 2026092560,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "move_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          0,
+          930,
+          434
+        ]
+      ],
+      "anchor": [
+        800,
+        431
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One exact Bog Brute, heavily built adult human man with shoulder-length dark hair and beard, layered dull grey-green scale armor, yellow reed ties, leather boots and belt, hanging rusty chain with one hook on the near hip. Exactly two human arms and two legs. One short wooden club with a single large cylindrical iron-banded head held in the near right hand; the far left hand is empty. Same original face, gear, body proportions and fixed right-facing three-quarter orthographic camera. Entire figure stays on screen at constant scale and fixed ground reference. Uniform flat magenta RGB(255,0,255) background remains unchanged in every frame. No scenery, other characters, text, camera movement, projectiles, particles, light flashes, blood or magic. Three full heavy walking-in-place cycles. Alternate left and right knee lead distinctly: heel contact, weight transfer, toe push-off, opposite knee passing and opposite heel contact. Feet trace reciprocal grounded arcs under a stable centered torso. Club remains in the near right hand with natural arm counter-swing; empty far hand counter-swings. Hanging chain follows hip motion. End at the original gait phase.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

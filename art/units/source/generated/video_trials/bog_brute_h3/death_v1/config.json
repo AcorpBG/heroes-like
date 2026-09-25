@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_bog_brute",
+  "clip": "death",
+  "seed": 2026092564,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_bog_brute/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        495
+      ],
+      "scale": 0.465,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_0",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          15,
+          850,
+          306,
+          1235
+        ]
+      ],
+      "anchor": [
+        166,
+        1226
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_bog_brute/alpha/poses.png",
+      "rects": [
+        [
+          635,
+          996,
+          957,
+          1050
+        ],
+        [
+          620,
+          1050,
+          957,
+          1190
+        ]
+      ],
+      "anchor": [
+        790,
+        1180
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      88,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "One exact Bog Brute, heavily built adult human man with shoulder-length dark hair and beard, layered dull grey-green scale armor, yellow reed ties, leather boots and belt, hanging rusty chain with one hook on the near hip. Exactly two human arms and two legs. One short wooden club with a single large cylindrical iron-banded head held in the near right hand; the far left hand is empty. Same original face, gear, body proportions and fixed right-facing three-quarter orthographic camera. Entire figure stays on screen at constant scale and fixed ground reference. Uniform flat magenta RGB(255,0,255) background remains unchanged in every frame. No scenery, other characters, text, camera movement, projectiles, particles, light flashes, blood or magic. Knees weaken, lower to one knee then collapse onto the ground toward screen right. Head and shoulders settle at screen right, feet at screen left, matching the final guide. Both arms and both legs remain visible and bend naturally. The club lowers with its near hand and rests on the ground in front of the body with the hanging chain. One continuous heavy collapse, no recovery; remain motionless in the final grounded pose.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

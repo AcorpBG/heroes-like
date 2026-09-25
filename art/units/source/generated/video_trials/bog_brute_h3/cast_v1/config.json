@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_bog_brute",
+  "clip": "cast",
+  "seed": 2026092565,
+  "scale": 0.65,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_bog_brute/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        190,
+        495
+      ],
+      "scale": 0.465,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One exact Bog Brute, heavily built adult human man with shoulder-length dark hair and beard, layered dull grey-green scale armor, yellow reed ties, leather boots and belt, hanging rusty chain with one hook on the near hip. Exactly two human arms and two legs. One short wooden club with a single large cylindrical iron-banded head held in the near right hand; the far left hand is empty. Same original face, gear, body proportions and fixed right-facing three-quarter orthographic camera. Entire figure stays on screen at constant scale and fixed ground reference. Uniform flat magenta RGB(255,0,255) background remains unchanged in every frame. No scenery, other characters, text, camera movement, projectiles, particles, light flashes, blood or magic. A physical rally signal, not a spell. Keep the club lowered in the near right hand for the entire sequence. Raise the empty far left hand with a clenched fist from waist level to above its own shoulder, hold a strong rally gesture briefly, then lower that same empty fist back to original ready. Visible elbow and shoulder articulation with planted boots. Exactly two arms and hands, no extra club or magic.",
+  "key_rgb": [
+    255,
+    0,
+    255
+  ]
+}

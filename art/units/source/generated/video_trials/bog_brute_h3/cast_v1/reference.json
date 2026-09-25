@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_bog_brute",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_bog_brute/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          190,
+          495
+        ],
+        "scale": 0.7153846153846154,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1965d98043ed96d6aa13e4f7f2d644ad9cfe72f4409104e5c0903c07defb2d45",
+      "input_file": "guide_0_magenta.png",
+      "input_sha256": "dabe7369cd3877d54a35100977fc37b2d6027db4830856b2e34ece7d70782b56",
+      "runtime_source_scale": 0.465
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
