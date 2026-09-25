@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_v1/matte/rgba_038.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "11198a86306d5ca1fb52dc66dac558d466767872eb1946b237f02a16b96da428",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "fbe65f58a20898b5a8709ef55cfd2804da0ebd782c674fe68416af7f2f63bccb",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_v1/matte/rgba_050.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "46307ac8572e33c66747413b1d5adfefe19e3195fc7c904d001be18519e4af48",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "95490d6d2cfa1b7d1bf84a6a494aca05b15c071f372ba4fb1d10b8653000b36f",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original_lossless.mkv",
+          "sha256": "c16ea71a47abd1937f767050c2566b4af8ef0c18d973d343d0085e5b126e6513"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original.json",
+          "sha256": "462348fe344150004f80f09779d8c69a45d17b7d8f6c10a009931beed7de1c2a"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/workflow_api.json",
+          "sha256": "1438bb93268d29243685281542ca29d14de86da90bfcb3b60c77799b2df1ba0d"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/prompt.txt",
+          "sha256": "b738f814d607099c27fa50a2c385291bd28e577e547b5d868d4bdcb2f1753686"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/reference.json",
+          "sha256": "b70ed29e7268f9209eefbcc6e8e8d11cc0ce737bf78d5236800a37672f4b4e48"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte.json",
+          "sha256": "fb7816f0b284b334d2146966d7a554b487297d6d1ce74c01ae4728f43c0030d5"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/staged_generation.json",
+          "sha256": "b3a36f94fd564c509181d604f2b119f7c077b8ff942532f9db362c778868d2c2"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_workflow_api.json",
+          "sha256": "98fbc2b0f900d2ce3de3e46ccab49ac7b98627adacefe10c10e6c86c8f096eb6"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_submission.json",
+          "sha256": "35c93c95a4b0d11d84c2688fdccd7d265f25c4732e6dfc0accc8ab8d4889ddb6"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_history.json",
+          "sha256": "bc1353874faf0ee3f53d243643aa03fb44278ee7dc792f76dc9e8e5aab9338c3"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original.latent",
+          "sha256": "c0f88b45c052c4d6b42aee82f3de6e205aafa8817eebac09c6066cca6ecaf24f"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames reviewed chronologically. One controlled quarter-turn from the actual strike contact to ready; staff stays rigid, hand maintains its middle grip, shield and feet stay registered. No flourish or reverse motion; trim initial/terminal stillness. Source/native join review follows assembly. Trim the initial post-contact hold; frame34 starts the visible quarter-turn and keeps all later recovery beats. Original pixels and source scale are unchanged."
+      }
+    }
+  ]
+}

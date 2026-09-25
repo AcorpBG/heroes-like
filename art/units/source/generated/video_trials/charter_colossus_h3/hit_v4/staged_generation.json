@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a7737ccec247af094cd29da3ea335ca419c1e3d28abf9331cc7565babcbc6235",
+  "latent_sha256": "7e7659109ef40ffeb5c378040325349c31f76bbda933b65cef451fb7b4644774",
+  "decode_workflow_sha256": "86051b77d072d4bb9f401eb901cf8c2294fb277f476b0d799ffbe81ee8cc46b7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "charter_colossus_h3\\hit_v4",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32218546176,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

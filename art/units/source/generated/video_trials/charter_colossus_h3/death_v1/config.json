@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_embercourt_charter_colossus",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1002
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        746
+      ],
+      "scale": 1.18,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        746
+      ],
+      "scale": 1.18,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1002
+      ],
+      "scale": 1.18,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      37,
+      1
+    ],
+    [
+      67,
+      2
+    ]
+  ],
+  "seed": 925206,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked camera, original hand-painted fantasy strategy sprite on a completely flat uniform vivid green RGB(0,255,0) background, also green between limbs. No ground, shadows or background detail. One Charter Colossus: massive humanoid automaton with ivory stone armor plates, dark iron mechanical joints, bronze fittings, round red joint bosses, narrow helmet visor, red waist cloth and scarlet tassels. Exactly two arms and two legs. The arm on IMAGE LEFT bears one tall rectangular ivory-and-iron shield with a red charter panel; that shield stays attached to that same forearm. The hand on IMAGE RIGHT grips the middle of one long straight bronze-tipped dark staff with a red tassel at the top. Maintain one shield, one rigid staff, one helmet, unchanged body proportions and painted details. Fixed three-quarter right-facing view, no camera rotation or zoom. Entire figure and staff remain visible at identical scale. Both large armored feet stay on the same anatomical ground baseline except the foot actively stepping. One heavy mechanical collapse. Knees buckle, the armored body sinks to one knee, torso tilts and drops onto its side. Shield and staff follow their real arms down to the floor. The same staff rotates from vertical through diagonal to lie flat beside the fallen body. End in the provided fully grounded side-lying corpse, helmet, torso, both legs, shield and staff all at rest. No standing up, no disintegration, no extra parts, no growing or shrinking. Hold the corpse motionless for the last second."
+}

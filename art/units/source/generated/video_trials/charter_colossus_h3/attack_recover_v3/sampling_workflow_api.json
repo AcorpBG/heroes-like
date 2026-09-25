@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked camera, original hand-painted fantasy strategy sprite on a completely flat uniform vivid green RGB(0,255,0) background, also green between limbs. No ground, shadows or background detail. One Charter Colossus: massive humanoid automaton with ivory stone armor plates, dark iron mechanical joints, bronze fittings, round red joint bosses, narrow helmet visor, red waist cloth and scarlet tassels. Exactly two arms and two legs. The arm on IMAGE LEFT bears one tall rectangular ivory-and-iron shield with a red charter panel; that shield stays attached to that same forearm. The hand on IMAGE RIGHT grips the middle of one long straight bronze-tipped dark staff with a red tassel at the top. Maintain one shield, one rigid staff, one helmet, unchanged body proportions and painted details. Fixed three-quarter right-facing view, no camera rotation or zoom. Entire figure and staff remain visible at identical scale. Both large armored feet stay on the same anatomical ground baseline except the foot actively stepping. One direct controlled recovery from the provided horizontal forward staff strike to the upright ready stance. Initially the sharp point faces IMAGE RIGHT, the round tasselled cap faces IMAGE LEFT. Keep the same hand gripping the exact middle of the same rigid straight staff. Lower the sharp point in a simple downward quarter-circle while the round tasselled cap rises in a matching quarter-circle. Simultaneously bend the elbow and bring the hand to its ready position beside the waist. End with the sharp point down and round cap up. Only this single 90-degree rotation, NO spinning, twirling, flourishes, reversals, repeated attacks, extra limbs, bending or elastic rod. Spread the movement smoothly over the whole video. Shoulder, elbow and wrist act together; the shield arm stays quiet and both feet planted.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 925224
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "charter_colossus_attack_recover_v3_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "charter_colossus_attack_recover_v3_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "charter_colossus_h3/attack_recover_v3/sampled"
+    }
+  }
+}

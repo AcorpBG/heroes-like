@@ -1,0 +1,8 @@
+{
+  "status": "interrupted_during_unresponsive_decode",
+  "prompt_id": "61c4fd09-6ba0-42cf-9748-461cd79c6b04",
+  "sampling_steps_completed": 20,
+  "completed_decoded_output": false,
+  "reason": "The API again stopped responding at VAE decode despite 256 spatial tiles and 4GB reserved VRAM. The task runner was stopped, then the verified service restarted. Next attempt saves the video latent and explicitly releases models/execution cache before a separate decode job.",
+  "retry": "hit_v4"
+}

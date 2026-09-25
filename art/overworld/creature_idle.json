@@ -625,37 +625,48 @@
     "unit_embercourt_charter_colossus": {
       "path": "res://art/overworld/runtime/creature_idle/unit_embercourt_charter_colossus.png",
       "frame_size": [
-        195,
-        251
+        198,
+        253
       ],
-      "frames": 8,
-      "frame_msec": 260,
+      "frames": 19,
+      "frame_msec": 148,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
-        239
+        100,
+        241
       ],
-      "painted_extent": 235,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_charter_colossus.png",
+      "painted_extent": 237,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_charter_colossus.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
         13,
         14,
         15,
         16,
         17,
         18,
-        19,
-        20
+        19
       ],
       "source_crop": [
-        159,
-        -5,
-        354,
-        246
+        64,
+        103,
+        262,
+        356
       ],
-      "source_sha256": "3718fd9f2b0be971a4421aa67ca8de5dfc89d1e6146ef7d462407cea8d743a85",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_charter_colossus/provenance.json",
-      "sha256": "fe200fb6d12853889b5034abe5a0cd2742513c371958a91d8b1bfa06aa327a01"
+      "source_sha256": "f219c2d8bbb640f6ef93a5e038b35195ae33db061f1f47e42d1c2858abcb5045",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_charter_colossus/provenance.json",
+      "sha256": "1dfd9e2b34993e111aeebf29c2e34f141ed3b474837a91eafb482ffa498b9895"
     },
     "unit_mireclaw_reedsnare_kin": {
       "path": "res://art/overworld/runtime/creature_idle/unit_mireclaw_reedsnare_kin.png",

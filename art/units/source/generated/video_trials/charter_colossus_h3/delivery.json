@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "idle_v1",
+    "move_v1",
+    "defend_v1",
+    "hit_v4",
+    "cast_v1",
+    "death_v1"
+  ],
+  "attack_segments": [
+    "attack_raise_v2",
+    "attack_strike_v2",
+    "attack_recover_v3"
+  ],
+  "attack_frame_msec": 45,
+  "attack_contact_frame": 19
+}
