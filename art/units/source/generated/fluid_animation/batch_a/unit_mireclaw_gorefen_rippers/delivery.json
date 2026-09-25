@@ -1,0 +1,10 @@
+{
+  "takes": [
+    "defend_v1",
+    "move_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Defense16 and movement42 visually reviewed at original and native scale;63 candidate and77 imported-live focused checks passed. Original idle8 retained unchanged. Four remaining action types pending; hit_v1 weak recoil and attack_v1 scale growth rejected."
+  }
+}
