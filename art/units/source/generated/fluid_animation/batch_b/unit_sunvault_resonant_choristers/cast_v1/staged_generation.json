@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "1d930aaadb857eee03ea767cb0af58346131929b646b1ab6e76eb66dad928269",
+  "latent_sha256": "3f8d05ae4705b7c28f7ce2f0b723098df7c9d35b3e297df90cd3f7300bfee8ff",
+  "decode_workflow_sha256": "18532677c01bf76cef670fd1ec848482e058a83e19e876408bf1f0a01c81c8ae",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "resonant_choristers_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

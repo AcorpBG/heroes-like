@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9ee0fba904624bd0e042029751fbcb7bc15ec3613f3b15e49f781570d7938251",
+  "latent_sha256": "f35625f1838136a9f7c32600249d5b28fb3bc6b863a1db9be428ea7bf661fee3",
+  "decode_workflow_sha256": "929e98fc2e6f298837d343a720ac8a1889d5197d7e3acc5ab19964f366f72604",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "resonant_choristers_h3\\attack_strike_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "1ba36dc6b54463425b059cdc33b364b245d4a5c930d19eb6c85eef6f3333ee5c",
+  "latent_sha256": "9ec33624a2893c8d0d344ad5bf77dee7b5e2adbe3d9fcedf64a6a87247e77147",
+  "decode_workflow_sha256": "ff7664fbd70cf128de353be0b932785ad8beb3e00ccfbe806406469ed70ada80",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "resonant_choristers_h3\\death_fall_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

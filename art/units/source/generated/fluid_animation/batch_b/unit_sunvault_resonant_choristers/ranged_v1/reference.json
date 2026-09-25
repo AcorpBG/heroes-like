@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+        "rects": [
+          [
+            1536,
+            768,
+            2048,
+            1024
+          ]
+        ],
+        "anchor": [
+          1792,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e48167aed46fdb7150cbc1d15514e13ab9eacea24e589a6099af8ae94eb86f24",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1272
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2ecc7272a894142a8931833f74697f35107938b06a74e3223a084f0622f38641",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
