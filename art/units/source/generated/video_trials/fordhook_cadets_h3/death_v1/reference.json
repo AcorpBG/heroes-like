@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          164,
+          474
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0fffb24b680532a2f3ee459d30cae01172a16007649d27de8d40f69317fd7add",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "82943f316d85f936f67fe44dc290ba765cfd9de07cd332c60eca4baa944ed669",
+      "runtime_source_scale": 0.48
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+        "rects": [
+          [
+            338,
+            744,
+            620,
+            1000
+          ],
+          [
+            338,
+            1000,
+            666,
+            1086
+          ]
+        ],
+        "anchor": [
+          509,
+          1054
+        ],
+        "scale": 0.7124999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "267d397c8b4330d0412e53a7f431388ab7b481709b9db3bd19d43025a3e00f8c",
+      "runtime_source_scale": 0.57
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+        "rects": [
+          [
+            666,
+            760,
+            1040,
+            997
+          ],
+          [
+            666,
+            997,
+            1076,
+            1086
+          ]
+        ],
+        "anchor": [
+          866,
+          1054
+        ],
+        "scale": 0.7124999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d1a33c35edf6ba802d8772bcaf4b3d0a7d9fd0230204660e0e4a02fdbe1c2dad",
+      "runtime_source_scale": 0.57
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/alpha/poses.png",
+        "rects": [
+          [
+            1041,
+            851,
+            1448,
+            996
+          ],
+          [
+            1102,
+            996,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          1261,
+          1054
+        ],
+        "scale": 0.7124999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2deef742345c3df333f15ee5595e05faeefcaff1fe5763e300a1494e5f3b007",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "75d223aa124980ef22cb1df1dd12bae831c5f36d52dc2e3602b0719e74621662",
+      "runtime_source_scale": 0.57
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

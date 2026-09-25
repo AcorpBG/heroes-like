@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "clip": "move",
+  "seed": 2026093000,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        565,
+        1188
+      ],
+      "scale": 0.171,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_passing_a",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        538,
+        1187
+      ],
+      "scale": 0.171,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-contact-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        552,
+        1160
+      ],
+      "scale": 0.176,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_passing_b",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/walk-passing-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        470,
+        1192
+      ],
+      "scale": 0.171,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      18,
+      1
+    ],
+    [
+      36,
+      2
+    ],
+    [
+      54,
+      3
+    ],
+    [
+      72,
+      0
+    ],
+    [
+      90,
+      1
+    ],
+    [
+      108,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Fordhook Cadet, a young human male soldier with short dark brown hair, red domed brass-rimmed helmet, red gold-edged coat, two small steel shoulder plates, brown gloves, trousers and boots with brass shin straps. Exactly two arms and two legs. His left arm holds the single round wooden shield with brass rim and central boss. His right gloved hand grips the single straight brown polearm shaft below its silver pointed hooked spear blade; preserve this original blade and shaft length. Fixed right-facing three-quarter camera, full body, original proportions and body size, centered grounded root. Uniform bright green RGB0,255,0 fills all empty surroundings throughout. Walk steadily in place with a complete reciprocal gait. Alternate left and right boot heel contact, weight bearing, passing and toe lift. Knees bend naturally, coat hem moves slightly. Shield stays on the left forearm and right hand keeps a firm grip on the polearm in its existing raised carrying position. No thrust or salute. Keep the body centered while the legs walk; end in the initial gait phase.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

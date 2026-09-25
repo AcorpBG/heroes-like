@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_embercourt_fordhook_cadets",
+  "clip": "attack",
+  "seed": 2026093001,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        164,
+        474
+      ],
+      "scale": 0.48,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_brace",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-brace-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        555,
+        1050
+      ],
+      "scale": 0.225,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_release",
+      "source": "art/animation/source/poses/unit_embercourt_fordhook_cadets/continuity-alpha/attack-release-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        575,
+        900
+      ],
+      "scale": 0.24,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      52,
+      2
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Fordhook Cadet, a young human male soldier with short dark brown hair, red domed brass-rimmed helmet, red gold-edged coat, two small steel shoulder plates, brown gloves, trousers and boots with brass shin straps. Exactly two arms and two legs. His left arm holds the single round wooden shield with brass rim and central boss. His right gloved hand grips the single straight brown polearm shaft below its silver pointed hooked spear blade; preserve this original blade and shaft length. Fixed right-facing three-quarter camera, full body, original proportions and body size, centered grounded root. Uniform bright green RGB0,255,0 fills all empty surroundings throughout. One physical spear thrust: raise the right elbow and draw the shaft back to the windup guide, brace behind the left-hand shield, extend the right arm and lunge the spear straight forward to the contact guide, then withdraw along the same path and recover to ready. The right hand never releases the shaft. Keep the original single blade and shield intact, no spinning or projectile.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

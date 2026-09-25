@@ -26,8 +26,16 @@ def prepare(out,c):
  refs=[]
  for i,original in enumerate(c['references']):
   f=original.copy();f['scale']=original['scale']/c['scale']
-  pose,(x,y)=source_pose(f,f.get('alpha_noise_cutoff',8))
-  rgba=Image.new('RGBA',(960,544));rgba.alpha_composite(pose,(c['anchor'][0]+x,c['anchor'][1]+y))
+  # Video guides may magnify an original to expose tiny mechanical details to
+  # the model. This is a fixed whole-reference resize, never authored motion or
+  # per-frame normalization; final extracted frames retain the runtime scale.
+  guide_magnification=max(1.0,f['scale']);sampling=dict(f,scale=f['scale']/guide_magnification)
+  pose,(x,y)=source_pose(sampling,f.get('alpha_noise_cutoff',8))
+  if guide_magnification>1:
+   pose=pose.resize((round(pose.width*guide_magnification),round(pose.height*guide_magnification)),Image.Resampling.LANCZOS)
+   x,y=round(x*guide_magnification),round(y*guide_magnification)
+  offset=original.get('guide_offset',[0,0])
+  rgba=Image.new('RGBA',(960,544));rgba.alpha_composite(pose,(c['anchor'][0]+x+offset[0],c['anchor'][1]+y+offset[1]))
   bounds=rgba.getchannel('A').point(lambda a:255 if a>127 else 0).getbbox()
   assert bounds and min(bounds)>0 and bounds[2]<959 and bounds[3]<543,(i,bounds)
   rgba.save(out/f'guide_{i}_rgba.png');back=Image.new('RGBA',rgba.size,tuple(c.get('key_rgb',[255,0,255]))+(255,));back.alpha_composite(rgba);back.convert('RGB').save(out/f'guide_{i}_chroma.png')

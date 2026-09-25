@@ -422,29 +422,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        91.0,
+        91,
         232
       ],
       "painted_extent": 228,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_fordhook_cadets.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_fordhook_cadets.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        165,
-        12,
-        369,
-        256
+        45,
+        52,
+        249,
+        296
       ],
-      "source_sha256": "9129697587b056b6abc32a26573b9ac1abf0f126e3308db8b329c4297bf66e8f",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_fordhook_cadets/provenance.json",
+      "source_sha256": "33ebb499d519b702d96e165e0ddbc95b01d40d154f69d79031de302f7bb75d8d",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_fordhook_cadets/provenance.json",
       "sha256": "6057027d7d2974fd85114baebf35722d0e36d049e7ad92534c8d42e4dc18e997"
     },
     "unit_embercourt_lantern_sappers": {

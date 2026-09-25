@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "roll_a",
+        "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+        "rects": [
+          [
+            629,
+            0,
+            950,
+            315
+          ]
+        ],
+        "anchor": [
+          790,
+          311
+        ],
+        "scale": 1.6941176470588235,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "11a28299020f46534d496169f9d2a20c99d5862ab1a4531df17c8dcee5df7154",
+      "runtime_source_scale": 0.72
+    },
+    {
+      "source_frame": {
+        "name": "roll_a",
+        "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+        "rects": [
+          [
+            629,
+            0,
+            950,
+            315
+          ]
+        ],
+        "anchor": [
+          790,
+          311
+        ],
+        "scale": 1.6941176470588235,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          360,
+          0
+        ]
+      },
+      "source_sha256": "5f07be007bf5f95f9b344696434cb87fcf82f7aac14a918287434f303b48c73e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c62fdf83e21b82e2655072cd2d03ebc37c832402dc299f745fa730ef3470f05c",
+      "runtime_source_scale": 0.72
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    300,
+    520
+  ],
+  "output_scale": 0.425,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

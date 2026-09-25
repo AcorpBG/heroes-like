@@ -1,0 +1,60 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "move",
+  "seed": 2026092990,
+  "scale": 0.425,
+  "anchor": [
+    300,
+    520
+  ],
+  "references": [
+    {
+      "name": "roll_a",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "roll_a",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        360,
+        0
+      ]
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "The original fantasy wheeled ballista drives slowly and smoothly across the screen from the left starting reference to the right ending reference. Its wheels roll clockwise on the ground, propelling the carriage forward about one wheel circumference. The eight gold spokes turn visibly and continuously around the axles through one complete revolution as the machine advances. Wheel rims remain round in their existing perspective. Tires grip rather than slide. The carriage stays upright with supports folded, bow and rail loaded, original blue/gold lens tower rigid, every part retaining its shape. Gentle working axle suspension only. Locked camera, no camera tracking, no perspective or scale change. The same machine moves steadily rightward and stops at the final reference. Pure uniform RGB0,255,0 background, no shadows, dust, floor lines or other objects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

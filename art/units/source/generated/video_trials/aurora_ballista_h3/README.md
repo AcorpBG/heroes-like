@@ -56,6 +56,16 @@ stable axle centers. Existing movement is preserved without claiming acceptance.
 The wheel_guide original, exact image-generation prompt and hashes are retained
 as source/provenance, not a completed movement animation.
 
+Follow-up control experiments also remain rejected. move_v4 magnifies the
+whole input reference twofold (fixed extraction scale0.425) to expose the
+wheel detail, but its spokes barely turn. move_v5 translates the carriage
+360 source pixels, approximately one wheel circumference, while retaining
+the same scale; the wheels still slide instead of rolling. All124 frames
+of each and enlarged registered wheel phases were inspected. No movement
+frames were selected or published. Originals and guide-placement provenance
+are retained. Further equivalent prompt retries are not justified without
+reliable wheel-phase control.
+
 Focused Windows Godot validation:196 candidate and210 live checks passed,
 including Normal/Fast/reduced-motion and presentation/simulation checks.
 Native phase review passed for the six selected actions. Atlas3432x3484,
