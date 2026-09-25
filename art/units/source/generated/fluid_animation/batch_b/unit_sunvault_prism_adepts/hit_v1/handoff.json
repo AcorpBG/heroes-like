@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_prism_adepts",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_039",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original_lossless.mkv",
+          "sha256": "1bd8f4bf35d04aca5ba96449bf6180fd276dbc96c18f76714269d0363b038303"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original.json",
+          "sha256": "b223718e7d4684a8cf725080cd8f55c309131148d5633b3a545ab7e9da295034"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/workflow_api.json",
+          "sha256": "877e26b6d7400516b6ce5fcbc0cc6c4b3dc95f438e372d27b38afb4a145d62c1"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/prompt.txt",
+          "sha256": "c350af01feba4b509955480b6e0ee217728480bbb25a604a20db5e68d97613b0"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/reference.json",
+          "sha256": "38df7051bd610cff95bf5242cb7e587fdff129e33b0c515e513269038ccb1419"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/matte.json",
+          "sha256": "52d817a7f790edc5ebad8b51ab62ba8cb8b0ff1bbdc7250178a791f081fb0a08"
+        },
+        "runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/runtime_profile.json",
+          "sha256": "3cc0cd4fbb4ba27e4bbccd34776c70f4ef3a66b7351450abe2bef772d276642e"
+        },
+        "extract_ranges.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/extract_ranges.json",
+          "sha256": "bcc8f5cdee1565579d55823dd77dcf09697ac85cf5359214ad7bf23d05293ca9"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/staged_generation.json",
+          "sha256": "599bfe63c5502e93d55f3588cc51eed0418cf69eceff318c233dbaf031e9e1c4"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_workflow_api.json",
+          "sha256": "3bb1d46546722a2064bd12a17ee4322d84740d999c5828db625e0c8a91ddd5b0"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_submission.json",
+          "sha256": "6f6e0432de668aafb5c820283e3c36a5e34665945b307386a8ef351d7da17265"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/sampling_history.json",
+          "sha256": "f8eb9aa6baf6192fe468207c8673aaf8867511b3c14952974f4feca64223aafe"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_prism_adepts/hit_v1/original.latent",
+          "sha256": "aa2d42250f54cb44250ebc451417313969060c4e935c6bc0515b85ce1febe4a6"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Source fragment only: clean sharp recoil onset after the rejected beam opening. Replace abrupt recovery76-to77 with hit_recover_v2. All original frames reviewed; root delivery supplies the complete action."
+      }
+    }
+  ]
+}

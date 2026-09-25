@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 56,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1272
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 925961,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "A painted fantasy laboratory technician identical to the reference, full body, fixed orthographic three-quarter right view. Short brown hair, forehead goggles with violet lenses, white gold-edged split coat with blue lining, brown satchel and boots. Exactly two arms and two legs. A single compact gold optical measuring instrument with blue/violet lenses and a rigid triangular prism housing is carried at waist height. Its surfaces remain opaque, solid and unchanged, with steady neutral illumination. Perfectly uniform vivid green RGB(0,255,0) fills every empty pixel throughout. Camera, ground anchor and anatomical size are fixed. The subject is demonstrating controlled body mechanics with inactive equipment. While the LEFT hand cradles the instrument securely at the waist, the RIGHT hand releases its rear grip, bends the elbow and draws a closed fist up beside the ear. The same right fist then travels forward toward image right in one deliberate punch. The right elbow bends again, retracting the fist toward the shoulder, then the hand lowers and closes around the original rear grip. The left arm keeps its continuous supporting hold throughout. Animate each intermediate elbow, wrist and hand position smoothly; devote the final third to the complete visible regrip and recovery. The instrument stays passive and identical from start to finish."
+}

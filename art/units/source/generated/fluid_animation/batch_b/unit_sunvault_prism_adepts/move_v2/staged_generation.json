@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b885d64812573b7eef8650b68452dd50b928c433f79cdc460761f1feb8c80913",
+  "latent_sha256": "45879366710bc6205c290b6d94b74be00fc4155c899caa446a53ffe71d1812c7",
+  "decode_workflow_sha256": "476b272c39b2ac8e8aa4b6aa486e0c5b9b6fb5d338447bee945272a049214181",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "prism_adepts_h3\\move_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17418787840,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

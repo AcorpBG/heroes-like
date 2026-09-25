@@ -1,0 +1,137 @@
+{
+  "id": "unit_sunvault_prism_adepts",
+  "unit_id": "unit_sunvault_prism_adepts",
+  "name": "Prism Adepts",
+  "faction_id": "faction_sunvault",
+  "tier": 2,
+  "role": "ranged",
+  "motif": "caster",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_sunvault_prism_adepts.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_sunvault_prism_adepts.png",
+  "curated_source_sha256": "71b5d4e1ee79e191e9032ffb3451e5ec398bbd37242bb325f96f96dfcb2c98b2",
+  "pose_sheet": "res://art/animation/source/fluid/unit_sunvault_prism_adepts/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        10,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        11,
+        12
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        13,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 4,
+      "indices": [
+        14,
+        15,
+        16,
+        17
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        17
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "ranged"
+  },
+  "pose_provenance": "res://art/animation/source/poses/unit_sunvault_prism_adepts/provenance.json",
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_ground_margin": 8,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

@@ -1,0 +1,6 @@
+{
+  "prompt_id": "faad3402-53d3-492c-a204-982e17e9a349",
+  "reason": "Sustained GPU memory pressure with other user applications present; 31.0 GiB physical VRAM occupied and sampler step time rising from 7 seconds to over 90 seconds. Cancel only this owned job, preserve history, increase runtime reservation without changing source quality settings.",
+  "original_reserve_vram_gib": 4,
+  "next_reserve_vram_gib": 10
+}

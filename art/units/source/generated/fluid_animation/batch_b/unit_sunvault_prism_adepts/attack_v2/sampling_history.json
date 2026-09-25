@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    14,
+    "b15da0c4-cc36-4fc0-9c96-9c3b97c53a7f",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "A painted fantasy laboratory technician identical to the reference, full body, fixed orthographic three-quarter right view. Short brown hair, forehead goggles with violet lenses, white gold-edged split coat with blue lining, brown satchel and boots. Exactly two arms and two legs. A single compact gold optical measuring instrument with blue/violet lenses and a rigid triangular prism housing is carried at waist height. Its surfaces remain opaque, solid and unchanged, with steady neutral illumination. Perfectly uniform vivid green RGB(0,255,0) fills every empty pixel throughout. Camera, ground anchor and anatomical size are fixed. The subject is demonstrating controlled body mechanics with inactive equipment. While the LEFT hand cradles the instrument securely at the waist, the RIGHT hand releases its rear grip, bends the elbow and draws a closed fist up beside the ear. The same right fist then travels forward toward image right in one deliberate punch. The right elbow bends again, retracting the fist toward the shoulder, then the hand lowers and closes around the original rear grip. The left arm keeps its continuous supporting hold throughout. Animate each intermediate elbow, wrist and hand position smoothly; devote the final third to the complete visible regrip and recovery. The instrument stays passive and identical from start to finish.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 925961
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adepts_attack_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adepts_attack_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "prism_adepts_attack_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "prism_adepts_h3/attack_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "prism_adepts_h3",
+      "create_time": 1790353831939
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "prism_adepts_h3\\attack_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "b15da0c4-cc36-4fc0-9c96-9c3b97c53a7f",
+          "timestamp": 1790353831940
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "b15da0c4-cc36-4fc0-9c96-9c3b97c53a7f",
+          "timestamp": 1790353831963
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "b15da0c4-cc36-4fc0-9c96-9c3b97c53a7f",
+          "timestamp": 1790354031607
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

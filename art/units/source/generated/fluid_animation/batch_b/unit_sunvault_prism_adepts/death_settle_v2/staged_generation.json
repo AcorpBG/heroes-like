@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "212506e17b5931160cf524084daa92e511ca3baea7807edd06feaa96287d2f42",
+  "latent_sha256": "7c79c119ea3b7237a1804be4a226d5d4f4710b4376625f25ea817a037cb50a4f",
+  "decode_workflow_sha256": "0b6b894195446e3385a0f2fae7abe89b86bd1d78a5b1b92b0acd980b778145e0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "prism_adepts_h3\\death_settle_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

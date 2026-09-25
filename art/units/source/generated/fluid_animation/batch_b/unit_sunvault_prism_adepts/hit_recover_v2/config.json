@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 56,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1016
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1272
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 925963,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Original painted fantasy technician with short brown hair, violet forehead goggles, white gold-edged split coat with blue lining, brown satchel and boots. Exactly two arms and legs. One rigid gold optical instrument with blue/violet round lenses and triangular housing stays solid and opaque, with constant neutral illumination. Fixed three-quarter right-view camera, identical body scale and ground plane, uniform vivid green RGB(0,255,0) throughout every empty region. Start leaning backward as shown, both hands gripping the passive instrument. Slowly regain balance: shoulders and head move forward, knees straighten naturally and elbows guide the instrument back to waist-height carry. Show a smooth continuous progression of intermediate body positions throughout the video, ending in the exact original upright ready pose."
+}

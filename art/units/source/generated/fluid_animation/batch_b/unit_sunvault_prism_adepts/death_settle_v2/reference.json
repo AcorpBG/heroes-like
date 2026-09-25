@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_prism_adepts",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+        "rects": [
+          [
+            1536,
+            768,
+            2048,
+            1024
+          ]
+        ],
+        "anchor": [
+          1792,
+          1016
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "23fa6b46fa254c2b92d5811601308e04f927c51d0b103c5b17fcf17e544840b7",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_prism_adepts.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1272
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fd73d2bdf72cd1b45d37b49e16998f1ea988c2b6eca5295f03df41bc712d8d02",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6dabc1690cc364e37e2d0f8bb418a90cc8e6ffd4097f1b835ffb79b132490717",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
