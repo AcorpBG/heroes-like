@@ -23,9 +23,21 @@ def extract(row):
     indices = spec.get('indices', [spec.get('row', 0) * columns +
                                  spec.get('column', 0) + i for i in range(spec['frames'])])
     with Image.open(source) as sheet:
-        frames = [sheet.crop(((i % columns) * width, (i // columns) * height,
-                              (i % columns + 1) * width, (i // columns + 1) * height))
-                  for i in indices]
+        if row.get('pose_frame_rects'):
+            # Restore the common anatomical canvas before the shared idle crop.
+            # Per-frame storage trims must not normalize breathing or foot lift.
+            from integrate_fluid_creature_animation import old_pose
+            frames = []
+            for i in indices:
+                pose, (x, y) = old_pose(sheet, row, i)
+                frame = Image.new('RGBA', (width, height))
+                frame.paste(pose, (row.get('pose_anchor_x', width//2)+x,
+                                   height-row.get('pose_ground_margin', 0)+y))
+                frames.append(frame)
+        else:
+            frames = [sheet.crop(((i % columns) * width, (i // columns) * height,
+                                  (i % columns + 1) * width, (i // columns + 1) * height))
+                      for i in indices]
     assert len(frames) > 1 and len({f.tobytes() for f in frames}) > 1, row['id']
     bounds = [f.getchannel('A').getbbox() for f in frames]
     assert all(bounds), row['id']

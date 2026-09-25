@@ -1,0 +1,273 @@
+{
+  "prompt": [
+    28,
+    "eda68748-5d30-4b81-9f57-a12b8ae09d3f",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked camera, original richly painted fantasy strategy game sprite on a perfectly uniform flat vivid GREEN RGB(0,255,0) background. The background stays the identical solid green throughout, including inside sling cords and between limbs. No scenery, colored lighting, shadows, text or particles. One adult human female Mudglass Slinger, brown hair in a long loose ponytail with yellow reed ornaments, green cloth scarf covering mouth and nose, olive and brown layered leather clothing, ochre-yellow reed fringe on both shoulders and legs, brown wrapped boots, small round pale shell charms across belt, one brown ammunition pouch at IMAGE RIGHT hip. Exactly TWO arms and TWO legs. The IMAGE LEFT hand holds the two dark leather cords of ONE small traditional sling; its single brown/gold leather pouch hangs below that hand. The IMAGE RIGHT hand is the free hand, normally near her belt pouch. Preserve the same face, scarf, hair, shoulder fringe, belt charms, sling cords and pouch, and boots. No staff, bow, shield, sword, extra sling, duplicated hand or additional limb. Stable three-quarter RIGHT-facing camera, no camera rotation, zoom or root translation. Full figure and sling remain visible at the same anatomical scale throughout. No background hue cycling or transitions. One close-range unarmed punch with the FREE IMAGE RIGHT hand. Draw that fist back near shoulder and load the rear leg, drive the fist toward IMAGE RIGHT with shoulder/hip rotation, then withdraw the fist and smoothly restore the original ready stance. The IMAGE LEFT sling hand stays down beside the body holding the same dangling sling. Do not throw, spin or strike with the sling during this melee punch. No projectile or magic. Continuous windup, contact and recovery.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 925602
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mudglass_slingers_attack_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mudglass_slingers_attack_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mudglass_slingers_attack_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 104,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "mudglass_slingers_h3/attack_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "mudglass_slingers_h3",
+      "create_time": 1790333209613
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "mudglass_slingers_h3\\attack_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "eda68748-5d30-4b81-9f57-a12b8ae09d3f",
+          "timestamp": 1790333209614
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "eda68748-5d30-4b81-9f57-a12b8ae09d3f",
+          "timestamp": 1790333209632
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "eda68748-5d30-4b81-9f57-a12b8ae09d3f",
+          "timestamp": 1790333407548
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

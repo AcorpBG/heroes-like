@@ -67,6 +67,14 @@ def source_pose(frame, alpha_noise_cutoff=0):
 
 
 def old_pose(sheet, row, index):
+    if row.get("pose_frame_rects"):
+        x, y, w, h = row["pose_frame_rects"][index]
+        anchor = row["pose_region_anchors"][f"{x},{y}"]
+        cut = sheet.crop((x, y, x+w, y+h))
+        bounds = cut.getchannel("A").getbbox()
+        if not bounds:
+            raise ValueError("existing packed pose is empty")
+        return cut.crop(bounds), (bounds[0]-anchor[0], bounds[1]-anchor[1])
     w, h = [row["pose_frame_size"][k] for k in ("width", "height")]
     col = row["pose_columns"]
     cut = sheet.crop((index % col*w, index//col*h, (index % col+1)*w, (index//col+1)*h))
@@ -78,6 +86,49 @@ def old_pose(sheet, row, index):
 
 def clip_indices(spec, columns):
     return spec.get("indices", [spec.get("row", 0)*columns+spec.get("column", 0)+i for i in range(spec["frames"])])
+
+
+def pack_compact(poses):
+    """Pack original ink rectangles with gutters; retain anatomical offsets.
+
+    Used only when the common action envelope cannot fit one 4096px grid.
+    Sorting affects storage coordinates, never clip order or original pixels.
+    """
+    gutter = 4
+    sizes = [(math.ceil((p.width+2*gutter)/4)*4,
+              math.ceil((p.height+2*gutter)/4)*4) for p, _ in poses]
+    order = sorted(range(len(poses)), key=lambda i: (-sizes[i][1], -sizes[i][0], i))
+    best = None
+    for limit in range(math.ceil(max(w for w, h in sizes)/64)*64, 4097, 64):
+        shelves, locations, bottom = [], {}, 0
+        for i in order:
+            w, h = sizes[i]
+            matches = [s for s in shelves if s[2]+w <= limit and h <= s[1]]
+            if matches:
+                shelf = min(matches, key=lambda s: (s[1]-h, limit-s[2]-w))
+            else:
+                shelf = [bottom, h, 0]
+                shelves.append(shelf)
+                bottom += h
+            locations[i] = (shelf[2], shelf[0], w, h)
+            shelf[2] += w
+        actual_width = max(s[2] for s in shelves)
+        if bottom > 4096:
+            continue
+        score = (actual_width*bottom, abs(actual_width-bottom), actual_width)
+        if best is None or score < best[0]:
+            best = (score, actual_width, bottom, locations)
+    if best is None:
+        raise ValueError("original ink cannot fit 4096 atlas; needs split pages, never shrink creature")
+    _, width, height, locations = best
+    atlas = Image.new("RGBA", (width, height))
+    rects, anchors = [], {}
+    for i, (pose, (x, y)) in enumerate(poses):
+        l, t, w, h = locations[i]
+        atlas.paste(pose, (l+gutter, t+gutter))
+        rects.append([l, t, w, h])
+        anchors[f"{l},{t}"] = [gutter-x, gutter-y]
+    return atlas, rects, anchors
 
 
 def pack_unit(entry, previous, output_dir):
@@ -153,12 +204,17 @@ def pack_unit(entry, previous, output_dir):
         right = math.ceil((max(0, max(x+p.width for p, (x, y) in poses))+4)/4)*4
         width, anchor_x = right-left, -left
         layouts = [(c, math.ceil(len(poses)/c)) for c in range(1, 33) if c*width <= 4096 and math.ceil(len(poses)/c)*height <= 4096]
-    if not layouts:
-        raise ValueError(f"{uid}: original envelope cannot fit 4096 atlas; needs authored split pages, never shrink creature")
-    columns, rows = min(layouts, key=lambda cr: (cr[0]*cr[1], abs(cr[0]*width-cr[1]*height)))
-    atlas = Image.new("RGBA", (columns*width, rows*height))
-    for i, (pose, (x, y)) in enumerate(poses):
-        atlas.paste(pose, (i % columns*width+anchor_x+x, i//columns*height+y-top))
+    compact = {}
+    if layouts:
+        columns, rows = min(layouts, key=lambda cr: (cr[0]*cr[1], abs(cr[0]*width-cr[1]*height)))
+        atlas = Image.new("RGBA", (columns*width, rows*height))
+        for i, (pose, (x, y)) in enumerate(poses):
+            atlas.paste(pose, (i % columns*width+anchor_x+x, i//columns*height+y-top))
+    else:
+        atlas, rects, anchors = pack_compact(poses)
+        columns = 1  # Explicit rectangles own storage; common size remains a presentation envelope.
+        compact = dict(pose_frame_rects=rects, pose_region_anchors=anchors,
+                       pose_sheet_size=dict(width=atlas.width, height=atlas.height))
     output_dir.mkdir(parents=True, exist_ok=True)
     path = output_dir/f"{uid}.png"
     # Direct destination write inherits the workspace ACL on Windows. Never
@@ -169,6 +225,9 @@ def pack_unit(entry, previous, output_dir):
                   pose_frame_size=dict(width=width, height=height), pose_ground_margin=bottom,
                   pose_reference_height=reference_height, pose_source_facing=facing,
                   pose_aliases=aliases, pose_provenance="original_fluid_animation")
+    for key in ("pose_frame_rects", "pose_region_anchors", "pose_sheet_size"):
+        result.pop(key, None)
+    result.update(compact)
     if anchor_x != width//2:
         result["pose_anchor_x"] = anchor_x
     else:

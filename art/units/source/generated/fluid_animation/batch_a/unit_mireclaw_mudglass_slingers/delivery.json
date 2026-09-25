@@ -3,10 +3,191 @@
     "hit_v1",
     "cast_v1",
     "death_v1",
-    "move_v2"
+    "move_v2",
+    "attack_v2",
+    "defend_v2"
   ],
   "visual_review": {
     "status": "accepted_selected_clips",
-    "notes": "Autonomously reviewed all 124 chronological original walking frames, enlarged anatomy and sling, reciprocal foot contacts, 78-to-40 loop boundary, and all 20 packed phases in offscreen Godot at native scale. Movement approved at 83ms per frame. Previous hit, support, death/corpse and eight-pose 240ms idle retained. No continuous playback or manual game playtest claimed."
+    "notes": "Autonomous review: all chronological originals, enlarged anatomy/equipment/alpha, loaded-pose and release/recovery joins, gait loop boundary and every native-scale offscreen Godot phase. Melee keeps sling image-left while free fist punches; ranged uses one pouch/two cords and original loading/recovery around corrected throw; defense bends continuously into held forearm guard. Compact storage preserves original pixels, scale and anatomical offsets. Original eight-pose240ms idle and prior hit/support/death/movement retained. No continuous playback or manual game playtest claimed."
+  },
+  "clip_sequences": {
+    "ranged": {
+      "frames": [
+        {
+          "take": "ranged_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 8
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 10
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 14
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 22
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 74
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 78
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 82
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 86
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_throw_v2",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 102
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 104
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 106
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 108
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 112
+        },
+        {
+          "take": "ranged_v1",
+          "video_frame": 118
+        }
+      ],
+      "timing": {
+        "frame_msec": 55,
+        "contact_frame": 24
+      },
+      "review_note": "Accepted: original loading24-to-corrected loaded pose, condensed extra winding32-to74, release92-to-original recovery70 inspected enlarged and at native scale. No generated bridging pixels."
+    }
   }
 }

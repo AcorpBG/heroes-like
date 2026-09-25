@@ -1,0 +1,37 @@
+{
+  "protected_chroma_by_axis": [
+    109.0,
+    32.0,
+    32.0,
+    170.0,
+    32.0,
+    32.0
+  ],
+  "axes": [
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "cyan",
+    "magenta"
+  ],
+  "source_maxima": [
+    93.0,
+    0.0,
+    0.0,
+    154.0,
+    0.0,
+    3.0
+  ],
+  "calibration_rule": "Opaque original guide pixels; max chroma plus16, minimum32. Each decoded plate must remain uniform within10 and exceed source protected band by80. No source geometry or motion is altered.",
+  "guides": [
+    {
+      "path": "guide_0_rgba.png",
+      "sha256": "3705cfa40788bb3787badce1ac85cf3e3e044109560f2d72d883a6fb6b694755"
+    },
+    {
+      "path": "guide_1_rgba.png",
+      "sha256": "7858f71271476448828199d429dce5de8e3f77e0dd2f3254fceb5a24119a3e40"
+    }
+  ]
+}

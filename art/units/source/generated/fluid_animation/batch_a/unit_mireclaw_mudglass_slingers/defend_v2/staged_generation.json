@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9492e58be6d8059d96167994aad97499d79b219556ccebcb9571caf35d8667ee",
+  "latent_sha256": "c7cc3e282a4e72e9ae4f80675fba3573ec6f23d09b56bc90c906d7864cd44dee",
+  "decode_workflow_sha256": "c2b680eb266618c41feb46f24aa34548740747b530f01abdfe3e46152b91fdbc",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mudglass_slingers_h3\\defend_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17715869504,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

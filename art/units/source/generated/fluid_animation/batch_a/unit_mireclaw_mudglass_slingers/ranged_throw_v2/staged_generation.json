@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f06935c7a91e354396a56ab15b0affe3308cadcb9b4924438c7b4326cb0950d6",
+  "latent_sha256": "8123c893cf6811d102b81c1971845154fed5183749a8ecb633aa844120606366",
+  "decode_workflow_sha256": "8b9bb57b009b616a6b53d35e87afbdcd799143fdd8c4ca881eb73ba4c7e6673f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mudglass_slingers_h3\\ranged_throw_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18445905216,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

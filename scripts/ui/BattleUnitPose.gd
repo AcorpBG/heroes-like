@@ -76,6 +76,14 @@ static func grounded_rect(ground: Vector2, height: float, region: Rect2, animati
 	# Expanded transparent action envelopes retain the accepted creature scale.
 	# The reference height describes its original canvas, not its painted bounds.
 	var reference_height := maxf(1.0, float(animation.get("pose_reference_height", region.size.y)))
+	var anchors: Dictionary = animation.get("pose_region_anchors", {})
+	var region_key := "%d,%d" % [int(region.position.x), int(region.position.y)]
+	if anchors.has(region_key):
+		var authored: Array = anchors[region_key]
+		var anchor := Vector2(float(authored[0]), float(authored[1]))
+		if flipped: anchor.x = region.size.x - anchor.x
+		var scale := height / reference_height
+		return Rect2(ground - anchor * scale, region.size * scale)
 	height *= region.size.y / reference_height
 	# Preserve raster aspect for long weapons and prone bodies. Gameplay body
 	# cells are independent of this presentation-only transparent canvas.
@@ -122,5 +130,9 @@ static func region(animation: Dictionary, state: String, progress: float, elapse
 	if not indices.is_empty():
 		var columns := maxi(1, int(animation.get("pose_columns", 1)))
 		var index := int(indices[clampi(frame, 0, indices.size() - 1)])
+		var packed: Array = animation.get("pose_frame_rects", [])
+		if not packed.is_empty():
+			var rect: Array = packed[index]
+			return Rect2(float(rect[0]), float(rect[1]), float(rect[2]), float(rect[3]))
 		return Rect2(Vector2((index % columns) * width, int(index / columns) * height), Vector2(width, height))
 	return Rect2(Vector2((int(spec.get("column", 0)) + frame) * width, int(spec.get("row", 0)) * height), Vector2(width, height))
