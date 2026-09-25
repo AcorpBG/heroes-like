@@ -1,0 +1,5256 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_sporeglass_menders",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_061",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_065",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_067",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_071",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_073",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_077",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_079",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_083",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_085",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_089",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_091",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_093",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "move_h3_094",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "move_h3_095",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_097",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "move_h3_098",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "move_h3_099",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "move_h3_100",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_011",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_017",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_057",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_059",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_061",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_071",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_073",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_017",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_019",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_021",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_043",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_045",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_089",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_091",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_093",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_h3_095",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_097",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "death_h3_098",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "death_h3_104",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "frame_msec": 40,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 21
+        },
+        "ranged": {
+          "indices": [
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "defend": {
+          "indices": [
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 21,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            160
+          ]
+        },
+        "hit": {
+          "indices": [
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11
+        },
+        "death": {
+          "indices": [
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 31
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/original_lossless.mkv",
+          "sha256": "1736c00843808ab38968d5a5c752ddbb698f1b0bc0b8f2e198823003127dd284"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/original.json",
+          "sha256": "ea949fa708e1407ed49b65d4877f5d01be50e6364c4e532f8a7303bd4b5a913b"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/workflow_api.json",
+          "sha256": "114b24bfca3777313af55b7021c1de9400f519a45b5c2a1a9177207ea2b8d7a9"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/prompt.txt",
+          "sha256": "7f0dcf930e622609c60e71b6b19b98551ace2f8d8da24361b1baaf5371c79bbe"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/reference.json",
+          "sha256": "56b62292ddb304e5e4010838eb8487a730fc635be1e88fd6b0c416de5e098cd3"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte.json",
+          "sha256": "56ecb2ec09bdb421d293681e5416bcdb05a1336e6b6c1e9ce6c03c33453df717"
+        },
+        "move_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/staged_generation.json",
+          "sha256": "98cc4d8c51fabbf766cfb9ce497bbfc4ec698558cedc8a2a913cf8ed17b0ff4e"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/sampling_workflow_api.json",
+          "sha256": "92faecc42eeac819e566a8b682f124d12f6dd14052c34f5c6305b44b067e2c24"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/sampling_submission.json",
+          "sha256": "bee87238c2567d7268ab13cae77dfcc227790918095c89314a9ef1c44112d3c2"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/sampling_history.json",
+          "sha256": "bac144858d71b444a850e45910d0c01a424ac89dc4cee1c843a46bb6e642cbf5"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/original.latent",
+          "sha256": "0b25f8da39ee736c47fbf67336e46eb560682104130f0f82aff094fd0dca7b18"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/original_lossless.mkv",
+          "sha256": "b8242f6e1003d9f936d2d78bebc534368d8e7343d71e92bfa8caae95d537e357"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/original.json",
+          "sha256": "b902557025a18031d3ad9c5cc11025e96045825f132179783663e167ddae49e5"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/workflow_api.json",
+          "sha256": "28fdc2fe515699cc030fcb343b41bdb58026b337ab08ddcdf8c4baff7ae91035"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/prompt.txt",
+          "sha256": "0905163fb533cdc98d4a840b1abcd8bb13b57f7cbdd051ee6937f74ce8c593a5"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/reference.json",
+          "sha256": "cbafa86342595c24c6cb70d67f329e522e300141161d92b4c57a1232d5654068"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte.json",
+          "sha256": "a23e064c1859a7dfaf568b31b044eac858665ae5e4ce0dc86bd54069f9103aba"
+        },
+        "attack_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/staged_generation.json",
+          "sha256": "7139348c78b3b0381c3f76a797023beabed43917666e871aaf2510c8df3f843e"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/sampling_workflow_api.json",
+          "sha256": "cca7f951227c426050a461fdeb5d38a8408cec95780238bbec695309609f1634"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/sampling_submission.json",
+          "sha256": "f370c50b821a0bc84c5467cd9a16622853a7bb72df505aa311c2ea1079c4e1b6"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/sampling_history.json",
+          "sha256": "3236e75accf528d31ced82b0728b722cadaea7b36b83de28a8f1a75c7d5e6612"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/original.latent",
+          "sha256": "78b009d1d709a71ead1ff61189c25cea04e40313d3b608340b61ec97b4cdf239"
+        },
+        "ranged_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/original_lossless.mkv",
+          "sha256": "d62c864c0d90fce97186078d515cafc0724a7349d5f0a00c9fa1b2ed56524f3e"
+        },
+        "ranged_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/original.json",
+          "sha256": "27bae5e6ab7fc9468f768b1160269be2a68dd8d99187110cbfdfa788d376e4a1"
+        },
+        "ranged_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/workflow_api.json",
+          "sha256": "432378cbf3ab41fe8ff9c3da8b5c77d0161685b3984ca4f07d1cfea32271f286"
+        },
+        "ranged_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/prompt.txt",
+          "sha256": "872cfd2904a79950177047e009b241f3e240eab33a6ccad606631f87ed53ab68"
+        },
+        "ranged_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/reference.json",
+          "sha256": "90bbcdbd799e2402f20355027e0c84a1870b442004b84c904104517e0756a927"
+        },
+        "ranged_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte.json",
+          "sha256": "4c983de0d28f45aad51ac426859d36e6525dd6dc3f0ae89a25174838acd55ecf"
+        },
+        "ranged_v2_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "ranged_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/staged_generation.json",
+          "sha256": "4482fe86c20614ffe16f5c5ca64b24c971126e847870a21e2134dc701f9e64d8"
+        },
+        "ranged_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/sampling_workflow_api.json",
+          "sha256": "ef41db243e92e24f5b522a5b965ba420ea1912c637a7dbe5c53e1a0e4d19bba2"
+        },
+        "ranged_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/sampling_submission.json",
+          "sha256": "f1c365ede070165d936d91e322ce49d698efb2158139e86df682b6b71d92bd6e"
+        },
+        "ranged_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/sampling_history.json",
+          "sha256": "145517f5fc75b401fdb36c2de17a1b40ffba42c03a451458d16326549f969fc8"
+        },
+        "ranged_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/original.latent",
+          "sha256": "7566f2db47055e35dddab2a1c5657c72484c353826fb217907b530937f3077d6"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/original_lossless.mkv",
+          "sha256": "75e27cc274cf22f8c012b35926a799bf76f5dcd20f8d365f07bc743269b1d286"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/original.json",
+          "sha256": "f0662f7b6ddaf5358730c3e38fbaaf464b274d5c105c96dd1d480fd4b8a1d683"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/workflow_api.json",
+          "sha256": "c0213ca8e584cb2e4cc0b373beca0e3e483186f0c14e476f5c7ac27033c5cca3"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/prompt.txt",
+          "sha256": "cd0162448880e1fbf72e91421e81ce05bb1c1c24c9ce131d5eddbd8daf82e1fb"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/reference.json",
+          "sha256": "3820a5b2b66dd14c6954d61e7154a1364a266e5097dec7626c53b2fdf7136375"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte.json",
+          "sha256": "d37cbc9c93b606d2e5f3643a8d5d2a3a36e5da703daa986e319a6faa96c8ef31"
+        },
+        "defend_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/staged_generation.json",
+          "sha256": "ce80e8bbe6514c3b2082245547cc1f37f60f6c84114acf9526081f030b1f0dfc"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/sampling_workflow_api.json",
+          "sha256": "1a7886a825ff6faa2be534f99e0e0ab93edd06666ded39d12ce6c976c29bbad2"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/sampling_submission.json",
+          "sha256": "840be2b868a14cbace8a163b6e55e18bc7d1fead05077a297e13f70e3f2da102"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/sampling_history.json",
+          "sha256": "69eac471d2ccac134d043bd56bdfdbf1905db7d64d923fbe14e89ce1208179cd"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/original.latent",
+          "sha256": "7332c85e94855221ffd4e3f564badfb5c1f60b1d6a4276b108ca178d0c410cee"
+        },
+        "hit_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/original_lossless.mkv",
+          "sha256": "4a54dd58ddb25550e7507c600f5e04b3e21877640512d017897a23e5c7f75711"
+        },
+        "hit_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/original.json",
+          "sha256": "b8f179b25dc23943d09b434f618e7f50a3401c12ed07b78e2162ce24af4b5b27"
+        },
+        "hit_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/workflow_api.json",
+          "sha256": "a019993c57809154453e06ffc94508ee4424d023c4eadc20100e9faef156a41b"
+        },
+        "hit_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/prompt.txt",
+          "sha256": "360bbe8cb174a0f87036d44476cd58860ceedf8ab9012383a6c7ce07ab2b948b"
+        },
+        "hit_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/reference.json",
+          "sha256": "0f487ecf650677504900e29929f730c3b788285a2897c395d1178b6f02a456bf"
+        },
+        "hit_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte.json",
+          "sha256": "9761471315166ec57f62f9573f32ea0a379ba2136e56a52b2ad283e6db93e75c"
+        },
+        "hit_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "hit_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/staged_generation.json",
+          "sha256": "877109fa3ca713574a5b59b31ebdcf0bf1e31467011dcdca04a2e1e64dea9d79"
+        },
+        "hit_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/sampling_workflow_api.json",
+          "sha256": "3afa10af55d9b011178d773eddd9e3602642f376e0c8006b1a5d275db31faa17"
+        },
+        "hit_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/sampling_submission.json",
+          "sha256": "98fe1019c1b813b0069ebb1076fc3e160aa9027a2de903e9f3da01d61228ef65"
+        },
+        "hit_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/sampling_history.json",
+          "sha256": "80611365b1028bbc3836ff50adcee4571eb72764a526ab37eb416ecef5be9341"
+        },
+        "hit_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/original.latent",
+          "sha256": "b06089d71065f334e099b041999fe7ba6e0d99026dfacc9e0e68b0ab1641baa4"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/original_lossless.mkv",
+          "sha256": "1c0010ba7fb225a731e5d4757c1f9afda8418bd988334b78cc79ab01971d30c3"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/original.json",
+          "sha256": "4a4a4bcc703ae64c4136d50f34c5dc2f785b41922693f12550406c31db765379"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/workflow_api.json",
+          "sha256": "0d6a7558789488aba82f6ce1f07c32b588315376b24507638686e5ad77e79355"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/prompt.txt",
+          "sha256": "ad965a78ad27cd2095613033c3dadf8f8ba0e299dec5552ea6e73d5b62dcfe88"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/reference.json",
+          "sha256": "44c6c268291ff6c4ce24deecacbd5b988f12409a1c600af4bc81ebcc35242576"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte.json",
+          "sha256": "0db90fcc145fb20ef5bf3ecbccc96bf0b660c7fc227b7567a0929d4f91495469"
+        },
+        "cast_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/staged_generation.json",
+          "sha256": "47e855123a6faf504900f41a9847fe21fd474a63a60888e97561bb8767589239"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/sampling_workflow_api.json",
+          "sha256": "24266ae4040d48f0d6d808786cf46c0842f8ac4b06c956fed21932053d9fcf89"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/sampling_submission.json",
+          "sha256": "45334f64ec9ebfecddc78ee78e45b5db2f64d6fe71f8879de6b0f5f45d793305"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/sampling_history.json",
+          "sha256": "d9c24c0357cffda1898f4430757c96c7ae27418629120001afdda97690e0bf27"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/original.latent",
+          "sha256": "cb44f0bbee32d616eb8577887d5480234152834e9eb26c1928366df6bd8d768f"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/original_lossless.mkv",
+          "sha256": "ec3f725cfd69ec703dc5ca0ecc3c2b7aaed4320837d05264f1309cbe4957e991"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/original.json",
+          "sha256": "c2074a5b659bf0447d548779c586a4f2e7029f840073f53ded2ce37c83ef16e7"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/workflow_api.json",
+          "sha256": "fe64cc594ec56d74d4f4851bc29fa31fc06c189a2c283c596c4b611232374a61"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/prompt.txt",
+          "sha256": "67db2ed3407a4bbd3dba6d8a790bf76f209974f0fdcde1acc8280e01a43bfa56"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/reference.json",
+          "sha256": "99688b62fea05112983b55e043da50da54629638fa75d0481f26b8b37fff0b22"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte.json",
+          "sha256": "57ff19da17796851b00bcbe841127a01d7bf9c3e4704194e3cf157092fe3e41f"
+        },
+        "death_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/runtime_profile.json",
+          "sha256": "6ede1ff7d8891be1a33da928231dfb0ddd5b5bbc4bf96c492fa7646255ae43cd"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/staged_generation.json",
+          "sha256": "a1ae66711a558ec12e8919715b8ecf6321527b2f7d788a01df6ed5e216e80e5a"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/sampling_workflow_api.json",
+          "sha256": "7804bac0a92702e3ca70db16cc3decbc1cf91ad4caff48ae620dbcf9121eef91"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/sampling_submission.json",
+          "sha256": "cc6164147337ab6285f4c3df01d18e9a812749d032e894247cf1d258897955ce"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/sampling_history.json",
+          "sha256": "4701c79b8512a1715dc48ac9da4c9652865f680e0bbefd3ef1572be912875c3a"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/original.latent",
+          "sha256": "da09a1bbebbb3f0eba49d713d397ca8fe57d88f72e3eef5eaabddc114b7bdbb3"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all selected source phases, enlarged grips and joins, and native Godot battle phases. 209 new frames; original eight-frame articulated idle preserved. Ranged v1 rejected for generated projectile, v2 corrected. No continuous playback or manual playtest claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_061.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_063.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_065.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_067.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_069.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_071.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_073.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_075.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_077.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_079.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_081.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_083.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_085.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_087.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_089.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_091.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_093.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_095.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_097.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_099.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/move_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_011.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_013.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_057.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_059.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_061.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_071.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_073.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_075.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/attack_v1/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/ranged_v2/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/defend_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/hit_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/cast_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_089.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_091.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_093.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_095.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_097.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/death_v1/matte/rgba_104.png": 0.8
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "ranged",
+        "defend",
+        "hit",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

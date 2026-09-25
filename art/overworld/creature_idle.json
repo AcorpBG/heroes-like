@@ -1242,25 +1242,25 @@
         221
       ],
       "painted_extent": 216,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_sporeglass_menders.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        182,
-        15,
-        352,
-        247
+        54,
+        3,
+        224,
+        235
       ],
-      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_sporeglass_menders/provenance.json",
+      "source_sha256": "9f0fef7464c61c69aa039ea5aa2f2a07ff7c267cea5bbe26d9c80e0513ec3407",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_sporeglass_menders/provenance.json",
       "sha256": "d19b1c7206f04abc898cde1f6c144a49d30f09aa0652c5b6160c65f4d1d6b5ac"
     },
     "unit_thornwake_barkmantle_rams": {
