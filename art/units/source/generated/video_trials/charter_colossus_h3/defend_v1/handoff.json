@@ -1,0 +1,273 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_037",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ],
+          "frame_msec": 75,
+          "loop": false,
+          "static_frame": 9
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/original_lossless.mkv",
+          "sha256": "916b9f4f965fc0a07a0d7d8f75662a40cb14a925c8e042e5ef5846b3ccb359dc"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/original.json",
+          "sha256": "e35af63d51f5b70329e70e2de403cce5977fce4134813cb4d2a750e7eca2a491"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/workflow_api.json",
+          "sha256": "3fade005c8a2cf1c370bfe281e1925ac89189d4ba95b2be93d2bb1357a651ad0"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/prompt.txt",
+          "sha256": "590b974c0aa6f8908a6d76206d754ed89ffc26f276da9011178ed11281aac34e"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/reference.json",
+          "sha256": "8ad43502775c9e9fd929584b0a4879e6ade8c9c6a36b81d227bdc4e7b62c0d75"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte.json",
+          "sha256": "5bbda83cbbf467114db76b7f0e2761a712786bed9838dcc532afef0f758288ea"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Pending native review. All124 frames reviewed. Knees bend while shield elbow carries the red-panel shield across the torso into a lower held brace. Helmet remains visible above shield and other hand keeps upright staff. Trim only settled terminal hold; final pose remains defensive. Final atlas sampling retains articulation and action beats while removing redundant hold samples; fixed source scale unchanged. Native review required for final selection."
+      }
+    }
+  ]
+}

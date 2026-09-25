@@ -1,0 +1,13 @@
+{
+  "status": "interrupted_during_unresponsive_decode",
+  "prompt_id": "9401bfc0-d741-4d9c-8126-dc49c339ee26",
+  "sampling_steps_completed": 20,
+  "completed_decoded_output": false,
+  "reason": "VAE decode held the local service API unresponsive for over 15 minutes. Verified only this task job in server log; restarted the exact MiniMax server process. No decoded frames were available to review or publish.",
+  "retry": "hit_v3",
+  "retry_changes": {
+    "spatial_tile_size": 256,
+    "reserve_vram_gb": 4
+  },
+  "preserved": "Original prompt, references, workflow, seed and submission; all earlier completed videos untouched."
+}

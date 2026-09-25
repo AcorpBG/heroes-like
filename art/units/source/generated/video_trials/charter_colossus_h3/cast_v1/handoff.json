@@ -1,0 +1,362 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "cast_h3_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+          ],
+          "frame_msec": 75,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 6
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/original_lossless.mkv",
+          "sha256": "3b0826e3e5ea4135b71a93190cf2acb80399d4979a0f8429842539b873ba7aac"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/original.json",
+          "sha256": "5613f42b3d1cc2fe1c3b18e5b60a6c31c4d67ae78299d5dda07e7a8a691ffbb5"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/workflow_api.json",
+          "sha256": "4e2d765e6fb265d8f5a8c03bc5276da63d353a5370ec1463af66e31ea5d12cf1"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/prompt.txt",
+          "sha256": "6df4e18eaeea81d77f405318b002dff7722e75f46ba3260cb1e5612dce2e8634"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/reference.json",
+          "sha256": "315dd1173ccdaaad59c78cd3d158fb11cf4acec2eb7cf05f1ab1bf9807d408d3"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte.json",
+          "sha256": "eda49a3a0f31f440876e12a7cd817a45aa0caceb32531278f56f184e2eb0631e"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Pending native review. All124 original frames reviewed; physical shield-raised rally salute and slightly lifted upright staff, both arms return to ready. No invented magic. Consecutive samples retained across rapid elbow rotation; long steady salute hold trimmed. Final atlas sampling retains articulation and action beats while removing redundant hold samples; fixed source scale unchanged. Native review required for final selection."
+      }
+    }
+  ]
+}

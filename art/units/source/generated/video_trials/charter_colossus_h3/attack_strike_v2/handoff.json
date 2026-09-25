@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_004",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/original_lossless.mkv",
+          "sha256": "3723187028bcc6f8111cddbfc7fe1c18c84f4843685340ef9325f2fcd2c46a4e"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/original.json",
+          "sha256": "707df4ba8ffa916b6af7a7c43d27a25d48d6151ac60a7174c9f47309d7b769cc"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/workflow_api.json",
+          "sha256": "5ee023693100f893df49c1785396add9625ad725c3469e6bf9d3ecbb466e366d"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/prompt.txt",
+          "sha256": "afa3b3aa8b3e2663af8c29cdfef3c2d2efc7601c754d980f21ea4d9671b7c534"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/reference.json",
+          "sha256": "79147e448833a55c7d6b63dce11f5c24ef30ea363dccfdef8f167e882187afed"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte.json",
+          "sha256": "f9b4debfbecc70b531aad222e5fa1c318b343e0597e36b82fe984fcf91853480"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Pending enlarged/combined review. Full124 reviewed; select initial complete rigid-staff forward strike0..32 only. Post-contact flourish32..90 is not part of delivered action; dedicated recovery now starts at32. Final atlas sampling retains articulation and action beats while removing redundant hold samples; fixed source scale unchanged. Native review required for final selection."
+      }
+    }
+  ]
+}

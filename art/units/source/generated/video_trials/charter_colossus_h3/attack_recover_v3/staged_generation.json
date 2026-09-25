@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "98fbc2b0f900d2ce3de3e46ccab49ac7b98627adacefe10c10e6c86c8f096eb6",
+  "latent_sha256": "c0f88b45c052c4d6b42aee82f3de6e205aafa8817eebac09c6066cca6ecaf24f",
+  "decode_workflow_sha256": "1438bb93268d29243685281542ca29d14de86da90bfcb3b60c77799b2df1ba0d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "charter_colossus_h3\\attack_recover_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 32218546176,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,249 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "frame_msec": 65,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original_lossless.mkv",
+          "sha256": "5a54f83532274b0c1d42103723719b34b8d2932b581479bf865aafcd7ccc313c"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original.json",
+          "sha256": "8a1ea52f05c56f81e0b3a7c77672ee06892f06bc609b39eff0081bf69e53b584"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/workflow_api.json",
+          "sha256": "86051b77d072d4bb9f401eb901cf8c2294fb277f476b0d799ffbe81ee8cc46b7"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/prompt.txt",
+          "sha256": "93027ff54102c8bc75ee267b2a90371d5f414c16676ccb34d69f77a3f6633eba"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/reference.json",
+          "sha256": "d9ceddd74154042f62a6f261ef8558aa41b6efafc6bfe0e2cc0f040c804f79ab"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte.json",
+          "sha256": "e4b271fd3b18d290a1836b5a165029504820728897e164a217c4465588ca80de"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/staged_generation.json",
+          "sha256": "aad78fea89af4f91cc4aabf025cd374f3b06cca5d7e0448cc63e675c8702bca1"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_workflow_api.json",
+          "sha256": "a7737ccec247af094cd29da3ea335ca419c1e3d28abf9331cc7565babcbc6235"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_submission.json",
+          "sha256": "fa93e06f5141f6067f8ac36b412f4e29607ff030974471edeb7f8bb0691ebf52"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_history.json",
+          "sha256": "cadb860b653481fbcded6db9419e9dbf5975efcc932513fbde684a274a44e226"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original.latent",
+          "sha256": "7e7659109ef40ffeb5c378040325349c31f76bbda933b65cef451fb7b4644774"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 source frames inspected chronologically and recoil/grip enlarged on light/dark ground. Staff retains both rigid tips and fixed grip; knees/chest articulate with planted boots. Select the first recoil and final recovery, joining matching held recoil postures36/74; omit the intervening secondary shudder and long still periods. No synthesized or reversed frames. Eight original samples retimed to520ms. Native review pending."
+      }
+    }
+  ]
+}

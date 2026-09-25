@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 83,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/original_lossless.mkv",
+          "sha256": "c74c4f990bfa32c4e5542a6c94b8bf189966a60b1d775abbbeb9f62aca9c6e3c"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/original.json",
+          "sha256": "dcf6f16afd4304361210f4ead3a1abfe8c176decbee6b1a24bbdca8a3404a4c8"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/workflow_api.json",
+          "sha256": "0dc9fb1085d47020d26ab5e4879138754d097e97a2a48a31db430e4767aaf0b2"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/prompt.txt",
+          "sha256": "fc8527acc6837266acfb0a6be612a108b101473d4e5b08f7abd078392edf22b9"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/reference.json",
+          "sha256": "40b8d97ccdace8fec5baf7921f24db35f9189d5dfee40dd5575f88bce82d2f60"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte.json",
+          "sha256": "e48f7576705d6d2f1b908cb6db6521ec0e1b4c351bf83e14c624a18de09334a3"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Pending native review. All124 frames inspected, with enlarged boot, knee, staff and shield phases. First complete cycle selected: near knee lifts, near boot extends and plants, opposite leg passes/extends/plants, returning to ready. One shield/staff and stable grip throughout; feet alternately support weight. No camera reframe or synthetic reversal. Final atlas sampling retains articulation and action beats while removing redundant hold samples; fixed source scale unchanged. Native review required for final selection."
+      }
+    }
+  ]
+}

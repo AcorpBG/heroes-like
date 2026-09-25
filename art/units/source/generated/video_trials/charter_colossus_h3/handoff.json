@@ -1,0 +1,3069 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_charter_colossus",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_h3_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "idle_h3_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "idle_h3_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "idle_h3_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "idle_h3_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "idle_h3_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "idle_h3_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "idle_h3_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "idle_h3_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "idle_h3_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "idle_h3_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "idle_h3_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_123",
+          "clip": "idle",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_037",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "cast_h3_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_raise_v2_attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_004",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_strike_v2_attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_recover_v3_attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
+          ],
+          "frame_msec": 148,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38
+          ],
+          "frame_msec": 83,
+          "loop": true,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48
+          ],
+          "frame_msec": 75,
+          "loop": false,
+          "static_frame": 9
+        },
+        "hit": {
+          "indices": [
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56
+          ],
+          "frame_msec": 65,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70
+          ],
+          "frame_msec": 75,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 6
+        },
+        "death": {
+          "indices": [
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90
+          ],
+          "frame_msec": 75,
+          "loop": false,
+          "static_frame": 19
+        },
+        "attack": {
+          "indices": [
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118
+          ],
+          "frame_msec": 45,
+          "contact_frame": 19,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "idle_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/original_lossless.mkv",
+          "sha256": "165b6d494feafeddb17df98730e97640da83ebdd88652b534024abe54e8da860"
+        },
+        "idle_v1_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/original.json",
+          "sha256": "24656152c8a79a21aa59b16e8782d881462311f85338bf8e88293b59ad2407ac"
+        },
+        "idle_v1_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/workflow_api.json",
+          "sha256": "5d81057a9becf67a34dba56af34f7d29259225ef04cfd228ea28b8cd4d888753"
+        },
+        "idle_v1_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/prompt.txt",
+          "sha256": "e6925e563634c312159317c4aef9e738b0dbdae256a74b83ddd7b17f315a9363"
+        },
+        "idle_v1_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/reference.json",
+          "sha256": "8ac843f165dcede6353eafa1415ce4fc6bc0ce70c34de8bc382f704244ce840b"
+        },
+        "idle_v1_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte.json",
+          "sha256": "3d4313bda6c96e2a8bd710b18f1ff507434240b38976a7ff2d616d83a5534114"
+        },
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/original_lossless.mkv",
+          "sha256": "c74c4f990bfa32c4e5542a6c94b8bf189966a60b1d775abbbeb9f62aca9c6e3c"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/original.json",
+          "sha256": "dcf6f16afd4304361210f4ead3a1abfe8c176decbee6b1a24bbdca8a3404a4c8"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/workflow_api.json",
+          "sha256": "0dc9fb1085d47020d26ab5e4879138754d097e97a2a48a31db430e4767aaf0b2"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/prompt.txt",
+          "sha256": "fc8527acc6837266acfb0a6be612a108b101473d4e5b08f7abd078392edf22b9"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/reference.json",
+          "sha256": "40b8d97ccdace8fec5baf7921f24db35f9189d5dfee40dd5575f88bce82d2f60"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte.json",
+          "sha256": "e48f7576705d6d2f1b908cb6db6521ec0e1b4c351bf83e14c624a18de09334a3"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/original_lossless.mkv",
+          "sha256": "916b9f4f965fc0a07a0d7d8f75662a40cb14a925c8e042e5ef5846b3ccb359dc"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/original.json",
+          "sha256": "e35af63d51f5b70329e70e2de403cce5977fce4134813cb4d2a750e7eca2a491"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/workflow_api.json",
+          "sha256": "3fade005c8a2cf1c370bfe281e1925ac89189d4ba95b2be93d2bb1357a651ad0"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/prompt.txt",
+          "sha256": "590b974c0aa6f8908a6d76206d754ed89ffc26f276da9011178ed11281aac34e"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/reference.json",
+          "sha256": "8ad43502775c9e9fd929584b0a4879e6ade8c9c6a36b81d227bdc4e7b62c0d75"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte.json",
+          "sha256": "5bbda83cbbf467114db76b7f0e2761a712786bed9838dcc532afef0f758288ea"
+        },
+        "hit_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original_lossless.mkv",
+          "sha256": "5a54f83532274b0c1d42103723719b34b8d2932b581479bf865aafcd7ccc313c"
+        },
+        "hit_v4_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original.json",
+          "sha256": "8a1ea52f05c56f81e0b3a7c77672ee06892f06bc609b39eff0081bf69e53b584"
+        },
+        "hit_v4_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/workflow_api.json",
+          "sha256": "86051b77d072d4bb9f401eb901cf8c2294fb277f476b0d799ffbe81ee8cc46b7"
+        },
+        "hit_v4_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/prompt.txt",
+          "sha256": "93027ff54102c8bc75ee267b2a90371d5f414c16676ccb34d69f77a3f6633eba"
+        },
+        "hit_v4_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/reference.json",
+          "sha256": "d9ceddd74154042f62a6f261ef8558aa41b6efafc6bfe0e2cc0f040c804f79ab"
+        },
+        "hit_v4_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte.json",
+          "sha256": "e4b271fd3b18d290a1836b5a165029504820728897e164a217c4465588ca80de"
+        },
+        "hit_v4_staged_generation.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/staged_generation.json",
+          "sha256": "aad78fea89af4f91cc4aabf025cd374f3b06cca5d7e0448cc63e675c8702bca1"
+        },
+        "hit_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_workflow_api.json",
+          "sha256": "a7737ccec247af094cd29da3ea335ca419c1e3d28abf9331cc7565babcbc6235"
+        },
+        "hit_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_submission.json",
+          "sha256": "fa93e06f5141f6067f8ac36b412f4e29607ff030974471edeb7f8bb0691ebf52"
+        },
+        "hit_v4_sampling_history.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/sampling_history.json",
+          "sha256": "cadb860b653481fbcded6db9419e9dbf5975efcc932513fbde684a274a44e226"
+        },
+        "hit_v4_original.latent": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/original.latent",
+          "sha256": "7e7659109ef40ffeb5c378040325349c31f76bbda933b65cef451fb7b4644774"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/original_lossless.mkv",
+          "sha256": "3b0826e3e5ea4135b71a93190cf2acb80399d4979a0f8429842539b873ba7aac"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/original.json",
+          "sha256": "5613f42b3d1cc2fe1c3b18e5b60a6c31c4d67ae78299d5dda07e7a8a691ffbb5"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/workflow_api.json",
+          "sha256": "4e2d765e6fb265d8f5a8c03bc5276da63d353a5370ec1463af66e31ea5d12cf1"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/prompt.txt",
+          "sha256": "6df4e18eaeea81d77f405318b002dff7722e75f46ba3260cb1e5612dce2e8634"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/reference.json",
+          "sha256": "315dd1173ccdaaad59c78cd3d158fb11cf4acec2eb7cf05f1ab1bf9807d408d3"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte.json",
+          "sha256": "eda49a3a0f31f440876e12a7cd817a45aa0caceb32531278f56f184e2eb0631e"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/original_lossless.mkv",
+          "sha256": "8773d54aa0b05925efd6f6c38bc1c4b01fca889bba076b83ee75f0865445b5a3"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/original.json",
+          "sha256": "759ac06be2e52f6f7e6aac0629e0b5bedcc31b3bbd5ac8b6ebf868dd6c40114b"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/workflow_api.json",
+          "sha256": "e707dfb93e510bb6a50dbdf3d06321542f8956f70acd4530b8afdadc9919c3ff"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/prompt.txt",
+          "sha256": "0b690b1713ae109157ce7081aedd32a3706c9365c5c2832fa130ba3c2f6059b1"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/reference.json",
+          "sha256": "1eab4d670821a0f1c78de25932b1c424a8cc74cacec722715dc6f40714a5be15"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte.json",
+          "sha256": "71a9d40065620a986b684eca40ee1a39db4ca0b2f243306d9042bfe5222e40a0"
+        },
+        "attack_raise_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/original_lossless.mkv",
+          "sha256": "68b4ba16ef29e94605c0726c528f363a4e6c05c0150dd32d1ecc9be7cecd6adf"
+        },
+        "attack_raise_v2_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/original.json",
+          "sha256": "8c8496673c38621459974f5d33d5021ffe35eed9bfa961e26349d9e8b5bee7cb"
+        },
+        "attack_raise_v2_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/workflow_api.json",
+          "sha256": "7b272a2bbb4a9ee43778f1b2ef026b8ed5f3e636f7834ec6d25c1833a03d2ac8"
+        },
+        "attack_raise_v2_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/prompt.txt",
+          "sha256": "0d4e1ed235784e4766386999350b77be7af30e4115aea986121275408c4b8175"
+        },
+        "attack_raise_v2_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/reference.json",
+          "sha256": "6c7a02465d63f2dbfaa66adbddc740684f43bff39b0378ce4d48b29db7db7bd7"
+        },
+        "attack_raise_v2_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte.json",
+          "sha256": "b1f230df7ea726b530b896dc7041d5831830a20443af3f2f33b5da2ccb990927"
+        },
+        "attack_strike_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/original_lossless.mkv",
+          "sha256": "3723187028bcc6f8111cddbfc7fe1c18c84f4843685340ef9325f2fcd2c46a4e"
+        },
+        "attack_strike_v2_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/original.json",
+          "sha256": "707df4ba8ffa916b6af7a7c43d27a25d48d6151ac60a7174c9f47309d7b769cc"
+        },
+        "attack_strike_v2_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/workflow_api.json",
+          "sha256": "5ee023693100f893df49c1785396add9625ad725c3469e6bf9d3ecbb466e366d"
+        },
+        "attack_strike_v2_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/prompt.txt",
+          "sha256": "afa3b3aa8b3e2663af8c29cdfef3c2d2efc7601c754d980f21ea4d9671b7c534"
+        },
+        "attack_strike_v2_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/reference.json",
+          "sha256": "79147e448833a55c7d6b63dce11f5c24ef30ea363dccfdef8f167e882187afed"
+        },
+        "attack_strike_v2_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte.json",
+          "sha256": "f9b4debfbecc70b531aad222e5fa1c318b343e0597e36b82fe984fcf91853480"
+        },
+        "attack_recover_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original_lossless.mkv",
+          "sha256": "c16ea71a47abd1937f767050c2566b4af8ef0c18d973d343d0085e5b126e6513"
+        },
+        "attack_recover_v3_original.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original.json",
+          "sha256": "462348fe344150004f80f09779d8c69a45d17b7d8f6c10a009931beed7de1c2a"
+        },
+        "attack_recover_v3_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/workflow_api.json",
+          "sha256": "1438bb93268d29243685281542ca29d14de86da90bfcb3b60c77799b2df1ba0d"
+        },
+        "attack_recover_v3_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/prompt.txt",
+          "sha256": "b738f814d607099c27fa50a2c385291bd28e577e547b5d868d4bdcb2f1753686"
+        },
+        "attack_recover_v3_reference.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/reference.json",
+          "sha256": "b70ed29e7268f9209eefbcc6e8e8d11cc0ce737bf78d5236800a37672f4b4e48"
+        },
+        "attack_recover_v3_matte.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte.json",
+          "sha256": "fb7816f0b284b334d2146966d7a554b487297d6d1ce74c01ae4728f43c0030d5"
+        },
+        "attack_recover_v3_staged_generation.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/staged_generation.json",
+          "sha256": "b3a36f94fd564c509181d604f2b119f7c077b8ff942532f9db362c778868d2c2"
+        },
+        "attack_recover_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_workflow_api.json",
+          "sha256": "98fbc2b0f900d2ce3de3e46ccab49ac7b98627adacefe10c10e6c86c8f096eb6"
+        },
+        "attack_recover_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_submission.json",
+          "sha256": "35c93c95a4b0d11d84c2688fdccd7d265f25c4732e6dfc0accc8ab8d4889ddb6"
+        },
+        "attack_recover_v3_sampling_history.json": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/sampling_history.json",
+          "sha256": "bc1353874faf0ee3f53d243643aa03fb44278ee7dc792f76dc9e8e5aab9338c3"
+        },
+        "attack_recover_v3_original.latent": {
+          "path": "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/original.latent",
+          "sha256": "c0f88b45c052c4d6b42aee82f3de6e205aafa8817eebac09c6066cca6ecaf24f"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Selected Charter Colossus H3 actions; native review required. Seven dedicated actions; identity matches original idle painting."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/idle_v1/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_003.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_006.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_009.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/move_v1/matte/rgba_057.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/defend_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/hit_v4/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_083.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_085.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_087.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/cast_v1/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/death_v1/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_raise_v2/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_strike_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/video_trials/charter_colossus_h3/attack_recover_v3/matte/rgba_123.png": 0.8
+      },
+      "preserved_accepted_clips": []
+    }
+  ]
+}
