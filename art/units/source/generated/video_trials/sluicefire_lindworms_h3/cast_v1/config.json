@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_embercourt_sluicefire_lindworms",
+  "clip": "cast",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        760
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_sluicefire_lindworms.png",
+      "rects": [
+        [
+          512,
+          0,
+          1024,
+          256
+        ]
+      ],
+      "anchor": [
+        768,
+        248
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      46,
+      1
+    ]
+  ],
+  "seed": 925130,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked camera original hand-painted fantasy tactical game creature, facing right throughout. One long LEGLESS Sluicefire Lindworm serpent: one angular dragon head, one continuous heavy charcoal-scaled serpentine body, one tapered hooked tail, ivory segmented dorsal plates, fixed dark iron harness bands, orange furnace vents on the throat and belly. Exactly zero arms, zero legs, zero wings. Preserve head size, body thickness, all armor materials and original painterly texture. Entire creature stays visible, same scale, lower coils grounded on the same baseline. Flat uniform vivid green RGB(0,255,0) background through all coil gaps, without ground or shadow. The orange is contained inside its body vents. One nonmagical support signal. The serpent coils firmly, raises its head and upper neck, lifts its jaw in a deliberate short commanding hiss, and slowly lowers head back to the starting ready stance. Lower coils remain grounded. A purposeful neck and jaw gesture distinct from biting or getting hit. No magic, no fireball, no beam, no new horns, no smoke or particles."
+}
