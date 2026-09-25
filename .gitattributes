@@ -8,3 +8,7 @@ art/units/source/generated/video_trials/**/*.prompt.txt -text
 # Reedsnare H3 delivery lives in its assigned production batch; preserve hashes.
 art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/**/*.json -text
 art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/**/prompt.txt -text
+
+# Preserve hash-bound Mudglass Slingers H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/**/*.json -text
+art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/**/*.txt -text

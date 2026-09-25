@@ -1,0 +1,40 @@
+{
+  "unit_id": "unit_mireclaw_mudglass_slingers",
+  "baseline": "baseline.json",
+  "handoff": "reviewed_handoff.json",
+  "tool": "tools/publish_fluid_creature_animation.py",
+  "sources": {
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_000.png": "fb994d913288a8c5e03049b85a4a2ab0a87af27bb3f533256bed9f69b9b72b4d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_004.png": "fad79740ee2e6d469a5c141be5de5624c0fe300e1c5c8e682263289d28a668a6",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_006.png": "aeb18b82a8878c4e9b3cef859a454e6db13c23acd16f101d1b1ffcdfdafaa79e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_007.png": "0ef49f3353a41f4cda3e0dbcce3c89526b16ef469739c5858cbaf24e97e849d4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_008.png": "ba10cd7b3538e3d1aa83a08ac427bd69ffee2fddf656d6e6a045ee7211d53cdc",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_009.png": "8b339b6988ba5a6013a3ffcc05e6d740203e98e689bedd25a41bb1eecde5f5b3",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_010.png": "c05d3a3e233826e0c306422f333713dd23bdad00569de4b0f02ee369c873e914",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_012.png": "51b6e9e17711737dfb2846ee354bb889ff68f6ea1a4fd6a7cce7d0755d20044e",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_018.png": "1d76ccbbbd83fa90c1ec9a9d85fa45ca7d4946176378099c204de6f24997ae76",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_024.png": "a2f1d8afa1f9e7cd7cb9f8e79dfb9d18cc7a715c50dda8c0af920d8135b20131",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_062.png": "a00574d886536bdaf17872b4d54503cc81bd513401a9674f23a746297733c24d",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_066.png": "9d4cd0ada1b8ca450a461a509604f67ece2d9aed4efa0a250f0dcddf1257199c",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_070.png": "c2d4febbcef07c3a3b97954ef158a644de800a3932f5b6bac65d6b0027432607",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_074.png": "b255616f5ffaabedb842fb57a11ac90d83628fb03093b959a5f1af57eacd2a74",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_078.png": "e1e5e91286f253d191c1416e8fcfbaf7ad56f43461a85d8ecb92c12665013113",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_082.png": "a51b7147e5bed62d7f5d8f362b003295fda5b30cb16560913a98901a8d8433f5",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_086.png": "4ee1b7ba18a166362f1794d26552be8b94e8d8e872a16b9ee65247fdf3496ed4",
+    "res://art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mudglass_slingers/hit_v1/matte/rgba_090.png": "bc412249d2993f9462e30551cdbc7c125121cb260c72acb802be545f702f028e"
+  },
+  "accepted_clips": [
+    "hit",
+    "idle"
+  ],
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all124 original chronological frames, enlarged anatomy/sling/alpha, the condensed settled-hold join and all18 selected phases in offscreen Godot at128px. Accept dedicated articulated hit flinch and recovery, stable two-arm/two-leg anatomy and the same sling hand. Preserve all eight original articulated idle paintings and240ms timing. Candidate21 focused checks passed. Other six actions remain in production; rejected one-leg movement, sling-swapping melee and color-cycling defense are not accepted. No continuous video playback or manual game playtest claimed."
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "baseline_atlas_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
+  "atlas_sha256": "563901837364e65bf3b969bbdc2638c9e1238eac3c27fe999f3f2b436d4b79e3",
+  "texture_bytes_rgba": 16220160
+}
