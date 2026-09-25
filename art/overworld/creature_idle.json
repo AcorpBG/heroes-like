@@ -496,25 +496,25 @@
         224
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_bargebow_crews.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_bargebow_crews.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        150,
-        12,
-        347,
-        249
+        30,
+        0,
+        227,
+        237
       ],
-      "source_sha256": "7587839bf6caea54d4a0afac29445c700f57f9d11abe405dfb77d2022a025445",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_bargebow_crews/provenance.json",
+      "source_sha256": "fcfea4efe5fa9fb9954c574101cca6aa52a4723df872ad2b2df35d076c878b82",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_bargebow_crews/provenance.json",
       "sha256": "7ffbee859bf8f91a9d8d6a4f2534b5462066315346d2350e8e8624571e6399b2"
     },
     "unit_embercourt_ash_oath_bailiffs": {

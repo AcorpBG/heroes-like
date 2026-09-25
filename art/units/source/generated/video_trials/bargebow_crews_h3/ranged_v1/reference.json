@@ -1,0 +1,243 @@
+{
+  "unit_id": "unit_embercourt_bargebow_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            257
+          ],
+          [
+            0,
+            257,
+            385,
+            258
+          ],
+          [
+            0,
+            258,
+            386,
+            260
+          ],
+          [
+            0,
+            260,
+            387,
+            262
+          ],
+          [
+            0,
+            262,
+            388,
+            264
+          ],
+          [
+            0,
+            264,
+            389,
+            266
+          ],
+          [
+            0,
+            266,
+            390,
+            269
+          ],
+          [
+            0,
+            269,
+            391,
+            282
+          ],
+          [
+            0,
+            282,
+            390,
+            287
+          ],
+          [
+            0,
+            287,
+            389,
+            290
+          ],
+          [
+            0,
+            290,
+            388,
+            294
+          ],
+          [
+            0,
+            294,
+            387,
+            297
+          ],
+          [
+            0,
+            297,
+            386,
+            299
+          ],
+          [
+            0,
+            299,
+            385,
+            301
+          ],
+          [
+            0,
+            301,
+            384,
+            338
+          ],
+          [
+            0,
+            338,
+            385,
+            340
+          ],
+          [
+            0,
+            340,
+            386,
+            342
+          ],
+          [
+            0,
+            342,
+            387,
+            345
+          ],
+          [
+            0,
+            345,
+            388,
+            346
+          ],
+          [
+            0,
+            346,
+            389,
+            347
+          ],
+          [
+            0,
+            347,
+            382,
+            348
+          ],
+          [
+            0,
+            348,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          213,
+          495
+        ],
+        "scale": 0.575,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d3f7000f624370c773179e1c6dbe26aeb2a3a7f1446c99284bd54d1084e5cfc1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e336469c2cc9005759712247d1f76c1a1b12a9ab885d9ed31aa478cf6479fc33",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "ranged_load",
+        "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/ranged-load-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1162,
+            1354
+          ]
+        ],
+        "anchor": [
+          480,
+          1235
+        ],
+        "scale": 0.20625,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a4d6f802e4af51880eb54030dd6a41eec060a65995b36714fdc358e1811b4a58",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1ba86d5002a8952b69e8f13180e2d284ca48737b7bcb5a144d72a3d2a0fcd6af",
+      "runtime_source_scale": 0.165
+    },
+    {
+      "source_frame": {
+        "name": "ranged_aim",
+        "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/alpha/poses.png",
+        "rects": [
+          [
+            625,
+            630,
+            825,
+            645
+          ],
+          [
+            625,
+            645,
+            934,
+            926
+          ]
+        ],
+        "anchor": [
+          750,
+          915
+        ],
+        "scale": 0.7999999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7da53a218e05307ba8ec493a48778c8f6e3277aceee6b19655b04b9cd781f30d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e469a6a2feaa1644d80fd997b89aaf422ea8a51bca06dbf5144fd291bb971dde",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "ranged_release",
+        "source": "art/animation/source/poses/unit_embercourt_bargebow_crews/continuity-alpha/ranged-release-string-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1221,
+            1289
+          ]
+        ],
+        "anchor": [
+          460,
+          1235
+        ],
+        "scale": 0.18749999999999997,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dfdfdd15322589109d960bed51b84ae4d082a6489650e48a65ff5741ad736b46",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "14fd1fbf1c748e195d7bd6573c4c930677ba2f438306f503ae77db4bf8ccf64c",
+      "runtime_source_scale": 0.15
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
