@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "fb91e1706ea27cd868411e46c0c82aba57b72f298776a714abf109bf2471d970",
+  "latent_sha256": "8b6333d304627ac4471bb5bd5e82d33c6f36242fbf0f8441741736f3e363846b",
+  "decode_workflow_sha256": "8cf60bd0da09aa2cb4ab0194169ddbdf7f141e7c6f6904087e77fb8082ab28fc",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "seedcutters_h3\\move_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_thornwake_seedcutters",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "seed": 927321,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed camera. A single original female fantasy gatherer walks in place against an entirely unmoving solid ROYAL BLUE backdrop. The backdrop is exactly the blue in every supplied guide: keep this identical blue for the entire video, with no colour changes or gradients. Preserve her two human arms and two booted legs, original hood, leather clothing, shoulder/knee pieces, hair, face, back basket, herb contents, waist rope and pouches. RIGHT hand holds the same short curved sickle on the left side of the image. LEFT hand holds the same small tied twig bundle on the right side. Walk with alternating natural foot lifts and planted steps, cycling through the supplied opposite leg contacts and bent-knee passing phases. Centered body, fixed body scale, slight natural elbow swing but sickle always clear of legs and never changing grip. Basket remains strapped on. Return to the initial foot-contact phase. The only movement is the original woman and her attached belongings; surrounding blue remains perfectly still and unchanged.",
+  "protected_foreground_chroma": 20
+}

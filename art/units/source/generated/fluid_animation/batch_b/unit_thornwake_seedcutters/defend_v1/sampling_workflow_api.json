@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic three-quarter camera facing image right, original richly painted fantasy strategy sprite on perfectly uniform flat MAGENTA RGB(255,0,255). One adult human female Seedcutter with exactly two arms, two hands and two booted legs. Preserve her brown hair, green hood/scarf, brown leather gathering clothes, ivory scale shoulder and knee armor, red ties, waist pouches and rope coil. Her anatomical RIGHT hand (the sickle hand, initially on image left) grips ONE short curved steel sickle throughout. Her anatomical LEFT hand (on image right) grips ONE tied bundle of straight leafy twigs throughout. A tall woven gathering basket filled with herbs and sticks stays strapped on her back. Preserve her face, sickle handle/blade length and curvature, bundle size, basket contents and straps. No added limbs, no swapped hands, no new tools, no loose flying objects. Same body size, fixed planted-foot baseline and centered body, full figure and equipment visible, no camera motion, shadows only on the subject and uniform empty magenta everywhere else. From ready lower her center of mass, bend both knees into the original low defensive guard and bring the sickle across the front with its hand still gripping the handle. Keep the twig bundle in the other hand close to the chest, the basket strapped behind. Settle into a held braced guard. Do not return to ready, strike, walk or cast.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 927304
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "seedcutters_defend_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "seedcutters_defend_v1_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "seedcutters_h3/defend_v1/sampled"
+    }
+  }
+}

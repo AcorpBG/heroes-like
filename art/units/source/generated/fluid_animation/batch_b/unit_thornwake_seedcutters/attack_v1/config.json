@@ -1,0 +1,86 @@
+{
+  "unit_id": "unit_thornwake_seedcutters",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      62,
+      2
+    ]
+  ],
+  "seed": 927303,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic three-quarter camera facing image right, original richly painted fantasy strategy sprite on perfectly uniform flat MAGENTA RGB(255,0,255). One adult human female Seedcutter with exactly two arms, two hands and two booted legs. Preserve her brown hair, green hood/scarf, brown leather gathering clothes, ivory scale shoulder and knee armor, red ties, waist pouches and rope coil. Her anatomical RIGHT hand (the sickle hand, initially on image left) grips ONE short curved steel sickle throughout. Her anatomical LEFT hand (on image right) grips ONE tied bundle of straight leafy twigs throughout. A tall woven gathering basket filled with herbs and sticks stays strapped on her back. Preserve her face, sickle handle/blade length and curvature, bundle size, basket contents and straps. No added limbs, no swapped hands, no new tools, no loose flying objects. Same body size, fixed planted-foot baseline and centered body, full figure and equipment visible, no camera motion, shadows only on the subject and uniform empty magenta everywhere else. One deliberate close melee sickle strike. Plant both boots, rotate torso and raise the sickle-hand elbow for the original backswing, then swing the short curved sickle forward to the contact pose. The other hand keeps the leafy bundle close and intact. Recover the same sickle along a natural arm path and return to original ready. Exactly one swing, no projectile, no detached blade, no extra hand."
+}
