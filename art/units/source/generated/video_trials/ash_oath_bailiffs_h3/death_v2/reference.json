@@ -1,0 +1,137 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_0",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            50,
+            0,
+            301,
+            348
+          ],
+          [
+            102,
+            348,
+            301,
+            383
+          ]
+        ],
+        "anchor": [
+          183,
+          374
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "81463ae3673d5a0ada030560a2ba0bfbd239a02be176b1257eeb08d6d6bf45c6",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            362,
+            727,
+            642,
+            1061
+          ]
+        ],
+        "anchor": [
+          501,
+          1037
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a713cb5ca3e6f9076a97de2029c709cfafe558142b381298095899e4234b6be1",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "lowered_spear_kneel",
+        "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v3.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          850,
+          811
+        ],
+        "scale": 0.38749999999999996,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e0af5070ffe80fafe6751a5aba8050924127571faa2c35f18b7499b677260a3f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "03f26263c2f53f6d0724d56422a0f4eea16fb8507ca48584badd1581a79db3d4",
+      "runtime_source_scale": 0.31
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            644,
+            818,
+            1063,
+            1061
+          ]
+        ],
+        "anchor": [
+          860,
+          1037
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "aaf58a0b367940e4ba453f4010f2deb6eb657ec4c9d8c0c2a722b92ff18335d2",
+      "runtime_source_scale": 0.56
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+        "rects": [
+          [
+            1060,
+            846,
+            1448,
+            1061
+          ]
+        ],
+        "anchor": [
+          1274,
+          1037
+        ],
+        "scale": 0.7000000000000001
+      },
+      "source_sha256": "7b286803d56a496633d092b8dbb380adea6c7aee8b1f56fd9c1a2fb6fc2fd131",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "8de564bfa5d079208c377f28a7a6e5e6f5c46d406b24f2474754e6f4b2f6cd91",
+      "runtime_source_scale": 0.56
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

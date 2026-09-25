@@ -1,0 +1,126 @@
+{
+  "id": "unit_embercourt_ash_oath_bailiffs",
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "name": "Ash-Oath Bailiffs",
+  "faction_id": "faction_embercourt",
+  "tier": 4,
+  "role": "melee",
+  "motif": "melee",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_embercourt_ash_oath_bailiffs.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_embercourt_ash_oath_bailiffs.png",
+  "curated_source_sha256": "fe7e30b782f0034eff222a82c96d8c97be3a6d1a6bc49b1c5be54f1005dd43cb",
+  "pose_sheet": "res://art/animation/runtime/poses/unit_embercourt_ash_oath_bailiffs.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "loop": true,
+      "frame_msec": 240,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 140,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 5,
+      "indices": [
+        6,
+        7,
+        8,
+        7,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        0,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 350,
+      "static_frame": 1
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        9
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_provenance": "res://art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/provenance.json",
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_ground_margin": 16,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "defend",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          301,
+          348
+        ],
+        [
+          102,
+          348,
+          301,
+          383
+        ]
+      ],
+      "anchor": [
+        183,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          1190,
+          382,
+          1410,
+          520
+        ],
+        [
+          1148,
+          520,
+          1410,
+          726
+        ]
+      ],
+      "anchor": [
+        1271,
+        710
+      ],
+      "scale": 0.56
+    }
+  ],
+  "last": 1,
+  "guides": [
+    [
+      42,
+      1
+    ]
+  ],
+  "seed": 2026093402,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. One defensive brace. From ready, lower the hips and bend both knees, draw the head behind the upper edge of the raised pavise. Shield arm braces it securely; spear hand keeps the spear diagonally upright beside the body. Settle into the low planted guard and hold it without returning to standing. No attack."
+}

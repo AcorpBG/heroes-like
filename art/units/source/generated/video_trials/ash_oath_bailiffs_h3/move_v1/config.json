@@ -1,0 +1,133 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          771,
+          0,
+          985,
+          383
+        ]
+      ],
+      "anchor": [
+        875,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "walk_near_passing",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-b-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        547,
+        1370
+      ],
+      "scale": 0.154
+    },
+    {
+      "name": "walk_near_landing",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-near-landing-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        547,
+        1370
+      ],
+      "scale": 0.154
+    },
+    {
+      "name": "walk_far_passing",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/walk-passing-a-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1145,
+          1374
+        ]
+      ],
+      "anchor": [
+        581,
+        1270
+      ],
+      "scale": 0.17
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      10,
+      1
+    ],
+    [
+      20,
+      2
+    ],
+    [
+      30,
+      3
+    ],
+    [
+      40,
+      0
+    ],
+    [
+      50,
+      1
+    ],
+    [
+      60,
+      2
+    ],
+    [
+      70,
+      3
+    ],
+    [
+      80,
+      0
+    ],
+    [
+      90,
+      1
+    ],
+    [
+      100,
+      2
+    ],
+    [
+      110,
+      3
+    ]
+  ],
+  "seed": 2026093400,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. Walk in place towards screen right through three continuous reciprocal strides. Alternate near and far foot contacts, knee loading, passing and push-off. Lift the spear butt above the floor while walking; keep its shaft rigid and upright. Carry the shield securely. Torso remains over the same world anchor. Both feet alternate with equal natural stride; no foot skating, hopping or leg crossing."
+}

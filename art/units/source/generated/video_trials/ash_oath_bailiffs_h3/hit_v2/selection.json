@@ -1,0 +1,26 @@
+{
+  "source_frames": [
+    0,
+    8,
+    9,
+    10,
+    12,
+    14,
+    16,
+    18,
+    22,
+    48,
+    80,
+    82,
+    84,
+    86,
+    90,
+    94,
+    98,
+    102,
+    106,
+    110
+  ],
+  "frame_msec": 50,
+  "review_note": "Correction supplies progressive recoil9-22 and articulated recovery80-110, replacing rejected near-instant pose swaps. All124 original frames and enlarged transitions checked: stable two-arm grips, shaft, shield and feet; no collapse.20 selected original frames retimed to1000ms, repeated hold interval trimmed. All native Godot 128px phases reviewed: motion readable, registered scale/feet, grips and alpha intact; focused five-action candidate 172 checks passed."
+}

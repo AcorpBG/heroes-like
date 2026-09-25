@@ -1,0 +1,126 @@
+{
+  "unit_id": "unit_embercourt_ash_oath_bailiffs",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "name": "idle_0",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          50,
+          0,
+          301,
+          348
+        ],
+        [
+          102,
+          348,
+          301,
+          383
+        ]
+      ],
+      "anchor": [
+        183,
+        374
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "observed_valid_angle",
+      "source": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/attack_v1/matte/rgba_017.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/alpha/poses.png",
+      "rects": [
+        [
+          345,
+          389,
+          728,
+          640
+        ],
+        [
+          345,
+          640,
+          661,
+          726
+        ]
+      ],
+      "anchor": [
+        494,
+        713
+      ],
+      "scale": 0.56
+    },
+    {
+      "name": "attack_release",
+      "source": "art/animation/source/poses/unit_embercourt_ash_oath_bailiffs/continuity-alpha/attack-release-length-corrected-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1686,
+          933
+        ]
+      ],
+      "anchor": [
+        571,
+        855
+      ],
+      "scale": 0.223
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      12,
+      1
+    ],
+    [
+      24,
+      2
+    ],
+    [
+      40,
+      3
+    ],
+    [
+      62,
+      2
+    ],
+    [
+      76,
+      1
+    ],
+    [
+      90,
+      0
+    ]
+  ],
+  "seed": 2026093501,
+  "prompt": "Single original female human Ash-Oath Bailiff, exactly two arms and two legs. Dark brown tied bun hair, same face, silver segmented lamellar armor, ivory cloak with red lining, red scarf and tassels, dark trousers, brown boots. Weapon hand holds one straight brown long spear with one silver spearpoint and one small backward hook at the head. Opposite arm carries one tall rectangular wooden pavise with steel rim, ivory and red painted markings, brass ring and short chain. Preserve both grips, spear length, shield shape and limb count; no new weapons or props. Three-quarter view facing screen right, fixed orthographic camera and scale, full body and entire equipment always inside frame. Detailed original fantasy sprite painting, consistent with guide. Flat uniform vivid green background RGB(0,255,0), no scenery, floor, shadows, text, particles, trails, glow or camera movement. One single deliberate spear thrust. Start ready upright. Rotate the weapon down horizontally through a natural shoulder and wrist windup, keep the shield facing the enemy. Drive the spear forward with the weapon hand in a controlled lunge to the right at the release guide. Recover along the same physical arc, return upright. No slash, spinning shaft, duplicate spear, extended new blade or changing grip. The spear is a single rigid solid rod, including while rotating. Interpolate smoothly through the diagonal guide before horizontal windup, forward thrust, horizontal recovery, diagonal recovery and upright ready. No bending at the hand, disconnected or transparent spearhead. The elbow and wrist rotate the whole rigid weapon as a unit. Avoid lingering for most of the shot then snapping."
+}

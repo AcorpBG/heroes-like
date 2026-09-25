@@ -1,0 +1,15 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-dd0f6172-6bab-4ae1-b752-e7a417aaf6a8.png",
+  "image": "death_lowered_v3.png",
+  "image_sha256": "e0af5070ffe80fafe6751a5aba8050924127571faa2c35f18b7499b677260a3f",
+  "prompt": "death_lowered_v3.prompt.txt",
+  "prompt_sha256": "65890f7bcc3e559878e47da356804f0eaf02591bb89dadda20188bf0a302626c",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/ash_oath_bailiffs_h3/death_lowered_v2.png",
+      "sha256": "9070b29cede5c5bbd70f11d838d2c059aae561ba2274d8121f21c7e37b0d6ec2"
+    }
+  ],
+  "review": "Shortened the rigid hooked spear while retaining the kneeling anatomy and grip. Fixed registration scale .31, anchor [850,811], full 1665x944 source. v1 lacked the hook; v2 had an overlong shaft; only v3 guides video."
+}
