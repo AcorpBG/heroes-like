@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_far_contact",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+        "rects": [
+          [
+            620,
+            15,
+            937,
+            437
+          ]
+        ],
+        "anchor": [
+          772,
+          425
+        ],
+        "scale": 0.625,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f929172c58d1c3b9c2c3f711669e6678f3952d54aa5e3f75b771730d8d72058d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "87bdbe1ea59cf8efb1eff04219192be5234e5270136d2af72c1d671dd3145a1f",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

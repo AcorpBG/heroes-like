@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          195,
+          495
+        ],
+        "scale": 0.5874999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5caa4324c50bd404e6e1fd8e4b8cd4489a17a43ab562407bfcff1853f1933ed7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "20e6947182654b2b6d667d168c1f4b13a506b22fd62d673e7c286e9d332355f4",
+      "runtime_source_scale": 0.47
+    },
+    {
+      "source_frame": {
+        "name": "defend",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/defend-green.png",
+        "rects": [
+          [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        ],
+        "anchor": [
+          690,
+          1180
+        ],
+        "scale": 0.21874999999999997,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cf15e5dd53f375556c4744952c3e3afa896bdecf11c9d05174556da4675bb798",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "44ed49de4e78cdbddba60c78fd46ff227337ed91b8666ca3a9861cedcd5192a8",
+      "runtime_source_scale": 0.175
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

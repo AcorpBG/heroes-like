@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "attack",
+  "seed": 2026093201,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        195,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+      "rects": [
+        [
+          25,
+          437,
+          340,
+          811
+        ]
+      ],
+      "anchor": [
+        180,
+        796
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "attack_contact",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+      "rects": [
+        [
+          400,
+          442,
+          914,
+          811
+        ]
+      ],
+      "anchor": [
+        555,
+        796
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      90,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. A grounded melee chain-hook strike. Keep the lantern in the far hand. Near arm lifts its chain hand back for windup, then swings and extends the single chained hook forward to screen RIGHT at the contact guide. The flexible chain straightens under tension, keeping its one end in the near hand and the one hook at the far end; it is never a projectile or rigid spear. Then retract the chain and recover to the original ready grip. The lantern arm stays clear of the chain. Continuous shoulder/elbow/wrist motion, no added equipment or extra hands.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

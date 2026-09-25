@@ -1,0 +1,56 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "death",
+  "seed": 2026093205,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        195,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+      "rects": [
+        [
+          918,
+          970,
+          1254,
+          1190
+        ]
+      ],
+      "anchor": [
+        1082,
+        1150
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. A continuous defeated collapse backward toward screen LEFT. Knees buckle, torso lowers and rolls onto its side with head ending on LEFT and boots on RIGHT, matching the final corpse. Lower both held objects with the real hands: chain and hook settle near the near hand, crook and handheld lantern settle flat on the ground, backpack remains attached behind her shoulders. The lamps gradually dim as in the final reference. Exactly two arms and two legs, no spin or teleport. End motionless with grounded body and all original equipment.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

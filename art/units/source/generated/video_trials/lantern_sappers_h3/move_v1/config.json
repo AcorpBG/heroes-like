@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "move",
+  "seed": 2026093200,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "walk_far_contact",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          15,
+          937,
+          437
+        ]
+      ],
+      "anchor": [
+        772,
+        425
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. Continuous natural slow walking in place through complete reciprocal left/right steps. Each boot alternately swings forward from the hip, bends at the knee, plants, loads and pushes off behind while the other passes. Low steps, not hopping or high-knee marching. Keep pelvis centered and original body proportions. Both hands retain their own equipment: the chain hangs with a small inertial sway and the suspended lantern swings gently beneath its crook. Backpack remains attached. Return to the first gait phase.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}
