@@ -1,0 +1,13 @@
+{
+  "generator": "builtin_image_gen",
+  "original_sha256": "7ebb075950c0e976e0805deeaaf4b676b82ff7026918d7a3d9349a46ead89dd5",
+  "prompt_sha256": "c26c5525747eb498647247bdee0e62c4754f5cacebe97395067b5f04403fd6a0",
+  "reference": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v2/guide_0_chroma.png",
+  "reference_sha256": "d6a0f5b8d186f07528d745d2a2930e6b73d16b46af9855d66cab8e2c24572f2d",
+  "purpose": "Original wheel-spoke phase reference; retain generated alpha and full-canvas layout. One canvas-derived scale returns the generated reference to its original size, not per-frame normalization.",
+  "canvas": [
+    1666,
+    944
+  ],
+  "canvas_ratio": 1.7354166666666666
+}

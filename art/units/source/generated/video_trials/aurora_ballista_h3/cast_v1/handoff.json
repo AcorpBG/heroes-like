@@ -1,0 +1,538 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_aurora_ballista",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_006",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_098",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "cast_h3_106",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "cast_h3_114",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "cast_h3_118",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "cast_h3_120",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            475
+          ],
+          "scale": 0.85,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 7
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/original_lossless.mkv",
+          "sha256": "734aac82fb5f941e96274e4eb20431ac4ee6368eee3e0d9808bd2c4f21bae06b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/original.json",
+          "sha256": "0f076a256c17425343a044e7a5a6470a71473e72ae3deb5273e5c835b0262867"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/workflow_api.json",
+          "sha256": "d69fca6d65908172ae871d4c42ad97edae7d2ca2dbb6d281ef347404c6d7e311"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/prompt.txt",
+          "sha256": "36bf892769bc485ed7fd6e633e6486373d5cdee531565d5392e560076725c067"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/reference.json",
+          "sha256": "7ba637b575ec303f6682c070f2b55a8a29e5a9db91361cd4caa18ed5f2641483"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/cast_v1/matte.json",
+          "sha256": "bf3dbbad408b642d4a7dd7fa86da1769aed2494d7c80afdc5998cf1b0f93cf3e"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 chronological originals and enlarged rail/lens/bow reviewed.22 poses/1320ms: original rail extends and settles while the rear relay lens visibly pulses twice inside its existing housing, then original ready pose returns. Support contact420ms at first lens peak. Wheels/supports remain grounded and empty surroundings clean. Native-scale review required."
+      }
+    }
+  ]
+}

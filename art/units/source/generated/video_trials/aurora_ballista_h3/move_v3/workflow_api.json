@@ -1,0 +1,322 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "The same compact unmanned wheeled crossbow carriage rolls in place on a perfectly uniform green background. Its two circular wheels rotate continuously clockwise around their fixed axle centers. The eight gold spokes visibly turn through the successive spoke phases in the supplied references, always proceeding clockwise rather than swinging backward. Complete repeated rolling with the original rigid carriage, folded supports, bow, string, rail and lens unchanged. Keep both tire ellipses and hubs fixed in position; only the gold spoke patterns and wheel rims turn in their original wheel planes. Locked right-facing orthographic camera, unchanged body size and ground contact. Surrounding green space stays completely empty. End in the original spoke phase for a seamless loop.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092790
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "11": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "10",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "13": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "fps": 24,
+      "bit_depth": 8
+    }
+  },
+  "14": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": [
+        "13",
+        0
+      ],
+      "filename_prefix": "aurora_ballista_h3/move_v3/original",
+      "format": "mp4",
+      "format.codec": "h264"
+    }
+  },
+  "15": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "images": [
+        "11",
+        0
+      ],
+      "filename_prefix": "aurora_ballista_h3/move_v3/frames/decoded"
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "aurora_ballista_move_v3_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "aurora_ballista_move_v3_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 16,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 48,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "43": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "42",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 64,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "44": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "43",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 80,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "45": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "44",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 96,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "46": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "45",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 112,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "46",
+        0
+      ]
+    }
+  }
+}

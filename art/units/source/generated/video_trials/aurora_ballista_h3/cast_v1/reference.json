@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_aurora_ballista/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            387,
+            522
+          ]
+        ],
+        "anchor": [
+          211,
+          441
+        ],
+        "scale": 0.7145176470588236,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ef63049a28434c0092b178d1de27ff09e2b10de48d1429f8804a466b9bb4125a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "45c1fccdcda467c29e1b372724373409fcbc0dc96e46f319d7e188d6df620bde",
+      "runtime_source_scale": 0.60734
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    475
+  ],
+  "output_scale": 0.85,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

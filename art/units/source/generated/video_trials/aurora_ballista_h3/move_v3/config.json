@@ -1,0 +1,85 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "move",
+  "seed": 2026092790,
+  "scale": 0.85,
+  "anchor": [
+    480,
+    475
+  ],
+  "references": [
+    {
+      "name": "roll_a",
+      "source": "art/animation/source/poses/unit_aurora_ballista/alpha/poses.png",
+      "rects": [
+        [
+          629,
+          0,
+          950,
+          315
+        ]
+      ],
+      "anchor": [
+        790,
+        311
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "rotated_spokes",
+      "source": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_guide/original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        833,
+        824
+      ],
+      "scale": 0.4897959183673469,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      16,
+      1
+    ],
+    [
+      32,
+      0
+    ],
+    [
+      48,
+      1
+    ],
+    [
+      64,
+      0
+    ],
+    [
+      80,
+      1
+    ],
+    [
+      96,
+      0
+    ],
+    [
+      112,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "The same compact unmanned wheeled crossbow carriage rolls in place on a perfectly uniform green background. Its two circular wheels rotate continuously clockwise around their fixed axle centers. The eight gold spokes visibly turn through the successive spoke phases in the supplied references, always proceeding clockwise rather than swinging backward. Complete repeated rolling with the original rigid carriage, folded supports, bow, string, rail and lens unchanged. Keep both tire ellipses and hubs fixed in position; only the gold spoke patterns and wheel rims turn in their original wheel planes. Locked right-facing orthographic camera, unchanged body size and ground contact. Surrounding green space stays completely empty. End in the original spoke phase for a seamless loop.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}
