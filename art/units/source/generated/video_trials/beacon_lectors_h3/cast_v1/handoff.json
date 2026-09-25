@@ -1,0 +1,582 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_beacon_lectors",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_049",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "cast_h3_058",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_110",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 14
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/original_lossless.mkv",
+          "sha256": "aaeb67b6dc2d3e6438d2b18492f53ec4b89aa84c45a2dcf203e646632c04c08d"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/original.json",
+          "sha256": "1fbd9533a421a7bb7cf2edc2087bd24055ec04076aab6b924603d15351effcb3"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/workflow_api.json",
+          "sha256": "291550b56d862893fc24a38d7b40543fa779ba753962a5368ea83f9b2f4b37c9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/prompt.txt",
+          "sha256": "de663584eb9f5f4693b5eb302d9efdf74af829364f1d9669b6ede0ad620f76e8"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/reference.json",
+          "sha256": "d5a4a2e4b0f30750aaaea1bfa2fb8e85c5cee1e75b56e6669ecd958778421ea6"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/beacon_lectors_h3/cast_v1/matte.json",
+          "sha256": "10802ada0a3e131bb6b37a161537b18b0b845e5c1c5a86ebb13cc40fb638b24c"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 chronological originals reviewed: hand to chest, continuous raised open-palm rallying gesture, deliberate lowering and recovery. Distinct from brisk ranged release; no generated projectile. One bell and lantern remain attached, two arms/two legs and staff grip stable.24 original samples retimed1320ms with support peak770ms. Native review pending."
+      }
+    }
+  ]
+}

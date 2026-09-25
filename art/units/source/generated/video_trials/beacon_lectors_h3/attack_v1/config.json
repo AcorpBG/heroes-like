@@ -1,0 +1,80 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1264
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        496
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        496
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 25925001,
+  "prompt": "Single original Beacon Lector woman, exactly two arms and two legs, brown hair tied back, ivory split mantle and robe with red bands, red scarf, silver armor and kneepads, brown gloves and boots, belt keys and scroll case. Anatomical RIGHT hand on screen LEFT grips one straight dark wooden metal-ferruled staff, topped with exactly ONE iron bell and ONE hanging amber lantern, short red and ivory streamers. Anatomical LEFT hand on screen RIGHT is free. Preserve her face, clothing and equipment dimensions and elevated three-quarter camera facing screen RIGHT. No extra hands, duplicated bell or lantern, bent shaft, detached tips, morphing gear or new props. Locked camera, full body on uniform vivid GREEN #00ff00 background, no ground shadow or scenery. Fixed body scale and ground registration, no root travel; motion is articulated in limbs and cloth. All staff and cloth remain inside frame. One deliberate close-combat staff shove, followed by recovery. Begin ready, bring free LEFT hand onto lower shaft while RIGHT retains upper grip, pull staff back, drive the complete rigid bell-staff diagonally forward toward screen RIGHT, both arms extend, then withdraw along the same arc, left hand releases and return ready. Both boots planted during strike. Bell and lantern stay attached. No firing, magic, projectile or detached spearhead."
+}
