@@ -1,0 +1,140 @@
+{
+  "id": "unit_sunvault_daybreak_colossus",
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "name": "Daybreak Colossus",
+  "faction_id": "faction_sunvault",
+  "tier": 7,
+  "role": "ranged",
+  "motif": "engine",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_sunvault_daybreak_colossus.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_sunvault_daybreak_colossus.png",
+  "curated_source_sha256": "41a17f5ace0bb3ec28c3936b68fe5353b85cf901e52e2dc61ea3075e5fb62810",
+  "pose_sheet": "res://art/animation/source/fluid/unit_sunvault_daybreak_colossus/baseline.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "loop": true,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 8,
+      "indices": [
+        2,
+        0,
+        3,
+        0,
+        4,
+        0,
+        5,
+        0
+      ],
+      "loop": true,
+      "frame_msec": 115,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        8,
+        9,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "ranged": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        6,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        10,
+        11
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        12,
+        10
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        13,
+        14,
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        15
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "cast": "idle"
+  },
+  "pose_provenance": "res://art/animation/source/poses/unit_sunvault_daybreak_colossus/provenance.json",
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_ground_margin": 8,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

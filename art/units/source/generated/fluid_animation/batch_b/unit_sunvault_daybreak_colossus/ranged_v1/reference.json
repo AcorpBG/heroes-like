@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_sunvault_daybreak_colossus",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1272
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "000427d460707c05cef5b20d15a496ed569ccaf00efdf8465219eecca26a5b49",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ec17595bbbc10ce16ec245fdd32c7089737bbd6e70eab530723f6af1792fcb89",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          504
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "000427d460707c05cef5b20d15a496ed569ccaf00efdf8465219eecca26a5b49",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e2d39ebea25744aa1926bcb9f472f30e63049c3cf7d4a8142fdb473f486a6d2e",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_daybreak_colossus.png",
+        "rects": [
+          [
+            1024,
+            512,
+            1536,
+            768
+          ]
+        ],
+        "anchor": [
+          1280,
+          760
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "000427d460707c05cef5b20d15a496ed569ccaf00efdf8465219eecca26a5b49",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e38e8dfab95422a1e5772fa809c6363f79a300f242ca7a7b39cf2941d311cb66",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

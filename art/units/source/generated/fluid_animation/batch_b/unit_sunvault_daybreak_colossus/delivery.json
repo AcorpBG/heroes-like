@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "ranged_v1",
+    "defend_v1",
+    "hit_v1",
+    "cast_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all868 original chronological frames, enlarged limb/cannon/alpha details and selected joins; inspected every selected phase at native128px reference height plus retained idle. Accepted reciprocal four-legged gait, braced body strike, one bounded muzzle discharge, held low guard, cannon/chassis recoil, high cannon support salute and grounded collapse. Trim repeated actions and long holds; exclude long beam and blurred collapse-barrel interval. Single cannon/halo and four articulated legs remain coherent. Preserve original eight-pose260ms idle and exact map idle pixels. Windows candidate242 checks passed. Continuous playback unavailable through permitted preview route; no manual playtest or Linux claim."
+  }
+}

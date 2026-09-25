@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    69,
+    "5a60dda0-3847-42a1-98bc-186243bf125a",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic camera, richly painted original fantasy strategy sprite on a perfectly uniform vivid GREEN RGB(0,255,0) background. One ivory-and-gold mechanical quadruped with exactly FOUR articulated metal legs, circular bearing joints and claw-like gold-and-ivory metal feet. Far legs can be naturally occluded but remain attached to their own chassis joints. The compact armored chassis carries ONE long forward-facing cylindrical purple-glass cannon in a rigid gold cage with an orange round muzzle. Above it is one round golden sun lens, surrounded by the original gold spoked halo and pale blue leaf-shaped glass fins. Preserve the original cannon length, gold cage, four leg lengths and armor plates, purple central core, dangling core crystal, halo spokes and glass-fin arrangement. The machine faces three-quarter image right and stays fully visible at one fixed anatomical size. Same painted palette, lighting, centered body and flat empty green background in every frame. Aim and discharge the single chassis-mounted cannon once. Brace all four feet, adjust the barrel toward image right, let the purple chamber brighten inside the gold cage, then recoil the intact barrel backward on its mounting joint and bend the knees to absorb the shot. Return the barrel and chassis to the exact original ready position. The shot itself is outside this isolated sprite: retain only the machine and internal chamber illumination against the green plate.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 927204
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "daybreak_colossus_ranged_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "daybreak_colossus_ranged_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "daybreak_colossus_ranged_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 38,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 64,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "daybreak_colossus_h3/ranged_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "daybreak_colossus_h3",
+      "create_time": 1790363210075
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "daybreak_colossus_h3\\ranged_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "5a60dda0-3847-42a1-98bc-186243bf125a",
+          "timestamp": 1790363223751
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "5a60dda0-3847-42a1-98bc-186243bf125a",
+          "timestamp": 1790363223777
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "5a60dda0-3847-42a1-98bc-186243bf125a",
+          "timestamp": 1790363390966
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
