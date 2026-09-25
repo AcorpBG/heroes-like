@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "92faecc42eeac819e566a8b682f124d12f6dd14052c34f5c6305b44b067e2c24",
+  "latent_sha256": "0b25f8da39ee736c47fbf67336e46eb560682104130f0f82aff094fd0dca7b18",
+  "decode_workflow_sha256": "114b24bfca3777313af55b7021c1de9400f519a45b5c2a1a9177207ea2b8d7a9",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sporeglass_h3\\move_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19178644480,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -42,3 +42,8 @@ art/animation/source/fluid/unit_sunvault_daybreak_colossus/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedcutters/**/*.txt -text
 art/animation/source/fluid/unit_thornwake_seedcutters/*.json -text
+
+# Preserve hash-bound Sporeglass Menders H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/**/*.txt -text
+art/animation/source/fluid/unit_thornwake_sporeglass_menders/*.json -text

@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      74,
+      2
+    ]
+  ],
+  "seed": 927407,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera. A single original female fantasy field medic on an entirely unmoving solid ROYAL BLUE backdrop, exactly the same blue in every guide for the entire video, no color changes or gradients. Preserve her brown ponytail and face, two human arms and two booted legs, green scarf and tunic, split ivory coat, red ties, brown gloves, belt medicine pouches, and strapped amber reservoir on her back. ONE short brass-and-amber spore sprayer with a flared muzzle and its original curved hose connected to the back reservoir. No added weapons, fingers, hands or devices. Stable body size, same three-quarter view facing right. Lose strength and collapse once. Knees buckle into the supplied kneeling pose, torso leans sideways, supporting arm lowers with the sprayer, then fall gently onto her side and finish fully grounded in the supplied corpse pose. Back reservoir and hose follow the body naturally. The same sprayer settles beside her hands on the ground, intact. Two arms and two legs throughout. No rising, extra limbs or hovering equipment. Keep the blue backdrop perfectly still and unchanged. Only the original woman and her attached clothing and equipment move. Preserve all original grips, hose connections, anatomy and silhouette, no scene or camera motion.",
+  "protected_foreground_chroma": 20
+}

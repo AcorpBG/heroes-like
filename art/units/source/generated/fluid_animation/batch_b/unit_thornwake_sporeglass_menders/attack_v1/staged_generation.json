@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "cca7f951227c426050a461fdeb5d38a8408cec95780238bbec695309609f1634",
+  "latent_sha256": "78b009d1d709a71ead1ff61189c25cea04e40313d3b608340b61ec97b4cdf239",
+  "decode_workflow_sha256": "28fdc2fe515699cc030fcb343b41bdb58026b337ab08ddcdf8c4baff7ae91035",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sporeglass_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17250667520,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

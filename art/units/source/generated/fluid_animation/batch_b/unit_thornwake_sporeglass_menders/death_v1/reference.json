@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5baafd138db3c854aa1fdef9e563266d92c9cec4ff2f6dd3864588c0c4f84a4e",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6c8e3464eecc538e98367334337b01d3ab078c2961e894cc4efe49fad3d99201",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "04714bbd4c5c6973eb1cec01d52ff9ac01eb76e9949cf30e76b123d725e1ef05",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a8a2cb4c714d0e4d01ab1a62dd454ff4597ae56b6082a186859af6b59696d62",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "de90877b0dd6593f9c3851a79e3602148b6883b74baa9573df5d07e757687d93",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

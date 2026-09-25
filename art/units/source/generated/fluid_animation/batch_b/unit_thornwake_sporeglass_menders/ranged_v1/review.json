@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "notes": "Generated bright projectile/beam in frames42-49. It duplicates runtime projectile and overlaps the meaningful recoil interval, so omitting it would create a motion jump. Preserve original and regenerate only ranged with dry mechanical drill prompt."
+}

@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_thornwake_sporeglass_menders",
+  "clip": "ranged",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          512,
+          512,
+          1024,
+          768
+        ]
+      ],
+      "anchor": [
+        768,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_sporeglass_menders.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      54,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "seed": 927420,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed camera, uninterrupted solid royal blue background exactly as in the guide images. One original female field medic rehearses a mechanical aiming drill with her brass-and-amber sprayer. The rear chamber spring locks once and nudges her shoulders backward. Show only the woman and her original equipment. All space outside their silhouette remains the same plain royal blue at every moment. Start with sprayer at her waist; bend elbows to bring it to shoulder level, stabilize its aim, move both shoulders and elbows back a little as its internal spring catches, then lower the instrument and return to the initial relaxed stance. RIGHT hand retains rear handle; LEFT hand retains front support. Keep the same single flared brass muzzle, hose attached to the amber backpack reservoir, brown ponytail, two arms and two legs, ivory split coat, green tunic/scarf, red ties and medicine pouches. The sprayer opening stays dark and unchanged throughout. Precise physical rehearsal; preserve the ordinary brass, glass and cloth materials. Fixed body size and three-quarter camera facing right. The only changing pixels are the moving woman and her attached equipment; every surrounding pixel stays plain blue.",
+  "protected_foreground_chroma": 20
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7804bac0a92702e3ca70db16cc3decbc1cf91ad4caff48ae620dbcf9121eef91",
+  "latent_sha256": "da09a1bbebbb3f0eba49d713d397ca8fe57d88f72e3eef5eaabddc114b7bdbb3",
+  "decode_workflow_sha256": "fe64cc594ec56d74d4f4851bc29fa31fc06c189a2c283c596c4b611232374a61",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sporeglass_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19525683200,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

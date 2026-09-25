@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "ranged_v2",
+    "defend_v1",
+    "hit_v1",
+    "cast_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all868 chronological source frames of seven selected takes, enlarged hands/hose, full40-frame reciprocal gait and seam, fast contact/collapse phases and hold joins. Every209 selected phase and original8-frame240ms idle reviewed in Godot at native128px reference height. Same two arms/legs, medic clothing, sprayer grips, hose and reservoir retained. Dedicated punch, aimed recoil, low guard, hit recovery, physical support and grounded collapse read distinctly. Ranged v1 rejected for added projectile; v2 contains none. Candidate283 checks passed. No continuous video playback, manual playtest or Linux execution claimed."
+  }
+}
