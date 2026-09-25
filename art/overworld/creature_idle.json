@@ -717,25 +717,25 @@
         232
       ],
       "painted_extent": 228,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_mudglass_slingers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_mudglass_slingers.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        174,
-        4,
-        331,
-        248
+        94,
+        0,
+        251,
+        244
       ],
-      "source_sha256": "6259c717159968690899b54c95a87b41881c86836581d8cba31f76b75948f464",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_mudglass_slingers/provenance.json",
+      "source_sha256": "563901837364e65bf3b969bbdc2638c9e1238eac3c27fe999f3f2b436d4b79e3",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_mudglass_slingers/provenance.json",
       "sha256": "fb02f6047a4469a2c66d012925d0527c6cca0a8918b66dc4b034f0ae9930ba86"
     },
     "unit_mireclaw_bogplate_maulers": {
