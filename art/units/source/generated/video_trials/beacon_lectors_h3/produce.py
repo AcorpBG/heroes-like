@@ -5,6 +5,8 @@ import json
 import sys
 import time
 import urllib.request
+import urllib.error
+import urllib.parse
 from pathlib import Path
 import av
 import numpy as np
@@ -56,6 +58,8 @@ def prepare(out,c):
   '13':node('CreateVideo',images=['11',0],fps=24,bit_depth=8),
   '14':node('SaveVideo',video=['13',0],filename_prefix=f'beacon_lectors_h3/{out.name}/original',**{'format':'mp4','format.codec':'h264'}),
   '15':node('SaveImage',images=['11',0],filename_prefix=f'beacon_lectors_h3/{out.name}/frames/decoded')}
+ if c.get('tiled_decode'):
+  graph['11']=node('VAEDecodeTiled',samples=['10',0],vae=['3',0],**c['tiled_decode'])
  for i in range(len(refs)):graph[str(30+i)]=node('LoadImage',image=f'beacon_lectors_{out.name}_guide_{i}.png')
  previous='5'
  for i,(frame,ref) in enumerate(c['guides']):
@@ -74,7 +78,21 @@ def submit(out,c):
  q=request(URL,'/queue');assert not q['queue_running'] and not q['queue_pending'],'Server busy; queue untouched'
  g=json.loads((out/'workflow_api.json').read_bytes());uploaded={}
  for i in range(len(c['references'])):
-  name=f'beacon_lectors_{out.name}_guide_{i}.png';boundary='----BeaconLectorsH3'
+  name=f'beacon_lectors_{out.name}_guide_{i}.png'
+  if c.get('reuse_uploaded_guides'):
+   # A decode-only retry retains the exact loader inputs so ComfyUI can reuse
+   # its completed sampling cache. Restore cleaned inputs on later rebuilds.
+   item=c['reuse_uploaded_guides'][str(30+i)];name=item['name']
+   assert not item.get('subfolder') and name.startswith('beacon_lectors_') and '/' not in name and '\\' not in name
+   query=urllib.parse.urlencode(dict(filename=name,type='input'))
+   try:
+    with urllib.request.urlopen(URL+'/view?'+query,timeout=30) as response:existing=response.read()
+   except urllib.error.HTTPError as error:
+    if error.code!=404:raise
+   else:
+    assert hashlib.sha256(existing).hexdigest()==sha(out/f'guide_{i}_chroma.png'),'Uploaded guide changed; do not overwrite it'
+    uploaded[str(30+i)]=item;g[str(30+i)]['inputs']['image']=name;continue
+  boundary='----BeaconLectorsH3'
   data=(f'--{boundary}\r\nContent-Disposition: form-data; name="image"; filename="{name}"\r\nContent-Type: image/png\r\n\r\n'.encode()+(out/f'guide_{i}_chroma.png').read_bytes()+f'\r\n--{boundary}--\r\n'.encode())
   req=urllib.request.Request(URL+'/upload/image',data=data,headers={'Content-Type':'multipart/form-data; boundary='+boundary})
   with urllib.request.urlopen(req,timeout=60) as r:item=json.load(r)
@@ -154,8 +172,17 @@ def build(out,c):
 
 def assemble():
  unit=None
- for take in json.loads((SOURCE_DIR/'delivery.json').read_bytes())['takes']:
+ delivery=json.loads((SOURCE_DIR/'delivery.json').read_bytes())
+ for take in delivery['takes']:
   unit=combine(unit,json.loads((SOURCE_DIR/take/'handoff.json').read_bytes())['units'][0])
+ if delivery.get('attack_segments'):
+  parts=[json.loads((SOURCE_DIR/t/'handoff.json').read_bytes())['units'][0] for t in delivery['attack_segments']]
+  attack=dict(parts[0]);attack['frames']=[]
+  for take,part in zip(delivery['attack_segments'],parts):
+   attack['frames'].extend(dict(f,name=f'{take}_{f["name"]}') for f in part['frames'])
+  attack['clips']={'attack':dict(indices=list(range(len(attack['frames']))),frame_msec=delivery['attack_frame_msec'],contact_frame=delivery['attack_contact_frame'],loop=False,static_frame=0)}
+  attack['provenance']={f'{i}_{k}':v for i,part in enumerate(parts) for k,v in part['provenance'].items()}
+  unit=combine(unit,attack)
  unit['preserved_accepted_clips']=['idle'];unit['visual_review']=dict(status='pending',notes='Selected Beacon Lector H3 actions; native review required. Preserve original accepted articulated idle.')
  write(SOURCE_DIR/'handoff.json',dict(schema_version=1,units=[unit]))
 

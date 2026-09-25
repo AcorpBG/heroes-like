@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_embercourt_beacon_lectors",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/beacon_lectors_h3/attack_v1/matte/rgba_058.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c6c9066f881d02ddea3352b576f451fd8197d9227a3e708d03fff3795ea511f9",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e13fe774297134d93df19d9907732cbe192f175b73a92e29e6512e13fb50070d",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/beacon_lectors_h3/recovery_guides_v4/original.png",
+        "rects": [
+          [
+            0,
+            0,
+            833,
+            944
+          ]
+        ],
+        "anchor": [
+          520,
+          806
+        ],
+        "scale": 0.44999999999999996,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c9ff8619df8ac09937d1b223392db5f37647198d3b1f217e71a3d04a6b5a3dac",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "202efb8601811157b15c4fba997bf1d2141c395c9d0d521da88bef34e6dcc4e3",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/beacon_lectors_h3/recovery_guides_v4/original.png",
+        "rects": [
+          [
+            833,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          1220,
+          806
+        ],
+        "scale": 0.44999999999999996,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "c9ff8619df8ac09937d1b223392db5f37647198d3b1f217e71a3d04a6b5a3dac",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5cc31b89100b08f4a7e05bed3e9391589b98fbbe8daf6f2f79f6caf3f6a53a48",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_beacon_lectors.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1264
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "da8c4c09bb79fe170090059ba530866df6f89d1f53d6643c954f474674857845",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "364f64439123db0e5cbbca05ecd848cee6e1016b05c31d3b4c8a9bc757c56d4a",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
