@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6128babefe019f086bed0815abbba77f1a3c8a2cac4d601697a2926c188d2d19",
+  "latent_sha256": "6ac119477b1e27aba9055f1687e1d712c17e06af5602edbeed071c83411d20cf",
+  "decode_workflow_sha256": "6ccd1fc39c8ed811d0e8998a7e666be6aa9a86cbad4f188c2696104e33ba86a1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gorefen_rippers_h3\\hit_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17812699968,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,4 @@
+{
+  "protected_foreground_chroma": 32,
+  "reason": "Original opaque green-excess outliers reach 64, but enlarged light/dark comparison exposes plate spill at band72. Band32 keeps scale/rope/bone pixels and alpha>=8 geometry while unmixing green boundary contamination. Reviewed on defense22/36/62; no geometry repainting."
+}

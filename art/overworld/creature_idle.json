@@ -857,25 +857,25 @@
         234
       ],
       "painted_extent": 257,
-      "source_sheet": "res://art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_mireclaw_gorefen_rippers.png",
       "source_indices": [
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        115,
-        2,
-        388,
-        247
+        203,
+        -2,
+        476,
+        243
       ],
-      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
-      "source_provenance": "res://art/animation/source/poses/unit_mireclaw_gorefen_rippers/provenance.json",
+      "source_sha256": "ecb97c98b9b41e0aa7c381dfb479f64f2d39787734bf834537984633393273ae",
+      "source_provenance": "res://art/animation/source/fluid/unit_mireclaw_gorefen_rippers/provenance.json",
       "sha256": "ee82be8fe50f967105532b57250e93872d103e1c0dc76d79a4f5d8d4be4a2deb"
     },
     "unit_mireclaw_drowned_antler_sovereign": {
