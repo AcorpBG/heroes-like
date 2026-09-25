@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "76e5cf54776b5cfcfed5f99ada14d8e856d511cb4290d61689f9a8416faf0b60",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "36ce99f9f964faf4531f7fef5f2721dfc38f33079275338123d64a77665f1488",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/hit_v2/matte/rgba_032.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "0b36a54378b183b06614c174875d62eb785b349128100cc5eff0a404f938307f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5cfb1e810cd29a70a953633781ad0ab805fd5255c5953bd5dd05748b2bc7f67f",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,10 +1,217 @@
 {
   "takes": [
     "defend_v1",
-    "move_v1"
+    "move_v1",
+    "cast_v1",
+    "death_v1"
   ],
   "visual_review": {
     "status": "accepted_selected_clips",
-    "notes": "Defense16 and movement42 visually reviewed at original and native scale;63 candidate and77 imported-live focused checks passed. Original idle8 retained unchanged. Four remaining action types pending; hit_v1 weak recoil and attack_v1 scale growth rejected."
+    "notes": "Reviewed complete original H3 chronologies, enlarged light/dark edges and joined action segments, then native battle-scale phase rendering (539 candidate checks). Stable quadruped, bone harness, snout, red crest and anatomical scale. Attack26 retains anticipation/recovery from v1 and stable strike from v2, excluding v1 size growth and v2 hard onset/recovery; jaw contact index14/source39. Hit21 combines continuous endpoint-only recoil and independent forward recovery; short impact motion blur retained, long holds excluded. Cast22 is a physical rally roar; death25 collapses continuously to a grounded head-right corpse. Previously published defense16, full two-cycle movement42 and original idle8/260ms retained. No synthetic/reversed frames; no manual playtest or continuous video-player review claimed."
+  },
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 10
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 37
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 38
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 39
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 42
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 50
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 58
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 102
+        }
+      ],
+      "timing": {
+        "frame_msec": 45,
+        "contact_frame": 14
+      }
+    },
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "hit_onset_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 6
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_recovery_v1",
+          "video_frame": 72
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      }
+    }
   }
 }

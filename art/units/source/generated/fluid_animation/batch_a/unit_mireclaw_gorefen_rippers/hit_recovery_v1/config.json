@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_mireclaw_gorefen_rippers",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 72,
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_gorefen_rippers/hit_v2/matte/rgba_032.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_gorefen_rippers.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 925823,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera, original richly painted fantasy strategy game sprite on a perfectly uniform vivid GREEN RGB(0,255,0) background. The background stays identical everywhere and throughout, including all gaps between claws and legs. No scenery, floor shadow, text, particles or colored lighting. One large muscular crocodilian quadruped: dark slate grey-brown pebbled scales, pinkish belly, long crocodile snout with ivory teeth, red quill crest along its head, neck and back, exactly ONE long curved tail with red fin spines. Tan rope harness and small ivory bone/fang fetishes hang over its back, chest and sides. Exactly FOUR legs with hooked dark claws, ONE head and ONE tail. Forelegs are beneath the shoulders toward IMAGE RIGHT; hindlegs beneath the pelvis toward IMAGE LEFT. Keep near and far legs anatomically distinct. Preserve the same skull, muzzle length, eyes, scales, crest, ropes, ornaments and claws. No rider, wings, humanoid arms, weapons, extra legs or magic. Stable three-quarter RIGHT-facing view, no camera motion, zoom or changes in anatomical scale. Full body and tail stay visible with ample margins. This video is ONLY the smooth physical RECOVERY from a hit that already happened. Begin exactly in the first startled snarl pose, with head twisted toward the viewer and jaws open. Over the FIRST HALF of the video, continuously untwist the head toward IMAGE RIGHT while lowering and closing the jaw, relax the bent shoulders and elbows, and place the near forepaw back into its ready support. The supplied final image is the target ready stance. Show every intermediate neck angle, jaw closure and foreleg adjustment gradually. Finish the recovery by the midpoint, then remain in the target posture with only slight settling. Do not hold the starting recoil, do not cut or snap to ready, no second hit or attack, no body scaling or face morphing. Four legs and one tail throughout."
+}
