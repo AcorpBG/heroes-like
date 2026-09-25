@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 56,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        504
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1272
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 926112,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera. Rich original hand-painted fantasy strategy sprite, full group visible against a perfectly flat vivid GREEN RGB(0,255,0) background and green limb gaps. Exactly THREE adult human choristers in the same compact formation, each with exactly two arms and two legs. The tall central lead has long fair hair and carries one long straight gold staff with one large circular gold sun ring, blue-violet central jewel and fixed small crystal points at its top. At IMAGE LEFT stands the shorter light-skinned short brown-haired book reader holding one open dark-bound crystal hymn book in both hands. At IMAGE RIGHT stands the dark-skinned dark-haired percussionist holding one round gold-and-blue crystal hand drum at chest height. All three wear their own white and deep-blue robes with ornate gold trim, white/gold shoulder armor and golden boots. Maintain their three distinct faces, six legitimate arms, six legs, clothing, relative positions and original equipment. Hands remain connected to the same staff, open book and hand drum; each instrument keeps its original fixed geometry and attached crystals. The group faces three-quarter image right at fixed anatomical scale, grounded on the same horizontal plane. Camera and lighting remain still. The surrounding background stays uniformly green and empty throughout. Only the original bodies, robes and carried instruments are visible. From the extended diagonal pose, the central lead gradually folds both elbows, draws the same rigid staff back toward the chest, and lowers its butt to the ground while returning the ring upright above the hands. The original circular ring and straight shaft keep their dimensions as the body regains its ready posture. Both companions settle in their original places while retaining book and framed circular instrument. Keep the ring above and to the right of the hands during the recovery and finish at the original upright ready stance."
+}

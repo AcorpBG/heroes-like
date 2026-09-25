@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    41,
+    "ae31aeb3-4e8a-49f0-bc50-f9f14b082c72",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic camera. Rich original hand-painted fantasy strategy sprite, full group visible against a perfectly flat vivid GREEN RGB(0,255,0) background and green limb gaps. Exactly THREE adult human choristers in the same compact formation, each with exactly two arms and two legs. The tall central lead has long fair hair and carries one long straight gold staff with one large circular gold sun ring, blue-violet central jewel and fixed small crystal points at its top. At IMAGE LEFT stands the shorter light-skinned short brown-haired book reader holding one open dark-bound crystal hymn book in both hands. At IMAGE RIGHT stands the dark-skinned dark-haired percussionist holding one round gold-and-blue crystal hand drum at chest height. All three wear their own white and deep-blue robes with ornate gold trim, white/gold shoulder armor and golden boots. Maintain their three distinct faces, six legitimate arms, six legs, clothing, relative positions and original equipment. Hands remain connected to the same staff, open book and hand drum; each instrument keeps its original fixed geometry and attached crystals. The group faces three-quarter image right at fixed anatomical scale, grounded on the same horizontal plane. Camera and lighting remain still. The surrounding background stays uniformly green and empty throughout. Only the original bodies, robes and carried instruments are visible. From the extended diagonal pose, the central lead gradually folds both elbows, draws the same rigid staff back toward the chest, and lowers its butt to the ground while returning the ring upright above the hands. The original circular ring and straight shaft keep their dimensions as the body regains its ready posture. Both companions settle in their original places while retaining book and framed circular instrument. Keep the ring above and to the right of the hands during the recovery and finish at the original upright ready stance.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 926112
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "resonant_choristers_attack_recover_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "resonant_choristers_attack_recover_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "resonant_choristers_h3/attack_recover_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "resonant_choristers_h3",
+      "create_time": 1790358005756
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "resonant_choristers_h3\\attack_recover_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "ae31aeb3-4e8a-49f0-bc50-f9f14b082c72",
+          "timestamp": 1790358005756
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "ae31aeb3-4e8a-49f0-bc50-f9f14b082c72",
+          "timestamp": 1790358005768
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "ae31aeb3-4e8a-49f0-bc50-f9f14b082c72",
+          "timestamp": 1790358128232
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

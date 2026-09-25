@@ -1028,29 +1028,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        86.0,
+        86,
         218
       ],
       "painted_extent": 214,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_resonant_choristers.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        170,
-        30,
-        352,
-        260
+        42,
+        26,
+        224,
+        256
       ],
-      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_resonant_choristers/provenance.json",
+      "source_sha256": "247247aeb792c5748cf1b9491497f5521814af60e8779c6391cd01e3732eb782",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_resonant_choristers/provenance.json",
       "sha256": "985127ed81358d37d5bef4f09a814ccf7faa35ae91cb9f39d3bd8fd0e55377d2"
     },
     "unit_sunvault_solar_array_striders": {

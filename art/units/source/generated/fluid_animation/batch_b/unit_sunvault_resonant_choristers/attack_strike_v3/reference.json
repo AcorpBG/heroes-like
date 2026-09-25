@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_sunvault_resonant_choristers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+        "rects": [
+          [
+            1024,
+            1024,
+            1536,
+            1280
+          ]
+        ],
+        "anchor": [
+          1280,
+          1272
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "af3771ec42e165595dc64e664e1d9ee29bfc7d3631586863a8f719128254cd37",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers/attack_recover_v2/matte/rgba_040.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "387b1797cb81ccc52a1040d202007839fd6a944c410023b3cd7550902879f6df",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6b795a207940b40ebc286456b17fbaba5b8ddc96b3ac787b2b0cfcee6fdd6d02",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_resonant_choristers/attack_recover_v2/matte/rgba_030.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "1c058b434e9fe534caba52eff561c664c257bff6aeec62ae473d4e04d0cf1996",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "35862f0f32c130f5b8243f359e2de69a8858f7f9310e81f6f662f47a4d584633",
+      "runtime_source_scale": 0.8
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_resonant_choristers.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          504
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4821a6e445a0c64d88b70c2e13fe914267ab7f6e62fcd13732c655d4d411563c",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "8ce95f2af2779ee8ae1add753ca30b7309b179344ab272892ec31af5f61f23ab",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
