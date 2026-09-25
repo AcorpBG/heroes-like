@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_thornwake_stagknot_runners",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+        "rects": [
+          [
+            512,
+            256,
+            1024,
+            512
+          ]
+        ],
+        "anchor": [
+          768,
+          492
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f078889df81c69e742d0ebbdb6979d40dfc4165f436190cbc4e61f5f623732de",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            256
+          ]
+        ],
+        "anchor": [
+          1280,
+          236
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2eb0aa7f72427efbc2de2a41de740c95a364b3ef8035e127989366de54b356bb",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+        "rects": [
+          [
+            0,
+            256,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          492
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9da0fa1bd14a24af1354f850a6ce604accd82f8a6673d8a54ddfaf63975728a5",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+        "rects": [
+          [
+            1536,
+            0,
+            2048,
+            256
+          ]
+        ],
+        "anchor": [
+          1792,
+          236
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "03d9c908975e005f96edf821d489f7884b07e37c56317b79d3b170a5e38c31cb",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "2565c928d20b6a1da00c5ca0bacd1973dbe8045e932b51004efb92b4ade6e413",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

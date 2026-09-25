@@ -1,0 +1,4370 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_stagknot_runners",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_025",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "attack_h3_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_062",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "defend_h3_068",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "defend_h3_080",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "hit_h3_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_095",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_099",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_101",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "hit_h3_102",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_033",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_037",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_039",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_041",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_043",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_058",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "cast_h3_059",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_061",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_063",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "death_h3_108",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 24
+        },
+        "defend": {
+          "indices": [
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 21
+        },
+        "hit": {
+          "indices": [
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 14
+        },
+        "death": {
+          "indices": [
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 30
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/original_lossless.mkv",
+          "sha256": "e97e6fea1a7aa9a1fa11eb6a3fce531648bca61ffe3aab3066778313d052bc52"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/original.json",
+          "sha256": "1417ec3fc11af75268f8596dd3c8086e822143a611cb3f03aa9f5445858d6488"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/workflow_api.json",
+          "sha256": "488621a175d4bc56c74cd42ca79dbb2b31910dc8c68f6d48e70ccb1decf8b6fc"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/prompt.txt",
+          "sha256": "aeba75f559e8e70c35ba3dc6213395b4f096660336179e5da9f33192c95715bc"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/reference.json",
+          "sha256": "525f08b24c4550fc2ba48c7e997a6ba6b5264bf037dac97078e934268e003d59"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte.json",
+          "sha256": "1e2fb5b55fc1af5e3134c7b66a0761ea741cd79631d76daa3e70eb2678b0803c"
+        },
+        "move_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/staged_generation.json",
+          "sha256": "c49f4eac41a84f617c8fefb41cc7799be58b376d6e22afdac90d7eba288618a7"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/sampling_workflow_api.json",
+          "sha256": "a2683857ef7a50a085d7dfe0f5f409e01036610c0eaab6c5dcbfc7b508c801e0"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/sampling_submission.json",
+          "sha256": "daac53abb847c6b7ccf3a51b4910db79f411e12351008dc5933a3b63c31896f9"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/sampling_history.json",
+          "sha256": "a8cda23f519ad6e93fdf497a72bf47cba04b98888dc282ad23193a015fa55862"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/original.latent",
+          "sha256": "24f6183cb4fe0dd7ef2e01afb62de68242727da68f4146cf9b429fde51645005"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/original_lossless.mkv",
+          "sha256": "7c4c355979beee36b6064f10e6a5f82daf639123b345b76d11644e1e52d9e296"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/original.json",
+          "sha256": "73ed81163ce66f5ffec25e20c9a1ff739c1679eae0ba6fdefd5065a489f91dbc"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/workflow_api.json",
+          "sha256": "67ee4992bae95426362bf18368ec7a689abf01612cdd0fd2b3b89cf9db886128"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/prompt.txt",
+          "sha256": "4b8326a6153bf1c2b2692e84a4908dc976717c864feaef5821c3238bcbb65ce8"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/reference.json",
+          "sha256": "17c0fe18b4f36d90730ab610dfe2e416bca4926cd273c792ab64ddeab705961f"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte.json",
+          "sha256": "48890818fba7f069f0ac063ee285968fecea5a43334c32bdade3c7d7649764d5"
+        },
+        "attack_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/staged_generation.json",
+          "sha256": "a76b30b7a7774d78089cd8e052ab2963e9b477e66594e81429ea09bfa0897dfb"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/sampling_workflow_api.json",
+          "sha256": "2b94ca9b5e297253434ab5aa92b2975431192ddb5f8eb70042046cc2ca773cc8"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/sampling_submission.json",
+          "sha256": "02c4d6d3b908960303cd05c5c6e355b6be930b671df486b88191edf650b38a14"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/sampling_history.json",
+          "sha256": "77aca8a1bc294bf6824792c599243500d286be93297b7a3c5d5802737c0103c2"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/original.latent",
+          "sha256": "ec867ff416a2ecd646e98282d429ebfb800078bdfe0a76159fef5553201c953e"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/original_lossless.mkv",
+          "sha256": "c8274d75b901ab8991b5a6b2092406eab02c0fcdf862ce0bbc84387dce138983"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/original.json",
+          "sha256": "e889a8a01e48ea9d0e28dc5e5446a8eab79b91a5d5254fa1bca05e89300075cc"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/workflow_api.json",
+          "sha256": "f33e4a9e4843d13528118764f15963ac0602713a70b1a15dbc05a6ffd2f97883"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/prompt.txt",
+          "sha256": "cde9199261b9c4a57667a6e5d0e4e7f7e78e21593958c5b46960fa892ee48807"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/reference.json",
+          "sha256": "567929ce9ff03b36b5b0abf6784c510cc24b26c76c6f074d5e28eda9cb397b26"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte.json",
+          "sha256": "50e76e8a7ca69a63eb1eed4daf427ad1339ea9fea8a09beb01afed009b88e6d0"
+        },
+        "defend_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/staged_generation.json",
+          "sha256": "99fee62e5a3f2015805b2ee466851dba99a1cec152a7c0078319ea71263df748"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/sampling_workflow_api.json",
+          "sha256": "e861555a3d24c1a2ed6682d2e0e620beb04b51e7c2c32105cada64cb88daa1ca"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/sampling_submission.json",
+          "sha256": "836bbd2c4924ef605a5dec2ad15927daa3cd18f2903270e7a0152f97f4549f72"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/sampling_history.json",
+          "sha256": "1b6734b817129dcdcbffd772ba7e7e9325748f2e8dd93c7e5659b2f3ff5a640f"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/original.latent",
+          "sha256": "3378d7b0c84f6f3b3e671b340d59a3a4c3d5b0b120b6cefc0ec3f07d6f9fa5da"
+        },
+        "hit_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/original_lossless.mkv",
+          "sha256": "06935b2f86f61316f8a4d882ebe3b06ae80f75323239156524406d8357dd344d"
+        },
+        "hit_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/original.json",
+          "sha256": "f4774622d6f6e689ce4ab26d0316aeae3a8c7772f0f8c513828a69905109f062"
+        },
+        "hit_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/workflow_api.json",
+          "sha256": "361f98105f2f70a9496bbde6e1c6bc75f09d90126abd0f5e3c38107387f7da8b"
+        },
+        "hit_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/prompt.txt",
+          "sha256": "3de25b8de68b103cada411d136ebc2496ee65111f712147b86d60e0228b1e146"
+        },
+        "hit_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/reference.json",
+          "sha256": "68a1387d633a38e0db77e21e8c9c68dd0cde33a7f0abec466c592a3085937eeb"
+        },
+        "hit_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte.json",
+          "sha256": "9796e1db923e08a0193ec9c9a41d48492a3066b6dafaa28ebc8d3abfa7adcab0"
+        },
+        "hit_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "hit_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/staged_generation.json",
+          "sha256": "ed21822798fb72490b76d2c59989de0a653cec71b5af9601bb79705d50cf6418"
+        },
+        "hit_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/sampling_workflow_api.json",
+          "sha256": "ed57c63f20870ce66bca5170840e8d3fe656de06ed1d7a29bcf9093e6eebdc63"
+        },
+        "hit_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/sampling_submission.json",
+          "sha256": "5e23a35346974ed25f4a63d3b0f45bf5b4be04d7bc4762d0c3e621c156dce9fd"
+        },
+        "hit_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/sampling_history.json",
+          "sha256": "324da064d693d521175038be99cbc53cd8d889325d61d745b9c2b6ad00bcd36e"
+        },
+        "hit_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/original.latent",
+          "sha256": "1819f3e98623250ed310ab893d48e740a3f128e616b8047cd4c0150fc5eb73a7"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/original_lossless.mkv",
+          "sha256": "732abcd06359d9726b084340104b71783708455a21ab38cc78b5fb1f54ed820c"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/original.json",
+          "sha256": "4fb48f6ed4ac4d2b2136c2104798ea67fc903516968aa42e20fd8bd2c6b69046"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/workflow_api.json",
+          "sha256": "0e6a31d69120c03595c8c05df908915c1733aba3849946f532ce3793264e0624"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/prompt.txt",
+          "sha256": "67642cb16d9337712ea7b8a0fd59d43647dfe11c86414fbc5abc2653af52d159"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/reference.json",
+          "sha256": "31ecbe8ccdceb9a363c7cd83ad26379fbf21fca1497e557ce5d2e79e983fd4f7"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte.json",
+          "sha256": "bb62cb8cdb398bf7872c9e72230217e2257b64367cc74f109b561de2b5be1e20"
+        },
+        "cast_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/staged_generation.json",
+          "sha256": "8878fa30ac2056ceed6cf2aa96baa9ec87d5579f942b600e8a12cacec0478f49"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/sampling_workflow_api.json",
+          "sha256": "f056a0091673346e54daa4dffe6488003317568f724833f97b81ea8b1f9e63d8"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/sampling_submission.json",
+          "sha256": "b1a1638f24901557f7a0e4e4db095ef942a54065ef5573c8b71ea6299592a29c"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/sampling_history.json",
+          "sha256": "8418356bf1355873da7d60ab54a00015a73eab2bf281aa6d5a19c17f312babda"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/original.latent",
+          "sha256": "92f705d7ed119a0cf45b30c29f0aa9db72814cbd7e76cea47116cfb04bad0d74"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/original_lossless.mkv",
+          "sha256": "53a62e7104098ecf5eadf4e1777b1857af8f0144f95e59bfb0ffd12146a89188"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/original.json",
+          "sha256": "ce810c5a6d0082f7746874e8bfe8e0677176cc33cc9892a7dde8d9bf84b77aa4"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/workflow_api.json",
+          "sha256": "27705a0a16475bfe475489e490a5ad927aa157b5e2fae09317d4c7b8329e79ef"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/prompt.txt",
+          "sha256": "48989bd3c9d680bb97c5d146aca77dc48b88d5cdfd08a0ff0ff1a1cf10188eab"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/reference.json",
+          "sha256": "a8073b12a5b48b51770c98859d3cb8dde3f24ff3a5f6710a10f25e27b6b5470a"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte.json",
+          "sha256": "7aaa7b2a8dcd7c79149a1bb69235e8a676733c5c283137cb978986f4a629aede"
+        },
+        "death_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/runtime_profile.json",
+          "sha256": "f088b16d6c313bfd6d99134b37a8d0c871231422955702ca1aea48590c1f1ef7"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/staged_generation.json",
+          "sha256": "50cb86f3bd836420b7d1345a90d6ef056c97c28037aaa7b1f9cf7fa6cfe527ec"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/sampling_workflow_api.json",
+          "sha256": "a46e5cb8951e96a18dbad2a74644998c92115adfd72f66a5e35c09acace6cc27"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/sampling_submission.json",
+          "sha256": "a670546a836ef3cd7059df574e13898a902f35e00f67231e5a81adbbec2472e5"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/sampling_history.json",
+          "sha256": "3ec4658723b6a8e955ebfe6a8b87d9373dcb2d374848c0df4a830c58858689d7"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/original.latent",
+          "sha256": "866fd16d85a765fe4d564090b46aad1f5bb8977a6bf33d21b9b05f79367b233e"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all744 chronological original frames, enlarged four-leg/antler/streamer details, complete22-frame gallop and seam, action hold trims and hit/death joins, then all174 selected phases and original8-frame260ms idle at native128px reference height in Godot. Four-legged bark anatomy, red harness, amber medallion, paired antlers and pale streamers remain readable. Dedicated ram, held guard, recoil/recovery, physical support and grounded corpse are distinct. Candidate240 checks pass. No continuous video playback, manual game playtest or Linux execution claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/move_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_047.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_102.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/attack_v1/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/defend_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_006.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_095.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_097.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_099.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_101.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_102.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_104.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/hit_v1/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_059.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_061.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_063.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/cast_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/death_v1/matte/rgba_123.png": 0.8
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "defend",
+        "hit",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

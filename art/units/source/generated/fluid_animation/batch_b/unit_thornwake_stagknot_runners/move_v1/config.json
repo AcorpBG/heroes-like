@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_thornwake_stagknot_runners",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_stagknot_runners.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      58,
+      2
+    ],
+    [
+      88,
+      3
+    ]
+  ],
+  "seed": 927501,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera. A single original wooden fantasy stag on an entirely unmoving solid ROYAL BLUE backdrop, exactly the same blue throughout. Preserve FOUR articulated deer legs: near and far forelegs plus near and far hindlegs, with original branching root digits. Preserve ivory split bark over green and brown wood, slim deer head and long neck, TWO original reddish branching antlers with unchanged tines, amber eye and round amber chest medallion, red cord harness, small red backpad without a rider, pale flowing bark streamers and twig tail. No human limbs or hands, no new objects or effects. Same body proportions and three-quarter right-facing camera. Gallop in place, body centered. Hind legs push off, all four legs extend into flight, forelegs make contact and take weight, all four legs gather below the body, then hind legs land for the next push. Cycle the original near and far legs independently with flexing joints and distinct support and flight phases. Return to the first hind-contact pose. Antlers retain every branch while streamers follow the motion. Keep the blue background absolutely constant. Only the original stag and its attached streamers move. No camera movement, no floor, shadow, particles or new anatomy.",
+  "protected_foreground_chroma": 20
+}

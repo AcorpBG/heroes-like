@@ -47,3 +47,8 @@ art/animation/source/fluid/unit_thornwake_seedcutters/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_sporeglass_menders/**/*.txt -text
 art/animation/source/fluid/unit_thornwake_sporeglass_menders/*.json -text
+
+# Preserve hash-bound Stag-Knot Runners H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_stagknot_runners/**/*.txt -text
+art/animation/source/fluid/unit_thornwake_stagknot_runners/*.json -text
