@@ -1,0 +1,29 @@
+{
+  "source_frames": [
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78
+  ],
+  "frame_msec": 55,
+  "review_note": "Reviewed all124 original frames: continuous loss of leg support into kneeling, torso pitches forward onto hands, legs extend left as body settles onto its side, head/arms/pole and weighted loop rest on ground. No return to standing or extra limb. Select16..34 and54..78 every2 frames, trimming the near-static kneeling hold34..54;55ms gameplay frame timing. Final78 supplies persistent corpse. Enlarged/native review pending; no continuous playback/manual playtest claimed."
+}

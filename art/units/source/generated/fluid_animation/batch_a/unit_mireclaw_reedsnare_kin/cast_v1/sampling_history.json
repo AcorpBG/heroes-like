@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    18,
+    "a76041b1-6d1e-4940-90a0-a6e4ce44219b",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "The flat green backdrop is STATIC and NEVER changes hue or brightness. Every frame has the identical solid green background. Locked camera, original richly painted fantasy strategy game sprite on a perfectly uniform flat vivid GREEN RGB(0,255,0) background, green also between limbs and inside the hanging rope loop. No environment, ground shadow, text or particles. One Reedsnare Kin human swamp hunter: brown hair tied in a small topknot with loose side locks, olive green layered leather tunic and leggings, ochre-yellow reed fringe on shoulders and knees, wrapped brown-green boots, rope coil attached at the IMAGE LEFT hip. Exactly TWO human arms and TWO legs. Both bare hands hold ONE straight wooden trapping pole with exactly TWO curved bronze fork tips pointing IMAGE RIGHT. One weighted rope loop hangs beneath the fork; its small dark weight stays attached to the rope. The image-left hand holds the rear shaft near the hip, the image-right hand holds the forward shaft before the fork. Preserve both fixed grips, original pole length, fork tips, rope coil, clothing, face and limb count. The pole remains a rigid solid object and never changes into a spear, bow or gun. Stable three-quarter right-facing view, no camera motion or zoom. Full figure, boots and whole pole remain visible at the same anatomical scale throughout. Perform one physical rally/support gesture, NOT magic. Raise the horizontal forked trapping pole from waist level to just below the chin using both bent elbows, keeping both original grips and both bronze fork tips directed IMAGE RIGHT. Give a firm small nod and squared-shoulder resolve, hold the raised pole briefly, then lower it smoothly to the original ready stance. Feet remain planted, face stays the same. Rope coil and attached weighted loop settle naturally. Clearly visible arm motion, but no staff spinning, waving with an empty hand, overhead attack, shield, light, runes, energy or particles. No colored lighting, rainbow, gradients or background hue cycling.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 925305
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reedsnare_kin_cast_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "reedsnare_kin_h3/cast_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "reedsnare_kin_h3",
+      "create_time": 1790330803020
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "reedsnare_kin_h3\\cast_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a76041b1-6d1e-4940-90a0-a6e4ce44219b",
+          "timestamp": 1790330803022
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "a76041b1-6d1e-4940-90a0-a6e4ce44219b",
+          "timestamp": 1790330803028
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a76041b1-6d1e-4940-90a0-a6e4ce44219b",
+          "timestamp": 1790330922687
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

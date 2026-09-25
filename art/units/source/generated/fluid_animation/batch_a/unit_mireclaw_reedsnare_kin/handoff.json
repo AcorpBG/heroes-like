@@ -1,0 +1,3118 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_reedsnare_kin",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_004",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "hit_h3_116",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 9
+        },
+        "defend": {
+          "indices": [
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 15
+        },
+        "hit": {
+          "indices": [
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 8
+        },
+        "death": {
+          "indices": [
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 22
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/original_lossless.mkv",
+          "sha256": "3740be340f2d83bbd12975ca039113f1232b8d473f7ae8d405b9e7b14620405e"
+        },
+        "move_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/original.json",
+          "sha256": "3a179e42855e293bb051d8de3dd2ad2acad4585fffe88ae7531a1b954fab39b6"
+        },
+        "move_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/workflow_api.json",
+          "sha256": "5ac94ceeb7c881dbb14d2fcc4ffb949ce54ea92c7bda91d7e4b73c0ff95a7451"
+        },
+        "move_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/prompt.txt",
+          "sha256": "73dea233fac008b81ad93f1421bb62d6860b78db1a5efa4488d69ed0ee740848"
+        },
+        "move_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/reference.json",
+          "sha256": "3bc7c715071fb20eecaf22e601f0b97bbd0b11881bd18381784aff0fa7c6d51d"
+        },
+        "move_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte.json",
+          "sha256": "46270150a111ca1ec8747370b2b1c10c662d3d07c465b7a013a3f09d03b292d8"
+        },
+        "move_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/staged_generation.json",
+          "sha256": "0db649366c43b661b77851ffc3c03ab317c1f114fa877f289660954a62a01c36"
+        },
+        "move_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/sampling_workflow_api.json",
+          "sha256": "43f8734cff7de1089ad485065328d1c8c94e9842452cfbb91ea74de5769633a7"
+        },
+        "move_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/sampling_submission.json",
+          "sha256": "b9a337ee0d27cda4a8f2a1b403d2089860d4947b985899c61bced25c0f5ed0c2"
+        },
+        "move_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/sampling_history.json",
+          "sha256": "25d2dc23a9c2c42ab6f8995525f825b6aca7864546cc236af2ca1867cb29d1c9"
+        },
+        "move_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/original.latent",
+          "sha256": "35ea6c3920ef2f2d993e62f513d4f804b29612445f83ee724bd2248053f7e21f"
+        },
+        "attack_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/original_lossless.mkv",
+          "sha256": "9597b272dded0a15518c5e30bfd7ab215eebaf2698c52ad675a43317b01bc4bd"
+        },
+        "attack_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/original.json",
+          "sha256": "c18a0bb2a6a959716c8b6758253f96c4578c1baf0f4b3944626591ae71772521"
+        },
+        "attack_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/workflow_api.json",
+          "sha256": "189725851b64789a38a59d2fa3fcc09de00903d2806b24a3be4eea9084a32492"
+        },
+        "attack_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/prompt.txt",
+          "sha256": "528edf17215803160542d89816d32edac500342778978e4fe673c129b0ba650c"
+        },
+        "attack_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/reference.json",
+          "sha256": "cd520463415b92b3a1ced991c9920484df49f5d3ed53456c683ad76604e9f8b4"
+        },
+        "attack_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte.json",
+          "sha256": "f16d61bb8a25eb8e9649cc2930f65470edb2fab08ba5079053332903469594c6"
+        },
+        "attack_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/staged_generation.json",
+          "sha256": "33372675ae4e7090900de2cffd60d26a598419ebb346eaeabdce21bc3c7ee3a4"
+        },
+        "attack_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/sampling_workflow_api.json",
+          "sha256": "f86d2a1fb9c0553b4df1503878b6e20f7638df1cf674d08d7143c8885f1da415"
+        },
+        "attack_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/sampling_submission.json",
+          "sha256": "d0c00cea688b04da2cdf1d49813d7f6ae7e0940e9de229c0151090db326a0c39"
+        },
+        "attack_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/sampling_history.json",
+          "sha256": "a97e50179d4dbe1534cdb5dbdc21e1f8f81041e9a891c25e0918c2eac0a7fa3f"
+        },
+        "attack_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/original.latent",
+          "sha256": "0cafef5bdc5c4358aaddf4184eb5f9c51ca933a617826729882dbcc206562aaf"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/original_lossless.mkv",
+          "sha256": "593de5c0e9e793ef6fe84e6d05a23cc91aa609a226a1c75193b04ed5b771c9ee"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/original.json",
+          "sha256": "4d48daec5fdcc95dbacef0a956a19d33c46d9ac29c1550451169180af9425296"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/workflow_api.json",
+          "sha256": "f405f85ed1bc8a28e6beafd62522badbf30564e3d49015c2fcfcff577ccaae9d"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/prompt.txt",
+          "sha256": "ae7eb45697b80b3a1b995dace3bd16ddca0f5098ffc3b88700979b839dba3a41"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/reference.json",
+          "sha256": "26584c6dbba0bf154fd680ce1b670ef60d80bf8490846d082da02aa0ef57bf68"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte.json",
+          "sha256": "5c22e17390dfc79ff7346f5437c25bb3db5d0a411551d0883c7a51086f316801"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/staged_generation.json",
+          "sha256": "97214872ab0a78450430e19c401519327b297f98de67bbc20edc0938f4df340e"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/sampling_workflow_api.json",
+          "sha256": "c6f6e76b76a591ad380b5ee8d8d4c02c505502e0d3308e6dff4af8c029ceed2c"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/sampling_submission.json",
+          "sha256": "b33945e5b1b07886892028238b70464deb009ba7b24ae0c8f89af465eb835779"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/sampling_history.json",
+          "sha256": "edc958cdbb46ac050af8b0d17631c7ffa974265c918ebb498a1948c6c5118e25"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/original.latent",
+          "sha256": "10ba3101893e0d0bf63db366308acade5d1410709d1bfaf407781306c729d6aa"
+        },
+        "hit_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/original_lossless.mkv",
+          "sha256": "544c32e8ddee374491967f2b49758eace0a503008fad94671f4b5531af286655"
+        },
+        "hit_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/original.json",
+          "sha256": "7b2a4b04d149eebcf20582e444010c8c27a923fdd6329e382b12cc227200e4ca"
+        },
+        "hit_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/workflow_api.json",
+          "sha256": "db386edbb15061eb5eb5d27ad742282e7e1665b200e8d518df017d5fa4c1fcbe"
+        },
+        "hit_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/prompt.txt",
+          "sha256": "e105d7caf1bbd0209e407adfc7ccd19dfdf73f222427c4105b4638280395c97c"
+        },
+        "hit_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/reference.json",
+          "sha256": "3bc7c715071fb20eecaf22e601f0b97bbd0b11881bd18381784aff0fa7c6d51d"
+        },
+        "hit_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte.json",
+          "sha256": "2052f675fa1a259ff6afb6251608a162d214bb0d2f8815fed316c495c290a77a"
+        },
+        "hit_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/staged_generation.json",
+          "sha256": "3ce8df2dff59e39a4fe428b849dcd354f8636c1a31205b4866a94e7a52a78c9c"
+        },
+        "hit_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/sampling_workflow_api.json",
+          "sha256": "497c34794e97f6c3b20cdb9b8bc0f091991b4e24ae6cb7482e9cf6f98ac5d57a"
+        },
+        "hit_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/sampling_submission.json",
+          "sha256": "0d5be6aa6997e44f07599cf68e72d650b94210746fc535aa7477178b7288f92e"
+        },
+        "hit_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/sampling_history.json",
+          "sha256": "8f6f459398aeabe7bfae3ff7b0c55c0bd68fcbb88033e1050514fc355df55a2a"
+        },
+        "hit_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/original.latent",
+          "sha256": "9e47ad51507d6bfc01bee5e39369f6f6e476613bbaa2c202e17dabcead797c86"
+        },
+        "cast_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/original_lossless.mkv",
+          "sha256": "16ce7e0b2b7935293108f8b9fb0f00fbff340b85a073f65667971aa74afd0a76"
+        },
+        "cast_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/original.json",
+          "sha256": "87b4118f275d7486ad58422021a676814cab94e086c3c6e36b016d644c5ddc47"
+        },
+        "cast_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/workflow_api.json",
+          "sha256": "7dea9b6a5780eb335113c5cc64eb6b16991481dbbfa2928d08893b2e960a33a9"
+        },
+        "cast_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/prompt.txt",
+          "sha256": "3fb8fadf8783d00510baf4679a779771553724ec823d37f7f7e6c4d06b90635a"
+        },
+        "cast_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/reference.json",
+          "sha256": "88fb7a9fc2f403acfaa28c9245b9946c1fbcf611929e7f6f8d833f3603a479d1"
+        },
+        "cast_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte.json",
+          "sha256": "48feef0961b01edae8ff30ea771bcd12894ca20b3dcfa12973d024df2b15bdf1"
+        },
+        "cast_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/staged_generation.json",
+          "sha256": "4e4a936fcbe399a4f4e08cf1096278f7b52678bc3b9f3d4608d7e06f1260f6b4"
+        },
+        "cast_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/sampling_workflow_api.json",
+          "sha256": "a8bcec83d43cbd4ebe0775a8c49ad2a9ddd1c4b30ece6f7e35643b1fcbd3a545"
+        },
+        "cast_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/sampling_submission.json",
+          "sha256": "86876cf3cd601f75e34c41828ac45a4a4109498407bc59506a24781999313481"
+        },
+        "cast_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/sampling_history.json",
+          "sha256": "da4f78fdf7782476d4e1de5dce88942762a0b81b6605f22a2bee4fb254c069b6"
+        },
+        "cast_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/original.latent",
+          "sha256": "211e84f3ed6e345d11cf7ad51d07ccecf39c3ad663d3f95fd79c8fdc8b6b9db1"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/original_lossless.mkv",
+          "sha256": "735f3028c7e4f7dfc66ca8ba52935e5a6d3d772cfdf8edd662a7ac912625ba6f"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/original.json",
+          "sha256": "02881d3363026ae03017e2130e7d262c61e072aab72602ded24e4fb5fc36ac6b"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/workflow_api.json",
+          "sha256": "5c2b0efc055971dda247e1a31ee827038fcd7398e00ece6ddb5bdd55eaafa4a3"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/prompt.txt",
+          "sha256": "2b2d60544acae987801be16c4cecd61a006e653529632e4cbb92e5c78d14bc29"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/reference.json",
+          "sha256": "6fd3135be4b555ce7c2b24c9d0ea11626172e163f787590f8b6654adf27cb81b"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte.json",
+          "sha256": "f8cdd10a1a0df9f579b1306c0bf04b3b3c727b7a28aa2972d6b79153910c6669"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/staged_generation.json",
+          "sha256": "560eab3d81acf85afe2fcff04dade45b3d6a5f7a4c7331d49a79f39b1b9f163f"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/sampling_workflow_api.json",
+          "sha256": "766e416ead92b486850a892a65fd68c98584de72f1554e5fd38b9b5ae2d59db7"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/sampling_submission.json",
+          "sha256": "305376c0669d0155ad8dba744ceb1e7c067dddb98c1a9997e398882b8726aad4"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/sampling_history.json",
+          "sha256": "bf16621b766a85e60adc1fdaf69bd65d65c714cdabd088e15d381bc2d9e3cd84"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/original.latent",
+          "sha256": "57a4bfceeaa824a3c86d6636b3b17fbcfab2bb9c852c52d1df9d8d40c6e9e710"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Coordinator autonomously reviewed all124 chronological original frames for each selected take, enlarged identity/grips/rope/alpha and every packed phase in offscreen Godot at128px reference height. Accept six dedicated actions: reciprocal walking cycle, two-handed thrust/recovery, held crouching guard, continuous recoil/recovery, raised-pole physical rally and grounded collapse/corpse. Preserve all eight original articulated idle poses and timing. Fixed anatomical scale/anchor, stable palette and intact two-prong pole; failed hue-cycling and snap-transition takes excluded. Candidate187 focused checks passed (plus24 initial movement checks). No continuous video playback or manual game playtest claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_003.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_006.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_009.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_057.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/move_v3/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_104.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/attack_v2/matte/rgba_108.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/defend_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_104.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_116.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/hit_v2/matte/rgba_123.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/cast_v2/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_062.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_066.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_068.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_reedsnare_kin/death_v1/matte/rgba_078.png": 0.8
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

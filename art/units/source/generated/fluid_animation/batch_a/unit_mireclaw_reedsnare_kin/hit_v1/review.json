@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Hard pose changes at source32-to33 and72-to73 with mostly held recoil between. Missing articulated impact/recovery, do not approve by frame count.",
+  "correction": "Remove held midpoint guide; use matching ready endpoints and explicit continuous moderate recoil/recovery."
+}
