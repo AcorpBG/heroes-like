@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2b47656faecca14a4f8e7bc83ad2e310f1b69ab614ea1ca14a1dc3794586f949",
+  "latent_sha256": "4261d5d6cb85ceef6950c575540e7eadf0b6d8b08b0a7a060104e4c1ef78e404",
+  "decode_workflow_sha256": "1c9012cae0e438111123cabb0c9f9ff60687ff80ca5c089ebfa113ff24fc55ce",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "solar_array_striders_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

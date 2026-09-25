@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked orthographic camera, original richly painted fantasy strategy sprite on a perfectly flat vivid GREEN RGB(0,255,0) background. One ivory, gold and deep-blue mechanical quadruped strider. Exactly FOUR articulated metal legs: near front, far front, near rear, far rear. Each leg has fixed gold-and-ivory armor plates, blue circular joint bearings and one broad pointed triangular metal foot. Far limbs may be naturally occluded behind near limbs, but stay attached to their own chassis joints. The compact ivory chassis has gold sun engravings and short hanging blue cloth strips. On top is the original rigid inclined array of three blue triangular sail-like panels in gold frames, one large round blue lens in a gold ring, and the gold forward curved bracket carrying exactly three smaller round lenses. Preserve all original rigid equipment, plates, leg lengths, lens sizes, panel count and gold braces. No human rider or humanoid arms. The entire machine faces three-quarter image right, remains the same anatomical size, and stays fully visible. The camera, lighting and flat empty green backdrop stay fixed. The blue lenses remain solid painted glass. Only the original machine and its cloth are visible. One deliberate physical acknowledgment and support gesture. With all four feet planted, the upper lens array slowly inclines forward on its chassis hinge, the forward lens bracket follows it, and the three blue panels tilt together as one rigid assembly. Pause in a clear forward bow, then rotate the same assembly smoothly back to its original upright angle. The legs flex only slightly to balance this movement; this is a mechanical bow, with the same solid painted glass and unchanged machinery throughout.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 926206
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "solar_array_striders_cast_v1_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "solar_array_striders_h3/cast_v1/sampled"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d540b1f8214e0bab016f6ee45607bb041248a3fff6f5ebda4977830675024e8b",
+  "latent_sha256": "0b27242d4f8a49d8d55854aa1bfb224513d1cc9a8d43c6bc81c8df591b4a082e",
+  "decode_workflow_sha256": "3f7b55e0f10c24529294e17beb880cb9d06dfd42ca946ae9f515159b4f5e29b0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "solar_array_striders_h3\\hit_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17445548032,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

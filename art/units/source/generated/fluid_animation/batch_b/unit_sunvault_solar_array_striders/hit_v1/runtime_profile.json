@@ -1,0 +1,68 @@
+{
+  "reserve_vram_gib": 10,
+  "system_stats": {
+    "system": {
+      "os": "win32",
+      "ram_total": 68625412096,
+      "ram_free": 54453510144,
+      "comfyui_version": "0.37.0",
+      "required_frontend_version": "1.53.6",
+      "installed_templates_version": "0.11.69",
+      "required_templates_version": "0.11.69",
+      "comfy_package_versions": [
+        {
+          "name": "comfyui-frontend-package",
+          "installed": "1.53.6",
+          "required": "1.53.6"
+        },
+        {
+          "name": "comfyui-workflow-templates",
+          "installed": "0.11.69",
+          "required": "0.11.69"
+        },
+        {
+          "name": "comfyui-embedded-docs",
+          "installed": "0.5.12",
+          "required": "0.5.12"
+        },
+        {
+          "name": "comfy-kitchen",
+          "installed": "0.2.35",
+          "required": "0.2.35"
+        },
+        {
+          "name": "comfy-aimdo",
+          "installed": "0.5.5",
+          "required": "0.5.5"
+        }
+      ],
+      "python_version": "3.12.14 | packaged by conda-forge | (main, Sep  2 2026, 23:18:20) [MSC v.1944 64 bit (AMD64)]",
+      "pytorch_version": "2.14.0+cu130",
+      "embedded_python": false,
+      "deploy_environment": "local-git",
+      "argv": [
+        "main.py",
+        "--listen",
+        "127.0.0.1",
+        "--port",
+        "8189",
+        "--reserve-vram",
+        "10",
+        "--disable-api-nodes",
+        "--disable-dynamic-vram"
+      ]
+    },
+    "devices": [
+      {
+        "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+        "type": "cuda",
+        "index": 0,
+        "vram_total": 34190458880,
+        "vram_free": 32081888916,
+        "torch_vram_total": 2885681152,
+        "torch_vram_free": 2717566612
+      }
+    ]
+  },
+  "settings": "20steps960x544124frames24fps; staged sampler then tiled VAE"
+}

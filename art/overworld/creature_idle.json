@@ -1067,25 +1067,25 @@
         230
       ],
       "painted_extent": 225,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_solar_array_striders.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        148,
+        52,
         18,
-        370,
+        274,
         259
       ],
-      "source_sha256": "50bb603b040f1ad0cb655ad7e1bcd7c2f92caf14aff517c79fcb5049b1b5345e",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_solar_array_striders/provenance.json",
+      "source_sha256": "974183aaec3928d12dbff2c743a5fa885c62563b8ca2402a0362aaca11ff1818",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_solar_array_striders/provenance.json",
       "sha256": "84fa9c7060d6729ec96e567e25099ef41a8835586da70f204b1aa88b0337f422"
     },
     "unit_sunvault_aurora_ballistae": {

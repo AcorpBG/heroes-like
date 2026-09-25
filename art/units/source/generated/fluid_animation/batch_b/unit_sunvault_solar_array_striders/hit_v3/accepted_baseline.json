@@ -1,0 +1,125 @@
+{
+  "id": "unit_sunvault_solar_array_striders",
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "name": "Solar Array Striders",
+  "faction_id": "faction_sunvault",
+  "tier": 5,
+  "role": "melee",
+  "motif": "engine",
+  "sprite_sheet": "res://art/animation/runtime/units/unit_sunvault_solar_array_striders.png",
+  "states": [
+    "idle_hold",
+    "ready_active",
+    "move_path_step",
+    "melee_windup_release",
+    "ranged_aim_release",
+    "hit_stagger",
+    "death_rout_remove",
+    "cast_support_anchor",
+    "status_applied",
+    "status_expired",
+    "defend_brace",
+    "retaliation_release",
+    "retreat_withdraw_column",
+    "surrender_stand_down"
+  ],
+  "art_source_kind": "curated_original_character_v1",
+  "curated_source": "res://art/units/source/curated/unit_sunvault_solar_array_striders.png",
+  "curated_source_sha256": "38b54e8fc5921b71641d61385457e3281746b2f3bb585c7c39e82d0f8b52b5ec",
+  "pose_sheet": "res://art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+  "pose_frame_size": {
+    "width": 512,
+    "height": 256
+  },
+  "pose_columns": 4,
+  "pose_clips": {
+    "idle": {
+      "frames": 8,
+      "indices": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "loop": true,
+      "frame_msec": 260,
+      "static_frame": 0
+    },
+    "move": {
+      "frames": 4,
+      "indices": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "loop": true,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "attack": {
+      "frames": 4,
+      "indices": [
+        6,
+        7,
+        8,
+        0
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "defend": {
+      "frames": 2,
+      "indices": [
+        8,
+        9
+      ],
+      "loop": true,
+      "frame_msec": 550,
+      "static_frame": 0
+    },
+    "hit": {
+      "frames": 2,
+      "indices": [
+        10,
+        8
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "death": {
+      "frames": 3,
+      "indices": [
+        11,
+        12,
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    },
+    "dead": {
+      "frames": 1,
+      "indices": [
+        13
+      ],
+      "loop": false,
+      "frame_msec": 150,
+      "static_frame": 0
+    }
+  },
+  "pose_aliases": {
+    "ranged": "attack",
+    "cast": "idle"
+  },
+  "pose_provenance": "res://art/animation/source/poses/unit_sunvault_solar_array_striders/provenance.json",
+  "pose_review_status": "accepted_idle_articulation_20260919",
+  "pose_ground_margin": 8,
+  "pose_review_evidence": "docs/battle-unit-animation-acceptance.json"
+}

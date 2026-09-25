@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_sunvault_solar_array_striders",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 22,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_solar_array_striders.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1016
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_018.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_020.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_024.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_solar_array_striders/hit_v1/matte/rgba_032.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      36,
+      2
+    ],
+    [
+      48,
+      3
+    ],
+    [
+      76,
+      4
+    ]
+  ],
+  "seed": 926208,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic camera. One original ivory, gold and blue mechanical quadruped on a uniform solid vivid green background. Animate only the physical motion shown by the supplied chronological guides. The four jointed legs briefly flex and catch the machine weight, one rear foot lifts slightly then plants, the chassis dips and returns to the ready stance. Three rigid triangular blue panels, one large round blue lens and three smaller round blue lenses stay mounted on their original gold frame. All four pointed metal feet remain attached to their own leg joints. Keep the original armor geometry, painted colors, cloth, camera, lighting, body scale and ground registration throughout. Slow clear hinge movement follows each guide in order, then returns to the exact first pose. Background is a perfectly flat uninterrupted green plate."
+}
