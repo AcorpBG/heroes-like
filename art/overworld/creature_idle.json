@@ -1172,25 +1172,25 @@
         215
       ],
       "painted_extent": 210,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_seedcutters.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        179,
-        21,
-        329,
-        247
+        55,
+        17,
+        205,
+        243
       ],
-      "source_sha256": "7a12b07be3236664051d6c4e99d8260c8733dd176681dc09d9e7cfe2a64cee09",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_seedcutters/provenance.json",
+      "source_sha256": "e8b15861fd4a973523b0db893b933e1fb9ceeb984258ff11fd11087346ce1bec",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_seedcutters/provenance.json",
       "sha256": "50c25dcbb4f01baf6db9df6f262d1f7273d59838d4c702eb347147b5f9497bcb"
     },
     "unit_thornwake_thornwhip_carriers": {

@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_seedcutters",
+  "clip": "cast",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedcutters.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      56,
+      1
+    ]
+  ],
+  "seed": 927323,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed camera, single original female fantasy gatherer, full body against a perfectly constant solid ROYAL BLUE backdrop matching all guides. Background blue stays completely unchanged throughout the entire video. Preserve the original face, clothing, hood, hair, armor, waist rope and pouches, and the herb basket strapped to her back. Exactly two hands and arms and two legs. RIGHT hand holds her one short curved steel sickle; LEFT hand holds her one tied bundle of leafy twigs. Perform a deliberate physical support gesture: boots planted, bend the left elbow and lift/present the twig bundle at chest height, while the sickle forearm rises safely clear of her torso. Hold the raised-equipment acknowledgment, then lower both forearms to the starting ready position. The same hands keep their own equipment and original grips. No walking, no slash, no new prop or magic. Constant size, centered body, identical view and palette, uniform unchanging empty blue background.",
+  "protected_foreground_chroma": 20
+}
