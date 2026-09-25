@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          195,
+          495
+        ],
+        "scale": 0.5874999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5caa4324c50bd404e6e1fd8e4b8cd4489a17a43ab562407bfcff1853f1933ed7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "20e6947182654b2b6d667d168c1f4b13a506b22fd62d673e7c286e9d332355f4",
+      "runtime_source_scale": 0.47
+    },
+    {
+      "source_frame": {
+        "name": "attack_windup",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+        "rects": [
+          [
+            25,
+            437,
+            340,
+            811
+          ]
+        ],
+        "anchor": [
+          180,
+          796
+        ],
+        "scale": 0.625,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f929172c58d1c3b9c2c3f711669e6678f3952d54aa5e3f75b771730d8d72058d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0823ecbc64f47d0656a596766517786ca4038043c380a8bea299d04d2a01f704",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "name": "attack_contact",
+        "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+        "rects": [
+          [
+            400,
+            442,
+            914,
+            811
+          ]
+        ],
+        "anchor": [
+          555,
+          796
+        ],
+        "scale": 0.625,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f929172c58d1c3b9c2c3f711669e6678f3952d54aa5e3f75b771730d8d72058d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "3e523a1ca38b1b74767d8b3fb36ca0eaade926cd8965c6d5c0dcb7ba5f36ab07",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

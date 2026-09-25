@@ -461,25 +461,25 @@
         225
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_embercourt_lantern_sappers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_embercourt_lantern_sappers.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        169,
-        7,
-        338,
-        244
+        85,
+        3,
+        254,
+        240
       ],
-      "source_sha256": "87a729e01c7ac44d276aeb28b121780f6b55c08387174797a1e2c5c412a33c41",
-      "source_provenance": "res://art/animation/source/poses/unit_embercourt_lantern_sappers/provenance.json",
+      "source_sha256": "af8017ff6a4fd2dd1054b9605e93c89aaa125bf13fcfed3ac9b0bdb9178aa31b",
+      "source_provenance": "res://art/animation/source/fluid/unit_embercourt_lantern_sappers/provenance.json",
       "sha256": "5b7bcdbf41f7b13f6db611452726a1e1f4998a2c4e53f598fa9b8e212a48a279"
     },
     "unit_embercourt_bargebow_crews": {

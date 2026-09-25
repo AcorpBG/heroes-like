@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "defend",
+  "seed": 2026093202,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        195,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/continuity-alpha/defend-green.png",
+      "rects": [
+        [
+          0,
+          0,
+          1254,
+          1254
+        ]
+      ],
+      "anchor": [
+        690,
+        1180
+      ],
+      "scale": 0.175,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      86,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. Lower the center of gravity by bending both knees into a firm defensive crouch. Draw the near chain hand inward close to the waist, keep the far lantern crook upright and safely ahead. Hold the final guarded stance, alert face facing right. Hands remain on their own equipment throughout, no swapping.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

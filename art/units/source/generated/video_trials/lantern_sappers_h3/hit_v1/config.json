@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "hit",
+  "seed": 2026093203,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        195,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          811,
+          327,
+          1190
+        ]
+      ],
+      "anchor": [
+        157,
+        1162
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      26,
+      1
+    ],
+    [
+      76,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. One brief impact reaction: shoulders and torso recoil backward, knees flex to absorb weight, both arms move with their equipment still gripped. Then recover forward into the original ready stance. Lanterns sway gently with inertia, backpack remains rigidly attached. No fall, weapon release or repeated bouncing.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}

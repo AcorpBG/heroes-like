@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_embercourt_lantern_sappers",
+  "clip": "cast",
+  "seed": 2026093204,
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        195,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_embercourt_lantern_sappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1383,
+        495
+      ],
+      "scale": 0.47,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      64,
+      1
+    ],
+    [
+      100,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Lantern Sapper, a young human woman with dark hair and ivory-and-teal head scarf, ivory sleeves and apron, brass chest and hip plates, teal waist sash, grey trousers, brown gloves and strapped boots. Exactly two arms and two legs. Her near hand on the screen-left holds one coiled iron chain with a single heavy curved hook; her far hand on screen-right holds the wooden crook handle suspending one brass lantern with orange lattice glass. Two additional orange lanterns are firmly attached to her original wooden backpack frame. Preserve all three lanterns, face, grips, chain links, hook and clothing. Original right-facing three-quarter camera, fixed body scale and ground root, entire body and equipment visible. Flat uniform RGB0,255,0 bright green background throughout, no other objects or scenery. A physical rally signal with the lantern. Bend the far elbow and raise the crook hand to lift the suspended orange lantern distinctly above shoulder level, presenting its warm light forward. The chain hand gathers its loose coil near the waist and holds the single hook safely down. Hold the signal, then smoothly lower both hands and return to ready. Keep the three original lanterns; no magical orbs, extra flames or new objects.",
+  "key_rgb": [
+    0,
+    255,
+    0
+  ]
+}
