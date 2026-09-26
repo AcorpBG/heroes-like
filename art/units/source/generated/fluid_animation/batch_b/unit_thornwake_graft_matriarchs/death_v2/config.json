@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs/death_v1/matte/rgba_076.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      64,
+      2
+    ]
+  ],
+  "seed": 927614,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked camera, one original two-armed ivory-and-green tree matriarch on perfectly uniform ROYAL BLUE. Original right-facing three-quarter camera, amber stones, red bindings, ivory fan crown, decorative shoulder loops, root skirt and single bow retained. One slow coherent collapse TOWARD SCREEN LEFT. Roots buckle, trunk leans left, both arms lower the original bow with the body, crown and chest sink to the ground on the LEFT while roots remain on the RIGHT. Finish lying still in exactly the supplied last reference, with crown LEFT and roots RIGHT. Preserve those ends throughout the collapse. No rolling, spinning, body rotation or swapping head and roots. Keep bow, hands, shoulder loops and crown intact; no extra head or limbs, no jumps, no rising again. Bow stays with both hands during fall. One continuous grounded collapse, fixed scale, no smoke or emitted effects.",
+  "protected_foreground_chroma": 28
+}

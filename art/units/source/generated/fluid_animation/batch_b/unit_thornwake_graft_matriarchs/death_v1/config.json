@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          1536,
+          768,
+          2048,
+          1024
+        ]
+      ],
+      "anchor": [
+        1792,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      70,
+      2
+    ]
+  ],
+  "seed": 927607,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera, exactly one original fantasy tree matriarch on a uniform unmoving ROYAL BLUE background, identical blue in every frame. Same three-quarter right-facing view and body scale. Preserve her slim dark green trunk and ivory bark, branching ivory fan crown, amber eyes and chest gems, red vine bindings, spreading white root skirt and two decorative loop branches behind her shoulders with amber nodes. She has TWO hand-bearing arms; the rear branch loops are ornaments, never extra arms. Her original single curved ivory-and-red wooden bow has one continuous thin amber string, and a green leaf-shaped bolt. Keep hands attached to the correct arms and their bow grips. No human legs: her original many long branching roots form her lower body. Collapse once: spreading root base buckles, trunk slumps sideways and tips over, both arms lower the bow as the full body falls onto the ground. Crown and all root tips settle with the fallen trunk. Finish in the original fully grounded corpse, with the original bow lying beside her rather than standing upright. No disintegration, new growth or recovery. No camera motion, new objects, added limbs or background changes. Keep original crown twigs, root tips, chest stones and bow coherent. No smoke, particles, emitted light or painted floor.",
+  "protected_foreground_chroma": 28
+}

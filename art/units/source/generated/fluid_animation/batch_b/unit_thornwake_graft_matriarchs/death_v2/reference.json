@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2fe361aa61773913f2591619c3784308ceffccba44ae04f2230b7cdbad114a04",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8a506d7ad7b0ca41c7f6f1afee5110444b753c91a02e4067f25eebec8a4dca2c",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+        "rects": [
+          [
+            0,
+            768,
+            512,
+            1024
+          ]
+        ],
+        "anchor": [
+          256,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2fe361aa61773913f2591619c3784308ceffccba44ae04f2230b7cdbad114a04",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "fbf0c500e05ba078c4a31f2584c11f5a3f19a573b1a66b6f08052d1584f342f4",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2fe361aa61773913f2591619c3784308ceffccba44ae04f2230b7cdbad114a04",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "7ca23cc9233e162498e0d547d2eee1543f42b738dc0e82add611d103788555d3",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs/death_v1/matte/rgba_076.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          480,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "8e86b6fc3facff915eb04f92cef5550dd0375b3bb988ec325ea7fa5c98d5201f",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a0ef00713aed2aa2935dfb6f376db30abc8f5577973ddaa1e91e4c32da8eef1d",
+      "runtime_source_scale": 0.8
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

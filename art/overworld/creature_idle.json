@@ -1343,29 +1343,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        98.0,
+        98,
         226
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_thornwake_graft_matriarchs.png",
       "source_indices": [
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        158,
-        10,
-        355,
-        247
+        66,
+        14,
+        263,
+        251
       ],
-      "source_sha256": "2fe361aa61773913f2591619c3784308ceffccba44ae04f2230b7cdbad114a04",
-      "source_provenance": "res://art/animation/source/poses/unit_thornwake_graft_matriarchs/provenance.json",
+      "source_sha256": "0659a0720bba76041334fe7dee64064faa0ca9d06edd6adabc1469b5a420005e",
+      "source_provenance": "res://art/animation/source/fluid/unit_thornwake_graft_matriarchs/provenance.json",
       "sha256": "190b81b8b19bc3de709d975f632997773a7f6bc79ba4737101517ecfb0e108dd"
     },
     "unit_thornwake_worldroot_bastion": {

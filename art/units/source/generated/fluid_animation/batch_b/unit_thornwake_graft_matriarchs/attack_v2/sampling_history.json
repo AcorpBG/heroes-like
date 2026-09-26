@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    138,
+    "551e0670-ad78-48c1-b982-45b1aa62e6d1",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Fixed orthographic camera. Exactly one original tree matriarch with TWO working arms and decorative shoulder loops, ivory branching crown, green trunk with amber gems, red bindings and spreading root skirt. Same three-quarter right-facing view, original body scale, perfectly uniform ROYAL BLUE background. Start with her EMPTY ivory-and-red wooden bow already vertical in BOTH hands. Both hands grasp the solid wooden stave at two separated heights; neither hand ever touches or pulls the string. This is a blunt two-handed shield bash drill: bend both elbows to bring the upright bow closer to her chest, firmly extend both elbows forward together to SHOVE the entire upright bow toward the right, briefly brace against resistance, then bend elbows and bring it back close to her chest. Root skirt spreads and anchors her weight. End holding the same empty bow upright in both hands, ready for another shove. Only this original bow and body move; no arrows, leaf bolts, firing, aiming, string drawing, emitted projectiles, beams or magic. Preserve exactly two hands attached to their original arms, both grips on the solid bow stave, crown, shoulder loops and rooted base throughout. Camera and background stay absolutely still.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 927612
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "graftmatriarch_attack_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "graftmatriarch_attack_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 50,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "graftmatriarch_h3/attack_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "graftmatriarch_h3",
+      "create_time": 1790375434231
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "graftmatriarch_h3\\attack_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "551e0670-ad78-48c1-b982-45b1aa62e6d1",
+          "timestamp": 1790375434232
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "551e0670-ad78-48c1-b982-45b1aa62e6d1",
+          "timestamp": 1790375434244
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "551e0670-ad78-48c1-b982-45b1aa62e6d1",
+          "timestamp": 1790375592876
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,291 @@
+{
+  "takes": [
+    "move_v1",
+    "ranged_v1",
+    "defend_v1",
+    "cast_v1",
+    "hit_v2",
+    "death_v2"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Coordinator reviewed all124 original frames of each take, enlarged two-arm anatomy, decorative shoulder loops, bow/string retention, root contacts, alpha edges, movement seam, ranged release and cross-take melee joins. Reviewed every candidate phase at native128px reference height in offscreen Godot;868 focused checks passed. Accepted259 selected H3 frames: move44, attack53, ranged45, defend20, hit26, cast33, death38. Original eight-frame260ms articulated idle retained. Invalid fired-bolt melee, smeared hit and reversing death intervals are excluded; originals retained. Ranged source61-62 with airborne bolt omitted, runtime projectile remains authoritative. Selected frame durations record retiming and shortened holds. No continuous playback, manual game playtest or Linux execution claimed."
+  },
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 2
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 4
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 6
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 8
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 10
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 12
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 14
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 38
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 41
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 42
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 43
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 45
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 46
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 47
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 49
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 50
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 51
+        },
+        {
+          "take": "attack_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 102
+        }
+      ],
+      "timing": {
+        "frame_msec": 42,
+        "contact_frame": 37,
+        "frame_durations_msec": [
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    }
+  }
+}

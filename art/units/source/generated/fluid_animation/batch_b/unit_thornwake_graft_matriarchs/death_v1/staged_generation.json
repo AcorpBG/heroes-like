@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6111ac8bbc58abd0cc747a0b70d823fb4e65dbe2fc59bd0c9dc8c892cecf1a2f",
+  "latent_sha256": "541eb758353bea6db3d55c071ce252e4cd0cb6d0b0282feea1e301b45ecefa23",
+  "decode_workflow_sha256": "cb94e971df5e9fc9a4c680a6d96729a19f531a8db578f07fbbab44b6321902bc",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "graftmatriarch_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17248570368,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

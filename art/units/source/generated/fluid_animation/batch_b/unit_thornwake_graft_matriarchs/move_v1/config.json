@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      76,
+      2
+    ]
+  ],
+  "seed": 927601,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera, exactly one original fantasy tree matriarch on a uniform unmoving ROYAL BLUE background, identical blue in every frame. Same three-quarter right-facing view and body scale. Preserve her slim dark green trunk and ivory bark, branching ivory fan crown, amber eyes and chest gems, red vine bindings, spreading white root skirt and two decorative loop branches behind her shoulders with amber nodes. She has TWO hand-bearing arms; the rear branch loops are ornaments, never extra arms. Her original single curved ivory-and-red wooden bow has one continuous thin amber string, and a green leaf-shaped bolt. Keep hands attached to the correct arms and their bow grips. No human legs: her original many long branching roots form her lower body. Creep steadily in place with alternating original near and far root bundles. Lift and reach forward with the near root bundle while the far roots stay planted and carry the trunk, plant it, then lift and reach the far root bundle while near roots bear weight. Flexible root tips curl then unfurl. Keep trunk centered, stable height and body size. Both hands keep the original bow low across her waist. Finish in the initial planted stance. No camera motion, new objects, added limbs or background changes. Keep original crown twigs, root tips, chest stones and bow coherent. No smoke, particles, emitted light or painted floor.",
+  "protected_foreground_chroma": 28
+}
