@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      50,
+      1
+    ]
+  ],
+  "seed": 927612,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera. Exactly one original tree matriarch with TWO working arms and decorative shoulder loops, ivory branching crown, green trunk with amber gems, red bindings and spreading root skirt. Same three-quarter right-facing view, original body scale, perfectly uniform ROYAL BLUE background. Start with her EMPTY ivory-and-red wooden bow already vertical in BOTH hands. Both hands grasp the solid wooden stave at two separated heights; neither hand ever touches or pulls the string. This is a blunt two-handed shield bash drill: bend both elbows to bring the upright bow closer to her chest, firmly extend both elbows forward together to SHOVE the entire upright bow toward the right, briefly brace against resistance, then bend elbows and bring it back close to her chest. Root skirt spreads and anchors her weight. End holding the same empty bow upright in both hands, ready for another shove. Only this original bow and body move; no arrows, leaf bolts, firing, aiming, string drawing, emitted projectiles, beams or magic. Preserve exactly two hands attached to their original arms, both grips on the solid bow stave, crown, shoulder loops and rooted base throughout. Camera and background stay absolutely still.",
+  "protected_foreground_chroma": 28
+}

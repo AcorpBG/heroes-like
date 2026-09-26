@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    126,
+    "c08f9b80-6e3c-4da0-ae71-7a4afeea7bbe",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Fixed orthographic camera, exactly one original fantasy tree matriarch on a uniform unmoving ROYAL BLUE background, identical blue in every frame. Same three-quarter right-facing view and body scale. Preserve her slim dark green trunk and ivory bark, branching ivory fan crown, amber eyes and chest gems, red vine bindings, spreading white root skirt and two decorative loop branches behind her shoulders with amber nodes. She has TWO hand-bearing arms; the rear branch loops are ornaments, never extra arms. Her original single curved ivory-and-red wooden bow has one continuous thin amber string, and a green leaf-shaped bolt. Keep hands attached to the correct arms and their bow grips. No human legs: her original many long branching roots form her lower body. Perform one physical two-handed bow shove. Raise the original bow vertically, both hands grip its wooden stave at separate heights, lean the rooted trunk forward and extend both elbows to shove the bow once, then retract elbows and lower it to the original ready position. Root skirt braces the force. Never release the bow or turn its string into another limb. No camera motion, new objects, added limbs or background changes. Keep original crown twigs, root tips, chest stones and bow coherent. No smoke, particles, emitted light or painted floor.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 927602
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "graftmatriarch_attack_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "graftmatriarch_attack_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "graftmatriarch_attack_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "graftmatriarch_h3/attack_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "graftmatriarch_h3",
+      "create_time": 1790374046945
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "graftmatriarch_h3\\attack_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "c08f9b80-6e3c-4da0-ae71-7a4afeea7bbe",
+          "timestamp": 1790374047085
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "c08f9b80-6e3c-4da0-ae71-7a4afeea7bbe",
+          "timestamp": 1790374047104
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "c08f9b80-6e3c-4da0-ae71-7a4afeea7bbe",
+          "timestamp": 1790374210208
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

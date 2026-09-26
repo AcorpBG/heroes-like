@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_graft_matriarchs",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_graft_matriarchs.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      52,
+      1
+    ]
+  ],
+  "seed": 927613,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera, one original two-armed tree matriarch, same right-facing three-quarter view, uniform unmoving ROYAL BLUE background. Preserve exactly the original ivory branching crown, amber stones, dark green trunk, spreading root skirt, decorative shoulder branch loops and one original ivory-red bow with green leaf bolt. Both working hands remain firmly attached to their original bow grips throughout; shoulder loops never become hands. Perform one short controlled hit reaction: a small backward recoil of the trunk while roots remain planted, elbows bend together bringing the bow close to the waist, then smoothly straighten and return to the exact initial ready pose. Bow stays horizontal across the waist with the same orientation, uninterrupted string and leaf bolt. One recoil and recovery only. No side-to-side head shaking, no spinning crown, no detached equipment, no weapon flip or hand transfer, no firing or arrows, no effects, no blur or duplicated silhouettes. Gentle recoil, steady camera and anatomical scale.",
+  "protected_foreground_chroma": 28
+}

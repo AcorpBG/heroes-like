@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "1c97577b60c689a5e868df946ef58f572fe58e0aa0354f01bbd0fc1a52982533",
+  "latent_sha256": "cae7061bea2d769da4e0957266bd58d09834b29c127cce1b28da03dce8f6b6f6",
+  "decode_workflow_sha256": "52a387a9427c28247de90e9bc25ce7f62fb0af651eecfcaca9d1bf2c27f56d9b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "graftmatriarch_h3\\defend_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17441353728,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

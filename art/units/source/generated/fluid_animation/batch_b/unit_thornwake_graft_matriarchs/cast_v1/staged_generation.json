@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a0484f2802bb7caa03743911ac6b0d1278ee5ad5b3b85f3a5aee302b2f04eb8d",
+  "latent_sha256": "6dc234f2c604cdfda0adbdca342d41450a2e73b541e31e003f8a059bd7e7ee42",
+  "decode_workflow_sha256": "5f405ec3e9826a68fc8dbee542c6aa1acd4600cee62c58e2d98e492ce8131f8c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "graftmatriarch_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17441353728,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
