@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "clip": "attack",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 57,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 985101,
+  "prompt": "One original Tidehook Deckhand facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. One lean athletic blue spectral humanoid, exactly two arms, two hands, two legs and two bare blue feet with brown shin wraps. Dark navy hood hides the face except cyan eyes; pale cyan flame-like hair and a few trailing spectral coat wisps, tattered blue coat and rope harness with bronze rings. RIGHT near hand on screen left holds the short grip of ONE rigid large J-shaped cyan-edged steel boarding hook. LEFT far hand on screen right holds the top of ONE short bronze chain with ONE brass bell at its lower end, a small cyan flame at the bell mouth. Keep the hook rigid with its single curved tip and keep the chain visibly connected to the left hand and bell. Preserve the original hood, ropes, hands, feet and weapon proportions. Locked camera, consistent anatomical scale and fixed ground anchor; full hook, chain, bell, head and feet remain in view. Uniform saturated GREEN RGB0,255,0 backdrop, no scenery, floor, cast shadow, text, opponents, missiles or external particles. Only the original cyan body wisps and bell flame may move subtly; no new effects. Slowly move the right arm from the raised windup to the forward contact pose in one continuous deliberate hook sweep. Keep the single J-shaped hook absolutely rigid, its steel curve and short grip the same size in every frame. The right shoulder rotates and elbow unfolds; the blade follows a clear curved trajectory above and in front of the hood before the right hand extends toward screen right. Left arm keeps the bell chain suspended throughout. Shift weight into the forward leg, keeping both feet grounded. Finish in the exact extended contact pose and hold. Do not return to ready. No motion blur, no sword-like extension, no straight blade, no smear or slash trail. Show every connecting arm angle clearly. Pass through the original intermediate bent-elbow pose with the hook near the chest before extending the forearm forward. The three guide images show the same unchanged curved hook at three arm angles.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

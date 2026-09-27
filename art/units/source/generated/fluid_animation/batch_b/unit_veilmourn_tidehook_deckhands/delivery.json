@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v3",
+    "attack_v3",
+    "defend_v2",
+    "hit_v1",
+    "cast_v3",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all chronological source frames and enlarged hands/hook/chain/feet/alpha for six dedicated H3 actions, plus every selected phase in the actual128px Godot overview. Reciprocal32-frame gait,30-frame compact hook strike/contact/recovery,30-frame held brace,25-frame recoil/recovery,33-frame physical bell signal and37-frame grounded collapse retain identity, both grips and body scale. Rejected earlier wrist crescents, elongated blade, detached slash arcs and mixed-guide jumps. Preserve exact reviewed8-frame idle, its240ms timing and map strip. Selected unique original pixels and fixed anchors/scales; no fabricated or reversed motion. Continuous video playback, manual playtesting and Linux execution are not claimed. Candidate focused checks253 passed."
+  }
+}

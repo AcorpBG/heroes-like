@@ -1,0 +1,235 @@
+{
+  "prompt": [
+    350,
+    "a5e86bea-16ea-4d2b-acfa-38dc0caa1384",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Tidehook Deckhand facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. One lean athletic blue spectral humanoid, exactly two arms, two hands, two legs and two bare blue feet with brown shin wraps. Dark navy hood hides the face except cyan eyes; pale cyan flame-like hair and a few trailing spectral coat wisps, tattered blue coat and rope harness with bronze rings. RIGHT near hand on screen left holds the short grip of ONE rigid large J-shaped cyan-edged steel boarding hook. LEFT far hand on screen right holds the top of ONE short bronze chain with ONE brass bell at its lower end, a small cyan flame at the bell mouth. Keep the hook rigid with its single curved tip and keep the chain visibly connected to the left hand and bell. Preserve the original hood, ropes, hands, feet and weapon proportions. Locked camera, consistent anatomical scale and fixed ground anchor; full hook, chain, bell, head and feet remain in view. Uniform saturated GREEN RGB0,255,0 backdrop, no scenery, floor, cast shadow, text, opponents, missiles or external particles. Only the original cyan body wisps and bell flame may move subtly; no new effects. Slowly move the right arm from the raised windup to the forward contact pose in one continuous deliberate hook sweep. Keep the single J-shaped hook absolutely rigid, its steel curve and short grip the same size in every frame. The right shoulder rotates and elbow unfolds; the blade follows a clear curved trajectory above and in front of the hood before the right hand extends toward screen right. Left arm keeps the bell chain suspended throughout. Shift weight into the forward leg, keeping both feet grounded. Finish in the exact extended contact pose and hold. Do not return to ready. No motion blur, no sword-like extension, no straight blade, no smear or slash trail. Show every connecting arm angle clearly. Pass through the original intermediate bent-elbow pose with the hook near the chest before extending the forearm forward. The three guide images show the same unchanged curved hook at three arm angles.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 985101
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tidehook_attack_strike_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tidehook_attack_strike_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tidehook_attack_strike_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tidehook_h3/attack_strike_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tidehook_h3",
+      "create_time": 1790548775833
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tidehook_h3\\attack_strike_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a5e86bea-16ea-4d2b-acfa-38dc0caa1384",
+          "timestamp": 1790548775833
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "a5e86bea-16ea-4d2b-acfa-38dc0caa1384",
+          "timestamp": 1790548775861
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a5e86bea-16ea-4d2b-acfa-38dc0caa1384",
+          "timestamp": 1790548907567
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

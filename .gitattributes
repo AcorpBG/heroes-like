@@ -142,3 +142,8 @@ art/animation/source/fluid/unit_thornwake_dawnseed_bolters/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_brasshollow_gaugeplate_bailiffs/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_brasshollow_gaugeplate_bailiffs/**/*.txt -text
 art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs/*.json -text
+
+# Preserve hash-bound Tidehook Deckhands H3 provenance.
+art/units/source/generated/fluid_animation/batch_b/unit_veilmourn_tidehook_deckhands/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_veilmourn_tidehook_deckhands/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_tidehook_deckhands/*.json -text

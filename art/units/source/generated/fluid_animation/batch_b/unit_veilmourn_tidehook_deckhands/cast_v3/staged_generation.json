@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "877e2e8917e686d1f5d5b77e551c5e17a86e9efff67bdbbbad38890abaf5ab73",
+  "latent_sha256": "eaec2a4ba11a500b0206db157e1af4c39c5cdd163360b0c83f83c0facd633311",
+  "decode_workflow_sha256": "55123ba07f81564f51101a3de7ac758dda343a925f8c927d97f842c15ad21b27",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tidehook_h3\\cast_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17426673664,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

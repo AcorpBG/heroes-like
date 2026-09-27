@@ -1,0 +1,10 @@
+{
+  "tool": "image_gen",
+  "original_sha256": "6a2bae02d8c28bc5eb9879ae4bcbdbcb6803288334a6fbfc5d114ee73319babe",
+  "prompt_sha256": "bdfb41878a8d5824e46b40df90022487c1a1d04417a7e5d6217e4f35526226c5",
+  "reference": "art/units/source/generated/fluid_animation/batch_b/unit_veilmourn_tidehook_deckhands/walk_guide_v1/original.png",
+  "reference_sha256": "a99b46a03653dda13e4e4abb62e5d62ab9de924f8340c8bf48404d689dd59fe3",
+  "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-6c802245-e7ea-4b3e-a4e4-bd3ca0a96630.png",
+  "status": "rejected",
+  "reason": "Second image edit still retains the same lead leg. Reassess control: remove biased walking midpoint guides and use a neutral ready stance with explicit alternating knee lifts in H3."
+}

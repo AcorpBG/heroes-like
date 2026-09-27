@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.75,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "41111a728d57a93a95300da3d10d4aa3233e6303742a6c3caf1d7f678273248f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a0deb0a651b42a7c5821640471795e21346d852427da290c7c68d4ebda4d9ea0",
+      "runtime_source_scale": 0.875
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          748
+        ],
+        "scale": 1.75,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "41111a728d57a93a95300da3d10d4aa3233e6303742a6c3caf1d7f678273248f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "56dc10047a2addca0276ffb4f99bc4503b2705eaee96a649a85868f65bf4198c",
+      "runtime_source_scale": 0.875
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
