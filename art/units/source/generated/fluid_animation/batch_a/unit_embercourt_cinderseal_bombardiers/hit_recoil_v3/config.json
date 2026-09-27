@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_embercourt_cinderseal_bombardiers",
+  "clip": "hit",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_012.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 980025,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One red-hooded original fantasy strategy figure as in the references, facing right in a fixed elevated orthographic view. Exactly two arms, two hands, two legs and two boots. Red/gold split coat, dark trousers, bronze gloves and boots. Right hand holds the rear grip of one rigid heavy hollow bronze tube resting on the right shoulder; left hand holds a separate short straight red and brass baton. Full figure, fixed anatomical scale, planted boots, neutral constant illumination, flat uniform saturated green RGB0,255,0 everywhere outside the subject. This is a slow physical balance adjustment between the two references. Smoothly lift the LEFT forearm across the abdomen while leaning the upper torso a short distance backward and bending both knees to absorb the heavy shoulder load. Left elbow bends gradually, left wrist turns the short baton across the belly; show all intermediate elbow angles. The RIGHT hand never changes its grip, and the rigid shoulder tube moves only with the shoulder. The circular interior of the tube stays completely dark, unchanged and opaque. Finish in the supplied leaning-back, crossed-forearm pose and hold it. One measured upper-body motion, steady feet, constant material colors, no other visual events. Do not return to the start."
+}

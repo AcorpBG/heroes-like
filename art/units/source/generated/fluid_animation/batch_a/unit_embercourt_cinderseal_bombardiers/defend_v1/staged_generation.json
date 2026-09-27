@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7cd6a2e985c43b68bd1581999f788c884e197bb61aa09fa5fb171a14c57f7bb2",
+  "latent_sha256": "b27d2d3171c50a8cd79bd2010666ef0aa1233d0b7a4f0f6932da2f7b34f40450",
+  "decode_workflow_sha256": "4d69f3d267212ec1ac4256596215fae892173030c166c13d003a5d083d452401",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cinderseal_h3\\defend_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18823217152,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -117,3 +117,8 @@ art/animation/source/fluid/unit_veilmourn_obituary_scribes/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mirrorkeel_reavers/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_mirrorkeel_reavers/*.json -text
+
+# Preserve hash-bound Cinderseal Bombardiers H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/**/*.json -text
+art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/**/*.txt -text
+art/animation/source/fluid/unit_embercourt_cinderseal_bombardiers/*.json -text

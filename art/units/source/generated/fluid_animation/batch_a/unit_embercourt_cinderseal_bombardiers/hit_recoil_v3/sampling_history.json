@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    245,
+    "c3adfbe1-f46d-495c-8027-0a2ea5db102d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One red-hooded original fantasy strategy figure as in the references, facing right in a fixed elevated orthographic view. Exactly two arms, two hands, two legs and two boots. Red/gold split coat, dark trousers, bronze gloves and boots. Right hand holds the rear grip of one rigid heavy hollow bronze tube resting on the right shoulder; left hand holds a separate short straight red and brass baton. Full figure, fixed anatomical scale, planted boots, neutral constant illumination, flat uniform saturated green RGB0,255,0 everywhere outside the subject. This is a slow physical balance adjustment between the two references. Smoothly lift the LEFT forearm across the abdomen while leaning the upper torso a short distance backward and bending both knees to absorb the heavy shoulder load. Left elbow bends gradually, left wrist turns the short baton across the belly; show all intermediate elbow angles. The RIGHT hand never changes its grip, and the rigid shoulder tube moves only with the shoulder. The circular interior of the tube stays completely dark, unchanged and opaque. Finish in the supplied leaning-back, crossed-forearm pose and hold it. One measured upper-body motion, steady feet, constant material colors, no other visual events. Do not return to the start.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 980025
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cinderseal_hit_recoil_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cinderseal_hit_recoil_v3_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "cinderseal_h3/hit_recoil_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "cinderseal_h3",
+      "create_time": 1790530737262
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "cinderseal_h3\\hit_recoil_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "c3adfbe1-f46d-495c-8027-0a2ea5db102d",
+          "timestamp": 1790530737817
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "c3adfbe1-f46d-495c-8027-0a2ea5db102d",
+          "timestamp": 1790530737829
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "c3adfbe1-f46d-495c-8027-0a2ea5db102d",
+          "timestamp": 1790530885621
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
