@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ff48bc96582e9734f6ed2cf7740d26b7993e2aa2fdc0d790d7c2195df735b2da",
+  "latent_sha256": "8a1c16222ad3a5e6a8bf1145bf5a710afaff84bd0c262446f7b100958f94130d",
+  "decode_workflow_sha256": "a35d34d9b437719fb4302c62c234037fc987652dbcaf1e0561b68a74c2eb212d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scriphauler_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18983763968,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

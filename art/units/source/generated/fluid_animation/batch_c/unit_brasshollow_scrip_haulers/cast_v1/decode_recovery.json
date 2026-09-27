@@ -1,0 +1,6 @@
+{
+  "reason": "Prior service terminated during VAE decode; original saved sampling latent verified unchanged and decoded again without new sampling.",
+  "interrupted_prompt_id": "f574acfe-3fa3-4962-bd0a-4aee7be900d1",
+  "resumed_prompt_id": "649aecc4-48be-4c8a-b53f-cf256958b626",
+  "original_latent_sha256": "3b15a233ffea0b5005c0460c4962cb9b4aff30302556c62960a752775626695b"
+}

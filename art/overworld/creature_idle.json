@@ -1413,29 +1413,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        84.0,
+        84,
         222
       ],
       "painted_extent": 217,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_scrip_haulers.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        172,
-        14,
-        346,
-        247
+        88,
+        18,
+        262,
+        251
       ],
-      "source_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_scrip_haulers/provenance.json",
+      "source_sha256": "c85ed2531de0fcca69c60c52f6b13322bac22e991332c0d02251a92d323d342b",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_scrip_haulers/provenance.json",
       "sha256": "bcf64edd472a27b1ca2fa53ebc5c3eb2317162fbe0180c35e76f0efc3ad61025"
     },
     "unit_brasshollow_rivet_hounds": {

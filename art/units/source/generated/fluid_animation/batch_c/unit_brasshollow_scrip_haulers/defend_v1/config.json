@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "clip": "defend",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 928003,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera on one original Brasshollow infantryman, three-quarter facing right, absolutely uniform ROYAL BLUE background and fixed body scale. Preserve exactly his weathered brass helmet and shoulder plates, dark brown leather coat, brass knee plates and boots, belt scrip tags and coins, rolled backpack, human face and two arms and two legs. His near camera-side RIGHT hand holds the original short curved steel billhook with brown-and-brass handle, his far LEFT forearm carries the same rigid rectangular brass-rimmed dark shield with one round central boss. Never exchange hands, grow a second weapon, change the curved hook into an axe, or alter the rectangular shield. From ready, bend both knees into a strong low shield brace. Raise and angle the original rectangular shield in front of the torso with the far forearm; near hand draws the low hook close across the knees. Hold that defensive crouch at the end. No attack swing or shield rotation into another shape. No camera movement, floor painting, emitted effects, floating objects, motion blur or duplicated anatomy. Keep hands, equipment and face coherent, feet grounded and original silhouette scale.",
+  "protected_foreground_chroma": 29
+}
