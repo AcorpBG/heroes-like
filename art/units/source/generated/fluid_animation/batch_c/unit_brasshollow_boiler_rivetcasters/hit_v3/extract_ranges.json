@@ -1,0 +1,9 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      52
+    ]
+  ],
+  "reason": "Retain only observed recoil before the uniform green backdrop changes to orange in recovery. New separately generated recovery is required. No orange interval keyed or accepted."
+}

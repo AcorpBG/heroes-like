@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "61a934058e9a7e9b9487771ae8a853fa21e8b092c7ca342bf099970ad478ba63",
+  "latent_sha256": "db43f94c6967cdc28b44e0ca7b24e9c81d0a26cc1738d6a369bbf16267fd1ef8",
+  "decode_workflow_sha256": "0ab4d5dac0cc2658df8ff84154d5b52cf0500101c4418423c3fcea536a286137",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "boilerrivet_h3\\hit_flinch_v5",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19337094144,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_v3/matte/rgba_020.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      80,
+      0
+    ]
+  ],
+  "seed": 934005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fantasy strategy sprite: two goblin engineers startle, hunch their shoulders and bend their knees for one brief physical flinch, then straighten and recover to their working pose. The rear engineer briefly lowers his head and shoulders over the lever. The near engineer tucks his head beside the wheel and pulls both elbows inward while keeping his hands on the controls. Both recover together, arms and torsos articulating naturally. The supplied crouched midpoint shows their lowest flinch posture. The cannon remains completely stationary and inactive, with an unchanged short tube, stable glow, round attached wheels, stabilizer, brass boiler, white armor and black hoses. Exactly two goblins; original opaque orange goggles and gray scarves stay over their faces, original helmets and ears unchanged. A single quiet body reaction and recovery, no firing action, no blast or flash, no projectile, no equipment movement. Locked camera, same original body scale and ground contacts, flat pure green background remains pure green throughout. Crisp solid outlines and continuous joint motion, no ghosting or dissolves. Start ready, brief knee-and-shoulder flinch, recover ready, then hold still.",
+  "protected_foreground_chroma": 16
+}
