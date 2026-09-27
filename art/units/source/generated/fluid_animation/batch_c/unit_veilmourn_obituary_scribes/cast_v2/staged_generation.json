@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a8accd27082166cbbab83d2489e8ef645097c986cafd2dfc1fdd3a2a9090eced",
+  "latent_sha256": "8d797191a8bd99ae57f832683f43a624f667f1b1efff9a7986a3d0473d562895",
+  "decode_workflow_sha256": "9ebf88e152df6d3f9fc9c53995ebf5712e0c190152677aab1d78a5c76d1eefb6",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scribes_h3\\cast_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17319370752,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    195,
+    "cf715ff2-47b1-41bb-9ad7-903327357799",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Obituary Scribe facing RIGHT in the same elevated three-quarter orthographic fantasy strategy game view. A slender spectral humanoid with exactly TWO real arms and TWO hands, an ivory pointed beaked mask and small dark-gold thorn crown. Layered ivory scale chest and long ragged black, teal and ivory robes, brass circular medallions and small violet vials at the belt. RIGHT hand on screen-left holds ONE rigid slender ivory-and-brass quill staff, with ONE dark feather at one end and a small brass knob at the other. LEFT hand on screen-right supports ONE open dark brass-bound book with violet-lit pages. Preserve these assigned hands and props in every phase. Long teal cloth ribbons extend behind the shoulders, carrying ONE violet hanging lantern above screen-left and ONE ivory scroll placard with a dark circular seal above screen-right. These are attached cloth ornaments, NEVER extra arms, hands, snakes or tentacles. Preserve mask, feather, straight shaft, book, ribbons and ornaments; no duplicate quill, book or glowing tip. Locked camera, constant body scale and low hover/ground baseline, full figure and every prop inside the image. Flat uniform saturated GREEN background RGB0,255,0 throughout; never cyan, blue, black, gradients or changing hue. Constant neutral light. One physically continuous collapse into the supplied grounded corpse. Begin gradually losing the low hover, knees bend under the robe and the lower body reaches the floor. Lean sideways, let one forearm and shoulder contact the ground, then settle the hips and long robe on that side. Lower the quill and book with their hands; lay the complete straight quill and book on the floor with the figure. Hanging lantern, scroll and ribbons lose support and settle beside the body. Show the intermediate fall continuously, no snaps, rolls, flying corpse, dissolving, lost hands, bent shaft or regrowth. The last short beat is fully still on the ground, no rising again.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 960007
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "scribes_death_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "scribes_death_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "scribes_h3/death_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "scribes_h3",
+      "create_time": 1790522853426
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "scribes_h3\\death_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "cf715ff2-47b1-41bb-9ad7-903327357799",
+          "timestamp": 1790522854063
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "cf715ff2-47b1-41bb-9ad7-903327357799",
+          "timestamp": 1790522854076
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "cf715ff2-47b1-41bb-9ad7-903327357799",
+          "timestamp": 1790523003357
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

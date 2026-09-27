@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "d2830a9fea5160b97d57a805e9607dc8760ac6c6a5716d8f450e473ae554a356",
+  "latent_sha256": "1a219c450a72a9333df7826efe49019d5f98e7362410552d46a5b0be72259bf9",
+  "decode_workflow_sha256": "9424bb491a898ae03eb1423dac751b37b5f75950c8eeda7006ddc0aa059d7fa5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scribes_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17435062272,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

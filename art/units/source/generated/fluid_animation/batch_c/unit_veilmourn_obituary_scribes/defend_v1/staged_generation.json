@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b417cd47d1a0f73c9fe4be9d4d85b1d0fb35e7745f292e60cdb1be6b54ecdf7f",
+  "latent_sha256": "75696d46681204014d54344d3c50526dad616a0272ff45419ed39ea8b8f3e139",
+  "decode_workflow_sha256": "4dddda9f4ea8c757d01bf93cffea0857f3b8b80c6b74af0670602450704daf0b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scribes_h3\\defend_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18709622784,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
