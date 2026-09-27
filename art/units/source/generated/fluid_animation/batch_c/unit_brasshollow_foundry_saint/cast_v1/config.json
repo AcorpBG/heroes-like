@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "clip": "cast",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 937004,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Foundry Saint, a massive humanoid living furnace in ornate brass and dark-steel plate armor, rigid domed helmet with slit face, spiked circular brass halo fixed behind the head, glowing orange vertical furnace grating in the chest, white hanging cloth tabard and shoulder streamers with red seals and golden symbols. Exactly TWO armored arms and TWO jointed armored legs with broad brass boots. SCREEN-RIGHT hand holds the short shaft of one large rectangular forging hammer, glowing orange end faces; SCREEN-LEFT hand holds the long dark tongs gripping one rectangular orange-hot metal billet at their lower tip. Preserve both tools, grips, rigid lengths and rectangular heads, the halo, furnace grille, original proportions and materials throughout. Fixed orthographic three-quarter front game camera facing slightly RIGHT, whole body and tools inside the canvas, constant scale and ground baseline, no zoom, no turn to the back. Solid uniform saturated BLUE chroma-key background stays unchanged in every frame, edge-to-edge identical blue pixels, no scene cuts, no black bars, no fade or wipe. One deliberate support blessing for allied machinery. Keep both boots planted. Raise the screen-left forearm and its long tongs smoothly so the single orange billet is presented forward at waist height, then hold for a moment while the right hammer is lifted slightly in a solemn salute. Lower the tongs back to their original down-left position and return the hammer to ready. Visible elbow and wrist articulation, stable tool grips and geometry. Warm light remains within the existing furnace grille and metal billet. No new props, projectiles, sparks, colored aura or outside effects.",
+  "protected_foreground_chroma": 20
+}

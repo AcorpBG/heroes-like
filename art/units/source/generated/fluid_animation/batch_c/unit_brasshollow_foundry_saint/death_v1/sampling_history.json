@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    107,
+    "fee1ed91-3116-4b30-97c0-f7c8930f790e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Foundry Saint, a massive humanoid living furnace in ornate brass and dark-steel plate armor, rigid domed helmet with slit face, spiked circular brass halo fixed behind the head, glowing orange vertical furnace grating in the chest, white hanging cloth tabard and shoulder streamers with red seals and golden symbols. Exactly TWO armored arms and TWO jointed armored legs with broad brass boots. SCREEN-RIGHT hand holds the short shaft of one large rectangular forging hammer, glowing orange end faces; SCREEN-LEFT hand holds the long dark tongs gripping one rectangular orange-hot metal billet at their lower tip. Preserve both tools, grips, rigid lengths and rectangular heads, the halo, furnace grille, original proportions and materials throughout. Fixed orthographic three-quarter front game camera facing slightly RIGHT, whole body and tools inside the canvas, constant scale and ground baseline, no zoom, no turn to the back. Solid uniform saturated BLUE chroma-key background stays unchanged in every frame, edge-to-edge identical blue pixels, no scene cuts, no black bars, no fade or wipe. One continuous heavy mechanical collapse into the supplied grounded corpse. Both knees buckle, the body sinks to a knee, then tips gently onto its side with knees and elbows folding. The helmet, halo, torso and both boots settle together on the ground; the hammer and tongs with the billet lower and rest on the same ground beside their hands. Furnace light gradually extinguishes as the mechanism becomes still. Preserve both arms, two legs and all equipment through the fall. No turning away, spinning, disassembly, flying pieces, blasts or smoke. End as the supplied cold fallen armored body, not crouching upright.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 937006
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "foundry_death_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "foundry_death_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "foundry_h3/death_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "foundry_h3",
+      "create_time": 1790506572542
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "foundry_h3\\death_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "fee1ed91-3116-4b30-97c0-f7c8930f790e",
+          "timestamp": 1790506573066
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "fee1ed91-3116-4b30-97c0-f7c8930f790e",
+          "timestamp": 1790506573078
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "fee1ed91-3116-4b30-97c0-f7c8930f790e",
+          "timestamp": 1790506723527
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

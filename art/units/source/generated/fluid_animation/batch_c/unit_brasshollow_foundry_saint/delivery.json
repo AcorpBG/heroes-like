@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v2",
+    "attack_v1",
+    "defend_v1",
+    "cast_v1",
+    "hit_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Accepted after all chronological original phases, enlarged selected anatomy/equipment/alpha, fixed-anchor joins and all151 selected frames at native128px Godot battle scale. Reciprocal heavy gait, hammer windup/strike/recovery, held chest guard, distinct tongs-and-hammer support, clean recoil recovery, and grounded cold collapse. Preserve original eight-frame articulated idle. Blue movement correction replaces failed changing green plate. Hit selects only clean30-70 after unwanted explosion; no pixels erased. No continuous playback or manual playtest claim."
+  }
+}

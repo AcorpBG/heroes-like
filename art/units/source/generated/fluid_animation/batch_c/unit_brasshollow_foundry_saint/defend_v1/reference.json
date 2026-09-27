@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.6666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0ae5eca55dfd66d0b50a81300010061a1a53f42939a11aa41bd0c05c9932c379",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0e1654ad78a4bf3bd56f8c4409d6855334aa11b556cc36c0c33ef930094b9c7b",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 1.6666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0ae5eca55dfd66d0b50a81300010061a1a53f42939a11aa41bd0c05c9932c379",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0036b14e297de5fb13733315e2471b2be3c78a3a3058d04f157077c0b8899473",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.6,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

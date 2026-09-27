@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b4c2e97575d3f8e0e2b46dab8b17f07afef076deb7318243a4b3a669f2fdb978",
+  "latent_sha256": "428418f83e3f735c9cb113c19bed8115070479b3e1e0a5f475774109bfeaaa36",
+  "decode_workflow_sha256": "09d87186af164663c23afa85296e1ab65d6647e4e22b4247698183020fe2831b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "foundry_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18638822400,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
