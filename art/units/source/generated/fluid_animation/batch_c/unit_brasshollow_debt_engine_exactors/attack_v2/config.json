@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "clip": "attack",
+  "scale": 0.55,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      52,
+      1
+    ]
+  ],
+  "seed": 935102,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. One deliberate MELEE piston-fist strike toward RIGHT. Wind the huge NEAR fist upward and back, rotate torso at the waist while both boots remain planted, then drive that same massive fist forward to the right in a powerful punch at chest height. Reach a clear full extension with elbow attached and rigid fist intact. The smaller far gauntlet guards the chest. Retract the big fist and recover naturally to the ready stance. Preserve both arms throughout; no projectile, gunfire, magical beam, detached fist, duplicate hand or extra weapon. Small exhaust breath may follow the punch, with original two shoulder stacks unchanged.One deliberate compact mechanical punch toward image RIGHT, then recovery. First lift the huge near gauntlet from beside the hip to chest height by bending its elbow, drawing the elbow slightly back for a compact wind-up. Keep its heavy cylindrical armored fist exactly the same size and shape; this is a hinged mechanical arm with rigid plates and fixed segment lengths. Then extend the elbow into one straight chest-height forward punch, matching the supplied contact pose. Briefly hold full extension, then bend the elbow, retract the same fist back to the chest and lower it to its original resting position. Keep the smaller far fist guarding the core, feet grounded and knees stable, with modest hip and shoulder rotation. No overhead swing, no circular windmill, no stretching, no telescoping forearm, no shrinking fist, no extra hand. No projectile, muzzle flash, beam or magic. Original green background and camera stay fixed, with crisp solid armor in every frame.",
+  "protected_foreground_chroma": 16
+}

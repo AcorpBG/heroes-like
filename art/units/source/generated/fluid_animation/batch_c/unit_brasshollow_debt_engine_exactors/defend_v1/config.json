@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "clip": "defend",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 935003,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. Raise both heavy gauntlets into a dedicated defensive brace. Bend knees slightly, pull torso back, bring the huge near gauntlet across the furnace core and the smaller far fist beside it, elbows bent and shoulders locked. End in the supplied held guard with armor shielding the core, then hold completely steady. No strike or return to ready; both boots remain firmly planted.",
+  "protected_foreground_chroma": 16
+}

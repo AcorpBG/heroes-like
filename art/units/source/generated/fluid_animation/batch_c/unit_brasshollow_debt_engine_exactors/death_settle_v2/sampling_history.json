@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    71,
+    "b457d0b0-a1f7-4200-b3f9-4019098ef47d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. The automaton begins ALREADY KNEELING in the supplied pose, disabled and exhausted. It collapses slowly FORWARD onto its forearms and chest, ending face-down in the exact supplied grounded wreck pose. The huge near gauntlet is already close to the ground and supports the falling chest; its elbow folds as weight comes down. The smaller far gauntlet reaches down and stays beside the helmet. Hips lower, knees remain bent, the two lower legs fold beneath and behind the torso. The helmet lowers toward the ground with the chest without turning the back of the head toward the camera. Keep every body segment connected and rigid. A single smooth heavy forward collapse with clear intermediate elbow, hip and knee positions. No standing back up, no straight-legged sitting pose, no floating, no backward fall, no rolling over, no flip, no spinning, no crossfade or cuts. Final torso, head, both gauntlets and knees rest firmly on the same ground. Furnace, visor and vents gradually go dark and quiet. No explosions or detached parts.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 935104
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "debtexactor_death_settle_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "debtexactor_death_settle_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "debtexactor_h3/death_settle_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "debtexactor_h3",
+      "create_time": 1790500296778
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "debtexactor_h3\\death_settle_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "b457d0b0-a1f7-4200-b3f9-4019098ef47d",
+          "timestamp": 1790500297193
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "b457d0b0-a1f7-4200-b3f9-4019098ef47d",
+          "timestamp": 1790500297207
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "b457d0b0-a1f7-4200-b3f9-4019098ef47d",
+          "timestamp": 1790500452181
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

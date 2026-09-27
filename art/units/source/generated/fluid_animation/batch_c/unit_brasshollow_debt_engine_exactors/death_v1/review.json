@@ -1,0 +1,27 @@
+{
+  "status": "accepted_after_native_review",
+  "notes": "Only the coherent standing-to-kneeling descent is retained:18 observed frames17-65, with central pause shortened. Two legs bend, near gauntlet reaches the floor, chest and helmet sag, equipment stays connected. This is an unfinished first segment, not a complete accepted death. The later backward-to-face-down turn is excluded and being corrected from the exact ending pose.",
+  "selected_source_frames": [
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    49,
+    55,
+    61,
+    65
+  ],
+  "review_method": "Full chronological extracted-frame inspection, enlarged anatomical and edge details and seam comparison. No continuous playback claimed; native render review pending.",
+  "native_review": "All selected phases reviewed at actual 128px reference height; combined candidate247 checks passed.",
+  "scope": "Only selected descent17..65 accepted as first segment; later backward flip rejected. Completion supplied by death_settle_v2."
+}

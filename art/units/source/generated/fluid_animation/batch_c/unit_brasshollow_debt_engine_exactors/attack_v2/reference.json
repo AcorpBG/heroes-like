@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1004
+        ],
+        "scale": 1.8181818181818181,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dc2b6a7d4fea89da12b7102c4c0a07cae164ac7a8be552175365b2dd67faf387",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "512edf534fde92cc48e2cecb64d1f8bedd8c3f25c8de0acee5a58a5f7d14fed6",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 1.8181818181818181,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dc2b6a7d4fea89da12b7102c4c0a07cae164ac7a8be552175365b2dd67faf387",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5fadc3b35ea77ffde33d4379835a3269c359f3e4421095415440a4c383637e32",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.55,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

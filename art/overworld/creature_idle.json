@@ -1557,25 +1557,25 @@
         238
       ],
       "painted_extent": 233,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_debt_engine_exactors.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        144,
-        -2,
-        363,
-        247
+        36,
+        2,
+        255,
+        251
       ],
-      "source_sha256": "dc2b6a7d4fea89da12b7102c4c0a07cae164ac7a8be552175365b2dd67faf387",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_debt_engine_exactors/provenance.json",
+      "source_sha256": "ccd69388f329e90a4d86d112bcd02bec0fc68eb108f527c280f666f6b7111cb6",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_debt_engine_exactors/provenance.json",
       "sha256": "005ee0468a4c9ce9a34fe5712b2985ff0a67a2a07830bfce675f4fc34a7dbe37"
     },
     "unit_brasshollow_crucible_crawlers": {

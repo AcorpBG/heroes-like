@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    61,
+    "cbd1ce27-f8f1-4cbb-94ba-678f461dd615",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. Perform a nonmagical pressure-regulation support gesture. Raise the huge near piston fist toward chest height, rotate that forearm at its existing elbow joint, and bring the smaller far gauntlet to the brass wrist regulator as though tightening it. Then release the regulator, open the elbows outward and lower both arms back to the ready stance. Both hands remain their original closed mechanical gauntlets. Furnace glow pulses gently as pressure stabilizes; a restrained breath leaves the existing exhaust stacks. This is mechanical maintenance, not magic: no spell circles, floating particles, beams, conjured objects or extra tools. Distinct hand, elbow and shoulder articulation followed by recovery.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 935005
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "debtexactor_cast_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "debtexactor_cast_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 54,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 95,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "debtexactor_h3/cast_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "debtexactor_h3",
+      "create_time": 1790498660896
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "debtexactor_h3\\cast_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "cbd1ce27-f8f1-4cbb-94ba-678f461dd615",
+          "timestamp": 1790498661139
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "cbd1ce27-f8f1-4cbb-94ba-678f461dd615",
+          "timestamp": 1790498661154
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "cbd1ce27-f8f1-4cbb-94ba-678f461dd615",
+          "timestamp": 1790499061979
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

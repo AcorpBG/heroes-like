@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "50f905436d480e4d341c041c8ef3d9c07836bb29da6b7039e8bba9a8e07fedcc",
+  "latent_sha256": "4b783e3b0fd9b7e3dfba748cf34168d112e3c0810840188aa4da742c8f784744",
+  "decode_workflow_sha256": "a7bc5eebe7f7eeabad3987cb970a164e90d89f8562419a91b07de4cb3420b338",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "debtexactor_h3\\hit_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19065050112,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
