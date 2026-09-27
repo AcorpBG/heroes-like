@@ -1,0 +1,4 @@
+{
+  "status": "selected_pending_native_review",
+  "notes": "Reviewed124 chronological source frames and enlarged aim, release, rigid bow limbs and two grips. Continuous raised aim0-16 and recovery54-76. Source32-37 carries the outgoing seed bolt; exclude that six-frame projectile-only interval while the body holds its aim, because the live game owns outgoing projectiles. Join31->38 preserves actor pose, flips loaded to released state and sets runtime contact to38. No pixel deletion, interpolation or synthetic reload.34 original frames retimed40ms; native review pending."
+}

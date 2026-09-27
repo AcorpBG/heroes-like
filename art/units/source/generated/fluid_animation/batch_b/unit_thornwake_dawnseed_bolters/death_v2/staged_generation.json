@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b6a5892c5c051efea05aaef0644b090e567ce31d0b68c4f90f81c566541a50cc",
+  "latent_sha256": "bf29c44ca0788bba505a2398d77b8e2a96e47ac117742a38d14fcbcfb3d7d486",
+  "decode_workflow_sha256": "288c1fac332227e8f8cea58b2fb0cda5145ac940bda39c2e6630d561abfad88f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "dawnseed_h3\\death_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

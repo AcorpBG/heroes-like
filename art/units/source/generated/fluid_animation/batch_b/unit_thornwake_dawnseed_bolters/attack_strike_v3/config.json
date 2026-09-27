@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "clip": "attack",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 110,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 983302,
+  "prompt": "Slowly extend the RIGHT arm forward from its bent elbow position into one straight RIGHT bare-fist punch to the right, matching the final pose. The left hand keeps the rigid crossbow motionless at the waist. Rotate the shoulder slightly and straighten the elbow continuously through every angle. Finish with the right fist extended. One small wooden woodland creature, exactly two hands and two root legs, green leaf hood and cloak, white flower, orange hip pods and branching antlers. Original elevated three-quarter view facing RIGHT. The left hand supports the same small RIGID HORIZONTAL CROSSBOW at waist height for the entire shot. Fixed short stock, fixed curved branch bow arms and string. The crossbow is only carried; it remains rigid and unchanged.  One uninterrupted shot with smoothly articulated intermediate positions, no cuts or still-pose jumps. Constant scale, complete body and equipment always inside frame. Unchanging flat saturated GREEN background RGB0,255,0, no scenery or camera motion.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

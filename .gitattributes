@@ -132,3 +132,8 @@ art/animation/source/fluid/unit_mireclaw_mireglass_reedcasters/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/**/*.txt -text
 art/animation/source/fluid/unit_sunvault_noonfacet_sentinels/*.json -text
+
+# Preserve hash-bound Dawnseed Bolters H3 provenance.
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_dawnseed_bolters/**/*.txt -text
+art/animation/source/fluid/unit_thornwake_dawnseed_bolters/*.json -text

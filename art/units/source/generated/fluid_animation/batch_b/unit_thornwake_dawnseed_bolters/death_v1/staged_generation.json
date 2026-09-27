@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "972e7e56c2552882fddd3b6cf2f35cd2b00662eaa9388ea029d5cc27a4b991e4",
+  "latent_sha256": "4176a2fa3d0ed64c5d5a505aac1b7bf7fbd6088bba0078cbe588080820787aa7",
+  "decode_workflow_sha256": "f61d5e02186d2e78e00cb88906788ba2ccfdf740a2a7147d5a896fe30d5bb30d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "dawnseed_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17430867968,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

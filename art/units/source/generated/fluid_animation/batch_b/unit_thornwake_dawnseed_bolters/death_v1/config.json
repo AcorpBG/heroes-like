@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "clip": "death",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 110,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      78,
+      2
+    ]
+  ],
+  "seed": 983006,
+  "prompt": "One original Dawnseed Bolter, facing RIGHT, fixed elevated three-quarter orthographic fantasy strategy camera. Exactly one small wooden humanoid with two arms and hands and two jointed root legs. Green pointed leaf hood, dark face with two tiny gold eyes, white flower and orange center beside the hood, branching wooden antlers, overlapping vivid green leaf cloak, orange seed pods at the near hip, brown articulated bark limbs and root feet. One rigid living-wood crossbow with curved branch bow arms, visible string, gold fittings and an orange/red seed-shaped front tip; preserve its original geometry and size. Right near hand on screen left normally holds the rear grip; left far hand on screen right supports its forward underside. Preserve exactly two hands, one crossbow, one hood and both root feet. Fixed camera and body scale, whole creature and every equipment tip always in frame. Uniform flat saturated GREEN RGB0,255,0 plate throughout, no ground scenery or cast shadow, steady illumination. One continuous defeated collapse. Knees buckle, the creature drops to one knee, lowers its hood and crossbow, then tips onto its side, settling as the supplied grounded final corpse. Keep the two arms, two root legs and single crossbow physically coherent throughout. The weapon settles flat beside the hands on the same ground plane. Stay down and motionless at the end; never stand back up.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    289,
+    "3c40ff27-7c7d-43dc-a28b-f41ef62c927e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Dawnseed Bolter, facing RIGHT, fixed elevated three-quarter orthographic fantasy strategy camera. Exactly one small wooden humanoid with two arms and hands and two jointed root legs. Green pointed leaf hood, dark face with two tiny gold eyes, white flower and orange center beside the hood, branching wooden antlers, overlapping vivid green leaf cloak, orange seed pods at the near hip, brown articulated bark limbs and root feet. One rigid living-wood crossbow with curved branch bow arms, visible string, gold fittings and an orange/red seed-shaped front tip; preserve its original geometry and size. Right near hand on screen left normally holds the rear grip; left far hand on screen right supports its forward underside. Preserve exactly two hands, one crossbow, one hood and both root feet. Fixed camera and body scale, whole creature and every equipment tip always in frame. Uniform flat saturated MAGENTA RGB255,0,255 plate throughout, no ground scenery or cast shadow, steady illumination. Perform one close-range right-hand punch to the right. Left hand keeps the crossbow firmly supported at the waist throughout. Right near hand releases the rear grip, draws back beside the shoulder, then extends one firm punch toward the right. Retract the right forearm and regrip the SAME crossbow stock, returning to the original ready stance. The wooden fist remains a fist and does not grow a weapon. One continuous anticipation, punch, recoil and recovery.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 983002
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dawnseed_attack_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dawnseed_attack_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dawnseed_attack_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "dawnseed_h3/attack_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "dawnseed_h3",
+      "create_time": 1790539332228
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "dawnseed_h3\\attack_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "3c40ff27-7c7d-43dc-a28b-f41ef62c927e",
+          "timestamp": 1790539332833
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "3c40ff27-7c7d-43dc-a28b-f41ef62c927e",
+          "timestamp": 1790539332852
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "3c40ff27-7c7d-43dc-a28b-f41ef62c927e",
+          "timestamp": 1790539491235
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

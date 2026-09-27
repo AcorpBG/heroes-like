@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    312,
+    "d990349c-0c5c-4d3a-9953-42efd186ae0e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Slowly extend the RIGHT arm forward from its bent elbow position into one straight RIGHT bare-fist punch to the right, matching the final pose. The left hand keeps the rigid crossbow motionless at the waist. Rotate the shoulder slightly and straighten the elbow continuously through every angle. Finish with the right fist extended. One small wooden woodland creature, exactly two hands and two root legs, green leaf hood and cloak, white flower, orange hip pods and branching antlers. Original elevated three-quarter view facing RIGHT. The left hand supports the same small RIGID HORIZONTAL CROSSBOW at waist height for the entire shot. Fixed short stock, fixed curved branch bow arms and string. The crossbow is only carried; it remains rigid and unchanged.  One uninterrupted shot with smoothly articulated intermediate positions, no cuts or still-pose jumps. Constant scale, complete body and equipment always inside frame. Unchanging flat saturated GREEN background RGB0,255,0, no scenery or camera motion.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 983302
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dawnseed_attack_strike_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "dawnseed_attack_strike_v3_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "dawnseed_h3/attack_strike_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "dawnseed_h3",
+      "create_time": 1790541894832
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "dawnseed_h3\\attack_strike_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d990349c-0c5c-4d3a-9953-42efd186ae0e",
+          "timestamp": 1790541894833
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "d990349c-0c5c-4d3a-9953-42efd186ae0e",
+          "timestamp": 1790541894845
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d990349c-0c5c-4d3a-9953-42efd186ae0e",
+          "timestamp": 1790542022441
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

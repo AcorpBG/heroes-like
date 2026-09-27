@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "c0e06ba1d4d5306426f3b43b8fee459b2c872df143d759664b3c404c5d5ca125",
+  "latent_sha256": "71cc762e35ffdd566219f82d8f071b9080db311f5b58a5f591a0acea20c6b771",
+  "decode_workflow_sha256": "cccd91be2067d7202fa9b7908eec5b3f5746624ee158572fb7deb84689a86e06",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "dawnseed_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17430867968,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

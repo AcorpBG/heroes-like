@@ -1,0 +1,21 @@
+{
+  "takes": [
+    "move_v2",
+    "defend_v2",
+    "hit_v1",
+    "ranged_v1",
+    "death_v2",
+    "cast_v3"
+  ],
+  "attack_segments": [
+    "attack_windup_v3",
+    "attack_strike_v3",
+    "attack_recover_v3"
+  ],
+  "attack_frame_msec": 30,
+  "attack_contact_frame": 29,
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomous review of all original chronological frames, enlarged hand/weapon/foot details and all 256 native 128px-reference phase poses. Reciprocal root-foot walk; stable two-handed living crossbow; near right fist windup/strike/regrip with matched segment joins; loaded aim/release/recovery timed to contact; physical raised-fist support without a shot; dedicated braced guard; recoil with original shed leaves; continuous grounded collapse and persistent final corpse. Original eight-frame articulated idle reviewed and retained exactly, including map strip. No visible plate residue or clipped antlers/weapon at native scale. Retiming trims source holds while keeping rapid transitions consecutive; ranged sources32-37 containing the outgoing bolt are excluded at a coherent held-body boundary because the game owns the projectile. No continuous-video playback, manual game session, full suite or Linux test claimed."
+  }
+}
