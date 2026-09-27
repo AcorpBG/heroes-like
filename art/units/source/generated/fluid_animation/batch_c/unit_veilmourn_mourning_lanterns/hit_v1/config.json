@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "clip": "hit",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      36,
+      1
+    ]
+  ],
+  "seed": 939006,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mourning Lanterns human lantern bearer, brown tied-back hair and pale face looking RIGHT, muted grey-green ragged cloak and scarf, charcoal long coat, brown leather belts and boots, brass fittings and rope at the belt. Exactly TWO arms, TWO hands and TWO legs. Screen-left hand grips ONE tall straight staff standing upright beside the body. Its curved hook holds exactly TWO lit amber lanterns: one elongated lantern on the upper-left, one rounded lantern on the upper-right, plus the original small silver mirror plates and cloth strips. Screen-right hand grips ONE separate compact brass hand-lantern by its top handle, with its round amber glass facing RIGHT. Keep all three lanterns, both original hand grips, full staff, mirror plates and cloak identity. Locked right-facing three-quarter orthographic game camera, full body and complete staff visible, constant body scale and fixed foot baseline. Every background pixel remains solid saturated BLUE for the entire shot. Constant even illumination, no camera movement. One brief unassisted stagger and recovery. Flex knees, lean the chest backward into the supplied recoil pose, keep both original hands gripping their separate staff and hand-lantern. Then recover balance, straighten knees and return to the original stance. Only this character and its three attached lights are present. No attacker, incoming object, projectile, impact spark or external effect.",
+  "protected_foreground_chroma": 20
+}

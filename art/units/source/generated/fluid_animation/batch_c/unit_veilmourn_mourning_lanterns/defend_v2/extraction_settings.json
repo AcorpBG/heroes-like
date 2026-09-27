@@ -1,0 +1,15 @@
+{
+  "protected_foreground_chroma": 20,
+  "reviewed_key_ranges": [
+    {
+      "start": 9,
+      "end": 28,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    }
+  ],
+  "reason": "Original raw frames reviewed: uniform saturated green9-28 safely separates muted cloth and brass. Use explicit measured green matte only in this interval; original magenta0-4. Preserve separation>=80 and corner spread<=10; no black/gradient fallback."
+}

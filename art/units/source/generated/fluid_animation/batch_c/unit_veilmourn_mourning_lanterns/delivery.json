@@ -1,0 +1,20 @@
+{
+  "takes": [
+    "move_v2",
+    "ranged_v1",
+    "cast_v1",
+    "hit_v1",
+    "defend_v2",
+    "death_v2"
+  ],
+  "attack_segments": [
+    "attack_push_v2",
+    "attack_v1"
+  ],
+  "attack_frame_msec": 40,
+  "attack_contact_frame": 25,
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Accepted209 original H3 frames across seven dedicated actions after all chronological source phases, enlarged anatomy/equipment and light/dark alpha edges, fixed-anchor joins and every selected phase at native128px Godot battle scale. Alternating gait; physical lamp strike with matching recovery; ranged aim with generated projectile interval omitted in favor of runtime projectile; chest-lantern support; supported recoil; held crouch; continuous grounded death with rigid staff. Preserve reviewed original8-frame240ms idle and exact overworld pixels. Continuous playback/manual game playtest/Linux/full-suite validation not performed."
+  }
+}

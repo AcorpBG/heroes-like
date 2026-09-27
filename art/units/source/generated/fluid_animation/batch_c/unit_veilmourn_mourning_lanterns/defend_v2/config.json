@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "clip": "defend",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          512,
+          512,
+          1024,
+          768
+        ]
+      ],
+      "anchor": [
+        768,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 939014,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mourning Lanterns human lantern bearer, brown tied-back hair and pale face looking RIGHT, muted grey-green ragged cloak and scarf, charcoal long coat, brown leather belts and boots, brass fittings and rope at the belt. Exactly TWO arms, TWO hands and TWO legs. Screen-left hand grips ONE tall straight staff standing upright beside the body. Its curved hook holds exactly TWO lit amber lanterns: one elongated lantern on the upper-left, one rounded lantern on the upper-right, plus the original small silver mirror plates and cloth strips. Screen-right hand grips ONE separate compact brass hand-lantern by its top handle, with its round amber glass facing RIGHT. Keep all three lanterns, both original hand grips, full staff, mirror plates and cloak identity. Locked right-facing three-quarter orthographic game camera, full body and complete staff visible, constant body scale and fixed foot baseline. Every background pixel remains solid saturated MAGENTA for the entire shot. Constant even illumination, no camera movement. One defensive brace. Bend both knees and lower into the supplied crouched guard, draw the hand-lantern protectively across the chest, keep the tall staff planted with the left hand. Hold the final low guard. Warm amber lamps remain attached, no attack or return to standing.",
+  "protected_foreground_chroma": 0
+}

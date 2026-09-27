@@ -1,0 +1,13 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      4
+    ],
+    [
+      9,
+      28
+    ]
+  ],
+  "reason": "Exclude color-change transition intervals and redundant held footage. These original intervals contain ready, full crouch transition and held guard."
+}

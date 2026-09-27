@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "52e835d0014d8c79f2fb9c4e51b78dde95d96d4c78050525ccfe43de65250ae9",
+  "latent_sha256": "3b84cae6a430cc99ed158a6f04303fd2a7020a5fb455747e675892c5253175f0",
+  "decode_workflow_sha256": "677175fa94c2bbbfbe44e05626161c1ca90ef8e8629ed182f68c8252cc489ddc",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mourning_h3\\move_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17441353728,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

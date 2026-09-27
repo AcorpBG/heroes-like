@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    147,
+    "636cbd01-9de8-4bf8-b477-1c2957b15f3b",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Mourning Lanterns human lantern bearer, brown tied-back hair and pale face looking RIGHT, muted grey-green ragged cloak and scarf, charcoal long coat, brown leather belts and boots, brass fittings and rope at the belt. Exactly TWO arms, TWO hands and TWO legs. Screen-left hand grips ONE tall straight staff standing upright beside the body. Its curved hook holds exactly TWO lit amber lanterns: one elongated lantern on the upper-left, one rounded lantern on the upper-right, plus the original small silver mirror plates and cloth strips. Screen-right hand grips ONE separate compact brass hand-lantern by its top handle, with its round amber glass facing RIGHT. Keep all three lanterns, both original hand grips, full staff, mirror plates and cloak identity. Locked right-facing three-quarter orthographic game camera, full body and complete staff visible, constant body scale and fixed foot baseline. Every background pixel remains solid saturated MAGENTA for the entire shot. Constant even illumination, no camera movement. One continuous collapse. Knees buckle, lower onto both knees as in the midpoint, then slump and fall onto the side. Lower the hand-lantern and the entire tall staff WITH its two hanging lanterns onto the ground as the body falls. Finish exactly in the supplied grounded side-lying corpse, all three lanterns and staff resting flat beside the body. Both hands remain anatomically coherent. No upright floating staff, extra limbs, smoke, particles, scenery or return to life. The staff is one rigid straight wooden shaft: it rotates as one solid object with the two hanging lamps attached to its hook, never bends or grows. Follow the supplied intermediate side-fall pose to lower the staff together with the body.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 939017
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mourning_death_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mourning_death_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mourning_death_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mourning_death_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 36,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 68,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "mourning_h3/death_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "mourning_h3",
+      "create_time": 1790513230700
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "mourning_h3\\death_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "636cbd01-9de8-4bf8-b477-1c2957b15f3b",
+          "timestamp": 1790513231187
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "636cbd01-9de8-4bf8-b477-1c2957b15f3b",
+          "timestamp": 1790513231210
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "636cbd01-9de8-4bf8-b477-1c2957b15f3b",
+          "timestamp": 1790513395800
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
