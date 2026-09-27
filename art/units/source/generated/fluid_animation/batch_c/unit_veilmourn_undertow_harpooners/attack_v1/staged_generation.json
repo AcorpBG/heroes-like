@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5bed6289fa18d12bc1eec85497a1d1839b81d4ac64a8499746b8b54d322210f4",
+  "latent_sha256": "747f6ad014904344638713e9f414b135b612955c768fed3d277cf8301a91b71f",
+  "decode_workflow_sha256": "2745eb45fa696842c44ff81db573ebe67aab0818d2c53a85da8a45317f61b64c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "undertow_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18480372736,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

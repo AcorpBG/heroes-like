@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b9480f82cbd7663b4aa29e9a49c07e770f1bd020160acb30b3f8dd3903c4e0ff",
+  "latent_sha256": "95953f143e37d5655de0f0ee45893df3285a828d5bbd574bf2b0529edfddebc8",
+  "decode_workflow_sha256": "c637192b281dbc477506ef1477d2c3ccbb1a44be4d9aa06f1b2c15f657a01864",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "undertow_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18827411456,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
