@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "clip": "move",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 937001,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Foundry Saint, a massive humanoid living furnace in ornate brass and dark-steel plate armor, rigid domed helmet with slit face, spiked circular brass halo fixed behind the head, glowing orange vertical furnace grating in the chest, white hanging cloth tabard and shoulder streamers with red seals and golden symbols. Exactly TWO armored arms and TWO jointed armored legs with broad brass boots. SCREEN-RIGHT hand holds the short shaft of one large rectangular forging hammer, glowing orange end faces; SCREEN-LEFT hand holds the long dark tongs gripping one rectangular orange-hot metal billet at their lower tip. Preserve both tools, grips, rigid lengths and rectangular heads, the halo, furnace grille, original proportions and materials throughout. Fixed orthographic three-quarter front game camera facing slightly RIGHT, whole body and tools inside the canvas, constant scale and ground baseline, no zoom, no turn to the back. Completely flat pure green background, no floor texture or shadows. One deliberate heavy walking cycle IN PLACE. First lift the screen-left boot, bend knee and place it forward while screen-right boot supports the body; pass through both feet grounded. Then lift and advance the screen-right boot while screen-left boot supports. Return to the original stance. Both knees and ankles articulate visibly, with small weight transfer and no drifting root, sliding feet or hopping. The hammer stays held near its shoulder; tongs and the billet sway gently with the supporting arm; cloth moves naturally. No attacks or effects.",
+  "protected_foreground_chroma": 16
+}

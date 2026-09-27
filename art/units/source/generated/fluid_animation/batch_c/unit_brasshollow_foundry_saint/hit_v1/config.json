@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_brasshollow_foundry_saint",
+  "clip": "hit",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_foundry_saint.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 937005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Foundry Saint, a massive humanoid living furnace in ornate brass and dark-steel plate armor, rigid domed helmet with slit face, spiked circular brass halo fixed behind the head, glowing orange vertical furnace grating in the chest, white hanging cloth tabard and shoulder streamers with red seals and golden symbols. Exactly TWO armored arms and TWO jointed armored legs with broad brass boots. SCREEN-RIGHT hand holds the short shaft of one large rectangular forging hammer, glowing orange end faces; SCREEN-LEFT hand holds the long dark tongs gripping one rectangular orange-hot metal billet at their lower tip. Preserve both tools, grips, rigid lengths and rectangular heads, the halo, furnace grille, original proportions and materials throughout. Fixed orthographic three-quarter front game camera facing slightly RIGHT, whole body and tools inside the canvas, constant scale and ground baseline, no zoom, no turn to the back. Solid uniform saturated BLUE chroma-key background stays unchanged in every frame, edge-to-edge identical blue pixels, no scene cuts, no black bars, no fade or wipe. One distinct impact recoil and recovery. The chest rocks back briefly and both knees flex, the hammer arm opens slightly at elbow while retaining the same grip, the left tongs-hand follows the recoil while retaining the billet. Absorb impact through the planted boots, settle shoulders and straighten back into the identical original ready stance. A quick initial stagger then damped recovery, no fall or attack or effects. Keep tools intact and leg identities stable.",
+  "protected_foreground_chroma": 20
+}
