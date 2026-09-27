@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b3587f23ecd8340f6578f986449d2238b5c1cacf57a37e5a92b1d32ced8b9e1b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "46a226b3e5d5513f7433f46a6e7f7e39cfbc67689f1fe0ff23c837b7f977134d",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          748
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b3587f23ecd8340f6578f986449d2238b5c1cacf57a37e5a92b1d32ced8b9e1b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ca7b0ac91bab95ff0146197aab23cbbf7f1d3ce30ba80c3f29b8cd28c0def294",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

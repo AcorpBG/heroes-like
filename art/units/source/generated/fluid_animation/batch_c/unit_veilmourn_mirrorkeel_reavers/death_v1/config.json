@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "clip": "death",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 970007,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mirror-Keel Reaver facing RIGHT in the same elevated three-quarter orthographic fantasy strategy game view. A lean armored spectral humanoid with exactly TWO arms, TWO hands, TWO legs and TWO armored clawed feet. Layered dark silver-blue plate armor, ivory split beak-like mask on a tall dark spiked helmet, two violet lantern ornaments at the helmet sides, and a long ragged teal sailcloth cape flowing behind. The cape is CLOTH, not wings or extra limbs. RIGHT hand on screen-left holds ONE long rigid gently curved silver saber by its short hilt; preserve its full continuous blade and pointed tip. LEFT hand on screen-right holds ONE separate short silver crescent boarding hook with a dark grip. These two distinct weapons NEVER swap hands, multiply, fuse or change shape. Preserve both real grips, mask, armor joints, lanterns, clawed feet, and tattered cape. Locked camera, fixed anatomical scale, full figure and both weapons inside frame. Stable ground baseline. Flat uniform saturated GREEN background RGB0,255,0, constant neutral lighting. No scenery, shadows painted on the plate, camera movement, flashes, magic, particles, beams, or action swoosh lines. One continuous loss of support and grounded collapse. The knees buckle, one knee contacts the ground, torso tips forward and sideways, forearm then shoulder and hip lower onto the ground. Right hand lowers the FULL saber beside the body; left hand lowers the intact crescent hook. The long blade remains rigid and full length throughout; no snapping, disappearing or stretching. The cape and helmet ornaments fall with gravity and settle. Finish motionless on the ground in the original corpse pose, every weapon and body part supported. No floating corpse, dissolution, fading, standing recovery or magical effect."
+}

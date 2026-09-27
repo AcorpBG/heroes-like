@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7bd0cc9022f4066d6305d26332687f42b0b994073b5cf995957308f4ebee5cd7",
+  "latent_sha256": "e5b0ff0f4add608dbf13d867db107dc2cf5de3b5a437adf087b595f9129fb623",
+  "decode_workflow_sha256": "686ea3d0501d93958d4f2a48b488c5af8ffad3822f388f4b3953d9f2a4cd0d07",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reavers_h3\\defend_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18476178432,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

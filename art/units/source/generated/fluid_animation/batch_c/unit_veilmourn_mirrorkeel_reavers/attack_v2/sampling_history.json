@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    217,
+    "4a20c3f4-4489-4836-9621-f98cd516a687",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Mirror-Keel Reaver facing RIGHT in the same elevated three-quarter orthographic fantasy strategy game view. A lean armored spectral humanoid with exactly TWO arms, TWO hands, TWO legs and TWO armored clawed feet. Layered dark silver-blue plate armor, ivory split beak-like mask on a tall dark spiked helmet, two violet lantern ornaments at the helmet sides, and a long ragged teal sailcloth cape flowing behind. The cape is CLOTH, not wings or extra limbs. RIGHT hand on screen-left holds ONE long rigid gently curved silver saber by its short hilt; preserve its full continuous blade and pointed tip. LEFT hand on screen-right holds ONE separate short silver crescent boarding hook with a dark grip. These two distinct weapons NEVER swap hands, multiply, fuse or change shape. Preserve both real grips, mask, armor joints, lanterns, clawed feet, and tattered cape. Locked camera, fixed anatomical scale, full figure and both weapons inside frame. Stable ground baseline. Flat uniform saturated GREEN background RGB0,255,0, constant neutral lighting. No scenery, shadows painted on the plate, camera movement, flashes, magic, particles, beams, or action swoosh lines. A dry rehearsal of ONE controlled fencing cut, filmed with a short shutter so the actual thin sword blade is always sharply visible. This is a practice movement with NO opponent and NO contact effect. Starting at ready, bend the right elbow and lift the actual saber overhead into the reference windup. Rotate the shoulder and extend the right elbow to move the SAME rigid blade in a measured arc into the forward horizontal reference pose. The sword stays its original thickness and curve at every instant, with crisp bare edges. Then withdraw the right arm and lower the actual saber back to ready. The left hand holds its short crescent hook separately near the body throughout. Knees load and straighten without a jump. Only jointed character movement, no drawn trails of any kind, no additional white shapes or sweeping crescents, no shockwave, no smoke, no stars, no particles, no slash effects, no motion blur.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 970013
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reavers_attack_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reavers_attack_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reavers_attack_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 66,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "reavers_h3/attack_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "reavers_h3",
+      "create_time": 1790526462271
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "reavers_h3\\attack_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "4a20c3f4-4489-4836-9621-f98cd516a687",
+          "timestamp": 1790526462776
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "4a20c3f4-4489-4836-9621-f98cd516a687",
+          "timestamp": 1790526462795
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "4a20c3f4-4489-4836-9621-f98cd516a687",
+          "timestamp": 1790526623029
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

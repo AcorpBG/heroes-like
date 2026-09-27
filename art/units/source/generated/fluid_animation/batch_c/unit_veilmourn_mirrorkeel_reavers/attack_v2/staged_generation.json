@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4a52769d8af60e0e80c45051ed1e0d87a42a06c4620da730dc610e8e2ddb13f6",
+  "latent_sha256": "441f6ff57f57de9515d02b5d13cca93c76c457afe8138c2d22d9acbb2300ff1a",
+  "decode_workflow_sha256": "6471ee6683f5ba44228317131a4981ef75f8eaea3b4bf1fc4c2523218ffdce66",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reavers_h3\\attack_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18476178432,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

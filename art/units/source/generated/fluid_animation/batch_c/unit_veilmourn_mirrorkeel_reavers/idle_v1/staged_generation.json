@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4487a4f121f66c2d61e57dd3b3c5962a7397fd9d559c90dfdc421d4c06961d57",
+  "latent_sha256": "592ba9728903b4a10817b18cd9469fca1c29ae9d591394c50b2b097a0d970427",
+  "decode_workflow_sha256": "a77c4240d917c6a61eef8c77edce646792180afd5fa94d0c39705e71ab3c9f42",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reavers_h3\\idle_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17435062272,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

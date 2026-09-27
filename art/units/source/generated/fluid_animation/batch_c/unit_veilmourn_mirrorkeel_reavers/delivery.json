@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "idle_v1",
+    "move_v1",
+    "attack_v3",
+    "defend_v1",
+    "cast_v1",
+    "hit_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all chronological source phases, enlarged anatomy/grips/alpha, fixed-anchor joins and every selected native Godot phase at 128px reference height. Visible arm/equipment idle, reciprocal gait, saber windup/contact/return, held guard, physical hook salute, recoverable hit and continuous grounded death. Attack v1/v2 rejected for white trails; selected v3 excludes broken-blade frames35-36. Hit excludes blur18/100. New idle replaces repetitive original and feeds overworld. Candidate729 checks passed. No continuous playback, manual playtest, Linux or full-suite claim."
+  }
+}
