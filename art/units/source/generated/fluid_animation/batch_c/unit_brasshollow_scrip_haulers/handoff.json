@@ -1,0 +1,5262 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_scrip_haulers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_005",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_007",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_011",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_013",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_017",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_019",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_023",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_025",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_047",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_049",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_053",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_009",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_011",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_013",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_017",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_029",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_033",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_035",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_037",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_033",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_035",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_089",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_091",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_093",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_095",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_099",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_101",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "hit_h3_102",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "hit_h3_103",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_037",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_039",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_041",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_043",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_045",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_047",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_049",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_051",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_071",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_073",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_079",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_081",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_045",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51
+          ],
+          "frame_msec": 32,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 23,
+          "frame_durations_msec": [
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            84,
+            42,
+            42,
+            42,
+            42,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84,
+            84
+          ]
+        },
+        "defend": {
+          "indices": [
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 21
+        },
+        "hit": {
+          "indices": [
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 17
+        },
+        "death": {
+          "indices": [
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 31
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/original_lossless.mkv",
+          "sha256": "11c7ea3d84c5d7dc16fb81a708894128b2445d9a99b500faa619af5df4f01f22"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/original.json",
+          "sha256": "97b63efb12d31f9079f3b18420142bba17f3b910ea0f85b7b70d5aab401fc7de"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/workflow_api.json",
+          "sha256": "2d509c5fea35d06638de1e39c4458989b8079ae42b9d1d154122bc5cb3e99b46"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/prompt.txt",
+          "sha256": "ca8c0f70535daaee1d37ae699fa997bc6efec51ad8ec951e17464aad96b5f402"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/reference.json",
+          "sha256": "b435f9aea2f3d118298d01d79733809787666171cb71dc9c066a52fe7f654609"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte.json",
+          "sha256": "535b82ab4f48fef24a01760ed41151e2f7804f4a3929f90bf7e0eeba26802fa4"
+        },
+        "move_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/staged_generation.json",
+          "sha256": "62fecdf1aedbff3e6fdce2a8051daf87acf214ab3959cfe1dc4d53d540c67c7a"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/sampling_workflow_api.json",
+          "sha256": "8dca26436e84af15b2b0232b6096466638323222115454b13e52f5d4eda8f02a"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/sampling_submission.json",
+          "sha256": "3bcdfdcc4677ad9310d6fd36672e2ee96331486a43f2e945ed164a93b49bd799"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/sampling_history.json",
+          "sha256": "0a444938e0db675a1d627476e57a02efae94d4d39311a3746c05f50c42f85a74"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/original.latent",
+          "sha256": "68a7787de2f380505215b1f5a6e6d358ff59312b92254da74f05d45277e407b2"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/original_lossless.mkv",
+          "sha256": "f7b5e009597c00e418aa5777c562e36614403f29904c4647684b9eda97d4a6f8"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/original.json",
+          "sha256": "c6c80c64310961b38a1334d31a332b4c8753ac3f2736e71f98a8409ad9759eb8"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/workflow_api.json",
+          "sha256": "a35d34d9b437719fb4302c62c234037fc987652dbcaf1e0561b68a74c2eb212d"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/prompt.txt",
+          "sha256": "7085f4ef648d98a146a1725785e9738f1c49fa345d34023451efd0bae7428b22"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/reference.json",
+          "sha256": "7cf1384fd7254b050763dc8d86eda7878741cf988327fbcf64a6bb93df610b9d"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte.json",
+          "sha256": "6968980340f7260739184c1157eeaf9082824205fa5ec29652220c584509abf4"
+        },
+        "attack_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/staged_generation.json",
+          "sha256": "01b0a8a80afa343ce5f5f26486d0300c0a1db64be8ef51e325c5bb07283350f5"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/sampling_workflow_api.json",
+          "sha256": "ff48bc96582e9734f6ed2cf7740d26b7993e2aa2fdc0d790d7c2195df735b2da"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/sampling_submission.json",
+          "sha256": "185cdf1539cd5d228589b4c32e567d5dcab793cdcd0728886950cbf8159a71ff"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/sampling_history.json",
+          "sha256": "a530e607e0219acea5bbf2203aad4b8cb682f85142e39bdfb80220481aa44d3e"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/original.latent",
+          "sha256": "8a1c16222ad3a5e6a8bf1145bf5a710afaff84bd0c262446f7b100958f94130d"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/original_lossless.mkv",
+          "sha256": "7d0c0883c449897a78af90f51d186e0fc0bec1fdf3e977b46be95b440864db98"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/original.json",
+          "sha256": "9655312c2fc3663c71f50ff137d26526c6a55be55955b7fc136830081c828334"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/workflow_api.json",
+          "sha256": "1312afb5af1efed6c5dfef4b9282c1b7f735ea04258b79638a526603a09f64b5"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/prompt.txt",
+          "sha256": "8e754d9c551ca28b929e4c94933d367367edc4a31a2e02fcf6a5830a7311e62d"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/reference.json",
+          "sha256": "757262098b440190ebb56bfcd6975ed5ef01e4b1dbb9a0561314a1c512b263dc"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte.json",
+          "sha256": "8654c81e5566ec2d605ddc66a174de4268b35a6e01dd94bb415f25a7bd51dd8d"
+        },
+        "defend_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/staged_generation.json",
+          "sha256": "dd3d946cadc56504b477f39c84725a9eb0c63c28bc7214e1b011ddc01e4990c5"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/sampling_workflow_api.json",
+          "sha256": "2d1be5376de8a63b567f9008087f023cec845fe380495512a90cfeef33ce010d"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/sampling_submission.json",
+          "sha256": "5781abee50b94e64560a8fb5865d747586551bc2c77fc7207e7b9b5b5fed9470"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/sampling_history.json",
+          "sha256": "ce916a20cc20e178657631c729f9dcab6606cce05d509e2ab395909cc05274b1"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/original.latent",
+          "sha256": "f993536fa6a9807a2f94c89627ec595d5ff42edb87719fc79fe762a4a1d1391c"
+        },
+        "hit_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/original_lossless.mkv",
+          "sha256": "2d74ac5eb706fe6c11f15c5fed2d099a92b74751de720c60ed12dbefb66f55ed"
+        },
+        "hit_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/original.json",
+          "sha256": "4244a2fe3cf1990d0cc1cb1a2768653666f059a5c54042891836055d048f9062"
+        },
+        "hit_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/workflow_api.json",
+          "sha256": "8598d05e5d601dc6d147e99405a8e1d4dcd540f336474bb079f39be29b2997d3"
+        },
+        "hit_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/prompt.txt",
+          "sha256": "11a00a0bde7b909d3d6a1327dc114623e85c1ffb30651e463c5cced2e49c255b"
+        },
+        "hit_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/reference.json",
+          "sha256": "f22d7cd6920ca733eb5ab6b2e7e22666abcf77040557b43ccaeea51bd70be873"
+        },
+        "hit_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte.json",
+          "sha256": "cc32e3073d4904a6161f7765949135af6754296955b2178daefdc837162d73b6"
+        },
+        "hit_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "hit_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/staged_generation.json",
+          "sha256": "0193b9b65ddd1cee636b4a75213a455016fbfb2d66558ca756c68cb0d03304cb"
+        },
+        "hit_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/sampling_workflow_api.json",
+          "sha256": "461c684b2fa20286553f84c58dd5602c470ee24f5a417314a580f5988dea15e2"
+        },
+        "hit_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/sampling_submission.json",
+          "sha256": "2eba362706070ea5d68dc239fe40ffd38bb696f97dec0e19eecc07c8f011bbf8"
+        },
+        "hit_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/sampling_history.json",
+          "sha256": "cd9473f692b6c0bac9b392f3e5f80a8febe2aa57010d357b9e670b5604a9fe28"
+        },
+        "hit_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/original.latent",
+          "sha256": "4b6bd41dfecfb0a8ad82b3a2895b51e95f491f7d89e83348e52d4e32df9ffc82"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/original_lossless.mkv",
+          "sha256": "13926a801a8eb55200a51540c425880908197e6928cf7e4f9d52e6e5692a2c45"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/original.json",
+          "sha256": "83e68bc119e861be966c3195f3ef6e6821ab4718fde51531cc1a626c4a56d32a"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/workflow_api.json",
+          "sha256": "c2ba013244dca13dd4e5deb9bf8310183894129d97d679fd8919549a0336ec55"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/prompt.txt",
+          "sha256": "263c07feb2ae9839bc0274ec697ccc31836efbb036964de4ccde396df081754f"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/reference.json",
+          "sha256": "096fdce422ce53f41e710714f798c80b6a45755b3818df2dabe533913ab07fcb"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte.json",
+          "sha256": "04213e99cdd1c487f94964d556c35e353b630b4f9885040bd78fa7544b895155"
+        },
+        "cast_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/staged_generation.json",
+          "sha256": "db95623121f7250c7804cdfacc031dcba9abaca7d0357fff7189ec8be8621140"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/sampling_workflow_api.json",
+          "sha256": "1e493512e135fdc4a97a7a213660a640e7cc97ed560892957a82241aa927f394"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/sampling_submission.json",
+          "sha256": "3b4224ec0c982df82de8e2b22cba34120ed4f9a5f68417a78b36969481f75b89"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/sampling_history.json",
+          "sha256": "19dfef1b799baf6309dc7ac52359b6f32152fd062a725412239eaae132fbc943"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/original.latent",
+          "sha256": "3b15a233ffea0b5005c0460c4962cb9b4aff30302556c62960a752775626695b"
+        },
+        "cast_v1_decode_recovery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/decode_recovery.json",
+          "sha256": "38786dfd25d56e21b757316a3d5c0acdee91b42b8bae85ba7797b39839e66956"
+        },
+        "cast_v1_interrupted_decode_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/interrupted_decode_submission.json",
+          "sha256": "773166908022e060b82ffb4f1f81cbdea27a447129a56e2c65abd1620d8edaa2"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/original_lossless.mkv",
+          "sha256": "409686d531b5aea8e37e7fe58025f0d36f15be73eda8642df41b73fe452e88d9"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/original.json",
+          "sha256": "bbf793597b333f48586c92b0a3a62b0fac1a20ba22400901ece41d6ae8d186f3"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/workflow_api.json",
+          "sha256": "c682935d5faad399c8712cfb003309246ec4a670ed1550d919d1bdc3616c217b"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/prompt.txt",
+          "sha256": "d5c350522df7b5237f98f015435a1f67e35dbfe7cfc1d6ed42ce6f4926af9500"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/reference.json",
+          "sha256": "6feda889d67e4548df3774821293b6f3a4c7aa6f3cba45aefe7a2dc79618c3a2"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte.json",
+          "sha256": "c7a22d0596047df15588e685484ff6d24ee0c43c4c799a978e65eabf210436e9"
+        },
+        "death_v1_runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/runtime_profile.json",
+          "sha256": "4a3be0dc78f3d5fe49a58d02624897873cc7b16cf75c027301176f5e8c0f81fd"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/staged_generation.json",
+          "sha256": "c77d106a36c47c12949336f5bc4261c849c7e69381f6c73e5b30767457fce1d7"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/sampling_workflow_api.json",
+          "sha256": "6ab150993913c5ec367e52882bb19ffaf40a138f6ff6b1daef9c7aae315858ac"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/sampling_submission.json",
+          "sha256": "05f59f5c5a7b31df227f3b9f5bee4c66e3e10a50108e4639e2770c3b63fdc6ac"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/sampling_history.json",
+          "sha256": "746447828cb5748d46e059af63b3c4533c79bc21c4222b86148988efb2889512"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/original.latent",
+          "sha256": "f5d4eb3c4008fa7c6796c5ca62057e7ca0086765558f46182844d6fa3f52fbc6"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed all124 source frames per action chronologically, enlarged grips/limbs/alpha and gait seam, and every selected native battle phase. Reciprocal near/far boot gait closes into ready; billhook remains in near right hand, shield on far left forearm. Attack31 with disconnected blade excluded; valid30-to32 fast strike join reviewed at native scale. Dedicated brace, recoil recovery, physical equipment-check support and grounded forward collapse retain identity. Preserve original eight-frame240ms hand/equipment idle and overworld pixels. Candidate716 checks passed. Continuous playback, manual game playtest and Linux execution were not performed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_002.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_003.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_005.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_006.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_007.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_009.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_011.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_013.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_047.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_049.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/move_v1/matte/rgba_053.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_009.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_011.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_013.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_015.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_017.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_086.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/attack_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_000.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_021.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_023.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/defend_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_089.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_090.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_091.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_092.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_093.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_095.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_096.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_097.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_098.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_099.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_101.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_102.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_103.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/hit_v1/matte/rgba_104.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_039.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_041.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_047.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_049.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_071.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_072.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_073.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_074.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_075.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_077.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_078.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_079.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_080.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_081.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_083.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/cast_v1/matte/rgba_084.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_027.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_029.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_033.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_035.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_045.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_047.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_049.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_051.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_053.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_055.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_057.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_059.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_060.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/death_v1/matte/rgba_061.png": 0.8
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

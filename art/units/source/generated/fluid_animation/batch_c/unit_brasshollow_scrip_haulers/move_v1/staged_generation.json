@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8dca26436e84af15b2b0232b6096466638323222115454b13e52f5d4eda8f02a",
+  "latent_sha256": "68a7787de2f380505215b1f5a6e6d358ff59312b92254da74f05d45277e407b2",
+  "decode_workflow_sha256": "2d509c5fea35d06638de1e39c4458989b8079ae42b9d1d154122bc5cb3e99b46",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scriphauler_h3\\move_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18983763968,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

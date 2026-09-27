@@ -57,3 +57,8 @@ art/animation/source/fluid/unit_thornwake_stagknot_runners/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_graft_matriarchs/**/*.txt -text
 art/animation/source/fluid/unit_thornwake_graft_matriarchs/*.json -text
+
+# Preserve hash-bound Scrip Haulers H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/**/*.txt -text
+art/animation/source/fluid/unit_brasshollow_scrip_haulers/*.json -text

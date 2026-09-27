@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "clip": "move",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "rects": [
+        [
+          1536,
+          0,
+          2048,
+          256
+        ]
+      ],
+      "anchor": [
+        1792,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      78,
+      2
+    ]
+  ],
+  "seed": 928001,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera on one original Brasshollow infantryman, three-quarter facing right, absolutely uniform ROYAL BLUE background and fixed body scale. Preserve exactly his weathered brass helmet and shoulder plates, dark brown leather coat, brass knee plates and boots, belt scrip tags and coins, rolled backpack, human face and two arms and two legs. His near camera-side RIGHT hand holds the original short curved steel billhook with brown-and-brass handle, his far LEFT forearm carries the same rigid rectangular brass-rimmed dark shield with one round central boss. Never exchange hands, grow a second weapon, change the curved hook into an axe, or alter the rectangular shield. Walk in place with a clear alternating infantry gait. The near leg lifts and passes forward while the far boot supports; then the near boot plants and the far leg lifts and passes. Bend knees naturally with heel-to-toe contacts and a small weight shift. Remain centered without sliding or travelling. The near hand carries the same low billhook, far forearm carries shield steadily. Two reciprocal steps with matching ready endpoint. No camera movement, floor painting, emitted effects, floating objects, motion blur or duplicated anatomy. Keep hands, equipment and face coherent, feet grounded and original silhouette scale.",
+  "protected_foreground_chroma": 29
+}

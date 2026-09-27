@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6ab150993913c5ec367e52882bb19ffaf40a138f6ff6b1daef9c7aae315858ac",
+  "latent_sha256": "f5d4eb3c4008fa7c6796c5ca62057e7ca0086765558f46182844d6fa3f52fbc6",
+  "decode_workflow_sha256": "c682935d5faad399c8712cfb003309246ec4a670ed1550d919d1bdc3616c217b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scriphauler_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17681089536,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

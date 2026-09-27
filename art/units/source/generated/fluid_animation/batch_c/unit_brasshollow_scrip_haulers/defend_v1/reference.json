@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_scrip_haulers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "598a1a4370a74a3cfd9253b12e7f045370c60021a6659f3198a3d9808d324b69",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_scrip_haulers.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "12b4fcaf0fd6e6931a49df5187f4c9fd8a59c03cbeab8d413430a89a50a3bed8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c79c11f507135f12627df42667538497edf6e5fd2f436939bf6073c79910a0ad",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
