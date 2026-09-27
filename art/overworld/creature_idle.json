@@ -1588,29 +1588,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        107.0,
+        107,
         242
       ],
       "painted_extent": 237,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_crucible_crawlers.png",
       "source_indices": [
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        149,
-        -6,
-        370,
-        247
+        33,
+        30,
+        254,
+        283
       ],
-      "source_sha256": "c2afc3c86d65647afed90f8be8a6fbf07dd06262610c53753e4aa4565392ed00",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_crucible_crawlers/provenance.json",
+      "source_sha256": "2bea90725af375d54cd224cac2a17099d87da5098627586a673fb6b2a9085e5b",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_crucible_crawlers/provenance.json",
       "sha256": "734b9f309e0e30d1c4ccb619a847223ac0f599d9bb34ed3d30d480064faab6a8"
     },
     "unit_brasshollow_foundry_saint": {

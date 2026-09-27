@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a39be9cc2cb88df546b2b98db9c81059e6f55b162f43cc90bee4ecbd7b7fe92c",
+  "latent_sha256": "e5f54f3e8c4faa56bd6d8559241b4c5d4b5571110980e05ab32047c15ed61358",
+  "decode_workflow_sha256": "25a6e829f4fbee182b6eb4788d3673733db0f61f2a1786cec88445353fb7052e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "crucible_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17443450880,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

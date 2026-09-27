@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "clip": "cast",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 936105,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original brass-and-dark-steel Crucible Crawler siege automaton, fixed orthographic three-quarter game camera facing RIGHT. A broad round glowing orange open furnace bowl on articulated claw-foot mechanical spider legs, brass piston joints, black iron plates, rivets, pipes and the original rear furnace box. Preserve precisely the reference leg arrangement and articulated joints, with near legs separated clearly from far legs. Exactly THREE existing articulated articulated brass pipe assemblies over the body, staggered vertically and pointing RIGHT: large upper nozzle, middle nozzle and lower nozzle. Their lengths, cylinders and attachments remain rigid and consistent. No human pilot, no head, no arms added. Warm molten-orange internal furnace glow, brass and dark steel. Full mechanism sharp and wholly inside frame, constant original size, ground baseline and camera, no zoom. Uniform completely flat pure green backdrop. One smooth deliberate maintenance and pressure-regulation gesture. The upper brass pipe rises slowly at its hinged elbow, its tip lifting a little higher than the starting pose. At the same time the central short piston above the molten bowl extends slightly. Pause briefly at full extension. The upper pipe then lowers smoothly and the central piston retracts to their original positions. Middle and lower pipe assemblies angle slightly outward and return while remaining rigid and attached. Every joint moves continuously through visible intermediate angles. The walking legs stay in their initial stance on the ground for the whole gesture, body size stays exactly constant. Original warm orange glow stays confined to the bowl and small glass bands. All pipe openings are dark empty metal; surrounding green space remains empty and uniformly flat. End exactly in original ready pose.",
+  "protected_foreground_chroma": 16
+}

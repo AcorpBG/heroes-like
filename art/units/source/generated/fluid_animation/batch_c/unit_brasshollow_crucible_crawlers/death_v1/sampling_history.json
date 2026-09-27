@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    85,
+    "ca4f13f9-dc0b-4e71-a8e3-067c13c51083",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original brass-and-dark-steel Crucible Crawler siege automaton, fixed orthographic three-quarter game camera facing RIGHT. A broad round glowing orange open furnace bowl on articulated claw-foot mechanical spider legs, brass piston joints, black iron plates, rivets, pipes and the original rear furnace box. Preserve precisely the reference leg arrangement and articulated joints, with near legs separated clearly from far legs. Exactly THREE existing articulated pouring-cannon nozzles over the body, staggered vertically and pointing RIGHT: large upper nozzle, middle nozzle and lower nozzle. Their lengths, cylinders and attachments remain rigid and consistent. No human pilot, no head, no arms added. Warm molten-orange internal furnace glow, brass and dark steel. Full mechanism sharp and wholly inside frame, constant original size, ground baseline and camera, no zoom. Uniform completely flat pure green backdrop. One continuous mechanical shutdown collapse. The legs buckle under the furnace bowl, knees folding and claws sliding a short distance outward as weight settles. The three nozzle assemblies fold down onto the chassis. The furnace glow fades and the body settles into the supplied grounded collapsed wreck. Keep every piece physically connected throughout; no explosion, no scattered flying parts, no molten spill, no new rocks or smoke. End completely still on the ground, matching the terminal original reference. Do not stand again.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 936007
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "crucible_death_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "crucible_death_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "crucible_h3/death_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "crucible_h3",
+      "create_time": 1790502876785
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "crucible_h3\\death_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "ca4f13f9-dc0b-4e71-a8e3-067c13c51083",
+          "timestamp": 1790502876835
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "ca4f13f9-dc0b-4e71-a8e3-067c13c51083",
+          "timestamp": 1790502876855
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "ca4f13f9-dc0b-4e71-a8e3-067c13c51083",
+          "timestamp": 1790503028750
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

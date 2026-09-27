@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ce7541cae31aae2387e50eff0359fe6e8973bacd821ad1226cacc8c3148bf9e8",
+  "latent_sha256": "8078954d9b97ffb7c695db4f7fbb2a9192d5b39832c161e1282cdbacc1d0f244",
+  "decode_workflow_sha256": "d40fcd1bbc4e5b94cb85cf0413c286b206f5b9484faa29adf00416913549a957",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "crucible_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19178644480,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

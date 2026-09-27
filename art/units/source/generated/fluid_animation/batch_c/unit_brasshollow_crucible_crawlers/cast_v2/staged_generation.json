@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "dc09cd7ca83cf75e9974b1653ef2a30c08aded473629c27a9dd9de268c36afa2",
+  "latent_sha256": "7fb901417f03afe3d9e8f5f685d09a4d02dd4aa5b2025dcb635c9406cef4a33b",
+  "decode_workflow_sha256": "167cfd38b83d2ee267068a70fe6bef80733076039603af033206eb9030c3498d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "crucible_h3\\cast_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18715914240,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
