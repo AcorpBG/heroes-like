@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "72d466a62c243cf7f803842cf79704f9a7b8b6f0e80dd7bc46afcd6b52d5fe43",
+  "latent_sha256": "f6e70ff3d3960341094169dc16dc1c17ca079a1704eaee2de3b236e945fb4461",
+  "decode_workflow_sha256": "6e9cbd6fd4dc292ada57c25189149d1ef954fb254c2c6d5b1fd164148e6fcb5f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "dawnseed_h3\\attack_recover_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

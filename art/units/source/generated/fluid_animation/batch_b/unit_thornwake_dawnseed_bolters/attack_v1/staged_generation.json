@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5f4dca0f681f5c3abb481b964b2b89657af9ce09e06e712201b5b8ac28e63fd2",
+  "latent_sha256": "94549572c20b9f9e796bcca0688a67dea722b311bd4a461e70320329c1c1aea9",
+  "decode_workflow_sha256": "2cc357b8ea8d2126aeba7d32be1dcfc86a887cea6e6d8d07ff51a6cd4dc04925",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "dawnseed_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17432965120,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

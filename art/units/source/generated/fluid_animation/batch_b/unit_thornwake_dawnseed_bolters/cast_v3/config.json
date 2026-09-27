@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "clip": "cast",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 110,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "seed": 983204,
+  "prompt": "A single smooth physical rally gesture: the small wooden woodland creature slowly raises its RIGHT fist beside its shoulder, gives one affirmative nod to its companions, briefly holds the raised fist, then lowers that hand back onto its weapon and returns to the supplied ready stance. LEFT hand steadily carries the SAME small rigid horizontal crossbow at waist height throughout. Keep the crossbow angled down, unchanged stock length and branch bow geometry, while only the right arm gestures. Exactly two arms and two root legs, green leaf hood and cloak, white flower, orange hip pods, branching antlers and dark face. Both root feet stay planted. Animate the complete smooth elbow and shoulder motion between references, no sudden pose cuts. Fixed elevated three-quarter camera facing right, complete body and equipment, constant anatomical scale, flat unchanging saturated GREEN background RGB0,255,0.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

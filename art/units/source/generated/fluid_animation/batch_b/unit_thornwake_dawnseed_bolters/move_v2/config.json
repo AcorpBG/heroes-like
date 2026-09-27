@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "clip": "move",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 110,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "seed": 983101,
+  "prompt": "One original Dawnseed Bolter, facing RIGHT, fixed elevated three-quarter orthographic fantasy strategy camera. Exactly one small wooden humanoid with two arms and hands and two jointed root legs. Green pointed leaf hood, dark face with two tiny gold eyes, white flower and orange center beside the hood, branching wooden antlers, overlapping vivid green leaf cloak, orange seed pods at the near hip, brown articulated bark limbs and root feet. One rigid living-wood crossbow with curved branch bow arms, visible string, gold fittings and an orange/red seed-shaped front tip; preserve its original geometry and size. Right near hand on screen left normally holds the rear grip; left far hand on screen right supports its forward underside. Preserve exactly two hands, one crossbow, one hood and both root feet. Fixed camera and body scale, whole creature and every equipment tip always in frame. Uniform flat saturated GREEN RGB0,255,0 plate throughout, no ground scenery or cast shadow, steady illumination. Walk in place to the right for two complete reciprocal walking cycles. Alternate root feet through heel contact, weight bearing, knee lift, passing and forward extension. Hold the crossbow securely in both hands, angled down to the right, while elbows, knees and ankles articulate and leaves follow the body. Finish in the starting support phase; stay centered, no sliding or turning.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

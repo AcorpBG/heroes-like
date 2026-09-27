@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_thornwake_dawnseed_bolters",
+  "clip": "death",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 110,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_dawnseed_bolters.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 983106,
+  "prompt": "One unbroken continuous slow-motion collapse over the whole shot. The small leaf-cloaked wooden archer gradually bends both knees and lowers onto one knee, puts the crossbow on the ground, then tips its torso sideways, catches itself briefly with its forearm, lowers its shoulder and hood to the ground, and finally lies still on its side as shown in the final reference. Animate every intermediate torso angle and limb position; smooth continuous falling, no still-image cuts or sudden change into the corpse. Same two arms and two root legs, one living-wood crossbow, green pointed hood and leaf cloak, white flower, orange hip seeds, branching antlers and dark face. Keep physical contact with the ground. Camera fixed in the original elevated three-quarter view, facing right, unchanged anatomical scale. Entire creature and crossbow always visible against one unchanging flat saturated GREEN background RGB0,255,0. No scenery, no camera motion.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
