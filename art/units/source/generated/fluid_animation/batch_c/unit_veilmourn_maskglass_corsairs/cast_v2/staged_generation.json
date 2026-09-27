@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "74c23d8a7f3bcbf734d9b60791434444bd2dd7e21c2ee2de1d166fa565552cc3",
+  "latent_sha256": "6563f703e89283e0f9c7ca4e791126bab2c94806f477210ed799f00495c57aa3",
+  "decode_workflow_sha256": "de6367a10eac911ebbf4e5551671d6997ee31200ee67cf0122854bafeef79794",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "maskglass_h3\\cast_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17439256576,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

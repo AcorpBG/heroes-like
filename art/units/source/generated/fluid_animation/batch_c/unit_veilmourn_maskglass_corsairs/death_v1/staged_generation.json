@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a830b096ba753b825487df812fcb1d6585ad8cd1ec1fb10c57416ec88de6ff72",
+  "latent_sha256": "cf5b85eec17436d9e54b843c9130dd27c776aadaa5de0a4a7385521fe43e4755",
+  "decode_workflow_sha256": "b324e587205042693317367028549de08ea2800fb07ac14c8140c764db0047df",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "maskglass_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17439256576,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

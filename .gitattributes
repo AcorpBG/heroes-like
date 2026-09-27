@@ -97,3 +97,8 @@ art/animation/source/fluid/unit_veilmourn_bellwake_oars/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_mourning_lanterns/*.json -text
+
+# Preserve hash-bound Maskglass Corsairs H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_maskglass_corsairs/*.json -text

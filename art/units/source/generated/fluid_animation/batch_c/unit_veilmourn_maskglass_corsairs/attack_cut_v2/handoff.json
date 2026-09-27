@@ -1,0 +1,535 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_maskglass_corsairs",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_004",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "attack_h3_006",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/original_lossless.mkv",
+          "sha256": "2e0bb246a1a213610ed5af7cf11a939fabeb2b3ed3c8914ffedecdd5865363b8"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/original.json",
+          "sha256": "eee7724fc4f80882cfe12899e3b19f73b0151c7143697a4d35d9b2c75018c7cd"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/workflow_api.json",
+          "sha256": "d13ef435db493e4a4c9a8b06f2480047948a4306c0fcad0fc0d4e1b2efb55ad1"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/prompt.txt",
+          "sha256": "ccce33fb7555dda85465474999d84022a804c7d3d4543fcbd0762566d3c6fd6c"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/reference.json",
+          "sha256": "f0a544bb156b2f123a5124aaa0516ad748417288b12148371956d1d269eb3fb9"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/matte.json",
+          "sha256": "c945eb141343cc950cfa5805d9c77e33bc7f8c26918e26d776bd659f3ebd352f"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/staged_generation.json",
+          "sha256": "77258c3f1135a2d2235da8f8a1e12ba06d83c2f6cff49cacfe118cf33c780a25"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/sampling_workflow_api.json",
+          "sha256": "7f0fe1d67a155ac676003ea5ebfad12fbd2566e446f659296fbe25d5373cc0db"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/sampling_submission.json",
+          "sha256": "34c98a3b4a18bcca4a037dcb124a273c07fcb59a1535d5283263c3ddf995494e"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/sampling_history.json",
+          "sha256": "e83cd126d64ffdf7a5510db5a68ce683259c47f479cc108c0c20abb4f0baa7c2"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_maskglass_corsairs/attack_cut_v2/original.latent",
+          "sha256": "ffa479a28a136de6a9a15261de62b321b642d1cd1608ea0d268e1e7b51e572e3"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All 124 phases reviewed. Raised saber sweeps outward then across the body into rightward contact. Unlike v1 the blade remains attached, with perspective foreshortening during the forward-facing part and no crescent or detached slash. Select active4-44 at deliberate35ms gameplay tempo and join to v1 anticipation/recovery; no replay or synthetic frames. Pending native-scale and join review."
+      }
+    }
+  ]
+}

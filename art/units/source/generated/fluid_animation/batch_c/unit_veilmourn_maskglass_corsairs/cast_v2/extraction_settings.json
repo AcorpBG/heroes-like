@@ -1,0 +1,15 @@
+{
+  "protected_foreground_chroma": 20,
+  "reviewed_key_ranges": [
+    {
+      "start": 50,
+      "end": 68,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    }
+  ],
+  "reason": "Original raw frames show a uniform saturated green plate during recovery50-68; requested blue elsewhere. Muted cloth foreground protected at20; retain strict chroma>=80 and corner spread<=10. Exclude49 and post68 backdrop transitions."
+}

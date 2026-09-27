@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_maskglass_corsairs",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_maskglass_corsairs.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "326d24e65e2c506dc8547f3cbe9d3083e66d920e76a1da3627cd321a2647884c",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_maskglass_corsairs.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4ca97b1993171f44db9b3314d3a0735dd27844ec0d147bdc73d88e428a1cece6",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,179 @@
+{
+  "takes": [
+    "move_v1",
+    "defend_v1",
+    "hit_v1",
+    "death_v1",
+    "cast_v2"
+  ],
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 35
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 4
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 6
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 8
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 10
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 12
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 14
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 20
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 38
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 42
+        },
+        {
+          "take": "attack_cut_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 102
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 104
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 106
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 108
+        }
+      ],
+      "timing": {
+        "frame_msec": 35,
+        "contact_frame": 29
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all chronological source phases, enlarged identity/equipment and light/dark alpha edges, fixed-anchor loop and segmented attack joins, and every selected phase in the native128px Godot overview. Reciprocal32-frame gait; dedicated21-frame shield brace,28-frame hit,34-frame grounded collapse,28-frame physical salute and39-frame corrected saber attack. Original eight-frame articulated idle retained. Cast uses explicitly reviewed uniform-blue anticipation and uniform-green recovery with strict foreground-preserving extraction. Candidate254 checks passed. No continuous playback, manual playtest, Linux or full-suite claim."
+  }
+}

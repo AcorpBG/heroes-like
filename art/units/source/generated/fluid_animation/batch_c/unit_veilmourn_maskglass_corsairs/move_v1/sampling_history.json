@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    149,
+    "927d3630-2018-414d-8400-6c572e04d84b",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Maskglass Corsair, a human female swordswoman facing RIGHT in locked three-quarter orthographic game view. Silver mirror half-mask over the screen-left side of the face, visible other eye and mouth, long brown tied-back hair, ragged muted grey-green scarf and skirt strips, ivory sleeves, charcoal trousers, brown leather boots and belt with a small brass bottle. Exactly TWO arms, TWO hands and TWO legs. RIGHT hand at screen-left grips the gold basket hilt of ONE complete curved SILVER SABER, blade extending downward-left in ready pose. LEFT arm at screen-right holds ONE round dark buckler with a brass rim, central boss and radial brass spokes. Keep the saber blade rigid, full length and continuously attached to its hilt; keep the buckler round and on the same arm. Preserve face, mask, clothing, both grips and body proportions. Locked camera, fixed body scale and ground baseline; full figure, blade tip and shield remain visible. Every background pixel stays flat saturated BLUE, constant neutral illumination. One slow complete in-place walking cycle to the RIGHT. Near and far legs alternate through heel contact, loading, passing and forward swing, boots point right. The planted foot travels back relative to the centered torso while the free foot swings forward. Keep sword lowered safely outside the legs and shield held beside the torso. Small natural opposing shoulder movement and trailing cloth. Return to the initial contact pose. No backward walk, sliding stance or camera rotation.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 949001
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "maskglass_move_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "maskglass_move_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "maskglass_h3/move_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "maskglass_h3",
+      "create_time": 1790514668699
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "maskglass_h3\\move_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "927d3630-2018-414d-8400-6c572e04d84b",
+          "timestamp": 1790514668700
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "927d3630-2018-414d-8400-6c572e04d84b",
+          "timestamp": 1790514668711
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "927d3630-2018-414d-8400-6c572e04d84b",
+          "timestamp": 1790514824711
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7f0fe1d67a155ac676003ea5ebfad12fbd2566e446f659296fbe25d5373cc0db",
+  "latent_sha256": "ffa479a28a136de6a9a15261de62b321b642d1cd1608ea0d268e1e7b51e572e3",
+  "decode_workflow_sha256": "d13ef435db493e4a4c9a8b06f2480047948a4306c0fcad0fc0d4e1b2efb55ad1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "maskglass_h3\\attack_cut_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18827411456,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
