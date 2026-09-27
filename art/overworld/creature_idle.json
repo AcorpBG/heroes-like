@@ -1728,29 +1728,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        85.0,
+        85,
         221
       ],
       "painted_extent": 216,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_maskglass_corsairs.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_maskglass_corsairs.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        171,
-        15,
-        336,
-        247
+        63,
+        47,
+        228,
+        279
       ],
-      "source_sha256": "e6c58a4d4f1b3c1887302b6f5ef96bc6b2e86a6915de7f2e41be82f9d793255b",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_maskglass_corsairs/provenance.json",
+      "source_sha256": "e25179d5dd51f695bee0afb01e8384fb7b27e57503baf13292d6eadbd14aa2e9",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_maskglass_corsairs/provenance.json",
       "sha256": "c87ce72d13decec76db84fb87c877f14b63985a561a1c05266d81e6c97022638"
     },
     "unit_veilmourn_undertow_harpooners": {
