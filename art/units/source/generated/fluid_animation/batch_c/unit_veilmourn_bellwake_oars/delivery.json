@@ -1,0 +1,19 @@
+{
+  "takes": [
+    "move_v1",
+    "defend_v1",
+    "cast_v1",
+    "hit_v2",
+    "death_v1"
+  ],
+  "attack_segments": [
+    "attack_thrust_v3",
+    "attack_v1"
+  ],
+  "attack_frame_msec": 35,
+  "attack_contact_frame": 24,
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Accepted after review of all chronological source frames, enlarged anatomy/alpha, fixed-anchor joins and all173 selected frames in the native128px Godot overview. Alternating gait; two-handed lunge joined at matching contact to clean recovery; held crouched guard; physical oar-and-bell support; recoil and regrip; grounded collapse. Preserve original eight-frame240ms articulated idle and exact map idle. Broken windup, unwanted spin, black plates and opening hit effect excluded as recorded in selections. No continuous playback or manual playtest claim."
+  }
+}

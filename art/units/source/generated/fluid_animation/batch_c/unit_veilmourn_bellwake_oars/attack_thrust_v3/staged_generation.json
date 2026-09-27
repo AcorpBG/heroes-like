@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e0c21e6008a8a6846781f9e2b785a5a7c47be53ca39753de69d1dbdeb0a303ac",
+  "latent_sha256": "7fd3225909c01b29a6253d4b361d15631158fac407fbe77ffe0ec3b8696ae76a",
+  "decode_workflow_sha256": "e2e2c652c6a19576bde8fc523e6b7beec51f378501ae1500d7801e562abd8953",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "bellwake_h3\\attack_thrust_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18636725248,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

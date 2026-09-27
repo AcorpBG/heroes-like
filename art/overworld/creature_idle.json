@@ -1658,29 +1658,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        69.0,
+        69,
         228
       ],
       "painted_extent": 222,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_bellwake_oars.png",
       "source_indices": [
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        187,
-        8,
-        359,
-        246
+        103,
+        20,
+        275,
+        258
       ],
-      "source_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_bellwake_oars/provenance.json",
+      "source_sha256": "ecb9cf78426853b46613a0d3a417f5d661ddbab80640d7ca959079954101138f",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_bellwake_oars/provenance.json",
       "sha256": "90778257b4fc6456120e13a084fbcb6f2503e0b88f549cf3f0c813efc21db3b7"
     },
     "unit_veilmourn_mourning_lanterns": {
