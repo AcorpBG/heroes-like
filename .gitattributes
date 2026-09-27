@@ -107,3 +107,8 @@ art/animation/source/fluid/unit_veilmourn_maskglass_corsairs/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_undertow_harpooners/*.json -text
+
+# Preserve hash-bound Obituary Scribes H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_obituary_scribes/*.json -text

@@ -1,0 +1,19 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      59
+    ],
+    [
+      84,
+      123
+    ]
+  ],
+  "excluded_ranges": [
+    [
+      60,
+      83
+    ]
+  ],
+  "reason": "Reviewed all 124 original RGB phases. Frames60-83 invent an expanding ring/projectile and cross the plate corners; exclude the entire effect interval. Inspect clean arm pose continuity before selecting any join. No weakened matte tolerances."
+}

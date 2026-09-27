@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "ranged_v2",
+    "defend_v1",
+    "cast_v2",
+    "hit_v2",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of every chronological original phase, enlarged anatomy/grips/alpha, fixed-anchor joins and every selected native128px Godot phase. Seven dedicated actions: spectral glide31, physical quill strike29/contact13, book-led ranged27/contact13, guard22, raised-quill cast43/contact22, clean hit/recovery30, continuous grounded death42. Original8-frame240ms articulated idle retained. Rejected v1 ranged feather swaps/projectile, v1 cast feather-end swap/orbs, and v1 hit shockwave; selected only the complete clean first action of ranged v2 and excluded cast v2 held-peak speck. Candidate763 focused checks passed. No continuous playback, manual playtest, Linux or full-suite claim."
+  }
+}

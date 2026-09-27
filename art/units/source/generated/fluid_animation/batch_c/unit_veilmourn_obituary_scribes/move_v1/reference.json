@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            256
+          ]
+        ],
+        "anchor": [
+          1280,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d730e9c803fead3adfdb1e6fe2b9c4a4ec591bae0c41f879c236ba925b2550a1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "70c5071df975a488776710990daf645d5782d0ac77310d1aa7830e2c9c4e6173",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes.png",
+        "rects": [
+          [
+            0,
+            256,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d730e9c803fead3adfdb1e6fe2b9c4a4ec591bae0c41f879c236ba925b2550a1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6549d5d939d83e9198ae9a4ee784661c902ce733d1ea6fb44a58e2650b1184ba",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
