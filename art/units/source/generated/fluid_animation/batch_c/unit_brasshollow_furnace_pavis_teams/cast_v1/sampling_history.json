@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    11,
+    "90447b6c-abd8-4797-8861-11246e44f127",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Fixed orthographic camera on one original Brasshollow armored human infantryman, three-quarter facing right, absolutely uniform saturated GREEN background and fixed anatomical scale. Preserve navy cloth and face covering, dark steel helmet with brass band, brass shoulder and knee armor, leather belt and boots. Two arms and two legs only. His near camera-side RIGHT hand grips the single long dark hook-pole with brass collars and one broad crescent notched steel head; his far LEFT forearm carries the tall rigid rectangular dark iron pavis, brass-rimmed, one horizontal orange furnace slit near its top and a short handle/pipe at the top edge. The shield is body-height, not a small buckler. Never exchange hands, shrink equipment, add hands or weapons, change the hook head into a spear, or detach the gripping hand. Perform a physical equipment-check support gesture, not magic: right hand lifts and slightly tilts the hook-pole, elbow bends, left forearm raises and re-seats the tall shield, shoulders brace and relax. Keep both boots planted. Return naturally to exact ready pose; do not swing an attack, cast a spell or add a third hand. No camera travel, floor painting, flames, smoke, particles, duplicated anatomy or motion blur. Keep original silhouette and coherent equipment; the engine supplies travel. All equipment stays within frame.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 929005
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "furnacepavis_cast_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "furnacepavis_cast_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 56,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "furnacepavis_h3/cast_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "furnacepavis_h3",
+      "create_time": 1790488866374
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "furnacepavis_h3\\cast_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "90447b6c-abd8-4797-8861-11246e44f127",
+          "timestamp": 1790488866426
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "90447b6c-abd8-4797-8861-11246e44f127",
+          "timestamp": 1790488866439
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "90447b6c-abd8-4797-8861-11246e44f127",
+          "timestamp": 1790489071367
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

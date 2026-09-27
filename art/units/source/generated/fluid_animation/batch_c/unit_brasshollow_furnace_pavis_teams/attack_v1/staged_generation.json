@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9e90720ec627d35b087cbd4b4c5913794cf9ed57b58eba95aaa332c6d3b6ccab",
+  "latent_sha256": "eaa3145f015303c156a2f5b7c09bbef79a050e0410c9ffd27eec1786a200ad6a",
+  "decode_workflow_sha256": "692298a4d488a66e22d6684139f6949688ca7df733eed0c40284f2832d1dbe6e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "furnacepavis_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17603997696,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

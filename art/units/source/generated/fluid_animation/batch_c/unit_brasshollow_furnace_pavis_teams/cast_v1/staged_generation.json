@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "fbcf1cd85d326a562ea69b88d158885cbc03081c38bbce3d56207f5e62d22be3",
+  "latent_sha256": "f03eea357199ef1bcfde3719dd6265e5d3b69ff0e1955123be0dcb3d953c4b56",
+  "decode_workflow_sha256": "b87fceba781484e9a6c53763ab76267ca8478cca9b6c3ae8a9b6447586b28ce8",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "furnacepavis_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18837897216,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

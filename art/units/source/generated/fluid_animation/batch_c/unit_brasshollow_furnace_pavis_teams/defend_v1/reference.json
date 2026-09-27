@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24f2180d6db165898bc1b37389853a4f7b4fc9957ec42cb92dbee23d7fdffde3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2b2a238d4f07d0087b6f801c49970e4573dc7d845691e07ced0c7d1b333c49ab",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24f2180d6db165898bc1b37389853a4f7b4fc9957ec42cb92dbee23d7fdffde3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "21067605e524edbc989b42406012c562c3491c33d468ecff2d3741cce54b195e",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

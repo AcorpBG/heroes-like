@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "clip": "cast",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      56,
+      1
+    ]
+  ],
+  "seed": 929005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera on one original Brasshollow armored human infantryman, three-quarter facing right, absolutely uniform saturated GREEN background and fixed anatomical scale. Preserve navy cloth and face covering, dark steel helmet with brass band, brass shoulder and knee armor, leather belt and boots. Two arms and two legs only. His near camera-side RIGHT hand grips the single long dark hook-pole with brass collars and one broad crescent notched steel head; his far LEFT forearm carries the tall rigid rectangular dark iron pavis, brass-rimmed, one horizontal orange furnace slit near its top and a short handle/pipe at the top edge. The shield is body-height, not a small buckler. Never exchange hands, shrink equipment, add hands or weapons, change the hook head into a spear, or detach the gripping hand. Perform a physical equipment-check support gesture, not magic: right hand lifts and slightly tilts the hook-pole, elbow bends, left forearm raises and re-seats the tall shield, shoulders brace and relax. Keep both boots planted. Return naturally to exact ready pose; do not swing an attack, cast a spell or add a third hand. No camera travel, floor painting, flames, smoke, particles, duplicated anatomy or motion blur. Keep original silhouette and coherent equipment; the engine supplies travel. All equipment stays within frame.",
+  "protected_foreground_chroma": 13
+}
