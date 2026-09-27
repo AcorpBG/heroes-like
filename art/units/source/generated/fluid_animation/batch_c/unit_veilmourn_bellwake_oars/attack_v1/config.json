@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "clip": "attack",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      62,
+      2
+    ]
+  ],
+  "seed": 938002,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Bellwake Oars human fighter, brown swept-back tied hair, pale face looking RIGHT, grey shoulder cape and layered grey tunic, white neck scarf and torn white cloth streamers, dark grey trousers, brown strapped boots, leather belts and small bronze waist bells. Exactly TWO arms, TWO hands and TWO legs. Both hands grip ONE long rigid dark pole-oar diagonally: screen-left hand holds the upper shaft near shoulder, screen-right hand holds the lower shaft near waist. One small brass hanging bell and white tassels at the upper-left end, one broad dark leaf-shaped paddle blade with a gold curved tip at the lower-right end. Keep the complete oar length, blade shape, bells, both hands and unchanged spaced grips throughout; no extra staff, duplicate blade or weapon swap. Locked orthographic three-quarter game camera, facing RIGHT throughout, constant original body scale, full body and long oar inside generous frame margins, stable ground baseline, no zoom or turn away. Solid uniform saturated BLUE chroma-key background remains edge-to-edge unchanged for every frame; no black bars, fade, wipe or scenery. One two-handed physical oar strike. Raise the same long oar above the head with both elbows bent in the supplied windup. Then bring it forward into the supplied rightward lunging thrust: the broad paddle tip leads to screen-right, both hands extend together without changing their spaced grips. Briefly hold contact, then withdraw arms and return the diagonal oar and both feet to the original ready stance. Smooth continuous shoulder/elbow articulation and supported knee lunge. No weapon spin, hand crossing, projectiles, trails, impact graphics or magic.",
+  "protected_foreground_chroma": 20
+}

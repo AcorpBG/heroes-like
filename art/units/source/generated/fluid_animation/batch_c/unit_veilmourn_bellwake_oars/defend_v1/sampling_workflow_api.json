@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Bellwake Oars human fighter, brown swept-back tied hair, pale face looking RIGHT, grey shoulder cape and layered grey tunic, white neck scarf and torn white cloth streamers, dark grey trousers, brown strapped boots, leather belts and small bronze waist bells. Exactly TWO arms, TWO hands and TWO legs. Both hands grip ONE long rigid dark pole-oar diagonally: screen-left hand holds the upper shaft near shoulder, screen-right hand holds the lower shaft near waist. One small brass hanging bell and white tassels at the upper-left end, one broad dark leaf-shaped paddle blade with a gold curved tip at the lower-right end. Keep the complete oar length, blade shape, bells, both hands and unchanged spaced grips throughout; no extra staff, duplicate blade or weapon swap. Locked orthographic three-quarter game camera, facing RIGHT throughout, constant original body scale, full body and long oar inside generous frame margins, stable ground baseline, no zoom or turn away. Solid uniform saturated BLUE chroma-key background remains edge-to-edge unchanged for every frame; no black bars, fade, wipe or scenery. One guarded brace transition. Widen stance and bend both knees while bringing the diagonal oar closer across the torso as a block, both hands keeping their separate original shaft grips. Lower weight into the supplied crouched guard and HOLD that final pose. Preserve straight shaft and full paddle blade, small upper bell and tassels. No attack, no hand release, no return to idle and no effects.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 938003
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "bellwake_defend_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "bellwake_defend_v1_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "bellwake_h3/defend_v1/sampled"
+    }
+  }
+}

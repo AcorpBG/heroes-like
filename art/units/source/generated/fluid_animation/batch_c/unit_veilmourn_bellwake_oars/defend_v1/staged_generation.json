@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5e002a87b2cf4569645ae1272396f707f11309683181427a6fe6518150032c16",
+  "latent_sha256": "5a4bc9d120297f4b506e69438c9c9c42e5753ee3aaaa35e77102dddec49f2b68",
+  "decode_workflow_sha256": "5eb85b3c83aa74c32275897fae233ea973c8b827d6728f1b254d28e287f269d3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "bellwake_h3\\defend_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18713817088,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

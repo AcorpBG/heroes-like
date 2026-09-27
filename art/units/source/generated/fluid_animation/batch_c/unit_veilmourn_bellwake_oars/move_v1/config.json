@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "clip": "move",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 938001,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Bellwake Oars human fighter, brown swept-back tied hair, pale face looking RIGHT, grey shoulder cape and layered grey tunic, white neck scarf and torn white cloth streamers, dark grey trousers, brown strapped boots, leather belts and small bronze waist bells. Exactly TWO arms, TWO hands and TWO legs. Both hands grip ONE long rigid dark pole-oar diagonally: screen-left hand holds the upper shaft near shoulder, screen-right hand holds the lower shaft near waist. One small brass hanging bell and white tassels at the upper-left end, one broad dark leaf-shaped paddle blade with a gold curved tip at the lower-right end. Keep the complete oar length, blade shape, bells, both hands and unchanged spaced grips throughout; no extra staff, duplicate blade or weapon swap. Locked orthographic three-quarter game camera, facing RIGHT throughout, constant original body scale, full body and long oar inside generous frame margins, stable ground baseline, no zoom or turn away. Solid uniform saturated BLUE chroma-key background remains edge-to-edge unchanged for every frame; no black bars, fade, wipe or scenery. One natural walking cycle IN PLACE. Lift and advance the screen-left boot as the opposite boot supports, place it down and transfer weight, then lift and advance the screen-right boot while the first supports. Both knees bend and ankles roll through distinct passing and contact phases. Return to the opening stance with the body centered. The two hands carry the diagonal oar steadily, elbows following the gait slightly, bell and white scarf moving naturally. No marching hop, foot sliding, running or global body wobble.",
+  "protected_foreground_chroma": 20
+}

@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    115,
+    "d6aec1e8-36d9-42d6-afc8-684667f47f2a",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Bellwake Oars human fighter, brown swept-back tied hair, pale face looking RIGHT, grey shoulder cape and layered grey tunic, white neck scarf and torn white cloth streamers, dark grey trousers, brown strapped boots, leather belts and small bronze waist bells. Exactly TWO arms, TWO hands and TWO legs. Both hands grip ONE long rigid dark pole-oar diagonally: screen-left hand holds the upper shaft near shoulder, screen-right hand holds the lower shaft near waist. One small brass hanging bell and white tassels at the upper-left end, one broad dark leaf-shaped paddle blade with a gold curved tip at the lower-right end. Keep the complete oar length, blade shape, bells, both hands and unchanged spaced grips throughout; no extra staff, duplicate blade or weapon swap. Locked orthographic three-quarter game camera, facing RIGHT throughout, constant original body scale, full body and long oar inside generous frame margins, stable ground baseline, no zoom or turn away. Solid uniform saturated BLUE chroma-key background remains edge-to-edge unchanged for every frame; no black bars, fade, wipe or scenery. One physical support signal, not spellcasting. Keep both boots planted. Bend both elbows to raise and present the diagonal oar across the upper chest, lifting the small bell end gently so it sways once; give a short solemn head nod. Then lower the oar back to the original diagonal ready stance. Both hands remain spaced on the same straight shaft throughout, blade never changes side or detaches. A clear deliberate arm gesture and recovery, no head-only idle, no aura, spark, projectile or new prop.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 938004
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "bellwake_cast_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "bellwake_h3/cast_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "bellwake_h3",
+      "create_time": 1790508238024
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "bellwake_h3\\cast_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d6aec1e8-36d9-42d6-afc8-684667f47f2a",
+          "timestamp": 1790508238606
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "d6aec1e8-36d9-42d6-afc8-684667f47f2a",
+          "timestamp": 1790508238619
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d6aec1e8-36d9-42d6-afc8-684667f47f2a",
+          "timestamp": 1790508390407
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

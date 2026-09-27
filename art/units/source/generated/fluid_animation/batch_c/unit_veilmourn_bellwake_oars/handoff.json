@@ -1,0 +1,4362 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_bellwake_oars",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_001",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.041666666666666664
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_005",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_007",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_011",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_013",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_017",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_019",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_023",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_025",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_033",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_035",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_089",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_091",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_093",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_095",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_099",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_021",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_023",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_027",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_029",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_033",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_035",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_039",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_041",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_thrust_v3_attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_v1_attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_v1_attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_v1_attack_h3_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "attack_v1_attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_v1_attack_h3_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "attack_v1_attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_v1_attack_h3_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "attack_v1_attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_v1_attack_h3_101",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "attack_v1_attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_v1_attack_h3_103",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "attack_v1_attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_v1_attack_h3_105",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "attack_v1_attack_h3_106",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 40,
+          "loop": true,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 14
+        },
+        "cast": {
+          "indices": [
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10
+        },
+        "hit": {
+          "indices": [
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 31
+        },
+        "attack": {
+          "indices": [
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172
+          ],
+          "frame_msec": 35,
+          "contact_frame": 24,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/original_lossless.mkv",
+          "sha256": "a72e74a441520562971d6c535f720cdc6d886612b6d2afafaf9f26d2ef5cf81a"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/original.json",
+          "sha256": "371e936aa8256f06bb4dd5722c6aa31341516bf9411a85b1df5553815130f6b0"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/workflow_api.json",
+          "sha256": "664e1cb72f7caae7f52feb3bad6358efb17cb203003d511b4435e73592a0eedd"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/prompt.txt",
+          "sha256": "5b79791069a79c5532a6a00e06f92a6840c73f93d5903489ef4385de40019045"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/reference.json",
+          "sha256": "8703a21c9e6e0ee563b980b2221d15f030d15f1e65055c72d9e7d13a4a34faf2"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte.json",
+          "sha256": "72d27d712add44c7be78a139709e4b8c1ccdbb25ec8160103847aa5ba1ccfbe6"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/staged_generation.json",
+          "sha256": "67a99374c7cef0a9c456d8e4914223c9584e3938faf1eb21666942c671ec0e80"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/sampling_workflow_api.json",
+          "sha256": "17be8c8b109c47c6b9f71319a17ece916f66898f106f146a7e459da28c7d0dba"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/sampling_submission.json",
+          "sha256": "7e26f83f654f38698ea62d1b9d9946c111ace9d20fcf1a650269d6be45de4e3c"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/sampling_history.json",
+          "sha256": "c6e42d8fd8b51552a915befbbfff503033c587e05960c61061fa4915dd120b6f"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/original.latent",
+          "sha256": "e061c9a63e232bd27e353b81f1bba5c8766d94091ae2d1ebde0be2899f9e83cf"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/original_lossless.mkv",
+          "sha256": "b6fb0f8713b5048b6f3ea11b860a9e156e62b0ba8bcff9461ca31eac2fd5a498"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/original.json",
+          "sha256": "3328c0b451b941c52957993bc0ba5f5bb95b547819327e27cbc4cf6b30400d9b"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/workflow_api.json",
+          "sha256": "5eb85b3c83aa74c32275897fae233ea973c8b827d6728f1b254d28e287f269d3"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/prompt.txt",
+          "sha256": "9a9b72c471942a54c582db0ca0e567bbea8e01f1715e1243361244f0ef9ff077"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/reference.json",
+          "sha256": "a2b5a078d9b95bbe98f444d21fe5619389a661d94fc74c3fe889e09418099480"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte.json",
+          "sha256": "b49263fa88b5189d85bee20a3b39f5dd3dd2599b085bd981282b961f03281b2d"
+        },
+        "defend_v1_extract_ranges.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/extract_ranges.json",
+          "sha256": "970f88cfdbace8f9e89d8f5018c67529ea1b8667a906cdc9514a5bdbd3680da0"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/staged_generation.json",
+          "sha256": "a2c7f04ba59f2fc744c14d699df04090f66b88b58c5292636181addba3aa548e"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/sampling_workflow_api.json",
+          "sha256": "5e002a87b2cf4569645ae1272396f707f11309683181427a6fe6518150032c16"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/sampling_submission.json",
+          "sha256": "21e8554df80152bc8d1d3755a8b1cde796d7fc6ed2982f4bfa1803f9de46b2cc"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/sampling_history.json",
+          "sha256": "bb9f4ef85bb188ec950fb353c4e86ed50b5b1779e83729e76e9a84a59205c6ee"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/original.latent",
+          "sha256": "5a4bc9d120297f4b506e69438c9c9c42e5753ee3aaaa35e77102dddec49f2b68"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/original_lossless.mkv",
+          "sha256": "310b81f68ee65b6df7010b1bf1608dfe7b6f317788998ce13b80365d89017d00"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/original.json",
+          "sha256": "fe5425af778226e014b7fbdb22638ba295f0fa238048b1034881ae9343d0da67"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/workflow_api.json",
+          "sha256": "cc63ac63507e5824833e453953153d4f5112d936986bfa6246dd4b332d495d59"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/prompt.txt",
+          "sha256": "ebcdb5f6f9441b43953daca3e2dfc5213081f63594d024b78b1d24fa0e787629"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/reference.json",
+          "sha256": "8703a21c9e6e0ee563b980b2221d15f030d15f1e65055c72d9e7d13a4a34faf2"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte.json",
+          "sha256": "a46cdbb4b15077ba8fbcde452e212ad4d562748319dbaba5e2d889e4638bef48"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/staged_generation.json",
+          "sha256": "a4634f98867c3b706399d141fbaf3890e8aa14e6e191d9c3b3ccaf7da011d4d4"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/sampling_workflow_api.json",
+          "sha256": "799e6343f7cd6a4c08d91bb4fa074cd7aa0116a0ab6f6a376b3fcb61dd8d7610"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/sampling_submission.json",
+          "sha256": "ebcbd7ef095a3877b9c55844a438367ef823f47689cf531519091991b96aa72f"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/sampling_history.json",
+          "sha256": "1a9ec2f31e3bf8efcbe71676701b3d10956eac8ed083bd9bab0684bbe020c407"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/original.latent",
+          "sha256": "c774e4107e2e7cf10eb5482e21fa5e283e96e9b78b27d3f01d222749b4a0fa1c"
+        },
+        "hit_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/original_lossless.mkv",
+          "sha256": "6bd1678c515f18902626d0c580c65a181f9a9a3c665a38d813cc7e7f36854806"
+        },
+        "hit_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/original.json",
+          "sha256": "66fb50aa8279fd2842d314abaf43b82f507a5977bd70ca301ceb67b01da8336c"
+        },
+        "hit_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/workflow_api.json",
+          "sha256": "9cdf6dc9deba1349684235c47326de5889462cd568d9b7de773e664c897ee3a0"
+        },
+        "hit_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/prompt.txt",
+          "sha256": "c8d479ed4ae989bb307a557d9cb08e6aa94fd86ce98577f833e60c07ef7053cc"
+        },
+        "hit_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/reference.json",
+          "sha256": "f64dff8ced79725427750e5044e49b1386ce5a1c82e5cb8fc2c25be7505de218"
+        },
+        "hit_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte.json",
+          "sha256": "d718290eb83cc38602680508ee719aa8cd72acbb28ab4034f6750a73a41498ad"
+        },
+        "hit_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/staged_generation.json",
+          "sha256": "275a51254097119ad14646184ee42526094e311c772da06db35e89ac9acb31c1"
+        },
+        "hit_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/sampling_workflow_api.json",
+          "sha256": "53b9502d674bf824e4c1c4fe360fa1a7bfc42cdc27140b3500191423dbaaf887"
+        },
+        "hit_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/sampling_submission.json",
+          "sha256": "95761e067ed9f5c49006e862fd18916d57c1a57cd936f54914d700f31768de4c"
+        },
+        "hit_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/sampling_history.json",
+          "sha256": "3cfec5af32254eb71ad0b35f7d6b65fbf37140400feac683cbf7a83f704c74ef"
+        },
+        "hit_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/original.latent",
+          "sha256": "5749c3bea2990e54cf075ee4a694fa9382e5a19878265eb7c23c3daef88cdd8c"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/original_lossless.mkv",
+          "sha256": "f3d60e501f2f2e3ad46ee82a7dc0ad0b99c5e0b6b378bfa0119337e4372a350b"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/original.json",
+          "sha256": "8f974421941a0f14de1f311c4c845e6031eada73deb3c1459dfab02c5faa50c1"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/workflow_api.json",
+          "sha256": "981f45268771c7eb4764bc8a8cac19d7213369bbdfe4200add8551341e406f34"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/prompt.txt",
+          "sha256": "69f89846adef478328b6d08f34806c8062c48f1787bda4f0dbc61c1fec9b583c"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/reference.json",
+          "sha256": "3237ad757b9d114c006b82ade197d6ab07ce7db05b57df0228931a85501a0466"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte.json",
+          "sha256": "cca3d9d427d5f7e67a9195fbe1b704af5414415f0ad8b630a6ba2d7aaec0b500"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/staged_generation.json",
+          "sha256": "ed71272b47eab12777e1ecab41edd57410997620b077b315db4db2c4294b7a9f"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/sampling_workflow_api.json",
+          "sha256": "ebb93b1ce5e3ba2c5456e6c58c1a81487a0fa13f3f1eea59892b0f5482472b9e"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/sampling_submission.json",
+          "sha256": "384e971acc5d3e39ff6f7dad81f3e479a99c0ec96621910a5a4ce5260347f6e9"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/sampling_history.json",
+          "sha256": "131c41efd6752b8d947f852ee134fd0dcd10c161b30606a92186e9970cb8e580"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/original.latent",
+          "sha256": "b94cf58a141572ef98e9792e6713dedbf6a2f0b95498b19ba6f42d8751fff870"
+        },
+        "attack_thrust_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/original_lossless.mkv",
+          "sha256": "273df0d273b4d262bbd9fb4d079614fb154c1c00df1491ab134208bfa80648e2"
+        },
+        "attack_thrust_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/original.json",
+          "sha256": "836977dd002407986af84477763bbae072e3c03606ed4ec90c187ee141b39e25"
+        },
+        "attack_thrust_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/workflow_api.json",
+          "sha256": "e2e2c652c6a19576bde8fc523e6b7beec51f378501ae1500d7801e562abd8953"
+        },
+        "attack_thrust_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/prompt.txt",
+          "sha256": "14396f81b7b12d89862f1600483d80111584842280a176afe2264dc50ac97c8b"
+        },
+        "attack_thrust_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/reference.json",
+          "sha256": "a29961009f9ed2d3668cb5b591e9cb52c5d827c2496749ed64eb708aff20f432"
+        },
+        "attack_thrust_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte.json",
+          "sha256": "2eecf16e4395e92af28bde30d8b955f92051b362ce892bd088bb4c01c1bf4649"
+        },
+        "attack_thrust_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/staged_generation.json",
+          "sha256": "5f1cf2c228efe745dd2ce6e035840c4e1e4079fc0870621531b7fbf744335020"
+        },
+        "attack_thrust_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/sampling_workflow_api.json",
+          "sha256": "e0c21e6008a8a6846781f9e2b785a5a7c47be53ca39753de69d1dbdeb0a303ac"
+        },
+        "attack_thrust_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/sampling_submission.json",
+          "sha256": "beb308a08b98bdc5ae8cb2bbbea25b2b260885ee1df6d85f37f1440d7d5daf8c"
+        },
+        "attack_thrust_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/sampling_history.json",
+          "sha256": "743d3b0de29ef3eee6722bdd421e18378b54a166c3f5fbac530a2ead8bb5fee7"
+        },
+        "attack_thrust_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/original.latent",
+          "sha256": "7fd3225909c01b29a6253d4b361d15631158fac407fbe77ffe0ec3b8696ae76a"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/original_lossless.mkv",
+          "sha256": "ab30286fda9860a43992ec9bc9786d4c20ffc58f86ceb5718bb6984be9dd7107"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/original.json",
+          "sha256": "f48ca30a88aad38e92c51d595b91b009a0f6e242cfd94b7601859827daaef9a3"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/workflow_api.json",
+          "sha256": "902b630712935895c880afe70b06b2a162b871bdc3aebf966007a0ef490c8b03"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/prompt.txt",
+          "sha256": "bc658031be9d444fefefd5c0c8c9f49101ea8ddb74b361fc5f0d790b73c6358a"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/reference.json",
+          "sha256": "fc7cb82e77f8756bc57139c44a66ed264790a462e3ece67a55d88dae199be1d0"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte.json",
+          "sha256": "cc37bcfe86293b87bcb4cd51e5470fab03a87289dbe3a31ecb098c65524c07d0"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/staged_generation.json",
+          "sha256": "9a9e3e6095f96a652f2303d185a33ffb1ca0941b13195baaa8c8c86596596a3b"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/sampling_workflow_api.json",
+          "sha256": "c807c51b500dabe62df3e7cb2aa48aab9ff0330e761c53ec3145a6479c8c0443"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/sampling_submission.json",
+          "sha256": "9aab689352f6acd1a06ba52d870c7ac04b6adfaa07b8041f27bd8a2c6dbd3a02"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/sampling_history.json",
+          "sha256": "bf8c7912e626040d064da2249970ffbb18560579cad280a57948939da214b2e6"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/original.latent",
+          "sha256": "7a13e75fc67bcea859cf962c2f12b8c677a793711d4fc680425b882a872f0849"
+        }
+      },
+      "visual_review": {
+        "status": "accepted",
+        "notes": "Accepted after review of all chronological source frames, enlarged anatomy/alpha, fixed-anchor joins and all173 selected frames in the native128px Godot overview. Alternating gait; two-handed lunge joined at matching contact to clean recovery; held crouched guard; physical oar-and-bell support; recoil and regrip; grounded collapse. Preserve original eight-frame240ms articulated idle and exact map idle. Broken windup, unwanted spin, black plates and opening hit effect excluded as recorded in selections. No continuous playback or manual playtest claim."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_000.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_001.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_002.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_003.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_004.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_005.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_006.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_007.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_008.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_009.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_010.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_011.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_012.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_013.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_014.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_015.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_016.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_017.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_018.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_019.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_020.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_021.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_022.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_023.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_024.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_025.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_026.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_027.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_029.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_030.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/move_v1/matte/rgba_031.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_000.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_013.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_016.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_019.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_020.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_021.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_022.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_025.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_026.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_027.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_031.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_034.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_040.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/defend_v1/matte/rgba_052.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_000.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_012.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_016.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_018.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_020.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_022.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_024.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_026.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_032.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_036.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_044.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_052.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_060.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_066.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_070.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_074.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_078.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_082.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_086.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_092.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/cast_v1/matte/rgba_100.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_024.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_025.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_026.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_027.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_029.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_030.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_031.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_032.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_033.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_034.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_035.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_036.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_050.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_070.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_088.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_089.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_090.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_091.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_092.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_093.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_094.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_095.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_096.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_097.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_098.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_099.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_100.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/hit_v2/matte/rgba_104.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_000.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_008.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_014.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_018.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_019.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_020.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_021.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_022.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_023.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_024.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_025.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_026.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_027.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_029.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_030.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_031.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_032.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_033.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_034.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_035.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_036.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_037.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_038.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_039.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_040.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_041.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_042.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_046.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_050.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_056.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/death_v1/matte/rgba_062.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_000.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_010.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_012.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_014.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_016.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_018.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_020.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_024.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_028.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_032.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_033.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_034.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_035.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_036.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_037.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_038.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_039.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_040.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_041.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_042.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_043.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_044.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_045.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_046.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_047.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_048.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_050.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_054.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_thrust_v3/matte/rgba_060.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_090.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_094.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_095.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_096.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_097.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_098.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_099.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_100.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_101.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_102.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_103.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_104.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_105.png": 0.6,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/attack_v1/matte/rgba_106.png": 0.6
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

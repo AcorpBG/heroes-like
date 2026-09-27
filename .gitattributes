@@ -87,3 +87,8 @@ art/animation/source/fluid/unit_brasshollow_crucible_crawlers/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_foundry_saint/**/*.txt -text
 art/animation/source/fluid/unit_brasshollow_foundry_saint/*.json -text
+
+# Preserve hash-bound Bellwake Oars H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_bellwake_oars/*.json -text

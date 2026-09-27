@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    119,
+    "7abc1a88-ae42-43a5-a14b-c612ec278c06",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Bellwake Oars human fighter, brown swept-back tied hair, pale face looking RIGHT, grey shoulder cape and layered grey tunic, white neck scarf and torn white cloth streamers, dark grey trousers, brown strapped boots, leather belts and small bronze waist bells. Exactly TWO arms, TWO hands and TWO legs. Both hands grip ONE long rigid dark pole-oar diagonally: screen-left hand holds the upper shaft near shoulder, screen-right hand holds the lower shaft near waist. One small brass hanging bell and white tassels at the upper-left end, one broad dark leaf-shaped paddle blade with a gold curved tip at the lower-right end. Keep the complete oar length, blade shape, bells, both hands and unchanged spaced grips throughout; no extra staff, duplicate blade or weapon swap. Locked orthographic three-quarter game camera, facing RIGHT throughout, constant original body scale, full body and long oar inside generous frame margins, stable ground baseline, no zoom or turn away. Solid uniform saturated BLUE chroma-key background remains edge-to-edge unchanged for every frame; no black bars, fade, wipe or scenery. One continuous natural collapse into the supplied grounded body. Knees buckle, sink to a knee, shoulders sag and torso tips onto the side. Both arms lower the intact oar to the ground in front of the falling body, bell and tassels descending with it, both hands remaining on the shaft. The body and both bent legs settle fully on the ground with cheek resting by the arm. End in the supplied side-lying corpse, oar resting flat on the same ground. No extra limbs, floating oar, spinning, vanishing props, smoke or magic. Preserve clothing, original body size and camera throughout.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 938006
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "bellwake_death_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "bellwake_death_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "bellwake_h3/death_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "bellwake_h3",
+      "create_time": 1790508746305
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "bellwake_h3\\death_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "7abc1a88-ae42-43a5-a14b-c612ec278c06",
+          "timestamp": 1790508746874
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "7abc1a88-ae42-43a5-a14b-c612ec278c06",
+          "timestamp": 1790508746886
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "7abc1a88-ae42-43a5-a14b-c612ec278c06",
+          "timestamp": 1790508897741
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

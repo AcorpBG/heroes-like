@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.6666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "4e7d1adbff4f4a49809eb2c92f9fc6035b8d10e7623b3d407c25c24b3ea9919d",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars.png",
+        "rects": [
+          [
+            1024,
+            512,
+            1536,
+            768
+          ]
+        ],
+        "anchor": [
+          1280,
+          748
+        ],
+        "scale": 1.6666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0db6722acf2c97685f0bacf49347fa42861df68d6d887284c40905945ae2337d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b851bb83b749223ee76157d257f575e69dd4cb0261041ae39f0317cbe8b5d5b9",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.6,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
