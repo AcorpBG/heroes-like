@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      56,
+      2
+    ]
+  ],
+  "seed": 931002,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "A stationary brass workshop machine and exactly two goblin engineers, facing left, on flat bright green. Fixed camera and identical proportions throughout. Animate ONLY the foreground goblin on the right making ONE empty-fist punch. Start at rest, pull his outside empty fist behind his shoulder toward image right, then sweep that fist across the front of his chest toward image left in a firm short jab. His elbow extends then folds as the fist returns to rest. His other hand keeps its original grip beside the machine. Boots remain planted, knees flex and torso twists with the punch. The rear goblin stays on the platform with his hand on the lever. The complete machine, front tube, hoses, wheels and mast remain rigid and stationary throughout; the hoses stay clipped to the chassis and are never grasped as weapons. The only moving things are the foreground goblin arms, knees, head and torso, with subtle cloth and pennant motion. Preserve all white armor, goggles, helmets, scarves and equipment. Keep every part inside the image. Finish in the original resting posture.",
+  "protected_foreground_chroma": 16
+}

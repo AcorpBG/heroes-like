@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_correction_reference/original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        930,
+        799
+      ],
+      "scale": 0.324,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      104,
+      2
+    ]
+  ],
+  "seed": 931006,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Exactly two goblin engineers and their original wheeled brass machine collapse. Fixed left-facing orthographic camera, fixed original proportions, flat pure green background throughout. First the rear engineer releases the lever and slides down toward the open LEFT side of the machine, staying recognizably a complete goblin with helmet, scarf, torso, arms and legs. He lands kneeling beside the front stabilizer. At the same time the near engineer at RIGHT buckles to his knees. At the middle reference BOTH engineers are visible kneeling on the ground on opposite sides, outside the machine silhouette. Next each bends elbows and lowers chest and head to the ground, ending prone. The rigid chassis slowly tips toward the foreground into the supplied wreck, exposing its upper wheel. Both goblins remain visible as separate bodies while it tips. Preserve the exact same machine: white front armor, short left-facing tube, attached black hoses, brass hubs, original pennant and gauges. All parts stay recognizable; the two goblins remain goblins and the machine stays machinery. The orange furnace darkens. End with two grounded prone bodies on the left and right of the stationary wreck, exactly as final reference. Crisp solid sprite outlines, camera locked, all parts inside frame.",
+  "protected_foreground_chroma": 16
+}

@@ -67,3 +67,8 @@ art/animation/source/fluid/unit_brasshollow_scrip_haulers/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams/**/*.txt -text
 art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams/*.json -text
+
+# Preserve hash-bound Boiler Rivetcasters H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/**/*.txt -text
+art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters/*.json -text

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "cf82a3ef9a948beb4d71463dd40128fd3527f8aeff95c5cc9409131324858403",
+  "latent_sha256": "6c602f1648a16d631e8c940f22e6af88611f2b84209e9999fec16187e5d8d38c",
+  "decode_workflow_sha256": "48603040a345b0f5413ff55de27cfe9fb2a7768d156d9ea8e9c7a2ea2dae74ad",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "boilerrivet_h3\\death_tail_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17331953664,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

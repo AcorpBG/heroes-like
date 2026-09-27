@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "death",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_correction_reference/original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        930,
+        799
+      ],
+      "scale": 0.324,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 932006,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Continue from the exact supplied kneeling pose into the supplied grounded wreck. Camera absolutely fixed, original scale, flat pure green backdrop. Exactly two scarf-faced goblin mechanics are already kneeling, LEFT and RIGHT of the machine. Slowly both bend elbows, lower their shoulders and chests, turn heads to the side and settle fully prone on the ground, maintaining complete separate bodies at all times. The rigid machine gradually tips toward the foreground around its grounded wheel. Its far wheel stays physically ATTACHED to the axle and becomes visible as the chassis turns; it moves with the machine as a single solid mechanism. Both wheels remain part of the machine throughout. All components follow a continuous connected motion. The tube stays short, round, dark and facing LEFT. Preserve white front armor, boiler, gauges, all hoses and red-cream pennant. No component lifts independently into the air. End exactly in the supplied wreck with both original bodies lying beside it, then remain completely still. Preserve orange goggles, gray face-covering scarves, helmets, gloves, aprons and boots, two arms and legs for each goblin. Smooth weighted lowering, grounded contacts and crisp outlined fantasy strategy sprite artwork.",
+  "protected_foreground_chroma": 16
+}

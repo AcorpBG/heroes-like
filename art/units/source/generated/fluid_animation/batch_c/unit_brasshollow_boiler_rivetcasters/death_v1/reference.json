@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            1024,
+            1024,
+            1536,
+            1280
+          ]
+        ],
+        "anchor": [
+          1280,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "14ac361f6c6b9347a8a5b0957ea839b4cd2c443e276097417ab66b43627b6813",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9b547e03e469bf0d397ff8f5bc0ad3c52c32f849622f24dc4e6923bb0ec59bc3",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            1536,
+            768,
+            2048,
+            1024
+          ]
+        ],
+        "anchor": [
+          1792,
+          1004
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "34433114a40a94780f2f3e9ec6a4ae8c8f42b6f0ed905f814b43b4a06a6fe3c3",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "7f9fc2704c671a81fb25857c89dd55de99d078bca8b9fa0dbf1cb6a77f1c50e4",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

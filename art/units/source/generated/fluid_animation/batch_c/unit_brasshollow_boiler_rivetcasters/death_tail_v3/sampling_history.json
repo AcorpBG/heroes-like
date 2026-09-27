@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    43,
+    "665b7da3-20ff-4e3e-9b8d-16e361ad24ca",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Continue from the exact supplied kneeling pose into the supplied grounded wreck. Camera absolutely fixed, original scale, flat pure green backdrop. Exactly two scarf-faced goblin mechanics are already kneeling, LEFT and RIGHT of the machine. Slowly both bend elbows, lower their shoulders and chests, turn heads to the side and settle fully prone on the ground, maintaining complete separate bodies at all times. The rigid machine gradually tips toward the foreground around its grounded wheel. Its far wheel stays physically ATTACHED to the axle and becomes visible as the chassis turns; it moves with the machine as a single solid mechanism. Both wheels remain part of the machine throughout. All components follow a continuous connected motion. The tube stays short, round, dark and facing LEFT. Preserve white front armor, boiler, gauges, all hoses and red-cream pennant. No component lifts independently into the air. End exactly in the supplied wreck with both original bodies lying beside it, then remain completely still. Preserve orange goggles, gray face-covering scarves, helmets, gloves, aprons and boots, two arms and legs for each goblin. Smooth weighted lowering, grounded contacts and crisp outlined fantasy strategy sprite artwork.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 932006
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_tail_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_tail_v3_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "boilerrivet_h3/death_tail_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "boilerrivet_h3",
+      "create_time": 1790493540467
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "boilerrivet_h3\\death_tail_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "665b7da3-20ff-4e3e-9b8d-16e361ad24ca",
+          "timestamp": 1790493540479
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "665b7da3-20ff-4e3e-9b8d-16e361ad24ca",
+          "timestamp": 1790493540491
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "665b7da3-20ff-4e3e-9b8d-16e361ad24ca",
+          "timestamp": 1790493792383
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
