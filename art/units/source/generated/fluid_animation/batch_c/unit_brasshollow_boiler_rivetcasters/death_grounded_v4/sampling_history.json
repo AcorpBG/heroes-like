@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    49,
+    "da179a4e-5810-4114-be30-ce9c26c203d9",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic camera on one motionless upright brass cannon and exactly TWO kneeling goblin engineers, on a perfectly uniform solid pure green background. Only the two engineers move. Both lose their remaining strength, gradually bend elbows and hips, lower their heads onto their gloved forearms, and fold their knees beside their bodies. LEFT engineer rolls gently onto his LEFT side to the LEFT of the stabilizer; RIGHT engineer rolls gently onto his RIGHT side to the RIGHT of the near wheel. Show weight transferring from palms to forearms to shoulders. They become two separate relaxed dead bodies resting completely on the ground, then remain still. Smooth continuous slow anatomical collapse with crisp outlines; neither body merges with the cannon. Both keep their brass helmets, pointed red ears, opaque ORANGE goggles, GRAY face scarves covering mouth and nose, brown leather apron, two gloves, two arms and two legs. The entire disabled cannon remains UPRIGHT, motionless and geometrically unchanged, with both wheels and stabilizer planted in the EXACT SAME positions throughout. Short dark left-facing muzzle, white armor, all hoses, gauges, boiler and red-cream pennant remain intact in their original locations. Only the crew falls; the heavy machine stays completely still. No falling machine, rotating chassis, spinning wheels, smoke, projectile, extra person or new equipment. Follow the supplied starting and final postures precisely with a natural continuous transition and original body proportions.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 934003
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_grounded_v4_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_grounded_v4_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "boilerrivet_h3/death_grounded_v4/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "boilerrivet_h3",
+      "create_time": 1790495514654
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "boilerrivet_h3\\death_grounded_v4",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "da179a4e-5810-4114-be30-ce9c26c203d9",
+          "timestamp": 1790495514655
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "da179a4e-5810-4114-be30-ce9c26c203d9",
+          "timestamp": 1790495514670
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "da179a4e-5810-4114-be30-ce9c26c203d9",
+          "timestamp": 1790495678442
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

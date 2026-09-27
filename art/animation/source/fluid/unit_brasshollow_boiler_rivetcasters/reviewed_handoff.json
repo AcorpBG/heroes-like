@@ -3512,6 +3512,1413 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 114,
           "video_time_seconds": 4.75
+        },
+        {
+          "name": "hit_h3_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_descent_v3_death_h3_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "death_descent_v3_death_h3_007",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_013",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "death_descent_v3_death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_descent_v3_death_h3_019",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "death_descent_v3_death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_descent_v3_death_h3_025",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_031",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_043",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_085",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_091",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_descent_v3_death_h3_097",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "death_descent_v3_death_h3_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "death_grounded_v4_death_h3_004",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "death_grounded_v4_death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_grounded_v4_death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_grounded_v4_death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_grounded_v4_death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_grounded_v4_death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_grounded_v4_death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_grounded_v4_death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_grounded_v4_death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_grounded_v4_death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.8,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
         }
       ],
       "clips": {
@@ -3718,6 +5125,132 @@
           "frame_msec": 50.0,
           "loop": false,
           "static_frame": 0
+        },
+        "hit": {
+          "indices": [
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190
+          ],
+          "frame_msec": 32.0,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "frame_msec": 42,
+          "frame_durations_msec": [
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            42,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83
+          ],
+          "indices": [
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220,
+            221,
+            222,
+            223,
+            224,
+            225,
+            226,
+            227,
+            228,
+            229,
+            230,
+            231,
+            232,
+            233
+          ],
+          "loop": false,
+          "static_frame": 42
         }
       },
       "alpha_noise_cutoff": 0,
@@ -3942,11 +5475,143 @@
         "cast_v1_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/original.latent",
           "sha256": "7b1c3920c00fd388d99527b5347996f9fa325f265c0f0be116c71543bab819a1"
+        },
+        "hit_flinch_v5_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/original_lossless.mkv",
+          "sha256": "db8be9e147e84e7c1fa89addb07007662ecef40beadf0866bd2dbce019d96654"
+        },
+        "hit_flinch_v5_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/original.json",
+          "sha256": "0fa056dbfe0ab511e2fce5e994af7c147682dd36599bfc9ca2d4220acee6d1fb"
+        },
+        "hit_flinch_v5_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/workflow_api.json",
+          "sha256": "0ab4d5dac0cc2658df8ff84154d5b52cf0500101c4418423c3fcea536a286137"
+        },
+        "hit_flinch_v5_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/prompt.txt",
+          "sha256": "0fdcc3cc5b3f157d74b4b0c8ebe56816a83b6220045f8f72dbda822c2ce50dbb"
+        },
+        "hit_flinch_v5_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/reference.json",
+          "sha256": "1dc9d6e91d84e674c132273b9e515397bba628f7688c0e06eec32dbf4b51bcef"
+        },
+        "hit_flinch_v5_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte.json",
+          "sha256": "1d70ef7fc0ef69a3b0c0026740cc351370d5e38f130b3e1af2c235cc87c98f2e"
+        },
+        "hit_flinch_v5_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/staged_generation.json",
+          "sha256": "814b3e8b8518730e3aaf4646cfc9c680601bff4b5749229e93cc326392f6864e"
+        },
+        "hit_flinch_v5_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/sampling_workflow_api.json",
+          "sha256": "61a934058e9a7e9b9487771ae8a853fa21e8b092c7ca342bf099970ad478ba63"
+        },
+        "hit_flinch_v5_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/sampling_submission.json",
+          "sha256": "3553bc9c47d65032f642903a504894ffd0ad693c81305454ba1b833b4d509912"
+        },
+        "hit_flinch_v5_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/sampling_history.json",
+          "sha256": "a896321f26d008380f8a4d21a43670efa365a8d96a11747af3682ed50d29a864"
+        },
+        "hit_flinch_v5_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/original.latent",
+          "sha256": "db43f94c6967cdc28b44e0ca7b24e9c81d0a26cc1738d6a369bbf16267fd1ef8"
+        },
+        "death_descent_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/original_lossless.mkv",
+          "sha256": "55c2311650dc27915c4101f19e52314e55c12a672e5eed88761ca85a46f168a5"
+        },
+        "death_descent_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/original.json",
+          "sha256": "277e427354d68fbfac758ec1ad362fda44e6faf3f67456a6ccb3890499bc6688"
+        },
+        "death_descent_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/workflow_api.json",
+          "sha256": "daa292dc21599941985c72448808b75c7eaf44c5bc5bf57843c31cda0c0e0bdc"
+        },
+        "death_descent_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/prompt.txt",
+          "sha256": "d40a09e68684b1cb8cb0be24c091c443c797f444e1b11d392ac9fc740d4e9082"
+        },
+        "death_descent_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/reference.json",
+          "sha256": "2d3375f8e44eb89ff099c39a76e1356c0f8e14387a34f8e7650eea532dcd9db5"
+        },
+        "death_descent_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte.json",
+          "sha256": "44e93f132e080c3ae50a701ccb86ae1bff3cccd2e02914122a9686dc4504a784"
+        },
+        "death_descent_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/staged_generation.json",
+          "sha256": "61bff47cd3bb5182fad7a7687f028c233865dba94d890b73ab3a679a8d8903bd"
+        },
+        "death_descent_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/sampling_workflow_api.json",
+          "sha256": "066ea236a362ca704e5b504c29608a572e94235335f6529b86a4972913b945a6"
+        },
+        "death_descent_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/sampling_submission.json",
+          "sha256": "10c23c8362e4c0378af1a51ce6980ce25d8aa001d8e34d3ede1ff5e925acfdf7"
+        },
+        "death_descent_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/sampling_history.json",
+          "sha256": "a107900cf6a57a174dfa764e13cf4e60a2c4df16f7c035ccdd9e499669974b4b"
+        },
+        "death_descent_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/original.latent",
+          "sha256": "8907855d872ad4a1eec4d8e486f6ba251692df3b17f5048776ca0b814ec43b94"
+        },
+        "death_grounded_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/original_lossless.mkv",
+          "sha256": "fbbc3e29bda6ddc9b4afe53f17d99478781b5028277446eefa0f31d5e23fe857"
+        },
+        "death_grounded_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/original.json",
+          "sha256": "392654ce184d63005a90f3e5aa8a9e20551ca24ae00e554c1e724fb72957e6e6"
+        },
+        "death_grounded_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/workflow_api.json",
+          "sha256": "146e0290142f8c2808b5e7c07479fb2855bb6153d364557f551a5cface00006a"
+        },
+        "death_grounded_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/prompt.txt",
+          "sha256": "3d3785297092e1fe25628c86d972e82c787e57f2976506b57e77078b3c9b0f73"
+        },
+        "death_grounded_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/reference.json",
+          "sha256": "5865e5016f0814a7ebb4bde21e7c84b22ed0966a9d9c06e6c2c4e2b78663c0fc"
+        },
+        "death_grounded_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte.json",
+          "sha256": "585ed250f29fb346cc1814cb3dbb68642c611954b11594c375f8f95f0c2c43d6"
+        },
+        "death_grounded_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/staged_generation.json",
+          "sha256": "01b25c35d08db4102d2e3f6263450431b4f09137e5e6aa8129b5b653526e129d"
+        },
+        "death_grounded_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/sampling_workflow_api.json",
+          "sha256": "2e046538b39149114f634440dc4f7b2d776b060667d1de6a60faa557dedcd8d3"
+        },
+        "death_grounded_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/sampling_submission.json",
+          "sha256": "60f79c7ca593ea0303aceed314a4986737dfeb88a6af47d348de85988bed30fa"
+        },
+        "death_grounded_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/sampling_history.json",
+          "sha256": "4087dc630c8b75b262534c51e8827d9c49408dbc4bdc519a4ae475fe369e6e11"
+        },
+        "death_grounded_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/original.latent",
+          "sha256": "10a5098c964a06e10ea91c7eac4eb686b7679d94add178c32bb44be52057017c"
         }
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Reviewed all chronological source frames, enlarged grips/crew/edges and move loop endpoints, then all 167 selected phases in offscreen Godot at native battle scale. Two operators, grounded reciprocal push and wheel rotation, empty-fist melee, mounted recoil, held brace and nonmagical lever/valve support remain readable. Original eight-phase 260ms articulated idle reviewed and retained. Hit and death remain unaccepted due to backdrop/identity and collapse/wheel defects. No continuous playback, manual game playtest or Linux execution claimed."
+        "notes": "All source sequences inspected chronologically, with enlarged face/grip/alpha/collapse details and native-scale Godot phases. Accepted24-frame knee-and-shoulder hit flinch/recovery from source-matched video guide, no firing or facial redesign. Accepted43-frame two-stage death: rear engineer descends, both sink to knees, then elbows/shoulders settle into two distinct grounded bodies beside the disabled upright cannon. Stable attached wheels, ground anchors and stage join; final corpse persists. Prior167 move/melee/ranged/defense/support frames and eight-frame260ms idle preserved. Source descent retimed to42ms per sample, final collapse83ms; total2216ms. Hit32ms per sample,768ms. No continuous playback, manual game playtest or Linux execution claimed."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/move_v1/matte/rgba_058.png": 0.8,
@@ -4115,7 +5780,74 @@
         "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/matte/rgba_105.png": 0.8,
         "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/matte/rgba_108.png": 0.8,
         "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/matte/rgba_111.png": 0.8,
-        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/matte/rgba_114.png": 0.8
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/cast_v1/matte/rgba_114.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_014.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_018.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_026.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_030.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_038.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_042.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_044.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_048.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_050.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_054.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_flinch_v5/matte/rgba_056.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_007.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_010.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_013.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_019.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_022.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_025.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_031.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_034.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_037.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_040.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_043.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_046.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_049.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_052.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_055.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_058.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_061.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_064.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_067.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_070.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_073.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_076.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_079.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_082.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_085.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_088.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_091.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_094.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_097.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_descent_v3/matte/rgba_100.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_004.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_008.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_012.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_016.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_020.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_024.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_028.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_032.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_036.png": 0.8,
+        "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/death_grounded_v4/matte/rgba_040.png": 0.8
       },
       "preserved_accepted_clips": [
         "idle"
@@ -4126,6 +5858,8 @@
         "ranged",
         "defend",
         "cast",
+        "hit",
+        "death",
         "idle"
       ]
     }

@@ -1518,7 +1518,7 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        122.0,
+        122,
         226
       ],
       "painted_extent": 221,
@@ -1534,12 +1534,12 @@
         7
       ],
       "source_crop": [
-        22,
-        -2,
-        258,
-        235
+        86,
+        2,
+        322,
+        239
       ],
-      "source_sha256": "f12d4c7fab2d9098e3c7f1fe93bc148dba03f5513e6d964f5de13741f69f2390",
+      "source_sha256": "1fdb1b5d5c9612bc97404af89dfb0894210dd1cca9c0bb51bec97e3abfd2124b",
       "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters/provenance.json",
       "sha256": "8ba752669408a84ac841d031909197080bcf9e52203798a64a4383b5f0c299cb"
     },

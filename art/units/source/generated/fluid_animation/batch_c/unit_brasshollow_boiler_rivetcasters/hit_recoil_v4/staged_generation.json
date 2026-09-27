@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "cb5ed9a5c14c378446196d4c29c2ef002643f7ff3a5c8048e1b98acd2b31f1e0",
+  "latent_sha256": "8d15a0282bf869825724c8a43ce229db85fa40142b81622b65c46d4564b42999",
+  "decode_workflow_sha256": "5ab03b6bf16b0e8774a69418fc18ae7320962c02beb6333012e524a7d2f1ffc1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "boilerrivet_h3\\hit_recoil_v4",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19529877504,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

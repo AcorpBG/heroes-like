@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "eaf4091e3ff73fe4c5ea04691f93c7f68d4b6679e9a4e44ba1d0f1e649456f2a",
+  "latent_sha256": "63a90ccf83db9343eb144fbeb7c6052777dfca62207e34463ab27f154213f72e",
+  "decode_workflow_sha256": "12c9de98ac289dc6bfe5a9fdf9cf6abd3e01decc0d0dba358a470683648ee9d1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "boilerrivet_h3\\hit_recovery_v4",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17254861824,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

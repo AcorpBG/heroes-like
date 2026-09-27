@@ -4,14 +4,238 @@
     "attack_v2",
     "ranged_v2",
     "defend_v2",
-    "cast_v1"
+    "cast_v1",
+    "hit_flinch_v5"
   ],
   "visual_review": {
     "status": "accepted_selected_clips",
-    "notes": "Reviewed all chronological source frames, enlarged grips/crew/edges and move loop endpoints, then all 167 selected phases in offscreen Godot at native battle scale. Two operators, grounded reciprocal push and wheel rotation, empty-fist melee, mounted recoil, held brace and nonmagical lever/valve support remain readable. Original eight-phase 260ms articulated idle reviewed and retained. Hit and death remain unaccepted due to backdrop/identity and collapse/wheel defects. No continuous playback, manual game playtest or Linux execution claimed."
+    "notes": "All source sequences inspected chronologically, with enlarged face/grip/alpha/collapse details and native-scale Godot phases. Accepted24-frame knee-and-shoulder hit flinch/recovery from source-matched video guide, no firing or facial redesign. Accepted43-frame two-stage death: rear engineer descends, both sink to knees, then elbows/shoulders settle into two distinct grounded bodies beside the disabled upright cannon. Stable attached wheels, ground anchors and stage join; final corpse persists. Prior167 move/melee/ranged/defense/support frames and eight-frame260ms idle preserved. Source descent retimed to42ms per sample, final collapse83ms; total2216ms. Hit32ms per sample,768ms. No continuous playback, manual game playtest or Linux execution claimed."
   },
-  "unaccepted_clips": {
-    "hit": "No stable complete source yet: first take ghosts, first correction changes faces, guided correction changes backdrop during recovery. Original live hit is retained without acceptance.",
-    "death": "Tail correction still doubles crew silhouettes during collapse (58-64) and reveals the far wheel through a chassis morph (70-74). No complete stable collapse; retain original live death/dead without acceptance."
+  "unaccepted_clips": {},
+  "clip_sequences": {
+    "death": {
+      "frames": [
+        {
+          "take": "death_descent_v3",
+          "video_frame": 4
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 7
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 10
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 13
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 16
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 19
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 22
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 25
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 28
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 31
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 34
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 37
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 40
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 43
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 46
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 49
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 52
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 55
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 58
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 61
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 64
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 67
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 70
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 73
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 76
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 79
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 82
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 85
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 88
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 91
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 94
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 97
+        },
+        {
+          "take": "death_descent_v3",
+          "video_frame": 100
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 4
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 8
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 12
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 16
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 20
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 24
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 28
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 32
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 36
+        },
+        {
+          "take": "death_grounded_v4",
+          "video_frame": 40
+        }
+      ],
+      "timing": {
+        "frame_msec": 42,
+        "frame_durations_msec": [
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          42,
+          83,
+          83,
+          83,
+          83,
+          83,
+          83,
+          83,
+          83,
+          83,
+          83
+        ]
+      }
+    }
   }
 }
