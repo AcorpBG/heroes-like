@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_mirrorkeel_reavers",
+  "clip": "hit",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mirrorkeel_reavers.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      36,
+      1
+    ]
+  ],
+  "seed": 970006,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mirror-Keel Reaver facing RIGHT in the same elevated three-quarter orthographic fantasy strategy game view. A lean armored spectral humanoid with exactly TWO arms, TWO hands, TWO legs and TWO armored clawed feet. Layered dark silver-blue plate armor, ivory split beak-like mask on a tall dark spiked helmet, two violet lantern ornaments at the helmet sides, and a long ragged teal sailcloth cape flowing behind. The cape is CLOTH, not wings or extra limbs. RIGHT hand on screen-left holds ONE long rigid gently curved silver saber by its short hilt; preserve its full continuous blade and pointed tip. LEFT hand on screen-right holds ONE separate short silver crescent boarding hook with a dark grip. These two distinct weapons NEVER swap hands, multiply, fuse or change shape. Preserve both real grips, mask, armor joints, lanterns, clawed feet, and tattered cape. Locked camera, fixed anatomical scale, full figure and both weapons inside frame. Stable ground baseline. Flat uniform saturated GREEN background RGB0,255,0, constant neutral lighting. No scenery, shadows painted on the plate, camera movement, flashes, magic, particles, beams, or action swoosh lines. One plain physical flinch and recovery. Begin promptly: shoulders pull backward and down, the masked head tilts back, knees flex, the right elbow folds the saber toward the body, and the left arm steadies the separate hook. Cape and lanterns follow through. Hold the recoil only briefly, then straighten smoothly into the original ready pose. Both hands retain their assigned weapons. No attacker or visible blow. Absolutely no white rings, flashes, bursts, particles, magic or motion streaks; only original character motion against unchanged green."
+}

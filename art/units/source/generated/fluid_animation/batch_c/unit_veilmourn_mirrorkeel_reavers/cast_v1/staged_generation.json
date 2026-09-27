@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4b7b5bc94895fdff474b97d3e7f59276dddc13a9bcd262cb29b19371382ed1d6",
+  "latent_sha256": "82a82be4181dc623495c557f14a65832893c8766ec964ab2cae9a9ba2e3b93dc",
+  "decode_workflow_sha256": "170e6940eb7a67d076cb4bf3751e12d1faf13dcb5a0ab4f28e81b17726ebf637",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reavers_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18476178432,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a47d44b78769d1b75c60f1d215098bf2f76c6df5bcd71408a3511d303bd4a17e",
+  "latent_sha256": "ccada449636558c84105b5564b07d1af601c1f9e6a3c9f32061d69da15269257",
+  "decode_workflow_sha256": "52f827cfceb6d4b125ea4900811c9b6bc59b098dff980d20280ee7188630549b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reavers_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18476178432,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
