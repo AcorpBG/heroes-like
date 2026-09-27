@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "clip": "defend",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 929003,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera on one original Brasshollow armored human infantryman, three-quarter facing right, absolutely uniform saturated GREEN background and fixed anatomical scale. Preserve navy cloth and face covering, dark steel helmet with brass band, brass shoulder and knee armor, leather belt and boots. Two arms and two legs only. His near camera-side RIGHT hand grips the single long dark hook-pole with brass collars and one broad crescent notched steel head; his far LEFT forearm carries the tall rigid rectangular dark iron pavis, brass-rimmed, one horizontal orange furnace slit near its top and a short handle/pipe at the top edge. The shield is body-height, not a small buckler. Never exchange hands, shrink equipment, add hands or weapons, change the hook head into a spear, or detach the gripping hand. Sink into a dedicated low shield brace. Bend both knees, lower the rigid shield toward the ground in front of torso, keep right hand gripping upright hook-pole beside shield. Settle into held defensive crouch and remain there. Boots support body; shield is not a transforming panel. No camera travel, floor painting, flames, smoke, particles, duplicated anatomy or motion blur. Keep original silhouette and coherent equipment; the engine supplies travel. All equipment stays within frame.",
+  "protected_foreground_chroma": 13
+}

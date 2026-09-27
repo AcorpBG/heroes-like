@@ -1483,29 +1483,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        93.0,
+        93,
         223
       ],
       "painted_extent": 218,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_furnace_pavis_teams.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        163,
-        13,
-        336,
-        247
+        59,
+        49,
+        232,
+        283
       ],
-      "source_sha256": "24f2180d6db165898bc1b37389853a4f7b4fc9957ec42cb92dbee23d7fdffde3",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_furnace_pavis_teams/provenance.json",
+      "source_sha256": "75f069b258abd8e2becb7627d7d79475fd39294aeba1f0da60bc84aff9da5335",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams/provenance.json",
       "sha256": "d3f6f76b8a55965cd95acb331943928024d836e098a0a430406d42dec3be50e1"
     },
     "unit_brasshollow_boiler_rivetcasters": {

@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_brasshollow_furnace_pavis_teams",
+  "clip": "attack",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_furnace_pavis_teams.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 929002,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Fixed orthographic camera on one original Brasshollow armored human infantryman, three-quarter facing right, absolutely uniform saturated GREEN background and fixed anatomical scale. Preserve navy cloth and face covering, dark steel helmet with brass band, brass shoulder and knee armor, leather belt and boots. Two arms and two legs only. His near camera-side RIGHT hand grips the single long dark hook-pole with brass collars and one broad crescent notched steel head; his far LEFT forearm carries the tall rigid rectangular dark iron pavis, brass-rimmed, one horizontal orange furnace slit near its top and a short handle/pipe at the top edge. The shield is body-height, not a small buckler. Never exchange hands, shrink equipment, add hands or weapons, change the hook head into a spear, or detach the gripping hand. Make one deliberate melee strike. Right arm raises the long hook-pole diagonally overhead while left forearm retains the tall shield upright; then right hand drives the single hook head forward to the right with a controlled step and lunge. Recover pole upright and return both boots to ready stance. The entire pole remains rigid and connected to the right hand at every angle. Never throw it or swap its head and butt. No camera travel, floor painting, flames, smoke, particles, duplicated anatomy or motion blur. Keep original silhouette and coherent equipment; the engine supplies travel. All equipment stays within frame.",
+  "protected_foreground_chroma": 13
+}

@@ -62,3 +62,8 @@ art/animation/source/fluid/unit_thornwake_graft_matriarchs/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_scrip_haulers/**/*.txt -text
 art/animation/source/fluid/unit_brasshollow_scrip_haulers/*.json -text
+
+# Preserve hash-bound Furnace Pavis Teams H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_furnace_pavis_teams/**/*.txt -text
+art/animation/source/fluid/unit_brasshollow_furnace_pavis_teams/*.json -text
