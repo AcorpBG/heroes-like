@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5b47a266549168602dbba8ecd56cda7f25b969d42ec5b718035296a18ecb1097",
+  "latent_sha256": "20fce13c548a31f8cb7c31434d756f469af7b344ff4427a56746098962e37532",
+  "decode_workflow_sha256": "ebbac8cb8f8fd06671de151f84585ae9245e1ff09cbb8919d5d6d23d0c9fa2cb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedcasters_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17432965120,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

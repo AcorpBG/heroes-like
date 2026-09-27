@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "922eacaa6be41f878c85ecf7b59d939a4d7a0632629a66f67e0e43f05b42f219",
+  "latent_sha256": "a576084f6c65fcf4b66493505b02eebc4413e2cad4b4ba99e8a6338b9bfbdf5d",
+  "decode_workflow_sha256": "b10c408e5fb31175e38e6a5f2fc61df929b9d7119eec9327178cbdf24e2c2e8e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedcasters_h3\\ranged_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17432965120,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

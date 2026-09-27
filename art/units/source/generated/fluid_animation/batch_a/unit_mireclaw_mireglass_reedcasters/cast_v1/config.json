@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters",
+  "clip": "cast",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      52,
+      1
+    ]
+  ],
+  "seed": 981005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mireglass Reedcaster, facing RIGHT in the same fixed elevated three-quarter orthographic fantasy strategy view as the reference. Exactly one hooded reptilian humanoid, two arms, two hands, two legs and two clawed feet. Olive green layered leaf mantle and pointed hood, thin gold edging, shadowed face with two green eyes, brown scaled limbs, leather and brass wrist/ankle guards. Both hands grip ONE long rigid dark brown twisted reedwood staff across the body. Right near hand grips its lower half at the waist; left far hand grips the upper shaft toward screen right. The curved upper staff head has EXACTLY THREE distinct ROUND turquoise-green glass globes, each attached by its own thin brown hanging cord; keep all three globes round and intact, with unchanged subtle internal green liquid. Small turquoise belt bottle remains fixed at the waist and is not a fourth hanging globe. The rigid staff never changes length, splits, bends or swaps hands. Hanging globes swing gently with real pendulum inertia and keep separate cords; no globe duplication or loss. Fixed camera, fixed anatomical scale, full body and entire staff/globes always in frame. Uniform saturated BLUE RGB0,0,255 flat background with no shadows or scenery. Constant neutral illumination and stable colors. One deliberate measured staff gesture: both elbows lift the staff diagonally before the chest, hood inclines toward the glass globes, fingers tighten their correct grips, and the three attached globes swing gently together. Hold the raised staff pose briefly, then lower the same staff to its original ready angle and return the hood. Keep the liquid brightness constant and all three glass globes intact; no additional or detached magical objects, clouds, trails or beams. The solid blue backdrop remains exactly the same color and illumination throughout the entire action."
+}

@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            256
+          ]
+        ],
+        "anchor": [
+          1280,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "28d7fdd1ec8591e6e277e83dca7210cbc63232877bce3be77f8ebe2c93fc007a",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+        "rects": [
+          [
+            1536,
+            0,
+            2048,
+            256
+          ]
+        ],
+        "anchor": [
+          1792,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bdfc046dbe1d2cbb1014b15fa553cf95489b4b6acff52d883800bde8437fddc0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e7c9b780cac18d769c47be1da1e1fcc2210a23ddf5c1c3022991a79ccd3e2e00",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

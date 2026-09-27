@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_mireclaw_mireglass_reedcasters",
+  "clip": "attack",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 0,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_mireclaw_mireglass_reedcasters.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 981002,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mireglass Reedcaster, facing RIGHT in the same fixed elevated three-quarter orthographic fantasy strategy view as the reference. Exactly one hooded reptilian humanoid, two arms, two hands, two legs and two clawed feet. Olive green layered leaf mantle and pointed hood, thin gold edging, shadowed face with two green eyes, brown scaled limbs, leather and brass wrist/ankle guards. Both hands grip ONE long rigid dark brown twisted reedwood staff across the body. Right near hand grips its lower half at the waist; left far hand grips the upper shaft toward screen right. The curved upper staff head has EXACTLY THREE distinct ROUND turquoise-green glass globes, each attached by its own thin brown hanging cord; keep all three globes round and intact, with unchanged subtle internal green liquid. Small turquoise belt bottle remains fixed at the waist and is not a fourth hanging globe. The rigid staff never changes length, splits, bends or swaps hands. Hanging globes swing gently with real pendulum inertia and keep separate cords; no globe duplication or loss. Fixed camera, fixed anatomical scale, full body and entire staff/globes always in frame. Uniform saturated MAGENTA RGB255,0,255 flat background with no shadows or scenery. Constant neutral illumination and stable colors. One physical staff strike. Raise the long staff smoothly across the shoulders as in the windup guide, then rotate and drive its BARE WOODEN BUTT toward screen right as in the extension guide. Both legitimate hands stay on the same shaft and slide only slightly to control it; the three hanging globes stay on the opposite hooked end. Knees bend and torso turns with the strike. Recover the same staff and both hands to the original ready pose. Continuous arm and shoulder articulation, no instantaneous pose switch. No spell effects or emitted objects."
+}

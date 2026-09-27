@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v2",
+    "ranged_v2",
+    "defend_v1",
+    "cast_v1",
+    "hit_v1",
+    "death_v1"
+  ],
+  "runtime_scale_multiplier": 0.83,
+  "runtime_scale_reason": "Original ready pose height211 exceeds accepted idle heights174-178. Apply one fixed0.83 anatomical scale correction to every new H3 frame (0.65 guide inversion times0.83 =0.5395). Preserve original idle, anatomical anchor and original videos; no per-pose normalization.",
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed every chronological original, enlarged anatomy/grips/alpha edges, fixed-anchor movement and ranged joins, and every selected offscreen Godot phase at128px battle reference height. Seven dedicated H3 actions retain two hands, a rigid staff and three hanging globes. Ranged63-79 excluded for globe stretching;62-to80 retains the extended pose with a small settling displacement at native size. Uniform0.83 source-wide correction matches the accepted original idle body scale; no per-frame normalization. Original eight-frame240ms idle retained after enlarged and native review. Candidate757 checks pass. No continuous playback, manual game playtest or Linux claim."
+  }
+}
