@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c1ffe10803789304c10564b3f0cc595805d1e33db2eae28891c3992ef8059692",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+        "rects": [
+          [
+            1536,
+            768,
+            2048,
+            1024
+          ]
+        ],
+        "anchor": [
+          1792,
+          1004
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "32cd3336f7521aa53aeeb9a34eff60d8c0c965756a6c7f755b5a6967b9d3f3ec",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+        "rects": [
+          [
+            1024,
+            1024,
+            1536,
+            1280
+          ]
+        ],
+        "anchor": [
+          1280,
+          1260
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e99dc41fabe1c22a4d4e8e1fa3c4f02db9252f654469afe1375a1c3dcf2b104b",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1260
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "1425dc60725d666b93f00ef274c50ae3894c16130cba963f8b63938a98ee7da7",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

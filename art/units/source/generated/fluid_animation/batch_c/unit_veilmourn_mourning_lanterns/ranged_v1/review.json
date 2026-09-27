@@ -1,0 +1,33 @@
+{
+  "status": "accepted_selected_after_native_review",
+  "notes": "Reviewed every source phase and enlarged arm/grips/edges. Dedicated draw-to-chest, aim extension and lowered recovery. Exclude frames32-40 containing the unwanted detached projectile during held aim;31-to41 keeps the same extended arm and feet, settling the lantern orientation. Runtime owns the released projectile. Trim long holds, retain original unique frames, fixed scale and anchor. Native review pending.",
+  "selected_source_frames": [
+    0,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    29,
+    30,
+    31,
+    41,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78
+  ],
+  "review_method": "All chronological source frames, selected enlarged anatomy and edges, fixed-anchor joins. No continuous playback claim.",
+  "native_review": "Every selected phase rendered at actual128px reference height; grounding, grips, held guard, corpse and original idle reviewed."
+}

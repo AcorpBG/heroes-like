@@ -92,3 +92,8 @@ art/animation/source/fluid/unit_brasshollow_foundry_saint/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_bellwake_oars/*.json -text
+
+# Preserve hash-bound Mourning Lanterns H3 provenance byte-for-byte.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_mourning_lanterns/*.json -text

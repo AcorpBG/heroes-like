@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7054df278fae279572157a3ab944c1e1d3fb598c363aeab1b8dddf62d0b40cd0",
+  "latent_sha256": "c716c55f3576436e05bd02d9ecbf499d06d7c026d729ff58f6ed58535cdc7e04",
+  "decode_workflow_sha256": "879f304da2983f782877fbd8e75d68067f88b7f96e954a9c0ba158095090ada2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mourning_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17441353728,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

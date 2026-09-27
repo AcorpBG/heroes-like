@@ -1,0 +1,32 @@
+{
+  "source_frames": [
+    0,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    29,
+    30,
+    31,
+    41,
+    54,
+    56,
+    58,
+    60,
+    62,
+    64,
+    66,
+    68,
+    70,
+    72,
+    74,
+    76,
+    78
+  ],
+  "frame_msec": 50,
+  "review_note": "Reviewed every source phase and enlarged arm/grips/edges. Dedicated draw-to-chest, aim extension and lowered recovery. Exclude frames32-40 containing the unwanted detached projectile during held aim;31-to41 keeps the same extended arm and feet, settling the lantern orientation. Runtime owns the released projectile. Trim long holds, retain original unique frames, fixed scale and anchor. Native review pending.",
+  "contact_frame": 11
+}

@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "clip": "death",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          1536,
+          768,
+          2048,
+          1024
+        ]
+      ],
+      "anchor": [
+        1792,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      68,
+      3
+    ]
+  ],
+  "seed": 939017,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mourning Lanterns human lantern bearer, brown tied-back hair and pale face looking RIGHT, muted grey-green ragged cloak and scarf, charcoal long coat, brown leather belts and boots, brass fittings and rope at the belt. Exactly TWO arms, TWO hands and TWO legs. Screen-left hand grips ONE tall straight staff standing upright beside the body. Its curved hook holds exactly TWO lit amber lanterns: one elongated lantern on the upper-left, one rounded lantern on the upper-right, plus the original small silver mirror plates and cloth strips. Screen-right hand grips ONE separate compact brass hand-lantern by its top handle, with its round amber glass facing RIGHT. Keep all three lanterns, both original hand grips, full staff, mirror plates and cloak identity. Locked right-facing three-quarter orthographic game camera, full body and complete staff visible, constant body scale and fixed foot baseline. Every background pixel remains solid saturated MAGENTA for the entire shot. Constant even illumination, no camera movement. One continuous collapse. Knees buckle, lower onto both knees as in the midpoint, then slump and fall onto the side. Lower the hand-lantern and the entire tall staff WITH its two hanging lanterns onto the ground as the body falls. Finish exactly in the supplied grounded side-lying corpse, all three lanterns and staff resting flat beside the body. Both hands remain anatomically coherent. No upright floating staff, extra limbs, smoke, particles, scenery or return to life. The staff is one rigid straight wooden shaft: it rotates as one solid object with the two hanging lamps attached to its hook, never bends or grows. Follow the supplied intermediate side-fall pose to lower the staff together with the body.",
+  "protected_foreground_chroma": 0
+}

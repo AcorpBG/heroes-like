@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "clip": "move",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "seed": 939011,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Mourning Lanterns human lantern bearer, brown tied-back hair and pale face looking RIGHT, muted grey-green ragged cloak and scarf, charcoal long coat, brown leather belts and boots, brass fittings and rope at the belt. Exactly TWO arms, TWO hands and TWO legs. Screen-left hand grips ONE tall straight staff standing upright beside the body. Its curved hook holds exactly TWO lit amber lanterns: one elongated lantern on the upper-left, one rounded lantern on the upper-right, plus the original small silver mirror plates and cloth strips. Screen-right hand grips ONE separate compact brass hand-lantern by its top handle, with its round amber glass facing RIGHT. Keep all three lanterns, both original hand grips, full staff, mirror plates and cloak identity. Locked right-facing three-quarter orthographic game camera, full body and complete staff visible, constant body scale and fixed foot baseline. Every background pixel remains solid saturated BLUE for the entire shot. Constant even illumination, no camera movement. Complete ONE slow rightward walking gait cycle IN PLACE between the supplied opposite leg phases. Begin with the original front leg reaching RIGHT. Bend and lift the rear knee, swing that boot forward toward screen-RIGHT, plant it and move the other leg back toward screen-LEFT. In the second half, exchange the roles of the two legs and return to the first walking pose. Toes point toward screen-right along the walking direction. Natural heel contact, knee flexion and ankle roll; torso stays centered. Preserve dark muted grey-green inner coat fabric, no white patch or bright skirt lining. Keep staff upright, both upper lanterns attached, hand-lantern held at hip, original arm and equipment size. No hop, reverse walking, sliding or new limbs.",
+  "protected_foreground_chroma": 20
+}

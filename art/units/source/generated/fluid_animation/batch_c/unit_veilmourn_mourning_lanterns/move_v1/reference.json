@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "79bc6bd18d34155ffebbe87b076a4e1855b519d87c2b4e5703c5e15e5d1538e5",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "eaebd78ab59d5e1e67bc3555fce1fce1543b2d80d9c2a840dc465e4aee8060cb",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

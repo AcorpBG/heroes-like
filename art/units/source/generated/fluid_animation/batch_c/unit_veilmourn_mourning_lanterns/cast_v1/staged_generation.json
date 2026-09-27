@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6558b09439509408f0244e2dd67bc33c2473207663545401027a431f8d1b006b",
+  "latent_sha256": "77ded1c62cda13482385ef7523c9f56fb030bb3b12c94759e094909d465b1ae2",
+  "decode_workflow_sha256": "e4d362473b51efd304085b354c04024a9bb1ed78722fa58645b12f8064daa050",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mourning_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19176547328,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
