@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3165b65c1cf1d7011ff2b3a094d28f684a6abcd4c16838b0cf40046c02134775",
+  "latent_sha256": "caf4210a8b1da26fa15a0d01baa71f047b0eff5a22afde0d8f31198afeaac8e8",
+  "decode_workflow_sha256": "33c2a05d6f9cf2eb3d152aa596e044b200ac70cb35b3424d312b7fc6990054fb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "undertow_h3\\ranged_reload_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18825314304,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

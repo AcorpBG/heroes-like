@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "clip": "ranged",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 950013,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Undertow Harpooner, a human-sized masked armored figure facing RIGHT in a locked three-quarter orthographic game view. A rigid ivory beaked mirror mask beneath a teal tricorn helmet with thin brass twigs. Dark teal plated armor, ragged ivory and navy cloak strips, brass rope netting over the waist, pointed teal boots, and one small violet glass lantern at the screen-left hip. Exactly TWO arms, TWO hands and TWO legs. Hold ONE long brass-and-teal mechanical harpoon launcher across the torso: right hand at the rear trigger grip on screen-left, left hand under the forward barrel toward screen-right, a central cylindrical brass rope drum, long rigid teal shaft and an initially EMPTY straight pronged muzzle exactly as in the first reference. The last reference shows one barbed steel point loaded down-right. Keep the whole shaft straight and constant length, preserve both grips, mask, lantern, netting and body proportions. Fixed body scale and ground baseline; full boots, cloak and entire weapon tip inside frame. Solid uniform saturated GREEN background RGB0,255,0 throughout, never blue, cyan, grey, black or gradients. Constant neutral light. One deliberate reload and settle from the supplied EMPTY muzzle pose to the supplied loaded ready pose. This starts AFTER the shot: do not aim or fire again. Lower the rigid launcher toward the waist, right hand keeps its rear trigger grip and left hand works the foregrip beside the central rope drum. The foregrip resets the internal loading mechanism; one attached steel point slides forward along its rail into the final loaded position. Keep every moving part physically attached to the launcher and held in the hands, no loose spear or projectile flying, spawning in the air, bending or passing through the body. Settle into the exact loaded ready pose and hold. No flash, sparks, smoke, rope trail, magic or attack."
+}

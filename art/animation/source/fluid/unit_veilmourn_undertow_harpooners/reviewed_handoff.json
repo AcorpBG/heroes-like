@@ -1,0 +1,5581 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_undertow_harpooners",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_001",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.041666666666666664
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_005",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_007",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_011",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_013",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_017",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_019",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_023",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_029",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_031",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_v1_ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_v1_ranged_h3_019",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "ranged_v1_ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_v1_ranged_h3_021",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "ranged_v1_ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_v1_ranged_h3_023",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "ranged_v1_ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_025",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "ranged_v1_ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_v1_ranged_h3_027",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "ranged_v1_ranged_h3_033",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "ranged_v1_ranged_h3_039",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "ranged_v1_ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_v1_ranged_h3_051",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "ranged_v1_ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_053",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_v1_ranged_h3_055",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_057",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "ranged_v1_ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_v1_ranged_h3_059",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "ranged_v1_ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_002",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_003",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_004",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_005",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_006",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_007",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_reload_v2_ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_011",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_021",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_025",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_027",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_081",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_085",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_087",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_089",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "frame_msec": 40,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 13
+        },
+        "ranged": {
+          "frame_msec": 45,
+          "frame_durations_msec": [
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            45,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40
+          ],
+          "contact_frame": 13,
+          "indices": [
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106
+          ],
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 19
+        },
+        "cast": {
+          "indices": [
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 9
+        },
+        "hit": {
+          "indices": [
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 3
+        },
+        "death": {
+          "indices": [
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202,
+            203,
+            204,
+            205,
+            206,
+            207,
+            208,
+            209,
+            210,
+            211,
+            212,
+            213,
+            214,
+            215,
+            216,
+            217,
+            218,
+            219,
+            220
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 35
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/original_lossless.mkv",
+          "sha256": "911e3f3e141b14bb26b39d4a0351b3e5ab602304ef8b44ad6eb24985120c975c"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/original.json",
+          "sha256": "adc069af5ac8c1b2f67119447a4666e034e3caad9faad6913733730400493eb8"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/workflow_api.json",
+          "sha256": "ee92a747b171a2dc345e3de37bf455884a89dc921a4981b9078a11b5e491fdde"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/prompt.txt",
+          "sha256": "46c106b07b174a7899c1bf4c21966a0720371ff6e146fc903c1c6157c4eec536"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/reference.json",
+          "sha256": "6a8e5f7aac072303c9c01125df68376b058844ae0ccef562628776a871888ffc"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte.json",
+          "sha256": "d81b3351bb572f063ff527e5959d2610d99c75de868f5744d6e851e0633f56cb"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/staged_generation.json",
+          "sha256": "449673c6a70fe0be0a5e03642ef8ce0a17268f3d24599c788875b91294a55e1f"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/sampling_workflow_api.json",
+          "sha256": "a89b84f6011422d1da5a2ac7c97e02a0dae99c3896dc360c3b1e445db982c4e6"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/sampling_submission.json",
+          "sha256": "755bf1406b967c69575da73ca01d7ae10a0394250e1f66378a5b80770027cf84"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/sampling_history.json",
+          "sha256": "8dfc071d2ca847a4917f6a500742bb30b276535e9bbad7fe17bcbc37ef8f0d81"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/original.latent",
+          "sha256": "a54c1ff27c6c697181c087284fbc629c44e9007933dc914fc93e49bd20541e90"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/original_lossless.mkv",
+          "sha256": "9283c43daf2a15a5fde805f8a22e212397f61336e2182a02a54c4a79de3ac34d"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/original.json",
+          "sha256": "691751cdf33b0dd2a53389e49e9480fe3f4360b3d8c03778d4ae0a2f7cb4cd8d"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/workflow_api.json",
+          "sha256": "2745eb45fa696842c44ff81db573ebe67aab0818d2c53a85da8a45317f61b64c"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/prompt.txt",
+          "sha256": "1b68e4caa113e2d3cd0f95801b9a8e0f93ec733530f6aafab0bfcb66d6c23b95"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/reference.json",
+          "sha256": "9e24752342156cba1f3d78b0c275c2ada46d249b2bee2d99981239173b133277"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte.json",
+          "sha256": "6866d9a6829eb15bdde9f9088d1631dd4e00a4d6b628bd8e43a642102c1c0e5e"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/staged_generation.json",
+          "sha256": "a85f065723a5558bc751b6331ce1768e0bb97a9d699dc6eadafbcc167bf9630d"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/sampling_workflow_api.json",
+          "sha256": "5bed6289fa18d12bc1eec85497a1d1839b81d4ac64a8499746b8b54d322210f4"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/sampling_submission.json",
+          "sha256": "95ac3d489e653da2291f54b4dcb64d552dd0ea98b9b358394b9c6974ce39d6f2"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/sampling_history.json",
+          "sha256": "93ab5a13485f0c29cfad048020cd21fe8b045ea92c6380377fb3d21d0590dae2"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/original.latent",
+          "sha256": "747f6ad014904344638713e9f414b135b612955c768fed3d277cf8301a91b71f"
+        },
+        "defend_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/original_lossless.mkv",
+          "sha256": "0d56dd0c472c70c5c673d51c2eb54ba4bdcad74d16d25de7488609cbb8d96617"
+        },
+        "defend_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/original.json",
+          "sha256": "531e192cb5c6bc167eb8895d2322a8122da41ef4b3c176574438a6ce47315376"
+        },
+        "defend_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/workflow_api.json",
+          "sha256": "e8ba7d5f747035d1a3479e613ccedc7d9315abbb2fde028ef348027d35298e87"
+        },
+        "defend_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/prompt.txt",
+          "sha256": "02a356b1bce0176ea5e8da896ee79bd4b3222d0734a83b417ee56659f3b7592d"
+        },
+        "defend_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/reference.json",
+          "sha256": "394532e2863f288f912ad396acff8f1d0d83fe429db8eff7f41c3554be6b3dd3"
+        },
+        "defend_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte.json",
+          "sha256": "0d3596dfe4bf220d429a74b26ca02267465175ed87d57c4d1a6b12b359e629ca"
+        },
+        "defend_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/staged_generation.json",
+          "sha256": "9875a2d594e15adb74f64eeca694e6e9f2e0e3453382d87eced08a297a2c96fa"
+        },
+        "defend_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/sampling_workflow_api.json",
+          "sha256": "89659bf02b2cec21f2f7e21fe5c0d74495a4420a5e3a0453d84fb8fd5a2f67a5"
+        },
+        "defend_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/sampling_submission.json",
+          "sha256": "9be2b46a04b475a9608a41e98df9cb210084eb45d3428553a65cefdefbb7bf49"
+        },
+        "defend_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/sampling_history.json",
+          "sha256": "750f5cdb0d2ac1491c732a205b0648dc6a306d712d738b0b12ea7c9b7ab68b01"
+        },
+        "defend_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/original.latent",
+          "sha256": "d80b0cf127d827d5b494f07d04fa9dcf261329360b3cc2151f42d83d25e381eb"
+        },
+        "cast_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/original_lossless.mkv",
+          "sha256": "cf148cd513cad0d7609536d7a7d8ab2acc7a7310f39d58b3742010f73a95c7d3"
+        },
+        "cast_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/original.json",
+          "sha256": "c22e27feb47bc67146fe1d679764db214bdb8a32ec520eaae3d8f3efcaf252b7"
+        },
+        "cast_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/workflow_api.json",
+          "sha256": "8adc9b9c21161104bab9d46f0209608c25929866a0621117c9c54501a00fbaf7"
+        },
+        "cast_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/prompt.txt",
+          "sha256": "95c15d0bfe9aa29f57ed16298575f09a1428b5b13add8c874773fc30e7739e83"
+        },
+        "cast_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/reference.json",
+          "sha256": "90f36d1faf1bee3cd5ff39402fb4441323a8b5fd3122b55193033ae97f3d476c"
+        },
+        "cast_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte.json",
+          "sha256": "069a3f5c016a93fb810e5ff535bcc90e7a32fc46c51054839fcc115798ab0359"
+        },
+        "cast_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/staged_generation.json",
+          "sha256": "c218e1697e63ade1176f5b910028a6a7c28c21dac5f4b67285348b54e3724fd1"
+        },
+        "cast_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/sampling_workflow_api.json",
+          "sha256": "e4d169e96cae8eaef58251bc5dc2638eb0b45795ee482fe534129304036ddb54"
+        },
+        "cast_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/sampling_submission.json",
+          "sha256": "72383947f5a5bba07d955ec0e293eed331ac55bcba4c9d538e8c7e71405895d4"
+        },
+        "cast_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/sampling_history.json",
+          "sha256": "8e7f0f51400832f461da5a6ac76d404aa377108c1f61ed01cc124f04937fca68"
+        },
+        "cast_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/original.latent",
+          "sha256": "4e1fdab9d5019dfa9a442fc45d4ba82f9fe5e01647d287e99c5753d5e3fc8c13"
+        },
+        "hit_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/original_lossless.mkv",
+          "sha256": "901b0e68b64e0118cdfbd4b9b5a86ec93f856d6f9904dc4022ee91575d75ff3a"
+        },
+        "hit_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/original.json",
+          "sha256": "1378b31de84016bb699fa322b3aaf0473b3adf1c32ccf533cbe4b397f2a28008"
+        },
+        "hit_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/workflow_api.json",
+          "sha256": "7f4ced717dfef49fed1f0d528f9470d9dc2b14a77a2a10641b6ceccf72f70f9c"
+        },
+        "hit_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/prompt.txt",
+          "sha256": "b4af5c774da9c1974132e55c9f2244af070427f38f14760ca1e704dd73672148"
+        },
+        "hit_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/reference.json",
+          "sha256": "a8024273ac373128f065219b7ab8b9cbe99a366a483e41f592fe99100839c4af"
+        },
+        "hit_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte.json",
+          "sha256": "20c7a12f3ad78ab6b7e5f37de16a8aca2a0075f856761775dc589ec0ca57a892"
+        },
+        "hit_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/staged_generation.json",
+          "sha256": "b5ef171d62112a8448cd8fd5676f93bf789669c600785e123f8fa3bd7e1b399e"
+        },
+        "hit_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/sampling_workflow_api.json",
+          "sha256": "34cd1284bb5b535810429b5f5178e039e9f9ca10f4fcb8bbfff69ebc3b82b735"
+        },
+        "hit_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/sampling_submission.json",
+          "sha256": "042b7cb4214e0339a5c9ce983c2aa21a4084f9afcaee838b87760461fc7fd31d"
+        },
+        "hit_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/sampling_history.json",
+          "sha256": "c6a4950c153972d1377e69ac02749e4cc13e642083e77d0cff94c15fdd625ae4"
+        },
+        "hit_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/original.latent",
+          "sha256": "31a1a3d4affc43653987b4518ccab5d14be0ffecbc9c623b52852020ff9f3c97"
+        },
+        "death_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/original_lossless.mkv",
+          "sha256": "983e59b9cd9099a9c64559d6e660151ceb4cb4570a7da621b9343b5230ef183e"
+        },
+        "death_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/original.json",
+          "sha256": "6a71ace6c66d9514cdd63b1155d86d46dd6ea2d62c0a6c1b1aafd756e3b95381"
+        },
+        "death_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/workflow_api.json",
+          "sha256": "9330586d640997789f85f74d6caace45d221261f18b4c7911a7847c5f339a424"
+        },
+        "death_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/prompt.txt",
+          "sha256": "184e4f276ac577f7692bb03b5b6e83f39fd06a8ebddb840d8a984d78d7bedb39"
+        },
+        "death_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/reference.json",
+          "sha256": "707a21258a42830bebff5495b1adff5e0e0c5a013c65dc13c34c872e9208f9b1"
+        },
+        "death_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte.json",
+          "sha256": "ea85665e72319269db09fba39baf73aab4122c49b1173c579aea3c1e39c228df"
+        },
+        "death_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/staged_generation.json",
+          "sha256": "494cc690dbb43bf64b43544081009d871ae002fd1d0bbabad435a9c3e0303eee"
+        },
+        "death_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/sampling_workflow_api.json",
+          "sha256": "3425d9ba4445bab11e23885e28533503e6ec50346739e0fbe98f28c7fe656f4f"
+        },
+        "death_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/sampling_submission.json",
+          "sha256": "de840879dc08cdec715315d39a860bfb948af6462da9994a5c7282d4b83c6519"
+        },
+        "death_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/sampling_history.json",
+          "sha256": "46cbd27a63fa6ce08c3e9c63d7eda02f00b9ee87ee59483899faca249a087b35"
+        },
+        "death_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/original.latent",
+          "sha256": "021af23c8d70b46f4b0a8379d6536051ab10a0dc4af2112504cba16ced655ac7"
+        },
+        "ranged_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/original_lossless.mkv",
+          "sha256": "240db1228fa24b3daa9bd8c7b933ce829f0c4c88cbc4fc51385750cc27eb1058"
+        },
+        "ranged_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/original.json",
+          "sha256": "91a27bf8d576bbe2d56e813ae72ab4781abf7df1f8dd96674f88abfb6ff15537"
+        },
+        "ranged_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/workflow_api.json",
+          "sha256": "2da17c90abc621e0061e4cbccc99433e0e804007d582638c0639e99cba7c596e"
+        },
+        "ranged_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/prompt.txt",
+          "sha256": "63a72dba4448267430eec476c6ba6ae51aadb8bec9be04b0c225b699e2a34c67"
+        },
+        "ranged_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/reference.json",
+          "sha256": "716bae0672f72b718a2459ceef1eb7bee831a266da927102927de97c153f63e9"
+        },
+        "ranged_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte.json",
+          "sha256": "f9696e5269d7af149f34a28cc4aad6ee3f8225f7e66775747203814c89659e66"
+        },
+        "ranged_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/staged_generation.json",
+          "sha256": "684a402d9afa7b434ec7af7a55db647614af5aa444ff5eca8834f2ceec8beb31"
+        },
+        "ranged_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/sampling_workflow_api.json",
+          "sha256": "6eb11e988a1c8cc77eda042497c79f22dfe2f1c88d5b9af125beaf0572b48855"
+        },
+        "ranged_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/sampling_submission.json",
+          "sha256": "4eba2fd63c23afc513425e0722a3e2aac68f364861061cd6e977150236ace585"
+        },
+        "ranged_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/sampling_history.json",
+          "sha256": "d376bdf6319c592dc71e20c4a5fb49ac55c246cc85be010d78a0630f86a7ea0d"
+        },
+        "ranged_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/original.latent",
+          "sha256": "8b1fef9b14af2537facb34186880d90673b610aa4a2c6d8f9d19551cd9dbcca9"
+        },
+        "ranged_reload_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/original_lossless.mkv",
+          "sha256": "905bf9621cf0eacfb6ba1b144950d4a383298ce6d53124e274afa68775fe96dd"
+        },
+        "ranged_reload_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/original.json",
+          "sha256": "24224638eda529eee8b0bcb4bbcad2cc74c617b97f2af6c1d78d301e7581c51e"
+        },
+        "ranged_reload_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/workflow_api.json",
+          "sha256": "33c2a05d6f9cf2eb3d152aa596e044b200ac70cb35b3424d312b7fc6990054fb"
+        },
+        "ranged_reload_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/prompt.txt",
+          "sha256": "34addaf9767895e3074324704aa5182950f2e936f6cbe498fedc7ffe53abb2f7"
+        },
+        "ranged_reload_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/reference.json",
+          "sha256": "795a8719c6a8ccbfc991a5f2fd580f2186824f98e6647177d06f1cb2852cfdf8"
+        },
+        "ranged_reload_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte.json",
+          "sha256": "66cdc94b14b6943b6c1d02d2f94bb342aff1213e16d5eb056f6514beaf3f5c70"
+        },
+        "ranged_reload_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/staged_generation.json",
+          "sha256": "1430883ff3b1bd048eab09c5bd19cf4c67b02b3fcfff8427fdf15c492dc6c12d"
+        },
+        "ranged_reload_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/sampling_workflow_api.json",
+          "sha256": "3165b65c1cf1d7011ff2b3a094d28f684a6abcd4c16838b0cf40046c02134775"
+        },
+        "ranged_reload_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/sampling_submission.json",
+          "sha256": "21d54addbfd97ffda086ddfeee768a6296b68f8a5a39737fbcc2908960d009e1"
+        },
+        "ranged_reload_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/sampling_history.json",
+          "sha256": "73095b8134a024aed79bb17e7d9e6ffec8581a9b44c9c3fdfcc37d7659d3eb27"
+        },
+        "ranged_reload_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/original.latent",
+          "sha256": "caf4210a8b1da26fa15a0d01baa71f047b0eff5a22afde0d8f31198afeaac8e8"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Autonomous review of every chronological source phase, enlarged anatomy/grips/alpha, fixed-anchor joins and every selected native 128px Godot phase. Seven dedicated actions: reciprocal24-frame gait, melee29/contact13, planted guard20, physical fist salute26/contact9, impact/recovery32, corrected continuous grounded death36 and ranged54/contact13 with attached-point reload. Original8-frame240ms articulated idle retained. Excluded transient hit muzzle26, melee discharge-effects41-51 and ranged loose projectiles; rejected v1 reload and snapped/bent v1 death. Native candidate754 focused checks passed. No continuous playback, manual playtest, Linux or full-suite claim."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_001.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_002.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_003.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_004.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_005.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_006.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_007.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_008.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_009.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_010.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_011.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_013.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_015.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_017.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_019.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_021.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/move_v1/matte/rgba_023.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_027.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_029.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_031.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_033.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_035.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_037.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_039.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_070.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_074.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_078.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_080.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_086.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/attack_v1/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_008.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_009.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_010.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_011.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_013.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_015.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_017.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_019.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_021.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_023.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_025.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/defend_v1/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_021.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_023.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_025.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_027.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_029.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_080.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_081.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_083.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_085.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_086.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_087.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_089.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_092.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/cast_v1/matte/rgba_094.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_025.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_027.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_029.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_031.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_062.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_064.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_066.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_068.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_070.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_074.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_078.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_080.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_086.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_092.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_094.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_096.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_100.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/hit_v1/matte/rgba_104.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_044.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_046.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_049.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_050.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_051.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_053.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_055.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_056.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_057.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_058.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_062.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_064.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_066.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_068.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_070.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/death_v2/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_019.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_021.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_023.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_025.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_027.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_033.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_039.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_051.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_053.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_055.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_056.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_057.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_058.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_059.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_v1/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_002.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_003.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_004.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_005.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_006.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_007.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_008.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_010.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_044.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_046.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_050.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_056.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_066.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_078.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_096.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners/ranged_reload_v2/matte/rgba_102.png": 0.65
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "ranged",
+        "defend",
+        "cast",
+        "hit",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

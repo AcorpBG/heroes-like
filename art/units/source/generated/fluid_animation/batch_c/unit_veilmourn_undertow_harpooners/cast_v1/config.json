@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "clip": "cast",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 950005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Undertow Harpooner, a human-sized masked armored figure facing RIGHT in a locked three-quarter orthographic game view. A rigid ivory beaked mirror mask beneath a teal tricorn helmet with thin brass twigs. Dark teal plated armor, ragged ivory and navy cloak strips, brass rope netting over the waist, pointed teal boots, and one small violet glass lantern at the screen-left hip. Exactly TWO arms, TWO hands and TWO legs. Hold ONE long brass-and-teal mechanical harpoon launcher across the torso: right hand at the rear trigger grip on screen-left, left hand under the forward barrel toward screen-right, a central cylindrical brass rope drum, long rigid teal shaft and ONE barbed steel harpoon point aimed down-right in ready pose. Keep the whole shaft straight and constant length, preserve both grips and the single point, mask, lantern, netting and body proportions. Fixed body scale and ground baseline; full boots, cloak and entire weapon tip inside frame. Solid uniform saturated GREEN background RGB0,255,0 throughout, never blue, cyan, grey, black or gradients. Constant neutral light. One physical rally signal for a noncaster, no magic. Left hand continues supporting the launcher balanced across the torso. Right hand releases the rear grip, raises a closed fist beside the shoulder in a short deliberate signal, then lowers and regrips exactly the same rear trigger handle. Head gives a small nod. Feet stay planted. Keep the launcher rigid and unchanged, no shooting or spell effects, no extra arms or hands."
+}

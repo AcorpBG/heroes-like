@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    173,
+    "60a2f577-1598-41df-8547-450f39b22995",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Undertow Harpooner, a human-sized masked armored figure facing RIGHT in a locked three-quarter orthographic game view. A rigid ivory beaked mirror mask beneath a teal tricorn helmet with thin brass twigs. Dark teal plated armor, ragged ivory and navy cloak strips, brass rope netting over the waist, pointed teal boots, and one small violet glass lantern at the screen-left hip. Exactly TWO arms, TWO hands and TWO legs. Hold ONE long brass-and-teal mechanical harpoon launcher across the torso: right hand at the rear trigger grip on screen-left, left hand under the forward barrel toward screen-right, a central cylindrical brass rope drum, long rigid teal shaft and ONE barbed steel harpoon point aimed down-right in ready pose. Keep the whole shaft straight and constant length, preserve both grips and the single point, mask, lantern, netting and body proportions. Fixed body scale and ground baseline; full boots, cloak and entire weapon tip inside frame. Solid uniform saturated GREEN background RGB0,255,0 throughout, never blue, cyan, grey, black or gradients. Constant neutral light. One physical rally signal for a noncaster, no magic. Left hand continues supporting the launcher balanced across the torso. Right hand releases the rear grip, raises a closed fist beside the shoulder in a short deliberate signal, then lowers and regrips exactly the same rear trigger handle. Head gives a small nod. Feet stay planted. Keep the launcher rigid and unchanged, no shooting or spell effects, no extra arms or hands.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 950005
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "undertow_cast_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "undertow_h3/cast_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "undertow_h3",
+      "create_time": 1790518288763
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "undertow_h3\\cast_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "60a2f577-1598-41df-8547-450f39b22995",
+          "timestamp": 1790518289419
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "60a2f577-1598-41df-8547-450f39b22995",
+          "timestamp": 1790518289427
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "60a2f577-1598-41df-8547-450f39b22995",
+          "timestamp": 1790518442957
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

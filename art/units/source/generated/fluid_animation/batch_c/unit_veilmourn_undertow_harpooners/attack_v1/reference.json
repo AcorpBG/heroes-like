@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ac7a7d5d2513c8ccc21adc5299716e4b5accd9cb54ceee004d97c4fa5d8f46af",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a5eb87ef336185811924f1c2ffd20a148476f7f1f3457e60627a6f0b5f8fcef4",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "692f1dbd8897892322023b0f7418a4d2f2dc1426f91c972eda57325e262b2e2b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2d04d223861af0119f3d73a85fb9a25af231d3c72338851f082fff93827c6887",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
