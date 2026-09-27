@@ -1,0 +1,183 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomous review of every chronological source frame, enlarged identity/grip/alpha transitions on dark and light backgrounds, and every selected phase in the native Godot 128px reference-height overview. Reciprocal20-frame walk and its return,15-frame held brace,18-frame recoil/recovery,27-frame physical salute,37-frame continuous kneel/side-fall/grounded corpse, and40-frame two-handed thrust pass source/native phase review. Attack joins clean v1 anticipation/extension with v2 guided contact/recovery; v1 collision-spark intervals and v2 ready-to-thrust snap excluded. Joins v1 27-to33 and v1 40-to-v2 60 checked at native size with consistent anatomy/shaft/grips. Preserve eight original idle poses,240ms timing, map strip and catalog. Deliberate combat retiming shortens long holds; no duplicate/reversed/interpolated padding. Review was chronological frames and native phase renders; no continuous video playback or manual game playtest claimed."
+  },
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 35
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 37
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 38
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 39
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 90
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 95
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 97
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 98
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 99
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 100
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 101
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 102
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 103
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 104
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 105
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 106
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 107
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 108
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 109
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 110
+        },
+        {
+          "take": "attack_h3_v2",
+          "video_frame": 123
+        }
+      ],
+      "timing": {
+        "frame_msec": 40,
+        "contact_frame": 18
+      }
+    }
+  }
+}

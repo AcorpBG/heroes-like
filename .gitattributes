@@ -147,3 +147,8 @@ art/animation/source/fluid/unit_brasshollow_gaugeplate_bailiffs/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_veilmourn_tidehook_deckhands/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_veilmourn_tidehook_deckhands/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_tidehook_deckhands/*.json -text
+
+# Preserve hash-bound Roadwardens H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/**/*.txt -text
+art/animation/source/fluid/unit_neutral_roadwardens/*.json -text

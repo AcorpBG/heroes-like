@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8b94687e50afec0a3a41a49cbad7a0be9c8cdd55a8b1393a389bf37a960f4344",
+  "latent_sha256": "4f4aeba531e37bd9e4e76fa5a71773f6121d5e59b546309b51c053113388a2b9",
+  "decode_workflow_sha256": "da07f1d4cad301bebe8e91c745063bfd099e2b44b6e5a2b386ef246fdd9b6236",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "roadwarden_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
