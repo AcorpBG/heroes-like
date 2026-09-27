@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_neutral_roadwardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            512,
+            1280,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          768,
+          1528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9f7a8a106ac20127ebc4137b6f71f7a815f13ec8b64fb5748d510fa58e3cd199",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

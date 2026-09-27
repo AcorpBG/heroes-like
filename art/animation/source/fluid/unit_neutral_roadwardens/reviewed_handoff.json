@@ -1,0 +1,3999 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_roadwardens",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_078",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_065",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_067",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_069",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_094",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "death_h3_108",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_v1_attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_101",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_103",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_105",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_106",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_107",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_107.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 107,
+          "video_time_seconds": 4.458333333333333
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_109",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_109.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 109,
+          "video_time_seconds": 4.541666666666667
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_110",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "attack_h3_v2_attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 60,
+          "loop": true,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 14
+        },
+        "hit": {
+          "indices": [
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0
+        },
+        "cast": {
+          "indices": [
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "death": {
+          "indices": [
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 36
+        },
+        "attack": {
+          "frame_msec": 40,
+          "contact_frame": 18,
+          "indices": [
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+          ],
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/original_lossless.mkv",
+          "sha256": "f77e14cfaa44fdb4de7775c0e419558acd50c971c81c32e0e8715a3239d0eb30"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/original.json",
+          "sha256": "997804ce4d15ddbefdf83f5e266ff1abdc4df78e73b736d36d6eaa4b3d7b0e8e"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/workflow_api.json",
+          "sha256": "da07f1d4cad301bebe8e91c745063bfd099e2b44b6e5a2b386ef246fdd9b6236"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/prompt.txt",
+          "sha256": "7afbc7fe3143ccba847f25addc0acc6313ad76eff463d79880198138d4fc0ec5"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/reference.json",
+          "sha256": "4fd70d1acbe53f59382627375a780281c7d137a0ce31879811eb3af22aaee22f"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte.json",
+          "sha256": "bc9fb637c2a832e4f0340e53893fe3096f8f427024ed021ebc96ac1170b08f63"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/staged_generation.json",
+          "sha256": "d4779f818f2aeefee6c2ecda917ae41d1248a7d88e2484b42cebf500fef0704c"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "8b94687e50afec0a3a41a49cbad7a0be9c8cdd55a8b1393a389bf37a960f4344"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/sampling_submission.json",
+          "sha256": "1f2058e29c86e02600d0a6fbf7fc53c1b0f9c81f23f10cd977e650900de2a87a"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/sampling_history.json",
+          "sha256": "66392c0ea3467d769816da4c36cbd908d0eef8e099a0b14e817dda5d0616741a"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/original.latent",
+          "sha256": "4f4aeba531e37bd9e4e76fa5a71773f6121d5e59b546309b51c053113388a2b9"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/original_lossless.mkv",
+          "sha256": "c949340d803a4a498671488de3517457390c5ed90f4067a1d7c132b168f687fc"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/original.json",
+          "sha256": "9a790eb2b97c3e5c5b0358dd6f40a727aba06d6c2c67c9181943da6c59fe4aba"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/workflow_api.json",
+          "sha256": "745860d787c598faf09ac92084536aaa1fb6bb2aed08bd2c148c3af4158a6f2a"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/prompt.txt",
+          "sha256": "c28d1a473dfe753a049195be7198f5b034a5c26e129de77976287d64b28b26ee"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/reference.json",
+          "sha256": "a57dbea8d801c6d761fdb2f418b36e8584488f201fa573132d1cb4637b2f89d2"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte.json",
+          "sha256": "4800fe4a5a1db5ff4214210d4f08d919661035ac117b75be7fc1f3473c677262"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/staged_generation.json",
+          "sha256": "4e95e4b37be0f7898acc1429af88f4e397fdb8b648c94d9cc39fb7b99699bc29"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "f804c0a252d2575c0cc2b63514a7e6b3d3fe2c28adda3cc1f6912453abfd4fdd"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/sampling_submission.json",
+          "sha256": "7baf6b7441a5df27bf6e11b0cd11af938113106b1def8273c5de6e82fffdee44"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/sampling_history.json",
+          "sha256": "566ff638663b0dc799fbb588ab387f4eed3b3c23bde7d5c0c1260576c07b8945"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/original.latent",
+          "sha256": "544bd13aff0cbc6067f0157ad682b2192b04b44ee038e8d21ea1aafae7368b22"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/original_lossless.mkv",
+          "sha256": "332a80eeadd1464d7936852239cb5d7f2fc59d6c80709caa8d3cfb79adf63d4c"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/original.json",
+          "sha256": "d42e5061d308a99c4b6dd2960036cafbcfc7e543c96f6ed7a49ad530597de8a8"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/workflow_api.json",
+          "sha256": "98f6bf669bcfe7ff434501acbffe2529bad33faff7c054fb855394d930720eb9"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/prompt.txt",
+          "sha256": "4be585092a3ac572ee722166e4cfaf06ee22c55fed2169f5e9d048fbcc6e8603"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/reference.json",
+          "sha256": "3361a1d1244259df7ece002f233099269671ac166f068cbb974f36073b733263"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte.json",
+          "sha256": "5024b34d2b39fa515481bd12c3cbd4353cf3036802918883f0ef5321b6a307b5"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/staged_generation.json",
+          "sha256": "c4360aeaf37e5d3c0286623ad3a9c3f4c858063a738cb0c277fc45006c30113c"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "ea7b4ad12e253810cdde6dd0d587b7bf4622185425b1f922fadd3a4e8747f774"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/sampling_submission.json",
+          "sha256": "48abe0d583ebb9135158626377dd356b65c866c5f22dfee863a6549e05d45f20"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/sampling_history.json",
+          "sha256": "5111e182f1d80822f34315dcbf95cba199496a33b9586e67aa7c712633123df9"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/original.latent",
+          "sha256": "5004f1cb18937a302175da0b8d5d80686595c22c54a313e4304fbdd7a1fedab8"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/original_lossless.mkv",
+          "sha256": "88f43b31ba2b06f0017ba9b9f4c14dee0a51cd51d2cb46da4466f17ef5ae3fff"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/original.json",
+          "sha256": "a7e384e995eef38192d5e14b50b0beed180d232a5c915e2d5c23a5d9dceb7728"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/workflow_api.json",
+          "sha256": "6794d0dd3e2622b251fefc6efc94ddce85501c5dccc78134fba9f32cea6f65af"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/prompt.txt",
+          "sha256": "4ff4dce3cb04f59eee00212d375b732c915ba7f536f4f41260abeb67d9a73346"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/reference.json",
+          "sha256": "b1152756ef15cde0dfc08a3e9662de529ddd884caae77e9720ae4c294e207692"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte.json",
+          "sha256": "0a63bd4c8bac4b650196e0d03d6fb6007d8949eadef63deac0e131377480fc60"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/staged_generation.json",
+          "sha256": "529c9a299ea3740fd12b06119c7dda5f523ac0af05f3e12acc6aa5d7509b8c96"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "4bb00bacbe137e2cdb835043df4162e42dcdaf2902e18425d2bc23b455f44430"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/sampling_submission.json",
+          "sha256": "8a6a9bcdbe3d1694e9932fc3053d95a311e8d53d51a0f364751327ba8fd2f5d2"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/sampling_history.json",
+          "sha256": "dfef2825ae12abb546bde1c74a32be87a00522edaf74e3f453bd7e01e5df5620"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/original.latent",
+          "sha256": "43be2ab312da26f744557331e6108f5fce7f793724d9363a9e13e464f016d8a6"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/original_lossless.mkv",
+          "sha256": "ad4bff0dfcd7a06f744f57d275ee766bf84f6fea8e4669ea84f3d6e6a84ec98d"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/original.json",
+          "sha256": "8c555993f318176b56e67fbe34b43b9efc1ed88c778da9e6929d61f1e994dabe"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/workflow_api.json",
+          "sha256": "3d08c2914b7d5b1bdf8cbbf24bc3aa7d708030b1b171911cee08627f54be3be7"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/prompt.txt",
+          "sha256": "678d9c7369148dab0ddea979b84f1858d9e8167b001008b721bcf50fa87d6fc5"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/reference.json",
+          "sha256": "0f1f788d0904b296daa5f586d5e55fcde535414af85feebdf16e9ba58b1e35b1"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte.json",
+          "sha256": "34f597e7fb90688a2069f597105a7c5e4a59110d9c257fe64410c73047f16ef0"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/staged_generation.json",
+          "sha256": "a7b91e963f8a87aaee6a527740c32165882828d4bc921358efd632d223af5b50"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "d30b17c7c9f01e658ff8a5f68fb671827b85217acfab5ee0b707147474db354b"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/sampling_submission.json",
+          "sha256": "86dbc3e9eba3249ddbac93860774c20dbd3b0cabc286336b2af4478cde01ba2c"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/sampling_history.json",
+          "sha256": "ce5fdcdc51ff02ed6b3d5a4fa987ff539470ac35413b2f01ceac0cf970624668"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/original.latent",
+          "sha256": "72b50b41c117bf9b1ad047357267d3f79c0eee1dfba3d04b3abe220c5a33d43d"
+        },
+        "attack_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/original_lossless.mkv",
+          "sha256": "10f21fc34edc408563aa19cab3f920126d3ec0fe8449f457c16465ee7b0127ad"
+        },
+        "attack_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/original.json",
+          "sha256": "c2396723358ab24cbd595e7b35ffa9697eb8b69d74f5a47f5c8acdf19cfa65af"
+        },
+        "attack_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/workflow_api.json",
+          "sha256": "610ed1620d62d0f299394080c1e579d8bee71a64cbe395ed2198c24218c73f5b"
+        },
+        "attack_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/prompt.txt",
+          "sha256": "7423e1dbed1a6d0bfe7df567ca3b7d7dd73edec7a8d01a821382d6417a83abee"
+        },
+        "attack_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/reference.json",
+          "sha256": "10c34871b6991e778527a6ac5f286e4a303bcf52cf7bcbe32a5edae42f7c0f87"
+        },
+        "attack_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte.json",
+          "sha256": "e6ff241333fea8f3fa1d5d74ed3eb70b92af931c8d7c95d95d7009cdc3a36151"
+        },
+        "attack_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/staged_generation.json",
+          "sha256": "c7c8b55c98655b60f32a4dddcfa2e329701e76aa98c35ec024c62f2d9e1687a0"
+        },
+        "attack_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "9d28f1e5c5a9ca710212d546b69bd52433474206d9c6877e095c8a521161c8c0"
+        },
+        "attack_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/sampling_submission.json",
+          "sha256": "3c6f9c69632d2592129c495867d321c717623275e1e32bf9adc2bed959042c9e"
+        },
+        "attack_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/sampling_history.json",
+          "sha256": "5902073595c280b5181a5a58a3b906c2742da90dac2dbe6f52eaafe340f8e497"
+        },
+        "attack_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/original.latent",
+          "sha256": "9eb22a687361458cdae6553c475907976e05b668bbe52968e8ca00188ba1b002"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/original_lossless.mkv",
+          "sha256": "4be136d9b1909c70482f0a32bd90f69823745d9d6d44a2c7414aebbfc21693bf"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/original.json",
+          "sha256": "8e2ad37a073901d6bb51c76edc6c8820ed050110b855fb66cdcc2d1e5b240823"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/workflow_api.json",
+          "sha256": "4ea38537efc7d4fea5efc4b57efb8431bf0e56f6bc844455cec22d37f8d4a66b"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/prompt.txt",
+          "sha256": "31c8d5e28e92c4c550e002c4168b0e4ad1cacd88188bd723886c6c9113a1903d"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/reference.json",
+          "sha256": "24aefb013b834bfd1bebc11d5b2408bb188c3b85b6329137ffcbd7e08669e999"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte.json",
+          "sha256": "72c7b27d58ffff8b1151f603bc2a86b2ba77cc67c782105f23fc93f18d7d21e5"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/staged_generation.json",
+          "sha256": "17a9ad3932dee5a5332e164041dc89a05e22ec8821896242623c3215c5e4f770"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "b0f54db6c1786a642eee40bd3f4b5d32cfd2fd3ab4b908e44dc89c77c9c014ae"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/sampling_submission.json",
+          "sha256": "56032ec860b1a2f7a5ad93568d76b2959f49bdba877b4ab3b9a9ae0506760363"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/sampling_history.json",
+          "sha256": "0c5a65beaea83473cd9d45c53be2cf49653b2163d3187b8ea26019febc90ebb4"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/original.latent",
+          "sha256": "7c675167ba96fd168865d55ea27a2c9a73066477b95247e1eaf9f309f43a8796"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Autonomous review of every chronological source frame, enlarged identity/grip/alpha transitions on dark and light backgrounds, and every selected phase in the native Godot 128px reference-height overview. Reciprocal20-frame walk and its return,15-frame held brace,18-frame recoil/recovery,27-frame physical salute,37-frame continuous kneel/side-fall/grounded corpse, and40-frame two-handed thrust pass source/native phase review. Attack joins clean v1 anticipation/extension with v2 guided contact/recovery; v1 collision-spark intervals and v2 ready-to-thrust snap excluded. Joins v1 27-to33 and v1 40-to-v2 60 checked at native size with consistent anatomy/shaft/grips. Preserve eight original idle poses,240ms timing, map strip and catalog. Deliberate combat retiming shortens long holds; no duplicate/reversed/interpolated padding. Review was chronological frames and native phase renders; no continuous video playback or manual game playtest claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/move_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/defend_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/hit_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/cast_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/death_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_095.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_097.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_099.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_101.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_103.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_105.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_106.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_107.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_109.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_roadwardens/h3/attack_h3_v2/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "defend",
+        "hit",
+        "cast",
+        "death",
+        "attack",
+        "idle"
+      ]
+    }
+  ]
+}

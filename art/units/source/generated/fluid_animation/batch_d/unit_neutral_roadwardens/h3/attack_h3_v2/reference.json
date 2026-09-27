@@ -1,0 +1,88 @@
+{
+  "unit_id": "unit_neutral_roadwardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            512,
+            1280,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          768,
+          1528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9f7a8a106ac20127ebc4137b6f71f7a815f13ec8b64fb5748d510fa58e3cd199",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            368
+          ],
+          [
+            1536,
+            368,
+            1939,
+            371
+          ],
+          [
+            1942,
+            368,
+            2048,
+            371
+          ],
+          [
+            1536,
+            371,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          504
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "original_pixel_exclusion": [
+            1939,
+            368,
+            1942,
+            371
+          ],
+          "reason": "Six disconnected alpha>8 background-residue pixels beside the steel hook; no body or weapon component intersects this rectangle."
+        }
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6f906a53a21f62fb410ca86cd8b22a766f6b9a70c35e436eda49ebcd0a778289",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

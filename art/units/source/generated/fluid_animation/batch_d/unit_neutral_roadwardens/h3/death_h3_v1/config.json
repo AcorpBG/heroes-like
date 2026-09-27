@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_neutral_roadwardens",
+  "clip": "death",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 60,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+      "rects": [
+        [
+          512,
+          1280,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        768,
+        1528
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        760
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        760
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1016
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      88,
+      2
+    ]
+  ],
+  "seed": 986005,
+  "prompt": "One original Roadwarden facing RIGHT in an elevated three-quarter orthographic fantasy strategy sprite view. A sturdy human man with a short brown beard and moustache, steel kettle helmet with a rounded crown and brim, mustard-ochre tattered shoulder cloak, worn orange-brown leather tunic with cream sleeves, a diagonal row of round bronze road tokens and more tokens at the belt, muted olive trousers, brown leather gloves and knee-high strapped brown boots. Exactly two arms, two gloved hands, two legs and two boots. He carries ONE long straight dark wooden polearm with a single steel spear point and crescent bill-hook at the forward upper end, and a small steel butt spike at the rear lower end. The RIGHT near hand at the lower left side of the image grips the rear shaft near the hip; the LEFT far hand on the right side grips the forward shaft near the chest. Both hands stay wrapped around this ONE continuous rigid polearm, with normal finger counts. Never duplicate the shaft or turn it into a sword or axe. Preserve full weapon length and its single hooked steel head. Maintain original painterly detail, body proportions, costume, camera and anatomical ground registration. Full helmet, cloak, boots, polearm point and butt spike remain within view. Locked camera, no zoom or root translation. Uniform GREEN RGB0,255,0 background, with no floor, shadow, scenery, text, enemies, particles, glow, streaks or projectiles. Lose support and collapse continuously onto the side. Bend both knees, sink to kneeling while lowering the held polearm, lean and place one elbow near the ground, lower the torso gradually and fold the legs behind. The polearm remains one rigid object and settles on the ground beside the body. Only loosen the grips as the shaft rests. Finish in the original grounded side-lying corpse, no standing again, disappearing limbs, pose cuts or white holes. The cloak settles against the prone body. No gore or external effects.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

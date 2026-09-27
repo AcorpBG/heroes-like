@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_neutral_roadwardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            512,
+            1280,
+            1024,
+            1536
+          ]
+        ],
+        "anchor": [
+          768,
+          1528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9f7a8a106ac20127ebc4137b6f71f7a815f13ec8b64fb5748d510fa58e3cd199",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            1024,
+            512,
+            1536,
+            768
+          ]
+        ],
+        "anchor": [
+          1280,
+          760
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3be8ec9bd75f5ec9566e03997838cc60d37c2708e2b0c3eb0c7de0542f4064ef",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          760
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "04580351296b633f0ea6d0c92225b388597b6c7f6522542f09be24f5b7d8806d",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_roadwardens.png",
+        "rects": [
+          [
+            0,
+            768,
+            512,
+            1024
+          ]
+        ],
+        "anchor": [
+          256,
+          1016
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8812d55156f6e827243e36be0331585b0b29521108090202af3c8e4dc92bc708",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "248e0c5db7c71ad627ae339e62801f9e633a1acc3d8ce970462f59055dd818bf",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
