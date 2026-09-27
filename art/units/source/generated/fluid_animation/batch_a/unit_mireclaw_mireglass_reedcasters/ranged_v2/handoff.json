@@ -1,0 +1,998 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_mireclaw_mireglass_reedcasters",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_110",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "ranged_h3_114",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "ranged_h3_116",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "ranged_h3_118",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "ranged_h3_120",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "ranged_h3_122",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte/rgba_122.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 122,
+          "video_time_seconds": 5.083333333333333
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 19
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/original_lossless.mkv",
+          "sha256": "5891db5c17dd83983b77bf81874ae1cb8c134b4f877d34f5d9db5372740ada8c"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/original.json",
+          "sha256": "ab13b6229db3ddb810f7cc977416716c80321ee57b71e38e5526e132142b6b38"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/workflow_api.json",
+          "sha256": "b10c408e5fb31175e38e6a5f2fc61df929b9d7119eec9327178cbdf24e2c2e8e"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/prompt.txt",
+          "sha256": "da6d62151bb40c61c16e73ef18469748a790fce2aaf74ecdefd6d2125938de13"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/reference.json",
+          "sha256": "ddca4c052e6373dcf06161344439d8a752ff04fe6f749159c54a9d6339e1452e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/matte.json",
+          "sha256": "7b07627ea0ea8b5e29196e9d154de6c3c652b972b977a95f8f2b4324f1dde9a9"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/staged_generation.json",
+          "sha256": "21bdfef4b7032a5f5814a7a6154d7ff3475497c9163ad21776d128130cee26d0"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/sampling_workflow_api.json",
+          "sha256": "922eacaa6be41f878c85ecf7b59d939a4d7a0632629a66f67e0e43f05b42f219"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/sampling_submission.json",
+          "sha256": "c24d57ef53377d1db8fdfa51fb422ead0ea855243091ad7409dea896cf80e8ee"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/sampling_history.json",
+          "sha256": "2ca71883967df37758cbbb611a5d4faf6c0e73173447a9380ccc6a7484148a38"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/ranged_v2/original.latent",
+          "sha256": "a576084f6c65fcf4b66493505b02eebc4413e2cad4b4ba99e8a6338b9bfbdf5d"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_intervals",
+        "notes": "Reviewed124 chronological originals, enlarged aiming/release/recovery and fixed-anchor62-to80 join. Both arms raise the staff, pulse it forward, then lower it to ready; all three globes remain attached. Excluded63-79 because the large overswing elongates a globe. The join retains the extended staff/torso position with a small settling displacement of the globes; inspect again at native scale. First take remains rejected for color cycling. Contact at original62; no synthesized frames. Selected original phases inspected in offscreen Godot at128px battle scale; no continuous playback claim."
+      }
+    }
+  ]
+}

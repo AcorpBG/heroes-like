@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    257,
+    "e03f6eff-ce35-4d4c-ba0e-ae98894b022d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Mireglass Reedcaster, facing RIGHT in the same fixed elevated three-quarter orthographic fantasy strategy view as the reference. Exactly one hooded reptilian humanoid, two arms, two hands, two legs and two clawed feet. Olive green layered leaf mantle and pointed hood, thin gold edging, shadowed face with two green eyes, brown scaled limbs, leather and brass wrist/ankle guards. Both hands grip ONE long rigid dark brown twisted reedwood staff across the body. Right near hand grips its lower half at the waist; left far hand grips the upper shaft toward screen right. The curved upper staff head has EXACTLY THREE distinct ROUND turquoise-green glass globes, each attached by its own thin brown hanging cord; keep all three globes round and intact, with unchanged subtle internal green liquid. Small turquoise belt bottle remains fixed at the waist and is not a fourth hanging globe. The rigid staff never changes length, splits, bends or swaps hands. Hanging globes swing gently with real pendulum inertia and keep separate cords; no globe duplication or loss. Fixed camera, fixed anatomical scale, full body and entire staff/globes always in frame. Uniform saturated BLUE RGB0,0,255 flat background with no shadows or scenery. Constant neutral illumination and stable colors. One short body flinch followed by recovery. Shoulders and hood recoil backward, knees flex, elbows draw the staff closer to the chest while keeping both grips and all three globes. Then straighten and return to the initial ready pose. Feet remain near the original contacts. No attacking or invoking, no visual emissions. The solid blue backdrop remains exactly the same color and illumination throughout the entire action.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 981006
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reedcasters_hit_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reedcasters_hit_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 36,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "reedcasters_h3/hit_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "reedcasters_h3",
+      "create_time": 1790533192188
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "reedcasters_h3\\hit_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "e03f6eff-ce35-4d4c-ba0e-ae98894b022d",
+          "timestamp": 1790533192780
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "e03f6eff-ce35-4d4c-ba0e-ae98894b022d",
+          "timestamp": 1790533192793
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "e03f6eff-ce35-4d4c-ba0e-ae98894b022d",
+          "timestamp": 1790533345874
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

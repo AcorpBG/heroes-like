@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ff7a2472fd393288f1ed02826f390578abaceda911c9245a6385232e51255195",
+  "latent_sha256": "8ca3fe27d3fc7475e459344f23a68c0639cec63889e40b14f916625457342ea0",
+  "decode_workflow_sha256": "8019d8d354311efd126c5c2786dafb726cbcf4187b22341876d7c816d2c4a451",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedcasters_h3\\cast_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17317273600,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
