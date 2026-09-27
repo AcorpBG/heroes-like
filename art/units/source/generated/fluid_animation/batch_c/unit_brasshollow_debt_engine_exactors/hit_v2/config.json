@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "clip": "hit",
+  "scale": 0.55,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 935103,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. The automaton suffers one physical stagger. Bend knees, pull the armored chest and helmet backward slightly at the hip joints, let the two gauntlets recoil with the elbows, then regain balance and return to the same ready posture. Keep both boots planted, no falling or stepping away. Furnace and visor remain the same shape with steady orange glow. No attack, no firing, no detached panels, no new weapon, no duplicated body. One clear recoil and recovery.One small clear physical recoil and recovery, animated continuously. An unseen impact makes the upper body lean slightly backward while both knees bend a little and both elbows lift the gauntlets away from the hips. The head follows the chest and the waist pistons compress. Both boots remain firmly planted at the original ground line. Then the knees straighten, the chest returns upright and both gauntlets settle to the exact starting position. Show the entire hinged-joint transition into and out of the recoil with many distinct intermediate positions. Modest readable movement only: no falling, no stepping, no turning away, no arm strike, no magic or incoming projectile. All mechanical segments remain rigid and connected, with constant body proportions. Fixed camera, flat green plate, no dissolves or cuts.",
+  "protected_foreground_chroma": 16
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "761eb3e5375ca7502238a20094892499a3dba2f039f9f9f29fd2feeccab93d40",
+  "latent_sha256": "002e0cc904522bf6b75187082dd718c142e24e06c2ad3107d4863df02788c1e9",
+  "decode_workflow_sha256": "3c5bf9128f1b3f52e628f9427588f1e94ab2f106360645048f8ecfd3cc567d06",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "debtexactor_h3\\death_settle_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17443450880,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

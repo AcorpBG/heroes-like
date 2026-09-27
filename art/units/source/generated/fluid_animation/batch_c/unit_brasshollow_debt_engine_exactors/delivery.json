@@ -1,0 +1,182 @@
+{
+  "takes": [
+    "move_v2",
+    "attack_v2",
+    "defend_v1",
+    "cast_v1",
+    "hit_v2"
+  ],
+  "clip_sequences": {
+    "death": {
+      "frames": [
+        {
+          "take": "death_v1",
+          "video_frame": 17
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 35
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 37
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 39
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 41
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 43
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 49
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 55
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 61
+        },
+        {
+          "take": "death_v1",
+          "video_frame": 65
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 23
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 25
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 27
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 29
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 31
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 33
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 35
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 39
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 47
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 59
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 71
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 83
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 95
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 107
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 119
+        },
+        {
+          "take": "death_settle_v2",
+          "video_frame": 123
+        }
+      ],
+      "timing": {
+        "frame_msec": 50
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomous review: all 124 source frames per take inspected chronologically, selected frames enlarged, reciprocal gait and death joins inspected at fixed anchors, all final native 128px phases reviewed. Six dedicated actions retain asymmetric gauntlets, mechanical limbs and furnace details. Original eight-pose articulated idle retained. Corrected ghosting walk, morphing overhead punch, snapped hit and backward death by replacement takes. 247 focused candidate checks passed. No continuous playback or manual playtest claimed."
+  }
+}

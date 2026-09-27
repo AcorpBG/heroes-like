@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_debt_engine_exactors",
+  "clip": "death",
+  "scale": 0.55,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_debt_engine_exactors/death_v1/matte/rgba_065.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.8,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_debt_engine_exactors.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 935104,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original heavy brass-and-dark-steel humanoid debt-engine automaton facing RIGHT, fixed orthographic three-quarter game camera. Exactly two articulated mechanical arms and two heavy armored legs. The NEAR arm on image LEFT has the huge cylindrical fist with orange furnace slots; the FAR arm on image RIGHT has the smaller articulated gauntlet. Preserve their different sizes and sides. Original narrow orange visor inside the closed crown-topped helmet, circular orange barred furnace core, gold piston joints, red wax seals and cream hanging parchment strips, brown leather waist apron and two short shoulder exhaust stacks. One body, one head, no face or operator. Keep all armor panels, fist shapes and brass fittings consistent. Uniform flat pure green backdrop, fixed original body size and ground baseline, full figure comfortably inside frame, sharp painted fantasy strategy sprite outlines. The automaton begins ALREADY KNEELING in the supplied pose, disabled and exhausted. It collapses slowly FORWARD onto its forearms and chest, ending face-down in the exact supplied grounded wreck pose. The huge near gauntlet is already close to the ground and supports the falling chest; its elbow folds as weight comes down. The smaller far gauntlet reaches down and stays beside the helmet. Hips lower, knees remain bent, the two lower legs fold beneath and behind the torso. The helmet lowers toward the ground with the chest without turning the back of the head toward the camera. Keep every body segment connected and rigid. A single smooth heavy forward collapse with clear intermediate elbow, hip and knee positions. No standing back up, no straight-legged sitting pose, no floating, no backward fall, no rolling over, no flip, no spinning, no crossfade or cuts. Final torso, head, both gauntlets and knees rest firmly on the same ground. Furnace, visor and vents gradually go dark and quiet. No explosions or detached parts.",
+  "protected_foreground_chroma": 16
+}
