@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "clip": "cast",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        248
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_022.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        490
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      72,
+      1
+    ]
+  ],
+  "seed": 982024,
+  "prompt": "One original Noonfacet Sentinel, facing RIGHT in the fixed elevated three-quarter orthographic fantasy strategy view of the references. Exactly one humanoid knight, two arms and hands, two armored legs and feet. Ivory plate armor with gold edging, navy underlayers and a long split ivory/navy tabard. Closed angular gold-and-ivory helmet. RIGHT near hand on screen left holds ONE long rigid dark shaft with a gold sunburst collar and two pointed pale crystal spear blades; one ivory/gold cloth streamer hangs below its head. LEFT far forearm carries ONE tall rigid kite shield on screen right, gold border, pale blue/white faceted face and one circular silver boss. Keep the spear in the right hand and shield attached to the left forearm, unchanged length, shape and materials. No extra limbs, weapons or blade duplication. Fixed camera and anatomical scale, complete body and every weapon tip always within frame. Uniform saturated GREEN RGB0,255,0 background, flat and unchanged throughout, no shadows or scenery. Stable neutral illumination. One slow ceremonial weapon salute, with no strike: raise the RIGHT elbow and present the polearm horizontally ABOVE the helmet exactly as shown in the middle reference, briefly hold that pose, then carefully lower the same weapon back to the original upright ready position. LEFT arm holds its shield at the side; feet remain in the same grounded stance. The complete weapon is visible in the overhead reference: twin crystal point at ONE end, round gold butt cap at the opposite end. Its fixed rigid shaft must remain that exact length and shape; never add a pointed blade or ornament to the butt. This is a physical rally gesture by a noncaster, no attack contact or magic. Steady matte paint, no glow or emitted effects.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

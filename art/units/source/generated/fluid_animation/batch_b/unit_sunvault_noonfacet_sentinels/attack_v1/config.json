@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "clip": "attack",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        248
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        504
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        504
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      60,
+      2
+    ]
+  ],
+  "seed": 982002,
+  "prompt": "One original Noonfacet Sentinel, facing RIGHT in the fixed elevated three-quarter orthographic fantasy strategy view of the references. Exactly one humanoid knight, two arms and hands, two armored legs and feet. Ivory plate armor with gold edging, navy underlayers and a long split ivory/navy tabard. Closed angular gold-and-ivory helmet. RIGHT near hand on screen left holds ONE long rigid dark shaft with a gold sunburst collar and two pointed pale crystal spear blades; one ivory/gold cloth streamer hangs below its head. LEFT far forearm carries ONE tall rigid kite shield on screen right, gold border, pale blue/white faceted face and one circular silver boss. Keep the spear in the right hand and shield attached to the left forearm, unchanged length, shape and materials. No extra limbs, weapons or blade duplication. Fixed camera and anatomical scale, complete body and every weapon tip always within frame. Uniform saturated GREEN RGB0,255,0 background, flat and unchanged throughout, no shadows or scenery. Stable neutral illumination. One physical spear strike: bend the right elbow and raise the spear to a compact windup, then rotate the right shoulder and extend the right arm to drive the twin crystal point down and forward toward screen right. Keep the left shield covering the chest. Recover the same right-hand grip and return the spear upright. The shield never changes hands. No light trails, sparks, emitted magic, projectiles or extra objects. Maintain full tip clearance.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

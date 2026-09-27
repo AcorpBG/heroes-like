@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    267,
+    "ecf20e25-cfce-47a8-af0f-0cc742c47997",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Noonfacet Sentinel, facing RIGHT in the fixed elevated three-quarter orthographic fantasy strategy view of the references. Exactly one humanoid knight, two arms and hands, two armored legs and feet. Ivory plate armor with gold edging, navy underlayers and a long split ivory/navy tabard. Closed angular gold-and-ivory helmet. RIGHT near hand on screen left holds ONE long rigid dark shaft with a gold sunburst collar and two pointed pale crystal spear blades; one ivory/gold cloth streamer hangs below its head. LEFT far forearm carries ONE tall rigid kite shield on screen right, gold border, pale blue/white faceted face and one circular silver boss. Keep the spear in the right hand and shield attached to the left forearm, unchanged length, shape and materials. No extra limbs, weapons or blade duplication. Fixed camera and anatomical scale, complete body and every weapon tip always within frame. Uniform saturated GREEN RGB0,255,0 background, flat and unchanged throughout, no shadows or scenery. Stable neutral illumination. One physical spear strike: bend the right elbow and raise the spear to a compact windup, then rotate the right shoulder and extend the right arm to drive the twin crystal point down and forward toward screen right. Keep the left shield covering the chest. Recover the same right-hand grip and return the spear upright. The shield never changes hands. No light trails, sparks, emitted magic, projectiles or extra objects. Maintain full tip clearance.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 982002
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonfacet_attack_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonfacet_attack_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "noonfacet_attack_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "noonfacet_h3/attack_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "noonfacet_h3",
+      "create_time": 1790535583399
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "noonfacet_h3\\attack_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "ecf20e25-cfce-47a8-af0f-0cc742c47997",
+          "timestamp": 1790535583996
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "ecf20e25-cfce-47a8-af0f-0cc742c47997",
+          "timestamp": 1790535584015
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "ecf20e25-cfce-47a8-af0f-0cc742c47997",
+          "timestamp": 1790535742663
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

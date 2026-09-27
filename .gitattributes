@@ -127,3 +127,8 @@ art/animation/source/fluid/unit_embercourt_cinderseal_bombardiers/*.json -text
 art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/**/*.json -text
 art/units/source/generated/fluid_animation/batch_a/unit_mireclaw_mireglass_reedcasters/**/*.txt -text
 art/animation/source/fluid/unit_mireclaw_mireglass_reedcasters/*.json -text
+
+# Preserve hash-bound Noonfacet Sentinels H3 provenance.
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/**/*.txt -text
+art/animation/source/fluid/unit_sunvault_noonfacet_sentinels/*.json -text
