@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5e72902576ec527c6be3873c1e527b59d702e105ec7cfa1af503b37b4d8c09ac",
+  "latent_sha256": "4d69598222c45f5398f7208e9b783f827dc7ace6521d4d872bded933057c54ff",
+  "decode_workflow_sha256": "9683f13f27928dbbd96f368d9db2df1732346ea8c0f9f1402ae46eaeaa6f8bd8",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugeplate_h3\\death_settle_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18469886976,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

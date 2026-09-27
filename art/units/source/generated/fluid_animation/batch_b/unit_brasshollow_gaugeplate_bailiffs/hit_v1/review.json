@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "reason": "Original frames20-35 add an incoming glowing projectile and shield sparks. Recoil begins before effects fully clear; dropping that interval would lose the continuous motion. Preserve take as source, replace with body-motion-only guidance."
+}

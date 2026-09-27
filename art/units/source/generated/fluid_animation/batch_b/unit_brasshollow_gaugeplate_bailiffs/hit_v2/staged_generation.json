@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "fe0fcff4e4be16883d5d8e5c311071879844ad645f53198037ba638ec69a8e43",
+  "latent_sha256": "17af38157598af4949eb4d9bb7713feba0157042afc0532cbd85ba6c0ae543fb",
+  "decode_workflow_sha256": "eb6837c2aba7fa2c79393a29575da983da2e01f27a533a89a2667484b7604bb7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugeplate_h3\\hit_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17428770816,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

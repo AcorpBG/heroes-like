@@ -1,0 +1,218 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "defend_v1",
+    "hit_v2",
+    "cast_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomous review of every chronological original frame, enlarged identity/alpha/limb/equipment details, source loop and segment boundaries, and all selected native Godot battle phases at actual128px reference height. Reciprocal42-frame gait,35-frame hammer anticipation/contact/recovery,24-frame held shield brace,26-frame clean recoil/recovery,30-frame physical rally salute,49-frame kneel/support-transfer/side-roll/grounded corpse. Hammer remains in near right hand, round gauge shield stays on far left arm; two boots and brass helmet/boiler identity retained. Original8-frame articulated idle is preserved at matching body scale. The death joins a valid original kneel/lean interval to a dedicated gradual final descent, excluding the defective snap and white artifact in prior takes. Small original boiler exhaust wisps remain in move/support. Native candidate272 checks pass. Review covers chronological frames and native phase renders; continuous video playback, manual playtest and Linux execution are not claimed."
+  },
+  "clip_sequences": {
+    "death": {
+      "frames": [
+        {
+          "take": "death_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 10
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 12
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 14
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 15
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 17
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 18
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 19
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 20
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 22
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 26
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 46
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 50
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 54
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 58
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "death_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 4
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 8
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 12
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 16
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 20
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 24
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 28
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 32
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 36
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 40
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 44
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 48
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 52
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 56
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 60
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 64
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 68
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 72
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 76
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 80
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 84
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 92
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 108
+        },
+        {
+          "take": "death_settle_v3",
+          "video_frame": 123
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      }
+    }
+  }
+}

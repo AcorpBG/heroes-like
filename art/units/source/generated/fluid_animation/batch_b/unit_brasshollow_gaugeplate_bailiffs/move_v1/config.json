@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "clip": "move",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 40,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 0.83,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+      "rects": [
+        [
+          0,
+          256,
+          512,
+          512
+        ]
+      ],
+      "anchor": [
+        256,
+        492
+      ],
+      "scale": 0.83,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      60,
+      1
+    ]
+  ],
+  "seed": 984000,
+  "prompt": "One original Gaugeplate Bailiff facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. Exactly one short stocky humanoid with two armored arms and hands, two legs and two brass boots. Rounded polished brass diving helmet, two blue glass goggle lenses, ribbed brass breathing mask, blue cloth joints and blue-and-white angular waist tabard. Brass boiler with short pipes fixed on back. RIGHT near hand on screen left grips the single short dark hammer handle below its rectangular double-ended metal head, with a small ivory pressure dial on the head. LEFT far forearm on screen right carries one large round brass shield with riveted rings and ivory pressure-gauge face and red needle. Preserve the same shield size, dial, hammer shaft length, two hands and armor; no new weapon. Fixed camera, consistent body scale and ground anchor, full boots, pipes, hammer and shield always visible. Solid uniform saturated GREEN RGB0,255,0 backdrop for the entire clip, no scenery, no floor, no cast shadow, no particles, smoke, sparks, light effects or text. Walk in place toward the right in complete reciprocal cycles. Alternate left and right boots through heel contact, full weight bearing, knee lift and passing. Heavy measured gait with clear knee/ankle articulation; both hands keep their original grips. Shield carried slightly ahead of torso, hammer held safely beside body. Body stays centered; do not slide or turn. Return to initial support phase.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

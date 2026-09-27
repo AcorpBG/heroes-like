@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    328,
+    "5aae7a97-7580-48d4-bf43-aa43f938471c",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Gaugeplate Bailiff facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. Exactly one short stocky humanoid with two armored arms and hands, two legs and two brass boots. Rounded polished brass diving helmet, two blue glass goggle lenses, ribbed brass breathing mask, blue cloth joints and blue-and-white angular waist tabard. Brass boiler with short pipes fixed on back. RIGHT near hand on screen left grips the single short dark hammer handle below its rectangular double-ended metal head, with a small ivory pressure dial on the head. LEFT far forearm on screen right carries one large round brass shield with riveted rings and ivory pressure-gauge face and red needle. Preserve the same shield size, dial, hammer shaft length, two hands and armor; no new weapon. Fixed camera, consistent body scale and ground anchor, full boots, pipes, hammer and shield always visible. Solid uniform saturated GREEN RGB0,255,0 backdrop for the entire clip, no scenery, no floor, no cast shadow, no particles, smoke, sparks, light effects or text. Perform one slow continuous heavy collapse. Knees buckle, torso descends, then the right gauntlet and hammer approach the ground; shoulder and helmet roll down into the final side-lying grounded body. The round shield lowers with the left arm and rests against the body; the hammer remains one rigid intact weapon in the right hand. Show all intervening knee, elbow, shoulder and helmet contacts. Do not cut or dissolve from kneeling to corpse, do not turn into another design, do not bounce back up. Finish completely still in the final fallen pose.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 984005
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugeplate_death_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugeplate_death_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gaugeplate_h3/death_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gaugeplate_h3",
+      "create_time": 1790544729142
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gaugeplate_h3\\death_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "5aae7a97-7580-48d4-bf43-aa43f938471c",
+          "timestamp": 1790544729142
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "5aae7a97-7580-48d4-bf43-aa43f938471c",
+          "timestamp": 1790544729156
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "5aae7a97-7580-48d4-bf43-aa43f938471c",
+          "timestamp": 1790544854996
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

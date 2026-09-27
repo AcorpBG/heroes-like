@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          236
+        ],
+        "scale": 1.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "aa3acf3d8a370ac0ecf4f28cb7b84b585e5363f9f6e2be5c017dae8d54590481",
+      "runtime_source_scale": 0.83
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          492
+        ],
+        "scale": 1.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f79c8a03999a834cfa54fd932949764e463854be9ed4dc1692adfe5f17cf5540",
+      "runtime_source_scale": 0.83
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 1.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "989450a1fd3481321f13a9c5102d6e45731080a0f99a15caf885e578822521e9",
+      "runtime_source_scale": 0.83
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
