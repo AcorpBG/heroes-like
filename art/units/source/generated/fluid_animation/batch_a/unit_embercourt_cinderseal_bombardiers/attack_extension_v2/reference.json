@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_embercourt_cinderseal_bombardiers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+        "rects": [
+          [
+            0,
+            256,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "17990547f2b4d3b3a259e19dcb92375f60677f5f065e67d077a025a9fd30adde",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+        "rects": [
+          [
+            512,
+            256,
+            1024,
+            512
+          ]
+        ],
+        "anchor": [
+          768,
+          492
+        ],
+        "scale": 1.5384615384615383,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e83acda385ba75f24bad9f264542ce49a7be5a4b6b939be82e21271607708c7a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9efa8a4c858acccc20e5d7e585229c414483f4195a7ecdf80181a863f2cd2eb2",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "865b63082eee479f30598d5ba3117f640f510b479a9f3ac8c4d65498864021de",
+  "latent_sha256": "43cff3f2a7aaae945de2a6022d990a2fb61cba1f958d50861848629c82b3e502",
+  "decode_workflow_sha256": "fa472a38c7ebe586c1490bdc9475d65430846ade85eb480ea45c9dbbfe574d2d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cinderseal_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17435062272,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

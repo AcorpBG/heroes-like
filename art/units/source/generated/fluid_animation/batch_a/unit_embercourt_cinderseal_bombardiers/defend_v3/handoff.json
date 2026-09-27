@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_cinderseal_bombardiers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_084",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "defend_h3_086",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "defend_h3_088",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "defend_h3_090",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "defend_h3_092",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "defend_h3_094",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "defend_h3_096",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "defend_h3_098",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "defend_h3_100",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "defend_h3_102",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "defend_h3_104",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "defend_h3_106",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "defend_h3_108",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "defend_h3_110",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "defend_h3_114",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "defend_h3_118",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 17
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/original_lossless.mkv",
+          "sha256": "8e5ed8520f5910cc054cf5c7b4ea8b1900cf1a302f4cd01b6ade5624b889ce0c"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/original.json",
+          "sha256": "2ce7ae0a1bd341e7e55c8c8ddb28900c9659c9a652225a87d23bdfaa01b65fca"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/workflow_api.json",
+          "sha256": "3558cc2b7bdec508f7f0311f3ceb938db5bcea680a2c7ba439cc4eb75d0d9dfd"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/prompt.txt",
+          "sha256": "02a939eca2cb3b11e38ffc8cc78179f96498dac22129e083f3b1b1154b861e03"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/reference.json",
+          "sha256": "af916adfbe5cbdc4b61f573422ac98578ac608d7f22f790207912f290e6345dc"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/matte.json",
+          "sha256": "e2d26cc92aaa67fde6bd2b38e5bd55b891d39b9cdd49c45632ba337df3886645"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/staged_generation.json",
+          "sha256": "c861036fa5c9ec7fadeb4b3cabbcd9e1109f45b0e53a1408b097288925ad71ae"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/sampling_workflow_api.json",
+          "sha256": "3004a9208e01673a6d27889c0225a053709db68868e8bc31b27d99c66d03a469"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/sampling_submission.json",
+          "sha256": "f1beabee0b5d4ae3e7da40e158917352bf5ef0525fe7b0e77d895ec80dfe0c1d"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/sampling_history.json",
+          "sha256": "1908f7a9d633df53d2cf81d87209f6da12868af8686414125e7be8483e6b94cd"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/defend_v3/original.latent",
+          "sha256": "553cc43b51eff2ef50d2165ef435697be26306c3747948ff7abd06ac3707e118"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clip",
+        "notes": "Reviewed all124 chronological originals. Endpoint-only shallow guard resolves prior conditioning cuts: knees progressively bend88-118, hips lower, hood tucks and both boots remain grounded; right hand and shoulder carry the cannon without changing grip, left baton remains low. Final123 is a stable low protective stance. Long initial hold removed; 18 original frames at50ms. The endpoint painting is reviewed death_v1/frame48, used as a guide only; all runtime defense frames come from this dedicated defense video. Pending native review. Selected intervals inspected in offscreen Godot at128px battle size; no continuous playback claim."
+      }
+    }
+  ]
+}

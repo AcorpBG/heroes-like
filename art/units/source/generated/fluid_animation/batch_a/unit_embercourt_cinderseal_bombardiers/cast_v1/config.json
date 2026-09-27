@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_embercourt_cinderseal_bombardiers",
+  "clip": "cast",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_embercourt_cinderseal_bombardiers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 980005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original Cinderseal Bombardier facing RIGHT in the same elevated three-quarter orthographic fantasy strategy game view. Exactly ONE humanoid, TWO arms, TWO hands, TWO legs and TWO boots. Red pointed closed hood and narrow dark face opening, red and gold-edged split coat, dark trousers, bronze plate gloves and boots, belt with round brass seals and red canisters. Exactly ONE large bronze shoulder cannon: a long rigid hollow cylinder with a thick flared circular bronze muzzle, dark bore and red wrapping, resting over the RIGHT shoulder and extending diagonally forward above the hood toward screen-right. RIGHT hand remains on its rear handle beside the right cheek. LEFT hand holds ONE separate SHORT red-and-brass ignition baton with a blunt circular end, initially pointing down-right. Preserve both hands and distinct props; no added cannon, no second humanoid, no hand swaps, no stretching or melting barrels. The cannon is a solid heavy rigid tube, not a limb. Locked camera, fixed anatomical scale, full figure and all equipment inside the frame. Stable ground baseline. Flat uniform saturated GREEN background RGB0,255,0, constant neutral lighting. No scenery, camera motion, plate shadows, flashes, glowing trails, magic, explosions, smoke, sparks or projectiles. A physical readiness signal, not spellcasting. Keep the cannon firmly resting on the right shoulder. Bend the left elbow to raise the short red-brass igniter baton upright beside the chest, give one small deliberate nod of the hood, hold the signal briefly, then lower the same baton back down to the original ready pose. Both boots planted, one left hand only, no firing and no magic."
+}

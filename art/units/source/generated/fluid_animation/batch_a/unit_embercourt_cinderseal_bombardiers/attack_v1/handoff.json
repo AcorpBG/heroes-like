@@ -1,0 +1,734 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_cinderseal_bombardiers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_019",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_025",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_029",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_059",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_061",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_063",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_065",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_067",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/original_lossless.mkv",
+          "sha256": "0403bbfc44fe26e8a3eb506f8e9a07b1ab9d55f6acc3e103d26ee2dc19467527"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/original.json",
+          "sha256": "d755d6a8f14e4e2283d96ebcdb37df5503d56799add54e5ac94cbe74c6496e98"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/workflow_api.json",
+          "sha256": "94acbeef7b84fd9c29c794e30efbad946403538722359a7c406579bc1aa9ff7e"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/prompt.txt",
+          "sha256": "a8aa42d5fae0a9d210ea9604549af3ef507b6b410d1d9cfb7f93e38a188735a1"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/reference.json",
+          "sha256": "8e4c73f348ad937f45df6b8111baae4b4a61734d84e44c429fc888d653a04c31"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/matte.json",
+          "sha256": "6a3b5056668b29cdee30681105d5b56eb3d40eb7c4c5cb878f980a6235ef6c83"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/staged_generation.json",
+          "sha256": "5494a3842ae38cc83e40a296806e01aa6bc958446da9d6c458a1d8f0348e8fe7"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/sampling_workflow_api.json",
+          "sha256": "13dc08f1d86ccad019076f3fe67b0031cd334c45bb5d8952f252e6e3863f0347"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/sampling_submission.json",
+          "sha256": "a05a85c7a45db37c06d391255513927d7bff644188e31237cdc24a5c3894e237"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/sampling_history.json",
+          "sha256": "745e0eaa672d1c10a892cd025af8628ef87a88434e007c2800cb027ebec09d9e"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/attack_v1/original.latent",
+          "sha256": "662b7545ac2cfacb3a8c364a8cee924494c9a4f14edc7bdb9f4bf324ef72ff37"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_intervals",
+        "notes": "PARTIAL INTERVALS ONLY: original ready/windup through30 and contact-to-ready recovery58-74 are coherent and retain both real grips/props. The missing extension31-32 is rejected as a pose snap. These source frames may only be published after a separately generated extension is inserted and both joins reviewed. All124 chronological phases and enlarged source details inspected; no continuous playback claim. Selected intervals inspected in offscreen Godot at128px battle size; no continuous playback claim."
+      }
+    }
+  ]
+}

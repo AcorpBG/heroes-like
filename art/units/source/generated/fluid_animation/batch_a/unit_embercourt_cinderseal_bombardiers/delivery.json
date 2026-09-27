@@ -1,0 +1,366 @@
+{
+  "takes": [
+    "move_v1",
+    "ranged_v2",
+    "defend_v3",
+    "cast_v1",
+    "death_v1"
+  ],
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 80
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 82
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 83
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 84
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 85
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 86
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 87
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 88
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 89
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 90
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 91
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 92
+        },
+        {
+          "take": "attack_extension_v2",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 59
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 60
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 61
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 63
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 65
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 67
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 69
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "attack_v1",
+          "video_frame": 74
+        }
+      ],
+      "timing": {
+        "frame_msec": 40,
+        "contact_frame": 34
+      }
+    },
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 0
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 16
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 20
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 24
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_recoil_v3",
+          "video_frame": 123
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 20
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 30
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 34
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 38
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 42
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 46
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 50
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 54
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "hit_v2",
+          "video_frame": 72
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed all chronological original frames, enlarged identity/grips/alpha, fixed-anchor joins and native Godot battle phases. Seven dedicated H3 actions. Melee preparation/recovery from attack_v1 joins the corrected articulated extension; release contact at full extension. Ranged uses clean shoulder recoil without baked effects. Original eight-frame articulated idle and exact overworld pixels preserved. No continuous-video playback, manual playtest or Linux validation claimed."
+  }
+}

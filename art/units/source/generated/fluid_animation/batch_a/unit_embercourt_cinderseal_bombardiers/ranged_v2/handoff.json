@@ -1,0 +1,822 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_cinderseal_bombardiers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_061",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_063",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_110",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 13
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/original_lossless.mkv",
+          "sha256": "f06be9c2211b9c93f5767f27b2c3066798c9e24ac86bc6d00da59c265f904829"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/original.json",
+          "sha256": "a19631315be295628b751e8437dba2670b7bb5887f8bb6a10efef9070a6b2a3c"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/workflow_api.json",
+          "sha256": "4df1e0543e2cebc459612e6630d75d220bc34afec34037e9c33d74ae7d79c4e9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/prompt.txt",
+          "sha256": "08a37ebe0494561fb0d724458bbd04c2ba04e074788e1a647efc427466cc8922"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/reference.json",
+          "sha256": "4c3bfe68ceb34c3179e6e60295e528fc41812ef1904e6f24b07d7ced2b857095"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/matte.json",
+          "sha256": "822431aecb214ba4041bb3756a600482a801dcf781b39e8e3a4e0f3e857aa570"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/staged_generation.json",
+          "sha256": "9839f8ab883df5aeaa9e189513af7242f4e97446a27bb0016af8e9ca67d4e0a3"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/sampling_workflow_api.json",
+          "sha256": "a3149b0626ca6e2762d6f841aee225050081f4115bc77cd9d9fc6f65638c6b00"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/sampling_submission.json",
+          "sha256": "2517a956fca1ff315cf1f6957ce7203815f9c0d92cec1a7a11ac80fa14a83461"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/sampling_history.json",
+          "sha256": "e12819b7bc797712af177966b4e0ae8034bc86f741682d72b7892b82831e9d82"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/ranged_v2/original.latent",
+          "sha256": "c3b1d31fe04891f36936dde93dd22e2efca0066cefbb14651fe733e5a500078e"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clip",
+        "notes": "Reviewed all124 chronological frames and enlarged aim/recoil/recovery. Right shoulder lowers the rigid cannon to aim, knees absorb a backward shoulder catch starting60, muzzle tips upward with torso, then both arms return ready. Left hand retains separate igniter. Dark bore unchanged; no fire, smoke or extra weapons. Long aim/recoil holds shortened; 34 observed frames at45ms, release at source60. Pending native-scale review. Selected intervals inspected in offscreen Godot at128px battle size; no continuous playback claim."
+      }
+    }
+  ]
+}

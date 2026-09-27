@@ -1,0 +1,539 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_embercourt_cinderseal_bombardiers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_050",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_054",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/original_lossless.mkv",
+          "sha256": "8f42dc98f419a1b96b4111f13789b37652f0a6d409180c99b32c11a24e93dbce"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/original.json",
+          "sha256": "1902c5f6eaf39e736a8bc2f2e0ea6018722acf6cc406dd5461f198f51d96fab3"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/workflow_api.json",
+          "sha256": "83ac2cdcc40c59fdd4a69c24f051b94e1c4b0a0f9ce0e47146daebbf26c1eb88"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/prompt.txt",
+          "sha256": "29e8437bdbcd284cebb5e07e30e08b2bd220fb70055d3ef5bec7ddcc06c167bd"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/reference.json",
+          "sha256": "a3b137c45be294d35852ecefabfd2735445efe2daa9383397b3d842540b43bc4"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/matte.json",
+          "sha256": "4363355532832b90071adb684c4a59b89266bb6c9a4ed2ac290ecf04254f7c19"
+        },
+        "extract_ranges.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/extract_ranges.json",
+          "sha256": "b0d4672f11b6d5e94a44db6eb6bfe3df87afa474d42a25528c776324df35adfd"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/staged_generation.json",
+          "sha256": "cb54648328a1c2e8b32299b4839fb60378bdf65604a1684bd8506421b9235617"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/sampling_workflow_api.json",
+          "sha256": "fd15f8e4bc0e94056239976b9c55ebd4bdb529086b9ec2ae6caaa265fa7689ed"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/sampling_submission.json",
+          "sha256": "acc3b8279b0e0fac929730f0e0dfb3af21f2b7e2291a7bd1c699286548ff253d"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/sampling_history.json",
+          "sha256": "c933312ef5d456e62c4c596ac100457b0218ca7b17a613b6f3389bf7c02b1bd2"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_embercourt_cinderseal_bombardiers/hit_v2/original.latent",
+          "sha256": "5a356a00bdf612cad3945e7a7e3a6fd1341264d21f11bcb31172576e5b077d47"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_intervals",
+        "notes": "RECOVERY ONLY: first recoil2-11 contains unwanted discharge and is excluded; all raw chronological originals and enlarged12-123 reviewed. Crossed left forearm gradually lowers as torso returns upright; right shoulder retains cannon. This interval may publish only after a separately generated clean initial recoil is joined at the fixed anchor. No full hit acceptance yet. Selected intervals inspected in offscreen Godot at128px battle size; no continuous playback claim."
+      }
+    }
+  ]
+}
