@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_crucible_crawlers",
+  "clip": "ranged",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        236
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_crucible_crawlers.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        492
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      42,
+      1
+    ]
+  ],
+  "seed": 936003,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "One original brass-and-dark-steel Crucible Crawler siege automaton, fixed orthographic three-quarter game camera facing RIGHT. A broad round glowing orange open furnace bowl on articulated claw-foot mechanical spider legs, brass piston joints, black iron plates, rivets, pipes and the original rear furnace box. Preserve precisely the reference leg arrangement and articulated joints, with near legs separated clearly from far legs. Exactly THREE existing articulated pouring-cannon nozzles over the body, staggered vertically and pointing RIGHT: large upper nozzle, middle nozzle and lower nozzle. Their lengths, cylinders and attachments remain rigid and consistent. No human pilot, no head, no arms added. Warm molten-orange internal furnace glow, brass and dark steel. Full mechanism sharp and wholly inside frame, constant original size, ground baseline and camera, no zoom. Uniform completely flat pure green backdrop. One furnace-cannon firing cycle: planted legs brace slightly lower, upper nozzle aims horizontally RIGHT, the cylindrical nozzle recoils sharply backward along its mechanical slide then returns, followed by retraction to the original ready posture. Middle and lower nozzles remain clearly distinct. Depict physical barrel recoil and a brief internal muzzle glow only. NO projectile, NO jet or stream of fire, NO detached bright ball, NO smoke cloud that hides the body. The game supplies the projectile separately. Complete recovery to original pose.",
+  "protected_foreground_chroma": 16
+}

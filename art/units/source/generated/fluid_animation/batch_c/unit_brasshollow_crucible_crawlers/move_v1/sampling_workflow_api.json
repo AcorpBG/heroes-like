@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original brass-and-dark-steel Crucible Crawler siege automaton, fixed orthographic three-quarter game camera facing RIGHT. A broad round glowing orange open furnace bowl on articulated claw-foot mechanical spider legs, brass piston joints, black iron plates, rivets, pipes and the original rear furnace box. Preserve precisely the reference leg arrangement and articulated joints, with near legs separated clearly from far legs. Exactly THREE existing articulated pouring-cannon nozzles over the body, staggered vertically and pointing RIGHT: large upper nozzle, middle nozzle and lower nozzle. Their lengths, cylinders and attachments remain rigid and consistent. No human pilot, no head, no arms added. Warm molten-orange internal furnace glow, brass and dark steel. Full mechanism sharp and wholly inside frame, constant original size, ground baseline and camera, no zoom. Uniform completely flat pure green backdrop. One slow reciprocal crawling cycle IN PLACE over five seconds. Lift and advance the near front claw, shift weight to the planted opposite legs, lower that claw to ground. Then alternate the opposite front and rear support legs, with continuous bending at every knee and hip piston. Visible small lifted-foot steps and return to the exact opening stance. Maintain the same number of legs throughout; planted support claws hold the ground, body stays centered. No sliding, spinning, hopping or rigid whole-body bounce. All three nozzles remain attached and steady above the moving legs.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 936001
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "crucible_move_v1_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "crucible_h3/move_v1/sampled"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v2",
+    "ranged_v3",
+    "defend_v1",
+    "cast_v2",
+    "hit_v1",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Accepted after chronological review of all source phases, enlarged selected-frame anatomy and fixed-anchor joins, and all 201 selected frames at native 128px Godot battle scale. Seven distinct mechanical actions preserve the three narrow nozzles and articulated claw legs. Ranged retains only clean second recoil 53-81; melee excludes whole effect-contaminated frames 37-47. Original eight-frame idle retained. No continuous playback or manual playtest claim."
+  }
+}

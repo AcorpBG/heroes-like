@@ -1,0 +1,711 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_brasshollow_crucible_crawlers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "hit_h3_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_031",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "hit_h3_033",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "hit_h3_035",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "hit_h3_037",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "hit_h3_039",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "hit_h3_041",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "hit_h3_043",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "hit_h3_047",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "hit_h3_055",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "hit_h3_063",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "hit_h3_071",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "hit_h3_075",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "hit_h3_079",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "hit_h3_081",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "hit_h3_083",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "hit_h3_085",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "hit_h3_087",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "hit_h3_089",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "hit_h3_091",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.6,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/original_lossless.mkv",
+          "sha256": "99882723b1e82a07e1a9d40b72c22f655fb0e6ec72043d5681e7becd85c38bee"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/original.json",
+          "sha256": "8e62a2e0e31862617f551b915e2a2f01fedb85ccc3af764a12cc2b208cf3417f"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/workflow_api.json",
+          "sha256": "d38eb9d0034ff62024f6d153bbe1e30f519fcebf65c3287ff6a303434cc20525"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/prompt.txt",
+          "sha256": "be913633c1cb45903f4bb361ef2701077e4303321ebd0f27a4481ec29f0b1fbd"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/reference.json",
+          "sha256": "df0cd7b25cce4a85f465f1481ce365e528468d49d72b12e323706f840d46fda1"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/matte.json",
+          "sha256": "3cc8d718ebe9270e0d5d43fb36866e8f66a1f58cf66f9873281b97e7d00a0fce"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/staged_generation.json",
+          "sha256": "68fcbc5ab6ecc71048d6c8f45f58854154f838203e75a98dcdd46adac931a8cc"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/sampling_workflow_api.json",
+          "sha256": "d22faf4fc1a4b4fdcc22543f988b0da547cd535aa0290ef7ff6a321c89f7732a"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/sampling_submission.json",
+          "sha256": "61ac2b5655b90bcd1895d1b19ec6b10cefbc875504334f8182c10e8ea3e0fd9a"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/sampling_history.json",
+          "sha256": "a0513add01d57fe7e750aa1d42c0fc572bffae9f36ece7601fc07b73667c4645"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_crucible_crawlers/hit_v1/original.latent",
+          "sha256": "e74271bfbae8e2ab0240a863df0af6fe225733813d9c83e29631a511918995ce"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 source frames and all29 selected frames reviewed chronologically/enlarged. Initial impact compresses legs, torso tilts and all three articulated pipes recoil, settle through damped hinge motion and return to ready. Consecutive22..29 retain brief fast recoil blur and actual intermediate positions; no forced pose cut. Quiet central hold shortened chronologically for725ms gameplay response. Native review pending."
+      }
+    }
+  ]
+}
