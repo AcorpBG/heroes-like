@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ea220b231f1d4fdf56d7082ab7a999e2161f36a3230db15d7aa9e7c67d57c6f2",
+  "latent_sha256": "f70b5b501c2b81e30f247c6224fcffb26086ef5f5722c096c2878ae58563e56c",
+  "decode_workflow_sha256": "49288cca58537a1318c3aaf70622c199d6ea0869913b4b2e9affe2f7186bc0b4",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugeplate_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

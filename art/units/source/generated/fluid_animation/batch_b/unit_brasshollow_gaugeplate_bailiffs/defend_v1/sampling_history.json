@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    323,
+    "d0b6fdcb-ad19-4e90-83db-9050a6caf0ab",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Gaugeplate Bailiff facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. Exactly one short stocky humanoid with two armored arms and hands, two legs and two brass boots. Rounded polished brass diving helmet, two blue glass goggle lenses, ribbed brass breathing mask, blue cloth joints and blue-and-white angular waist tabard. Brass boiler with short pipes fixed on back. RIGHT near hand on screen left grips the single short dark hammer handle below its rectangular double-ended metal head, with a small ivory pressure dial on the head. LEFT far forearm on screen right carries one large round brass shield with riveted rings and ivory pressure-gauge face and red needle. Preserve the same shield size, dial, hammer shaft length, two hands and armor; no new weapon. Fixed camera, consistent body scale and ground anchor, full boots, pipes, hammer and shield always visible. Solid uniform saturated GREEN RGB0,255,0 backdrop for the entire clip, no scenery, no floor, no cast shadow, no particles, smoke, sparks, light effects or text. Gradually crouch into a firm protective brace. Bend both knees, tuck helmet behind the raised round shield, lower the hammer beside the near right boot while retaining its grip. Hold the final guarded pose with both soles grounded. Shield remains on left forearm; hammer remains in right hand. Continuous movement into the guard, no turn or attack.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 984002
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugeplate_defend_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gaugeplate_defend_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gaugeplate_h3/defend_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gaugeplate_h3",
+      "create_time": 1790544035943
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gaugeplate_h3\\defend_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d0b6fdcb-ad19-4e90-83db-9050a6caf0ab",
+          "timestamp": 1790544036549
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "d0b6fdcb-ad19-4e90-83db-9050a6caf0ab",
+          "timestamp": 1790544036561
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d0b6fdcb-ad19-4e90-83db-9050a6caf0ab",
+          "timestamp": 1790544186363
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

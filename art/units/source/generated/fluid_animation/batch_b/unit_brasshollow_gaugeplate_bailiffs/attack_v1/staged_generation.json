@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4d8e4d45285d1d63d4ad3cfb834921f6fed180b39506c0d497dccf0391af3a86",
+  "latent_sha256": "b2b1d731a866b5081fbaec306318a556a6761eee7ed44386e55b7763183ceae3",
+  "decode_workflow_sha256": "ec3b8741abd5a888ba0873c640ba351e2132a4d9b262beaa973dc8b82ed57d97",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gaugeplate_h3\\attack_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

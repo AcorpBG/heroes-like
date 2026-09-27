@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_gaugeplate_bailiffs",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1004
+        ],
+        "scale": 1.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3091023fdae5e53f61182d14380cf602c6ed579bc2730d3ed90e01e98022b791",
+      "runtime_source_scale": 0.83
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_gaugeplate_bailiffs.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b37431d46a227c443f835a0be4a954c67cb9b0c50dbf85c97f70faffffb66f65",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "99c6f9c31cbc17a75b8cb0ae41e28f12d1c80c9ce0a45f881fbd3c0b5e936b6c",
+      "runtime_source_scale": 0.83
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
