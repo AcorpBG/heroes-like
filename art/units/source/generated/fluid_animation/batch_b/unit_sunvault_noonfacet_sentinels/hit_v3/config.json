@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "clip": "hit",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        248
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        760
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "seed": 982025,
+  "prompt": "One original Noonfacet Sentinel, facing RIGHT in the fixed elevated three-quarter orthographic fantasy strategy view of the references. Exactly one humanoid knight, two arms and hands, two armored legs and feet. Ivory plate armor with gold edging, navy underlayers and a long split ivory/navy tabard. Closed angular gold-and-ivory helmet. RIGHT near hand on screen left holds ONE long rigid dark shaft with a gold sunburst collar and two pointed pale crystal spear blades; one ivory/gold cloth streamer hangs below its head. LEFT far forearm carries ONE tall rigid kite shield on screen right, gold border, pale blue/white faceted face and one circular silver boss. Keep the spear in the right hand and shield attached to the left forearm, unchanged length, shape and materials. No extra limbs, weapons or blade duplication. Fixed camera and anatomical scale, complete body and every weapon tip always within frame. Uniform saturated GREEN RGB0,255,0 background, flat and unchanged throughout, no shadows or scenery. Stable neutral illumination. The knight performs one controlled backward-lean exercise, then stands upright again. Slowly bend both knees and lean the armored torso backward to match the middle reference. The helmet follows the torso. The right hand keeps the polearm upright and the left forearm keeps the shield at its side. Gradually straighten the knees and torso to return to the first pose. Preserve rigid equipment geometry and the same hand grips throughout. The feet stay fixed on the ground. Consistent softly lit opaque painted metal and cloth throughout this quiet physical movement.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

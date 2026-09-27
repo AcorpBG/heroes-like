@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "clip": "defend",
+  "scale": 0.65,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        248
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        760
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 982013,
+  "prompt": "One original Noonfacet Sentinel, facing RIGHT in the fixed elevated three-quarter orthographic fantasy strategy view of the references. Exactly one humanoid knight, two arms and hands, two armored legs and feet. Ivory plate armor with gold edging, navy underlayers and a long split ivory/navy tabard. Closed angular gold-and-ivory helmet. RIGHT near hand on screen left holds ONE long rigid dark shaft with a gold sunburst collar and two pointed pale crystal spear blades; one ivory/gold cloth streamer hangs below its head. LEFT far forearm carries ONE tall rigid kite shield on screen right, gold border, pale blue/white faceted face and one circular silver boss. Keep the spear in the right hand and shield attached to the left forearm, unchanged length, shape and materials. No extra limbs, weapons or blade duplication. Fixed camera and anatomical scale, complete body and every weapon tip always within frame. Uniform saturated GREEN RGB0,255,0 background, flat and unchanged throughout, no shadows or scenery. Stable neutral illumination. Make one unmistakable defensive brace from tall ready to the low crouched guard reference. Bend both knees deeply and lower the hips; tuck the helmet behind the raised left shield. The LEFT elbow swings the shield inward across the chest while the RIGHT elbow draws the upright spear closer. Both feet remain planted. Complete the large arm and knee transition early and HOLD the final low guard. Do not attack, cast, pulse or idle sway.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

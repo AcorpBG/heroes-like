@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_sunvault_noonfacet_sentinels",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          248
+        ],
+        "scale": 1.4307692307692308,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b4b8f3a838846ff132be67f75690cb9d0be37db16fde07be8c426c5c797cdd23",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "14fce4a8c5d4387a32d9c45099af443fbd4dc3042590896f627c24356a1d0b86",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_sunvault_noonfacet_sentinels.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          760
+        ],
+        "scale": 1.4307692307692308,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b4b8f3a838846ff132be67f75690cb9d0be37db16fde07be8c426c5c797cdd23",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "18bccf6bd2d6098aa3e9d736187f3c479e524d819762bcdbe46f81cd53a1ad77",
+      "runtime_source_scale": 0.93
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.65,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

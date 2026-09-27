@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6df8da6360250a6e0c04e1dc6c08dc0ad3f94ef72fcba4c6c50f81f6c1403073",
+  "latent_sha256": "767e0da689ce3b9e8f88cc0096525c5ba92c63acb631308df6e350556c3a5e30",
+  "decode_workflow_sha256": "ebecf1687cc02407de9e4faf458bdba039270e1a14fe326264ec40e56e6f59bf",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "noonfacet_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17432965120,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

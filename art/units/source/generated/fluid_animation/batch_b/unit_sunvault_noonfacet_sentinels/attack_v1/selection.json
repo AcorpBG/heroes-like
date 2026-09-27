@@ -1,0 +1,92 @@
+{
+  "source_frames": [
+    0,
+    8,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    52,
+    62,
+    82,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110,
+    112,
+    114,
+    116,
+    118,
+    120
+  ],
+  "frame_msec": 40,
+  "contact_frame": 16,
+  "review_note": "Reviewed every chronological original phase and enlarged weapon/arm detail. Right arm swings the original rigid spear from ready through overhead windup, downward impact and recovery; left arm keeps the shield. Trimmed the long stationary strike hold using matching original poses, no synthetic frames. Contact is source frame 40. Selected original 24-fps phases retimed to 40ms each for a 1.52-second combat action. Five detached 43-55 pixel plate specks above the shoulder are excluded through audited original-pixel rectangles, without touching connected subject pixels. Native review pending.",
+  "original_pixel_exclusions": {
+    "26": {
+      "background_rect": [
+        400,
+        165,
+        425,
+        190
+      ],
+      "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+    },
+    "28": {
+      "background_rect": [
+        400,
+        165,
+        425,
+        190
+      ],
+      "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+    },
+    "30": {
+      "background_rect": [
+        400,
+        165,
+        425,
+        190
+      ],
+      "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+    },
+    "32": {
+      "background_rect": [
+        400,
+        165,
+        425,
+        190
+      ],
+      "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+    },
+    "34": {
+      "background_rect": [
+        400,
+        165,
+        425,
+        190
+      ],
+      "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+    }
+  }
+}

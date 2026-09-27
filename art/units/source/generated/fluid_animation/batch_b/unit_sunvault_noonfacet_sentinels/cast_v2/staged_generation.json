@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9e19a41cdf6a620846d329c71065ed628d68843ce3750cadce66b5a336b09b68",
+  "latent_sha256": "4c628083c0713f573d0288d5205c18786286594a6aaa1c3982a929bc29fe77f5",
+  "decode_workflow_sha256": "22aae2ba972621420b6ce4b4297f8e6fdbbba3b7e0cb36e152d39ecc0068619f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "noonfacet_h3\\cast_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18705428480,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

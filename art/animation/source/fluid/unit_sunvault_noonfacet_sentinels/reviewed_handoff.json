@@ -1,0 +1,4762 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_sunvault_noonfacet_sentinels",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_093",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "move_h3_096",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "move_h3_099",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "move_h3_102",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "move_h3_105",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "move_h3_108",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "move_h3_111",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_111.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 111,
+          "video_time_seconds": 4.625
+        },
+        {
+          "name": "move_h3_114",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "move_h3_117",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_117.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 117,
+          "video_time_seconds": 4.875
+        },
+        {
+          "name": "move_h3_120",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              165
+            ],
+            [
+              0,
+              165,
+              400,
+              190
+            ],
+            [
+              425,
+              165,
+              960,
+              190
+            ],
+            [
+              0,
+              190,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              400,
+              165,
+              425,
+              190
+            ],
+            "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+          }
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              165
+            ],
+            [
+              0,
+              165,
+              400,
+              190
+            ],
+            [
+              425,
+              165,
+              960,
+              190
+            ],
+            [
+              0,
+              190,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              400,
+              165,
+              425,
+              190
+            ],
+            "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+          }
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              165
+            ],
+            [
+              0,
+              165,
+              400,
+              190
+            ],
+            [
+              425,
+              165,
+              960,
+              190
+            ],
+            [
+              0,
+              190,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              400,
+              165,
+              425,
+              190
+            ],
+            "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+          }
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              165
+            ],
+            [
+              0,
+              165,
+              400,
+              190
+            ],
+            [
+              425,
+              165,
+              960,
+              190
+            ],
+            [
+              0,
+              190,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              400,
+              165,
+              425,
+              190
+            ],
+            "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+          }
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              165
+            ],
+            [
+              0,
+              165,
+              400,
+              190
+            ],
+            [
+              425,
+              165,
+              960,
+              190
+            ],
+            [
+              0,
+              190,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              400,
+              165,
+              425,
+              190
+            ],
+            "reason": "Detached plate speck above shoulder; separate from body, spear, cloth and shield."
+          }
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_h3_106",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "attack_h3_108",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "attack_h3_110",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "attack_h3_112",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "attack_h3_114",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_114.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 114,
+          "video_time_seconds": 4.75
+        },
+        {
+          "name": "attack_h3_116",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "attack_h3_118",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_118.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 118,
+          "video_time_seconds": 4.916666666666667
+        },
+        {
+          "name": "attack_h3_120",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_046",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_050",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "defend_h3_052",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_058",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_062",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_079",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_085",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_091",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_103",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "hit_h3_106",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "hit_h3_109",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_109.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 109,
+          "video_time_seconds": 4.541666666666667
+        },
+        {
+          "name": "hit_h3_112",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "hit_h3_116",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "hit_h3_120",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            490
+          ],
+          "scale": 0.65,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 16
+        },
+        "defend": {
+          "indices": [
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 22
+        },
+        "cast": {
+          "indices": [
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135
+          ],
+          "frame_msec": 55,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        },
+        "hit": {
+          "indices": [
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 22
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/original_lossless.mkv",
+          "sha256": "3f4e214f6fef2de7bbbff2d56dbc2064b926e6d334f408714a94ff4b37112f0d"
+        },
+        "move_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/original.json",
+          "sha256": "e1d10af21dfabaf2722bf351d02eeb6c79332acd64e66955a0a9071d3acb440c"
+        },
+        "move_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/workflow_api.json",
+          "sha256": "40c82554f68653667c46978e0cd00467e7b710ac5b58f3dcb5b612ee296f7677"
+        },
+        "move_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/prompt.txt",
+          "sha256": "2f5d90986df608edb5facb766979db258d1ce68aad3f788d7165ba5960d80e89"
+        },
+        "move_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/reference.json",
+          "sha256": "846db4d2b4cb6e49946f4d8d93081e2664be1ed3154faeb418b828f7796495d7"
+        },
+        "move_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte.json",
+          "sha256": "8c4e85cc269bfc4b04a44e964856266538b89f99689534c30a4de70c8dd36c18"
+        },
+        "move_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/staged_generation.json",
+          "sha256": "4e24be90f3bb81313abf06e8e32a24f63bd811c5795827a69c9773c557e8fd4e"
+        },
+        "move_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/sampling_workflow_api.json",
+          "sha256": "d137fd7f36896be6ca0a56ce207ac6f5715777fc593d8ad64b20867d9c078656"
+        },
+        "move_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/sampling_submission.json",
+          "sha256": "287729eca2e3d28e69c12c29a98184de498e1389e909d3af5fa646c0b9089e99"
+        },
+        "move_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/sampling_history.json",
+          "sha256": "efaa3af267184eb203062f568b49f40a781d811d9be12dba4183ca0cd7bef2a0"
+        },
+        "move_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/original.latent",
+          "sha256": "a7531d59b46341d00187f3b8241f1611ffd90074cc8dc765c7e74fe14a84fe44"
+        },
+        "attack_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/original_lossless.mkv",
+          "sha256": "fff4256ed35ef6ea8f65c49e5aa2e37412d0e0805b418c4f2f29f7caa640c644"
+        },
+        "attack_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/original.json",
+          "sha256": "a7bc2cd1fd407f6a93b44034f00e218241217879aef0c58d06dc1ac72beaa98c"
+        },
+        "attack_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/workflow_api.json",
+          "sha256": "ab850ebf946c3c7fe31e3a2646a29ad29111725e17f2b7159fb4adbbca53f571"
+        },
+        "attack_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/prompt.txt",
+          "sha256": "cc12e993a7a6fc32715ba5de74dfc4732b7979678745043983c0c148f52a7476"
+        },
+        "attack_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/reference.json",
+          "sha256": "d56767be57cb2fe807f4ea3e48fe99d85c32662f81542c504b77e8fd9b762d1f"
+        },
+        "attack_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte.json",
+          "sha256": "ddc485d2c2151fbdc5fa4e296f90abc7d0a85dfbcea01c811fb7605ebb838a3b"
+        },
+        "attack_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/staged_generation.json",
+          "sha256": "d0df8b2a3fb12984773450925153a90b6a589bb5311c1465b5d581fc4510e5ed"
+        },
+        "attack_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/sampling_workflow_api.json",
+          "sha256": "0f134b016a441a489d7c10c39fb4308deecea5cdff5e053978aea2f56ac8db35"
+        },
+        "attack_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/sampling_submission.json",
+          "sha256": "6f68aa492767b00d5bd7ccac7abd161424cea2bf6e8b27df229466f41c706f25"
+        },
+        "attack_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/sampling_history.json",
+          "sha256": "422be2ec8ae4a0397249a483888b0ee0e6a8ce988f7efee416541d1a66ad2432"
+        },
+        "attack_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/original.latent",
+          "sha256": "7990457757176339e1e119c88333e6c6e676855d2a5a41189d8cee8c58d9e72b"
+        },
+        "defend_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/original_lossless.mkv",
+          "sha256": "975a9ecbb28bf2371c67bc4848dbe920521c695991e910d93218fad89e708691"
+        },
+        "defend_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/original.json",
+          "sha256": "bd69f5810132108e445d8ddfb6583efc45f60082ad58425d84d4ecd602a82f41"
+        },
+        "defend_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/workflow_api.json",
+          "sha256": "d792765812dabb01dd61f49b596eca7ea6b22b75384890c6c4a2185a92e6fe59"
+        },
+        "defend_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/prompt.txt",
+          "sha256": "a185239ff2b4e28a642ade841671d4004cda124dbb1aea8d7991ceb8649242ca"
+        },
+        "defend_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/reference.json",
+          "sha256": "4cfe0e068a3a9fd5c4c5cc8b79dc399df7237ce9ba0026409236806e48bac3ae"
+        },
+        "defend_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte.json",
+          "sha256": "8e22cb7c8ca93e8fc1712d94d0d986f6004d9dd22830914acb090bf08d563b28"
+        },
+        "defend_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/staged_generation.json",
+          "sha256": "5ef6f5bf37c68d91f0a9efbfec2e37ad21e6ff5ca0646e72d0225c5e29136a49"
+        },
+        "defend_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/sampling_workflow_api.json",
+          "sha256": "52d67afa443dfe062c72cca3a993812bd44e3845ee9091bbc6761c7fe2a050a1"
+        },
+        "defend_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/sampling_submission.json",
+          "sha256": "71bac3ed02406a9c2a41d7cd6e8f1933ec390dfe714fdd09b023d57d4f641d75"
+        },
+        "defend_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/sampling_history.json",
+          "sha256": "03d93883ab36946da8ec7d523db568d22df42526c1e76be01122981161c3e47c"
+        },
+        "defend_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/original.latent",
+          "sha256": "28910443a063ac7375d806b7e5267857ee9290a7866e9dd984b29b22bdb9815c"
+        },
+        "cast_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/original_lossless.mkv",
+          "sha256": "cc7377031691fbb3fdbfab018918938a069ccfef888abb92c6fcb0d6e64e4be0"
+        },
+        "cast_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/original.json",
+          "sha256": "85ad3ddf2a4345d9b1ead6048839000543626c55ee03253408cffc83e8b638b4"
+        },
+        "cast_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/workflow_api.json",
+          "sha256": "c23c6a690a225228a2389e7a12ceec99ba482b7541c174aa3ccb3ff7456219eb"
+        },
+        "cast_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/prompt.txt",
+          "sha256": "8bad989ade4099a9df38526cfdd22850f92a86d208de925c3434e355964918c8"
+        },
+        "cast_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/reference.json",
+          "sha256": "a51841eedec00a0599c491aafb5b8d5152db4763a15272142a4027344898b2e8"
+        },
+        "cast_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte.json",
+          "sha256": "c7b731ce73a055f16907c7fb2dc32e74381bb30413a108f4f35ee75467c8a353"
+        },
+        "cast_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/staged_generation.json",
+          "sha256": "e810d0f82a8a8733df563925a3f4cb41f07b47b99a5155e6bc52c133799eaedc"
+        },
+        "cast_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/sampling_workflow_api.json",
+          "sha256": "37107dec5b737be88b593aaf0947a8fda0d1990c23e2c9da8085cb8c3261c339"
+        },
+        "cast_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/sampling_submission.json",
+          "sha256": "9604db62ff7c10692458c117576ce624ead3d53bd7b52dd3a80769261a1758d0"
+        },
+        "cast_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/sampling_history.json",
+          "sha256": "d655b66d7497875faf9bcc3f4c0240401eea8f94838e69b00e083d32f45e761a"
+        },
+        "cast_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/original.latent",
+          "sha256": "6df89b254a4536219152e02bbb7386e277dd4525a7ba8a37b6b310c27407043d"
+        },
+        "hit_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/original_lossless.mkv",
+          "sha256": "6392a5b58dffb3fc970e0031713f577bab7946ccec46750ef83007c8fdfcd0a0"
+        },
+        "hit_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/original.json",
+          "sha256": "86ca37cf31e8ae770bf71862c8bf4d50cad3cd6174365b11f658b4f437dc1d84"
+        },
+        "hit_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/workflow_api.json",
+          "sha256": "e47d52befcc5c000c990bb63869639af1b2b06ec1add85eb3e94dc256261895f"
+        },
+        "hit_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/prompt.txt",
+          "sha256": "1e84cde945abdffb21d95ec4c28b41139126e076d73006f04651f4521a2b6faf"
+        },
+        "hit_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/reference.json",
+          "sha256": "9a20329899fe15021317e8883e0640a35d64be759708c7ca95a97d8407ec46b0"
+        },
+        "hit_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte.json",
+          "sha256": "1aeab36150713c80a3f0afc5047c0b23f6ef462c6c14ae184ebf217bebcee752"
+        },
+        "hit_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/staged_generation.json",
+          "sha256": "0aee52a40dcaee965168a299096e1e6bb7eec8175456f55d095840ac586933ee"
+        },
+        "hit_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/sampling_workflow_api.json",
+          "sha256": "dab671f0c4f91746c63201431df2de783dffe4f7d4069a1f52608a67837c2619"
+        },
+        "hit_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/sampling_submission.json",
+          "sha256": "de78404cebabb7358af172ddad1c5ce1c72d8511de9bfc385a0cc8b31cf47821"
+        },
+        "hit_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/sampling_history.json",
+          "sha256": "f1780bd887c43c326b8e02ed735eb1cf7952e0a6043c5f94a8787291c6986437"
+        },
+        "hit_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/original.latent",
+          "sha256": "e07811d229d6a46ab81ad23b5a76c03f7879569e9c9904b4760391df777e01ea"
+        },
+        "death_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/original_lossless.mkv",
+          "sha256": "9f8c9e4cd270bce15202ecd997bc5ac0e7500cbef93f87bb36197461e09ae2dc"
+        },
+        "death_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/original.json",
+          "sha256": "442e4106bf7d6085c69d5bba2a7189f6acc801deee9275ba9bcd9afa13cd297b"
+        },
+        "death_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/workflow_api.json",
+          "sha256": "ebecf1687cc02407de9e4faf458bdba039270e1a14fe326264ec40e56e6f59bf"
+        },
+        "death_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/prompt.txt",
+          "sha256": "dba40fab464a1c06b6c56ce3e3cae1ac512c64d422a7d5dec0fb4910acacb56e"
+        },
+        "death_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/reference.json",
+          "sha256": "c7ba8b090a5c99973d7f37fce30f53ae9371024313d9e3f8b41bbb61a57b4940"
+        },
+        "death_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte.json",
+          "sha256": "f6d850860160288c06d20401556abf88b7b74848b8a15048bf1cd6f320de6e73"
+        },
+        "death_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/staged_generation.json",
+          "sha256": "949e986d533b06e076d6af5cfd5ce369549589bde751abb1c91b416b22924a5a"
+        },
+        "death_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/sampling_workflow_api.json",
+          "sha256": "6df8da6360250a6e0c04e1dc6c08dc0ad3f94ef72fcba4c6c50f81f6c1403073"
+        },
+        "death_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/sampling_submission.json",
+          "sha256": "88848ca6c04c760ab52c5cca878ba433d6dd5fd67ce609ccd31dee94c8dd8fc2"
+        },
+        "death_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/sampling_history.json",
+          "sha256": "76f36be7a0463e052942ee83de5b91ab91248648b2385332bae5c6138aed1b64"
+        },
+        "death_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/original.latent",
+          "sha256": "767e0da689ce3b9e8f88cc0096525c5ba92c63acb631308df6e350556c3a5e30"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Reviewed every chronological source phase, enlarged hand grips and weapon geometry, loop and selected hold joins, and all selected native Godot phases at128px reference height alongside the original idle. Reciprocal march, right-hand spear strike with recovery, tucked shield brace, complete-weapon physical salute, clean torso recoil and grounded collapse retain identity and readable scale. Corrected weak defense, changing spear butt and unintended hit effects through targeted original guides/prompt controls. Preserve the exact eight-frame idle and map strip. Candidate258 checks pass. Review used source-frame chronology and native phase renders; continuous video playback and manual game playtest are not claimed."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_003.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_006.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_009.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_015.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_021.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_027.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_033.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_039.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_045.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_051.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_057.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_063.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_066.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_069.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_075.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_078.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_081.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_087.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_093.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_096.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_099.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_102.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_105.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_108.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_111.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_114.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_117.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/move_v1/matte/rgba_120.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_008.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_062.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_092.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_094.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_096.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_098.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_100.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_102.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_104.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_106.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_108.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_110.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_112.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_114.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_116.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_118.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/attack_v1/matte/rgba_120.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_044.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_046.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_050.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_052.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_054.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_056.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_058.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/defend_v2/matte/rgba_062.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_056.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_064.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_070.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_074.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_078.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_080.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_084.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_086.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_090.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_092.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_094.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/cast_v3/matte/rgba_096.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_044.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_060.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_072.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_076.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_079.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_082.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_085.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_088.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_091.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_094.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_097.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_100.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_103.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_106.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_109.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_112.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_116.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/hit_v3/matte/rgba_120.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_000.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_008.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_010.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_012.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_014.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_016.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_018.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_020.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_022.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_024.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_026.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_028.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_030.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_032.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_034.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_036.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_038.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_040.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_042.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_044.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_046.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_048.png": 0.65,
+        "art/units/source/generated/fluid_animation/batch_b/unit_sunvault_noonfacet_sentinels/death_v1/matte/rgba_050.png": 0.65
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "defend",
+        "cast",
+        "hit",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

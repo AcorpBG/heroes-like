@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v1",
+    "defend_v2",
+    "cast_v3",
+    "hit_v3",
+    "death_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed every chronological source phase, enlarged hand grips and weapon geometry, loop and selected hold joins, and all selected native Godot phases at128px reference height alongside the original idle. Reciprocal march, right-hand spear strike with recovery, tucked shield brace, complete-weapon physical salute, clean torso recoil and grounded collapse retain identity and readable scale. Corrected weak defense, changing spear butt and unintended hit effects through targeted original guides/prompt controls. Preserve the exact eight-frame idle and map strip. Candidate258 checks pass. Review used source-frame chronology and native phase renders; continuous video playback and manual game playtest are not claimed."
+  }
+}

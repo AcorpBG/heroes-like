@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "52d67afa443dfe062c72cca3a993812bd44e3845ee9091bbc6761c7fe2a050a1",
+  "latent_sha256": "28910443a063ac7375d806b7e5267857ee9290a7866e9dd984b29b22bdb9815c",
+  "decode_workflow_sha256": "d792765812dabb01dd61f49b596eca7ea6b22b75384890c6c4a2185a92e6fe59",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "noonfacet_h3\\defend_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17587220480,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
