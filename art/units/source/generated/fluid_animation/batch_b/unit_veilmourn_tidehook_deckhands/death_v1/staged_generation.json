@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "053ee6fc6dfb6d6ac4cdcef8424eff2d374438cb9f5e49b9f778683146ae09f1",
+  "latent_sha256": "b7bf5c970e9b78244c7f0cd7347650d26b28adfa9ef60676cd37ccf02948a5b9",
+  "decode_workflow_sha256": "2495258b53bf4d05bf0a49cc807e566fc1d55a07dce0ceaf0551062f8ec7208a",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tidehook_h3\\death_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

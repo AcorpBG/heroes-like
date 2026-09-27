@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "clip": "hit",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 57,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      50,
+      1
+    ]
+  ],
+  "seed": 985003,
+  "prompt": "One original Tidehook Deckhand facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. One lean athletic blue spectral humanoid, exactly two arms, two hands, two legs and two bare blue feet with brown shin wraps. Dark navy hood hides the face except cyan eyes; pale cyan flame-like hair and a few trailing spectral coat wisps, tattered blue coat and rope harness with bronze rings. RIGHT near hand on screen left holds the short grip of ONE rigid large J-shaped cyan-edged steel boarding hook. LEFT far hand on screen right holds the top of ONE short bronze chain with ONE brass bell at its lower end, a small cyan flame at the bell mouth. Keep the hook rigid with its single curved tip and keep the chain visibly connected to the left hand and bell. Preserve the original hood, ropes, hands, feet and weapon proportions. Locked camera, consistent anatomical scale and fixed ground anchor; full hook, chain, bell, head and feet remain in view. Uniform saturated GREEN RGB0,255,0 backdrop, no scenery, floor, cast shadow, text, opponents, missiles or external particles. Only the original cyan body wisps and bell flame may move subtly; no new effects. Make a quick backward balance correction and recover. The torso and hood lean backward, knees flex, elbows react while each hand retains its own item, then the torso returns forward to the original ready stance. Keep both feet in contact with the ground, and the chain bell suspended from the left hand. Body motion only, no external impact object, projectile, sparks, splash or glow burst.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands",
+  "clip": "cast",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    490
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 57,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        236
+      ],
+      "scale": 0.875,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          512,
+          1024,
+          1024,
+          1280
+        ]
+      ],
+      "anchor": [
+        768,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      2
+    ],
+    [
+      60,
+      1
+    ],
+    [
+      92,
+      2
+    ]
+  ],
+  "seed": 985401,
+  "prompt": "One original Tidehook Deckhand facing RIGHT, elevated three-quarter orthographic fantasy strategy sprite. One lean athletic blue spectral humanoid, exactly two arms, two hands, two legs and two bare blue feet with brown shin wraps. Dark navy hood hides the face except cyan eyes; pale cyan flame-like hair and a few trailing spectral coat wisps, tattered blue coat and rope harness with bronze rings. RIGHT near hand on screen left holds the short grip of ONE rigid large J-shaped cyan-edged steel boarding hook. LEFT far hand on screen right holds the top of ONE short bronze chain with ONE brass bell at its lower end, a small cyan flame at the bell mouth. Keep the hook rigid with its single curved tip and keep the chain visibly connected to the left hand and bell. Preserve the original hood, ropes, hands, feet and weapon proportions. Locked camera, consistent anatomical scale and fixed ground anchor; full hook, chain, bell, head and feet remain in view. Uniform saturated GREEN RGB0,255,0 backdrop, no scenery, floor, cast shadow, text, opponents, missiles or external particles. Only the original cyan body wisps and bell flame may move subtly; no new effects. Make one slow restrained bell signal. Bend the left elbow and lift the chain fist only to upper-chest height, keeping the brass bell always hanging BELOW the fist on its single vertical short chain. The bell mouth keeps its one cyan flame pointing downward. Hold the modest raised pose, nod the hood, then slowly lower the same left fist and hanging bell back to ready. The right hand brings its unchanged rigid boarding hook close across the waist without swinging, and returns it to the original lowered position. Both feet remain planted. Keep the left hand normal blue fingers with its unchanged brown wrap and no dangling shape beneath the wrist. No overhead lift, no lasso swing, no tossed bell, no cyan droplet, no detached flame or extra object near the wrist. No motion blur or afterimages. Bell flame exists only within and immediately beneath the brass bell mouth.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

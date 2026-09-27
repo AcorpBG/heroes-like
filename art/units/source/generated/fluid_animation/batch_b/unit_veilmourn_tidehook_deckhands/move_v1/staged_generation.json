@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "b75f4208892fe93abcb43b5261a19b754832d1463ffa35dad299163dabb91249",
+  "latent_sha256": "23e4d6dc17075f445f7aba0550312f48a2e082204a993b9a1267ea6e27abfc4d",
+  "decode_workflow_sha256": "14cb521a177a89851696c88d4955fc796e95e7543bfc5dedf762de5f79f47922",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tidehook_h3\\move_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
