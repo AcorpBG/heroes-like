@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    41,
+    "1d98ccd9-d7c6-45e2-bbd2-1d99db5f4df4",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One slow continuous collapse of exactly two goblin mechanics beside their stationary wheeled brass machine, into the final kneeling reference. Locked camera, original proportions, uniform flat pure green. Rear goblin loses strength, bends forward, puts a gloved hand on the upper front armor, lowers one boot down the LEFT side, then lowers his whole torso and second leg beside the front stabilizer and sinks onto BOTH knees on the ground at LEFT. He remains a complete solid goblin with the SAME helmet, scarf-covered head, orange goggles, torso, two arms and two legs throughout his descent; his body never elongates or becomes part of the machine. Simultaneously the near goblin at RIGHT slowly bends both knees, lowers his head and sinks to kneeling beside the near wheel. Finish exactly with both engineers visible kneeling outside the machine silhouette, gloves braced on ground/armor. Keep the machine upright and completely motionless throughout this first stage; round tube and orange windows gradually go dark. Preserve all original equipment and camera, red-cream pennant, white armor, brass wheels and black attached hoses. Slow weighted lowering over the whole clip, no jump, no bounce. Clear limb articulation and crisp solid silhouettes, same anatomical proportions in every frame.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 933006
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_descent_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "boilerrivet_death_descent_v3_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "boilerrivet_h3/death_descent_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "boilerrivet_h3",
+      "create_time": 1790493313579
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "boilerrivet_h3\\death_descent_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "1d98ccd9-d7c6-45e2-bbd2-1d99db5f4df4",
+          "timestamp": 1790493314042
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "1d98ccd9-d7c6-45e2-bbd2-1d99db5f4df4",
+          "timestamp": 1790493314057
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "1d98ccd9-d7c6-45e2-bbd2-1d99db5f4df4",
+          "timestamp": 1790493483228
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

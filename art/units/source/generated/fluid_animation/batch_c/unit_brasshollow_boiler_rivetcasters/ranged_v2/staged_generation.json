@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8f5db81d033bd0ab2c65dac05bbb50c080784095d75c9b70dc0c189d7333fb39",
+  "latent_sha256": "ae455812b634e93075e28b4f32c9b6a9963fa487d13083f89a5ff07808344f59",
+  "decode_workflow_sha256": "dd1fde237216df4656ca0d516b24b51595efc8963663f232873268dd9099db00",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "boilerrivet_h3\\ranged_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17447645184,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

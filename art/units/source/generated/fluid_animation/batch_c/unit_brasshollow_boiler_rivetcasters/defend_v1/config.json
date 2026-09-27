@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "defend",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        748
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 930004,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic game camera on the ORIGINAL Boiler Rivetcaster: one small brass-and-dark-steel wheeled pressure cannon with EXACTLY TWO goblin engineers, facing LEFT. Uniform saturated GREEN background. Preserve original body scale, all machine geometry, white chipped frontal armor, orange furnace windows and barrel interior, gauges, black flexible hoses, brass wheel hubs and dark rubber tires, rear brass boiler, and upright red-and-cream pennant mast. Both goblins have two arms and two legs each, brass helmets, orange goggles, pointed red ears, gray face scarves, leather apron and brown boots. The rear elevated operator holds the vertical control lever; the near foreground operator stands on image RIGHT beside the wheel and hose. Never merge the crew, create a third goblin, change the cannon into an animal or add weapons. Both crew lower into a dedicated protective brace behind the existing frontal armor. Near operator crouches at image RIGHT beside wheel with hands braced on hose and machine; rear operator lowers helmet and folds elbows behind cannon. Keep machine, stabilizer and wheels planted. End held low guard, without returning to upright idle or firing. Keep the two original faces and all grips coherent. No emitted projectile, no detached rivet, no muzzle flash, smoke, sparks, camera movement, ground painting, motion blur or scale change. The game supplies projectiles and world travel. Preserve the complete team inside the canvas.",
+  "protected_foreground_chroma": 16
+}

@@ -1,0 +1,20 @@
+{
+  "tool": "built-in image_gen",
+  "source_file": "original.png",
+  "sha256": "eb7f7f113ecf48df7408fb314091c5e9ef06fe01511deafb685dc4e38e360ed6",
+  "request": "One intermediate kneeling collapse pose, both original engineers visible outside still-upright dark machine; same original left-facing camera, equipment and scale; transparent background.",
+  "reference_paths": [
+    "../death_v1/guide_0_rgba.png",
+    "../death_v1/guide_3_rgba.png"
+  ],
+  "generated_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-43d6ea1c-bc02-4999-8586-b610caf2ad32.png",
+  "registration": {
+    "anchor": [
+      930,
+      799
+    ],
+    "runtime_scale": 0.324,
+    "basis": "Fixed source-wide scale matching the original near wheel diameter and ground line; newly exposed left kneeling crew enlarges horizontal bounds, not the machine scale."
+  },
+  "review": "Both heads, torsos, two arms/legs each visible; left glove at muzzle underside and ground, right gloves by wheel and ground. White armor, dark tube, hoses and mast retain identity. Use as H3 guide, not fabricated motion."
+}

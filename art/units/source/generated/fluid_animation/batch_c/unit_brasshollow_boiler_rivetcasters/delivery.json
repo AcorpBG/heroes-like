@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "move_v1",
+    "attack_v2",
+    "ranged_v2",
+    "defend_v2",
+    "cast_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed all chronological source frames, enlarged grips/crew/edges and move loop endpoints, then all 167 selected phases in offscreen Godot at native battle scale. Two operators, grounded reciprocal push and wheel rotation, empty-fist melee, mounted recoil, held brace and nonmagical lever/valve support remain readable. Original eight-phase 260ms articulated idle reviewed and retained. Hit and death remain unaccepted due to backdrop/identity and collapse/wheel defects. No continuous playback, manual game playtest or Linux execution claimed."
+  },
+  "unaccepted_clips": {
+    "hit": "No stable complete source yet: first take ghosts, first correction changes faces, guided correction changes backdrop during recovery. Original live hit is retained without acceptance.",
+    "death": "Tail correction still doubles crew silhouettes during collapse (58-64) and reveals the far wheel through a chassis morph (70-74). No complete stable collapse; retain original live death/dead without acceptance."
+  }
+}

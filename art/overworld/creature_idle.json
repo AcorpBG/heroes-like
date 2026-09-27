@@ -1522,25 +1522,25 @@
         226
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_brasshollow_boiler_rivetcasters.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        134,
-        10,
-        370,
-        247
+        22,
+        -2,
+        258,
+        235
       ],
-      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
-      "source_provenance": "res://art/animation/source/poses/unit_brasshollow_boiler_rivetcasters/provenance.json",
+      "source_sha256": "f12d4c7fab2d9098e3c7f1fe93bc148dba03f5513e6d964f5de13741f69f2390",
+      "source_provenance": "res://art/animation/source/fluid/unit_brasshollow_boiler_rivetcasters/provenance.json",
       "sha256": "8ba752669408a84ac841d031909197080bcf9e52203798a64a4383b5f0c299cb"
     },
     "unit_brasshollow_debt_engine_exactors": {

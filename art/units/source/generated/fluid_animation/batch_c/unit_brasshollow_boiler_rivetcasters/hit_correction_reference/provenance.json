@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "source_file": "original.png",
+  "sha256": "11dee4f0be6f9a911ab50731e75429556b0d54413b4082f984b7acc049da4e31",
+  "prompt_file": "prompt.txt",
+  "reference_paths": [
+    "../death_v1/guide_0_rgba.png"
+  ],
+  "generated_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c95bd13f-c867-4678-8e23-3bd16cad2d97.png",
+  "registration": {
+    "anchor": [
+      847,
+      813
+    ],
+    "runtime_scale": 0.328,
+    "basis": "Fixed source-wide registration using near wheel diameter, front stabilizer and muzzle positions; crew recoil alters posture, not anatomical scale."
+  },
+  "review": "Exactly two original covered faces, orange goggles and closed brown fists; both bodies recoil while rigid chassis is grounded. H3 midpoint only."
+}

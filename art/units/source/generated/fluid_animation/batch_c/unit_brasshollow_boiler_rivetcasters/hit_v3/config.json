@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_boiler_rivetcasters/hit_correction_reference/original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        847,
+        813
+      ],
+      "scale": 0.328,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      44,
+      1
+    ]
+  ],
+  "seed": 932005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Two original goblin mechanics react physically to an impact and recover, facing left. Fixed orthographic camera, original scale, uniform pure green backdrop. Both original faces remain fully covered by the GRAY FABRIC SCARF throughout, and both pairs of ORANGE-LENSED GOGGLES stay orange. Helmets and ears keep their original shapes. Rear engineer leans shoulders back while maintaining his glove on the lever; foreground engineer bends knees and leans chest back, one glove gripping the side control and the other closed fist rising beside his shoulder. Follow the supplied recoil reference with restrained elbow and torso articulation. Then both smoothly recover to their original controls and ready stance. All emotion is in body posture; facial clothing and opaque orange glasses remain unchanged. Exactly two arms and two legs each, original brown closed-fist gloves. The machine remains a solid unchanged brass machine, with white armor, rigid short tube, attached hoses, round wheels and pennant. Chassis stays grounded and level. Every machine part and both complete goblin bodies remain inside the canvas. One clear backward body recoil and recovery, crisp solid outlines.",
+  "protected_foreground_chroma": 16
+}

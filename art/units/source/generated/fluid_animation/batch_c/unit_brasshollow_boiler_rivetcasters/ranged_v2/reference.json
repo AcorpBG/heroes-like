@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            1024,
+            1024,
+            1536,
+            1280
+          ]
+        ],
+        "anchor": [
+          1280,
+          1260
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "14ac361f6c6b9347a8a5b0957ea839b4cd2c443e276097417ab66b43627b6813",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c4a9be228322c6b7b0e79b260bd8bd583e647b7c4213b5fb66296f96cc4a4f57",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 1.25,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7905885d400be800760611d62770c758a33157f9b79b1fc30415f6ec0108b660",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b9df4fe375e30709c445ab94ab4f0e1327956fce94fe3d5e621e8670095ab307",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.8,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

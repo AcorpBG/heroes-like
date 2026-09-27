@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_brasshollow_boiler_rivetcasters",
+  "clip": "hit",
+  "scale": 0.8,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          1024,
+          1024,
+          1536,
+          1280
+        ]
+      ],
+      "anchor": [
+        1280,
+        1260
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_boiler_rivetcasters.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "seed": 930005,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "prompt": "Locked orthographic game camera, uniform saturated green backdrop, same original body scale. Exactly two original goblin engineers and their brass-and-dark-steel wheeled machine face LEFT. Preserve white chipped armor, orange windows, round tube, gauges, black hoses, wheel hubs, tires and red-and-cream pennant mast. Both goblins retain helmets, orange goggles, gray scarves, brown gloves, leather aprons, two arms and two legs. Rear operator rides the raised platform holding the lever; near operator stands to image right. React to one frontal impact with a clear recoil and recovery. Both operators jolt backward, elbows folding and knees bending; near operator raises his free hand and rear operator leans back above the lever. The machine pitches slightly on its mount while wheels and stabilizer support the chassis. Both crew then regain their original grips and posture. Every mechanical part remains attached and intact. Only the original bodies and mechanism move; background remains completely empty green. Preserve the complete team inside the canvas, with the original camera, body scale and registration.",
+  "protected_foreground_chroma": 16
+}
