@@ -6,7 +6,7 @@ const TERRAIN_DETAIL_ATLAS_SIZE := Vector2i(1024, 1024)
 const TERRAIN_DETAIL_CELL_SIZE := 256
 const TERRAIN_DETAIL_CELL_INSET := 16
 const TERRAIN_DETAIL_MIN_VISIBLE_PIXELS_PER_CELL := 25000
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const PRISM_MATRIX_PLACEMENT_ID := "ninefold_prism_matrix"
 const PRISM_MATRIX_PRODUCTION_STACKS := [
 	{"unit_id": "unit_sunvault_shard_wardens", "count": 6},

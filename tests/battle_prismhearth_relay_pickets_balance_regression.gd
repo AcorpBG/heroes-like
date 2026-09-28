@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_PRISMHEARTH_RELAY_PICKETS_BALANCE_REGRESSION"
 const SCENARIO_ID := "prismhearth-watch"
 const PLACEMENT_IDS := ["prismhearth_relay_pickets", "prismhearth_glasswing_sortie", "prismhearth_halo_reserve"]

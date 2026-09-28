@@ -677,9 +677,9 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 			"border_guard_link_count": border_count,
 			"expanded_zone_field_count": expanded_zone_field_count,
 			"expanded_link_field_count": expanded_link_field_count,
-			"recovered_runtime_fields": template.get("recovered_runtime_fields", []),
-			"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []),
-			"grammar_metadata": template.get("grammar_metadata", {}),
+			"recovered_runtime_fields": template.get("recovered_runtime_fields", []).duplicate(true),
+			"unsupported_runtime_fields": template.get("unsupported_runtime_fields", []).duplicate(true),
+			"grammar_metadata": template.get("grammar_metadata", {}).duplicate(true),
 			"supports_requested_constraints": _template_matches_constraints(template, normalized.get("size", {}), normalized.get("player_constraints", {})),
 		})
 	for profile in profiles:
@@ -689,8 +689,8 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		profile_summaries.append({
 			"id": String(profile.get("id", "")),
 			"template_id": String(profile.get("template_id", "")),
-			"terrain_ids": profile.get("terrain_ids", []),
-			"faction_ids": profile.get("faction_ids", []),
+			"terrain_ids": profile.get("terrain_ids", []).duplicate(true),
+			"faction_ids": profile.get("faction_ids", []).duplicate(true),
 		})
 	if templates.size() < 2:
 		failures.append("template catalog must contain multiple templates")
@@ -725,7 +725,7 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 		"catalog_path": TEMPLATE_CATALOG_PATH,
 		"template_count": templates.size(),
 		"profile_count": profiles.size(),
-		"source_catalog_summary": source_summary,
+		"source_catalog_summary": source_summary.duplicate(true),
 		"translated_import_counts": {
 			"template_count": imported_template_count,
 			"zone_count": imported_zone_count,
@@ -733,7 +733,7 @@ static func template_catalog_report(input_config: Dictionary = {}) -> Dictionary
 			"wide_link_count": imported_wide_link_count,
 			"border_guard_link_count": imported_border_guard_link_count,
 		},
-		"runtime_consumption_policy": runtime_policy,
+		"runtime_consumption_policy": runtime_policy.duplicate(true),
 		"templates_with_expanded_fields": templates_with_expanded_fields,
 		"selected_template_id": String(normalized.get("template_id", "")),
 		"selected_profile_id": String(normalized.get("profile", {}).get("id", "")),
@@ -2071,6 +2071,7 @@ static func _allocate_zone_level_cells(zones: Array, seeds: Dictionary, water_ce
 		if not assigned.has(seed_key):
 			assigned[seed_key] = zone_id
 			counts[zone_id] = int(counts.get(zone_id, 0)) + 1
+	var water_lookup := _point_lookup(water_cells)
 	for zone_id in zone_ids:
 		var candidates := []
 		var seed: Dictionary = seeds.get(zone_id, {})
@@ -2082,7 +2083,7 @@ static func _allocate_zone_level_cells(zones: Array, seeds: Dictionary, water_ce
 				candidates.append({
 					"x": x,
 					"y": y,
-					"sort_key": _layout_candidate_sort_key(x, y, seed, water_cells),
+					"sort_key": _layout_candidate_sort_key(x, y, seed, water_lookup),
 				})
 		candidates.sort_custom(Callable(RandomMapGeneratorRules, "_compare_layout_candidate"))
 		var cursor := 0
@@ -2094,16 +2095,16 @@ static func _allocate_zone_level_cells(zones: Array, seeds: Dictionary, water_ce
 				continue
 			assigned[candidate_key] = zone_id
 			counts[zone_id] = int(counts.get(zone_id, 0)) + 1
+	var sorted_zones := _zones_by_sorted_ids(zones, zone_ids)
 	for y in range(height):
 		for x in range(width):
 			var key := _point_key(x, y)
 			if assigned.has(key):
 				continue
-			var nearest := _nearest_zone_id(x, y, _zones_by_sorted_ids(zones, zone_ids), seeds)
+			var nearest := _nearest_zone_id(x, y, sorted_zones, seeds)
 			assigned[key] = nearest
 			counts[nearest] = int(counts.get(nearest, 0)) + 1
 	var owner_grid := []
-	var water_lookup := _point_lookup(water_cells)
 	var cells_by_zone := {}
 	for zone_id in zone_ids:
 		cells_by_zone[zone_id] = []
@@ -4043,25 +4044,6 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		rng,
 		materialized_route_rewards
 	)
-	var object_pool_value_weighting := _build_object_pool_value_weighting_payload(
-		normalized,
-		zones,
-		placements,
-		monster_reward_bands,
-		{},
-		{},
-		terrain_rows,
-		route_graph
-	)
-	var town_mine_dwelling := _build_town_mine_dwelling_placement_payload(
-		normalized,
-		zones,
-		placements,
-		terrain_rows,
-		route_graph,
-		route_build.get("road_network", {}),
-		{}
-	)
 	var decoration_density := _build_decoration_density_pass(
 		normalized,
 		zones,
@@ -4086,7 +4068,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		placements
 	)
 	var town_start_constraints := _town_start_constraints_payload(zones, placements, route_graph, route_build.get("route_reachability_proof", {}))
-	town_mine_dwelling = _build_town_mine_dwelling_placement_payload(
+	var town_mine_dwelling := _build_town_mine_dwelling_placement_payload(
 		normalized,
 		zones,
 		placements,
@@ -4095,7 +4077,7 @@ static func _build_constraint_payload(normalized: Dictionary, zones: Array, link
 		route_build.get("road_network", {}),
 		decoration_density
 	)
-	object_pool_value_weighting = _build_object_pool_value_weighting_payload(
+	var object_pool_value_weighting := _build_object_pool_value_weighting_payload(
 		normalized,
 		zones,
 		placements,
@@ -5695,6 +5677,7 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 			var control_tile: Dictionary = connection_control.get("road_tile", {}) if connection_control.get("road_tile", {}) is Dictionary else {}
 			control_key = _point_key(int(control_tile.get("x", -9999)), int(control_tile.get("y", -9999)))
 		var segment_tiles := []
+		var segment_lookup := _point_lookup(segment.get("cells", []))
 		for index in range(segment.get("cells", []).size()):
 			var cell = segment.get("cells", [])[index]
 			if not (cell is Dictionary):
@@ -5717,7 +5700,7 @@ static func _road_overlay_writeout_payload(road_network: Dictionary, route_graph
 				"road_type_id": road_type_id,
 				"road_type_byte": _road_type_byte_for_class(road_class),
 				"road_art_index": int(_hash32_int("%s:%d,%d:road_art" % [route_edge_id, x, y]) % 16),
-				"neighbor_mask": _road_neighbor_mask(segment.get("cells", []), x, y),
+				"neighbor_mask": _road_neighbor_mask(segment_lookup, x, y),
 				"passability": "passable" if _terrain_cell_is_passable(terrain_rows, x, y) and not body_blocked else "blocked",
 				"body_conflict": body_blocked,
 				"writeout_state": "final_generated_tile_bytes_written_to_export_record",
@@ -6438,20 +6421,30 @@ static func _serialization_object_instances(object_footprints: Dictionary, place
 	return instances
 
 static func _round_trip_serialization_record(record: Dictionary) -> Dictionary:
-	var json_safe_record: Dictionary = _json_safe_value(record)
-	var json_text := JSON.stringify(json_safe_record)
+	# The record is already JSON-safe (see _generated_map_serialization_record) and
+	# carries the signature computed when it was built, so it is serialised and
+	# hashed only once more here. The data check compares the record itself
+	# against what JSON parses back, so a value JSON cannot carry fails it.
+	var json_text := JSON.stringify(record)
 	var parsed = JSON.parse_string(json_text)
 	var failures := []
 	if not (parsed is Dictionary):
 		failures.append("serialized record did not parse back to dictionary")
 		parsed = {}
-	var original_signature := _serialization_record_signature(json_safe_record)
-	var parsed_signature := _serialization_record_signature(parsed)
-	var original_counts := _serialization_key_counts(json_safe_record)
+	var original_signature := String(record.get("round_trip_signature", ""))
+	if original_signature == "":
+		original_signature = _serialization_record_signature(record)
+	var parsed_without_signature: Dictionary = parsed.duplicate()
+	parsed_without_signature.erase("round_trip_signature")
+	var parsed_signature := _hash32_hex(_stable_stringify(parsed_without_signature))
+	var original_counts := _serialization_key_counts(record)
 	var parsed_counts := _serialization_key_counts(parsed)
+	if not _json_round_trip_equal(record, parsed):
+		failures.append("round-trip data changed")
 	if original_signature != parsed_signature:
 		failures.append("round-trip signature changed")
-	if _stable_stringify(original_counts) != _stable_stringify(parsed_counts):
+	var key_counts_stable := _stable_stringify(original_counts) == _stable_stringify(parsed_counts)
+	if not key_counts_stable:
 		failures.append("round-trip key counts changed")
 	return {
 		"ok": failures.is_empty(),
@@ -6461,10 +6454,43 @@ static func _round_trip_serialization_record(record: Dictionary) -> Dictionary:
 		"signature_stable": original_signature == parsed_signature,
 		"original_key_counts": original_counts,
 		"parsed_key_counts": parsed_counts,
-		"key_counts_stable": _stable_stringify(original_counts) == _stable_stringify(parsed_counts),
+		"key_counts_stable": key_counts_stable,
 		"json_byte_length": json_text.length(),
 		"failures": failures,
 	}
+
+static func _json_round_trip_equal(original: Variant, parsed: Variant) -> bool:
+	# JSON reads every number back as a float, so numbers compare by value; any
+	# other type change, missing key or length change counts as a difference.
+	var original_type := typeof(original)
+	var parsed_type := typeof(parsed)
+	if original_type in [TYPE_INT, TYPE_FLOAT] and parsed_type in [TYPE_INT, TYPE_FLOAT]:
+		return is_equal_approx(float(original), float(parsed))
+	if original_type in [TYPE_STRING, TYPE_STRING_NAME] and parsed_type in [TYPE_STRING, TYPE_STRING_NAME]:
+		return String(original) == String(parsed)
+	if original_type != parsed_type:
+		return false
+	match original_type:
+		TYPE_DICTIONARY:
+			var original_dict: Dictionary = original
+			var parsed_dict: Dictionary = parsed
+			if original_dict.size() != parsed_dict.size():
+				return false
+			for key in original_dict.keys():
+				var parsed_key := String(key)
+				if not parsed_dict.has(parsed_key) or not _json_round_trip_equal(original_dict[key], parsed_dict[parsed_key]):
+					return false
+			return true
+		TYPE_ARRAY:
+			var original_array: Array = original
+			var parsed_array: Array = parsed
+			if original_array.size() != parsed_array.size():
+				return false
+			for index in range(original_array.size()):
+				if not _json_round_trip_equal(original_array[index], parsed_array[index]):
+					return false
+			return true
+	return original == parsed
 
 static func _roads_rivers_writeout_validation_core(road_overlay: Dictionary, river_overlay: Dictionary, serialization_record: Dictionary, round_trip: Dictionary, route_graph: Dictionary, object_footprints: Dictionary) -> Dictionary:
 	var failures := []
@@ -6697,8 +6723,7 @@ static func _closest_point_in_path(cells: Array, anchor: Dictionary) -> Dictiona
 			best = cell
 	return best
 
-static func _road_neighbor_mask(cells: Array, x: int, y: int) -> Dictionary:
-	var lookup := _point_lookup(cells)
+static func _road_neighbor_mask(lookup: Dictionary, x: int, y: int) -> Dictionary:
 	return {
 		"n": lookup.has(_point_key(x, y - 1)),
 		"e": lookup.has(_point_key(x + 1, y)),
@@ -6737,7 +6762,9 @@ static func _route_blocking_body_lookup_from_footprint_records(records: Array) -
 	return result
 
 static func _serialization_record_signature(record: Dictionary) -> String:
-	var copy: Dictionary = _json_safe_value(record)
+	# Expects a JSON-safe record. The hash covers the JSON-parsed form, so it is
+	# the value a save reads back.
+	var copy := record.duplicate()
 	copy.erase("round_trip_signature")
 	var parsed = JSON.parse_string(JSON.stringify(copy))
 	if parsed is Dictionary:
@@ -11755,9 +11782,9 @@ static func _large_batch_translated_template_cases(fixture: Dictionary) -> Array
 			"unsupported_reason": unsupported_reason,
 			"accepted_non_parity": accepted_non_parity,
 			"source_support": {
-				"size_score": template.get("size_score", {}),
-				"map_support": template.get("map_support", {}),
-				"players": template.get("players", {}),
+				"size_score": template.get("size_score", {}).duplicate(true),
+				"map_support": template.get("map_support", {}).duplicate(true),
+				"players": template.get("players", {}).duplicate(true),
 				"wide_link_count": wide_count,
 				"border_guard_link_count": border_count,
 			},
@@ -12441,15 +12468,12 @@ static func _large_batch_blocker_record(case_result: Dictionary) -> Dictionary:
 	}
 
 static func _load_template_catalog() -> Dictionary:
-	if not FileAccess.file_exists(TEMPLATE_CATALOG_PATH):
+	# Returns ContentService's cached catalog, shared across calls: treat it as
+	# read-only and duplicate anything handed out to callers that may mutate it.
+	var catalog: Dictionary = ContentService.load_json(TEMPLATE_CATALOG_PATH)
+	if catalog.is_empty():
 		return {"schema_id": "", "profiles": [], "templates": []}
-	var file := FileAccess.open(TEMPLATE_CATALOG_PATH, FileAccess.READ)
-	if file == null:
-		return {"schema_id": "", "profiles": [], "templates": []}
-	var parsed = JSON.parse_string(file.get_as_text())
-	if not (parsed is Dictionary):
-		return {"schema_id": "", "profiles": [], "templates": []}
-	return parsed
+	return catalog
 
 static func _generation_seed_payload(normalized: Dictionary) -> Dictionary:
 	var profile: Dictionary = normalized.get("profile", {}).duplicate(true)
@@ -12557,7 +12581,7 @@ static func _select_template_profile(input_config: Dictionary, size: Dictionary,
 		var requested_profile_template_id := String(profile_by_id[requested_profile_id].get("template_id", ""))
 		return {
 			"template": {},
-			"profile": profile_by_id[requested_profile_id],
+			"profile": profile_by_id[requested_profile_id].duplicate(true),
 			"source": source,
 			"rejected": true,
 			"failure_code": "profile_template_constraints_failed",
@@ -12593,8 +12617,8 @@ static func _select_template_profile(input_config: Dictionary, size: Dictionary,
 	elif profile_by_template.has(String(selected_template.get("id", ""))):
 		selected_profile = profile_by_template[String(selected_template.get("id", ""))]
 	return {
-		"template": selected_template,
-		"profile": selected_profile,
+		"template": selected_template.duplicate(true),
+		"profile": selected_profile.duplicate(true),
 		"source": source,
 		"rejected": false,
 		"requested_template_id": requested_template_id,
@@ -12699,11 +12723,11 @@ static func _template_constraint_report(template: Dictionary, size: Dictionary, 
 			"player_count": player_count,
 		},
 		"supported": {
-			"size_score": size_score,
+			"size_score": size_score.duplicate(true),
 			"water_modes": supported_water_modes,
 			"level_counts": supported_counts,
-			"humans": humans,
-			"total": total,
+			"humans": humans.duplicate(true),
+			"total": total.duplicate(true),
 			"supported_config_count": int(players.get("supported_config_count", 0)),
 			"team_mode": String(players.get("team_mode", "free_for_all")),
 		},
@@ -13171,10 +13195,10 @@ static func _compare_area_remainder(a: Dictionary, b: Dictionary) -> bool:
 		return String(a.get("zone_id", "")) < String(b.get("zone_id", ""))
 	return left > right
 
-static func _layout_candidate_sort_key(x: int, y: int, seed: Dictionary, water_cells: Array) -> String:
+static func _layout_candidate_sort_key(x: int, y: int, seed: Dictionary, water_lookup: Dictionary) -> String:
 	var dx := x - int(seed.get("x", 0))
 	var dy := y - int(seed.get("y", 0))
-	var water_penalty := 200000 if _point_lookup(water_cells).has(_point_key(x, y)) else 0
+	var water_penalty := 200000 if water_lookup.has(_point_key(x, y)) else 0
 	var score := dx * dx + dy * dy + water_penalty
 	return "%09d:%03d:%03d" % [score, y, x]
 

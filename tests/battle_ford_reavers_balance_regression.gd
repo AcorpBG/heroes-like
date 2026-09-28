@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_FORD_REAVERS_BALANCE_REGRESSION"
 const PLACEMENT_ID := "bridge_ford_reavers"
 const LOCAL_ARMY_CONTRACTS := {

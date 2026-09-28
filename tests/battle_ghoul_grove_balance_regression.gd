@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_GHOUL_GROVE_BALANCE_REGRESSION"
 const SCENARIO_ID := "river-pass"
 const PLACEMENT_ID := "river_pass_ghoul_grove"

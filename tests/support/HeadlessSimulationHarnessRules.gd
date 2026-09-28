@@ -5,7 +5,7 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGeneratorRules.gd")
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const BattleAutoResolveRulesScript = preload("res://scripts/core/BattleAutoResolveRules.gd")
 
 const REPORT_SCHEMA_ID := "headless_simulation_harness_report_v1"
@@ -431,7 +431,7 @@ static func build_strategic_ai_long_run_seed_matrix_report(input_config: Diction
 			"seed_offset": seed_offset,
 			"seed_shard": seed_shard,
 			"turn_count": turn_count,
-			"summary": summary,
+			"summary": _without_timing_fields(summary),
 			"row_signatures": _strategic_ai_long_run_row_signatures(rows),
 		}),
 		"policy": {
@@ -1314,7 +1314,7 @@ static func _strategic_ai_long_run_seed_row(
 		row["classification"] = "setup_failure"
 		row["setup_error_code"] = String(setup.get("error_code", ""))
 		row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
-		row["signature"] = _signature_for(row)
+		row["signature"] = _signature_for(_without_timing_fields(row))
 		_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 		return row
 	var session: SessionStateStoreScript.SessionData = ScenarioSelectRulesScript.start_random_map_skirmish_session_from_setup(setup)
@@ -1323,7 +1323,7 @@ static func _strategic_ai_long_run_seed_row(
 		row["ok"] = false
 		row["classification"] = "session_failure"
 		row["row_runtime_msec"] = maxi(0, Time.get_ticks_msec() - row_started_msec)
-		row["signature"] = _signature_for(row)
+		row["signature"] = _signature_for(_without_timing_fields(row))
 		_strategic_ai_long_run_progress(progress_callback, _strategic_ai_long_run_row_progress_payload("row_complete", row, seed_index, seed_count))
 		return row
 	OverworldRules.normalize_overworld_state(session)
@@ -5942,6 +5942,22 @@ static func _resource_abs_sum(pool: Dictionary) -> int:
 
 static func _signature_for(value: Variant) -> String:
 	return _hash32_hex(_stable_stringify(value))
+
+static func _without_timing_fields(value: Variant) -> Variant:
+	# Wall-clock *_msec fields differ on every run, so signatures leave them out.
+	if value is Dictionary:
+		var result := {}
+		for key in value.keys():
+			if String(key).ends_with("_msec"):
+				continue
+			result[key] = _without_timing_fields(value[key])
+		return result
+	if value is Array:
+		var result := []
+		for item in value:
+			result.append(_without_timing_fields(item))
+		return result
+	return value
 
 static func _stable_stringify(value: Variant) -> String:
 	if value is Dictionary:

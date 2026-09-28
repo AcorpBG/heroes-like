@@ -1,6 +1,6 @@
 extends Node
 
-const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
+const HeadlessSimulationHarnessRulesScript = preload("res://tests/support/HeadlessSimulationHarnessRules.gd")
 const REPORT_ID := "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_REPORT"
 const DEFAULT_SEED_COUNT := 1
 const DEFAULT_TURN_COUNT := 1

@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_NINEFOLD_ROUGH_EXACTORS_BALANCE_REGRESSION"
 const SCENARIO_ID := "ninefold-confluence"
 const EXACTORS_PLACEMENT_ID := "ninefold_orevein_exactors"

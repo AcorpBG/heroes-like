@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_BOGBOUND_ARCHIVE_WARDENS_BALANCE_REGRESSION"
 const SCENARIO_ID := "bogbound-oath"
 const PLACEMENT_IDS := ["bogbound_lantern_patrol", "bogbound_survey_guard", "bogbound_archive_wardens"]

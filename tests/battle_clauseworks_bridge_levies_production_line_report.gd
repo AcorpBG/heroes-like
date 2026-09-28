@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_CLAUSEWORKS_BRIDGE_LEVIES_PRODUCTION_LINE_REPORT"
 const SCENARIO_ID := "clauseworks-counterclaim"
 const PLACEMENT_ID := "clauseworks_bridge_levies"

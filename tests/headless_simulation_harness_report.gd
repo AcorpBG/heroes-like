@@ -1,7 +1,7 @@
 extends Node
 
-const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const HeadlessSimulationHarnessRulesScript = preload("res://tests/support/HeadlessSimulationHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "HEADLESS_SIMULATION_HARNESS_REPORT"
 const FORBIDDEN_CLAIM_TOKENS := [
 	"manual_play_replacement\":true",

@@ -5,6 +5,7 @@ const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const TerrainPlacementRulesScript = preload("res://scripts/core/TerrainPlacementRules.gd")
+const OverworldLevelRulesScript = preload("res://scripts/core/OverworldLevelRules.gd")
 const FrontierVisualKit = preload("res://scripts/ui/FrontierVisualKit.gd")
 
 const DEFAULT_TERRAIN_ID := "grass"
@@ -106,7 +107,12 @@ const EDITOR_TOOL_RAIL_FRAME_PATH := "res://art/ui/runtime/overworld/sidebar_fra
 @onready var _tool_scroll: ScrollContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll
 @onready var _tool_buttons: GridContainer = $RootMargin/Shell/ShellPad/ShellBox/BodyRow/ToolRail/ToolPad/ToolScroll/ToolBox/ToolButtons
 
-var _session = null
+# Assigning the working copy or the dirty flag bumps the edit revision, which
+# drops the memoised validation below.
+var _session = null:
+	set(value):
+		_session = value
+		_editor_edit_revision += 1
 var _map_package_entries: Array = []
 var _map_package_index_status := {}
 var _terrain_entries: Array = []
@@ -125,7 +131,15 @@ var _pending_road_path_start := Vector2i(-1, -1)
 var _selected_tile := Vector2i.ZERO
 var _hovered_tile := Vector2i(-1, -1)
 var _tool := TOOL_INSPECT
-var _dirty := false
+var _dirty := false:
+	set(value):
+		_dirty = value
+		_editor_edit_revision += 1
+# Whole-map validation is memoised per edit revision so one refresh (and every
+# hover after it) runs it once instead of once per status surface.
+var _editor_edit_revision := 0
+var _editor_validation_memo_revision := -1
+var _editor_validation_memo := {}
 var _last_message := ""
 var _last_object_authoring_recap := {}
 var _restored_from_play_copy := false
@@ -1954,6 +1968,17 @@ func _placement_preview_tile() -> Vector2i:
 	return _selected_tile
 
 func _selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
+	# Several status surfaces show the same hover preview; build it once per
+	# edit revision, tile and palette choice. Callers must not mutate it.
+	var memo_key := "placement_preview:%d,%d:%s:%s" % [tile.x, tile.y, _selected_object_family, _selected_object_content_id]
+	var memo: Variant = _editor_validation_memo_lookup(memo_key)
+	if memo is Dictionary:
+		return memo
+	var preview := _build_selected_object_placement_preview_payload(tile)
+	_editor_validation_memo[memo_key] = preview
+	return preview
+
+func _build_selected_object_placement_preview_payload(tile: Vector2i) -> Dictionary:
 	var payload := _object_content_taxonomy_payload(_selected_object_family, _selected_object_content_id)
 	if payload.is_empty() or _selected_object_family == "" or _selected_object_content_id == "":
 		return {}
@@ -3076,7 +3101,7 @@ func _reward_links_for_placement(placement_id: String, objective_links: Array) -
 			var objective_id := String(objective_link.get("id", ""))
 			if objective_id != "":
 				objective_ids.append(objective_id)
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	for hook in scenario.get("script_hooks", []):
 		if not (hook is Dictionary):
 			continue
@@ -3108,7 +3133,7 @@ func _reward_links_for_placement(placement_id: String, objective_links: Array) -
 
 func _enemy_focus_links_for_placement(placement_id: String) -> Array:
 	var links := []
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	for config in scenario.get("enemy_factions", []):
 		if not (config is Dictionary):
 			continue
@@ -3146,9 +3171,25 @@ func _authoring_warnings_for_detail(
 		warnings.append("Editor placement id is linked; keep the id stable before saving author data.")
 	return warnings
 
+func _editor_validation_memo_lookup(key: String) -> Variant:
+	if _editor_validation_memo_revision != _editor_edit_revision:
+		_editor_validation_memo.clear()
+		_editor_validation_memo_revision = _editor_edit_revision
+	return _editor_validation_memo.get(key, null)
+
 func _scenario_authoring_validation_payload() -> Dictionary:
+	# Returns a memoised payload shared by every caller in the same edit revision;
+	# callers must not mutate it.
 	if _session == null:
 		return {}
+	var memo: Variant = _editor_validation_memo_lookup("scenario_authoring_validation")
+	if memo is Dictionary:
+		return memo
+	var payload := _build_scenario_authoring_validation_payload()
+	_editor_validation_memo["scenario_authoring_validation"] = payload
+	return payload
+
+func _build_scenario_authoring_validation_payload() -> Dictionary:
 	var placement_ids := _all_current_placement_ids()
 	var objective_anchors := []
 	var missing_objective_anchors := []
@@ -3652,6 +3693,11 @@ func _load_legacy_authored_scenario_working_copy_for_dev_validation(scenario_id:
 		_last_message = "Unable to load legacy authored scenario %s into the editor." % scenario_id
 		_refresh_state()
 		return false
+	var level_block := _editor_level_support_block_message(session, scenario_id)
+	if level_block != "":
+		_last_message = level_block
+		_refresh_state()
+		return false
 	_cancel_editor_map_cursor_semantic()
 	_session = session
 	_authored_baseline_cache = null
@@ -3699,6 +3745,11 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 		_last_message = "Unable to load package %s into the editor." % package_id
 		_refresh_state()
 		return false
+	var level_block := _editor_level_support_block_message(session, String(entry.get("display_name", package_id)))
+	if level_block != "":
+		_last_message = level_block
+		_refresh_state()
+		return false
 	SessionState.set_editor_working_copy_session(null)
 	_cancel_editor_map_cursor_semantic()
 	_session = session
@@ -3727,6 +3778,14 @@ func _load_maps_folder_package_entry_working_copy(entry: Dictionary) -> bool:
 	_last_message = "Loaded editor package into a mutable working copy."
 	_refresh_state()
 	return true
+
+func _editor_level_support_block_message(session, label: String) -> String:
+	# Object, terrain and export edits address tiles by x,y on the surface only,
+	# so a map with an underground level would lose or corrupt that level.
+	var level_count := OverworldLevelRulesScript.level_count(session)
+	if level_count <= 1:
+		return ""
+	return "%s has %d map levels. The editor only supports single-level maps so far, so it was not opened." % [label, level_count]
 
 func _duplicate_session(session):
 	if session == null or session.scenario_id == "":
@@ -3849,6 +3908,7 @@ func _make_all_tiles_visible(session) -> void:
 	}
 
 func _refresh_state() -> void:
+	_editor_edit_revision += 1
 	_sync_tool_buttons()
 	_sync_property_controls()
 	_sync_object_taxonomy_summary()
@@ -3962,6 +4022,11 @@ func _sync_preview() -> void:
 	_map_view.set_route_preview_enabled(false)
 	_map_view.set_map_state(_session, map_data, map_size, _selected_tile)
 	_map_view.set_placement_debug_overlay_enabled(_placement_debug_overlay_enabled)
+	_sync_preview_tooltip()
+
+func _sync_preview_tooltip() -> void:
+	if _session == null or _map_view == null:
+		return
 	var tooltip_sections := [String(_editor_active_tool_cue_payload().get("tooltip", ""))]
 	if _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
 		var terrain_paint_tooltip := String(_editor_terrain_paint_check_payload().get("tooltip", "")).strip_edges()
@@ -4118,7 +4183,7 @@ func _current_scenario_display_name() -> String:
 	var package_display := String(_session.flags.get("editor_source_display_name", "")).strip_edges()
 	if package_display != "":
 		return package_display
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	return String(scenario.get("name", _session.scenario_id))
 
 func _selected_map_package_label() -> String:
@@ -4501,16 +4566,19 @@ func _on_restore_selected_tile_pressed() -> void:
 	_refresh_state()
 
 func _on_map_tile_hovered(tile: Vector2i) -> void:
+	# Hover only moves the placement or paint preview. The map state, selection and
+	# validation are unchanged, so refresh the hover-dependent text and tooltips
+	# without re-pushing the map view; validation comes from the memo.
 	_hovered_tile = tile
 	if _tool == TOOL_PLACE_OBJECT:
 		_sync_object_taxonomy_summary()
 		_sync_tool_buttons()
-		_sync_preview()
+		_sync_preview_tooltip()
 		_refresh_labels()
 	elif _tool in [TOOL_TERRAIN, TOOL_TERRAIN_LINE, TOOL_TERRAIN_RECTANGLE]:
 		_sync_terrain_paint_surface()
 		_sync_tool_buttons()
-		_sync_preview()
+		_sync_preview_tooltip()
 		_refresh_labels()
 
 func _on_map_tile_pressed(tile: Vector2i) -> void:
@@ -6111,7 +6179,7 @@ func _editor_scenario_validation_check_payload() -> Dictionary:
 			"state": "no_working_copy",
 			"ready": false,
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
 	var validation := _scenario_authoring_validation_payload()
 	var warning_count := int(validation.get("warning_count", 0))
@@ -6172,7 +6240,7 @@ func _editor_export_intent_payload() -> Dictionary:
 			"dirty": false,
 			"ready": false,
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
 	var export_contract := _authored_scenario_export_contract_payload(false)
 	var warning_count := int(export_contract.get("warning_count", 0))
@@ -6235,6 +6303,13 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 			"write_context": "validated draft only; no authored file or campaign progress is written",
 			"blockers": ["No editor working copy is loaded."],
 		}
+	if include_draft:
+		# The full draft feeds Save Copy, so it always revalidates.
+		_editor_edit_revision += 1
+	else:
+		var memo: Variant = _editor_validation_memo_lookup("export_contract_summary")
+		if memo is Dictionary:
+			return memo
 	var scenario := _editor_scenario_template()
 	if scenario.is_empty():
 		return {
@@ -6257,7 +6332,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 		if warning_text != "":
 			blockers.append(warning_text)
 	if not include_draft:
-		return {
+		_editor_validation_memo["export_contract_summary"] = {
 			"ok": blockers.is_empty(),
 			"ready": blockers.is_empty(),
 			"contract_id": SCENARIO_EXPORT_CONTRACT_ID,
@@ -6279,6 +6354,7 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 			"missing_objective_anchor_count": int(validation.get("missing_objective_anchor_count", 0)),
 			"export_scope": "authored_scenario_and_terrain_layers_draft",
 		}
+		return _editor_validation_memo["export_contract_summary"]
 
 	var scenario_record := _export_scenario_record_from_working_copy(scenario)
 	var terrain_layers_record := _export_terrain_layers_record_from_working_copy()
@@ -6331,7 +6407,7 @@ func _editor_scenario_objectives() -> Dictionary:
 	# Returned read-only; callers must not mutate it.
 	if _session == null or _session.scenario_id == "":
 		return {}
-	var authored := ContentService.get_scenario(_session.scenario_id)
+	var authored := ContentService.get_scenario_readonly(_session.scenario_id)
 	var objectives: Variant = {}
 	if not authored.is_empty():
 		objectives = authored.get("objectives", {})
@@ -6883,7 +6959,7 @@ func _editor_play_handoff_payload() -> Dictionary:
 			"tooltip": "Load a map package working copy before play-testing it.",
 			"state_context": "no_working_copy",
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
 	var map_size := OverworldRules.derive_map_size(_session)
 	var hero_position := OverworldRules.hero_position(_session)
@@ -6926,7 +7002,7 @@ func _editor_play_return_context_payload() -> Dictionary:
 			"tooltip": "",
 			"restored": false,
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
 	var map_size := OverworldRules.derive_map_size(_session)
 	var hero_position := OverworldRules.hero_position(_session)
@@ -7098,7 +7174,7 @@ func _editor_menu_return_payload() -> Dictionary:
 			"restored_from_play_copy": false,
 			"write_context": "no editor working copy is loaded",
 		}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
+	var scenario := ContentService.get_scenario_readonly(_session.scenario_id)
 	var scenario_name := String(scenario.get("name", _session.scenario_id))
 	var dirty_context := "unsaved editor edits are discarded when leaving" if _dirty else "no editor edits need preserving"
 	var restored_context := "Play Copy launch snapshot restored" if _restored_from_play_copy else "active editor working copy"
@@ -8267,6 +8343,7 @@ func validation_dirty_transition_snapshot() -> Dictionary:
 	}
 
 func validation_snapshot() -> Dictionary:
+	_editor_edit_revision += 1
 	var map_size := OverworldRules.derive_map_size(_session) if _session != null else Vector2i.ZERO
 	var hero_pos := OverworldRules.hero_position(_session) if _session != null else Vector2i.ZERO
 	var terrain_placement := _materialize_last_terrain_final_normalization()

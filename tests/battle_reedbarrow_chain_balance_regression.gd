@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_REEDBARROW_CHAIN_BALANCE_REGRESSION"
 const SCENARIO_ID := "reedbarrow-ferry"
 const PLACEMENT_IDS := ["barrow_pickets", "reedbarrow_chain", "reedbarrow_levee_totemists"]
