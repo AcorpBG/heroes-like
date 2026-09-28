@@ -242,6 +242,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		"phases_ms": {},
 		"factions": [],
 	} if profile_enabled else {}
+	EnemyAdventureRulesScript.begin_enemy_turn_path_caches()
 	var phase_started := _profile_timer(profile_enabled)
 	DifficultyRulesScript.normalize_session(session)
 	_profile_add_ms(profile, "difficulty_normalize_ms", phase_started)
@@ -252,6 +253,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 	var configs = _enemy_faction_configs_for_session(session)
 	_profile_add_ms(profile, "config_lookup_ms", phase_started)
 	if not (configs is Array) or configs.is_empty():
+		EnemyAdventureRulesScript.end_enemy_turn_path_caches()
 		return _enemy_turn_result(true, "", [], profile_enabled, profile)
 
 	var states = session.overworld.get("enemy_states", [])
@@ -299,6 +301,7 @@ static func run_enemy_turn(session: SessionStateStoreScript.SessionData) -> Dict
 		"",
 		session.overworld.get("resolved_encounters", [])
 	)
+	EnemyAdventureRulesScript.end_enemy_turn_path_caches()
 	return _enemy_turn_result(true, " ".join(messages), events, profile_enabled, profile)
 
 static func _enemy_turn_profile_enabled() -> bool:
@@ -1416,7 +1419,7 @@ static func _latest_enemy_state(
 	var merged := fallback.duplicate(true)
 	# Commander and task helpers persist these fields directly while the empire
 	# cycle still owns economy and pressure in its local state.
-	for runtime_key in ["commander_roster", "known_world_memory", "hero_task_state", "rebuild_pressure_request"]:
+	for runtime_key in EnemyAdventureRulesScript.SESSION_OWNED_ENEMY_STATE_KEYS:
 		if latest.has(runtime_key):
 			merged[runtime_key] = latest.get(runtime_key)
 		else:
@@ -2945,7 +2948,7 @@ static func _has_open_emergency_defense_front(
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if EnemyAdventureRulesScript._town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var town_front: Dictionary = OverworldRulesScript.town_front_state(session, town)
 		if (
@@ -3863,6 +3866,7 @@ static func _spawn_raid(
 	var encounter_id := _spawn_raid_encounter_id_from_plan(spawn_point, encounter_pool, raid_counter)
 	state["raid_counter"] = raid_counter + 1
 	state["commander_counter"] = int(state.get("commander_counter", 0)) + 1
+	_sync_spawn_counters_to_session(session, faction_id, state)
 	var strategy = EnemyAdventureRulesScript.enemy_strategy(config, PlayerRules.controller_id(config))
 	var raid_threshold = _raid_threshold_for_strategy(
 		session,
@@ -8063,6 +8067,22 @@ static func _describe_recruit_delta(delta: Variant) -> String:
 		parts.append("+%d %s" % [amount, String(unit.get("name", unit_id))])
 	return ", ".join(parts)
 
+static func _sync_spawn_counters_to_session(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> void:
+	# Raid placement ids come from raid_counter. Keep the session entry at least
+	# as far along as this cycle's copy, so no later read of the session entry
+	# can hand out an id that is already on the map.
+	if session == null:
+		return
+	var live := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	if live.is_empty() or is_same(live, state):
+		return
+	for counter_key in ["raid_counter", "commander_counter"]:
+		live[counter_key] = max(int(live.get(counter_key, 0)), int(state.get(counter_key, 0)))
+
 static func _find_state(states: Variant, faction_id: String) -> Dictionary:
 	if states is Array:
 		for state in states:
@@ -8127,6 +8147,8 @@ static func _town_name(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("name", town_state.get("town_id", "Town")))
 
+# Content faction of the town template, not whoever controls it now. Use
+# _town_controller_faction_id for ownership checks; players can share a faction.
 static func _town_faction_id(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("faction_id", ""))
