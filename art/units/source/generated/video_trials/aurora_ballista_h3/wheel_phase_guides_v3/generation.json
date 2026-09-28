@@ -1,0 +1,25 @@
+{
+  "tool": "built-in image_gen",
+  "image": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v3/original.png",
+  "image_sha256": "856a8c8f89d60004d6a82483b9d261f2eabdf24e669dd455396ac1b2ea893d30",
+  "prompt_file": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v3/prompt.txt",
+  "prompt_sha256": "fa7e1f45cb3c774eb5a8f996a0c99cc2d05db8ca95855ca9ebd10dffdb0fa37e",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v4/guide_0_rgba.png",
+      "sha256": "2905b9407f63202ac5f6d9890e1e19a70cf77ad8d03b551a3e8b830dc8c9cfac"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v3/near_wheel_reference.png",
+      "sha256": "77282d18fa76e1b35e71f5f25bccee58d75130e1a3fbf31fb6d87f95e2aba661",
+      "crop_source": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v4/guide_0_rgba.png",
+      "crop_rect": [
+        419,
+        336,
+        549,
+        524
+      ]
+    }
+  ],
+  "review": "Rejected: focused half-spoke edit still retains a near-vertical top spoke instead of the specified blue gap, yielding no reliable intermediate rolling phase. No H3 job or publication. Movement needs consistently authored rigid spoke rotation at fixed hubs; all accepted clips remain unchanged."
+}

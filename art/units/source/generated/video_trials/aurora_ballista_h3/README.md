@@ -73,3 +73,5 @@ Native phase review passed for the six selected actions. Atlas3432x3484,
 unit rows, all eight idle poses and offsets/timing, existing move poses and
 offsets/timing, and the overworld PNG were verified unchanged. No Linux run
 is claimed. Live roster:112 complete,1 partial,120 remaining of232.
+
+Further guide repair (2026-09-28): wheel_phase_guides_v2 requested three distinct spoke angles; v3 supplied an enlarged original-wheel reference and explicitly requested a half-spoke turn. Both generated paintings retained essentially the original spoke orientation. They are rejected guides, not animation frames, and were not sent to H3. Original masters, prompts, reference crop and hashes remain preserved. Reliable rigid spoke-phase control at fixed axle centers is still missing; existing accepted actions remain untouched.

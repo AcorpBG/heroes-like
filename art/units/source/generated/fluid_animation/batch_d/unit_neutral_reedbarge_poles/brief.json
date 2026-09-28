@@ -1,0 +1,38 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "identity": "One original Reedbarge Pole human barge guard, facing screen right in an elevated orthographic three-quarter camera. Exactly two arms and two booted legs. Weathered straw conical hat with a few reeds, short brown beard, teal neck scarf and tunic, straw shoulder cape, beige patched coat, rope coil at belt, brown wrapped leather boots. One long rigid brown wooden dock pole with a single curved iron hook and hanging reed tassel at its upper/front end. The near hand on screen left grips the lower/rear shaft; the far hand on screen right grips the upper/front shaft. Both original hands retain their proper grip; never exchange ends of the pole. Preserve the head, hat, straw cape, long shaft, single hook, tassel and clothing. ",
+  "status": "completed",
+  "required_new_clips": [
+    "move",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_clips": [
+    "idle"
+  ],
+  "measured_protected_magenta_chroma": 8.0,
+  "acceptance": "137 selected original video frames across six actions; retained eight reviewed articulated idle poses and pixel-identical overworld idle. All source frames reviewed chronologically, enlarged edges/equipment and native Godot phases inspected. 218 candidate and 232 live focused Windows checks passed. No continuous playback or manual playtest claimed.",
+  "rejected_takes": {
+    "move_h3_v1": "Magenta/red/green/cyan/grey backdrop changes across the entire active gait. Unsafe extraction, original preserved. Blue correction prepared.",
+    "attack_h3_v1": "All chronological frames reviewed: hard pose cuts at 8/9, 38/39, 69/70, 99/100 instead of articulated transitions. Reject despite clean matte. V2 removes incompatible intermediate pose guides, retains same ready endpoints and requests continuous physical thrust on blue.",
+    "hit_h3_v1": "Background changes magenta to green at frame 11, back at 32, orange at 67, green at 93 and magenta at 111. Full recoil/recovery cannot be extracted with the reviewed palette. No runtime publication.",
+    "attack_h3_v2": "Continuous arm motion and intact pole, but minimal forward thrust and no committed body/knee lunge. Preserve original as unused candidate; add one full-extension guide to make an actual weighted strike."
+  },
+  "validation": {
+    "candidate_checks": 218,
+    "live_checks": 232,
+    "selected_originals": 137,
+    "preserved_idle_frames": 8,
+    "original_rgb_frames": 1240,
+    "guides": 17,
+    "provenance_records": 69,
+    "other_units_preserved": 231,
+    "atlas_size": [
+      3936,
+      3952
+    ]
+  }
+}

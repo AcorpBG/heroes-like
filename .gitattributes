@@ -227,3 +227,10 @@ art/animation/source/fluid/unit_thornwake_worldroot_bastion_veteran/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_tallyspring_throwers_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_brasshollow_tallyspring_throwers_veteran/**/*.txt -text
 art/animation/source/fluid/unit_brasshollow_tallyspring_throwers_veteran/*.json -text
+
+# Preserve hash-bound Reedbarge Poles H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_reedbarge_poles/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_reedbarge_poles/**/*.txt -text
+art/animation/source/fluid/unit_neutral_reedbarge_poles/*.json -text
+art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v[23]/*.json -text
+art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v[23]/*.txt -text

@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 8.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          120
+        ],
+        [
+          0,
+          120,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        488
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          740,
+          318,
+          1016
+        ],
+        [
+          0,
+          1016,
+          301,
+          1086
+        ]
+      ],
+      "anchor": [
+        174,
+        1040
+      ],
+      "scale": 0.57,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ]
+  ],
+  "prompt": "One original Reedbarge Pole human barge guard, facing screen right in an elevated orthographic three-quarter camera. Exactly two arms and two booted legs. Weathered straw conical hat with a few reeds, short brown beard, teal neck scarf and tunic, straw shoulder cape, beige patched coat, rope coil at belt, brown wrapped leather boots. One long rigid brown wooden dock pole with a single curved iron hook and hanging reed tassel at its upper/front end. The near hand on screen left grips the lower/rear shaft; the far hand on screen right grips the upper/front shaft. Both original hands retain their proper grip; never exchange ends of the pole. Preserve the head, hat, straw cape, long shaft, single hook, tassel and clothing. A quick backward physical flinch and recovery. Bend knees and lean shoulders/chin back while hands retain the diagonal pole. Briefly absorb the weight on the rear leg, then straighten into the same ready stance. The held pole and head lean with the torso without changing size. No forward jab or fall.  Full body stays inside the fixed camera, original body proportions and fixed ground reference. Perfectly flat saturated MAGENTA RGB 255,0,255 background remains constant in every frame, also between limbs and the pole. No landscape, floor, shadow, second person, extra arms, duplicated shaft or hook, smoke, effects, glowing magic or text.",
+  "clip": "hit",
+  "seed": 946103
+}

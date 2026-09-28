@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "54650cd2712710da3edab2f0b95f4130b21e62b4d634a70be7adeed3efebcd85",
+  "latent_sha256": "846e5e5e9a537d3e39f2d81144bbbd5caf25f1dfecd196d4ba30a51831c8a85a",
+  "decode_workflow_sha256": "5708555ab498dd399411f5330b5a5d01ac6c565ed1a301c85758ffeaf81aaac7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedbarge_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

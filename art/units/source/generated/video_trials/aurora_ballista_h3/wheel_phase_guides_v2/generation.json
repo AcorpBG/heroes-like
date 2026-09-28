@@ -1,0 +1,14 @@
+{
+  "tool": "built-in image_gen",
+  "image": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v2/original.png",
+  "image_sha256": "e361c6ae469a98b655679c8793f57d2611dc6ea87a6dd0c10fe1c6ac73b1c5d9",
+  "prompt_file": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v2/prompt.txt",
+  "prompt_sha256": "a1b8b9b6f9779b08d8d16ec6f3fd7878669075d97d266aa66de25ee3a4f57d7e",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v4/guide_0_rgba.png",
+      "sha256": "2905b9407f63202ac5f6d9890e1e19a70cf77ad8d03b551a3e8b830dc8c9cfac"
+    }
+  ],
+  "review": "Rejected as wheel-phase control: all three near-wheel spoke patterns remain essentially the same phase, so this sheet cannot establish directed rotation. Not supplied to H3 or published."
+}

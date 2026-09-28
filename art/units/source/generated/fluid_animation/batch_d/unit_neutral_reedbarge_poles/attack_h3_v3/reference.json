@@ -1,0 +1,81 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            425,
+            120
+          ],
+          [
+            0,
+            120,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          224,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "772b58cb52d0c9d7ed8d0e0b85a14be31bfd966d586b983077f0dc049808e925",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1b254581adf98c3e711aa520f7b8a523b7a84a9f6f336c5e2be7bde048a56503",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "pole_thrust",
+        "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+        "rects": [
+          [
+            670,
+            408,
+            1179,
+            499
+          ],
+          [
+            670,
+            499,
+            1140,
+            544
+          ],
+          [
+            670,
+            544,
+            1087,
+            740
+          ]
+        ],
+        "anchor": [
+          830,
+          714
+        ],
+        "scale": 1.14,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0adae13fbad3c9a3393d43b733fbed99be3fa707fe4b273fcf15675901110fe9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "98d17912b8b9cc5b41f133b70e6230ef7cbbb92b3b9a927c87059e9b7f1aa70b",
+      "runtime_source_scale": 0.57
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,5 @@
+{
+  "protected_foreground_chroma": 43.0,
+  "blue_chroma_axis": "blue_minus_red",
+  "review_note": "All 124 raw frames inspected: uniform blue plate shifts gradually to uniform cyan then returns blue. Original opaque guide maximum blue minus red is 41; protect 43. This axis remains separated from the complete brown/teal foreground. Corner uniformity and >=80 chroma separation remain required. No anatomy/geometry repair; inspect extracted cloth and equipment edges before acceptance."
+}

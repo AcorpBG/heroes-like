@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            425,
+            120
+          ],
+          [
+            0,
+            120,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          224,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "772b58cb52d0c9d7ed8d0e0b85a14be31bfd966d586b983077f0dc049808e925",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "63d768a4adf68f7d76bad8d9960f3dc9d27533f7f3326154f8c11843dab98fb0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hook_forward_windup",
+        "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/supported-travel-hook-forward-and-left-corpse.png",
+        "rects": [
+          [
+            0,
+            535,
+            546,
+            1024
+          ]
+        ],
+        "anchor": [
+          263,
+          948
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6b236da79671f0e695f725529eb662b2298cfcb00ae2654cdaebcd86b3b178ce",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bec558bccbfc815723f249114694ccf567afac409935977ffeae0fd097b62a82",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "pole_thrust",
+        "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+        "rects": [
+          [
+            670,
+            408,
+            1179,
+            499
+          ],
+          [
+            670,
+            499,
+            1140,
+            544
+          ],
+          [
+            670,
+            544,
+            1087,
+            740
+          ]
+        ],
+        "anchor": [
+          830,
+          714
+        ],
+        "scale": 1.14,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0adae13fbad3c9a3393d43b733fbed99be3fa707fe4b273fcf15675901110fe9",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a6452f69eba35468d59d1b33cac789cc627347ac57e08927a5d069d9a2de42b3",
+      "runtime_source_scale": 0.57
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

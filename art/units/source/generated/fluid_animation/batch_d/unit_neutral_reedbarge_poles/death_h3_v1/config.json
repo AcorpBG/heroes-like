@@ -1,0 +1,113 @@
+{
+  "unit_id": "unit_neutral_reedbarge_poles",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 18.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          425,
+          120
+        ],
+        [
+          0,
+          120,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        224,
+        488
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          741,
+          670,
+          923
+        ],
+        [
+          350,
+          923,
+          642,
+          1009
+        ],
+        [
+          307,
+          1009,
+          642,
+          1086
+        ]
+      ],
+      "anchor": [
+        470,
+        1035
+      ],
+      "scale": 0.57,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_reedbarge_poles/continuity-alpha/dead-head-left-cheek-on-arm.png",
+      "rects": [
+        [
+          0,
+          0,
+          1482,
+          1061
+        ]
+      ],
+      "anchor": [
+        761,
+        808
+      ],
+      "scale": 0.15,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        32
+      ]
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      32,
+      1
+    ]
+  ],
+  "prompt": "One original Reedbarge Pole human barge guard, facing screen right in an elevated orthographic three-quarter camera. Exactly two arms and two booted legs. Weathered straw conical hat with a few reeds, short brown beard, teal neck scarf and tunic, straw shoulder cape, beige patched coat, rope coil at belt, brown wrapped leather boots. One long rigid brown wooden dock pole with a single curved iron hook and hanging reed tassel at its upper/front end. The near hand on screen left grips the lower/rear shaft; the far hand on screen right grips the upper/front shaft. Both original hands retain their proper grip; never exchange ends of the pole. Preserve the head, hat, straw cape, long shaft, single hook, tassel and clothing. Continuous loss of support and sideways collapse. The knees slowly buckle into the provided kneeling pose. The torso folds down and rolls gently toward screen left, head still under the same straw hat, until the cheek and forearm rest on the ground in the final reference. Both legs finish lying bent to screen right. The original long pole lowers with the hands and comes to rest horizontally on the ground beside the body, its single hook at screen right. Preserve both arms, both legs and pole throughout; no sudden twist, disappearing equipment, extra limb or resurrection. End motionless in the final grounded body pose.  Full body stays inside the fixed camera, original body proportions and fixed ground reference. Perfectly flat saturated BLUE RGB 0,0,255 background remains constant in every frame, also between limbs and the pole. No landscape, floor, shadow, second person, extra arms, duplicated shaft or hook, smoke, effects, glowing magic or text.",
+  "clip": "death",
+  "seed": 946106,
+  "corpse_registration": "Original fallen body rests about 32 video pixels above the standing contact reference because the pole projects into the foreground; translate this whole original guide down 32 pixels so forearm/boot contact rests at the fixed ground. No per-frame scale adjustment."
+}

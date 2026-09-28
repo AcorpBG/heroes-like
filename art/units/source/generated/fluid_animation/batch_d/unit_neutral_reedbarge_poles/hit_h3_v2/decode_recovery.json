@@ -1,0 +1,5 @@
+{
+  "cause": "After hit_h3_v2 sampling, initial release_models wait expired below 16 GiB; no decode had been submitted.",
+  "recovery": "Confirmed queue empty and driver terminal. Inspected system stats and processes; requested ComfyUI unload/free again. Reported free VRAM increased to 27318061056 bytes. Resume exact preserved latent and original prompt id; no resampling or interruption of other applications.",
+  "sampling_prompt_id": "b5e825ca-9e07-421d-bcbf-dd5277dbf5d7"
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "122e7bc7c132d74a045c84708188564e869df6863b2185332e3d8999d9322ff0",
+  "latent_sha256": "5bf61c3715489d23adde7ff01d8e25b5f2cb73755cabe0bfb8f8de2da4a1bf12",
+  "decode_workflow_sha256": "671ec361b94c8a5ccae86fa9acaaf9a5b68e059f7ad5acd4557907d9ffd2d183",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "reedbarge_h3\\attack_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17561732096,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

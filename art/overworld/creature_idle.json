@@ -2410,29 +2410,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        97.0,
+        97,
         218
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_reedbarge_poles.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_reedbarge_poles.png",
       "source_indices": [
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        159,
-        18,
-        350,
-        247
+        31,
+        46,
+        222,
+        275
       ],
-      "source_sha256": "04943d4b4a10e6f7d27da47cdd26a64e3705da59e5e04d14fdf61a3d9507285f",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_reedbarge_poles/provenance.json",
+      "source_sha256": "f7a0926ee467508bc689600ae3c950ec27979998722072c73a5bcb524fb7f1ec",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_reedbarge_poles/provenance.json",
       "sha256": "92b1bb5fdfbf73e0a0751090123d458e20a6beba1febc2ee86580884ccc1c95f"
     },
     "unit_neutral_lanternet_throwers": {

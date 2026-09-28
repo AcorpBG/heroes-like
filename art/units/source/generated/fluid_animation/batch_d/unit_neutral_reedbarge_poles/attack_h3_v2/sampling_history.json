@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    720,
+    "fa31a363-aba0-4369-8300-0df65864f7f0",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Reedbarge Pole human barge guard, facing screen right in an elevated orthographic three-quarter camera. Exactly two arms and two booted legs. Weathered straw conical hat with a few reeds, short brown beard, teal neck scarf and tunic, straw shoulder cape, beige patched coat, rope coil at belt, brown wrapped leather boots. One long rigid brown wooden dock pole with a single curved iron hook and hanging reed tassel at its upper/front end. The near hand on screen left grips the lower/rear shaft; the far hand on screen right grips the upper/front shaft. Both original hands retain their proper grip; never exchange ends of the pole. Preserve the head, hat, straw cape, long shaft, single hook, tassel and clothing. Perform one two-handed forward dock-pole thrust and full recovery. Lower the pole from the ready diagonal into a horizontal windup by bending both elbows; plant the rear boot and lunge slightly forward while extending both arms to drive the hooked end toward screen right. The long pole stays rigid. Pull it back using both elbows and smoothly return to the initial diagonal ready stance. No twirling, spinning pole, overhead swing or loose hands.  Full body stays inside the fixed camera, original body proportions and fixed ground reference. Perfectly flat saturated BLUE RGB 0,0,255 background remains constant in every frame, also between limbs and the pole. No landscape, floor, shadow, second person, extra arms, duplicated shaft or hook, smoke, effects, glowing magic or text. Show one unbroken gradual joint motion between the ready stance, horizontal pole preparation, full forward thrust, and recovery; never jump or cut between separate poses. The blue backdrop remains identical throughout.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 946202
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "reedbarge_attack_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "reedbarge_h3/attack_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "reedbarge_h3",
+      "create_time": 1790620849290
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "reedbarge_h3\\attack_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "fa31a363-aba0-4369-8300-0df65864f7f0",
+          "timestamp": 1790620849292
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "fa31a363-aba0-4369-8300-0df65864f7f0",
+          "timestamp": 1790620849300
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "fa31a363-aba0-4369-8300-0df65864f7f0",
+          "timestamp": 1790621012623
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
