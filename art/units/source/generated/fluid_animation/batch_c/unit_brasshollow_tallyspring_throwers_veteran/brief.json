@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "identity": "One original Writwheel Reclaimer, a stocky human fantasy engineer facing screen right in a locked elevated orthographic three-quarter camera. Exactly two arms and two armored booted legs, brass helmet with short brim, round gold-rimmed goggles, dark brown face scarf, long split dark leather coat with paper tags at the belt, brass shoulder and knee armor, fixed large brass coil backpack. One heavy horizontal brass mechanical disc launcher: circular toothed muzzle wheel at the right front, cylindrical barrel, rear grip held by the near hand on screen left, underside foregrip supported by the far hand on screen right. Both hands stay on their own grips throughout. Preserve the same launcher length, circular wheel, backpack coils, face and clothing. ",
+  "required_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_accepted_clips": [],
+  "status": "completed_selected_unit",
+  "key_plate": "magenta",
+  "measured_foreground_magenta_chroma_max": 5.0,
+  "review_status": "Coordinator reviewed every chronological source frame for selected takes, enlarged anatomy/grips and alpha edges on light/dark backgrounds, loop endpoints, all selected phases in Godot at native 128px reference height and battle contact rendering. Accepted articulated launcher idle, reciprocal boot gait, two-handed melee ram/recovery, separate aim/recoil/recovery without baked projectile, backward hit/recovery, held raised guard, deliberate physical lift/hold/lower support, continuous kneeling forward-side collapse and grounded final corpse. Same two arms, two legs, goggles, mask, coil backpack and intact launcher wheel, fixed 0.5 scale and [416,560] ground reference. Original frames only; source long holds shortened and transitions sampled densely with documented gameplay timing. Candidate 662 focused checks passed. Review is chronological frame and native phase inspection; continuous video playback and manual playtest are not claimed. Published checks: 666 passed; 231 other catalog entries preserved; original pixels, guides and provenance verified.",
+  "rejected_takes": [
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "ranged_h3_v2",
+    "hit_h3_v2",
+    "cast_h3_v2"
+  ],
+  "accepted_takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v3",
+    "hit_h3_v3",
+    "defend_h3_v2",
+    "cast_h3_v3",
+    "death_h3_v2"
+  ],
+  "validation": {
+    "candidate_checks": 662,
+    "published_checks": 666,
+    "selected_original_frames": 192,
+    "original_rgb_frames": 2108,
+    "guides_verified": 26,
+    "provenance_records_verified": 89,
+    "atlas_size": [
+      3352,
+      3244
+    ],
+    "roster_core_complete": 165,
+    "roster_remaining": 67,
+    "overall_goal": "in_progress"
+  }
+}

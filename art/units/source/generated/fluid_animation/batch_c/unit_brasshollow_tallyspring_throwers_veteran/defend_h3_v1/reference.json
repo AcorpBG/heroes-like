@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "697e8af6be0c1d35edb663828522f114da0fd7ac71cc441ad0c76d52bd2c9ae1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3e1a243ff85bc764a956aaa6e9f1674981b1fc14d852471b698be823aee1480e",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            256
+          ]
+        ],
+        "anchor": [
+          1280,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "697e8af6be0c1d35edb663828522f114da0fd7ac71cc441ad0c76d52bd2c9ae1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1621ad72a9c4c45a92779e03204b30bd30e84a0e6a75e62e34cff0f1ecbe0f24",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

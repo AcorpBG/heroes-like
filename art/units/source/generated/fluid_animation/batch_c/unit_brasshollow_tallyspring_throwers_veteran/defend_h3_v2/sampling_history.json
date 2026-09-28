@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    694,
+    "90acc3ff-294c-4657-9e57-37b25d825359",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "On a constant flat pure BLUE chroma-key background, RGB 0,0,255 in every frame. One original Writwheel Reclaimer, a brass-armored human mechanic with brimmed helmet, round goggles, beak mask, split brown leather coat and fixed coil backpack. Exactly two booted legs and two arms. Both hands hold the original heavy brass tool, with rear grip and underside grip unchanged. The solid toothed round front plate stays attached and keeps its engraved face. Locked orthographic three-quarter view facing screen right, full body visible at the original scale and fixed ground anchor. Smoothly draw the held tool across the upper chest as a protective barrier, flex both elbows, lower the center of gravity through the knees and tuck the head behind the forearms. Settle into the elevated guard of the final reference and hold it firmly. The equipment remains intact and passive throughout. Final posture stays defensive. The character moves against one perfectly flat saturated BLUE RGB 0,0,255 background, constant for every frame and in all gaps between limbs. The character and intact held equipment are the only foreground shapes. Steady camera, uninterrupted physical movement, unchanged two-hand grips and body proportions.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 944205
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "writwheel_defend_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "writwheel_defend_h3_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "writwheel_h3/defend_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "writwheel_h3",
+      "create_time": 1790615811110
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "writwheel_h3\\defend_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "90acc3ff-294c-4657-9e57-37b25d825359",
+          "timestamp": 1790615811111
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "90acc3ff-294c-4657-9e57-37b25d825359",
+          "timestamp": 1790615811134
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "90acc3ff-294c-4657-9e57-37b25d825359",
+          "timestamp": 1790615974671
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

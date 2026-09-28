@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 7.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "One original Writwheel Reclaimer, a stocky human fantasy engineer facing screen right in a locked elevated orthographic three-quarter camera. Exactly two arms and two armored booted legs, brass helmet with short brim, round gold-rimmed goggles, dark brown face scarf, long split dark leather coat with paper tags at the belt, brass shoulder and knee armor, fixed large brass coil backpack. One heavy horizontal brass mechanical disc launcher: circular toothed muzzle wheel at the right front, cylindrical barrel, rear grip held by the near hand on screen left, underside foregrip supported by the far hand on screen right. Both hands stay on their own grips throughout. Preserve the same launcher length, circular wheel, backpack coils, face and clothing. One close-range melee weapon shove. Keeping both hands on the launcher, draw it back toward the belly by bending elbows and knees, then step weight forward and forcefully shove the whole brass launcher straight forward at chest height as a blunt ram. Reach one clear physical impact extension, then pull it back and settle into the exact original ready stance. The circular muzzle stays attached and rigid; no shooting, spinning saw release or projectile. One continuous anticipation, contact and recovery. Locked full-body camera and original body scale, fixed ground reference. A perfectly flat saturated MAGENTA RGB 255,0,255 background stays unchanged throughout every frame, including between limbs and equipment. Only one character and its original equipment; no scenery, floor, cast shadow, new weapons, smoke, projectile, flash, glowing magic, extra hands, extra limbs or text.",
+  "clip": "attack",
+  "seed": 944102
+}

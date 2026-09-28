@@ -1,0 +1,16 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v3",
+    "hit_h3_v3",
+    "defend_h3_v2",
+    "cast_h3_v3",
+    "death_h3_v2"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Coordinator reviewed every chronological source frame for selected takes, enlarged anatomy/grips and alpha edges on light/dark backgrounds, loop endpoints, all selected phases in Godot at native 128px reference height and battle contact rendering. Accepted articulated launcher idle, reciprocal boot gait, two-handed melee ram/recovery, separate aim/recoil/recovery without baked projectile, backward hit/recovery, held raised guard, deliberate physical lift/hold/lower support, continuous kneeling forward-side collapse and grounded final corpse. Same two arms, two legs, goggles, mask, coil backpack and intact launcher wheel, fixed 0.5 scale and [416,560] ground reference. Original frames only; source long holds shortened and transitions sampled densely with documented gameplay timing. Candidate 662 focused checks passed. Review is chronological frame and native phase inspection; continuous video playback and manual playtest are not claimed."
+  }
+}

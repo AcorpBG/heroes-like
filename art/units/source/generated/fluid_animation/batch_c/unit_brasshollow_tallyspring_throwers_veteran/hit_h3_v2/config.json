@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      36,
+      1
+    ]
+  ],
+  "prompt": "On a constant flat pure BLUE chroma-key background, RGB 0,0,255 in every frame. One original Writwheel Reclaimer, a brass-armored human mechanic with brimmed helmet, round goggles, beak mask, split brown leather coat and fixed coil backpack. Exactly two booted legs and two arms. Both hands hold the original heavy brass tool, with rear grip and underside grip unchanged. The solid toothed round front plate stays attached and keeps its engraved face. Locked orthographic three-quarter view facing screen right, full body visible at the original scale and fixed ground anchor. React once to being struck in the chest: arch the shoulders backward, bend the knees and draw the chin back like the middle recoil reference. Both arms tighten around the held tool, which dips with the forearms but remains mechanically inactive. Recover through the hips and knees, straighten the torso and return to the initial ready position. This is a bodily flinch and recovery, with all equipment held intact and passive. The character moves against one perfectly flat saturated BLUE RGB 0,0,255 background, constant for every frame and in all gaps between limbs. The character and intact held equipment are the only foreground shapes. Steady camera, uninterrupted physical movement, unchanged two-hand grips and body proportions.",
+  "clip": "hit",
+  "seed": 944204
+}

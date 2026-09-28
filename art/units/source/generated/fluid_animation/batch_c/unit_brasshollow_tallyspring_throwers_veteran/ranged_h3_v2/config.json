@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "prompt": "A single original Writwheel Reclaimer character on a constant flat pure BLUE RGB 0,0,255 background. Locked orthographic three-quarter full-body view facing right. Preserve the brass helmet, round goggles, beak mask, brown split coat, two armored legs, exactly two arms and coil backpack. The original brass mechanism held in both hands has one solid round toothed metal wheel with an engraved sun plate fixed permanently at the front. Keep this exact full solid wheel present and attached throughout, matching every reference. Rear hand and underside support hand keep the same grip. Perform one controlled mechanical dry-fire cycle: raise the heavy held mechanism into the elevated aiming pose of the middle reference, lean into it, then absorb a short backward recoil by bending both elbows and shoulders; settle and lower the tool back to the original ready position. The wheel and housing remain rigid, complete and unchanged during recoil. Feet stay planted and knees absorb the weight. This is only the physical arm and shoulder action, with the same opaque metal wheel visible in every frame. No discharged object, muzzle light, smoke, sparks or detached parts. Background stays exactly saturated blue, with no cuts or color changes. Original proportions and fixed ground anchor.",
+  "clip": "ranged",
+  "seed": 944203
+}

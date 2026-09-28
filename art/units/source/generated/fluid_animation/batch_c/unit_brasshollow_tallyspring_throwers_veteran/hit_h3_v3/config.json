@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ]
+  ],
+  "prompt": "One original brass-armored human mechanic against a perfectly flat BLUE RGB 0,0,255 background for the entire shot. Locked orthographic three-quarter camera, full body facing screen right. Original brimmed helmet, goggles, beak mask, brown split coat, two armored booted legs, two arms and coil backpack. Both hands firmly hold the same inactive brass mechanism with its solid engraved toothed front wheel. Animate one quick backward body lean: bend both knees, pull the shoulders and chin backward and arch the torso slightly like the middle reference; tighten both elbows so the held object dips a little with the forearms; then smoothly straighten the knees and torso back to the initial ready position. Boots remain on their original ground contacts. Equipment is passive, intact and held throughout; only the body joints move. Keep the head separate from the attached backpack and preserve the two original hand grips. The original character and its equipment are the only visible foreground shapes in every frame. No other objects enter or leave the frame. The saturated blue background stays identical around the silhouette and in all body gaps.",
+  "clip": "hit",
+  "seed": 944304
+}

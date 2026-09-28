@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    686,
+    "1d520fed-9d6b-4181-a01d-fca2f5d1ee03",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Writwheel Reclaimer, a stocky human fantasy engineer facing screen right in a locked elevated orthographic three-quarter camera. Exactly two arms and two armored booted legs, brass helmet with short brim, round gold-rimmed goggles, dark brown face scarf, long split dark leather coat with paper tags at the belt, brass shoulder and knee armor, fixed large brass coil backpack. One heavy horizontal brass mechanical disc launcher: circular toothed muzzle wheel at the right front, cylindrical barrel, rear grip held by the near hand on screen left, underside foregrip supported by the far hand on screen right. Both hands stay on their own grips throughout. Preserve the same launcher length, circular wheel, backpack coils, face and clothing. One continuous physical collapse into the supplied final fallen pose. Absorb a strong backward impact, let the knees buckle, lose support, twist and tip down toward screen right onto the side. Both arms keep the launcher close as the body and equipment settle together on the ground. Boots and knees fold naturally; keep exactly two arms and two legs. End lying still with the whole body, coil backpack and original launcher grounded like the final reference. No vanishing limbs, teleport, dissolved body or bouncing upright. Locked full-body camera and original body scale, fixed ground reference. A perfectly flat saturated MAGENTA RGB 255,0,255 background stays unchanged throughout every frame, including between limbs and equipment. Only one character and its original equipment; no scenery, floor, cast shadow, new weapons, smoke, projectile, flash, glowing magic, extra hands, extra limbs or text.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 944107
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "writwheel_death_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "writwheel_death_h3_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "writwheel_h3/death_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "writwheel_h3",
+      "create_time": 1790614794168
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "writwheel_h3\\death_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "1d520fed-9d6b-4181-a01d-fca2f5d1ee03",
+          "timestamp": 1790614794169
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "1d520fed-9d6b-4181-a01d-fca2f5d1ee03",
+          "timestamp": 1790614794193
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "1d520fed-9d6b-4181-a01d-fca2f5d1ee03",
+          "timestamp": 1790614962732
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

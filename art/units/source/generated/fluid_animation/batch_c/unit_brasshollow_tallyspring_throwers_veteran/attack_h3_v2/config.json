@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "A single original Writwheel Reclaimer character on a constant flat pure BLUE RGB 0,0,255 background. Locked orthographic three-quarter full-body view, facing right. Preserve the reference brass helmet, goggles and beak mask, brown leather coat, two armored legs, two arms, coil backpack and single heavy brass launcher with its fixed round toothed front wheel. Both hands stay firmly attached to their original rear and underside grips. A short physical melee shove: first bend both elbows and draw the entire held launcher close against the stomach while leaning back slightly; next lean forward from the hips, bend the forward knee and extend both elbows to push the rigid weapon forward as a heavy blunt ram; then bend the elbows and draw it back to the original waist-level ready position. The whole object moves as one rigid tool in both hands. The round wheel remains attached at its original size and shape. Smooth uninterrupted preparation, forward impact, withdrawal and settling. Exactly two arms and two legs, original body proportions and fixed ground anchor. The character and held tool are the only foreground content. Every background pixel remains the same saturated pure blue for the entire shot, including limb gaps. No background color changes, cuts, camera changes or extra visual effects.",
+  "clip": "attack",
+  "seed": 944202
+}

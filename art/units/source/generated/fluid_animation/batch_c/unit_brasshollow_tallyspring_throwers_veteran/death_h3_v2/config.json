@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "prompt": "One Writwheel Reclaimer on an absolutely constant pure BLUE RGB 0,0,255 background. Locked orthographic three-quarter camera, full original human body at fixed scale, facing right. Preserve the brass helmet, round goggles, beak mask, brown leather split coat, brass shoulder and knee armor, exactly two arms and two legs, and the large coil backpack attached to the back. The head remains connected to the neck and shoulders, separate from the backpack in every pose. The two hands hold the same heavy brass tool with solid toothed round front wheel. One continuous forward-side collapse: bend both knees and lower onto them while leaning the chest toward screen right, let the forearms and held tool descend toward the ground, then lower the head and shoulder together and gently roll the whole torso onto its right side into the supplied final prone pose. Keep the face directed toward screen right during the descent. The head and backpack rotate with the torso as distinct rigid objects; the backpack never becomes the head. Exactly two legs fold and settle behind the torso; the two arms and intact tool settle in front. Remain still in the final grounded pose. Original anatomy, clothing and equipment persist throughout. The background stays flat saturated blue around and between body parts, with no cuts or emitted effects.",
+  "clip": "death",
+  "seed": 944207
+}

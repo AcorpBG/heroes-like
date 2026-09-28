@@ -1,0 +1,74 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      72,
+      1
+    ]
+  ],
+  "prompt": "Perfectly uniform pure BLUE RGB 0,0,255 background. A single full-body original Writwheel Reclaimer sprite, locked orthographic three-quarter camera facing right. Preserve brass helmet, goggles and beak mask, brown split coat, exactly two armored legs and two arms, fixed coil backpack and the original brass object held firmly at its rear and underside grips. Its solid engraved toothed wheel remains attached and opaque. Both elbows bend and lift the held object in a clear deliberate gesture toward upper chest height, following the two matching middle guide poses. Straighten the shoulders, hold the raised object briefly, nod once, then lower it smoothly back to the starting waist-level stance. The whole object remains inert; all articulation comes from the original two arms, shoulders and head. Boots stay planted. Exactly the same character and held equipment are the only foreground objects throughout. Keep background color identically pure saturated blue in every frame, including behind the lifted arms. Continuous physical lift, hold and lowering; no environmental or lighting changes.",
+  "clip": "cast",
+  "seed": 944306
+}

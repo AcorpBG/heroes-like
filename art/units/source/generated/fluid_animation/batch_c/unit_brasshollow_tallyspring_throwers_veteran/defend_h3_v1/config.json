@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_brasshollow_tallyspring_throwers_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 7.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_brasshollow_tallyspring_throwers_veteran.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          256
+        ]
+      ],
+      "anchor": [
+        1280,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "prompt": "One original Writwheel Reclaimer, a stocky human fantasy engineer facing screen right in a locked elevated orthographic three-quarter camera. Exactly two arms and two armored booted legs, brass helmet with short brim, round gold-rimmed goggles, dark brown face scarf, long split dark leather coat with paper tags at the belt, brass shoulder and knee armor, fixed large brass coil backpack. One heavy horizontal brass mechanical disc launcher: circular toothed muzzle wheel at the right front, cylindrical barrel, rear grip held by the near hand on screen left, underside foregrip supported by the far hand on screen right. Both hands stay on their own grips throughout. Preserve the same launcher length, circular wheel, backpack coils, face and clothing. Raise the held brass launcher across the upper torso as a guard, bending both elbows and knees, tucking the head behind the weapon while keeping its muzzle directed right. Transition smoothly into a solid crouched protective stance. Both hands retain their original grips. Remain braced in the final pose instead of returning to idle; no attack or shot. Locked full-body camera and original body scale, fixed ground reference. A perfectly flat saturated MAGENTA RGB 255,0,255 background stays unchanged throughout every frame, including between limbs and equipment. Only one character and its original equipment; no scenery, floor, cast shadow, new weapons, smoke, projectile, flash, glowing magic, extra hands, extra limbs or text.",
+  "clip": "defend",
+  "seed": 944105
+}

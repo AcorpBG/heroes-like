@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "51a2594e30e6662f1b7ca6523602c92a92710defd1c9768cf921a37deff209f2",
+  "latent_sha256": "6cf369a898d7740f4b0c709fb9da42723c9d9a6bcb59f5f996148315bd66ce4c",
+  "decode_workflow_sha256": "c39f6ffdfa037b7a01005ef69801b4009429a108aeadc55fcf9986f55d2331f7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "writwheel_h3\\idle_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
