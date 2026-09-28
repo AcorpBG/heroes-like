@@ -18,6 +18,9 @@ protected:
 	static void _bind_methods();
 
 public:
+	// Frees process-wide caches. Called when the extension unloads.
+	static void release_runtime_caches();
+
 	String get_api_version() const;
 	Dictionary get_api_metadata() const;
 	PackedStringArray get_capabilities() const;

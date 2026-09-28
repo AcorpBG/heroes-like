@@ -2530,6 +2530,11 @@ struct RewardGuardSelectorResult4a9f1c {
 	bool selected_projection_object_0x540b14_known = false;
 	RewardGuardProjectionObject540b14 selected_projection_object_0x540b14;
 	int32_t accepted_count = 0;
+	bool selected_candidate_decision_known = false;
+	RewardGuardCandidateDecision4a9f1c selected_candidate_decision;
+	// Every scanned candidate's decision. reward_guard_selected_create_dispatch_0x4a9f1c
+	// keeps it only while AURELION_RMG_TRACE_4A9F1C is set; otherwise only
+	// selected_candidate_decision survives the scan.
 	std::vector<RewardGuardCandidateDecision4a9f1c> candidate_decisions;
 	std::string blocked_reason;
 };

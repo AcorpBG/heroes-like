@@ -19,6 +19,25 @@ Dictionary not_implemented(const String &operation) {
 	return result;
 }
 
+// Stored objects are shared with get_objects() callers, so every nested
+// container is locked against edits once the document owns it.
+void make_read_only_recursive(const Variant &value) {
+	if (value.get_type() == Variant::ARRAY) {
+		Array array = value;
+		for (int64_t index = 0; index < array.size(); ++index) {
+			make_read_only_recursive(array[index]);
+		}
+		array.make_read_only();
+	} else if (value.get_type() == Variant::DICTIONARY) {
+		Dictionary dictionary = value;
+		Array values = dictionary.values();
+		for (int64_t index = 0; index < values.size(); ++index) {
+			make_read_only_recursive(values[index]);
+		}
+		dictionary.make_read_only();
+	}
+}
+
 } // namespace
 
 void MapDocument::_bind_methods() {
@@ -36,6 +55,7 @@ void MapDocument::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_tile_layer_u16", "layer_id", "level"), &MapDocument::get_tile_layer_u16, DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("get_terrain_layers"), &MapDocument::get_terrain_layers);
 	ClassDB::bind_method(D_METHOD("get_object_count"), &MapDocument::get_object_count);
+	ClassDB::bind_method(D_METHOD("get_objects"), &MapDocument::get_objects);
 	ClassDB::bind_method(D_METHOD("get_object_by_index", "index"), &MapDocument::get_object_by_index);
 	ClassDB::bind_method(D_METHOD("get_object_by_placement_id", "placement_id"), &MapDocument::get_object_by_placement_id);
 	ClassDB::bind_method(D_METHOD("get_objects_in_rect", "rect", "level"), &MapDocument::get_objects_in_rect, DEFVAL(0));
@@ -46,6 +66,14 @@ void MapDocument::_bind_methods() {
 }
 
 void MapDocument::configure(Dictionary initial_state) {
+	assign_state(initial_state, true);
+}
+
+void MapDocument::configure_owned(const Dictionary &initial_state) {
+	assign_state(initial_state, false);
+}
+
+void MapDocument::assign_state(const Dictionary &initial_state, bool copy_containers) {
 	map_id = String(initial_state.get("map_id", ""));
 	map_hash = String(initial_state.get("map_hash", ""));
 	source_kind = String(initial_state.get("source_kind", "test_fixture"));
@@ -54,11 +82,17 @@ void MapDocument::configure(Dictionary initial_state) {
 	level_count = std::max(1, int32_t(initial_state.get("level_count", 1)));
 	metadata = initial_state.get("metadata", Dictionary());
 	Variant terrain_layers_value = initial_state.get("terrain_layers", Variant());
-	terrain_layers = terrain_layers_value.get_type() == Variant::DICTIONARY ? Dictionary(terrain_layers_value).duplicate(true) : Dictionary();
+	terrain_layers = terrain_layers_value.get_type() == Variant::DICTIONARY ? Dictionary(terrain_layers_value) : Dictionary();
 	Variant route_graph_value = initial_state.get("route_graph", Variant());
-	route_graph = route_graph_value.get_type() == Variant::DICTIONARY ? Dictionary(route_graph_value).duplicate(true) : Dictionary();
+	route_graph = route_graph_value.get_type() == Variant::DICTIONARY ? Dictionary(route_graph_value) : Dictionary();
 	Variant objects_value = initial_state.get("objects", Variant());
-	objects = objects_value.get_type() == Variant::ARRAY ? Array(objects_value).duplicate(true) : Array();
+	objects = objects_value.get_type() == Variant::ARRAY ? Array(objects_value) : Array();
+	if (copy_containers) {
+		terrain_layers = terrain_layers.duplicate(true);
+		route_graph = route_graph.duplicate(true);
+		objects = objects.duplicate(true);
+	}
+	make_read_only_recursive(objects);
 }
 
 int32_t MapDocument::get_schema_version() const { return SCHEMA_VERSION; }
@@ -68,7 +102,7 @@ String MapDocument::get_source_kind() const { return source_kind; }
 int32_t MapDocument::get_width() const { return width; }
 int32_t MapDocument::get_height() const { return height; }
 int32_t MapDocument::get_level_count() const { return level_count; }
-int32_t MapDocument::get_tile_count() const { return width * height * level_count; }
+int64_t MapDocument::get_tile_count() const { return int64_t(width) * int64_t(height) * int64_t(level_count); }
 
 Dictionary MapDocument::get_metadata() const {
 	Dictionary result = metadata.duplicate(true);
@@ -124,6 +158,9 @@ PackedInt32Array MapDocument::get_tile_layer_u16(String layer_id, int32_t level)
 
 Dictionary MapDocument::get_terrain_layers() const { return terrain_layers.duplicate(true); }
 int32_t MapDocument::get_object_count() const { return objects.size(); }
+// Every object in one call, without copying. The array and everything in it
+// is read-only; duplicate() an entry before changing it.
+Array MapDocument::get_objects() const { return objects; }
 Dictionary MapDocument::get_object_by_index(int32_t index) const {
 	if (index < 0 || index >= objects.size()) {
 		return Dictionary();
