@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ace6b512104fdcc0528e539cf4166f5f403dac216960b283149ab48ba4220f03",
+  "latent_sha256": "f775704a29baaa1527384fda168632d5c76be5fc2921db339d496b281e59bebb",
+  "decode_workflow_sha256": "276178d0b74f70825fae7a1218795beba692e87771fc6e7d76cfbb2bef06fbac",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gravetide_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

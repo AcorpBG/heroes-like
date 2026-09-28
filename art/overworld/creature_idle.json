@@ -8133,33 +8133,60 @@
     "unit_veilmourn_wakechain_boarders_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_wakechain_boarders_veteran.png",
       "frame_size": [
-        260,
-        250
+        250,
+        248
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 31,
+      "frame_msec": 110,
       "static_frame": 0,
       "ground_anchor": [
-        112.0,
+        113,
         239
       ],
-      "painted_extent": 244,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_wakechain_boarders_veteran.png",
+      "painted_extent": 234,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_wakechain_boarders_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
       ],
       "source_crop": [
-        144,
-        17,
-        404,
-        267
+        99,
+        101,
+        349,
+        349
       ],
-      "source_sha256": "7e9e7242fddfc55298fae4cb16f4e9261f3126912a84b0cb686f35e30ab2f4a0",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_wakechain_boarders_veteran/provenance.json",
-      "sha256": "20283d036497cb9899ea187f11fe45585ab445c1e6431603b85636abe97c6a79"
+      "source_sha256": "79e87d3fdc03ef50042b5c3fd1cf4690620121463070531dac63e16f6eb64702",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_wakechain_boarders_veteran/provenance.json",
+      "sha256": "93ac59d0f9171b76f26639f3acfba7f73f3a76ee2c3ecf8a909abf062f2dd2cb"
     },
     "unit_veilmourn_undertow_harpooners_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_undertow_harpooners_veteran.png",

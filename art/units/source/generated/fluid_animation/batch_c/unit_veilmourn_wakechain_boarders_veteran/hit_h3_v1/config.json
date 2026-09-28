@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    480,
+    596
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders_veteran.png",
+      "rects": [
+        [
+          1024,
+          272,
+          1536,
+          544
+        ]
+      ],
+      "anchor": [
+        1280,
+        528
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy camera facing screen right. One adult Gravetide Anchor human, exactly two arms and two legs, dirty ivory pointed hood hiding face, torn ivory tabard over dark navy-black long coat and cloak tails, brown leather armor and boots, brass round ship-wheel belt buckle. Exactly ONE heavy dark iron three-fluked grapnel with short central shank, attached to ONE continuous heavy chain. Near hand retains the chain and far hand retains the short grapnel shank; maintain the linked hanging chain between them. Keep the original grapnel size, flukes and handle unchanged. No pole, sword, second anchor, extra hand, disconnected chain or added props. Fixed body size, stationary camera and anatomical ground line. Entire body, chain and weapon remain inside the frame. Static solid saturated green background throughout, no floor, scenery, lettering, particles or magical effects. A brief physical impact reaction: shoulders jerk and fold forward, knees bend, hands lower the retained chain and grapnel matching the recoil guide, then body and arms recover to the exact ready pose. Both boots keep balanced support; no falling down, no lost chain, no attack or magical effect.",
+  "clip": "hit",
+  "seed": 928943
+}

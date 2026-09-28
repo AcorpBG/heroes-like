@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomously reviewed all 992 chronological H3 originals across eight takes, enlarged action details, and every selected native battle phase. Accepted seven distinct actions with visible forearm/grapnel idle, reciprocal grounded gait, connected-chain melee windup/contact/recovery, recovering recoil, held braced guard, physical raised-chain support and grounded collapse. Rejected attack v1 for canvas clipping; the enlarged-canvas v2 preserves body scale and full weapon clearance. Excluded v2 originals 40-41 where the hanging chain loop briefly separates, retaining a short overhead-to-contact transition. All 149 selected originals have safe opaque canvas margins. Trimmed stationary holds without reversed/interpolated or duplicate padding. Review used chronological originals and native phase rendering; no continuous playback, manual game playtest or Linux validation is claimed."
+  }
+}

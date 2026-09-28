@@ -192,3 +192,8 @@ art/animation/source/fluid/unit_veilmourn_mourning_lanterns_veteran/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_tidehook_deckhands_veteran/*.json -text
+
+# Preserve hash-bound Gravetide Anchors H3 provenance.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_wakechain_boarders_veteran/*.json -text
