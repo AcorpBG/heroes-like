@@ -1,0 +1,16 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "death_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all1240 chronological original frames, enlarged transitions on light/dark plates and every selected native128px battle phase. Articulated two-hand idle and reciprocal walk; dedicated low-guard thrust, ranged aim/release, recoil/recovery, held brace, open-palm support and grounded collapse. Corrected rejected attack/guard artifacts. Candidate743 focused checks pass; native appearance reviewed. No continuous playback or manual game playtest claimed."
+  }
+}

@@ -8284,33 +8284,60 @@
     "unit_veilmourn_obituary_scribes_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_obituary_scribes_veteran.png",
       "frame_size": [
-        238,
-        248
+        239,
+        247
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 31,
+      "frame_msec": 110,
       "static_frame": 0,
       "ground_anchor": [
-        85.0,
-        236
+        84,
+        235
       ],
-      "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+      "painted_extent": 231,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_obituary_scribes_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
       ],
       "source_crop": [
-        171,
-        4,
-        409,
-        252
+        68,
+        17,
+        307,
+        264
       ],
-      "source_sha256": "571ebd0421dee282a402d485b9e78bf69427e8ada4f60c41b51f15e27563720b",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_obituary_scribes_veteran/provenance.json",
-      "sha256": "519b1d18b83f440e07f60a7eb64c021c6eae1b6405dbde91ed2942986f6cb22e"
+      "source_sha256": "cb13d746d3bd2f715edf54e448e5586a7338d02de8f72d483054740d90d5a541",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_obituary_scribes_veteran/provenance.json",
+      "sha256": "7e64ea7d64cce09181373bf9797971d613c900da710cafd23c65db04c7e071d8"
     },
     "unit_veilmourn_wakeglass_navigators_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_wakeglass_navigators_veteran.png",

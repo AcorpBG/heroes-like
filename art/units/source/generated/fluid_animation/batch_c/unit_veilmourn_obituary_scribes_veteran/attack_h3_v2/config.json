@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/support_guard_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          980,
+          887
+        ]
+      ],
+      "anchor": [
+        475,
+        810
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+      "rects": [
+        [
+          512,
+          256,
+          1024,
+          512
+        ]
+      ],
+      "anchor": [
+        768,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      52,
+      2
+    ]
+  ],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Lastword Registrar humanoid, two arms and two booted legs, faceless black hood, long black layered robes with ivory stole and brass clasps. Tall parchment scroll in a fixed ornate brass rectangular back frame, small glass inkwell hanging at rear hip. Both hands hold ONE long thin rigid dark quill spear with a single brass leaf-shaped tip and attached broad ivory parchment streamers bearing round brass seals. Preserve the exact original staff length, hand ownership, back frame, paper attachments, robe palette and proportions. Paper ribbons flex naturally but stay attached near the spear tip; no changing their count. Fixed camera, anatomical body size and ground line; full body, staff and ribbons within generous empty margins. Flat saturated green background, no floor, scenery, extra limbs or equipment, glow, light trails, beams, smoke, sparks, text or shadows. One continuous deliberate close-range thrust from a LOW guard. Lower both hands to waist level and bend the elbows into the braced guide, then smoothly raise and extend the same rigid spear horizontally to screen right, leaning slightly into contact; retract to the low guard and recover diagonal ready. Both hands remain wrapped around the same straight shaft throughout. Do not lift the spear overhead or rotate/spin it. Quill tip remains firmly joined to shaft; parchment and round seals remain attached throughout. No flying pieces, projectile, flash or effects.",
+  "clip": "attack",
+  "seed": 931030
+}
