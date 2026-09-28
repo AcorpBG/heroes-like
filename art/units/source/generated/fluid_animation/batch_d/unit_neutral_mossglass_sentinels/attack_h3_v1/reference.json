@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1260
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a05b7ee1446fc7e9075e6d0c5f1d4cb564e61d5f8d2826ffda38d4d56ab2d468",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          492
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "98717c813bf8723e6a34332d34bc25542640acdf52c81f4b45acc85fc944183c",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+        "rects": [
+          [
+            0,
+            512,
+            512,
+            768
+          ]
+        ],
+        "anchor": [
+          256,
+          748
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "927936f131d9882a49e86cfeff59267df9237d0a6afc95a73b05368cb6cd8a26",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+        "rects": [
+          [
+            512,
+            512,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          768,
+          748
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a5d8959756ec07bcf6f7e66b8371b16b8cbc1cc6a58f5ae5e5232b35201f835f",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

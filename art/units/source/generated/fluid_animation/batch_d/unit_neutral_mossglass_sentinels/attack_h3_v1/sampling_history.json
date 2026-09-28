@@ -1,0 +1,285 @@
+{
+  "prompt": [
+    398,
+    "1619f2f2-2809-4462-b2fb-2a51e8da8447",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view facing right. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and constant body scale, no zoom, no whole-body sliding. Full body and all equipment visible. Uniform flat MAGENTA RGB255,0,255 background, no scenery, floor, shadow, text, light effects, particles, sparks, projectile or other actors. Perform one deliberate physical mallet strike: right elbow bends and raises the mallet above the right shoulder, then shoulder and elbow swing it downward and forward toward the right; crouch and plant the leading foot at contact. The cylindrical mallet head stays on the same handle throughout its arc; right hand never releases it. Left arm keeps the single shield close to the torso. Recover the mallet back to low ready and regain the starting stance. No thrown weapon and no impact effects.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 988001
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mossglass_attack_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mossglass_attack_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mossglass_attack_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "mossglass_attack_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 38,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 65,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 95,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "mossglass_h3/attack_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "mossglass_h3",
+      "create_time": 1790556736812
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "mossglass_h3\\attack_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "1619f2f2-2809-4462-b2fb-2a51e8da8447",
+          "timestamp": 1790556736813
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "1619f2f2-2809-4462-b2fb-2a51e8da8447",
+          "timestamp": 1790556736835
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "1619f2f2-2809-4462-b2fb-2a51e8da8447",
+          "timestamp": 1790557031995
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

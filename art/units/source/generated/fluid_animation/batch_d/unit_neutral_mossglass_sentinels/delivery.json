@@ -1,0 +1,14 @@
+{
+  "takes": [
+    "move_h3_v4",
+    "attack_h3_v1",
+    "defend_h3_v2",
+    "hit_h3_v3",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Accepted after all124 chronological raw frames of selected takes, enlarged hands/boots/shield/mallet and alpha-edge inspection, gait boundary review, and complete native128px phase overview. Six dedicated actions retain anatomy, grips, scale and grounding. Walk uses newly repaired opposite-leg guides to keep the decorated shield face fixed; selected cycle6-41 is chronological. Original eight-frame idle retains visible near-forearm mallet lift/lower and left-shield adjustment and is accepted unchanged. Attack41-42 and hit6-7 smears excluded. Walk blue/green backdrop ranges measured and keyed with protected100 above original opaque green excess89; all61789 solid reference pixels stay opaque. Continuous video playback route was unavailable; no continuous playback, manual game playtest, full suite or Linux validation claimed."
+  }
+}

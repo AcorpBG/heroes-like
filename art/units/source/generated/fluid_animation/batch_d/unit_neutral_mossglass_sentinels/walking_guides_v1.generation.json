@@ -1,0 +1,23 @@
+{
+  "tool": "built-in image_gen",
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-659bbd7e-e512-45d9-b447-44ed4456d563.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.png",
+    "sha256": "006b85f6437ce1dc2e87fa59aaf62c5afbc38306b998225bf47f849398be07fb"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.prompt.txt",
+    "sha256": "5d4b72fd8c491c9eca7a423a011ff2bd1ef06f0a6948808b5ac91b7bc314ba1b"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v3/guide_0_rgba.png",
+      "sha256": "a6e87e6b778db8d627df734345bbef9912a9e9e04a5de5b300be0a151fda9614"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/move_h3_v3/guide_2_rgba.png",
+      "sha256": "f6bb4cdbbb32e4281ce11a04fc038f612617ae39c5d307bae0895e631cc1655e"
+    }
+  ],
+  "review": "Two original opposite-leg guide poses reviewed: same helmet, chest, shoulders, green shield front and low right-hand mallet; near leg forward in left figure, far leg forward in right figure. Equal anatomical scale, ground812. Alpha cutoff8 removes faint background only."
+}

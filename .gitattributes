@@ -157,3 +157,8 @@ art/animation/source/fluid/unit_neutral_roadwardens/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_hearthbow_carriers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_hearthbow_carriers/**/*.txt -text
 art/animation/source/fluid/unit_neutral_hearthbow_carriers/*.json -text
+
+# Preserve hash-bound Mossglass Sentinels H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/**/*.txt -text
+art/animation/source/fluid/unit_neutral_mossglass_sentinels/*.json -text

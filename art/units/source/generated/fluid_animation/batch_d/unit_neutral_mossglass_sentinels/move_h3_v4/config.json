@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "clip": "move",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 100,
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          833,
+          944
+        ]
+      ],
+      "anchor": [
+        535,
+        812
+      ],
+      "scale": 0.29112081513828236,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.png",
+      "rects": [
+        [
+          833,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        1134,
+        812
+      ],
+      "scale": 0.29112081513828236,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "seed": 988400,
+  "prompt": "Technical chroma-key character animation: every single frame has the identical pure BLUE RGB0,0,255 backdrop. One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view in the exact original reference orientation. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and constant body scale, no zoom, no whole-body sliding. Full body and all equipment visible. Uniform flat BLUE RGB0,0,255 background, no scenery, floor, shadow, text, light effects, particles, sparks, projectile or other actors. A single smooth full walking cycle in place, continuously articulated from the very start to the end. Start with the RIGHT near boot forward as the first guide shows. Roll weight onto that boot, let the LEFT far leg pass and swing forward, reaching the opposite-leg midpoint guide. Plant that left boot, transfer weight onto it, then let the right leg pass and step forward again to return to the first pose. Each leg visibly bends and extends through lifting, swinging, planting, loading and passing. Small natural vertical weight response and cloth motion, no rigid hopping or sliding the whole body. Keep the original reference torso, helmet and shield view stable; both guide images have the SAME upper-body orientation. Hold the decorated GREEN shield face against the left chest with no swivel or reverse face. The right hand carries the one green-headed mallet low beside the thigh. Maintain the original body dimensions, both equipment grips, exactly two legs and two arms. No frozen holds, slideshow, sudden pose jumps or turns. The full walking loop returns naturally to its initial contact pose. Identical pure blue RGB0,0,255 background throughout, no floor, shadows, scenery, extra props or effects.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

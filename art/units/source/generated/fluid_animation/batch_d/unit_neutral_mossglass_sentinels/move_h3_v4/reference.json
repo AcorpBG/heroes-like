@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            833,
+            944
+          ]
+        ],
+        "anchor": [
+          535,
+          812
+        ],
+        "scale": 0.5822416302765647,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "006b85f6437ce1dc2e87fa59aaf62c5afbc38306b998225bf47f849398be07fb",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d5f1bb3bb339f1ff3ecea8c2c996e8f3d9dc6abe8635c157a3a1790f8050508e",
+      "runtime_source_scale": 0.29112081513828236
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/walking_guides_v1.png",
+        "rects": [
+          [
+            833,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          1134,
+          812
+        ],
+        "scale": 0.5822416302765647,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "006b85f6437ce1dc2e87fa59aaf62c5afbc38306b998225bf47f849398be07fb",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cff5ee96c03a0ff6414dbfb0841bbd7538c5b7dedb84c8c7e8aba005f6eddbf5",
+      "runtime_source_scale": 0.29112081513828236
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

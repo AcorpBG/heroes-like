@@ -1,0 +1,9 @@
+{
+  "protected_foreground_chroma": 100,
+  "reviewed_key_ranges": [
+    {"start":26,"end":37,"key_rgb":[0,255,0]},
+    {"start":62,"end":73,"key_rgb":[0,255,0]},
+    {"start":98,"end":109,"key_rgb":[0,255,0]}
+  ],
+  "reason": "All124 raw frames reviewed. Background switches only between uniform blue and green in these exact ranges. Original opaque repaired guide green excess maximum89, below protected100; background green excess approximately243. Preserve the measured green armor band, key only the separated saturated plate, and inspect all mattes on dark/light surfaces. Submitted blue generation config remains immutable."
+}

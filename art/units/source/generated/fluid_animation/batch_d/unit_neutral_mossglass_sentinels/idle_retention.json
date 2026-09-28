@@ -1,0 +1,17 @@
+{
+  "status": "accepted",
+  "indices": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+  ],
+  "frame_msec": 240,
+  "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+  "source_sha256": "bf59820580592a75e09d933e14663f9379f3dc37f571c05cb7bec75e0a654c2d",
+  "notes": "Original eight-frame idle and native128px phase row inspected. Right/near forearm raises and lowers the cylindrical mallet across the torso; left/far shield adjusts, shoulders and stance respond. Keep exact original pixels, timing and overworld strip."
+}
