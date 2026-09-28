@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0d8cbb32f2954d9003bfc4df9b366045ca2eb26ddc59b3cce49d7e97638c7723",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2324e902ba6d6aa6bd97b080279a4b72392b1e0854726fb3c64b28e2e78b8d59",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/support_guard_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            887,
+            887
+          ]
+        ],
+        "anchor": [
+          540,
+          834
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "87a703156a74afccdaa1a567e5208b9a6b79d703b73ea2afb16877bd97f7ae18",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "28beaccbb5d530f862cbfb3cd3f0baba9297b572ec271d7790d4478359cfa5d5",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

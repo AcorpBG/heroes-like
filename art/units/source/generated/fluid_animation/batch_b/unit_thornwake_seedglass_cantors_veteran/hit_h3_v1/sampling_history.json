@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    639,
+    "22b75cc1-3a43-45fd-b880-0fe06c52a836",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Blossomchoir Cantor plant humanoid facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two long bark arms with twig fingers and two root-shaped legs. Pale wood oval face framed by pink-white blossoms, layered sage-green and ivory leaf robe, blossom shoulder mantle, green hanging seed pods, and tall pink-ivory trumpet flower pipes fixed on its back. One ornate curved wooden lyre with green strings held in front on screen right: far hand supports its frame, near hand articulates to pluck or gesture. Preserve exact face, silhouette, instrument, pipes, blossoms, seed pods, robe colors and proportions. Fixed body scale and ground registration, full body and every prop inside generous margins. Flat saturated BLUE background, no floor, scenery, extra limbs or instruments, text, camera motion, shadows, emitted particles or projectiles. One brief impact recoil: shoulders bend backward, both knees flex and head recoils while far hand retains lyre and near hand lifts defensively as in the impact guide. Recover balance and return near hand to strings. No fall, extra limbs or teleportation.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 942014
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "blossomchoir_hit_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "blossomchoir_hit_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "blossomchoir_h3/hit_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "blossomchoir_h3",
+      "create_time": 1790605553112
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "blossomchoir_h3\\hit_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "22b75cc1-3a43-45fd-b880-0fe06c52a836",
+          "timestamp": 1790605553113
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "22b75cc1-3a43-45fd-b880-0fe06c52a836",
+          "timestamp": 1790605553125
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "22b75cc1-3a43-45fd-b880-0fe06c52a836",
+          "timestamp": 1790605768870
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

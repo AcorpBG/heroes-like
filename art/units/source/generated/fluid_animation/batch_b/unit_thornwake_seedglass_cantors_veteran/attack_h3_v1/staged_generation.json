@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "c4a1f71ea3d8826f51e76e0ae9462bcc15231365e0290c8c57120944cc9db32c",
+  "latent_sha256": "fbbe5f448fcac764a4bf770656b2bb46fac90e69a56ece0d2c9fd1d87bc20da8",
+  "decode_workflow_sha256": "5cb3c3f83f0b599445823ab7d271c5eacc0c4a89a167e1e7596fa0d50b590edf",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "blossomchoir_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

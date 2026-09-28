@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8b6cedcc665b30801030d7659f21f8ef5035b4827dc3da674b26ecb660e98d00",
+  "latent_sha256": "552460b697adaee80c044234cbc439a4d724aa94acef7197f6cd7a8241a2886f",
+  "decode_workflow_sha256": "d4450c9f04ad9b6ac8f931bfac83d18270d2addf7ccf48f85c7d30b2978726d7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "blossomchoir_h3\\idle_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

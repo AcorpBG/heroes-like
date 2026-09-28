@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Whole RGB sequence and extracted mattes reviewed. Abrupt background switches on 25-47 and 73-96 leave lime speckling at fingers/robe/pods and blue contamination inside lyre gaps (notably original 96). The strict interval-specific chroma recipe is insufficient for clean stable contours. Preserve original motion and extraction evidence, but do not publish these frames.",
+  "correction": "cast_h3_v2 retains reviewed original guides with a new seed and explicit constant blue plate/gap/color instruction."
+}

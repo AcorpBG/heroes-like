@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    632,
+    "fb802d91-7b63-4125-9deb-f7e459a72818",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Blossomchoir Cantor plant humanoid facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two long bark arms with twig fingers and two root-shaped legs. Pale wood oval face framed by pink-white blossoms, layered sage-green and ivory leaf robe, blossom shoulder mantle, green hanging seed pods, and tall pink-ivory trumpet flower pipes fixed on its back. One ornate curved wooden lyre with green strings held in front on screen right: far hand supports its frame, near hand articulates to pluck or gesture. Preserve exact face, silhouette, instrument, pipes, blossoms, seed pods, robe colors and proportions. Fixed body scale and ground registration, full body and every prop inside generous margins. Flat saturated BLUE background, no floor, scenery, extra limbs or instruments, text, camera motion, shadows, emitted particles or projectiles. Walk steadily in place toward screen right with clear reciprocal root-foot steps: near foot forward while far foot supports, then exchange. Bend knees and lift root toes clear of ground, leaf robe follows thighs. Keep upper body centered while limbs travel. Two arms retain lyre in ready position. No root translation, hopping, sliding or extra root legs. Two full walking cycles, ending with original supporting stance.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 942011
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "blossomchoir_move_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "blossomchoir_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "blossomchoir_h3",
+      "create_time": 1790604538850
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "blossomchoir_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "fb802d91-7b63-4125-9deb-f7e459a72818",
+          "timestamp": 1790604538851
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "fb802d91-7b63-4125-9deb-f7e459a72818",
+          "timestamp": 1790604538858
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "fb802d91-7b63-4125-9deb-f7e459a72818",
+          "timestamp": 1790604721232
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

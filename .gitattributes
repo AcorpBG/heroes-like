@@ -212,3 +212,8 @@ art/animation/source/fluid/unit_veilmourn_wakeglass_navigators_veteran/*.json -t
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_obituary_scribes_veteran/*.json -text
+
+# Preserve hash-bound Blossomchoir Cantors H3 provenance.
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/**/*.txt -text
+art/animation/source/fluid/unit_thornwake_seedglass_cantors_veteran/*.json -text

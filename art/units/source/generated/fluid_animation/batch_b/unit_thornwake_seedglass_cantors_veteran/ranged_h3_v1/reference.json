@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0d8cbb32f2954d9003bfc4df9b366045ca2eb26ddc59b3cce49d7e97638c7723",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2324e902ba6d6aa6bd97b080279a4b72392b1e0854726fb3c64b28e2e78b8d59",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors_veteran.png",
+        "rects": [
+          [
+            0,
+            256,
+            512,
+            512
+          ]
+        ],
+        "anchor": [
+          256,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0d8cbb32f2954d9003bfc4df9b366045ca2eb26ddc59b3cce49d7e97638c7723",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "17eaca70b27d49a5e2f56757524327a70b94e1d4cb302cb70cd5ab28e99396a4",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors_veteran.png",
+        "rects": [
+          [
+            512,
+            256,
+            1024,
+            512
+          ]
+        ],
+        "anchor": [
+          768,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0d8cbb32f2954d9003bfc4df9b366045ca2eb26ddc59b3cce49d7e97638c7723",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9d1a179aec98e611c5ceaaec1fc8af02db20fd4a0a76363f5daed6df14983f59",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
