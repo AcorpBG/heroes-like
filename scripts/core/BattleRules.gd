@@ -7258,6 +7258,16 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 		else "The enemy host withdraws and concedes the field."
 	)
 	var messages = [base_summary]
+	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
+	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
+	# Award experience before the force sync copies the commander back to the
+	# overworld; awarding afterwards only updated the discarded battle copy.
+	var experience_messages := []
+	var experience_amount = max(0, int(rewards.get("experience", 0)))
+	if experience_amount > 0:
+		var hero_name = String(_player_commander_state(session).get("name", "The commander"))
+		experience_messages.append("%s gains %d experience." % [hero_name, experience_amount])
+		experience_messages.append_array(_award_commander_experience(session, experience_amount))
 	_sync_player_force_from_battle(session)
 	var front_summary := _apply_front_pressure_shift(
 		session,
@@ -7275,17 +7285,11 @@ static func _finalize_enemy_withdrawal(session: SessionStateStoreScript.SessionD
 	var delivery_summary := _apply_delivery_route_aftermath(session, "victory")
 	_append_nonempty_message(messages, delivery_summary)
 	_sync_enemy_force_from_battle(session, true)
-	var encounter = ContentService.get_encounter(String(session.battle.get("encounter_id", "")))
-	var rewards = DifficultyRulesScript.scale_reward_resources(session, encounter.get("rewards", {}))
 	OverworldRulesScript._add_resources(session, rewards)
 	var reward_summary = OverworldRulesScript._describe_resource_delta(rewards)
 	if reward_summary != "":
 		messages.append("Battle rewards %s." % reward_summary)
-	var experience_amount = max(0, int(rewards.get("experience", 0)))
-	if experience_amount > 0:
-		var hero_name = String(_player_commander_state(session).get("name", "The commander"))
-		messages.append("%s gains %d experience." % [hero_name, experience_amount])
-		messages.append_array(_award_commander_experience(session, experience_amount))
+	messages.append_array(experience_messages)
 	HeroCommandRulesScript.commit_active_hero(session)
 	OverworldRulesScript.refresh_fog_of_war(session)
 	_apply_encounter_victory_flags(session, encounter)
