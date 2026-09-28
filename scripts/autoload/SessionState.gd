@@ -10,11 +10,18 @@ const LAUNCH_MODE_SKIRMISH := "skirmish"
 const LAUNCH_MODE_GENERATED_DRAFT := "generated_draft"
 const SUPPORTED_LAUNCH_MODES := [LAUNCH_MODE_CAMPAIGN, LAUNCH_MODE_SKIRMISH, LAUNCH_MODE_GENERATED_DRAFT]
 
-var active_session: SessionStateStoreScript.SessionData = null
+var active_session: SessionStateStoreScript.SessionData = null:
+	set(session):
+		active_session = session
+		_release_replaced_generated_scenario_draft(session)
 var editor_working_copy_session: SessionStateStoreScript.SessionData = null
 var _editor_working_copy_baseline_session: SessionStateStoreScript.SessionData = null
 var _editor_working_copy_package_identity := {}
 var _editor_return_pending := false
+# The last playable scenario that was active, and whether its generated draft
+# can be rebuilt from its save. See _release_replaced_generated_scenario_draft().
+var _last_playable_scenario_id := ""
+var _last_playable_draft_rebuildable := false
 
 static func normalize_payload(value: Variant) -> Dictionary:
 	var normalized: Dictionary = SessionStateStoreScript.normalize_payload(value)
@@ -270,3 +277,39 @@ func _clear_editor_working_copy_snapshot() -> void:
 	_editor_working_copy_baseline_session = null
 	_editor_working_copy_package_identity = {}
 	_editor_return_pending = false
+
+# ContentService keeps each generated scenario draft as a deep copy of a whole
+# generated map, tens of MB on Large maps. Once a different playable scenario
+# becomes active, release the draft of the scenario it replaced, so loading one
+# generated save after another no longer keeps every map until exit. Only a
+# draft that SaveService rebuilds from the save itself is released, so loading
+# that save again behaves exactly as it does after a restart. Clearing to an
+# empty session (menus, editor return) keeps the draft for resuming that map.
+func _release_replaced_generated_scenario_draft(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null or session.scenario_id == "" or session.scenario_id == _last_playable_scenario_id:
+		return
+	var replaced_id := _last_playable_scenario_id
+	var replaced_rebuildable := _last_playable_draft_rebuildable
+	_last_playable_scenario_id = session.scenario_id
+	_last_playable_draft_rebuildable = _generated_draft_rebuildable_from_save(session)
+	if not replaced_rebuildable or not ContentService.has_generated_scenario_draft(replaced_id):
+		return
+	if editor_working_copy_session != null and editor_working_copy_session.scenario_id == replaced_id:
+		return
+	ContentService.unregister_generated_scenario_draft(replaced_id)
+
+# Mirrors the provenance SaveService._ensure_generated_random_map_scenario_registered()
+# needs to register a generated skirmish scenario again when its save is loaded.
+static func _generated_draft_rebuildable_from_save(session: SessionStateStoreScript.SessionData) -> bool:
+	if normalize_launch_mode(session.launch_mode) != LAUNCH_MODE_SKIRMISH:
+		return false
+	if not bool(session.flags.get("generated_random_map", false)):
+		return false
+	var provenance: Dictionary = session.flags.get("generated_random_map_provenance", {}) if session.flags.get("generated_random_map_provenance", {}) is Dictionary else {}
+	if provenance.is_empty():
+		var setup: Dictionary = session.flags.get("generated_random_map_setup", {}) if session.flags.get("generated_random_map_setup", {}) is Dictionary else {}
+		provenance = setup.get("provenance", {}) if setup.get("provenance", {}) is Dictionary else {}
+	if String(provenance.get("schema_id", "")) == "aurelion_native_rmg_disk_package_provenance_v1":
+		return true
+	var config: Dictionary = provenance.get("generator_config", {}) if provenance.get("generator_config", {}) is Dictionary else {}
+	return not config.is_empty()
