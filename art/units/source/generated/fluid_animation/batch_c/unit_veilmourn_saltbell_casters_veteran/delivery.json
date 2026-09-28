@@ -1,0 +1,181 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "clip_sequences": {
+    "ranged": {
+      "frames": [
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 78
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 82
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 86
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 81
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 83
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 85
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 87
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 100
+        }
+      ],
+      "timing": {
+        "frame_msec": 35,
+        "contact_frame": 23
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed complete chronological original sequences, enlarged hands/cord bells/feet/alpha edges, and every selected native 128px battle phase. Visible elbow and bell idle; three reciprocal walking cycles; far-hand single-bell melee; corrected low near-hand paired-bell ranged cast with matching clean recovery; distinct held crouched guard; recoil and recovery; standing shoulder-level physical bell signal; grounded side collapse and corpse. Rejected clipped v1 ranged windup and color-changing v1 support. The latter supplies only one safely blue-keyed guide for the stable-background v2 replacement. Both bells, short cords and teal ribbons remain coherent. Continuous video playback, manual game playtest and Linux validation were not performed."
+  }
+}

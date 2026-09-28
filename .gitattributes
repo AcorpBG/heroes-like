@@ -177,3 +177,8 @@ art/animation/source/fluid/unit_neutral_windglass_slingers/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_bellwake_oars_veteran/*.json -text
+
+# Preserve hash-bound Echo-Salt Slingers H3 provenance.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_saltbell_casters_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_saltbell_casters_veteran/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_saltbell_casters_veteran/*.json -text

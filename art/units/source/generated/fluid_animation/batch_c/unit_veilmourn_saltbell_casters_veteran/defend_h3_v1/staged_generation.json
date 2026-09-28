@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "71546c6d76941a885a736502558f0edaf7ce886ffa56de67c1f15048782e8bb3",
+  "latent_sha256": "29c3ac3d83722dc60a9b0c35bb04febe0ee859f85e2526f7699e8c909c1faf78",
+  "decode_workflow_sha256": "df30f378a62df4bf1f7b15801cabe8f21283d6093ac5c88d1d1b9dddc2b849bf",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "echosalt_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

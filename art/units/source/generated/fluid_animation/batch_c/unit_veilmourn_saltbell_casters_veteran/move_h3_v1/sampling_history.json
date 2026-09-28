@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    496,
+    "cc386e18-de70-49f0-9926-8baac0388528",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender hooded adult human saltbell slinger, two arms and two legs, pale face partly covered by dark scarf, ragged muted teal cloak, off-white sleeves, dark wrapped forearms and gloves, black trousers, brown leather boots. Two small tarnished silver bell heads hanging on short brown braided cords, each bell with a short tattered teal ribbon. Exactly two bells, unchanged bell size and cord lengths, stable visible hand grips. Small steady turquoise glass charms at the belt remain unchanged. Fixed anatomical size, stationary camera, full body and all bells/ribbons within frame. Uniform flat saturated green studio background with no shadows, scenery, text, particles, new glow or external effects. Walk naturally in place through two complete cycles. Clearly alternate left and right feet through forward contact, weight transfer, passing and push-off. Knees bend under the loose trousers; opposite shoulders follow each leg. Keep centered without traveling or skating. Carry the paired cord bells low with controlled small pendulum motion, never spin or duplicate them. Return to the initial foot phase.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928801
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "echosalt_move_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "echosalt_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "echosalt_h3",
+      "create_time": 1790572654225
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "echosalt_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "cc386e18-de70-49f0-9926-8baac0388528",
+          "timestamp": 1790572654226
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "cc386e18-de70-49f0-9926-8baac0388528",
+          "timestamp": 1790572654232
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "cc386e18-de70-49f0-9926-8baac0388528",
+          "timestamp": 1790572781045
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

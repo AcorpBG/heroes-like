@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters_veteran",
+  "clip": "cast",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_saltbell_casters_veteran/cast_h3_v1/matte/rgba_061.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        480
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      64,
+      1
+    ]
+  ],
+  "seed": 928809,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender hooded adult human saltbell slinger, two arms and two legs, pale face partly covered by dark scarf, ragged muted teal cloak, off-white sleeves, dark wrapped forearms and gloves, black trousers, brown leather boots. Two small tarnished silver bell heads hanging on short brown braided cords, each bell with a short tattered teal ribbon. Exactly two bells, unchanged bell size and cord lengths, stable visible hand grips. Small steady turquoise glass charms at the belt remain unchanged. Fixed anatomical size, stationary camera, full body and all bells/ribbons within frame. Uniform flat saturated green studio background with no shadows, scenery, text, particles, new glow or external effects. Perform a physical rally with both bells: raise both gloved hands from waist to shoulder height with elbows bent, give the two hanging bells one deliberate outward wrist shake, then lower both hands to the identical original ready pose. Boots remain planted, torso upright. Preserve both cord attachments and exactly two bell heads and their ribbons. This is a physical bell signal, not a magical effect. Make the arm gesture readable and distinct from the defensive crouch. The background is absolutely CONSTANT pure RGB green throughout all frames, with NO color shifts and NO lighting transitions. Raise both bent arms into the supplied shoulder-level bell-signal pose, shake the suspended bells once, return to ready. No overhead swing, no backwards turn, no new objects. Maintain a straight standing torso with both boot soles on the ground.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
