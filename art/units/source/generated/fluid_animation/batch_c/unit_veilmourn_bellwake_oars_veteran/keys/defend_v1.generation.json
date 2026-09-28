@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v1.png",
+    "sha256": "168f457cf72ccca3b189d45d46be9554d2b3ec73def51121c39ff303e6c97ecc"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v1.prompt.txt",
+    "sha256": "91687918e3d2453c32b8d910e022e3de584677375dbbc0d1477d5768de276838"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/ready_reference.png",
+      "sha256": "cd342edbffbfae5e8265bfa8271814d5da8dd47c5027c496b838eb58a2d55e6a"
+    }
+  ],
+  "review": "Rejected: shield transferred to far forearm."
+}

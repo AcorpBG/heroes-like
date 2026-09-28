@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "clip": "cast",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/salute_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        882,
+        835
+      ],
+      "scale": 0.286,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "seed": 928702,
+  "prompt": "Locked orthographic three-quarter elevated fantasy strategy camera, full body facing screen right. One hooded adult human warden, exactly two arms and legs, charcoal layered cloak and cowl hiding face, dark leather gloves and boots. Small oval shield with thin brass cross strapped on NEAR forearm at SCREEN LEFT. One original long wooden oar with broad paddle at upper-right and single brass bell beneath paddle. Keep the far screen-right hand gripping its original place on the shaft and hold the oar at the SAME diagonal angle for the whole clip. Perform one physical chest salute: near screen-left hand releases its lower shaft grip, bends elbow to touch closed fist to chest matching supplied middle pose, holds proudly, then lowers and re-grips its original lower shaft position. The same shield follows the same near forearm through the salute. Torso upright, boots planted, constant original anatomical size. Entire paddle and bell remain inside the frame. Flat perfectly uniform saturated green background and neutral unchanging lighting, isolated costumed figure making a physical hand salute.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

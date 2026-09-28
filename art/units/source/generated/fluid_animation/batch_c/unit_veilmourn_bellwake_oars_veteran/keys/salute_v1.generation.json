@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/salute_v1.png",
+    "sha256": "33be8128400442e6ce747c546bee46f660ea38f903d805338255ef4ce44e7d36"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/salute_v1.prompt.txt",
+    "sha256": "ccd0a0a16566f557d3e9af609ddea50946cefccbf47e428323b898f8d39e8758"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/ready_reference.png",
+      "sha256": "cd342edbffbfae5e8265bfa8271814d5da8dd47c5027c496b838eb58a2d55e6a"
+    }
+  ],
+  "review": "One near fist at chest with shield on same forearm, far hand retaining original diagonal oar, complete paddle and bell, upright planted stance."
+}

@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/hit_v1.png",
+    "sha256": "95aced5a039160ff8e89dd567c5d1f78e8c8add03c2aee383556027160210d30"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/hit_v1.prompt.txt",
+    "sha256": "5b2b51debc6a196308762350f7a53343da3b7baa0b484c082f41a71de0ddb18d"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v2.png",
+      "sha256": "639ad4e8c562135f2a405cc4090075590e3e4aba9b7a0a86d647ed304a5f5cde"
+    }
+  ],
+  "review": "Backward shoulder recoil; shield stays on near screen-left forearm, both hand grips remain; complete oar and attached bell.",
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-965bae9e-c499-4fa6-b812-6c3b21d1ff7e.png"
+}

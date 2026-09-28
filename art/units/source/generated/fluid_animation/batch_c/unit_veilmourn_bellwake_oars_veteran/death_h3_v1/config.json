@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "clip": "death",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 928605,
+  "prompt": "Locked orthographic three-quarter elevated fantasy strategy camera, full body facing screen right. One hooded adult human warden, two arms and two legs, charcoal layered cloak and cowl hiding the face, dark leather gloves and boots. One small dark oval wooden shield with thin brass cross motif is strapped on the near forearm at screen-left. Both gloved hands grip one long dark wooden oar diagonally across the body. Oar has a broad flat paddle at its upper screen-right end and a single small brass bell attached immediately below that paddle. Preserve oar length, paddle shape, shaft, bell attachment, two-handed grip and shield attachment throughout. No extra props, magic, particles, fog, glow, shadows, text or effects. Uniform perfectly flat saturated green background, no green illumination. Fixed camera and anatomical size; do not zoom. A continuous physical collapse. Knees buckle, drop onto knees while holding the oar, lean onto the side and settle on the ground in the supplied final side-lying corpse pose. Let the same oar lie on the ground along the body and shield rest against the forearm; preserve its paddle and attached bell. Exactly two arms and legs; nothing vanishes or floats. Hold the grounded final corpse motionless. Do not recover or stand up.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

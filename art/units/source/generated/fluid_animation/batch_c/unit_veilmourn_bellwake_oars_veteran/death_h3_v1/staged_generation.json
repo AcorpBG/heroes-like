@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "eda8e668b6868dce42c57ce9e7f9dd36bd24d6fcdd0c54f56469b31c5b23ccb6",
+  "latent_sha256": "5007e95d6ec01a53d1eba955accfdf87fa677c1aff13ea49b0befc851d9cbed2",
+  "decode_workflow_sha256": "b9aa7bd3ecf811fd55753889b73bf67adda323e7872e20750ca291b795acc1c2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "knellwake_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -172,3 +172,8 @@ art/animation/source/fluid/unit_neutral_cliffhawk_wardens/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/**/*.txt -text
 art/animation/source/fluid/unit_neutral_windglass_slingers/*.json -text
+
+# Preserve hash-bound Knellwake Wardens H3 provenance.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_bellwake_oars_veteran/*.json -text
