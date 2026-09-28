@@ -1915,6 +1915,12 @@ static func _apply_carryover(session: SessionStateStoreScript.SessionData, bundl
 			hero["command"] = _merge_command(hero.get("command", {}), hero_progression.get("command", {}))
 			hero["specialties"] = hero_progression.get("specialties", hero.get("specialties", []))
 			hero["pending_specialty_choices"] = hero_progression.get("pending_specialty_choices", hero.get("pending_specialty_choices", []))
+			# The "level-up already shown" marker travels with the level. Without it
+			# the fresh chapter hero replays every carried level as a dialog.
+			if hero_progression.has("level_up_presented"):
+				hero["level_up_presented"] = int(hero_progression.get("level_up_presented", hero["level"]))
+			else:
+				hero.erase("level_up_presented")
 
 	if same_hero and bool(import_config.get("spells", false)):
 		var spellbook = SpellRulesScript.ensure_hero_spellbook(hero).get("spellbook", {})

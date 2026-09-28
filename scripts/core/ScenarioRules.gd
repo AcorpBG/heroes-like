@@ -94,6 +94,25 @@ static func objective_definitions(scenario: Dictionary) -> Variant:
 static func objectives_for_session(session: SessionStateStoreScript.SessionData) -> Variant:
 	return objective_definitions(scenario_record_for_session(session))
 
+static func objective_artifact_ids(session: SessionStateStoreScript.SessionData) -> Array:
+	# Artifacts this scenario's objectives name, including every piece of a
+	# required set. Town commerce must not sell or buy them back.
+	var ids := []
+	var objectives = objectives_for_session(session)
+	if not (objectives is Dictionary):
+		return ids
+	for bucket_name in ["victory", "defeat"]:
+		var bucket = objectives.get(bucket_name, [])
+		if not (bucket is Array):
+			continue
+		for objective in bucket:
+			if not (objective is Dictionary):
+				continue
+			for artifact_id in _scenario_objective_dependency(objective, {}, {}).get("artifact_ids", []):
+				if String(artifact_id) not in ids:
+					ids.append(String(artifact_id))
+	return ids
+
 static func evaluate_session_for_event(session: SessionStateStoreScript.SessionData, event_facts: Dictionary = {}) -> Dictionary:
 	normalize_scenario_state(session)
 	var profile := _scenario_event_dependency_profile(session, event_facts)

@@ -640,15 +640,19 @@ static func get_town_transfer_actions(session: SessionStateStoreScript.SessionDa
 				if unit_id == "" or count <= 0:
 					continue
 				var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: 1})
+				var source_stacks := _holder_stacks(session, town, source_holder)
 				for amount_token in _transfer_amount_tokens(count):
 					var amount_label := _transfer_amount_label(amount_token, count)
 					var unit_name := String(ContentService.get_unit(unit_id).get("name", unit_id))
+					var blocker := "" if bool(admission.get("ok", false)) else String(admission.get("message", ""))
+					if blocker == "" and _transfer_empties_hero_army(source_holder, source_stacks, _resolve_transfer_amount(amount_token, count), count):
+						blocker = _last_stack_message(session, town, source_holder)
 					actions.append(
 						{
 							"id": "transfer:%s:%s:%s:%s" % [source_holder, target_holder, unit_id, amount_token],
 							"label": "Move %s %s" % [amount_label, unit_name],
-							"summary": "%s -> %s%s" % [_holder_label(session, town, source_holder), _holder_label(session, town, target_holder), " | " + String(admission.get("message", "")) if not bool(admission.get("ok", false)) else ""],
-							"disabled": not bool(admission.get("ok", false)),
+							"summary": "%s -> %s%s" % [_holder_label(session, town, source_holder), _holder_label(session, town, target_holder), " | " + blocker if blocker != "" else ""],
+							"disabled": blocker != "",
 						}
 					)
 	return actions
@@ -792,6 +796,9 @@ static func manage_army_slots(
 	var same_unit := not target_stack.is_empty() and String(target_stack.get("unit_id", "")) == String(source_stack.get("unit_id", ""))
 	if not target_stack.is_empty() and not same_unit and transfer_count != available:
 		return {"ok": false, "message": "Split stacks can move only into an empty slot or merge with the same unit."}
+
+	if source_holder_id != target_holder_id and _transfer_empties_hero_army(source_holder_id, source_stacks, transfer_count, available, target_stack.is_empty() or same_unit):
+		return {"ok": false, "message": _last_stack_message(session, town, source_holder_id)}
 
 	var operation := "move"
 	if source_holder_id == target_holder_id:
@@ -997,6 +1004,8 @@ static func transfer_field_stack(
 	var transfer_count := _resolve_transfer_amount(amount_token, available)
 	if transfer_count <= 0:
 		return {"ok": false, "message": "No troops are available for transfer."}
+	if _transfer_empties_hero_army(source_hero_id, source_stacks, transfer_count, available):
+		return {"ok": false, "message": _last_stack_message(session, {}, source_hero_id)}
 
 	var admission := army_addition_plan(_holder_stacks(session, {}, target_hero_id), {unit_id: transfer_count})
 	if not bool(admission.get("ok", false)):
@@ -1164,6 +1173,8 @@ static func transfer_town_stack(
 	var transfer_count := _resolve_transfer_amount(amount_token, available)
 	if transfer_count <= 0:
 		return {"ok": false, "message": "No troops are available for transfer."}
+	if _transfer_empties_hero_army(source_holder, source_stacks, transfer_count, available):
+		return {"ok": false, "message": _last_stack_message(session, town, source_holder)}
 
 	var admission := army_addition_plan(_holder_stacks(session, town, target_holder), {unit_id: transfer_count})
 	if not bool(admission.get("ok", false)):
@@ -1559,6 +1570,9 @@ static func _append_field_transfer_actions(actions: Array, source: Dictionary, t
 			if seen_transfer_counts.has(transfer_count):
 				continue
 			seen_transfer_counts[transfer_count] = true
+			var blocker := "" if bool(admission.get("ok", false)) else String(admission.get("message", ""))
+			if blocker == "" and _transfer_empties_hero_army(source_id, source.get("army", {}).get("stacks", []), transfer_count, count):
+				blocker = "%s must keep at least one troop stack." % source_name
 			actions.append({
 				"id": "field_transfer:%s:%s:%s:%s" % [source_id, target_id, unit_id, amount_token],
 				"label": "%s -> %s | %d %s" % [source_name, target_name, transfer_count, unit_name],
@@ -1574,8 +1588,8 @@ static func _append_field_transfer_actions(actions: Array, source: Dictionary, t
 				"unit_id": unit_id,
 				"amount_token": amount_token,
 				"transfer_count": transfer_count,
-				"disabled": not bool(admission.get("ok", false)),
-				"disabled_reason": String(admission.get("message", "")),
+				"disabled": blocker != "",
+				"disabled_reason": blocker,
 			})
 
 static func _append_field_artifact_transfer_actions(actions: Array, source: Dictionary, target: Dictionary) -> void:
@@ -1649,6 +1663,16 @@ static func _preserve_movement_deficit_after_artifact_change(
 	movement["max"] = new_max
 	updated["movement"] = movement
 	return updated
+
+static func _transfer_empties_hero_army(holder_id: String, stacks: Variant, transfer_count: int, available: int, stack_leaves: bool = true) -> bool:
+	# A commander may not hand away its last troops and walk the map empty.
+	# The garrison may be emptied; a swap never leaves the source empty.
+	if holder_id == HOLDER_GARRISON or not stack_leaves or transfer_count < available:
+		return false
+	return _valid_stack_count(stacks) <= 1
+
+static func _last_stack_message(session: SessionStateStoreScript.SessionData, town: Dictionary, holder_id: String) -> String:
+	return "%s must keep at least one troop stack." % _holder_label(session, town, holder_id)
 
 static func _stack_index_by_unit(stacks: Array, unit_id: String) -> int:
 	for index in range(stacks.size()):

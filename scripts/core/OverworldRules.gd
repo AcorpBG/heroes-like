@@ -1227,12 +1227,9 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 		towns[index] = town
 	session.overworld["towns"] = towns
 
-	var hero_state = session.overworld.get("hero", {})
-	var artifact_income = DifficultyRulesScript.scale_income_resources(
-		session,
-		ArtifactRulesScript.aggregate_bonuses(hero_state).get("daily_income", {})
-	)
-	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
+	var hero_income := _player_heroes_daily_income(session)
+	var artifact_income: Dictionary = hero_income.get("artifact", {})
+	var specialty_income: Dictionary = hero_income.get("specialty", {})
 	var site_income = DifficultyRulesScript.scale_income_resources(session, controlled_resource_site_income(session, "player"))
 	var total_income := _add_resource_sets(
 		_add_resource_sets(_add_resource_sets(town_income, artifact_income), specialty_income),
@@ -1243,7 +1240,7 @@ static func end_turn(session: SessionStateStoreScript.SessionData) -> Dictionary
 		site_muster_messages = apply_controlled_resource_site_musters(session, "player")
 	_add_resources(session, total_income)
 	_refresh_all_player_heroes_for_new_day(session)
-	hero_state = session.overworld.get("hero", {})
+	var hero_state = session.overworld.get("hero", {})
 	var movement_after = session.overworld.get("movement", {})
 
 	var messages := ["Day %d begins." % session.day]
@@ -2261,7 +2258,7 @@ static func build_in_active_town(session: SessionStateStoreScript.SessionData, b
 	town["available_recruits"] = _add_recruit_growth(
 		town.get("available_recruits", {}),
 		HeroProgressionRulesScript.scale_recruit_growth(
-			session.overworld.get("hero", {}),
+			_town_scaling_hero(session, town),
 			_building_growth_payload(building_id)
 		)
 	)
@@ -5577,12 +5574,9 @@ static func _player_daily_income_projection(
 				_calculate_town_income(projected_town, projected_session)
 			)
 		)
-	var hero_state = session.overworld.get("hero", {})
-	var artifact_income = DifficultyRulesScript.scale_income_resources(
-		session,
-		ArtifactRulesScript.aggregate_bonuses(hero_state).get("daily_income", {})
-	)
-	var specialty_income = HeroProgressionRulesScript.daily_income_bonus(hero_state)
+	var hero_income := _player_heroes_daily_income(session)
+	var artifact_income: Dictionary = hero_income.get("artifact", {})
+	var specialty_income: Dictionary = hero_income.get("specialty", {})
 	var site_income = DifficultyRulesScript.scale_income_resources(
 		session,
 		controlled_resource_site_income(session, "player", next_day)
@@ -6086,8 +6080,49 @@ static func apply_resource_site_disruption(
 
 static func town_recruit_cost(session: SessionStateStoreScript.SessionData, town: Dictionary, unit_id: String) -> Dictionary:
 	var unit := ContentService.get_unit(unit_id)
-	var adjusted_cost := HeroProgressionRulesScript.scale_recruit_cost(session.overworld.get("hero", {}), unit.get("cost", {}))
+	var adjusted_cost := HeroProgressionRulesScript.scale_recruit_cost(_town_scaling_hero(session, town), unit.get("cost", {}))
 	return _apply_percent_discount(adjusted_cost, _recruitment_discount_percent(town, unit_id))
+
+static func _town_scaling_hero(session: SessionStateStoreScript.SessionData, town: Dictionary) -> Dictionary:
+	# Recruit prices and growth follow the commander stationed in this town, not
+	# whichever hero happens to be selected. No local hero means no hero bonus.
+	if session == null or town.is_empty():
+		return {}
+	var hero := HeroCommandRulesScript.town_defending_hero(session, town)
+	var hero_id := String(hero.get("id", ""))
+	if hero_id == "":
+		return {}
+	# The active mirror can be ahead of its roster entry until commit_active_hero.
+	var active = session.overworld.get("hero", {})
+	if active is Dictionary and hero_id == String(session.overworld.get("active_hero_id", "")) and String(active.get("id", "")) == hero_id:
+		return active
+	return hero
+
+static func _player_heroes_daily_income(session: SessionStateStoreScript.SessionData) -> Dictionary:
+	# Every commander's artifacts and specialties earn income, whichever is selected.
+	var artifact_income := {}
+	var specialty_income := {}
+	for hero in _player_hero_states(session):
+		artifact_income = _add_resource_sets(artifact_income, ArtifactRulesScript.aggregate_bonuses(hero).get("daily_income", {}))
+		specialty_income = _add_resource_sets(specialty_income, HeroProgressionRulesScript.daily_income_bonus(hero))
+	return {
+		"artifact": DifficultyRulesScript.scale_income_resources(session, artifact_income),
+		"specialty": specialty_income,
+	}
+
+static func _player_hero_states(session: SessionStateStoreScript.SessionData) -> Array:
+	var heroes := []
+	if session == null:
+		return heroes
+	var active = session.overworld.get("hero", {})
+	var active_id := ""
+	if active is Dictionary and not active.is_empty():
+		active_id = String(active.get("id", ""))
+		heroes.append(active)
+	for hero in session.overworld.get("player_heroes", []):
+		if hero is Dictionary and (active_id == "" or String(hero.get("id", "")) != active_id):
+			heroes.append(hero)
+	return heroes
 
 static func get_town_build_status(town: Dictionary, building_id: String, current_day: int = -1) -> Dictionary:
 	var building := ContentService.get_building(building_id)
@@ -9771,7 +9806,7 @@ static func _effective_player_town_weekly_growth(
 	town: Dictionary
 ) -> Dictionary:
 	return HeroProgressionRulesScript.scale_recruit_growth(
-		session.overworld.get("hero", {}),
+		_town_scaling_hero(session, town),
 		_town_weekly_growth(town, session)
 	)
 
