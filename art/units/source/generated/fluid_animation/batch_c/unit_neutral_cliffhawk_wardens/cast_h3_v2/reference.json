@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 1.6666666666666667,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7599dfe376c40f00f0369b1d2ab5efd6e53f9600efacf5c6cfc92664da1088ea",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/rally_key_original.png",
+        "rects": [
+          [
+            600,
+            0,
+            1200,
+            944
+          ]
+        ],
+        "anchor": [
+          840,
+          916
+        ],
+        "scale": 0.49677098857426727,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "211a2ea992a0967280469a23fc35290434095a49b860cbaeb808e8c0871f9a0e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "72b358d97b69685196d5462ffd6718376e703cf3c2d23093624b390a74c92b50",
+      "runtime_source_scale": 0.29806259314456035
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.6,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

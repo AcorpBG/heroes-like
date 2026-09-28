@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1004
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b904cada18df1bb8597b7ddd0626ff6e160299067d6fc63b6946d34dd0ee2042",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_original.png",
+        "rects": [
+          [
+            1358,
+            0,
+            2038,
+            771
+          ]
+        ],
+        "anchor": [
+          1695,
+          720
+        ],
+        "scale": 0.5979073243647235,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "01774f4c392c8debf1f08475bec878eda5e8f39cd3defc05576e350adbaa1c0c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1aaf386d4482281e84f2eea5d1358c1cd5afaf67d0445dea3fda285ddf54bade",
+      "runtime_source_scale": 0.29895366218236175
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    424,
+    "210e0f60-729f-4a47-a29a-96f808f8e918",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Cliffhawk Warden, an adult female human pike fighter in the reference elevated three-quarter orthographic fantasy strategy sprite view facing screen-right. Long wavy chestnut hair, uncovered fair human face, blue scarf, layered blue white and ochre feather mantle over brown leather and dull steel armor, round knee guards, leather boots, blue split tunic with ochre ribbons and a coil of golden rope at the belt. Exactly TWO arms, TWO hands, TWO legs and TWO boots. Both hands grip ONE long straight brown wooden pike: RIGHT NEAR hand on the rear/lower screen-left section, LEFT FAR hand on the forward/upper screen-right section. One hooked dark-silver spearhead at the upper right end, one small metal butt spike at the lower left end, blue and ochre feather tassels below the spearhead. Do not shorten, bend, duplicate or swap ends of the pike. One small natural brown-and-white hawk perches on the RIGHT shoulder at screen-left; separate head, hooked beak, two feet, folded feathered wings, no extra birds. Keep the hawk clearly separate from the feather cloak. Retain original face, hair, clothing, feather colors and proportions. Locked camera, constant body scale and view, full body and all pike tips visible with margins. Uniform unchanged flat MAGENTA RGB255,0,255 background throughout; no floor, scenery, ground shadow, text, sparks, magic, projectile, blood or other actors. One continuous reciprocal walking cycle in place with both boots alternately lifting, passing, planting and loading. Start in the first walking contact pose, pass through the opposite contacts shown by the guides and return smoothly. Carry the single diagonal pike securely in BOTH hands at the same hand spacing. The small hawk stays perched, balancing through its ankles and folded wings. Natural knee and ankle flexion, cloth and feather response. No running, hopping, facing change or global sliding. Uniform unchanged flat MAGENTA RGB255,0,255 background throughout; no floor, scenery, ground shadow, text, sparks, magic, projectile, blood or other actors.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 989001
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_move_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_move_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cliffhawk_move_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 35,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 82,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "cliffhawk_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "cliffhawk_h3",
+      "create_time": 1790561393549
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "cliffhawk_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "210e0f60-729f-4a47-a29a-96f808f8e918",
+          "timestamp": 1790561393550
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "210e0f60-729f-4a47-a29a-96f808f8e918",
+          "timestamp": 1790561393567
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "210e0f60-729f-4a47-a29a-96f808f8e918",
+          "timestamp": 1790561531481
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

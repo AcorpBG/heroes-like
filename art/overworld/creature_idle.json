@@ -2287,19 +2287,32 @@
     "unit_neutral_cliffhawk_wardens": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_cliffhawk_wardens.png",
       "frame_size": [
-        177,
-        221
+        180,
+        223
       ],
-      "frames": 8,
-      "frame_msec": 240,
+      "frames": 31,
+      "frame_msec": 90,
       "static_frame": 0,
       "ground_anchor": [
-        80.0,
-        210
+        83,
+        211
       ],
-      "painted_extent": 205,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+      "painted_extent": 207,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_cliffhawk_wardens.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
         14,
         15,
         16,
@@ -2307,17 +2320,27 @@
         18,
         19,
         20,
-        21
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
       ],
       "source_crop": [
-        176,
-        26,
-        353,
-        247
+        77,
+        65,
+        257,
+        288
       ],
-      "source_sha256": "f30bdb8225968646fd2350b4d47c6a9e3bae986160a6829f7f0e3b633491cdad",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_cliffhawk_wardens/provenance.json",
-      "sha256": "8837facdb52d2d336fc1d14e841c9baf1b453b2938082fe0c85e3fbcee6040df"
+      "source_sha256": "80806c600a752cf31692874bc1f197b5ff67bddc987403a4de673f6194fae727",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_cliffhawk_wardens/provenance.json",
+      "sha256": "bedf82b3ab7d75a8694520d72530bc1c7be3e3a9793becd180571af15f342382"
     },
     "unit_neutral_windglass_slingers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_windglass_slingers.png",

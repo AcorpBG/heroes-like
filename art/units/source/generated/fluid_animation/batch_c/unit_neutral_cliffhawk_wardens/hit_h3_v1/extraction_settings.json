@@ -1,0 +1,33 @@
+{
+  "protected_foreground_chroma": 65,
+  "reviewed_key_ranges": [
+    {
+      "start": 4,
+      "end": 27,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 40,
+      "end": 63,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 77,
+      "end": 102,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    }
+  ],
+  "review": "All 124 original frames reviewed; backdrop switches directly between separated uniform magenta and green. No unsafe intermediate plate. Retain complete foreground and original geometry."
+}

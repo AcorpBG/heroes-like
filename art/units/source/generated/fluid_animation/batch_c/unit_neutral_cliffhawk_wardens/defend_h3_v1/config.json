@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "clip": "defend",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 65,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+      "rects": [
+        [
+          0,
+          512,
+          512,
+          768
+        ]
+      ],
+      "anchor": [
+        256,
+        748
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+      "rects": [
+        [
+          512,
+          512,
+          1024,
+          768
+        ]
+      ],
+      "anchor": [
+        768,
+        748
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      44,
+      1
+    ]
+  ],
+  "seed": 989003,
+  "prompt": "One original Cliffhawk Warden, an adult female human pike fighter in the reference elevated three-quarter orthographic fantasy strategy sprite view facing screen-right. Long wavy chestnut hair, uncovered fair human face, blue scarf, layered blue white and ochre feather mantle over brown leather and dull steel armor, round knee guards, leather boots, blue split tunic with ochre ribbons and a coil of golden rope at the belt. Exactly TWO arms, TWO hands, TWO legs and TWO boots. Both hands grip ONE long straight brown wooden pike: RIGHT NEAR hand on the rear/lower screen-left section, LEFT FAR hand on the forward/upper screen-right section. One hooked dark-silver spearhead at the upper right end, one small metal butt spike at the lower left end, blue and ochre feather tassels below the spearhead. Do not shorten, bend, duplicate or swap ends of the pike. One small natural brown-and-white hawk perches on the RIGHT shoulder at screen-left; separate head, hooked beak, two feet, folded feathered wings, no extra birds. Keep the hawk clearly separate from the feather cloak. Retain original face, hair, clothing, feather colors and proportions. Locked camera, constant body scale and view, full body and all pike tips visible with margins. Uniform unchanged flat MAGENTA RGB255,0,255 background throughout; no floor, scenery, ground shadow, text, sparks, magic, projectile, blood or other actors. A dedicated two-handed guard transition. Bend both knees into a planted wide stance, draw the diagonal pike closer across the chest with both hands, lower the center of mass and settle into the final defensive brace. The hawk remains perched with wings folded. No strike or overhead salute. End holding the low guard, do not return to standing. Uniform unchanged flat MAGENTA RGB255,0,255 background throughout; no floor, scenery, ground shadow, text, sparks, magic, projectile, blood or other actors.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

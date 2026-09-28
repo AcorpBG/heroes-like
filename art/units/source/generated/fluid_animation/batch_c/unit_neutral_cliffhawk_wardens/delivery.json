@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "idle_h3_v2",
+    "move_h3_v2",
+    "attack_h3_v2",
+    "defend_h3_v1",
+    "hit_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Coordinator accepted 214 original H3 frames across all seven dedicated actions after chronological original, enlarged anatomy/equipment/alpha and native Godot phase review. Idle and walk loop; melee contact at source48; physical raised-pike rally; hit recovers; guard holds; death includes hawk takeoff and ends with grounded corpse. Five first takes rejected and retained. The original 125 already reviewed idle/move/guard/death poses are exact in the combined candidate; 709 focused candidate checks passed. No continuous playback, manual game playtest or Linux-run claim."
+  }
+}
