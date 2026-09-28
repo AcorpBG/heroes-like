@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "571ebd0421dee282a402d485b9e78bf69427e8ada4f60c41b51f15e27563720b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "44c42a0676e986e581dfa4aa4096a95e96cb16dbf4798ae8f8fccdfd5a3e36a0",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "571ebd0421dee282a402d485b9e78bf69427e8ada4f60c41b51f15e27563720b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2b1b2451de1584929cd8dfdddff338df3dbd7a0a35a54d8dce3df20d584c07ae",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_obituary_scribes_veteran.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "571ebd0421dee282a402d485b9e78bf69427e8ada4f60c41b51f15e27563720b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "f95b21fdb5a6d748ebdfbe3f17eb1646d43da23dda889590daeaa144fd42b636",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

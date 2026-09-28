@@ -1,0 +1,697 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "ranged_h3_120",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 11,
+          "frame_durations_msec": [
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            100,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50,
+            50
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "57293e642f305becabc884bf1cf422f14e069a8f44cf875724c92659877d773d"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/original.json",
+          "sha256": "4dca4ae7c804cb76a683aa1134360ba80db6bec7886172420ac3c5bde5250a6c"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/workflow_api.json",
+          "sha256": "e362a6708bc1285835acccdf5c492883c0e37da087bcebea1feb0e378e1688aa"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/prompt.txt",
+          "sha256": "0d0bc09a2e6be7778fda8e29f2f3fb100df62dbf9559ed6d1814fba2e8c8e41d"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/reference.json",
+          "sha256": "d22f15be6b5433d7f4e0c085633c93d1106947bd065a8bc5c5b0d3cfa9edade9"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/matte.json",
+          "sha256": "30792b3940ed5aded92be59a71fae9cd911980064b436a9fe25ed1eeeae997d6"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/staged_generation.json",
+          "sha256": "97cfa7f2e127677fefe1aad7cedf5487127aa1c70e2c203f9f852fddf717aded"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "b0cc3049d5bb8de5358f78f8c4750c043383f665351fe71142b8adbf8d3a1157"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/sampling_submission.json",
+          "sha256": "a0ecc3f8bd71e1aa79722e591b353f106a263a9a407a7a31ee08783935dbe156"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/sampling_history.json",
+          "sha256": "7984b43b890748e0394d8d55eae00c6180b5d447d00fa7e199cca8ca3815ad5f"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/ranged_h3_v1/original.latent",
+          "sha256": "688165b7ee60fdc7266214f454152a82e9b4f60c2a1ac94bcc3756a1cf9b5d8d"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all124 chronological originals and enlarged grips, aim/release/recoil and recovery. Spear levels forward with both forearms, release at full extension original34, modest recoil and continuous return. Rigid shaft, quill tip, attached parchment/seals and scroll pack retained; no generated projectile or flash.27 selected originals over1400ms including100ms contact hold. Native battle phases reviewed; candidate743 focused checks pass."
+      }
+    }
+  ]
+}

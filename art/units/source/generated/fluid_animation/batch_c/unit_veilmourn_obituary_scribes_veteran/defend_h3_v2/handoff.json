@@ -1,0 +1,525 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_obituary_scribes_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_076",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "defend_h3_096",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "defend_h3_120",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 19
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/original_lossless.mkv",
+          "sha256": "fc6212b77cb4a3fb4111aea464d648eb614b44d354321a15701d945057422182"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/original.json",
+          "sha256": "aacb313dcd7bb16aaa8dbd002b9c6ec1c7fd07fb7baacee2d49f5e9d09938b27"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/workflow_api.json",
+          "sha256": "f5e06a2b0eb5ddf53f4b14ce7776d1111e5c20304354c3259d0658784c7a78a5"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/prompt.txt",
+          "sha256": "fe7bda1d0922e34a73798c32cf472a60fb97b711e391cb361d40596e1c7f117b"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/reference.json",
+          "sha256": "1e6d4c1624834b7627c92f5d38f52a15490a611946d7c8c5b520eea08c9b5ad4"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/matte.json",
+          "sha256": "0daee8833bb88f95408d594a709cb8eae966c4927b335e95c029959b9c72e21f"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/staged_generation.json",
+          "sha256": "ab22f77acc847259181fd776e89ebbf9cc2fa214096137a8607686aad9ae1c61"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/sampling_workflow_api.json",
+          "sha256": "a756a387a3bb7c768a3d642d80a6f3fb8cdb9b1e07c6c9f94c69d9fa69eb7f99"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/sampling_submission.json",
+          "sha256": "608f814c998122b1b3d138c017ad9dd9616a7b04a10ae26e6506cdb140819832"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/sampling_history.json",
+          "sha256": "4d9b1b1f48c14b7cea3facb914b39266dd52540a00c86b2587b433f668dd6a79"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/defend_h3_v2/original.latent",
+          "sha256": "a733f025b410565eb495d31e7c482260e30d7576ef9a984aa10d5d608a1ec472"
+        },
+        "guide_image_support_guard_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/support_guard_v1.png",
+          "sha256": "52b375fbaa37f614706773b44377734e4b1cbd3a25cf0f769b7fe1d7be2614b7"
+        },
+        "guide_prompt_support_guard_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/support_guard_v1.prompt.txt",
+          "sha256": "2bcdb739065af7f237021f56cd6c63bc837e1cdc7c7537813c7e158c9d21b3ed"
+        },
+        "guide_generation_support_guard_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_obituary_scribes_veteran/support_guard_v1.generation.json",
+          "sha256": "859262dd86bd3cba14b80208b6657c8c37bcf83becbaf5dbf0082d345c28e227"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 chronological originals and enlarged lowering/brace/held terminal reviewed. Clean intermediate guidance removes stray spearhead ghost. Two hands retain shaft as knees bend and stance widens; scroll frame and inkwell remain attached.20 originals over1000ms, final held guard source120. Native battle phases reviewed; candidate743 focused checks pass."
+      }
+    }
+  ]
+}
