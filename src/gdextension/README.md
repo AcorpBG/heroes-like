@@ -50,9 +50,18 @@ git submodule update --init --recursive
 Build the Linux debug GDExtension library from the repo root:
 
 ```sh
-cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=Debug
+cmake -S src/gdextension -B .artifacts/map_persistence_native_build -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build .artifacts/map_persistence_native_build --parallel 2
 ```
+
+This is the `template_debug` library the editor and headless smokes load. It is
+optimized (`RelWithDebInfo`, also the default when no build type is given)
+because an unoptimized build makes map generation two to three times slower. Use
+`-DCMAKE_BUILD_TYPE=Debug` only when stepping through the code in a debugger.
+Each build tree compiles one godot-cpp flavour: `template_release` for `Release`
+and `MinSizeRel`, `template_debug` otherwise. Set
+`-DAURELION_GODOTCPP_TARGET=template_debug` or `template_release` to choose it
+explicitly; the library name always follows the flavour it links.
 
 Build the Linux release library with a separate build directory:
 
@@ -82,7 +91,8 @@ By default it:
 
 - initializes or updates `third_party/godot-cpp`;
 - configures MSVC with `-G "Visual Studio 17 2022" -A x64`;
-- builds Debug and Release;
+- builds the optimized debug DLL (`RelWithDebInfo` against `template_debug`) and
+  the Release DLL (against `template_release`), each in its own build tree;
 - verifies the expected DLLs in `bin\`;
 - checks `godot --version` before smokes and requires Godot 4.6.2;
 - runs the focused native package and native RMG foundation Godot smokes when
@@ -138,15 +148,19 @@ Godot_v4.6.2-stable_win64.exe --headless --path . tests\native_random_map_gdscri
 The underlying MSVC commands are:
 
 ```powershell
-cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_msvc -G "Visual Studio 17 2022" -A x64
-cmake --build .artifacts/map_persistence_native_build_windows_msvc --config Debug --parallel 2
-cmake --build .artifacts/map_persistence_native_build_windows_msvc --config Release --parallel 2
+cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_msvc -G "Visual Studio 17 2022" -A x64 -DAURELION_GODOTCPP_TARGET=template_debug
+cmake --build .artifacts/map_persistence_native_build_windows_msvc --config RelWithDebInfo --parallel 2
+cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_msvc_release -G "Visual Studio 17 2022" -A x64 -DAURELION_GODOTCPP_TARGET=template_release
+cmake --build .artifacts/map_persistence_native_build_windows_msvc_release --config Release --parallel 2
 ```
+
+Visual Studio builds every `--config` from the same godot-cpp flavour, so the
+debug and release DLLs need separate build trees.
 
 MinGW-w64 is also supported when `g++` is on `PATH`:
 
 ```sh
-cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build .artifacts/map_persistence_native_build_windows_mingw --parallel 2
 cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_mingw_release -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release
 cmake --build .artifacts/map_persistence_native_build_windows_mingw_release --parallel 2
@@ -160,7 +174,7 @@ cmake -S src/gdextension -B .artifacts/map_persistence_native_build_windows_cros
   -DCMAKE_SYSTEM_PROCESSOR=x86_64 \
   -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc \
   -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ \
-  -DCMAKE_BUILD_TYPE=Debug
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build .artifacts/map_persistence_native_build_windows_cross --parallel 2
 ```
 

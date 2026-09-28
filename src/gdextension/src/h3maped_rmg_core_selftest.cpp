@@ -1261,8 +1261,8 @@ int main() {
 						&& selected_create.selected_object_vtable_0x00_known
 						&& selected_create.selected_object_vtable_0x00 == aurelion::h3maped_rmg_core::PROJECTION_OBJECT_VTABLE_0X540B14
 						&& selected_create.selected_source_record_known_0x4a9e40
-						&& selected_create.candidate_decisions.size() > 1
-						&& selected_create.candidate_decisions[1].descriptor_selector_0x4a9e40.selected_from_resolver_state
+						&& selected_create.selected_candidate_decision_known
+						&& selected_create.selected_candidate_decision.descriptor_selector_0x4a9e40.selected_from_resolver_state
 						&& selected_create.selected_wrapper_index_0x4af785 >= 0
 						&& selected_create.selected_descriptor_vector_index_0x398 >= 0
 						&& selected_create.selected_object_record_allocated_0x4aa166

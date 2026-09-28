@@ -22,6 +22,7 @@ void uninitialize_aurelion_map_persistence(ModuleInitializationLevel level) {
 	if (level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
+	MapPackageService::release_runtime_caches();
 }
 
 extern "C" {
