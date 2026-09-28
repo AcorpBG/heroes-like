@@ -44,10 +44,21 @@ static var _normalized_read_scope_depth := 0
 static var _normalized_read_scope_cache: Dictionary = {}
 static var _last_normalized_read_scope_cache_profile: Dictionary = {}
 static var _runtime_normalized_signatures: Dictionary = {}
-static var _spatial_lookup_indexes: Dictionary = {}
-static var _spatial_lookup_signatures: Dictionary = {}
 static var _active_town_visit_indexes: Dictionary = {}
-static var _blocked_tile_indexes: Dictionary = {}
+# Pathing indexes live on the session object itself (metadata is never
+# serialized). A save summary loaded from the same campaign run shares the
+# persisted session_id, so keying these by id let it replace the live game's
+# blocked-tile and spatial indexes.
+const BLOCKED_TILE_INDEX_META := &"_overworld_blocked_tile_indexes"
+const SPATIAL_LOOKUP_INDEX_META := &"_overworld_spatial_lookup_indexes"
+const SPATIAL_LOOKUP_SIGNATURE_META := &"_overworld_spatial_lookup_signature"
+static var _fog_read_scope_session_id := 0
+static var _fog_read_scope_depth := 0
+static var _fog_read_scope_frame := -1
+static var _fog_read_scope_fog: Variant = null
+static var _fog_read_scope_grids: Dictionary = {}
+static var _terrain_passable_cache: Dictionary = {}
+static var _terrain_passable_cache_revision := -1
 static var _movement_rules_profile_active := false
 static var _movement_rules_profile: Dictionary = {}
 static var _pathing_debug_profile: Dictionary = {
@@ -482,18 +493,12 @@ static func player_town_vision_radius() -> int:
 static func is_tile_visible(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
-	if not _fog_state_ready(session):
-		normalize_overworld_state(session)
-	var fog = fog_for_level(session, level)
-	return _grid_cell(fog.get(EXPLORED_TILES_KEY, fog.get(VISIBLE_TILES_KEY, [])), x, y)
+	return _grid_cell(_fog_grids(session, level)[1], x, y)
 
 static func is_tile_explored(session: SessionStateStoreScript.SessionData, x: int, y: int, level: int = -1) -> bool:
 	if session == null:
 		return false
-	if not _fog_state_ready(session):
-		normalize_overworld_state(session)
-	var fog = fog_for_level(session, level)
-	return _grid_cell(fog.get(EXPLORED_TILES_KEY, []), x, y)
+	return _grid_cell(_fog_grids(session, level)[0], x, y)
 
 static func fog_for_level(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
@@ -506,6 +511,59 @@ static func fog_for_level(session: SessionStateStoreScript.SessionData, level: i
 	# A pre-level save's exploration belongs to surface. Do not reveal another
 	# level by copying that grid, and never move a legacy saved hero by inference.
 	return fog if level == int(fog.get("active_level", 0)) else {}
+
+## Opens a fog read scope for one presentation pass (a map layer redraw).
+## Until the matching end call in the same frame, fog lookups for this session
+## skip the readiness check and reuse each level's grids. The grids are live
+## references, so in-place reveals still show; storing a new fog dictionary
+## drops the cache, and a scope left open past its frame is ignored.
+static func begin_fog_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null:
+		return
+	var frame := Engine.get_process_frames()
+	if _fog_read_scope_depth > 0 and _fog_read_scope_frame != frame:
+		_fog_read_scope_depth = 0
+	if _fog_read_scope_depth == 0:
+		_fog_read_scope_session_id = session.get_instance_id()
+		_fog_read_scope_frame = frame
+		_fog_read_scope_fog = null
+		_fog_read_scope_grids = {}
+	if session.get_instance_id() == _fog_read_scope_session_id:
+		_fog_read_scope_depth += 1
+
+static func end_fog_read_scope(session: SessionStateStoreScript.SessionData) -> void:
+	if session == null or _fog_read_scope_depth <= 0 or session.get_instance_id() != _fog_read_scope_session_id:
+		return
+	_fog_read_scope_depth -= 1
+	if _fog_read_scope_depth == 0:
+		_fog_read_scope_fog = null
+		_fog_read_scope_grids = {}
+
+## [explored grid, visible grid] for a level, as is_tile_explored and
+## is_tile_visible read them.
+static func _fog_grids(session: SessionStateStoreScript.SessionData, level: int) -> Array:
+	if (
+		_fog_read_scope_depth > 0
+		and session.get_instance_id() == _fog_read_scope_session_id
+		and _fog_read_scope_frame == Engine.get_process_frames()
+	):
+		if is_same(session.overworld.get(FOG_KEY), _fog_read_scope_fog):
+			var cached = _fog_read_scope_grids.get(level)
+			if cached != null:
+				return cached
+		else:
+			_fog_read_scope_grids = {}
+		var grids := _fog_grids_uncached(session, level)
+		_fog_read_scope_fog = session.overworld.get(FOG_KEY)
+		_fog_read_scope_grids[level] = grids
+		return grids
+	return _fog_grids_uncached(session, level)
+
+static func _fog_grids_uncached(session: SessionStateStoreScript.SessionData, level: int) -> Array:
+	if not _fog_state_ready(session):
+		normalize_overworld_state(session)
+	var fog = fog_for_level(session, level)
+	return [fog.get(EXPLORED_TILES_KEY, []), fog.get(EXPLORED_TILES_KEY, fog.get(VISIBLE_TILES_KEY, []))]
 
 static func _store_level_fog(session: SessionStateStoreScript.SessionData, payload: Dictionary, level: int = -1) -> void:
 	if OverworldLevelRulesScript.level_count(session) == 1:
@@ -912,6 +970,14 @@ static func active_linked_transit_step(
 	return {}
 
 static func active_linked_transit_signature(session: SessionStateStoreScript.SessionData) -> String:
+	# The shell's selected-route signature asks for this several times per
+	# refresh, and each call rescans every resource node. A normalized read
+	# scope guarantees the session is not changing, so compute it once there.
+	var scope_key := ""
+	if session != null and _normalized_read_scope_depth > 0 and String(session.session_id) == _normalized_read_scope_session_id:
+		scope_key = "%d|active_linked_transit_signature" % session.get_instance_id()
+		if _normalized_read_scope_cache.has(scope_key):
+			return String(_normalized_read_scope_cache[scope_key])
 	var rows := []
 	for edge_value in active_linked_transit_edges(session):
 		if not (edge_value is Dictionary):
@@ -928,7 +994,10 @@ static func active_linked_transit_signature(session: SessionStateStoreScript.Ses
 			to_tile.y,
 			int(edge.get("movement_cost", 0)),
 		])
-	return "linked_transit:%s" % ";".join(rows)
+	var signature := "linked_transit:%s" % ";".join(rows)
+	if scope_key != "":
+		_normalized_read_scope_cache[scope_key] = signature
+	return signature
 
 static func try_move_along_route(
 	session: SessionStateStoreScript.SessionData,
@@ -2754,6 +2823,20 @@ static func tile_is_blocked(session: SessionStateStoreScript.SessionData, x: int
 	return _blocked_tile_index(session, level).has(_tile_key(Vector2i(x, y)))
 
 static func terrain_id_is_passable(terrain_id: String) -> bool:
+	# Route searches ask this for every neighbour; the biome table only changes
+	# when content is reloaded, so remember each terrain id's answer until then.
+	var revision := ContentService.get_content_revision()
+	if revision != _terrain_passable_cache_revision:
+		_terrain_passable_cache.clear()
+		_terrain_passable_cache_revision = revision
+	var cached: Variant = _terrain_passable_cache.get(terrain_id)
+	if cached != null:
+		return cached
+	var passable := _terrain_id_is_passable_uncached(terrain_id)
+	_terrain_passable_cache[terrain_id] = passable
+	return passable
+
+static func _terrain_id_is_passable_uncached(terrain_id: String) -> bool:
 	var normalized := ContentService.normalize_terrain_id(String(terrain_id))
 	if normalized in ["rock", "water"]:
 		return false
@@ -2886,7 +2969,7 @@ static func _refresh_blocked_tile_index(session: SessionStateStoreScript.Session
 	var level_indexes := {}
 	for level in range(OverworldLevelRulesScript.level_count(session)):
 		level_indexes[level] = _build_blocked_tile_index(session, level)
-	_blocked_tile_indexes[str(session.session_id)] = level_indexes
+	session.set_meta(BLOCKED_TILE_INDEX_META, level_indexes)
 	var index: Dictionary = level_indexes.get(hero_level(session), {})
 	_rules_profile_set("blocked_index", "rebuilt", true)
 	_rules_profile_set("blocked_index", "node_count", resource_nodes.size() if resource_nodes is Array else 0)
@@ -2902,11 +2985,10 @@ static func _refresh_blocked_tile_index(session: SessionStateStoreScript.Session
 static func _refresh_blocked_tile_index_for_interaction(session: SessionStateStoreScript.SessionData, topology_facts: Dictionary) -> void:
 	if session == null:
 		return
-	var session_id := str(session.session_id)
 	var blocks_changed := bool(topology_facts.get("blocks_changed", true))
 	var body_tiles_changed := bool(topology_facts.get("body_tiles_changed", true))
 	var contract_known := bool(topology_facts.get("contract_known", false))
-	if contract_known and not blocks_changed and not body_tiles_changed and _blocked_tile_indexes.has(session_id):
+	if contract_known and not blocks_changed and not body_tiles_changed and session.has_meta(BLOCKED_TILE_INDEX_META):
 		var index: Dictionary = _blocked_tile_index(session)
 		_rules_profile_set("blocked_index", "rebuilt", false)
 		_rules_profile_set("blocked_index", "mode", "skipped")
@@ -3086,21 +3168,20 @@ static func _profile_scenario_event_evaluation(session: SessionStateStoreScript.
 static func _blocked_tile_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
-	var session_id := str(session.session_id)
-	if not _blocked_tile_indexes.has(session_id):
+	if not session.has_meta(BLOCKED_TILE_INDEX_META):
 		_refresh_blocked_tile_index(session)
-	return _blocked_tile_indexes.get(session_id, {}).get(OverworldLevelRulesScript.query_level(session, level), {})
+	var level_indexes: Dictionary = session.get_meta(BLOCKED_TILE_INDEX_META, {})
+	return level_indexes.get(OverworldLevelRulesScript.query_level(session, level), {})
 
 static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData, level: int = -1) -> Dictionary:
 	if session == null:
 		return {}
-	var session_id := String(session.session_id)
 	var signature := _spatial_lookup_signature(session)
-	if not _spatial_lookup_indexes.has(session_id) or String(_spatial_lookup_signatures.get(session_id, "")) != signature:
-		_spatial_lookup_indexes[session_id] = {}
-		_spatial_lookup_signatures[session_id] = signature
+	if not session.has_meta(SPATIAL_LOOKUP_INDEX_META) or session.get_meta(SPATIAL_LOOKUP_SIGNATURE_META, []) != signature:
+		session.set_meta(SPATIAL_LOOKUP_INDEX_META, {})
+		session.set_meta(SPATIAL_LOOKUP_SIGNATURE_META, signature)
 	var resolved_level := OverworldLevelRulesScript.query_level(session, level)
-	var levels: Dictionary = _spatial_lookup_indexes[session_id]
+	var levels: Dictionary = session.get_meta(SPATIAL_LOOKUP_INDEX_META)
 	if not levels.has(resolved_level):
 		levels[resolved_level] = _build_spatial_lookup_index(session, resolved_level)
 	return levels[resolved_level]
@@ -3108,24 +3189,23 @@ static func _spatial_lookup_index(session: SessionStateStoreScript.SessionData, 
 static func invalidate_spatial_lookup(session: SessionStateStoreScript.SessionData) -> void:
 	if session == null:
 		return
-	var session_id := String(session.session_id)
-	_spatial_lookup_indexes.erase(session_id)
-	_spatial_lookup_signatures.erase(session_id)
+	session.remove_meta(SPATIAL_LOOKUP_INDEX_META)
+	session.remove_meta(SPATIAL_LOOKUP_SIGNATURE_META)
 
-static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionData) -> String:
+static func _spatial_lookup_signature(session: SessionStateStoreScript.SessionData) -> Array:
+	# Route searches consult this once per neighbour, so compare plain values
+	# instead of formatting and joining a string on every lookup.
 	if session == null:
-		return ""
-	var map_size := derive_map_size(session)
-	return "|".join([
-		String(session.session_id),
-		String(session.scenario_id),
-		"%d,%d" % [map_size.x, map_size.y],
-		str(OverworldLevelRulesScript.level_count(session)),
-		str(_collection_size(session.overworld.get("towns", []))),
-		str(_collection_size(session.overworld.get("resource_nodes", []))),
-		str(_collection_size(session.overworld.get("artifact_nodes", []))),
-		str(_collection_size(session.overworld.get("encounters", []))),
-	])
+		return []
+	return [
+		session.scenario_id,
+		derive_map_size(session),
+		OverworldLevelRulesScript.level_count(session),
+		_collection_size(session.overworld.get("towns", [])),
+		_collection_size(session.overworld.get("resource_nodes", [])),
+		_collection_size(session.overworld.get("artifact_nodes", [])),
+		_collection_size(session.overworld.get("encounters", [])),
+	]
 
 static func placement_level(session: SessionStateStoreScript.SessionData, placement_id: String, fallback: int = 0) -> int:
 	if session == null or placement_id == "":
@@ -13061,28 +13141,32 @@ static func _reveal_route_fog(session: SessionStateStoreScript.SessionData, trav
 		_normalize_fog_of_war(session)
 	var map_size := derive_map_size(session)
 	_rules_profile_set("fog", "grid_cells", max(map_size.x, 0) * max(map_size.y, 0))
-	var fog: Dictionary = session.overworld.get(FOG_KEY, {})
+	var fog: Dictionary = fog_for_level(session)
 	var before_explored_count := int(fog.get("explored_count", -1))
 	var normalize_started_usec := _rules_profile_timer()
-	var explored_tiles := _normalize_visibility_grid(fog.get(EXPLORED_TILES_KEY, []), map_size)
+	# Reveal into the stored explored grid when it already has the map's shape;
+	# only a malformed legacy grid is rebuilt. Exploration is permanent, so
+	# the stored rows only ever gain revealed cells.
+	var explored_tiles: Array = fog.get(EXPLORED_TILES_KEY, [])
+	if not _visibility_grid_has_shape(explored_tiles, map_size):
+		explored_tiles = _normalize_visibility_grid(explored_tiles, map_size)
 	_rules_profile_add_ms("fog_normalize_grid_ms", normalize_started_usec)
 	var hero: Dictionary = session.overworld.get("hero", {}) if session.overworld.get("hero", {}) is Dictionary else {}
 	var route_reveal_started_usec := _rules_profile_timer()
+	# The scouting radius depends on the hero's artifacts and specialties, not
+	# on the tile, so resolve it once and reveal around each traversed tile.
+	var scouting_radius := HeroCommandRulesScript.scouting_radius_for_hero(hero)
 	for tile_value in traversed_tiles:
 		var tile := _route_tile_from_variant(tile_value)
 		if tile.x < 0 or tile.y < 0:
 			continue
-		var route_hero := hero.duplicate(true)
-		route_hero["position"] = OverworldLevelRulesScript.moved_position(hero.get("position", {}), tile)
-		_apply_hero_reveal(explored_tiles, route_hero, map_size)
+		_apply_site_reveal(explored_tiles, {"x": tile.x, "y": tile.y}, scouting_radius, map_size)
 	_rules_profile_add_ms("fog_apply_route_reveal_ms", route_reveal_started_usec)
 	var sources_started_usec := _rules_profile_timer()
 	_reveal_all_current_fog_sources(session, explored_tiles, map_size)
 	_rules_profile_add_ms("fog_reveal_current_sources_ms", sources_started_usec)
-	var duplicate_started_usec := _rules_profile_timer()
-	var visible_tiles := _duplicate_visibility_grid(explored_tiles)
-	_rules_profile_add_ms("fog_duplicate_grid_ms", duplicate_started_usec)
-	var payload := _build_fog_payload(visible_tiles, explored_tiles, map_size)
+	# Visible tiles alias explored tiles in this fog model; share one grid.
+	var payload := _build_fog_payload(explored_tiles, explored_tiles, map_size)
 	if before_explored_count >= 0:
 		_rules_profile_set("fog", "changed_cells", max(0, int(payload.get("explored_count", before_explored_count)) - before_explored_count))
 	_store_level_fog(session, payload)
@@ -13179,8 +13263,8 @@ static func _fog_state_ready(session: SessionStateStoreScript.SessionData) -> bo
 
 static func _build_fog_payload(visible_tiles: Array, explored_tiles: Array, map_size: Vector2i) -> Dictionary:
 	var count_started_usec := _rules_profile_timer()
-	var visible_count := _count_grid(visible_tiles)
 	var explored_count := _count_grid(explored_tiles)
+	var visible_count := explored_count if is_same(visible_tiles, explored_tiles) else _count_grid(visible_tiles)
 	_rules_profile_add_ms("fog_count_grid_ms", count_started_usec)
 	return {
 		VISIBLE_TILES_KEY: visible_tiles,
@@ -13201,6 +13285,14 @@ static func _normalize_visibility_grid(value: Variant, map_size: Vector2i) -> Ar
 		for x in range(min(row.size(), map_size.x)):
 			normalized[y][x] = bool(row[x])
 	return normalized
+
+static func _visibility_grid_has_shape(grid: Variant, map_size: Vector2i) -> bool:
+	if not (grid is Array) or grid.size() != map_size.y:
+		return false
+	for row in grid:
+		if not (row is Array) or row.size() != map_size.x:
+			return false
+	return true
 
 static func _merge_visibility_grids(base: Array, overlay: Array, map_size: Vector2i) -> Array:
 	for y in range(max(map_size.y, 0)):

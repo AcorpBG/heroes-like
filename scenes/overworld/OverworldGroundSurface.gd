@@ -3,6 +3,7 @@ extends TextureRect
 const GROUND_SHADER = preload("res://scenes/overworld/overworld_ground_surface.gdshader")
 var slots: Dictionary = {}
 var data_image: Image
+var lookup_bytes := PackedByteArray()
 var data_texture: ImageTexture
 var map_signature: int = -1
 var fog_signature: int = -1
@@ -41,34 +42,52 @@ func configure(config: Dictionary, atlas: Texture2D) -> void:
 	material = shader_material
 	map_signature = -1
 	fog_signature = -1
+	lookup_bytes = PackedByteArray()
 	visible = false
 
 func sync_lookup(rows: Array, dimensions: Vector2i, terrain_signature: int, explored: Array, exploration_signature: int) -> void:
 	if not configured:
 		return
-	var map_changed := map_signature != terrain_signature
+	var byte_count := dimensions.x * dimensions.y * 4
+	var map_changed := map_signature != terrain_signature or lookup_bytes.size() != byte_count
 	var fog_changed := fog_signature != exploration_signature
 	if not map_changed and not fog_changed:
 		return
 	var start := Time.get_ticks_usec()
+	# One RGBA8 texel per tile: red is the material slot, green is explored.
+	# Fill a byte buffer and upload it once instead of per-pixel Color calls.
 	if map_changed:
 		missing_terrain_ids.clear()
-		data_image = Image.create(dimensions.x, dimensions.y, false, Image.FORMAT_RGBA8)
+		lookup_bytes.resize(byte_count)
+		lookup_bytes.fill(0)
+		var slot_by_cell: Dictionary = {}
+		var offset := 0
 		for y in range(dimensions.y):
+			var row = rows[y]
 			for x in range(dimensions.x):
-				var terrain_id := str(rows[y][x]).to_lower()
-				if not slots.has(terrain_id):
-					if terrain_id not in missing_terrain_ids:
-						missing_terrain_ids.append(terrain_id)
-						push_error("Unmapped ground material: " + terrain_id)
-				data_image.set_pixel(x, y, Color(float(slots.get(terrain_id, 255)) / 255.0, 0, 0, 1))
+				var cell = row[x]
+				var slot = slot_by_cell.get(cell)
+				if slot == null:
+					var terrain_id := str(cell).to_lower()
+					if not slots.has(terrain_id):
+						if terrain_id not in missing_terrain_ids:
+							missing_terrain_ids.append(terrain_id)
+							push_error("Unmapped ground material: " + terrain_id)
+					slot = int(slots.get(terrain_id, 255))
+					slot_by_cell[cell] = slot
+				lookup_bytes[offset] = slot
+				lookup_bytes[offset + 3] = 255
+				offset += 4
 		map_signature = terrain_signature
 		map_uploads += 1
 	for y in range(dimensions.y):
+		var explored_row = explored[y] if y < explored.size() and explored[y] is Array else []
+		var explored_width: int = explored_row.size()
+		var offset := y * dimensions.x * 4 + 1
 		for x in range(dimensions.x):
-			var pixel := data_image.get_pixel(x, y)
-			pixel.g = 1.0 if y < explored.size() and x < explored[y].size() and bool(explored[y][x]) else 0.0
-			data_image.set_pixel(x, y, pixel)
+			lookup_bytes[offset] = 255 if x < explored_width and bool(explored_row[x]) else 0
+			offset += 4
+	data_image = Image.create_from_data(dimensions.x, dimensions.y, false, Image.FORMAT_RGBA8, lookup_bytes)
 	if data_texture == null or data_texture.get_size() != Vector2(dimensions):
 		data_texture = ImageTexture.create_from_image(data_image)
 	else:
