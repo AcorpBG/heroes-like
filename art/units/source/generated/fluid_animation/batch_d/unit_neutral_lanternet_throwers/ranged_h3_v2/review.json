@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "reason": "Continuous body and reload, but expanding net clips upper canvas before fully releasing. Runtime owns projectile. Reassess with 128px additional vertical margin, concise physical throw prompt, compact held net; separate only fully detached projectile pixels from character layer after verified release."
+}

@@ -1,0 +1,227 @@
+{
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v4",
+    "hit_h3_v4",
+    "defend_h3_v1",
+    "cast_h3_v3",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "All124 originals for each selected take reviewed chronologically, enlarged hands/net/feet/alpha inspected, and all191 selected native Godot action phases inspected. Reciprocal walk, empty-fist melee, gathered-net recoil, held crouched guard, empty-hand support signal and grounded collapse are coherent. Ranged chest toss14-54 joins reviewed recovery56-112 at identical empty follow-through guide; detached projectile separated only across verified empty x640 gap after source44, preserving all body/hand pixels and game projectile ownership. Native join retains feet, body scale and empty hands. Original eight-frame articulated idle retained. Candidate673 focused checks pass. Frame-by-frame review, not continuous video playback or manual playtest."
+  },
+  "clip_sequences": {
+    "ranged": {
+      "frames": [
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 14
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 16
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 18
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 20
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 22
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 24
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 26
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 28
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 30
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 32
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 34
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 36
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 38
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 40
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 42
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 44
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 46
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 48
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 50
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 52
+        },
+        {
+          "take": "ranged_h3_v4",
+          "video_frame": 54
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 56
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 58
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 60
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 62
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 64
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 66
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 68
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 70
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 72
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 74
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 78
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 82
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 86
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 94
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 98
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 100
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 102
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 104
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 106
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 108
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 110
+        },
+        {
+          "take": "ranged_h3_v3",
+          "video_frame": 112
+        }
+      ],
+      "timing": {
+        "frame_msec": 30,
+        "contact_frame": 15
+      }
+    }
+  }
+}

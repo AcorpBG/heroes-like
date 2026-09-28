@@ -1,0 +1,4916 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_lanternet_throwers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_023",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_102",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "hit_h3_104",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "hit_h3_106",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_110",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "hit_h3_112",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_017",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_023",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_041",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_047",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_053",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_059",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_065",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_071",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_083",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_089",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_095",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "cast_h3_098",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "cast_h3_101",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_107",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_107.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 107,
+          "video_time_seconds": 4.458333333333333
+        },
+        {
+          "name": "cast_h3_110",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            416,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v4_ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_056",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_060",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_064",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_080",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_084",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_110",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        },
+        {
+          "name": "ranged_h3_v3_ranged_h3_112",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 8,
+          "frame_durations_msec": [
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            80,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "hit": {
+          "indices": [
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 15
+        },
+        "cast": {
+          "indices": [
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 8
+        },
+        "death": {
+          "indices": [
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140
+          ],
+          "frame_msec": 52,
+          "loop": false,
+          "static_frame": 24
+        },
+        "ranged": {
+          "frame_msec": 30,
+          "contact_frame": 15,
+          "indices": [
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190
+          ],
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/original_lossless.mkv",
+          "sha256": "87d43f5a8c4c4c07f21dc941f462a155e6c1a4a8ff850cce20c55034b5d9cb59"
+        },
+        "move_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/original.json",
+          "sha256": "d8a5ec300e65b5c870ea9fa442c650b230d743e961c62a93caa757f5443c1f91"
+        },
+        "move_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/workflow_api.json",
+          "sha256": "15b1ee990499bd42a0ad8f7bbb2fafa5bea91915161a71a26000b11d7c2737dc"
+        },
+        "move_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/prompt.txt",
+          "sha256": "48d53189864e863c64804475b5c7975186146a9bcccf6da83102e0e8d05af7b0"
+        },
+        "move_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/reference.json",
+          "sha256": "444574502774be58657d2257ac6476fc5222607376d2ec8e2bac4142ee3c8410"
+        },
+        "move_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte.json",
+          "sha256": "c330f02cdca53d8aceae04b85ebc0d4b7654d2cbc79af997a8fa6223f5ef1653"
+        },
+        "move_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/staged_generation.json",
+          "sha256": "7c8fe7b0a98b29d4ceb5d533ff617306a9819593da44661a138fbfcddc5d736e"
+        },
+        "move_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "6f387e367258d4417e59981d4331a371a832cb9d9c83f8e95f192c3a9f2b9656"
+        },
+        "move_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/sampling_submission.json",
+          "sha256": "b985a433499cea6760abc39660ec42a486da71e3cc6aa1341e34c9b15562c2a2"
+        },
+        "move_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/sampling_history.json",
+          "sha256": "c177a999816c2dfc703dcd918fc913eeb845954c6a7796528cd95b88fb8cfcf7"
+        },
+        "move_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/original.latent",
+          "sha256": "88b85a14f80117eb092e7f2e3a8197366e43a90b1cc47c94920dd622f0bbf6e8"
+        },
+        "attack_h3_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/original_lossless.mkv",
+          "sha256": "6c463f00936d2ead212fb6ef7783c34314b04756c253f9557926bc2b5d18e5ca"
+        },
+        "attack_h3_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/original.json",
+          "sha256": "ca628b471cdd1d241ce70cb6bcc9fe812f702287e56e26b8db240d89065b5ae6"
+        },
+        "attack_h3_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/workflow_api.json",
+          "sha256": "088f680167aa32b611f1866244ca4e7cc0064aca93450763261436fd4ec41a66"
+        },
+        "attack_h3_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/prompt.txt",
+          "sha256": "3a11324d1568fca49312c41ecc9dbbed7cc92df00387c1f1d15ec839b169a118"
+        },
+        "attack_h3_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/reference.json",
+          "sha256": "0b1298ee541b34eb66d5164125b928a4368eba6ca7f4d1314114399924c75aee"
+        },
+        "attack_h3_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte.json",
+          "sha256": "3cf79f81683ba0cf4e796565788ba8bb0dfc83149d52fdd2c233f2c1232779d5"
+        },
+        "attack_h3_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/staged_generation.json",
+          "sha256": "e6dac6dcd42fec02ddfd0086fa1981e862522c353be119cc44ae7dca251a0be3"
+        },
+        "attack_h3_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/sampling_workflow_api.json",
+          "sha256": "abb60dce06e6056cb29d9602597dc98fd8776e706b0dfc7a40a9c88906ef3cfd"
+        },
+        "attack_h3_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/sampling_submission.json",
+          "sha256": "0480477c21357a307f7db8c378c67705627d40c330039905ee04b78e98a174cd"
+        },
+        "attack_h3_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/sampling_history.json",
+          "sha256": "095306d64f8c4711fc2a2963c3c85c1a5d6491f914b426400316d9be61a80aae"
+        },
+        "attack_h3_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/original.latent",
+          "sha256": "6f8c8224ec8a50c3e1f85079e131f5d294e2a92576ccfe17c79c7f9ca769ef7b"
+        },
+        "attack_h3_v4_guide_image_melee_contact_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.png",
+          "sha256": "8f490bd89a843a835600e873733c81a9a87aaa2a9da8d25b9fb5ceefe05bbbe1"
+        },
+        "attack_h3_v4_guide_prompt_melee_contact_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.prompt.txt",
+          "sha256": "b60ebeab91b9d5cc306662dfd712b851bec8cc69208623cc62790bca456ba6fb"
+        },
+        "attack_h3_v4_guide_generation_melee_contact_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.generation.json",
+          "sha256": "fd7cc18f87819c34e0d185c959e02677379a6247430a8f653133f0687f99f139"
+        },
+        "hit_h3_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/original_lossless.mkv",
+          "sha256": "4f97e988b180fc0b70a3fa290277d79f4b4dc166fbaf30f0400306ea72acd67b"
+        },
+        "hit_h3_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/original.json",
+          "sha256": "16c20c7f8548d212190ab1b63a56a55dd91aa9bfedb68299ce4bb65d7670a449"
+        },
+        "hit_h3_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/workflow_api.json",
+          "sha256": "1597cf8f14f2aa75c7b13b1b8ba67177707e3a3978c90b9cb75f64c2c48dc1bd"
+        },
+        "hit_h3_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/prompt.txt",
+          "sha256": "ac32518f474d93158cfab0482b54fe0b42c4c51ca8a9fba6545a50a509e59dfd"
+        },
+        "hit_h3_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/reference.json",
+          "sha256": "4b7b32e786a93f42c3f5d039e3f2d95961385076b49e72213c58dacb00ffe9cf"
+        },
+        "hit_h3_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte.json",
+          "sha256": "5e871e8abfae2c9f8f00c1031ba332369bb90a65d4a914732b481e48d1ca4c4f"
+        },
+        "hit_h3_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/staged_generation.json",
+          "sha256": "43de000bcaf353ca59d1d3ee54d60ebb2476415398afcf125ade42c05fde5bcf"
+        },
+        "hit_h3_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/sampling_workflow_api.json",
+          "sha256": "d3d28bb4d5670ea14ef59d5dcc0fa35b05ba4c4d4e94916ee09c7752853657eb"
+        },
+        "hit_h3_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/sampling_submission.json",
+          "sha256": "786f2eea406d1c6a5147ccd22af838f8c04a3f76f4f9b644a7cb2cf1ef61161e"
+        },
+        "hit_h3_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/sampling_history.json",
+          "sha256": "34f7bcb458c5caa300564a8f9e5a57f4d96c324eaf1f5ac559744b856e9dd0fa"
+        },
+        "hit_h3_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/original.latent",
+          "sha256": "d2f87de5fe7524501fe559e9356edec5984e3889afa7c567681e9dcce51412f7"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/original_lossless.mkv",
+          "sha256": "65313353731c9b448d8051f22b50a493b770565210e3c6cb16bae7af1c52b6d7"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/original.json",
+          "sha256": "5613c118fcb286f55a9dfda4e2ba2c6ae7c3b2047bb411a9abfd52328d6c363c"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/workflow_api.json",
+          "sha256": "52ad82609cb0c573970788c585a353893efa8eb72bbc77202a6b60adf4102f5f"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/prompt.txt",
+          "sha256": "7baabd4c5aa263ebff8c0e6893b6b29f999f8416f56df7e04e95ede05166a451"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/reference.json",
+          "sha256": "4d0d69d81ec82e7f397e54f66ba2629b2b3e78339cf1022efd53c8cf1f15bff7"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte.json",
+          "sha256": "34729c080b445c557d4ff43efd3c933a07f0ff19a1ab1fc03fff5ca969e7da87"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/staged_generation.json",
+          "sha256": "c8a550be786fdbe3aa3a01174af62b290fe458f2eb681394f02227208e739ef4"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "984261c68b429e663e3545bcc2cf7263aa32cd1ebb65000dcaf1e2b6dbad415a"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/sampling_submission.json",
+          "sha256": "e059dc7cffb71390df468d2342a101ee266b5353a449773c050c9c2c6185fc65"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/sampling_history.json",
+          "sha256": "f61b506e64c705243de35cd7a554daf46dcaacb2dfcc75ecee9198086aea7d51"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/original.latent",
+          "sha256": "53ff50d566f7ee89a47cd8a9322e4ea59442508241a59230a9a92da0a7f2fba2"
+        },
+        "cast_h3_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/original_lossless.mkv",
+          "sha256": "ccb1585633d2b252e4fe38d41996b513291eaf453708a88d1df739db3f5a24c9"
+        },
+        "cast_h3_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/original.json",
+          "sha256": "e46c130aa85d94b5cf77a0538bbfeacb55ee14f18c5249fc34748067951c132f"
+        },
+        "cast_h3_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/workflow_api.json",
+          "sha256": "b33628229e0dd7ddc70e38b23ce21a8ab327b7a8fd377205a0cca1f85607449f"
+        },
+        "cast_h3_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/prompt.txt",
+          "sha256": "49e51f01422da39625d8b91ef08491181bebfb33e5251effa0f5c5b543d31d1c"
+        },
+        "cast_h3_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/reference.json",
+          "sha256": "4b7b32e786a93f42c3f5d039e3f2d95961385076b49e72213c58dacb00ffe9cf"
+        },
+        "cast_h3_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte.json",
+          "sha256": "694eee9f1ae88020ec5510208e1c623623567c33f56fa533a03e74b984f93db4"
+        },
+        "cast_h3_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/staged_generation.json",
+          "sha256": "304811448a05c0ae9835f3a5498d192591c7d8cb1ed026c0fde7caac516ada19"
+        },
+        "cast_h3_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/sampling_workflow_api.json",
+          "sha256": "ac978879ae534068698cee08413e5b8cc5c11116ac6143e60558b1c1b6233a77"
+        },
+        "cast_h3_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/sampling_submission.json",
+          "sha256": "c70495123721b623cfabfc9e11b9d06c46df5150c221244dc1db3c041e561c85"
+        },
+        "cast_h3_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/sampling_history.json",
+          "sha256": "6a8e4ec9bf815a58031f1776c86d96ea0ce34c2f3f8b7bb172d2d097dfe87228"
+        },
+        "cast_h3_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/original.latent",
+          "sha256": "66fb3007818689eef53f043d249f8a6c9a3cde8b34f73d52f3208950369431d0"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/original_lossless.mkv",
+          "sha256": "bce9e03bf289922e97bb876a86d2928fbe932424e06344900a1d27495fa440c6"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/original.json",
+          "sha256": "234c7c19998246afe37e60231671703f896f1fda60f40a0c3876fd5893710771"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/workflow_api.json",
+          "sha256": "3d91f7ff8e4b6dd18e238123f1cb34a05629fede5abe1f92b2d33d345fa48f97"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/prompt.txt",
+          "sha256": "0dafa81f2695aa2bf38501647e23d349ef2b9be9a28216f715b7844bbc4c96c0"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/reference.json",
+          "sha256": "b52851032d36c6d996c4b5fafb5c50eaad1b5eac402ba95557fe90f15f44fcba"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte.json",
+          "sha256": "b76550c2ff6002a92e99c4714e2996be7e26f4dbdcf1b9857abbd99aab17aa6c"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/staged_generation.json",
+          "sha256": "bfad55eb55d98fb8a2d5ac7cd974322878bc93391d6063044538b765593d5832"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "efb02c81cf1a8da9eac48988fdb83aaa392a5036ae9671ee601bc70d80b09822"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/sampling_submission.json",
+          "sha256": "a196b0e661e28ee0fa0cd3e13a738f93a2e957d27cb19989805edc0300c7dec1"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/sampling_history.json",
+          "sha256": "f89e73bbd42479fdfefdc8baa3f71ff477a07e443f43f6e59a4947ae42a4cc26"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/original.latent",
+          "sha256": "fb767ad26d117a186e3a5e8786112b4e8fba552dfa1c8ebed53664685e1c005b"
+        },
+        "ranged_h3_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original_lossless.mkv",
+          "sha256": "cc8f9b1230d20cbc483169ec705e70e341740dba63edc084fa288e6c4d9db4bd"
+        },
+        "ranged_h3_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original.json",
+          "sha256": "608bfbd47b7f5d6799d02c3a3b388d055b3595c8e5b6c198df949ce6c2550382"
+        },
+        "ranged_h3_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/workflow_api.json",
+          "sha256": "6e45a1f7d65c61cef01b36222e60d1a658e82ac7356e2a749090c6b14754fe7f"
+        },
+        "ranged_h3_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/prompt.txt",
+          "sha256": "b9ed14abc344c273a8028c4ec9e805141e962dd83293a132a1f1c1f56e5cb734"
+        },
+        "ranged_h3_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/reference.json",
+          "sha256": "686a98977a17edbe2827109507a7a1a95d05fd754fad5853ec889a7a034854cd"
+        },
+        "ranged_h3_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte.json",
+          "sha256": "6817c77c70819ac66dc447405da5d43f061dbb2bb893a0fd533b2efe86186a9e"
+        },
+        "ranged_h3_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/staged_generation.json",
+          "sha256": "e325321472335327ac260ddcaa063a284b27ef4bb950103f778455a7559abb83"
+        },
+        "ranged_h3_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_workflow_api.json",
+          "sha256": "a6af1fad4e6aa96ab104bf005691551df920e06d5f34f4b6ea54d0114ead7b4d"
+        },
+        "ranged_h3_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_submission.json",
+          "sha256": "93889a94180eb4fbf1e419f632ffaad7e8be80308558715379bfa8b5a4652ab5"
+        },
+        "ranged_h3_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_history.json",
+          "sha256": "0d0de6ad3ba95c5d65db9f61b9acae02244aa4693146d8403424c4f5a8e51b12"
+        },
+        "ranged_h3_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original.latent",
+          "sha256": "8c1327038afb9045c425bef72cf30f966dc6079a9d4e569fec68e31f3bcfd87e"
+        },
+        "ranged_h3_v4_guide_image_ranged_windup_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.png",
+          "sha256": "5f2eb8238d0ea2a6ecefbc0083faff44aa06a1a43936e7b3e29c88c29373b8cf"
+        },
+        "ranged_h3_v4_guide_prompt_ranged_windup_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.prompt.txt",
+          "sha256": "4352f0eefc65889bdd8391fa8ab49889a3c94ea3d60e6e279b19e92925e91881"
+        },
+        "ranged_h3_v4_guide_generation_ranged_windup_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.generation.json",
+          "sha256": "744788d6c2ad0d6929f6a21bcc15d3a4487bae861180234da56750073c9d9500"
+        },
+        "ranged_h3_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/original_lossless.mkv",
+          "sha256": "c72c38b70cf54c8296254416f5e7e9e671a3009fea82b8a9ea3f078480bb1221"
+        },
+        "ranged_h3_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/original.json",
+          "sha256": "caf1052117aaa94f8f2753399e1fb4b443248b7a72ecdceb1f725e336c336429"
+        },
+        "ranged_h3_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/workflow_api.json",
+          "sha256": "704a1ddda3ab39c1a227edc005e981a9feb14bb033df101bd59cbec17c986918"
+        },
+        "ranged_h3_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/prompt.txt",
+          "sha256": "6c9e5c0d066d2b47ddecb96a82644c7aa05e3cf09c42bc43c2472caca0844ee0"
+        },
+        "ranged_h3_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/reference.json",
+          "sha256": "3997e4c16a9515ca908ea3252529b2ea9fd940fb85042d686e778a364f005e51"
+        },
+        "ranged_h3_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte.json",
+          "sha256": "86f19f92f09f9b204494fce9233e88518209cad24ae8d023ce8d688a944cf7ff"
+        },
+        "ranged_h3_v3_extract_ranges.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/extract_ranges.json",
+          "sha256": "c546b195f86f9697605e3890a99d95bd0cb8988e86827770682acea38ad95ac7"
+        },
+        "ranged_h3_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/staged_generation.json",
+          "sha256": "99e9a4478d2fa0fec35b680ef3a4d68d29736623233cbe4818e00fe0aa7a2a69"
+        },
+        "ranged_h3_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/sampling_workflow_api.json",
+          "sha256": "70d384afd4ab4ee174b5a9011499f248478b9a92465bf52b0cff8a3fa36ee0e6"
+        },
+        "ranged_h3_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/sampling_submission.json",
+          "sha256": "f817d0a20c560a8d46ae4a4d1425f86899987a76cb788a2926819d4f29bd2821"
+        },
+        "ranged_h3_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/sampling_history.json",
+          "sha256": "0f610ccce7a7d99e7566cba55404945a2ed7e3fe800c4543e20e1f26c07ae87c"
+        },
+        "ranged_h3_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/original.latent",
+          "sha256": "28a7acf9ba9154db6c6abef6235cbd15f7aaa7636b42ac5ca64847663cfe555e"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/runtime_profile.json",
+          "sha256": "99169826c1e309b912127329775abbae4ceccf610c8a8691d3d7f1f1fdf722fa"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "All124 originals for each selected take reviewed chronologically, enlarged hands/net/feet/alpha inspected, and all191 selected native Godot action phases inspected. Reciprocal walk, empty-fist melee, gathered-net recoil, held crouched guard, empty-hand support signal and grounded collapse are coherent. Ranged chest toss14-54 joins reviewed recovery56-112 at identical empty follow-through guide; detached projectile separated only across verified empty x640 gap after source44, preserving all body/hand pixels and game projectile ownership. Native join retains feet, body scale and empty hands. Original eight-frame articulated idle retained. Candidate673 focused checks pass. Frame-by-frame review, not continuous video playback or manual playtest."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/move_h3_v2/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/attack_h3_v4/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_106.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/hit_h3_v4/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/defend_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_053.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_059.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_083.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_089.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_095.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_101.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_107.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/death_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_106.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_110.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v3/matte/rgba_112.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ]
+    }
+  ]
+}

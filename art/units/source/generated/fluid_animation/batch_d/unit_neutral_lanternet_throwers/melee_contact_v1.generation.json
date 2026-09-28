@@ -1,0 +1,19 @@
+{
+  "tool": "image_gen built-in",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.png",
+    "sha256": "8f490bd89a843a835600e873733c81a9a87aaa2a9da8d25b9fb5ceefe05bbbe1"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.prompt.txt",
+    "sha256": "b60ebeab91b9d5cc306662dfd712b851bec8cc69208623cc62790bca456ba6fb"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/cast_h3_v3/guide_0_rgba.png",
+      "sha256": "7b269e0d1d4ba2fd0522d9fd1d3d3cbcdc748211fe7da3f42a7e501dfd11a7fe"
+    }
+  ],
+  "generated_original_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-c52f5e4b-25ec-4c90-ac26-117d6d782bb7.png",
+  "review": "Two arms, two grounded legs; closed fist extended screen-right, opposite hand retains gathered lantern net. Original output alpha inspected on colored background. Whole-source scale 0.286 matches 727px anatomical height to original 208px runtime height; anchor at mid-foot baseline (740,890)."
+}

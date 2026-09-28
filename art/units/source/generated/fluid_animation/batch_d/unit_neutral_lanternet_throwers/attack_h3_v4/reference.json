@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "29ebfaa2712136939a579f2f71cc1d7229450d27758d5e231725732f918a9af7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a6f6ea21b345405e6a3da4739c6e53ea9a9d86f4baf392fb58100580bb28196b",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "punch_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/melee_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          740,
+          890
+        ],
+        "scale": 0.572,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "8f490bd89a843a835600e873733c81a9a87aaa2a9da8d25b9fb5ceefe05bbbe1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "adc0ed7a34deb61190e8bb5e3db0b19dd53ec40ee940d333a50ae46d7270af55",
+      "runtime_source_scale": 0.286
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

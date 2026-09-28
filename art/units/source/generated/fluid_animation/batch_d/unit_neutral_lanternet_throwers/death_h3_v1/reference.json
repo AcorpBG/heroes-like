@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "29ebfaa2712136939a579f2f71cc1d7229450d27758d5e231725732f918a9af7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1cb0ced641f4fd2fad2bea67f0fbb620db564a1499b59a4ac1937d8907ff8837",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "dead_cold",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+        "rects": [
+          [
+            866,
+            1023,
+            1225,
+            1241
+          ]
+        ],
+        "anchor": [
+          1042,
+          1221
+        ],
+        "scale": 1.38,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "81195809a937dc10d08efc33ff17d9f522c2d624d489874623cd7733bcc60c42",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "feb19b8d68033d94a2f4d527b998f7a649c2b9a4bc92a2e645a7a77e0b48d370",
+      "runtime_source_scale": 0.69
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

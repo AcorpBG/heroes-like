@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 7.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "One original Lanternet Thrower, a human woman facing screen right in an elevated orthographic three-quarter view. Exactly two arms and two booted legs. Brown braided hair, olive headband, green scarf and tattered green cape, brown fitted leather armor, leather forearm bracers, knee guards and tall brown boots. She holds ONE bundled brown rope net with small warm amber brass lantern weights, both hands gripping the gathered upper cords in front of her. The lanterns remain attached to their ropes; the extra small lantern at her belt stays at her belt. Preserve her face, costume, net and every legitimate hand; no second net, no extra hands or weapons. A brief single impact from screen right jolts her shoulders backward; knees yield, head recoils and elbows pull the held net toward her waist. She then straightens her legs and recovers the original ready posture. Hands retain the net throughout. One readable recoil and full recovery, no fall or attack. Locked camera, unchanged body proportions, centered full body and fixed ground reference. Completely uniform saturated BLUE RGB 0,0,255 background throughout every frame, including inside rope loops. No ground, shadow, scenery, camera motion, cuts, colored background changes, magic, particles or text.",
+  "clip": "hit",
+  "seed": 947101
+}

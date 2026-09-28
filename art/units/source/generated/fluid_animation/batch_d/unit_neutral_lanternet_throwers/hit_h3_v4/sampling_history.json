@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    760,
+    "09290edb-cab1-4143-809c-a0b0b18aedde",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "A single original Lanternet Thrower woman matching the reference identity, brown leather armor, olive cloth, braided hair, boots and compact gathered rope net with three small amber brass lantern weights. Fixed elevated orthographic three-quarter view facing screen right, entire body at constant scale. She performs one short physical startled recoil: shoulders and head pull back, both knees flex to absorb the shock, her hands firmly retain the gathered net close in front of her waist throughout; she steadies her weight and recovers exactly the original ready stance. The net stays softly folded and the little lantern weights hang downward, swinging only slightly under gravity. Exactly two arms and two legs, elbows following the torso, both boots grounded. This is only the woman flinching and recovering. All empty pixels remain a perfectly constant uniform bright GREEN RGB 0,255,0 studio plate in every frame. Constant diffuse lighting and one continuous take.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 947251
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lanternet_hit_h3_v4_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "lanternet_h3/hit_h3_v4/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "lanternet_h3",
+      "create_time": 1790628901951
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "lanternet_h3\\hit_h3_v4",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "09290edb-cab1-4143-809c-a0b0b18aedde",
+          "timestamp": 1790628901952
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "09290edb-cab1-4143-809c-a0b0b18aedde",
+          "timestamp": 1790628901958
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "09290edb-cab1-4143-809c-a0b0b18aedde",
+          "timestamp": 1790629058619
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

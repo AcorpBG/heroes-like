@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 7.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          944,
+          304,
+          1262
+        ]
+      ],
+      "anchor": [
+        141,
+        1238
+      ],
+      "scale": 0.69,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "prompt": "One original Lanternet Thrower human woman, exactly two arms and two booted legs, brown braided hair, olive headband and scarf, tattered green cape, brown leather armor, bracers, knee guards, leather boots. One bundled rope net with attached amber brass lantern weights held in her hands, plus the original belt lantern. Facing screen right, locked orthographic three-quarter camera, fixed centered body size and foot reference. Animate ONLY HER BODY in a short startled FLINCH: she abruptly leans her shoulders and head backward, bends the knees, elbows flex while retaining her net, then breathes out and recovers the supplied original ready stance. One flinch and full recovery, not an attack or fall. Nothing touches her. She is completely alone with only her own held equipment. NO attacker, incoming object, projectile, weapon from offscreen, second net, spark, flash, smoke, particles, hit effect, magical glow or color changes. Solid uniform flat MAGENTA RGB 255,0,255 background for every frame including all gaps. Never introduce a scene, floor, shadow, spotlight, gradient or colored flash. The background is an invariant chroma-key plate.",
+  "clip": "hit",
+  "seed": 947181
+}

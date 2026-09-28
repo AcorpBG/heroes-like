@@ -1,0 +1,584 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_lanternet_throwers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_028",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_032",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_036",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_052",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              640,
+              768
+            ]
+          ],
+          "anchor": [
+            416,
+            688
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 640,
+            "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+          }
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 15
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original_lossless.mkv",
+          "sha256": "cc8f9b1230d20cbc483169ec705e70e341740dba63edc084fa288e6c4d9db4bd"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original.json",
+          "sha256": "608bfbd47b7f5d6799d02c3a3b388d055b3595c8e5b6c198df949ce6c2550382"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/workflow_api.json",
+          "sha256": "6e45a1f7d65c61cef01b36222e60d1a658e82ac7356e2a749090c6b14754fe7f"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/prompt.txt",
+          "sha256": "b9ed14abc344c273a8028c4ec9e805141e962dd83293a132a1f1c1f56e5cb734"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/reference.json",
+          "sha256": "686a98977a17edbe2827109507a7a1a95d05fd754fad5853ec889a7a034854cd"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/matte.json",
+          "sha256": "6817c77c70819ac66dc447405da5d43f061dbb2bb893a0fd533b2efe86186a9e"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/staged_generation.json",
+          "sha256": "e325321472335327ac260ddcaa063a284b27ef4bb950103f778455a7559abb83"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_workflow_api.json",
+          "sha256": "a6af1fad4e6aa96ab104bf005691551df920e06d5f34f4b6ea54d0114ead7b4d"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_submission.json",
+          "sha256": "93889a94180eb4fbf1e419f632ffaad7e8be80308558715379bfa8b5a4652ab5"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/sampling_history.json",
+          "sha256": "0d0de6ad3ba95c5d65db9f61b9acae02244aa4693146d8403424c4f5a8e51b12"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_h3_v4/original.latent",
+          "sha256": "8c1327038afb9045c425bef72cf30f966dc6079a9d4e569fec68e31f3bcfd87e"
+        },
+        "guide_image_ranged_windup_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.png",
+          "sha256": "5f2eb8238d0ea2a6ecefbc0083faff44aa06a1a43936e7b3e29c88c29373b8cf"
+        },
+        "guide_prompt_ranged_windup_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.prompt.txt",
+          "sha256": "4352f0eefc65889bdd8391fa8ab49889a3c94ea3d60e6e279b19e92925e91881"
+        },
+        "guide_generation_ranged_windup_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.generation.json",
+          "sha256": "744788d6c2ad0d6929f6a21bcc15d3a4487bae861180234da56750073c9d9500"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 originals inspected chronologically and enlarged40/42/44/54. Compact two-handed chest toss fixes stretching held ropes; hands open at release. Select14-54 every2; from44 separate fully detached bundle across emptyx640 gap for existing game-owned projectile flight. Original41-42 retains bundle at hand;44 empty hand is runtime release. Later floating duplicate/reload overlap excluded; join clean ranged_v3 recovery56-112. All original pixels retained in original matte/video. Pending native join and release review. Final combined native render accepted after673 focused checks; no missing body/hand pixels or visible jump at selected transitions."
+      }
+    }
+  ]
+}

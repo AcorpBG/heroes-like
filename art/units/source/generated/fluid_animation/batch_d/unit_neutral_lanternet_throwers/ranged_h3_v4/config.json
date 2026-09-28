@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    768
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    688
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 17,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "compact_bundle_windup",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/ranged_windup_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        777,
+        895
+      ],
+      "scale": 0.312,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "net_release",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          640,
+          914,
+          945
+        ]
+      ],
+      "anchor": [
+        748,
+        927
+      ],
+      "scale": 0.69,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "prompt": "The original reference woman in olive cloth and leather armor performs ONE short two-handed forward toss of the SMALL folded brown rope bundle with three small amber brass weights. Both hands lift the compact gathered bundle from waist to sternum, elbows bent. Then she pushes both forearms toward screen right and OPENS both gloved hands, releasing the whole small bundle as a single compact object. The bundle immediately flies away to the right; her two hands remain visibly EMPTY for the follow-through. All the ropes stay folded together at their ORIGINAL SHORT LENGTH, with three small brass weights hanging close beneath the bundle; it never expands or stretches. She then reaches to her belt and visibly draws the next folded bundle, recovering her initial stance. Exactly two real arms and two booted legs, consistent original face/costume/body scale. Fixed elevated orthographic three-quarter camera facing screen right, full body and steady planted boot baseline. Perfectly constant flat GREEN RGB0,255,0 backdrop fills all empty pixels and rope gaps throughout the continuous take. Diffuse stable sprite lighting.",
+  "clip": "ranged",
+  "seed": 947282
+}

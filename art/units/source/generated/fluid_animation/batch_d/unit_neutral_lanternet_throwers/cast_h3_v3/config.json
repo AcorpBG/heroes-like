@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 10,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "Full-body sprite animation on a completely uniform solid GREEN chroma-key studio background, RGB 0,255,0. The backdrop stays exactly the same green from beginning to end. One human woman in the supplied reference design: brown braids, olive scarf and cape, fitted brown leather armor and boots, holding a bundled rope net with small brass lantern weights. Fixed three-quarter orthographic camera. She transfers the gathered rope bundle into her left hand at hip height. Her empty right hand rises slowly to shoulder height, palm outward, signaling stop. She holds this practical hand signal briefly, then lowers her right hand and returns to the original two-handed net hold. Her feet remain planted and her body keeps the original proportions. Fingers, wrist, elbow and shoulder articulate smoothly. One gesture performed by the same woman with exactly two arms and two legs; all original equipment stays intact. Flat even subject lighting. Every frame uses the same plain green backdrop.",
+  "clip": "cast",
+  "seed": 947194
+}

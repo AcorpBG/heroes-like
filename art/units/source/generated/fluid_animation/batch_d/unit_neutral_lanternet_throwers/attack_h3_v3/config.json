@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 7.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        192,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "One original Lanternet Thrower human woman with two arms and two booted legs, brown braided hair, olive headband and scarf, tattered olive cape, fitted brown leather armor, bracers, knee guards and leather boots. One compact bundled rope net with attached amber brass lantern weights; keep this bundle held LOW at the left hip in the left hand for the entire action. Original small belt lantern stays attached. Facing screen right, fixed elevated orthographic three-quarter camera and body scale. Perform ONE close-combat straight PUNCH with the EMPTY RIGHT HAND: transfer the net to the left hand, close the empty right hand into a fist, bring the right elbow back beside ribs, step weight onto the front boot and turn hips/shoulders into a short firm forward right-fist jab toward screen right, retract the fist, return to original two-handed net hold. Clear windup, contact and full recovery. Both legs support the lunge. The left hand retains the compact net low beside the hip; do NOT swing, raise, throw, lengthen or unfold the net. No weapon in the punching hand. No extra hands or new objects. Full body always inside canvas. Solid uniform flat MAGENTA RGB 255,0,255 background throughout, including all gaps; unchanged plate with no floor, shadows, scenery, particles, flashes, glowing effects or cuts.",
+  "clip": "attack",
+  "seed": 947193
+}

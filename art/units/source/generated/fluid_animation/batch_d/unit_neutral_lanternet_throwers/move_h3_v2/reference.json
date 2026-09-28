@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "contact_attempt",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+        "rects": [
+          [
+            0,
+            0,
+            510,
+            517
+          ]
+        ],
+        "anchor": [
+          255,
+          485
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cc648d996dcb895b6e6c0796237adb4457ba931265be388b28bdfa92fc368776",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c7c92ecf89f2d143ca739a716e493d7723a64a0f75bd3ede66cf4bfcd5e42cbd",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          192,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "29ebfaa2712136939a579f2f71cc1d7229450d27758d5e231725732f918a9af7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a6f6ea21b345405e6a3da4739c6e53ea9a9d86f4baf392fb58100580bb28196b",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "single_net_melee_windup",
+        "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+        "rects": [
+          [
+            0,
+            518,
+            510,
+            1024
+          ]
+        ],
+        "anchor": [
+          269,
+          988
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cc648d996dcb895b6e6c0796237adb4457ba931265be388b28bdfa92fc368776",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "11b9e8a8aaf912a104eb647fd89f9b9022c10802e34d8ed7740b3ceb6681bec0",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

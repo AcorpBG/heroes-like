@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_lanternet_throwers",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    560
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 17.0,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_lanternet_throwers/continuity-alpha/supported-travel-single-net-and-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          510,
+          517
+        ]
+      ],
+      "anchor": [
+        255,
+        485
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "One original Lanternet Thrower, a human woman facing screen right in an elevated orthographic three-quarter view. Exactly two arms and two booted legs. Brown braided hair, olive headband, green scarf and tattered green cape, brown fitted leather armor, leather forearm bracers, knee guards and tall brown boots. She holds ONE bundled brown rope net with small warm amber brass lantern weights, both hands gripping the gathered upper cords in front of her. The lanterns remain attached to their ropes; the extra small lantern at her belt stays at her belt. Preserve her face, costume, net and every legitimate hand; no second net, no extra hands or weapons. Walk in place toward screen right, alternating both legs through forward reach, planted boot, knee loading, passing and push-off. Let both elbows adjust to carry the heavy bundled net steadily in front of her hips, with gentle natural rope and cape follow-through. Keep the body centered: engine supplies translation. Complete a slow natural walking cycle: the near leg must swing FORWARD past the far leg, plant its heel and take weight, then the FAR leg must swing FORWARD past the near leg and take weight. Both thighs alternate forward and back, no hopping on one leg, no marching only the far leg, no running. Match the original extended stride phase at the end. Locked camera, unchanged body proportions, centered full body and fixed ground reference. Completely uniform saturated GREEN RGB 0,255,0 background throughout every frame, including inside rope loops. No ground, shadow, scenery, camera motion, cuts, colored background changes, magic, particles or text.",
+  "clip": "move",
+  "seed": 947130
+}

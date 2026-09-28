@@ -1,0 +1,54 @@
+{
+  "source_frames": [
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    42,
+    44,
+    46,
+    48,
+    50,
+    52,
+    54
+  ],
+  "frame_msec": 30,
+  "contact_frame": 15,
+  "runtime_projectile_separation": {
+    "44": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    },
+    "46": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    },
+    "48": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    },
+    "50": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    },
+    "52": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    },
+    "54": {
+      "split_x": 640,
+      "reason": "Both hands fully empty and left of623; fully detached flying bundle begins right of650. An empty vertical gap separates character and runtime-owned projectile. Keep every character/cloth/hand/belt pixel; preserve original projectile pixels in source matte/video."
+    }
+  },
+  "review_note": "All124 originals inspected chronologically and enlarged40/42/44/54. Compact two-handed chest toss fixes stretching held ropes; hands open at release. Select14-54 every2; from44 separate fully detached bundle across emptyx640 gap for existing game-owned projectile flight. Original41-42 retains bundle at hand;44 empty hand is runtime release. Later floating duplicate/reload overlap excluded; join clean ranged_v3 recovery56-112. All original pixels retained in original matte/video. Pending native join and release review. Final combined native render accepted after673 focused checks; no missing body/hand pixels or visible jump at selected transitions."
+}

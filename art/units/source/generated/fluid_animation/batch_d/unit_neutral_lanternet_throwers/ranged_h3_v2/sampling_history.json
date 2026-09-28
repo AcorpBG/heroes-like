@@ -1,0 +1,229 @@
+{
+  "prompt": [
+    752,
+    "e4cf9931-3bd1-42f6-9463-486de4c23d2b",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Lanternet Thrower, a human woman facing screen right in an elevated orthographic three-quarter view. Exactly two arms and two booted legs. Brown braided hair, olive headband, green scarf and tattered green cape, brown fitted leather armor, leather forearm bracers, knee guards and tall brown boots. She holds ONE bundled brown rope net with small warm amber brass lantern weights, both hands gripping the gathered upper cords in front of her. The lanterns remain attached to their ropes; the extra small lantern at her belt stays at her belt. Preserve her face, costume, net and every legitimate hand; no second net, no extra hands or weapons. Perform one weighted-net throw toward screen right. Gather and lift the rope net at the shoulder, shift weight onto the back foot, rotate shoulders forward and extend the throwing hand, opening the grip at release. The game draws the traveling projectile: the small folded net exits the camera INSTANTLY when her fingers open. Show NO airborne net, expanding mesh, rope trail or flying lanterns after release. The only visible action after release is her EMPTY outstretched hand. Follow through with empty extended hand, reach to the belt with the other hand for the next folded net, and return to the original two-handed ready hold. Exactly one smooth continuous throw and reload. At the belt she draws the folded replacement visibly, then returns it to the original two-handed hold. No cuts or sudden pose changes; shoulders, elbows and hands move continuously through the entire recovery. Locked camera, unchanged body proportions, centered full body and fixed ground reference. Completely uniform saturated GREEN RGB 0,255,0 background throughout every frame, including inside rope loops. No ground, shadow, scenery, camera motion, cuts, colored background changes, magic, particles or text.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 947151
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lanternet_ranged_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lanternet_ranged_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 54,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "lanternet_h3/ranged_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "lanternet_h3",
+      "create_time": 1790627407461
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "lanternet_h3\\ranged_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "e4cf9931-3bd1-42f6-9463-486de4c23d2b",
+          "timestamp": 1790627407462
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "e4cf9931-3bd1-42f6-9463-486de4c23d2b",
+          "timestamp": 1790627407475
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "e4cf9931-3bd1-42f6-9463-486de4c23d2b",
+          "timestamp": 1790627669059
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

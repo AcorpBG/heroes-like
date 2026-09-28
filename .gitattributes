@@ -234,3 +234,8 @@ art/units/source/generated/fluid_animation/batch_d/unit_neutral_reedbarge_poles/
 art/animation/source/fluid/unit_neutral_reedbarge_poles/*.json -text
 art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v[23]/*.json -text
 art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v[23]/*.txt -text
+
+# Preserve hash-bound Lanternet Throwers H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/**/*.txt -text
+art/animation/source/fluid/unit_neutral_lanternet_throwers/*.json -text

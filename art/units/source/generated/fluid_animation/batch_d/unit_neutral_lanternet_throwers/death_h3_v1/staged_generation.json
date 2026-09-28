@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "efb02c81cf1a8da9eac48988fdb83aaa392a5036ae9671ee601bc70d80b09822",
+  "latent_sha256": "fb767ad26d117a186e3a5e8786112b4e8fba552dfa1c8ebed53664685e1c005b",
+  "decode_workflow_sha256": "3d91f7ff8e4b6dd18e238123f1cb34a05629fede5abe1f92b2d33d345fa48f97",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "lanternet_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

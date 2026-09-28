@@ -2445,29 +2445,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        77.0,
+        77,
         219
       ],
       "painted_extent": 214,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_lanternet_throwers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_lanternet_throwers.png",
       "source_indices": [
-        20,
-        21,
-        22,
-        23,
-        24,
-        25,
-        26,
-        27
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        179,
-        17,
-        346,
-        247
+        75,
+        13,
+        242,
+        243
       ],
-      "source_sha256": "50ba9654165f92f09878c29a3f1c0b353d2e15b746db69df44d05a6bc491d46b",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_lanternet_throwers/provenance.json",
+      "source_sha256": "83e56f799abfd1f4fd2168e98db544fbd9b41667adcd313da7d8824940e40b5f",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_lanternet_throwers/provenance.json",
       "sha256": "310d9a6cc820fe83db14a8e400f62645c8991b45e7faf90cf3fa367b4c3fec98"
     },
     "unit_neutral_glowcap_bulwarks": {
