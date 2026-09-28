@@ -1,0 +1,32 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "identity": "One original Evergraft Colossus, a massive living tree guardian, facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two heavy braided-bark arms with root-knuckle fists and exactly two thick braided root legs with broad root feet. Preserve its huge layered dark olive-green canopy with small white blossoms, the two small ivory lookout structures fixed at the shoulders, hanging amber shoulder seedpods, and one glowing amber diamond-shaped heart in the center of its chest. Its stern bark face stays under the canopy. No held weapon or shield. Retain exact trunk thickness, canopy silhouette, limb anatomy, bark material, green/ivory/amber palette, and giant proportions. Full body and all canopy branches stay in frame at one fixed scale. Uniform flat pure BLUE RGB 0,0,255 background throughout, including gaps between roots and branches; no color changes, scenery, floor, shadows, text, emitted projectiles or particles, extra limbs, new branches, floating props or camera movement. ",
+  "required_clips": [
+    "idle",
+    "move",
+    "attack",
+    "hit",
+    "death",
+    "defend",
+    "cast"
+  ],
+  "preserved_accepted_clips": [],
+  "status": "completed",
+  "reviewed_candidates": [
+    "idle_h3_v2",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "death_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v2"
+  ],
+  "rejected_takes": [
+    "idle_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "hit_h3_v2"
+  ],
+  "review_status": "Accepted seven actions, persistent corpse and overworld idle after chronological and native frame review: 696 candidate and 700 live checks passed. Hit uses only clean death V1 recoil and hit V1 recovery intervals, excluding the hard cut. Original pixels, scale, anchors and other 231 units preserved. Continuous playback, manual playtest and Linux execution unclaimed."
+}

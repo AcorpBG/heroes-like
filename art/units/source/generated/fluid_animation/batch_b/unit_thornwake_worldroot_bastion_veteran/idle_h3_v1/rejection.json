@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "reason": "Original RGB inspection: plate changes from blue to grey at frames 14-20, 28-33 and 48-107. Grey overlaps foreground bark values; strict chroma extraction correctly stops. Do not weaken matting thresholds. Replace this action with idle_h3_v2, retaining all V1 originals."
+}

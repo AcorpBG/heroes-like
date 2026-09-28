@@ -1,0 +1,152 @@
+{
+  "takes": [
+    "idle_h3_v2",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "death_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v2"
+  ],
+  "clip_sequences": {
+    "hit": {
+      "frames": [
+        {
+          "take": "death_h3_v1",
+          "video_frame": 0,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 1,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 2,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 3,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 4,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 5,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 6,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 7,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 8,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 9,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 10,
+          "source_clip": "death"
+        },
+        {
+          "take": "death_h3_v1",
+          "video_frame": 16,
+          "source_clip": "death"
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 102
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 104
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      },
+      "reason": "Shared original recoil guide registers a clean continuous reaction: death V1 pre-collapse recoil 0-10 and16, then hit V1 recovery72-104. No collapse frames, interpolation, reverse motion, per-frame repositioning or idle aliases."
+    }
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Coordinator reviewed every original chronological frame, enlarged anatomy and alpha on light/dark backgrounds, fixed-ground loop/recoil joins, and the complete native 128px Godot overview. Far-hand idle rotation/opening, reciprocal root gait, same-arm punch and recovery, continuous matched recoil/recovery, held two-fist guard, physical open-palm support and grounded collapse preserve original scale, two arms/two legs, canopy, lookouts and amber heart. Hit reuses only the clean pre-collapse recoil and matching V1 recovery; rejected cuts, color-changing plates and invented effects are excluded. 696 focused candidate checks passed. No continuous-video playback, manual playtest or Linux run is claimed."
+  }
+}

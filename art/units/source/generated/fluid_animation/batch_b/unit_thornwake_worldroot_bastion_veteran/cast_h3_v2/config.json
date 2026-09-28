@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "A single animated fantasy strategy game sprite on a perfectly uniform saturated pure blue RGB(0,0,255) chroma-key background, which stays exactly blue across the entire shot. Locked orthographic three-quarter camera, facing right. The original Evergraft Colossus is a massive living tree guardian with exactly two braided-bark arms and root fists, exactly two thick root legs and broad planted root feet. Preserve the layered olive green canopy with white blossoms and fruit, two ivory shoulder lookouts, amber hanging shoulder pods and one amber diamond chest heart. A calm physical rally gesture to allies: from low closed fists, bend both elbows and raise both wooden hands to lower chest height, open the root fingers, then spread the open palms outward in a welcoming gesture. Hold briefly, then bend elbows inward, close the root fingers and lower both hands naturally into the starting stance. Both root feet stay planted. This gesture is only shoulder, elbow, wrist and finger motion. Canopy, ivory lookouts, shoulder pods and amber chest heart remain unchanged and attached. A single continuous take with one fixed body scale. Lighting is constant, with only the original small steady amber heart. The backdrop remains exactly saturated blue RGB(0,0,255), flat and uniform even behind the moving hands, for the entire video.",
+  "clip": "cast",
+  "seed": 943114
+}

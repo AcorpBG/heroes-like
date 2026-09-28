@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5eae0c19c54687a535244baf78c872e3d6ec339a4ebbe49311de9ac1a86c5eb7",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+        "rects": [
+          [
+            512,
+            0,
+            1024,
+            256
+          ]
+        ],
+        "anchor": [
+          768,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "cfbb5ee03f107b7704c5a4c1e89ab81112bcab90ab5d3c26562a97998a58bc09",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "One original Evergraft Colossus, a massive living tree guardian, facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two heavy braided-bark arms with root-knuckle fists and exactly two thick braided root legs with broad root feet. Preserve its huge layered dark olive-green canopy with small white blossoms, the two small ivory lookout structures fixed at the shoulders, hanging amber shoulder seedpods, and one glowing amber diamond-shaped heart in the center of its chest. Its stern bark face stays under the canopy. No held weapon or shield. Retain exact trunk thickness, canopy silhouette, limb anatomy, bark material, green/ivory/amber palette, and giant proportions. Full body and all canopy branches stay in frame at one fixed scale. Uniform flat pure BLUE RGB 0,0,255 background throughout, including gaps between roots and branches; no color changes, scenery, floor, shadows, text, emitted projectiles or particles, extra limbs, new branches, floating props or camera movement. A complete slow heavy walking-in-place cycle repeated smoothly. Exactly two root legs alternate: near foot lifts clearly, swings forward, lands flat and bears weight as the far heel releases; then the far foot passes and lands while near leg supports. Knees flex, opposite arms swing modestly, canopy follows the weight shift while retaining shape. No sliding feet, hopping, marching with both legs together, or extra roots growing from the feet. Stay centered for engine-driven travel.",
+  "clip": "move",
+  "seed": 943011
+}

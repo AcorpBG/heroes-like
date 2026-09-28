@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5eae0c19c54687a535244baf78c872e3d6ec339a4ebbe49311de9ac1a86c5eb7",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+        "rects": [
+          [
+            1024,
+            256,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1280,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b6d87d2277c758f7994985cd57dd7b3523c2713cc236d0ac6f104c16c37507b3",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2ae31db437aa09a67d43612094baad2dd3aebc7ce21b6838b71404b95f79ac9e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9ffe61bc7682b03937667c229c2350b5cfccfacc9c985cf63a7198c83399635b",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

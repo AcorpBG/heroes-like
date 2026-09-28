@@ -1,0 +1,169 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Evergraft Colossus, a massive living tree guardian, facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two heavy braided-bark arms with root-knuckle fists and exactly two thick braided root legs with broad root feet. Preserve its huge layered dark olive-green canopy with small white blossoms, the two small ivory lookout structures fixed at the shoulders, hanging amber shoulder seedpods, and one glowing amber diamond-shaped heart in the center of its chest. Its stern bark face stays under the canopy. No held weapon or shield. Retain exact trunk thickness, canopy silhouette, limb anatomy, bark material, green/ivory/amber palette, and giant proportions. Full body and all canopy branches stay in frame at one fixed scale. Uniform flat pure BLUE RGB 0,0,255 background throughout, including gaps between roots and branches; no color changes, scenery, floor, shadows, text, emitted projectiles or particles, extra limbs, new branches, floating props or camera movement. Continuous heavy defeat collapse. Recoil backward, bend both knees until the huge trunk visibly lowers onto one knee, then tip and settle sideways into the supplied grounded corpse pose. Arms bend and follow the fall; canopy, ivory shoulder structures and amber heart stay attached to the body. No dissolving, shrinking, sprouting limbs, falling offscreen or returning upright. End motionless on the ground.",
+      "width": 960,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "32",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 943014
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "evergraft_death_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "evergraft_death_h3_v1_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "evergraft_death_h3_v1_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 24,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "40",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "evergraft_h3/death_h3_v1/sampled"
+    }
+  }
+}

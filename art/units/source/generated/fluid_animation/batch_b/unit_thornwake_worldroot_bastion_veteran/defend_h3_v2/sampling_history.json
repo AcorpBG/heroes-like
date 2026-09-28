@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    668,
+    "b76df798-b168-4c92-b20a-a82ecfeef6c6",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "A single animated fantasy strategy game sprite on a perfectly uniform saturated pure blue RGB(0,0,255) chroma-key background, which stays exactly blue across the entire shot. Locked orthographic three-quarter camera, facing right. The original Evergraft Colossus is a massive living tree guardian with exactly two braided-bark arms and root fists, exactly two thick root legs and broad planted root feet. Preserve the layered olive green canopy with white blossoms and fruit, two ivory shoulder lookouts, amber hanging shoulder pods and one amber diamond chest heart. The guardian smoothly raises both root fists from the low ready stance to a compact guard in front of its chest. Elbows bend, shoulders draw forward and root knees brace without lifting either foot. Both fists remain clenched and held at chest height for the rest of the shot. Preserve the original posture, attached shoulder structures and full canopy. A single continuous physical motion into a sustained defensive pose, no pose cuts. Background stays the same uniform saturated pure blue through every frame, including gaps between branches, arms and torso. Only this one tree guardian and the constant blue background.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 943113
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "evergraft_defend_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "evergraft_defend_h3_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "evergraft_h3/defend_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "evergraft_h3",
+      "create_time": 1790611073593
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "evergraft_h3\\defend_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "b76df798-b168-4c92-b20a-a82ecfeef6c6",
+          "timestamp": 1790611073594
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "b76df798-b168-4c92-b20a-a82ecfeef6c6",
+          "timestamp": 1790611073608
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "b76df798-b168-4c92-b20a-a82ecfeef6c6",
+          "timestamp": 1790611266524
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

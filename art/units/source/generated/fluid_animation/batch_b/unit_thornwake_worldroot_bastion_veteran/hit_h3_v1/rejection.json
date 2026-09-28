@@ -1,0 +1,6 @@
+{
+  "status": "full_take_rejected_valid_recovery_segment_selected",
+  "reason": "Frames 27 to 28 cut directly from ready to full recoil without a physical transition; later recovery is coherent but does not repair the missing recoil. Replace the action with an unconstrained continuous take.",
+  "correction": "Remove intermediate pose constraints; keep the same original first/last ready guide, original anatomy, fixed scale and constant blue. Prompt continuous physical action.",
+  "salvage": "Only original frames 72-104 retained for the reviewed compound hit recipe."
+}

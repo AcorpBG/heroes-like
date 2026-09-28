@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "97847f59b35a8bb4b176a380a69af850a5fe1b8f7d3d197f0877d6f6b44647e8",
+  "latent_sha256": "dc74d8918ad94e17108cee438644a46b3428e4a27df83a536e3d0de01d980244",
+  "decode_workflow_sha256": "144da998b4349d68762af5da4f1207308d6b9afe21c7b592a3c8fdea13b2f6e7",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "evergraft_h3\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    667,
+    "a449ec75-e17a-4894-a8e7-b50b42949c9c",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "A single animated fantasy strategy game sprite on a perfectly uniform saturated pure blue RGB(0,0,255) chroma-key background, which stays exactly blue across the entire shot. Locked orthographic three-quarter camera, facing right. The original Evergraft Colossus is a massive living tree guardian with exactly two braided-bark arms and root fists, exactly two thick root legs and broad planted root feet. Preserve the layered olive green canopy with white blossoms and fruit, two ivory shoulder lookouts, amber hanging shoulder pods and one amber diamond chest heart. A single impact reaction and recovery: both feet are planted. The chest recoils backward, knees bend and both arms open outward to catch balance, then the trunk rocks upright, elbows bend and both root fists lower into the original ready stance. Show the whole bodily recoil developing over several frames, followed by smooth recovery. Canopy follows the torso, shoulder lookouts and pods stay attached. No attack, spell or emitted effect. Fixed full-body scale, unchanged bark face, branch anatomy and shoulder structures. A single continuous take with physically articulated transitions, not cuts between still poses. All empty pixels around the body and between limbs remain saturated pure blue from first frame to last. Only this one tree guardian and the constant blue background.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 943112
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "evergraft_hit_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "evergraft_h3/hit_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "evergraft_h3",
+      "create_time": 1790610853047
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "evergraft_h3\\hit_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a449ec75-e17a-4894-a8e7-b50b42949c9c",
+          "timestamp": 1790610853131
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "a449ec75-e17a-4894-a8e7-b50b42949c9c",
+          "timestamp": 1790610853142
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a449ec75-e17a-4894-a8e7-b50b42949c9c",
+          "timestamp": 1790611069077
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

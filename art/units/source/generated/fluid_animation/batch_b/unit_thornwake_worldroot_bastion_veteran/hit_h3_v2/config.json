@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_thornwake_worldroot_bastion_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_worldroot_bastion_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "A single animated fantasy strategy game sprite on a perfectly uniform saturated pure blue RGB(0,0,255) chroma-key background, which stays exactly blue across the entire shot. Locked orthographic three-quarter camera, facing right. The original Evergraft Colossus is a massive living tree guardian with exactly two braided-bark arms and root fists, exactly two thick root legs and broad planted root feet. Preserve the layered olive green canopy with white blossoms and fruit, two ivory shoulder lookouts, amber hanging shoulder pods and one amber diamond chest heart. A single impact reaction and recovery: both feet are planted. The chest recoils backward, knees bend and both arms open outward to catch balance, then the trunk rocks upright, elbows bend and both root fists lower into the original ready stance. Show the whole bodily recoil developing over several frames, followed by smooth recovery. Canopy follows the torso, shoulder lookouts and pods stay attached. No attack, spell or emitted effect. Fixed full-body scale, unchanged bark face, branch anatomy and shoulder structures. A single continuous take with physically articulated transitions, not cuts between still poses. All empty pixels around the body and between limbs remain saturated pure blue from first frame to last. Only this one tree guardian and the constant blue background.",
+  "clip": "hit",
+  "seed": 943112
+}

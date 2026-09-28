@@ -217,3 +217,8 @@ art/animation/source/fluid/unit_veilmourn_obituary_scribes_veteran/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/**/*.txt -text
 art/animation/source/fluid/unit_thornwake_seedglass_cantors_veteran/*.json -text
+
+# Preserve hash-bound Evergraft Colossus H3 provenance.
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_b/unit_thornwake_worldroot_bastion_veteran/**/*.txt -text
+art/animation/source/fluid/unit_thornwake_worldroot_bastion_veteran/*.json -text
