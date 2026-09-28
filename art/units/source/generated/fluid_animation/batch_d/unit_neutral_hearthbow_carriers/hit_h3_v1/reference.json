@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_hearthbow_carriers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1268
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "050185391c935c7be0e807305cbb974d908d2f521abffd8842df072d9d089397",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1012
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5c9687fdae77fc91573d1c425575a715ca995c7f06f6fd9b72b64737f14b63bb",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "1fec7f98f29343f52b774f9ec6de09f9396d37e20777745a53509752dcbc9c7a",
+  "latent_sha256": "f8fabca7d901253c2562906cdab40a122567b67c600a85561fc9399be1d81956",
+  "decode_workflow_sha256": "d153efd7340a7669a58e5eb9129cb00caa1ea0e70b3dc595a58693ee70559154",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "hearthbow_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
