@@ -1305,6 +1305,9 @@ static func _run_empire_cycle(
 
 	if not launched_placement_ids.is_empty():
 		phase_started = _profile_timer(profile_enabled)
+		var session_treasury_before_launch := _normalize_resource_pool(
+			_find_state(session.overworld.get("enemy_states", []), faction_id).get("treasury", {})
+		)
 		var launch_advance_result = EnemyAdventureRulesScript.advance_raids(
 			session,
 			config,
@@ -1318,6 +1321,10 @@ static func _run_empire_cycle(
 			}
 		)
 		state = launch_advance_result.get("state", state)
+		# Launched raids can spend at their home town or claim spoils on their
+		# first move; keep those treasury changes instead of restoring the
+		# pre-launch copy when the cycle writes treasury back below.
+		treasury = _treasury_after_raid_advance(session, faction_id, state, session_treasury_before_launch)
 		state = _latest_enemy_state(session, faction_id, state)
 		_append_event_records(events, launch_advance_result.get("events", []))
 		var launch_advance_message = String(launch_advance_result.get("message", ""))
@@ -7718,6 +7725,29 @@ static func _normalize_resource_pool(value: Variant) -> Dictionary:
 		for key in value.keys():
 			normalized[String(key)] = max(0, int(value[key]))
 	return normalized
+
+static func _treasury_after_raid_advance(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	advanced_state: Dictionary,
+	session_treasury_before: Dictionary
+) -> Dictionary:
+	# Raid spoils are credited to the state handed to advance_raids, while town
+	# services spend from the faction's live session entry. Combine both.
+	var live_state := _find_state(session.overworld.get("enemy_states", []), faction_id)
+	var live_treasury := _normalize_resource_pool(live_state.get("treasury", {}))
+	if is_same(advanced_state, live_state):
+		return live_treasury
+	var result := _normalize_resource_pool(advanced_state.get("treasury", {}))
+	var resource_keys := {}
+	for key in live_treasury.keys():
+		resource_keys[String(key)] = true
+	for key in session_treasury_before.keys():
+		resource_keys[String(key)] = true
+	for key in resource_keys.keys():
+		var delta := int(live_treasury.get(key, 0)) - int(session_treasury_before.get(key, 0))
+		result[key] = max(0, int(result.get(key, 0)) + delta)
+	return result
 
 static func _blank_resource_pool() -> Dictionary:
 	var resources = {}
