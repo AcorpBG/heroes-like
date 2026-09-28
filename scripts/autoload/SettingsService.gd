@@ -23,6 +23,16 @@ const DISPLAY_CHANGE_TIMEOUT_SECONDS := 15.0
 const DISPLAY_CHANGE_MIN_TIMEOUT_SECONDS := 0.1
 const DISPLAY_CHANGE_MAX_TIMEOUT_SECONDS := 60.0
 const DISPLAY_CHANGE_FORCE_SAVE_FAILURE_ENV := "HEROES_LIKE_DISPLAY_CHANGE_FORCE_SAVE_FAILURE"
+# Runtime categories a settings commit re-applies. Each setter applies only its
+# own category (plus any category whose uncommitted value differs from the last
+# committed settings), so an audio change never resets the window mode or size.
+const SETTINGS_APPLY_NONE := 0
+const SETTINGS_APPLY_INPUT := 1
+const SETTINGS_APPLY_ACCESSIBILITY := 2
+const SETTINGS_APPLY_RENDERING := 4
+const SETTINGS_APPLY_DISPLAY := 8
+const SETTINGS_APPLY_AUDIO := 16
+const SETTINGS_APPLY_ALL := SETTINGS_APPLY_INPUT | SETTINGS_APPLY_ACCESSIBILITY | SETTINGS_APPLY_RENDERING | SETTINGS_APPLY_DISPLAY | SETTINGS_APPLY_AUDIO
 const MUSIC_AUDIO_BUS := "Music"
 const EFFECTS_AUDIO_BUS := "Effects"
 const RENDER_QUALITY_LOW := "low"
@@ -370,7 +380,9 @@ func restore_default_settings(defer_display_change: bool = false) -> Dictionary:
 		default_settings["presentation"]["resolution"] = presentation_resolution_id()
 	var changed := previous_settings != build_default_settings()
 	settings = default_settings.duplicate(true)
-	var commit := _commit_settings()
+	# A deferred display change is previewed and confirmed separately, so the
+	# restore itself leaves the live window alone.
+	var commit := _commit_settings(SETTINGS_APPLY_ALL & ~SETTINGS_APPLY_DISPLAY if defer_display_change else SETTINGS_APPLY_ALL)
 	if not bool(commit.get("ok", false)):
 		return {
 			"ok": false,
@@ -883,53 +895,69 @@ func display_change_snapshot() -> Dictionary:
 func set_master_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["master_volume_percent"] = clampi(value, 0, 100)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_AUDIO)
 
 func set_music_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["music_volume_percent"] = clampi(value, 0, 100)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_AUDIO)
 
 func set_effects_volume_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["audio"]["effects_volume_percent"] = clampi(value, 0, 100)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_AUDIO)
+
+# Volume slider drags hear each step live without a disk write per tick; the
+# matching set_*_volume_percent call commits the final value when the drag ends.
+func preview_master_volume_percent(value: int) -> void:
+	_preview_audio_volume_percent("master_volume_percent", value)
+
+func preview_music_volume_percent(value: int) -> void:
+	_preview_audio_volume_percent("music_volume_percent", value)
+
+func preview_effects_volume_percent(value: int) -> void:
+	_preview_audio_volume_percent("effects_volume_percent", value)
+
+func _preview_audio_volume_percent(key: String, value: int) -> void:
+	ensure_settings()
+	settings["audio"][key] = clampi(value, 0, 100)
+	_apply_audio_settings()
 
 func set_presentation_mode(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["mode"] = _normalize_presentation_mode(mode_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_DISPLAY)
 
 func set_presentation_resolution(resolution_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["resolution"] = _normalize_presentation_resolution(resolution_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_DISPLAY)
 
 func set_render_quality_id(quality_id: String) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["render_quality"] = _normalize_render_quality(quality_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_RENDERING)
 
 func set_vsync_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["vsync_enabled"] = enabled
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_RENDERING)
 
 func set_frame_rate_limit(value: int) -> Dictionary:
 	ensure_settings()
 	settings["presentation"]["frame_rate_limit"] = _normalize_frame_rate_limit(value)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_RENDERING)
 
 func set_battle_playback_speed_id(speed_id: String) -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["battle_playback_speed"] = _normalize_battle_playback_speed(speed_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_NONE)
 
 func set_keyboard_navigation_layout_id(layout_id: String) -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["keyboard_navigation_layout"] = _normalize_keyboard_navigation_layout(layout_id)
 	settings["gameplay"]["hero_movement_bindings"] = {}
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_INPUT)
 
 func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 	ensure_settings()
@@ -955,7 +983,7 @@ func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 	var action_id := String(action)
 	var previous_keycode := int(bindings.get(action_id, 0))
 	if keycode == previous_keycode:
-		var unchanged_commit := _commit_settings()
+		var unchanged_commit := _commit_settings(SETTINGS_APPLY_INPUT)
 		unchanged_commit.merge({
 			"ok": true,
 			"action": action_id,
@@ -978,7 +1006,7 @@ func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 		break
 	bindings[action_id] = keycode
 	settings["gameplay"]["hero_movement_bindings"] = _normalize_hero_movement_bindings(bindings)
-	var commit := _commit_settings()
+	var commit := _commit_settings(SETTINGS_APPLY_INPUT)
 	commit.merge({
 		"ok": true,
 		"action": action_id,
@@ -991,7 +1019,7 @@ func set_hero_movement_key(action: StringName, keycode: int) -> Dictionary:
 func reset_hero_movement_bindings() -> Dictionary:
 	ensure_settings()
 	settings["gameplay"]["hero_movement_bindings"] = {}
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_INPUT)
 
 func set_large_ui_text_enabled(enabled: bool) -> Dictionary:
 	return set_ui_scale_percent(115 if enabled else 100)
@@ -1000,37 +1028,37 @@ func set_ui_scale_percent(value: int) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["ui_scale_percent"] = _normalize_ui_scale_percent(value)
 	settings["accessibility"]["large_ui_text"] = ui_scale_percent() > 100
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_high_contrast_ui_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["high_contrast_ui"] = enabled
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_color_cue_mode_id(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["color_cue_mode"] = _normalize_color_cue_mode(mode_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_battle_camera_shake_mode_id(mode_id: String) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["battle_camera_shake"] = _normalize_battle_camera_shake(mode_id)
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_reduced_motion_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_motion"] = enabled
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_reduced_flashes_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_flashes"] = enabled
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func set_reduced_repetitive_sounds_enabled(enabled: bool) -> Dictionary:
 	ensure_settings()
 	settings["accessibility"]["reduce_repetitive_sounds"] = enabled
-	return _commit_settings()
+	return _commit_settings(SETTINGS_APPLY_ACCESSIBILITY)
 
 func describe_settings() -> String:
 	var accessibility_parts := []
@@ -1164,25 +1192,39 @@ func credits_notices_text() -> String:
 	return "\n".join(lines)
 
 func apply_settings() -> void:
-	_apply_keyboard_navigation_layout()
-	_apply_accessibility_settings()
-	_apply_presentation_settings()
-	_apply_audio_settings()
+	_apply_settings_scope(SETTINGS_APPLY_ALL)
 
-func _commit_settings() -> Dictionary:
+func _apply_settings_scope(scope: int) -> void:
+	if (scope & SETTINGS_APPLY_INPUT) != 0:
+		_apply_keyboard_navigation_layout()
+	if (scope & SETTINGS_APPLY_ACCESSIBILITY) != 0:
+		_apply_accessibility_settings()
+	if (scope & SETTINGS_APPLY_DISPLAY) != 0:
+		_apply_presentation_settings()
+	elif (scope & SETTINGS_APPLY_RENDERING) != 0:
+		_apply_rendering_settings()
+	if (scope & SETTINGS_APPLY_AUDIO) != 0:
+		_apply_audio_settings()
+
+func _commit_settings(apply_scope: int = SETTINGS_APPLY_ALL) -> Dictionary:
 	if display_change_pending():
 		revert_display_change("direct_settings_commit")
 	var prior_settings := _committed_settings.duplicate(true) if not _committed_settings.is_empty() else build_default_settings()
 	var candidate := settings.duplicate(true)
-	var prior_runtime := _capture_runtime_display_state()
-	var prior_input_map := _capture_managed_input_map()
-	apply_settings()
+	# Uncommitted values such as a live volume preview are applied and rolled
+	# back with this commit, so runtime state always matches the settings kept.
+	var scope := apply_scope | _changed_settings_apply_scope(prior_settings, candidate)
+	var prior_runtime := _capture_runtime_display_state() if (scope & SETTINGS_APPLY_DISPLAY) != 0 else {}
+	var prior_input_map := _capture_managed_input_map() if (scope & SETTINGS_APPLY_INPUT) != 0 else {}
+	_apply_settings_scope(scope)
 	var persisted := _persist_settings_transaction(candidate)
 	if not bool(persisted.get("ok", false)):
 		settings = prior_settings
-		apply_settings()
-		_restore_managed_input_map(prior_input_map)
-		_restore_runtime_display_state(prior_runtime)
+		_apply_settings_scope(scope)
+		if (scope & SETTINGS_APPLY_INPUT) != 0:
+			_restore_managed_input_map(prior_input_map)
+		if (scope & SETTINGS_APPLY_DISPLAY) != 0:
+			_restore_runtime_display_state(prior_runtime)
 		var failure := persisted.duplicate(true)
 		failure["changed"] = false
 		failure["settings"] = settings.duplicate(true)
@@ -1201,6 +1243,33 @@ func _commit_settings() -> Dictionary:
 	_last_settings_commit_result = result.duplicate(true)
 	settings_changed.emit(settings.duplicate(true))
 	return result
+
+func _changed_settings_apply_scope(before: Dictionary, after: Dictionary) -> int:
+	var scope := SETTINGS_APPLY_NONE
+	if _settings_section_differs(before, after, "audio"):
+		scope |= SETTINGS_APPLY_AUDIO
+	if _settings_section_differs(before, after, "accessibility"):
+		scope |= SETTINGS_APPLY_ACCESSIBILITY
+	if _settings_section_differs(before, after, "gameplay", ["keyboard_navigation_layout", "hero_movement_bindings"]):
+		scope |= SETTINGS_APPLY_INPUT
+	if _settings_section_differs(before, after, "presentation", ["mode", "resolution"]):
+		scope |= SETTINGS_APPLY_DISPLAY
+	elif _settings_section_differs(before, after, "presentation"):
+		scope |= SETTINGS_APPLY_RENDERING
+	return scope
+
+func _settings_section_differs(before: Dictionary, after: Dictionary, section: String, keys: Array = []) -> bool:
+	var before_section: Dictionary = before.get(section, {}) if before.get(section, {}) is Dictionary else {}
+	var after_section: Dictionary = after.get(section, {}) if after.get(section, {}) is Dictionary else {}
+	if keys.is_empty():
+		return before_section != after_section
+	# Compare through dictionaries: a direct Variant != errors on mismatched types.
+	var before_values := {}
+	var after_values := {}
+	for key in keys:
+		before_values[key] = before_section.get(key)
+		after_values[key] = after_section.get(key)
+	return before_values != after_values
 
 func last_settings_commit_result() -> Dictionary:
 	return _last_settings_commit_result.duplicate(true)
@@ -1281,6 +1350,10 @@ func _ensure_hero_diagonal_numpad_actions() -> void:
 
 func _apply_presentation_settings() -> void:
 	_apply_display_candidate(presentation_mode_id(), presentation_resolution_size())
+	_apply_rendering_settings()
+
+# Render quality, VSync, and frame pacing apply without touching the window.
+func _apply_rendering_settings() -> void:
 	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_ENABLED if vsync_enabled() else DisplayServer.VSYNC_DISABLED)
 	Engine.max_fps = frame_rate_limit()
 	var root := get_tree().root
