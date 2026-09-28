@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          244
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c06d51ed4ba86c63cb0f37a97f2f3155ee1bb73a42e79cf754f642a3c899cf5f",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            1536,
+            256,
+            2048,
+            512
+          ]
+        ],
+        "anchor": [
+          1792,
+          500
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9a2452f7d89708f325039596a9bedbef52d55702ce40c59987fd37174c1e353b",
+      "runtime_source_scale": 0.93
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

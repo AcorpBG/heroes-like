@@ -1,0 +1,18 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/keys/melee_left_fist.png",
+    "sha256": "1fb9acb1b4ec94b5466b29b9bf7f55f4fe34e1c6a5d8c75ce31be317faad31d9"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/keys/melee_left_fist.prompt.txt",
+    "sha256": "24244338933820ef21c7358159fd3798210ca76a26f9217a1665a3c4d4e59531"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/attack_entry_h3_v3/guide_0_rgba.png",
+      "sha256": "d87b777835487a42eadf1291bc768d693c9c087f47983d0df410f8bcfdb26462"
+    }
+  ],
+  "review": "Correct two-arm anatomy; empty far left fist extended while near right hand retains the sling below hip. Original generation retained unchanged."
+}

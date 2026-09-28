@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          244
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c06d51ed4ba86c63cb0f37a97f2f3155ee1bb73a42e79cf754f642a3c899cf5f",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/keys/melee_left_fist.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          821,
+          851
+        ],
+        "scale": 0.5386740331491713,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1fb9acb1b4ec94b5466b29b9bf7f55f4fe34e1c6a5d8c75ce31be317faad31d9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6f477cfab2fc96bae6bddd858ec4b3bee0accd58492a59f2e0038dde0fb9c012",
+      "runtime_source_scale": 0.26933701657458564
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

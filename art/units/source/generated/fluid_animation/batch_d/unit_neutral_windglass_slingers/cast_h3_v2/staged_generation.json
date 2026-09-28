@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "185b6b99277501c8ba7721c951cc7b167c9f0552603297d966c25a6ec96a7380",
+  "latent_sha256": "ba0c6ae12525c276c65d81b4356452eab328839eefee006b24ca084e4747ccd2",
+  "decode_workflow_sha256": "419c6438c1237508aa1c0c207b28370a3795f65424fc4f292d9675c3387e0f44",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "windglass_h3\\cast_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -2345,19 +2345,37 @@
     "unit_neutral_windglass_slingers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_windglass_slingers.png",
       "frame_size": [
-        146,
-        222
+        139,
+        221
       ],
-      "frames": 8,
-      "frame_msec": 240,
+      "frames": 31,
+      "frame_msec": 90,
       "static_frame": 0,
       "ground_anchor": [
-        66.0,
+        67,
         212
       ],
-      "painted_extent": 206,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+      "painted_extent": 205,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_windglass_slingers.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
         19,
         20,
         21,
@@ -2365,17 +2383,22 @@
         23,
         24,
         25,
-        26
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
       ],
       "source_crop": [
-        190,
-        24,
-        336,
-        246
+        57,
+        32,
+        196,
+        253
       ],
-      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_windglass_slingers/provenance.json",
-      "sha256": "6635cd326a14ded08e927efba3c945e91496d98328b8a88775a4125951922766"
+      "source_sha256": "ddeaa4da7d089e29030ed56d27d90a3edc068bc5a3049c25307a5379f4dc0439",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_windglass_slingers/provenance.json",
+      "sha256": "eb2eb9618a0bb5094ccfe74bac53c936129c6bb68c0031d787d6f3a214844906"
     },
     "unit_neutral_reedbarge_poles": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_reedbarge_poles.png",
