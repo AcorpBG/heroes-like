@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            272
+          ]
+        ],
+        "anchor": [
+          256,
+          256
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2b5dee303546425139d303df022be2ca6483ee2ad84593f4e8d0c7cc6b86aa85",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "af0cd5a6197259e0dd8e312fc7caa862ce164f15d2cc82ca6571323cd62cbe93",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns_veteran/keys/attack_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1721,
+            914
+          ]
+        ],
+        "anchor": [
+          916,
+          844
+        ],
+        "scale": 0.57,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "91f227ab400b206440343e80da9ae7d64e93ce0991f912563755aeebe844a727",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c10e08492ae258117f32b90b2af8e9dabec6aeadb10b24f4f8a44bfd1a826b17",
+      "runtime_source_scale": 0.285
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    500
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

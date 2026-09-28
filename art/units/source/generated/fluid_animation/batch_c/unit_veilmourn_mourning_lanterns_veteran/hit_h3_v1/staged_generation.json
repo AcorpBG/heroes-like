@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "63275ee7dffb1dbb7e81b92f1fbb78ba9955b38dda8095dee798f6d9d33f599a",
+  "latent_sha256": "f76ba00e2e33db0e337e81e2ed00016b71f1e8f07e605d965f7294b41e4af570",
+  "decode_workflow_sha256": "039392107db8213c790aed4b705eeb05a7bf4f3422440bebf70d3781bb024f9e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "lastlight_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

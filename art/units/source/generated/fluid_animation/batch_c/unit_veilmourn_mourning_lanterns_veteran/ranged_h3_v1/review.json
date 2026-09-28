@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "reason": "Action jumps from ready at frame 37 to aimed pose at 38, and snaps back at 94. Long static holds do not supply an articulated approach or recovery. Replace using separate endpoint-controlled motion takes."
+}

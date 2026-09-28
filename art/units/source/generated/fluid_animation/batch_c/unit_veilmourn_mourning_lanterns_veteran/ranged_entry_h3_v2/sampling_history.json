@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    531,
+    "aada95bc-7366-4271-86b6-bf49f189ddc2",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender adult hooded human Lastlight Keeper, two arms and two legs, hidden face inside deep grey hood, layered ragged charcoal and ivory robes, dark leather gloves, boots and tarnished brass fittings. Exactly ONE rigid brown lantern staff: one metal housing near its top contains a blue upper pane and warm amber lower pane, with long ivory ribbons hanging from the housing. Preserve the staff length, one housing with its two colored chambers, all ribbons and the original hand grips. The lantern stays attached to the staff; no additional lanterns. Fixed anatomical size and stationary camera; entire body, staff and cloth always inside canvas. Background is CONSTANT flat saturated pure green throughout, no shadow, ground, scenery, text, color changes, particles or new magical effects. One continuous gradual transition from the starting ready pose to the supplied ending ranged aim pose. Bend elbows to prepare, tilt the rigid staff forward toward screen right, extend the free hand smoothly and flex knees into the aimed stance. End held in that aimed pose; do not return. Show the complete arc of hands and forearms, no cut, instant pose swap or frozen transition.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928908
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lastlight_ranged_entry_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lastlight_ranged_entry_h3_v2_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "lastlight_h3/ranged_entry_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "lastlight_h3",
+      "create_time": 1790577676166
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "lastlight_h3\\ranged_entry_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "aada95bc-7366-4271-86b6-bf49f189ddc2",
+          "timestamp": 1790577676245
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "aada95bc-7366-4271-86b6-bf49f189ddc2",
+          "timestamp": 1790577676258
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "aada95bc-7366-4271-86b6-bf49f189ddc2",
+          "timestamp": 1790577953822
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

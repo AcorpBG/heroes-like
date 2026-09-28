@@ -1,0 +1,275 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "clip_sequences": {
+    "ranged": {
+      "frames": [
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 0
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 100
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 104
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 112
+        },
+        {
+          "take": "ranged_entry_h3_v2",
+          "video_frame": 120
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 28
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 36
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 44
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 52
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 60
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 68
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 76
+        },
+        {
+          "take": "ranged_recovery_h3_v2",
+          "video_frame": 84
+        }
+      ],
+      "timing": {
+        "frame_msec": 35,
+        "contact_frame": 17
+      }
+    },
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 6
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 8
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 9
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 10
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 11
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 13
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 15
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 16
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 24
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 56
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 80
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 88
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 96
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 104
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 112
+        },
+        {
+          "take": "hit_recovery_h3_v2",
+          "video_frame": 120
+        }
+      ],
+      "timing": {
+        "frame_msec": 35
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomously reviewed every chronological original in selected takes, enlarged anatomy/grips/alpha edges and all 224 selected phases at native 128px battle reference height. Readable hand-to-lantern idle, reciprocal gait under robes, two-handed butt strike and recovery, held guard, physical open-hand support signal, aimed ranged release/recovery, balanced hit recoil/recovery and grounded side collapse. One staff and one blue-over-amber lantern housing preserved. Attack originals 34-35 are excluded whole for clipping; clean 33-to-36 angles retain the swing with an explicit 70ms sample interval, inspected at native scale. Rejected hard-cut ranged v1, clipped attack/guard v1 and changing-background hit remainder remain source-only. All selected opaque tips lie inside source canvases. Continuous temporal playback, manual game playtest and Linux validation were not performed; chronological frame review and native phase renders are the visual evidence. Candidate 749 focused checks passed."
+  }
+}

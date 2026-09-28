@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    500
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "clip": "hit",
+  "last": 1,
+  "guides": [],
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_mourning_lanterns_veteran/hit_h3_v1/matte/rgba_020.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          544
+        ]
+      ],
+      "anchor": [
+        480,
+        500
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "seed": 928912,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender adult hooded human Lastlight Keeper, two arms and two legs, hidden face inside deep grey hood, layered ragged charcoal and ivory robes, dark leather gloves, boots and tarnished brass fittings. Exactly ONE rigid brown lantern staff: one metal housing near its top contains a blue upper pane and warm amber lower pane, with long ivory ribbons hanging from the housing. Preserve the staff length, one housing with its two colored chambers, all ribbons and the original hand grips. The lantern stays attached to the staff; no additional lanterns. Fixed anatomical size and stationary camera; entire body, staff and cloth always inside canvas. Background is CONSTANT flat saturated pure green throughout, no shadow, ground, scenery, text, color changes, particles or new magical effects. One slow continuous physical recovery from the supplied off-balance recoil pose to the final upright ready stance. Lower the lifted front boot to the ground, ease shoulders forward, relax the bent elbows and return the one rigid lantern staff to its original upright hand grip. The lantern remains attached, blue above amber, two arms and two boots. The completely static solid green background stays green in every frame. End ready and hold."
+}
