@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    500
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "clip": "idle",
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands_veteran.png",
+      "rects": [
+        [
+          512,
+          0,
+          1024,
+          256
+        ]
+      ],
+      "anchor": [
+        768,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "seed": 928920,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. One adult human Mooring Talon: charcoal hood hiding the face, layered tattered dark leather longcoat, brown rope harness crossed over chest, faded burgundy sash, dark gloves and two sturdy leather boots. Exactly two arms and two legs. Each gloved hand grips ONE short brown-handled rusty bronze C-shaped boarding hook, two hooks total, with unchanged rigid handles and curved metal tips. No additional weapons or loose props. Keep each hook attached to its correct hand. Fixed body size and stationary camera; entire body and both hooks stay inside the image with generous margin. Background is static solid saturated green throughout. No ground, scenery, text or added effects. Slow idle cycle: bring both forearms forward and upward from the low ready position, tighten and relax the paired hook grips, then lower both hands back to the identical ready pose. Both boots stay planted. Small shoulder breathing supports the visible wrist and elbow motion; no global bounce."
+}
