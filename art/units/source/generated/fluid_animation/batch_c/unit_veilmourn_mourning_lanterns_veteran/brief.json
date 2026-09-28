@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "identity": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender adult hooded human Lastlight Keeper, two arms and two legs, hidden face inside deep grey hood, layered ragged charcoal and ivory robes, dark leather gloves, boots and tarnished brass fittings. Exactly ONE rigid brown lantern staff: one metal housing near its top contains a blue upper pane and warm amber lower pane, with long ivory ribbons hanging from the housing. Preserve the staff length, one housing with its two colored chambers, all ribbons and the original hand grips. The lantern stays attached to the staff; no additional lanterns. Fixed anatomical size and stationary camera; entire body, staff and cloth always inside canvas. Background is CONSTANT flat saturated pure green throughout, no shadow, ground, scenery, text, color changes, particles or new magical effects. ",
+  "required_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_accepted_clips": [],
+  "status": "completed",
+  "frames": 224,
+  "review_scope": "Chronological originals, enlarged details, all selected native battle phases and actual map-shader snapshots; continuous playback/manual playtest/Linux not performed."
+}

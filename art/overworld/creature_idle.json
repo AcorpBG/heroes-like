@@ -7982,33 +7982,60 @@
     "unit_veilmourn_mourning_lanterns_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_mourning_lanterns_veteran.png",
       "frame_size": [
-        216,
-        248
+        190,
+        252
       ],
-      "frames": 4,
-      "frame_msec": 240,
+      "frames": 31,
+      "frame_msec": 90,
       "static_frame": 0,
       "ground_anchor": [
-        88.0,
-        236
+        88,
+        241
       ],
-      "painted_extent": 232,
-      "source_sheet": "res://art/animation/runtime/poses/unit_veilmourn_mourning_lanterns_veteran.png",
+      "painted_extent": 236,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_veilmourn_mourning_lanterns_veteran.png",
       "source_indices": [
-        0,
         1,
         2,
-        3
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
       ],
       "source_crop": [
-        168,
-        20,
-        384,
-        268
+        132,
+        63,
+        322,
+        315
       ],
-      "source_sha256": "2b5dee303546425139d303df022be2ca6483ee2ad84593f4e8d0c7cc6b86aa85",
-      "source_provenance": "res://art/animation/source/poses/unit_veilmourn_mourning_lanterns_veteran/provenance.json",
-      "sha256": "df31764a52e32833eae5039856c9c52725f169a9e392501a6236ead91101372d"
+      "source_sha256": "3bef3dc198ccaf903c58f39b082d25ed4e68971a9208fd1b4c575211071eac30",
+      "source_provenance": "res://art/animation/source/fluid/unit_veilmourn_mourning_lanterns_veteran/provenance.json",
+      "sha256": "a9a4d2931f1f34a29466c146dcc0fa73f1b367eb0207e8c34b56c13a490a1606"
     },
     "unit_veilmourn_tidehook_deckhands_veteran": {
       "path": "res://art/overworld/runtime/creature_idle/unit_veilmourn_tidehook_deckhands_veteran.png",

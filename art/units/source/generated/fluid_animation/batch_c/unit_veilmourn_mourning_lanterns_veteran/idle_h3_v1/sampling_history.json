@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    515,
+    "8a51b968-205e-4cb3-b9eb-423e6f77bddc",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender adult hooded human Lastlight Keeper, two arms and two legs, hidden face inside deep grey hood, layered ragged charcoal and ivory robes, dark leather gloves, boots and tarnished brass fittings. Exactly ONE rigid brown lantern staff: one metal housing near its top contains a blue upper pane and warm amber lower pane, with long ivory ribbons hanging from the housing. Preserve the staff length, one housing with its two colored chambers, all ribbons and the original hand grips. The lantern stays attached to the staff; no additional lanterns. Fixed anatomical size and stationary camera; entire body, staff and cloth always inside canvas. Background is CONSTANT flat saturated pure green throughout, no shadow, ground, scenery, text, color changes, particles or new magical effects. Remain standing with boots planted. Clearly flex both elbows and wrists to gently tilt and settle the lantern staff, the free hand checking the grip and returning to its original resting position. Small shoulder breathing and hanging-cloth follow-through; torso remains centered, no overall bobbing.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928900
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "lastlight_idle_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "lastlight_h3/idle_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "lastlight_h3",
+      "create_time": 1790575694970
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "lastlight_h3\\idle_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "8a51b968-205e-4cb3-b9eb-423e6f77bddc",
+          "timestamp": 1790575694971
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "8a51b968-205e-4cb3-b9eb-423e6f77bddc",
+          "timestamp": 1790575694978
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "8a51b968-205e-4cb3-b9eb-423e6f77bddc",
+          "timestamp": 1790575905362
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

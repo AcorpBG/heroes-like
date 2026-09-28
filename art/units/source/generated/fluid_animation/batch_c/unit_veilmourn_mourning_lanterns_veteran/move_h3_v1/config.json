@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_veilmourn_mourning_lanterns_veteran",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    500
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "clip": "move",
+  "last": 0,
+  "guides": [],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_mourning_lanterns_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "seed": 928901,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender adult hooded human Lastlight Keeper, two arms and two legs, hidden face inside deep grey hood, layered ragged charcoal and ivory robes, dark leather gloves, boots and tarnished brass fittings. Exactly ONE rigid brown lantern staff: one metal housing near its top contains a blue upper pane and warm amber lower pane, with long ivory ribbons hanging from the housing. Preserve the staff length, one housing with its two colored chambers, all ribbons and the original hand grips. The lantern stays attached to the staff; no additional lanterns. Fixed anatomical size and stationary camera; entire body, staff and cloth always inside canvas. Background is CONSTANT flat saturated pure green throughout, no shadow, ground, scenery, text, color changes, particles or new magical effects. Walk in place through two complete reciprocal walking cycles. Alternate near and far feet through heel contact, weight bearing, bent-knee passing and toe push-off, while the torso stays centered for game-controlled translation. One hand continuously holds the staff; the other balances naturally. Staff moves with its grip without changing shape. Return to the initial ready stance."
+}
