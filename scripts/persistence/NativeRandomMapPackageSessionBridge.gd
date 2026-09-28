@@ -51,7 +51,12 @@ static func build_session_from_adoption(
 	var start := _primary_start(adoption)
 	var map_document: Variant = adoption.get("map_document", null)
 	var scenario_document: Variant = adoption.get("scenario_document", null)
-	for object in _document_objects(map_document):
+	# Materialize the package objects once. Every document read builds a fresh
+	# Dictionary per object, and the adoption passes below used to repeat that
+	# for each pass on Large maps. The passes only read these records and copy
+	# any record they adapt, so sharing one list keeps their outputs identical.
+	var source_objects := _document_objects(map_document)
+	for object in source_objects:
 		if object.has("native_guard_quantity"):
 			var resolved := GeneratedNeutralRules.resolve(object)
 			if not bool(resolved.get("ok", false)):
@@ -70,7 +75,7 @@ static func build_session_from_adoption(
 	var hero_state := _hero_state(hero_id_from_doc, start, difficulty)
 	if active_player_id != "":
 		hero_state["player_id"] = active_player_id
-	var towns := _town_states_from_document(map_document)
+	var towns := _town_states_from_objects(source_objects)
 	for town in towns:
 		if String(town.get("owner", "neutral")) == "neutral":
 			continue
@@ -79,25 +84,25 @@ static func build_session_from_adoption(
 				town["controlling_player_id"] = String(player.get("player_id", ""))
 				town["team_id"] = String(player.get("team_id", ""))
 				break
-	var resource_nodes := _resource_nodes_from_document(map_document)
-	var scenery_validation := NativeScenery.validate(_document_objects(map_document))
+	var resource_nodes := _resource_nodes_from_objects(source_objects)
+	var scenery_validation := NativeScenery.validate(source_objects)
 	if not bool(scenery_validation.get("ok", false)):
 		push_error("Generated scenery adoption failed: %s" % JSON.stringify(scenery_validation))
 		return SessionStateStoreScript.new_session_data()
-	var artifact_nodes := _artifact_nodes_from_document(map_document)
+	var artifact_nodes := _artifact_nodes_from_objects(source_objects)
 	var encounters := _ensure_generated_guarded_reward_site_guards(
 		resource_nodes,
-		_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document)),
+		_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_objects(source_objects)),
 		map_size
 	)
 	for encounter in encounters:
 		if not (encounter is Dictionary) or encounter.is_empty():
 			push_error("Generated guard adoption failed; refusing an unguarded partial session")
 			return SessionStateStoreScript.new_session_data()
-	var map_objects := _map_objects_from_document(map_document)
+	var map_objects := _map_objects_from_objects(source_objects)
 	var package_source_object_ids := []
 	var package_source_objects_by_id := {}
-	for source_object in _document_objects(map_document):
+	for source_object in source_objects:
 		var source_placement_id := String(source_object.get("placement_id", "")).strip_edges()
 		if source_placement_id != "":
 			package_source_object_ids.append(source_placement_id)
@@ -322,9 +327,15 @@ static func _document_objects(map_document: Variant) -> Array:
 			objects.append(object)
 	return objects
 
+# The *_from_document() forms stay for regression probes that adapt one pass
+# directly from a package document; session adoption uses the *_from_objects()
+# forms with its single materialized object list.
 static func _town_states_from_document(map_document: Variant) -> Array:
+	return _town_states_from_objects(_document_objects(map_document))
+
+static func _town_states_from_objects(objects: Array) -> Array:
 	var towns := []
-	for object in _document_objects(map_document):
+	for object in objects:
 		if String(object.get("native_record_kind", object.get("kind", ""))) != "town" and String(object.get("kind", "")) != "town":
 			continue
 		var town_identity := _project_town_identity_from_h3m_record(object)
@@ -418,8 +429,11 @@ static func _bool_or_default(value: Variant, default_value: bool) -> bool:
 	return default_value
 
 static func _resource_nodes_from_document(map_document: Variant) -> Array:
+	return _resource_nodes_from_objects(_document_objects(map_document))
+
+static func _resource_nodes_from_objects(objects: Array) -> Array:
 	var nodes := []
-	for object in _document_objects(map_document):
+	for object in objects:
 		var kind := String(object.get("kind", ""))
 		if not (kind in ["resource_site", "mine", "neutral_dwelling", "reward_reference"]):
 			continue
@@ -432,9 +446,9 @@ static func _resource_nodes_from_document(map_document: Variant) -> Array:
 		nodes.append(node)
 	return nodes
 
-static func _artifact_nodes_from_document(map_document: Variant) -> Array:
+static func _artifact_nodes_from_objects(objects: Array) -> Array:
 	var nodes := []
-	for object in _document_objects(map_document):
+	for object in objects:
 		var artifact_id := String(object.get("artifact_id", ""))
 		if artifact_id == "":
 			continue
@@ -444,8 +458,11 @@ static func _artifact_nodes_from_document(map_document: Variant) -> Array:
 	return nodes
 
 static func _encounters_from_document(map_document: Variant) -> Array:
+	return _encounters_from_objects(_document_objects(map_document))
+
+static func _encounters_from_objects(objects: Array) -> Array:
 	var encounters := []
-	for object in _document_objects(map_document):
+	for object in objects:
 		var kind := String(object.get("kind", ""))
 		var native_kind := String(object.get("native_record_kind", ""))
 		if kind != "guard" and native_kind != "guard":
@@ -687,9 +704,9 @@ static func _generated_source_in_bounds(tile: Vector2i, map_size: Variant) -> bo
 		return tile.x >= 0 and tile.y >= 0 and tile.x < int(map_size.get("x", map_size.get("width", 0))) and tile.y < int(map_size.get("y", map_size.get("height", 0)))
 	return false
 
-static func _map_objects_from_document(map_document: Variant) -> Array:
+static func _map_objects_from_objects(source_objects: Array) -> Array:
 	var objects := []
-	for object in _document_objects(map_document):
+	for object in source_objects:
 		var kind := String(object.get("kind", ""))
 		var native_kind := String(object.get("native_record_kind", ""))
 		if kind == "town" or native_kind == "town":
