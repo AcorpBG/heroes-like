@@ -1,0 +1,12 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/opposite_key_original.png",
+    "sha256": "36de45de9b0d7fe95f76c0d1cefdee1c8a922122ead589c9c2cdb369c0becb5f"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/opposite_key_prompt.txt",
+    "sha256": "00bd6675e698f9b036bab842a540958b8eeecd060bf05731022cc9fb62e8d6cd"
+  },
+  "review": "Rejected as an opposite walking contact: repeats the same leading leg as the first generated sheet. Original painting and prompt retained; not used as an H3 guide."
+}

@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_neutral_cliffhawk_wardens",
+  "clip": "cast",
+  "scale": 0.6,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 65,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_cliffhawk_wardens.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/rally_key_original.png",
+      "rects": [
+        [
+          600,
+          0,
+          1200,
+          944
+        ]
+      ],
+      "anchor": [
+        840,
+        916
+      ],
+      "scale": 0.29806259314456035,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "seed": 989305,
+  "prompt": "One original Cliffhawk Warden, an adult female human pike fighter in the reference elevated three-quarter orthographic fantasy strategy sprite view facing screen-right. Long wavy chestnut hair, uncovered fair human face, blue scarf, layered blue white and ochre feather mantle over brown leather and dull steel armor, round knee guards, leather boots, blue split tunic with ochre ribbons and a coil of golden rope at the belt. Exactly TWO arms, TWO hands, TWO legs and TWO boots. Both hands grip ONE long straight brown wooden pike: RIGHT NEAR hand on the rear/lower screen-left section, LEFT FAR hand on the forward/upper screen-right section. One hooked dark-silver spearhead at the upper right end, one small metal butt spike at the lower left end, blue and ochre feather tassels below the spearhead. Do not shorten, bend, duplicate or swap ends of the pike. One small natural brown-and-white hawk perches on the RIGHT shoulder at screen-left; separate head, hooked beak, two feet, folded feathered wings, no extra birds. Keep the hawk clearly separate from the feather cloak. Retain original face, hair, clothing, feather colors and proportions. Locked camera, constant body scale and view, full body and all pike tips visible with margins. Uniform pure GREEN RGB0,255,0 background throughout. One clear physical rally salute with a wooden spear. Lift both hands and bend both elbows, rotate the rigid pike upward to the raised midpoint reference, pause briefly and lower it smoothly back to ready. Feet stay planted, no thrust or combat attack, no projectile, no magic, no glow or effects. Keep full pike length, both existing grips and the same two hands. The hawk stays perched with wings folded, small head balancing only. Constant original body size and camera. Entire raised blade and all body parts remain within the image margins.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

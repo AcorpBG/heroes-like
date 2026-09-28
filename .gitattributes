@@ -162,3 +162,8 @@ art/animation/source/fluid/unit_neutral_hearthbow_carriers/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_mossglass_sentinels/**/*.txt -text
 art/animation/source/fluid/unit_neutral_mossglass_sentinels/*.json -text
+
+# Preserve hash-bound Cliffhawk Wardens H3 provenance.
+art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/**/*.txt -text
+art/animation/source/fluid/unit_neutral_cliffhawk_wardens/*.json -text

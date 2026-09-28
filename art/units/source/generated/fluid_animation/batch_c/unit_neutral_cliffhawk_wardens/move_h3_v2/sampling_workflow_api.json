@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Cliffhawk Warden, an adult female human pike fighter in the reference elevated three-quarter orthographic fantasy strategy sprite view facing screen-right. Long wavy chestnut hair, uncovered fair human face, blue scarf, layered blue white and ochre feather mantle over brown leather and dull steel armor, round knee guards, leather boots, blue split tunic with ochre ribbons and a coil of golden rope at the belt. Exactly TWO arms, TWO hands, TWO legs and TWO boots. Both hands grip ONE long straight brown wooden pike: RIGHT NEAR hand on the rear/lower screen-left section, LEFT FAR hand on the forward/upper screen-right section. One hooked dark-silver spearhead at the upper right end, one small metal butt spike at the lower left end, blue and ochre feather tassels below the spearhead. Do not shorten, bend, duplicate or swap ends of the pike. One small natural brown-and-white hawk perches on the RIGHT shoulder at screen-left; separate head, hooked beak, two feet, folded feathered wings, no extra birds. Keep the hawk clearly separate from the feather cloak. Retain original face, hair, clothing, feather colors and proportions. Locked camera, constant body scale and view, full body and all pike tips visible with margins. Uniform flat pure GREEN RGB0,255,0 background, unchanged for the ENTIRE shot. No orange, yellow, magenta, floor, shadows or scenery. One complete natural reciprocal walking cycle in place returning to the original contact pose. Each leg MUST take its own forward step: near right knee passes forward and its heel plants, body weight transfers, far left knee then passes forward and its heel plants, returning to the original near-leg contact. Both knees and ankles bend naturally; no hopping or repeated same-leg kick. Preserve the first guide camera and body proportions throughout. The pike is held at exactly the same diagonal angle and length with both hands fixed to their existing grips. The hawk stays on the shoulder with folded wings; no flight. Slight hip rotation and cloth response, no camera rotation or global travel. Full body, both boots, hawk and full weapon always visible.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 989101
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cliffhawk_move_h3_v2_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "cliffhawk_h3/move_h3_v2/sampled"
+    }
+  }
+}

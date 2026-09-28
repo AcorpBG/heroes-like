@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "cc34ef368d7bec4b890246d001ea50e0f5c83ba2318291d0a42a1a4caf592837",
+  "latent_sha256": "b18f1c4607d391e262f3d561c5513d4b6d97bbdb361436ab9e2755b07a4e59e0",
+  "decode_workflow_sha256": "75b3a54ff74765f5974c1c8e7baebdbf8ca7c2050bee576d0786f6802a448731",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cliffhawk_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

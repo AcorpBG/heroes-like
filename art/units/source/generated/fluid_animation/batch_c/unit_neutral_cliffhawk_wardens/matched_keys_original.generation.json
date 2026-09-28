@@ -1,0 +1,12 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_original.png",
+    "sha256": "01774f4c392c8debf1f08475bec878eda5e8f39cd3defc05576e350adbaa1c0c"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_neutral_cliffhawk_wardens/matched_keys_prompt.txt",
+    "sha256": "2f500b569d1d6e2a4977eb0299e551e4fd9b25d4632bf77012fe97957a2a9e95"
+  },
+  "review": "Original preserved. Walking keys rejected: same leading leg. Only third matched_keys pose is used as a planted idle midpoint; its anatomy, two hands, pike and perched hawk reviewed."
+}
