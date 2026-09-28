@@ -1,0 +1,4138 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "idle_h3_000",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "idle_h3_004",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "idle_h3_008",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "idle_h3_012",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "idle_h3_016",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "idle_h3_020",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "idle_h3_024",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "idle_h3_028",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "idle_h3_032",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "idle_h3_036",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "idle_h3_040",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "idle_h3_044",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "idle_h3_048",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "idle_h3_052",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "idle_h3_056",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "idle_h3_060",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "idle_h3_064",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "idle_h3_068",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "idle_h3_072",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "idle_h3_076",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "idle_h3_080",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "idle_h3_084",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "idle_h3_088",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "idle_h3_092",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "idle_h3_096",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "idle_h3_100",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "idle_h3_104",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "idle_h3_108",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "idle_h3_112",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "idle_h3_116",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_116.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 116,
+          "video_time_seconds": 4.833333333333333
+        },
+        {
+          "name": "idle_h3_120",
+          "clip": "idle",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "attack_h3_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_052",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "attack_h3_120",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_015",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_019",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_086",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_120",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "defend_h3_096",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_108",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "cast_h3_120",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            596
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            500
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "idle": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30
+          ],
+          "frame_msec": 110,
+          "loop": true,
+          "static_frame": 0
+        },
+        "move": {
+          "indices": [
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48
+          ],
+          "frame_msec": 70,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 12
+        },
+        "hit": {
+          "indices": [
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 16
+        },
+        "cast": {
+          "indices": [
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 9
+        },
+        "death": {
+          "indices": [
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 23
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "idle_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/original_lossless.mkv",
+          "sha256": "884a99359d61919a9a4b910b7c478830fb39bd1a4b3d69b1c2b2c7b251074749"
+        },
+        "idle_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/original.json",
+          "sha256": "81290a9f7a0a1c56207983b47f900928a03a4fdb1797bb893e0872e202bb6515"
+        },
+        "idle_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/workflow_api.json",
+          "sha256": "dccb122025f640ee86ca67e063773d3e157f749b616be7c438588115aa2acf49"
+        },
+        "idle_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/prompt.txt",
+          "sha256": "3ee38b4669ec2f0cfc4d569f42f7b703a4a96da09f5987217439765ec412fe2c"
+        },
+        "idle_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/reference.json",
+          "sha256": "58946d7cdcb1f9d72fc3a56974e67b94c699093f6b8bb39593789b485613751e"
+        },
+        "idle_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte.json",
+          "sha256": "d1b5eaf1700be8f90079e1438738f638a846da347c4fb20522ec580b7d68d944"
+        },
+        "idle_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/staged_generation.json",
+          "sha256": "858c8a2f100c936033ff3b1cfe942b25851aabf2a42353ada2015cea945c3c7d"
+        },
+        "idle_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/sampling_workflow_api.json",
+          "sha256": "2bc3f3e380b91302fa0772fe718001ef1bca9489f5f2c9f9d20d8e27bb2fdcd8"
+        },
+        "idle_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/sampling_submission.json",
+          "sha256": "a964b03fbe720523555035b5edf1291a97b7d2b9d9cf2aa1452973d3c0a6d9a2"
+        },
+        "idle_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/sampling_history.json",
+          "sha256": "9b79914f6c7e050628d5e2739e2a63f93198c3735cd43610078085009a6900b4"
+        },
+        "idle_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/original.latent",
+          "sha256": "561e9bb4ccdc7cf8c9103fdc3038c3c22ea034b37ee5b15a8b1ca6c42e9f24d5"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/original_lossless.mkv",
+          "sha256": "c6ef007953748d3baa4b5b9ca7a92e454476ac604b80e76dbcd0738f1ffd6ca2"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/original.json",
+          "sha256": "04d713584f014259011c0bf85d6ee78a1f98803ba2943fc1f53ff056221b5702"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/workflow_api.json",
+          "sha256": "38917c3d836093d4c268693aa4d2fd22c00789e10200554d4c83754f80bec971"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/prompt.txt",
+          "sha256": "dc329cc46b025533cea74fba709a853cbe75151a09b92e41e4abe56008821a8b"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/reference.json",
+          "sha256": "0a687d29a4c1a0eae27f11c28af4cf2b57a0628745ccfde0fd313cb8175a6bb0"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte.json",
+          "sha256": "47d0e2e790786ea0d3929fececb582193c844a18d9942ceac733365ddf206107"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/staged_generation.json",
+          "sha256": "16fd314efcb96ecac18f714aaeca00aed7b6f3a6cd759ed4ef2475611686a566"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "215bd7477d4a6298842a01ac55426fd4cd4bdf1d6123e998933ca2d2bbf2516b"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/sampling_submission.json",
+          "sha256": "d378f4fa21ab58252e966c7c697907798f74cbe04e1d1bed8ed8fc5138cbdc89"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/sampling_history.json",
+          "sha256": "279d557a3e0b2ca24ab7fa9537a63a8c04169f5a70ae52763b6fea3b08e98479"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/original.latent",
+          "sha256": "824a53dd7804178e813d7232d4e8eb7dae425873ba3f3c30d2597e7983926d32"
+        },
+        "attack_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/original_lossless.mkv",
+          "sha256": "4bededb8623d9153f725b4308625c9f4f0cee688c65e2c4bd257ac76a44e5cab"
+        },
+        "attack_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/original.json",
+          "sha256": "67f0edf0eb05d19c850f2b84ed3e85340ade88f3aee6679dd8fa6c5812c9d503"
+        },
+        "attack_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/workflow_api.json",
+          "sha256": "0758ae00d1472407bff0c3686caabc6f292af315ee55a285df0f0c6b898a3cec"
+        },
+        "attack_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/prompt.txt",
+          "sha256": "f9570718fb4fe2bd32bfd1dae7c57bf8343663bc3b2a51bdf0f0d3a628dd0e5e"
+        },
+        "attack_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/reference.json",
+          "sha256": "f9ab327a43706ac5987416e7ca43573f057fe4f6d4165862cdca0b3e652fa8c7"
+        },
+        "attack_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte.json",
+          "sha256": "9dc4e703b51fcd63358bccf5c42e7da7bbee3d23db8ac2e5c9d358b5aead2fb5"
+        },
+        "attack_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/staged_generation.json",
+          "sha256": "65a7c4cf832b87394ae752dfe1f74e15e3aaa99c6549e9c0076e2a2ce3aed68e"
+        },
+        "attack_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "12d09b44feee7c843f9977084a7e03bc262e6c0e3523506c3f3e276b9813cb4a"
+        },
+        "attack_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/sampling_submission.json",
+          "sha256": "e103e3bcc7e135d9c28cfc7e7bb24c4bdc4e364803fce7161267fb49faf1fc86"
+        },
+        "attack_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/sampling_history.json",
+          "sha256": "4e714a8f7e9de0be414e5de6935fb8a876df5299a2d0862b4d924859f22921a4"
+        },
+        "attack_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/original.latent",
+          "sha256": "b994f84ae9a9fc85683b261155981f48565ecd27d8e4d38c526311e3e0ca05c9"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/original_lossless.mkv",
+          "sha256": "5ce49e753ed826f2376fa5eaef86dd02b5a09527203241ea4668928eb5d98f1a"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/original.json",
+          "sha256": "109a57841218e9488e008905c5037b58fea6015dd445b7c507e370e98b9b2381"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/workflow_api.json",
+          "sha256": "f478f90ce7c4962a1d3e17c22607fa365bde75abb30fa4817eedf113566be574"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/prompt.txt",
+          "sha256": "c742ce34f10336b647cdc1fec33d0b8447f8ab0e52230b843840dc0df69ee790"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/reference.json",
+          "sha256": "b07b003af1176f131ed453cc682e6b3210902dfd7ee703b0293bd5ef63164a4a"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte.json",
+          "sha256": "b613333ebd465e91b6d0fbd8938409f82fac4a13c1af08892696cdbbe1164194"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/staged_generation.json",
+          "sha256": "dc7bb01462cbd931c8ffee2bfd9dd25800d13fa9244c32b88bf621b84aaa1eb7"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "57ddcdded9a13ab6b83b4e339286e25d62c997dfe500e4214e598434e72433ca"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/sampling_submission.json",
+          "sha256": "d45fbdb577b00a0d726ce555678904f2b62ff7ce411434b679dffca4592816fc"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/sampling_history.json",
+          "sha256": "64598360ba243bb4ab979696ff646253f6d08565275c15ddbe63afb640b2d9ed"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/original.latent",
+          "sha256": "e6d262d46a4219be64aec25a2bdee55eaaa1252f120ab5f2afa3733284faf867"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/original_lossless.mkv",
+          "sha256": "950127974b527d106ea2bbd49472b52a201a0057f6a5826f42bd3a9befacf1c9"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/original.json",
+          "sha256": "a7b31d63cf9c4d84ec038cd0accae7f348482af6f8b0a26334f9ac0acb2bcd5b"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/workflow_api.json",
+          "sha256": "81950060a22778b9c1b26b41e06cd93b8d956e8db852ddff19a55c5255b76419"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/prompt.txt",
+          "sha256": "bb3e69598365e5409b863eea7855f8b5d80ec4d10fa8fb5ed49a2b230e0c7354"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/reference.json",
+          "sha256": "a57270db17ddd5aa6be36331a465b0a3efda68019aa59c4a632bb941eeed06b0"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte.json",
+          "sha256": "3c754d25a29bf70a4825222ca78a82f854603d6f9907fb78b8ac9f479458b0b7"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/staged_generation.json",
+          "sha256": "4ff66672942c6b2ff637f80dcb7329795410412c0a6ebdaa4e98f4d696390157"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "5f4eb94f32c050271133480f4d10b47edc771db8b1c2ec5fb9e18c13e86e0c6f"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/sampling_submission.json",
+          "sha256": "66119c8bcdf0e726c896e1f3d821c5f5da234c7014f7ce240de9ede104dab14e"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/sampling_history.json",
+          "sha256": "882d01a9940c7c2ec0120bac43f6a7555d75bea0e36acbfa26292a892a02be1a"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/original.latent",
+          "sha256": "4fb8336a1d99ae8a2c96f809de06665a892fb711ea22c5d2c624669f081413a9"
+        },
+        "defend_h3_v1_guide_image_defend_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/defend_v1.png",
+          "sha256": "e53a88be9fb11e7f5b40a538113b06fcdb03daa5e8dc74db3f9a612b7bae3a8b"
+        },
+        "defend_h3_v1_guide_prompt_defend_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/defend_v1.prompt.txt",
+          "sha256": "4e15cbc1b4db80a6c42f5bb6ae73295cfaa3272625c81d77aa921e6686484ca1"
+        },
+        "defend_h3_v1_guide_generation_defend_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/defend_v1.generation.json",
+          "sha256": "b16b022fd846eb16e048508e125564ecc07dbcb570102a1c8e0db2739f605d7c"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/original_lossless.mkv",
+          "sha256": "5a323e0ad03695501d27e782c1b62c64eb2cd2e0990fb7eca6696a7651ee6fdd"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/original.json",
+          "sha256": "38d226ff67ac4c0a8883e2917737e6c804335058601a2c031e9646d9af07127d"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/workflow_api.json",
+          "sha256": "e24165b8419dcdb094819e9c151ebda274629bc000abc6a36ae5093f3be71e84"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/prompt.txt",
+          "sha256": "a053672ad6b203012fe722701b2b9559f744e6e5f5b72b8723e220483ff7a3d7"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/reference.json",
+          "sha256": "c6c928c0ea087d5298a852eac67915a5f982efdac1b56e9b8f298873f7e4ef1d"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte.json",
+          "sha256": "2ea950a914c1912d58ae9a970deab3a8f643585b910bc7781ef8b576dddcad78"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/staged_generation.json",
+          "sha256": "fcc2789880491ac94825f525fdd42cb46d00d7cd311b8efb0af6413a697a50ba"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "e2f2cf77c69c5abf6fcd3776b09e29eb342471a80c63dc8b8481f5d296ab0c1a"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/sampling_submission.json",
+          "sha256": "aa63712a926d2b20272bc4dae92912544bfea74332f4076680b03c8fbfd7bb89"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/sampling_history.json",
+          "sha256": "879b96e07307940a99135a6973670ffbe4609d82f5ae2763d18923bd65765466"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/original.latent",
+          "sha256": "2a704695de70446360162a16fdbfdb57b38b14b6a7dfc05ef5b25d8d8f3024be"
+        },
+        "cast_h3_v1_guide_image_cast_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/cast_v1.png",
+          "sha256": "cb3a692cd6c2197ed892a352900824def0e447bfb12385a0288bba82bc929007"
+        },
+        "cast_h3_v1_guide_prompt_cast_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/cast_v1.prompt.txt",
+          "sha256": "ac638584c86069ff1687ee1ec1d39f184f5e12884b4e802c7137ef9650bfe3f5"
+        },
+        "cast_h3_v1_guide_generation_cast_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/cast_v1.generation.json",
+          "sha256": "8b169969b6afbd2d32f9fba6e7c097e5c54723e8b677f2afed21a9f4fb23242a"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/original_lossless.mkv",
+          "sha256": "15bef5b109dc68ba21e5358248caed83fdcab948ccd0c625e989a35aa7a16da3"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/original.json",
+          "sha256": "ae285d526ea8746dce1a4451350eb2c344e1bfc47860f25851e775b1f861d338"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/workflow_api.json",
+          "sha256": "cac39873310b66982351c399f06b2262f09e5390db311e6d0b528eace2d2f77f"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/prompt.txt",
+          "sha256": "b7b8a1e461b4457532dc13593c34f5154cf58f292b7e71b81437bdd78ad11bfa"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/reference.json",
+          "sha256": "40260c8972a5a814ff38f2b99f43ac7dd570e60066a8cac0ceb116b7b04b6285"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte.json",
+          "sha256": "afc66d552f68a7573a48033fa4463439f668354f67d8b11b510e8b5d66f5840d"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/staged_generation.json",
+          "sha256": "7cb21950444041b820b68023293df0de408e13026e55be19476ae35024941368"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "49c0b2c164d5b3e6985cca756c1f27b3b83f31e395f68084717f83a5fe7cc967"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/sampling_submission.json",
+          "sha256": "01653ee24dbe43213592a8ff6cbee9f11f3f94fbb6d1e17e20e358fd66969152"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/sampling_history.json",
+          "sha256": "0cba01c74b8cc039be005786bb6a3a3b3cb91f85e50bef1ea8a09f1065796b7d"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/original.latent",
+          "sha256": "845e4e98f6e51fa68bfbb076e8daa008aa911cb1afb50576c87480de95547db6"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/runtime_profile.json",
+          "sha256": "a709aa61dcb485e368f66416014a27f4c89e0d523ac0d742fdfdec2af8d65ce1"
+        }
+      },
+      "visual_review": {
+        "status": "accepted",
+        "notes": "Autonomously inspected all 124 chronological original frames for each of seven H3 takes, enlarged anatomy, both hook grips, alpha edges on dark/light grounds, loop boundaries and every selected native 128px battle phase. Accepted visible paired-hook idle, reciprocal gait, windup/thrust/recovery with contact at selected 12, backward recoil/recovery, distinct held braced guard, physical raised-hook support with peak at selected 9, and grounded collapse/corpse. Hooks remain held and legible; planted anchors and original body scale remain coherent. Long source holds shortened; only original chronological pixels selected. Candidate 230 focused Windows Godot assertions passed. Continuous video playback, manual game playtest and Linux checks were not performed; no full suite."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_116.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/idle_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/move_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/attack_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/hit_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/defend_h3_v1/matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/cast_h3_v1/matte/rgba_120.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/death_h3_v1/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": []
+    }
+  ]
+}

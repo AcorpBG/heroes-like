@@ -1,0 +1,65 @@
+{
+  "unit_id": "unit_veilmourn_tidehook_deckhands_veteran",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    500
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "clip": "defend",
+  "last": 1,
+  "guides": [],
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_tidehook_deckhands_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_tidehook_deckhands_veteran/keys/defend_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        866,
+        835
+      ],
+      "scale": 0.275,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "seed": 928925,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. One adult human Mooring Talon: charcoal hood hiding the face, layered tattered dark leather longcoat, brown rope harness crossed over chest, faded burgundy sash, dark gloves and two sturdy leather boots. Exactly two arms and two legs. Each gloved hand grips ONE short brown-handled rusty bronze C-shaped boarding hook, two hooks total, with unchanged rigid handles and curved metal tips. No additional weapons or loose props. Keep each hook attached to its correct hand. Fixed body size and stationary camera; entire body and both hooks stay inside the image with generous margin. Background is static solid saturated green throughout. No ground, scenery, text or added effects. Lower the hips and bend knees, then draw both forearms in front of the chest with the two hooks held up and outward in the supplied guarded stance. Keep hands separated, each with its own handle. Settle into this braced defensive pose and hold; do not return ready.",
+  "canvas": [
+    960,
+    544
+  ]
+}

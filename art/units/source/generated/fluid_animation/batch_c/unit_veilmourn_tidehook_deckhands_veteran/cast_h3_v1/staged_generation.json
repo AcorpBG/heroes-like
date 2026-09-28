@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e2f2cf77c69c5abf6fcd3776b09e29eb342471a80c63dc8b8481f5d296ab0c1a",
+  "latent_sha256": "2a704695de70446360162a16fdbfdb57b38b14b6a7dfc05ef5b25d8d8f3024be",
+  "decode_workflow_sha256": "e24165b8419dcdb094819e9c151ebda274629bc000abc6a36ae5093f3be71e84",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mooring_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

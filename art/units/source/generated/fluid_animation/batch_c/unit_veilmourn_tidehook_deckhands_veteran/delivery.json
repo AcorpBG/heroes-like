@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomously inspected all 124 chronological original frames for each of seven H3 takes, enlarged anatomy, both hook grips, alpha edges on dark/light grounds, loop boundaries and every selected native 128px battle phase. Accepted visible paired-hook idle, reciprocal gait, windup/thrust/recovery with contact at selected 12, backward recoil/recovery, distinct held braced guard, physical raised-hook support with peak at selected 9, and grounded collapse/corpse. Hooks remain held and legible; planted anchors and original body scale remain coherent. Long source holds shortened; only original chronological pixels selected. Candidate 230 focused Windows Godot assertions passed. Continuous video playback, manual game playtest and Linux checks were not performed; no full suite."
+  }
+}
