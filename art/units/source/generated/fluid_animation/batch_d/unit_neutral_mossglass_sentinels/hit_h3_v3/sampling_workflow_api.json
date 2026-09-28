@@ -1,0 +1,191 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Technical chroma-key character animation: every single frame has the identical pure BLUE RGB0,0,255 backdrop. One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view facing right. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and original fixed elevated view, constant body scale. Full body and all equipment remain visible on the unchanged pure BLUE RGB0,0,255 backdrop for the whole shot. Exactly one continuous physical hit reaction, with gradual motion between the supplied poses. Begin moving immediately: the upper chest and helmet lean back while knees and ankles flex, the shield arm yields slightly, and the right mallet arm lowers under its weight. Reach the backward recoil pose at one-third of the shot. Then the planted legs catch the body: bend the knees into the supplied low shield brace, bring the torso forward over the boots, and steadily straighten the knees to return to the original ready stance. Animate every intermediate shoulder, elbow, hip, knee and ankle angle, with visible weight transfer and recovery. No instantaneous pose switches, slideshow, long freeze, cut, teleport, zoom or view change. Keep the green mallet head on its single short wooden handle in the right hand, and the green decorated shield face attached to the left arm. No strike, magic, sparks, floor, shadow or other scenery. End in the initial ready pose. The backdrop stays identical blue throughout.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 988303
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mossglass_hit_h3_v3_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mossglass_hit_h3_v3_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "mossglass_hit_h3_v3_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 72,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "mossglass_h3/hit_h3_v3/sampled"
+    }
+  }
+}

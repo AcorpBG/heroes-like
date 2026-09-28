@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "clip": "defend",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 100,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          1536,
+          512,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1792,
+        748
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 2,
+  "guides": [
+    [
+      16,
+      0
+    ],
+    [
+      46,
+      1
+    ],
+    [
+      82,
+      2
+    ]
+  ],
+  "seed": 988102,
+  "prompt": "Technical chroma-key character animation: every single frame has the identical pure BLUE RGB0,0,255 backdrop. One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view facing right. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and constant body scale, no zoom, no whole-body sliding. Full body and all equipment visible. Uniform flat BLUE RGB0,0,255 background, no scenery, floor, shadow, text, light effects, particles, sparks, projectile or other actors. Bend both knees and lower the center of gravity while the left arm lifts the shield before the chest and helmet. Right hand keeps the mallet low beside the shield, right elbow bends close to the body. Finish holding a deep, stable, clearly defensive shield brace with both boots planted, as in the final guide. No attack or projectile. Maintain pure BLUE behind the figure throughout all motion; no background or palette changes. The right hand keeps the mallet pointing DOWN for this entire passive brace. Never raise the mallet overhead and never swing it. The left shield and knees perform all the guard transition.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

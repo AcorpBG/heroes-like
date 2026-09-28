@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5c39688e193b771cb82a93017d16d53cde409c08b19d3bde98839726a427277e",
+  "latent_sha256": "6769aacb19c9940b281b55afa778048c453800568d4ce435054e45d3b30a9e49",
+  "decode_workflow_sha256": "572aa64284ce958e5fbe6b21d5cb9234bf303c29adb0ec583d4bbe74e3a77e5c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "mossglass_h3\\defend_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

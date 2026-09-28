@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "clip": "hit",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 100,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          0,
+          768,
+          512,
+          1024
+        ]
+      ],
+      "anchor": [
+        256,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          1024,
+          512,
+          1536,
+          768
+        ]
+      ],
+      "anchor": [
+        1280,
+        748
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      72,
+      2
+    ]
+  ],
+  "seed": 988303,
+  "prompt": "Technical chroma-key character animation: every single frame has the identical pure BLUE RGB0,0,255 backdrop. One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view facing right. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and original fixed elevated view, constant body scale. Full body and all equipment remain visible on the unchanged pure BLUE RGB0,0,255 backdrop for the whole shot. Exactly one continuous physical hit reaction, with gradual motion between the supplied poses. Begin moving immediately: the upper chest and helmet lean back while knees and ankles flex, the shield arm yields slightly, and the right mallet arm lowers under its weight. Reach the backward recoil pose at one-third of the shot. Then the planted legs catch the body: bend the knees into the supplied low shield brace, bring the torso forward over the boots, and steadily straighten the knees to return to the original ready stance. Animate every intermediate shoulder, elbow, hip, knee and ankle angle, with visible weight transfer and recovery. No instantaneous pose switches, slideshow, long freeze, cut, teleport, zoom or view change. Keep the green mallet head on its single short wooden handle in the right hand, and the green decorated shield face attached to the left arm. No strike, magic, sparks, floor, shadow or other scenery. End in the initial ready pose. The backdrop stays identical blue throughout.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_neutral_mossglass_sentinels",
+  "clip": "death",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 40,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          0,
+          1024,
+          512,
+          1280
+        ]
+      ],
+      "anchor": [
+        256,
+        1260
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          512,
+          768,
+          1024,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          1024,
+          768,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1280,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_mossglass_sentinels.png",
+      "rects": [
+        [
+          1536,
+          768,
+          2048,
+          1024
+        ]
+      ],
+      "anchor": [
+        1792,
+        1004
+      ],
+      "scale": 1.0,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 3,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      78,
+      2
+    ]
+  ],
+  "seed": 988005,
+  "prompt": "One original Mossglass Sentinel in the reference elevated three-quarter orthographic fantasy strategy sprite view facing right. A stocky armored humanoid knight enclosed in faceted jade-green mossglass plate edged with aged bronze and gold. Closed angular helmet with a narrow dark visor and small twig/moss crown, broad segmented shoulder plates, round green breastplate gem, layered green thigh/knee armor, heavy armored boots, mottled beige split tabard, moss and short hanging greenery. Exactly TWO arms, TWO hands, TWO legs and TWO boots. The RIGHT NEAR hand on screen-left holds the middle of one short brown wooden mallet handle with one large cylindrical bronze-capped green head. The LEFT FAR arm on screen-right carries one large oval round shield with a gold radial leaf design and central round leaf medallion. Preserve the single mallet, one shield, their original dimensions and grips, helmet, armor panels and moss. Hands and props stay connected; no sword, staff, extra hammerhead or extra limbs. Locked camera and constant body scale, no zoom, no whole-body sliding. Full body and all equipment visible. Uniform flat MAGENTA RGB255,0,255 background, no scenery, floor, shadow, text, light effects, particles, sparks, projectile or other actors. Passively lose strength and collapse continuously. Both knees buckle and lower the heavy armored body to kneeling; tip slowly onto the near right side, brace briefly with the right arm and lowered mallet, then the elbow gives way and torso and helmet settle on the ground. Two legs fold and remain visible, shield lowers with the left arm and rests by the body, mallet rests by the right hand. Preserve the guided intermediate side-fall so the body never jumps from kneeling to lying. End in the exact grounded final corpse, no recovery, disintegration, thrown weapons or impact FX.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
