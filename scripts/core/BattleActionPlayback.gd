@@ -17,13 +17,23 @@ static func finish(battle: Dictionary, result: Dictionary) -> Dictionary:
 static func capture(battle: Dictionary, event: Dictionary) -> void:
 	if not battle.has(CAPTURE_KEY): return
 	var frames: Array = battle[CAPTURE_KEY]
+	# Frames are read-only once captured, so a value that has not changed since
+	# the previous frame is shared with it instead of deep-copied again. One
+	# click can drain several enemy turns and capture dozens of frames.
+	var previous_frame: Dictionary = frames.back() if not frames.is_empty() else {}
 	var snapshot := {}
 	for key in battle:
-		if key == CAPTURE_KEY: continue
+		if key in [CAPTURE_KEY, "battle_animation_events", "stack_animation_states"]: continue
 		var value = battle[key]
-		snapshot[key] = value.duplicate(true) if value is Dictionary or value is Array else value
+		if value is Dictionary or value is Array:
+			var previous_value = previous_frame.get(key)
+			snapshot[key] = previous_value if typeof(previous_value) == typeof(value) and previous_value == value else value.duplicate(true)
+		else:
+			snapshot[key] = value
 	var record := event.duplicate(true)
-	if not frames.is_empty() and String(record.get("event_id", "")) in ["battle_unit_hit", "battle_unit_death", "battle_status_applied"]:
+	# Damage events normally carry their applied damage. Inferring it from the
+	# previous frame is a fallback: that frame may already include this hit.
+	if not record.has("damage") and not frames.is_empty() and String(record.get("event_id", "")) in ["battle_unit_hit", "battle_unit_death"]:
 		for previous in frames.back().get("stacks", []):
 			if String(previous.get("battle_id", "")) != String(record.get("battle_id", "")): continue
 			for current in snapshot.get("stacks", []):
@@ -33,7 +43,8 @@ static func capture(battle: Dictionary, event: Dictionary) -> void:
 				record["casualties"] = maxi(0, int(ceil(float(previous.get("total_health",0))/hp))-int(ceil(float(current.get("total_health",0))/hp)))
 	record["serial"] = 1000000 + frames.size()
 	snapshot["playback_event"] = record
-	# Use the existing render owners, but expose exactly one event at a time.
+	# Use the existing render owners, but expose exactly one event at a time;
+	# the loop above skips the two queues replaced here.
 	snapshot["battle_animation_events"] = [record]
 	snapshot["stack_animation_states"] = {String(record.get("battle_id", "")): record}
 	snapshot["active_stack_id"] = String(record.get("source_battle_id", "")) if String(record.get("source_battle_id", "")) != "" else String(record.get("battle_id", ""))

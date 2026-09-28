@@ -1983,16 +1983,29 @@ static func _hero_bonus_for_side(battle: Dictionary, side: String, kind: String)
 static func _damage_multiplier_for_side(battle: Dictionary, side: String) -> float:
 	return float(_hero_payload_for_side(battle, side).get("damage_multiplier", 1.0))
 
+# Last scoring payload per side, reused while its source dictionaries compare
+# equal. Scoring asks for it on every trait and damage check. Never saved.
+static var _hero_payload_cache: Dictionary = {}
+
+## Read-only: the result may be shared with later calls on an unchanged side.
 static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictionary:
-	if side == "player":
-		return _side_payload_with_commander_fallback(
-			battle.get("player_hero", {}),
-			battle.get("player_commander_state", {})
-		)
-	return _side_payload_with_commander_fallback(
-		battle.get("enemy_hero_payload", {}),
-		battle.get("enemy_hero", {})
-	)
+	var cache_side := "player" if side == "player" else "enemy"
+	var payload_value = battle.get("player_hero" if cache_side == "player" else "enemy_hero_payload", {})
+	var commander_value = battle.get("player_commander_state" if cache_side == "player" else "enemy_hero", {})
+	var payload_source: Dictionary = payload_value if payload_value is Dictionary else {}
+	var commander_source: Dictionary = commander_value if commander_value is Dictionary else {}
+	var cached: Dictionary = _hero_payload_cache.get(cache_side, {})
+	if not cached.is_empty() and cached.payload_source == payload_source and cached.commander_source == commander_source:
+		return cached.payload
+	# Without a commander the fallback returns the live payload itself; keep a
+	# private copy so later in-place edits cannot leak into a cache hit.
+	var payload := _side_payload_with_commander_fallback(payload_source, commander_source).duplicate(true)
+	_hero_payload_cache[cache_side] = {
+		"payload_source": payload_source.duplicate(true),
+		"commander_source": commander_source.duplicate(true),
+		"payload": payload,
+	}
+	return payload
 
 static func _side_payload_with_commander_fallback(existing_payload_value: Variant, commander_state_value: Variant) -> Dictionary:
 	var existing_payload: Dictionary = existing_payload_value if existing_payload_value is Dictionary else {}

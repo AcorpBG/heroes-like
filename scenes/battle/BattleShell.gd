@@ -184,6 +184,9 @@ var _wide_system_panel_style: StyleBox = null
 var _action_guide_source_text := ""
 var _last_refresh_intent_forecast: Dictionary = {}
 var _last_refresh_intent_forecast_battle_hash := 0
+# The session and battle as the last refresh normalized them; see _refresh().
+var _normalized_battle_session = null
+var _normalized_battle_snapshot: Dictionary = {}
 
 func _ready() -> void:
 	_confirm_order_button = Button.new()
@@ -1802,10 +1805,12 @@ func _complete_battle_exit_animation_handoff(route_target: String) -> void:
 		_last_battle_resolution_routed = _route_checkpointed_battle_resolution()
 
 func _refresh() -> void:
-	if _spell_targeting_id != "" and (_session == null or _spell_targeting_hash != hash(_session.battle)):
-		_cancel_board_order()
-	if not _pending_board_order.is_empty() and (_session == null or _pending_board_hash != hash(_session.battle)):
-		_cancel_board_order()
+	if _spell_targeting_id != "" or not _pending_board_order.is_empty():
+		var battle_hash := hash(_session.battle) if _session != null else 0
+		if _spell_targeting_id != "" and (_session == null or _spell_targeting_hash != battle_hash):
+			_cancel_board_order()
+		if not _pending_board_order.is_empty() and (_session == null or _pending_board_hash != battle_hash):
+			_cancel_board_order()
 	if _action_playback_in_progress:
 		_disable_battle_exit_handoff_inputs()
 		return
@@ -1817,9 +1822,16 @@ func _refresh() -> void:
 	if _session.battle.is_empty():
 		return
 	var section_started := ProfileLogScript.begin_usec()
-	if not BattleRules.normalize_battle_state(_session):
-		AppRouter.go_to_overworld()
-		return
+	# Normalization rebuilds every stack from content and is idempotent, so a
+	# refresh that finds the battle exactly as the last one left it skips it.
+	if not (_normalized_battle_session == _session and _normalized_battle_snapshot == _session.battle):
+		if not BattleRules.normalize_battle_state(_session):
+			_normalized_battle_session = null
+			_normalized_battle_snapshot = {}
+			AppRouter.go_to_overworld()
+			return
+		_normalized_battle_session = _session
+		_normalized_battle_snapshot = _session.battle.duplicate(true)
 	buckets["normalize_battle"] = ProfileLogScript.elapsed_ms(section_started)
 
 	section_started = ProfileLogScript.begin_usec()
