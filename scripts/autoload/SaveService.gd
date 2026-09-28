@@ -2763,9 +2763,7 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		summary["payload_deferred"] = true
 	summary["valid"] = true
 	summary["status_text"] = _status_text_for_summary(summary)
-	# One normalized session feeds every detail block, instead of rebuilding a
-	# session for the resume recap, continuity lines and progress recap each.
-	var finalized := _finalize_runtime_summary(summary, {}, true)
+	var finalized := _finalize_stored_summary(summary)
 	_store_slot_summary_cache(finalized)
 	return finalized
 
@@ -3271,18 +3269,29 @@ func _finalize_summary(summary: Dictionary) -> Dictionary:
 	summary["detail"] = describe_slot_details(summary)
 	return summary
 
-# stored_payload marks a payload read back from disk rather than one this
-# session just normalized and saved: detail text then reads a normalized copy.
-func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}, stored_payload: bool = false) -> Dictionary:
+func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}) -> Dictionary:
 	var payload: Dictionary = summary.get("payload", {}) if summary.get("payload", {}) is Dictionary else {}
 	if bool(summary.get("payload_deferred", false)) or payload.is_empty():
 		if not profile.is_empty():
 			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
 		return _finalize_summary(summary)
-	var trusted_session: SessionStateStoreScript.SessionData = _session_from_payload(payload) if stored_payload else _session_from_owned_detached_payload(payload)
-	if stored_payload and trusted_session != null and trusted_session.scenario_id != "":
-		OverworldRulesScript.normalize_overworld_state(trusted_session)
-		load("res://scripts/core/ScenarioRules.gd").normalize_scenario_state(trusted_session)
+	return _finalize_summary_from_session(summary, _session_from_owned_detached_payload(payload), profile)
+
+# A stored save's inline payload is the parsed file and is shared with the
+# summary cache, so describe it from a normalized copy, as a restore would.
+# One session then feeds every detail block, instead of rebuilding a session
+# for the resume recap, continuity lines and progress recap each.
+func _finalize_stored_summary(summary: Dictionary) -> Dictionary:
+	var payload: Dictionary = summary.get("payload", {}) if summary.get("payload", {}) is Dictionary else {}
+	if bool(summary.get("payload_deferred", false)) or payload.is_empty():
+		return _finalize_summary(summary)
+	var session := _session_from_payload(payload)
+	if session != null and session.scenario_id != "":
+		OverworldRulesScript.normalize_overworld_state(session)
+		load("res://scripts/core/ScenarioRules.gd").normalize_scenario_state(session)
+	return _finalize_summary_from_session(summary, session)
+
+func _finalize_summary_from_session(summary: Dictionary, trusted_session: SessionStateStoreScript.SessionData, profile: Dictionary = {}) -> Dictionary:
 	if trusted_session == null or trusted_session.scenario_id == "":
 		if not profile.is_empty():
 			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
