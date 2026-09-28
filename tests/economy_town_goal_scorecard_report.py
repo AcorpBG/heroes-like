@@ -77,8 +77,8 @@ RARE_RESOURCES = {
     "memory_salt",
 }
 LIVE_RESOURCES = COMMON_RESOURCES | RARE_RESOURCES
-BALANCE_REGRESSION_RULES_PATH = ROOT / "scripts" / "core" / "BalanceRegressionReportRules.gd"
-HEADLESS_SIMULATION_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
+BALANCE_REGRESSION_RULES_PATH = ROOT / "tests" / "support" / "BalanceRegressionReportRules.gd"
+HEADLESS_SIMULATION_RULES_PATH = ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd"
 BALANCE_REGRESSION_REPORT_TEST_PATH = ROOT / "tests" / "balance_regression_report_suite.gd"
 HEADLESS_SIMULATION_REPORT_TEST_PATH = ROOT / "tests" / "headless_simulation_harness_report.gd"
 GODOT_RUNTIME_REPORTS = (

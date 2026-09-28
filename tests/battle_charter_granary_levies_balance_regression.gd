@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_CHARTER_GRANARY_LEVIES_BALANCE_REGRESSION"
 const SCENARIO_ID := "charter-pyre"
 const PLACEMENT_ID := "charter_granary_levies"

@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 

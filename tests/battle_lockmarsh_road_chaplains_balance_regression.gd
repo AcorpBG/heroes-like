@@ -1,6 +1,6 @@
 extends Node
 
-const BalanceHarness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BalanceHarness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_LOCKMARSH_ROAD_CHAPLAINS_BALANCE_REGRESSION"
 const SCENARIO_ID := "lockmarsh-surge"
 const PLACEMENT_IDS := [

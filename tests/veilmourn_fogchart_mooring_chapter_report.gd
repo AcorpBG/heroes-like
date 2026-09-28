@@ -7,7 +7,7 @@ const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRule
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 const TownRulesScript = preload("res://scripts/core/TownRules.gd")
 const BattleRulesScript = preload("res://scripts/core/BattleRules.gd")
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "VEILMOURN_FOGCHART_MOORING_CHAPTER_REPORT"
 const SCENARIO_ID := "fogchart-mooring"

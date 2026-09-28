@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "BATTLE_AUTOPLAY_COMBAT_BALANCE_REPORT"
 const MAX_AVERAGE_TERMINAL_MARGIN_PCT := 65

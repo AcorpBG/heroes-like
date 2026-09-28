@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_POST_IDENTITY_ACTIVE_OUTLIER_REGRESSION"
 const GLASSFEN_PRODUCTION_STACKS := [
 	{"unit_id": "unit_sunvault_shard_wardens", "count": 6},

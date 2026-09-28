@@ -1,6 +1,6 @@
 extends Node
 
-const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
+const HeadlessSimulationHarnessRulesScript = preload("res://tests/support/HeadlessSimulationHarnessRules.gd")
 const REPORT_ID := "STRATEGIC_AI_EMERGENCY_DEFENSE_COMMANDER_FIT_REPORT"
 
 func _ready() -> void:

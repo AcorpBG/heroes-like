@@ -1,6 +1,6 @@
 extends Node
 
-const HeadlessSimulationHarnessRulesScript = preload("res://scripts/core/HeadlessSimulationHarnessRules.gd")
+const HeadlessSimulationHarnessRulesScript = preload("res://tests/support/HeadlessSimulationHarnessRules.gd")
 const REPORT_ID := "AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT"
 const OUTPUT_DIR := "res://.artifacts/ai_multi_scenario_recruitment_delivery_report"
 
