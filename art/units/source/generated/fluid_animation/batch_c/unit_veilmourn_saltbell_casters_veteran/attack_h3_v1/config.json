@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters_veteran",
+  "clip": "attack",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_saltbell_casters_veteran/keys/attack_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        870,
+        866
+      ],
+      "scale": 0.26,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "seed": 928807,
+  "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender hooded adult human saltbell slinger, two arms and two legs, pale face partly covered by dark scarf, ragged muted teal cloak, off-white sleeves, dark wrapped forearms and gloves, black trousers, brown leather boots. Two small tarnished silver bell heads hanging on short brown braided cords, each bell with a short tattered teal ribbon. Exactly two bells, unchanged bell size and cord lengths, stable visible hand grips. Small steady turquoise glass charms at the belt remain unchanged. Fixed anatomical size, stationary camera, full body and all bells/ribbons within frame. Uniform flat saturated green studio background with no shadows, scenery, text, particles, new glow or external effects. Perform a short close-range bell strike toward screen right. Draw the far elbow and its bell slightly back in anticipation, lean forward and extend the far arm to swing its single attached bell ahead of the fist, matching the supplied middle pose. The near hand retains the other bell cord at the waist throughout. Both boots stay planted, knees absorb the forward lean. Recover the striking arm and both hanging bells to ready. Exactly two silver bells stay attached to their original hands with stable short brown cords; no thrown weapon, duplicate bell, projectile or effects.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

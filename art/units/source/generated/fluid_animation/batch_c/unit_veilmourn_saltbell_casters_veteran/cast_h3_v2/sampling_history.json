@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    513,
+    "562b230d-8921-4c15-966f-2d71074ed9f5",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic elevated three-quarter fantasy strategy camera facing screen right. A single slender hooded adult human saltbell slinger, two arms and two legs, pale face partly covered by dark scarf, ragged muted teal cloak, off-white sleeves, dark wrapped forearms and gloves, black trousers, brown leather boots. Two small tarnished silver bell heads hanging on short brown braided cords, each bell with a short tattered teal ribbon. Exactly two bells, unchanged bell size and cord lengths, stable visible hand grips. Small steady turquoise glass charms at the belt remain unchanged. Fixed anatomical size, stationary camera, full body and all bells/ribbons within frame. Uniform flat saturated green studio background with no shadows, scenery, text, particles, new glow or external effects. Perform a physical rally with both bells: raise both gloved hands from waist to shoulder height with elbows bent, give the two hanging bells one deliberate outward wrist shake, then lower both hands to the identical original ready pose. Boots remain planted, torso upright. Preserve both cord attachments and exactly two bell heads and their ribbons. This is a physical bell signal, not a magical effect. Make the arm gesture readable and distinct from the defensive crouch. The background is absolutely CONSTANT pure RGB green throughout all frames, with NO color shifts and NO lighting transitions. Raise both bent arms into the supplied shoulder-level bell-signal pose, shake the suspended bells once, return to ready. No overhead swing, no backwards turn, no new objects. Maintain a straight standing torso with both boot soles on the ground.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928809
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "echosalt_cast_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "echosalt_cast_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 64,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "echosalt_h3/cast_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "echosalt_h3",
+      "create_time": 1790574486976
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "echosalt_h3\\cast_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "562b230d-8921-4c15-966f-2d71074ed9f5",
+          "timestamp": 1790574487009
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "562b230d-8921-4c15-966f-2d71074ed9f5",
+          "timestamp": 1790574487022
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "562b230d-8921-4c15-966f-2d71074ed9f5",
+          "timestamp": 1790574657181
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

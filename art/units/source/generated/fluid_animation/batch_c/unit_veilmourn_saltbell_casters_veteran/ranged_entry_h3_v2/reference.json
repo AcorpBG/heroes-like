@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_saltbell_casters_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          240
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f345ecc34384f787813fbca20f7239a6986fa07cc3cfb7b29ddbd4daa714c3d7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a44deaa211142f7e403bc44b031418cdd49a6c0462e4b0a68b4eb5407853b6ff",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_saltbell_casters_veteran.png",
+        "rects": [
+          [
+            512,
+            256,
+            1024,
+            512
+          ]
+        ],
+        "anchor": [
+          768,
+          496
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f345ecc34384f787813fbca20f7239a6986fa07cc3cfb7b29ddbd4daa714c3d7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2f0a815995c8256ac16d0cde064ce5e11d722ccfbc0347798b6595bb4ad7d5f3",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
