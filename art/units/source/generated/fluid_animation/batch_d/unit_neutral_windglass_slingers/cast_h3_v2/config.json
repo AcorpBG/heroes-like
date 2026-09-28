@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "clip": "cast",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 25,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        244
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+      "rects": [
+        [
+          1536,
+          256,
+          2048,
+          512
+        ]
+      ],
+      "anchor": [
+        1792,
+        500
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      55,
+      1
+    ]
+  ],
+  "seed": 928252,
+  "prompt": "Locked orthographic three-quarter game camera, full body facing screen right, unchanged illustrated fantasy sprite style. One athletic adult woman with brown hair, blue goggles on her forehead, teal blue scarf and split cape, ivory sleeveless tunic, brown leather bracers, belt and boots, blue-grey trousers and knee guards. Exactly two arms and two legs, unchanged face and proportions. She holds a short brown leather sling in her right hand: two flexible cords and a single pouch, no rigid bow, no staff or sword. Her left hand remains separate. Fixed character scale and planted ground reference. Flat perfectly uniform saturated green background, no scenery, no text, no camera motion, no zoom, no green lighting or ground shadow. Preserve the complete sling and cloth edges. One brief encouraging fist salute to allies. Bend the right elbow and raise the right fist beside the temple, with the short brown sling loop dangling DOWN freely below that fist under gravity. Lift the empty left forearm toward allies, nod once, then lower both arms and return to the exact starting ready pose. The sling is empty and remains soft and hanging; no stone appears, no cord spins or stretches horizontally. Boots stay planted and clothing follows the arm gesture subtly. A physical encouraging gesture only; no spell, throw, firing, incoming objects or special effects. Uniform pure green plate remains unchanged throughout.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

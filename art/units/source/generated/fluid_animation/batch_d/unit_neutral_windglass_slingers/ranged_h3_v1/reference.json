@@ -1,0 +1,130 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            256
+          ]
+        ],
+        "anchor": [
+          256,
+          244
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c06d51ed4ba86c63cb0f37a97f2f3155ee1bb73a42e79cf754f642a3c899cf5f",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            1536,
+            512,
+            2048,
+            768
+          ]
+        ],
+        "anchor": [
+          1792,
+          756
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "42a768104915c6dfc519f3b02a9b70135473b4766de05d1b6e92df0cd6bb5f77",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            0,
+            768,
+            512,
+            1024
+          ]
+        ],
+        "anchor": [
+          256,
+          1012
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fe53c845b07168ab5b16cfacd18039ade8407dec7602f401314a30707fe89166",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            512,
+            768,
+            1024,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1012
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f1182b8e69e3bc005c3acec05d70b79eb94872f49e48c6735043a589bf4dab07",
+      "runtime_source_scale": 0.93
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1012
+        ],
+        "scale": 1.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95d166d2cecf704489a1c1a3075aa4f204505f61a3f658a27b126dc3ccdb2125",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "f3fbd9105334cd62a6485561e1d20b93fa5049f2d7f3dce3f029caadfbfec14a",
+      "runtime_source_scale": 0.93
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

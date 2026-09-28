@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    452,
+    "a71ad60f-b5a7-48c5-a827-3fbca9e2cde7",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter game camera, full body facing screen right, unchanged illustrated fantasy sprite style. One athletic adult woman with brown hair, blue goggles on her forehead, teal blue scarf and split cape, ivory sleeveless tunic, brown leather bracers, belt and boots, blue-grey trousers and knee guards. Exactly two arms and two legs, unchanged face and proportions. She holds a short brown leather sling in her right hand: two flexible cords and a single pouch, no rigid bow, no staff or sword. Her left hand remains separate. Fixed character scale and planted ground reference. Flat perfectly uniform saturated green background, no scenery, no text, no camera motion, no zoom, no green lighting or ground shadow. Preserve the complete sling and cloth edges. From ready, bend both knees and lower the center of gravity into a firm crouched guard. Bring both bracers in front of face and chest, right hand still holding the sling. End in the shown stable protected crouch and hold, do not stand back up. Continuous controlled knee and elbow flexion, no attack or magic.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928143
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "windglass_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "windglass_defend_h3_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "windglass_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "windglass_h3",
+      "create_time": 1790565642712
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "windglass_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a71ad60f-b5a7-48c5-a827-3fbca9e2cde7",
+          "timestamp": 1790565642713
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "a71ad60f-b5a7-48c5-a827-3fbca9e2cde7",
+          "timestamp": 1790565642725
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a71ad60f-b5a7-48c5-a827-3fbca9e2cde7",
+          "timestamp": 1790565768994
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

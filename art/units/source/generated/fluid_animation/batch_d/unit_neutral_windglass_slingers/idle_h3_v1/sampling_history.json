@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    447,
+    "40e8b0de-95bb-42b0-a60f-fd8232496cfa",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter game camera, full body facing screen right, unchanged illustrated fantasy sprite style. One athletic adult woman with brown hair, blue goggles on her forehead, teal blue scarf and split cape, ivory sleeveless tunic, brown leather bracers, belt and boots, blue-grey trousers and knee guards. Exactly two arms and two legs, unchanged face and proportions. She holds a short brown leather sling in her right hand: two flexible cords and a single pouch, no rigid bow, no staff or sword. Her left hand remains separate. Fixed character scale and planted ground reference. Flat perfectly uniform saturated green background, no scenery, no text, no camera motion, no zoom, no green lighting or ground shadow. Preserve the complete sling and cloth edges. One calm ready cycle. Feet stay planted, chest breathes gently. The left hand comes across to briefly adjust the right bracer and sling grip at waist height; the right elbow flexes visibly while keeping hold of the cords. Then both arms relax back exactly to the initial ready pose. Hair and scarf settle softly. No walking, attack, raised weapon or magic.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928140
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "windglass_idle_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "windglass_h3/idle_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "windglass_h3",
+      "create_time": 1790565017656
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "windglass_h3\\idle_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "40e8b0de-95bb-42b0-a60f-fd8232496cfa",
+          "timestamp": 1790565017658
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "40e8b0de-95bb-42b0-a60f-fd8232496cfa",
+          "timestamp": 1790565017670
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "40e8b0de-95bb-42b0-a60f-fd8232496cfa",
+          "timestamp": 1790565167953
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

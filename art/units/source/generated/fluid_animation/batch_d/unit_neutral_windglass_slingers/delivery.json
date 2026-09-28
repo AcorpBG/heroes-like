@@ -1,0 +1,16 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v4",
+    "defend_h3_v1",
+    "hit_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v1",
+    "ranged_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed complete chronological originals, enlarged identity/alpha transitions and every selected phase in the Godot 128px battle overview. Visible hand articulation in idle, reciprocal gait, corrected empty-left-fist melee with right-hand sling retained, held forearm guard, shoulder recoil/recovery, physical sling rally, supported side collapse and grounded corpse, loading/release/recovery. 222 selected original frames; 743 focused candidate checks pass. Rejected legacy-guided melee transfers and effect-contaminated takes remain source-only. Ranged source 56-57 unwanted flying object excluded as whole frames. Retiming removes long source holds while retaining dense action transitions. Continuous playback route unavailable: no continuous playback, manual game or Linux validation claimed."
+  }
+}

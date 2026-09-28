@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_neutral_windglass_slingers",
+  "clip": "idle",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 85,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_neutral_windglass_slingers.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        244
+      ],
+      "scale": 0.93,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "seed": 928140,
+  "prompt": "Locked orthographic three-quarter game camera, full body facing screen right, unchanged illustrated fantasy sprite style. One athletic adult woman with brown hair, blue goggles on her forehead, teal blue scarf and split cape, ivory sleeveless tunic, brown leather bracers, belt and boots, blue-grey trousers and knee guards. Exactly two arms and two legs, unchanged face and proportions. She holds a short brown leather sling in her right hand: two flexible cords and a single pouch, no rigid bow, no staff or sword. Her left hand remains separate. Fixed character scale and planted ground reference. Flat perfectly uniform saturated green background, no scenery, no text, no camera motion, no zoom, no green lighting or ground shadow. Preserve the complete sling and cloth edges. One calm ready cycle. Feet stay planted, chest breathes gently. The left hand comes across to briefly adjust the right bracer and sling grip at waist height; the right elbow flexes visibly while keeping hold of the cords. Then both arms relax back exactly to the initial ready pose. Hair and scarf settle softly. No walking, attack, raised weapon or magic.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

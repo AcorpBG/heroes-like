@@ -1,0 +1,539 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_windglass_slingers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_003",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_033",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_039",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_045",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "defend_h3_048",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_051",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "defend_h3_054",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "defend_h3_057",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "defend_h3_060",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 20
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/original_lossless.mkv",
+          "sha256": "f4234d60808bb05dbbc5abe8e5a9bc1a177afbc7c7abcbd48e3c4abeb2ed5f58"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/original.json",
+          "sha256": "0c3e4b7bff39b51091ef0262ffbb1a2de91d1402484717e956da404702850e06"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/workflow_api.json",
+          "sha256": "c5af235318d0446780501f8ec8fdaa4c7e6e69285000e4ef5a104d595b57c106"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/prompt.txt",
+          "sha256": "853238305bf28f38970acac411e50b87021ef7dd529bd76b985044e4e0507535"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/reference.json",
+          "sha256": "f35d48e1051c15cb600de2fdb7fecad6a6d6d902e5baf7747080856737b06087"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/matte.json",
+          "sha256": "52a25b4979b0b6ccd709cb5dba52d6304c0b659f799bc231a30967cc6481e667"
+        },
+        "extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/extraction_settings.json",
+          "sha256": "9c363bc68e81701e5602465e91c441baa33f1900c5e5233958403aeaaec28961"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/staged_generation.json",
+          "sha256": "3dfc99917608ff72db5ccdcefc8bc01b17c8d985e977c6f110c6b77e41b2cf62"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "7e09633793b4edfbffcaf50a1588c26a88f50cc4da3d12bd201233b7402d9b64"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/sampling_submission.json",
+          "sha256": "34b721e14331a90bb2d68da6a619a1a233b7dbc7f0b3dad6b1e7c9c5e559d55f"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/sampling_history.json",
+          "sha256": "874cc1fa626aa1389cbf9600cae573dd5d952d58544460f624340d6120f5bbf9"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_windglass_slingers/defend_h3_v1/original.latent",
+          "sha256": "19440b53385f68be6aed3a22567d79fe0bcebf300694542aa6f21d57d8dd84ea"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Complete124-frame chronological review and enlarged0-60 phase review. Controlled brace, retained right-hand sling, two forearms protect face; final60 is stable held guard. Omit redundant trailing hold. Retimed selected guard transition to735ms."
+      }
+    }
+  ]
+}
