@@ -1,0 +1,16 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "ranged_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomously reviewed all 1,240 chronological H3 originals across ten takes, enlarged equipment/anatomy details, loop boundaries and every selected native battle phase. Accepted eight distinct actions: articulated forearm/launcher idle, reciprocal gait, continuous short bayonet thrust, aimed ranged release with recoil/recovery, hit recovery, held braced guard, physical raised-fist support and grounded collapse/corpse. Rejected attack v1 for abrupt pose switching and ranged v1 for a generated glowing projectile. Excluded brief effect-contaminated intervals in hit v1 and ranged v2; selected footage retains clean anatomy and equipment with safe opaque canvas margins. All 174 selected poses are original frames at one fixed anatomical scale, without reversed/interpolated frames or duplicate padding. Review used chronological originals and native phase rendering; no continuous playback, manual game playtest or Linux validation is claimed."
+  }
+}

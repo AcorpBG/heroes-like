@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "c250702845578929a846cc136ae25b9d476bc11a4588d587686f047073c856a3",
+  "latent_sha256": "a0ff0d75c07de9026182771ff8e812cde5073b5790e06d88cc40bcd895e28e73",
+  "decode_workflow_sha256": "3c8a576d4295baeb62e2cb7707da808530691765b6ed32d3c89040c616489adb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "keelbreaker_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

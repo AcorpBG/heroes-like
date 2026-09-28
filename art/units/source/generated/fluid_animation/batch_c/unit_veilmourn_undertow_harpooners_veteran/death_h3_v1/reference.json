@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            272
+          ]
+        ],
+        "anchor": [
+          256,
+          256
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3f9b00d194162a8537be247908cbbe6acdc3b977454af417f1066ae6a8d829d6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1fd8424d01945e47acabe8c75f649db5e45f65d1867679fa1cdec8d26a5f5f5d",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+        "rects": [
+          [
+            1536,
+            272,
+            2048,
+            544
+          ]
+        ],
+        "anchor": [
+          1792,
+          528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3f9b00d194162a8537be247908cbbe6acdc3b977454af417f1066ae6a8d829d6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "971dcc8cfec050f14507e60f84328ffbdffb012e0d42b975105dbce638e2f170",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

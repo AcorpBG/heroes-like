@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v2.png",
+  "image_sha256": "f1afc5213486bb98c452817419794dc1c441239aec91186e336a400829c70398",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v2.prompt.txt",
+  "prompt_sha256": "dd5c5fff6ab16e2b9e18710073a37cff12f574a3cbe547f4772e7cf67469fcc2",
+  "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-3876ded1-65d9-4339-89a2-382f0da7335a.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/original_0.png",
+      "sha256": "018cf6208a7fcb6fef86684ababd3ca220d4b233c2cee48702f074cafee728ad"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v1.png",
+      "sha256": "fa45c76db86b911d74ee89c08c54947f6899ca886eb841b2e2bb66ab69dd5a82"
+    }
+  ],
+  "review": "corrected compact launcher; anatomical registration and H3 sequence require final review"
+}

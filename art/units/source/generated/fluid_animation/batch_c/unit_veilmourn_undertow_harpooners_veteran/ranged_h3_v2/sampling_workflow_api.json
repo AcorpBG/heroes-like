@@ -1,0 +1,219 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, near hand on rear grip and far hand under forward shaft, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. No crossbow limbs, firearm barrel, second weapon, extra hand or added equipment. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; Only the flat green plate and the unchanged opaque creature and equipment are visible. One physical mechanical operation of an UNPOWERED harpoon launcher. Raise the compact launcher, lower it into a level aiming pose, then sharply pull the rear stock back against the shoulder while both elbows bend and the torso absorbs the backward jolt. The fixed forked tip remains attached to the same shaft. Recover with both hands to the exact initial ready pose. All motion is in arms, shoulders, knees and the single attached weapon; empty green space stays completely empty throughout. Show the stock pulling backward and returning, with the original painted materials unchanged.",
+      "width": 960,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 929032
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "keelbreaker_ranged_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "keelbreaker_ranged_h3_v2_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "keelbreaker_ranged_h3_v2_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "keelbreaker_ranged_h3_v2_guide_3.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 24,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 44,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 58,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "33",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "keelbreaker_h3/ranged_h3_v2/sampled"
+    }
+  }
+}

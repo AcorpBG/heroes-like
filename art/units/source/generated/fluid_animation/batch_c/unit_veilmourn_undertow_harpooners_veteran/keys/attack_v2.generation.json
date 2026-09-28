@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/attack_v2.png",
+  "image_sha256": "57e596e2a22384e4ae2b35173bd62eb410c3fa147e69f06cc394ef231d8949e4",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/attack_v2.prompt.txt",
+  "prompt_sha256": "e409abf29446a1f77e56ae5062976ef2fec99f0f2e84bc6db0e23200dab1dbc8",
+  "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-032d9d18-c8cb-49cc-853f-eeda572a4ae5.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/original_0.png",
+      "sha256": "018cf6208a7fcb6fef86684ababd3ca220d4b233c2cee48702f074cafee728ad"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/attack_v1.png",
+      "sha256": "d0634eb982aeda62ed4ee32d8ead922eab0ab6a241adaf854d6336a6a08f0ad0"
+    }
+  ],
+  "review": "corrected compact launcher; anatomical registration and H3 sequence require final review"
+}

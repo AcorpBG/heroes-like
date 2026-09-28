@@ -1,0 +1,207 @@
+{
+  "prompt": [
+    582,
+    "54ec4263-30a8-4944-99c5-ab4e31cfccb9",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, near hand on rear grip and far hand under forward shaft, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. No crossbow limbs, firearm barrel, second weapon, extra hand or added equipment. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; no floor, scenery, glow, smoke, sparks, text, shadows or particles. Enter a low wide defensive brace. Knees flex while shoulders and elbows bring the compact launcher diagonally across the chest as a parrying guard. End in the held braced pose, no return to idle and no firing.",
+          "width": 960,
+          "height": 704,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 929021
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "keelbreaker_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "keelbreaker_defend_h3_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "keelbreaker_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "keelbreaker_h3",
+      "create_time": 1790592209806
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "keelbreaker_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "54ec4263-30a8-4944-99c5-ab4e31cfccb9",
+          "timestamp": 1790592209808
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "54ec4263-30a8-4944-99c5-ab4e31cfccb9",
+          "timestamp": 1790592209824
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "54ec4263-30a8-4944-99c5-ab4e31cfccb9",
+          "timestamp": 1790592568491
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

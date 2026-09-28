@@ -1,0 +1,15 @@
+{
+  "tool": "built-in image_gen",
+  "image": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v1.png",
+  "image_sha256": "fa45c76db86b911d74ee89c08c54947f6899ca886eb841b2e2bb66ab69dd5a82",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v1.prompt.txt",
+  "prompt_sha256": "0053f6df493f9baa7abd22eca3ef7d7130ca07c2469a6c4fa9b411afe8cc504d",
+  "tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-317e395a-9562-417f-a148-9205c7900847.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/original_0.png",
+      "sha256": "018cf6208a7fcb6fef86684ababd3ca220d4b233c2cee48702f074cafee728ad"
+    }
+  ],
+  "review": "rejected: launcher oversized relative to original body"
+}

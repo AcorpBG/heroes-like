@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9515e8f1849cf4447f6f3d542e929dcdba1ad9627b4ef1f8729553c71ea8cad9",
+  "latent_sha256": "6ee3cea10cae4fca52ab02c2856c31b72005a63f2e9ef57bb19d9ce6ae1782cb",
+  "decode_workflow_sha256": "ef4527376aa932bc4eb3cff5265e3ec6495909f6847feac16253402d18f2ab68",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "keelbreaker_h3\\idle_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
