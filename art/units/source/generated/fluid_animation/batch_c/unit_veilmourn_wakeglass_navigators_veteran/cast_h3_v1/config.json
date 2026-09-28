@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators_veteran/support_guard_v1.png",
+      "rects": [
+        [
+          1024,
+          0,
+          2048,
+          768
+        ]
+      ],
+      "anchor": [
+        1490,
+        735
+      ],
+      "scale": 0.33,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Pale Meridian Pilot humanoid, two arms and two booted legs, silver-grey hood and full tattered grey/navy layered robes, round reflective silver face mask, brass belt fittings. The near hand holds one long narrow rigid dark staff with a single open brass crescent and dangling silver plumb bob at its top. The far hand supports one large circular brass-rimmed glass navigation compass at chest height, with its own short dangling silver plumb bob. Preserve the exact original staff length, crescent shape, compass diameter, grip, grey cloth palette and body proportions. Both original props stay separate. Fixed camera, anatomical body size and ground line. Keep full body, staff, cloth and compass within generous empty margins. Flat saturated green background throughout; no floor, scenery, additional limbs or equipment, glow, beams, smoke, sparks, text, shadows or particles. Make a physical navigation support signal. Far elbow lifts the existing round compass to eye level and tilts its glass dial while the near hand keeps the original crescent staff upright and planted. Briefly sight a bearing, then lower compass smoothly to the original ready position. No magic, particles or new props. Preserve both original staff hanging weights.",
+  "clip": "cast",
+  "seed": 930021
+}

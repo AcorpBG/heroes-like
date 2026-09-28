@@ -202,3 +202,8 @@ art/animation/source/fluid/unit_veilmourn_wakechain_boarders_veteran/*.json -tex
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/**/*.json -text
 art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/**/*.txt -text
 art/animation/source/fluid/unit_veilmourn_undertow_harpooners_veteran/*.json -text
+
+# Preserve hash-bound Pale Meridian Pilots H3 provenance.
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators_veteran/**/*.json -text
+art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators_veteran/**/*.txt -text
+art/animation/source/fluid/unit_veilmourn_wakeglass_navigators_veteran/*.json -text

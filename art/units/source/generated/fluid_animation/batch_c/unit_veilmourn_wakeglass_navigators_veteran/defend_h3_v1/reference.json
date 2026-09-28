@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            272
+          ]
+        ],
+        "anchor": [
+          256,
+          256
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85e029e166bbb71c7abd20d5c43b742887ff9d6601af83613011fe15f973d20e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2aa1e61408715b24e8cb671793d9aba33ac65d97ea32d785a933a6389c8336b1",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakeglass_navigators_veteran/support_guard_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1024,
+            768
+          ]
+        ],
+        "anchor": [
+          590,
+          730
+        ],
+        "scale": 0.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "af0a2030639fccf44023b4eb0c809ff609f1f09f80aefb4e5c4bac25916cfd02",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "47a4051b624a9b08398470b049cca490715694c77861a695147460a0c96dde86",
+      "runtime_source_scale": 0.33
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
