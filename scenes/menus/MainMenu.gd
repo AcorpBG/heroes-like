@@ -256,6 +256,7 @@ var _selected_help_topic_id := ""
 var _credits_notices_return_focus: Control
 var _last_context_tab := TAB_CAMPAIGN
 var _syncing_settings_ui := false
+var _dragging_volume_sliders: Array[HSlider] = []
 var _menu_notice := ""
 var _stage_return_focus: Control
 var _support_bundle_status := "No bundle exported"
@@ -293,6 +294,7 @@ func _ready() -> void:
 	_configure_display_change_confirmation()
 	_configure_destructive_confirmations()
 	_configure_settings_focus_visibility()
+	_configure_volume_slider_drags()
 	_configure_credits_notices()
 	resized.connect(_apply_stage_dock_layout)
 	phase_started = ProfileLogScript.begin_usec()
@@ -1596,17 +1598,62 @@ func _on_hero_keybindings_dialog_dismissed() -> void:
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
+	if _master_volume_slider in _dragging_volume_sliders:
+		SettingsService.preview_master_volume_percent(int(round(value)))
+		_master_volume_value.text = "%d%%" % SettingsService.master_volume_percent()
+		return
 	_finish_settings_commit(SettingsService.set_master_volume_percent(int(round(value))))
 
 func _on_music_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
+		return
+	if _music_volume_slider in _dragging_volume_sliders:
+		SettingsService.preview_music_volume_percent(int(round(value)))
+		_music_volume_value.text = "%d%%" % SettingsService.music_volume_percent()
 		return
 	_finish_settings_commit(SettingsService.set_music_volume_percent(int(round(value))))
 
 func _on_effects_volume_changed(value: float) -> void:
 	if _syncing_settings_ui:
 		return
+	if _effects_volume_slider in _dragging_volume_sliders:
+		SettingsService.preview_effects_volume_percent(int(round(value)))
+		_effects_volume_value.text = "%d%%" % SettingsService.effects_volume_percent()
+		return
 	_finish_settings_commit(SettingsService.set_effects_volume_percent(int(round(value))))
+
+# A mouse drag previews each step live and saves once on release; keyboard and
+# controller steps are not drags and still save immediately.
+func _configure_volume_slider_drags() -> void:
+	for slider in [_master_volume_slider, _music_volume_slider, _effects_volume_slider]:
+		var started := _on_volume_slider_drag_started.bind(slider)
+		if not slider.drag_started.is_connected(started):
+			slider.drag_started.connect(started)
+		var ended := _on_volume_slider_drag_ended.bind(slider)
+		if not slider.drag_ended.is_connected(ended):
+			slider.drag_ended.connect(ended)
+		# Hiding a slider mid-drag (tab switch, dock close) cancels the grab without drag_ended.
+		var interrupted := _finish_volume_slider_drag.bind(slider)
+		if not slider.visibility_changed.is_connected(interrupted):
+			slider.visibility_changed.connect(interrupted)
+
+func _on_volume_slider_drag_started(slider: HSlider) -> void:
+	if slider not in _dragging_volume_sliders:
+		_dragging_volume_sliders.append(slider)
+
+func _on_volume_slider_drag_ended(_value_changed: bool, slider: HSlider) -> void:
+	_finish_volume_slider_drag(slider)
+
+func _finish_volume_slider_drag(slider: HSlider) -> void:
+	if slider not in _dragging_volume_sliders:
+		return
+	_dragging_volume_sliders.erase(slider)
+	if slider == _master_volume_slider:
+		_on_master_volume_changed(slider.value)
+	elif slider == _music_volume_slider:
+		_on_music_volume_changed(slider.value)
+	elif slider == _effects_volume_slider:
+		_on_effects_volume_changed(slider.value)
 
 func _on_ui_scale_selected(index: int) -> void:
 	if _syncing_settings_ui:

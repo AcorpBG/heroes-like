@@ -77,7 +77,6 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 			"scenario_id": String(context.get("scenario_id", "")),
 			"day": int(context.get("day", 0)),
 			"terrain_id": String(context.get("terrain_id", "")),
-			"dominant_terrain_id": String(context.get("dominant_terrain_id", "")),
 			"threat_level": String(context.get("threat_level", "")),
 			"layer_count": _current_layers.size(),
 			"layers": _current_layers.duplicate(true),
@@ -112,7 +111,6 @@ func sync_overworld_session(session: Variant, source: String = "overworld") -> D
 		"scenario_id": String(context.get("scenario_id", "")),
 		"day": int(context.get("day", 0)),
 		"terrain_id": String(context.get("terrain_id", "")),
-		"dominant_terrain_id": String(context.get("dominant_terrain_id", "")),
 		"threat_level": String(context.get("threat_level", "")),
 		"layer_count": _current_layers.size(),
 		"layers": _current_layers.duplicate(true),
@@ -220,7 +218,6 @@ func _overworld_context(session: Variant) -> Dictionary:
 	var terrain_id := _terrain_at(map_data, x, y)
 	if level > 0 and terrain_id not in ["water", "lava"]:
 		terrain_id = "underground"
-	var dominant_terrain_id := _dominant_terrain(map_data)
 	var max_pressure := _max_enemy_pressure(overworld.get("enemy_states", []))
 	return {
 		"scenario_id": String(session.scenario_id),
@@ -229,7 +226,6 @@ func _overworld_context(session: Variant) -> Dictionary:
 		"y": y,
 		"level": level,
 		"terrain_id": terrain_id,
-		"dominant_terrain_id": dominant_terrain_id,
 		"max_enemy_pressure": max_pressure,
 		"threat_level": _threat_level(max_pressure),
 	}
@@ -237,7 +233,8 @@ func _overworld_context(session: Variant) -> Dictionary:
 func _ambient_layers_for_context(context: Dictionary) -> Array[Dictionary]:
 	var layers: Array[Dictionary] = []
 	var terrain_id := String(context.get("terrain_id", ""))
-	var terrain_spec: Dictionary = TERRAIN_SPECS.get(terrain_id, TERRAIN_SPECS.get(String(context.get("dominant_terrain_id", "grass")), TERRAIN_SPECS["grass"]))
+	# The hero tile id is always a TERRAIN_SPECS key (_normalize_terrain_id), so no map-wide fallback is needed.
+	var terrain_spec: Dictionary = TERRAIN_SPECS.get(terrain_id, TERRAIN_SPECS["grass"])
 	layers.append(_layer_payload("terrain", "overworld_ambient_%s" % terrain_id, terrain_spec, 0.0))
 	if int(context.get("max_enemy_pressure", 0)) > 0:
 		layers.append(_layer_payload("pressure", "overworld_ambient_pressure", PRESSURE_SPEC, 0.35))
@@ -403,24 +400,6 @@ func _terrain_at(map_data: Array, x: int, y: int) -> String:
 	if row is Array and x >= 0 and x < row.size():
 		return _normalize_terrain_id(row[x])
 	return "grass"
-
-func _dominant_terrain(map_data: Array) -> String:
-	var counts := {}
-	for row in map_data:
-		if not (row is Array):
-			continue
-		for cell in row:
-			var terrain_id := _normalize_terrain_id(cell)
-			counts[terrain_id] = int(counts.get(terrain_id, 0)) + 1
-	var best_id := "grass"
-	var best_count := -1
-	for terrain_id_value in counts.keys():
-		var terrain_id := String(terrain_id_value)
-		var count := int(counts.get(terrain_id, 0))
-		if count > best_count or (count == best_count and terrain_id < best_id):
-			best_id = terrain_id
-			best_count = count
-	return best_id
 
 func _normalize_terrain_id(cell: Variant) -> String:
 	var terrain_id := ""

@@ -132,7 +132,10 @@ var _validation_scenario_outcome_routing_suppressed := false
 func _ready() -> void:
 	# Native window close requests must pass through the same transactional save
 	# boundary as the menu Exit command. Explicit SceneTree.quit() calls used by
-	# headless harnesses remain unaffected.
+	# headless harnesses remain unaffected. One OS close reaches this node as
+	# NOTIFICATION_WM_CLOSE_REQUEST and then as the root close_requested signal
+	# (the path SceneTree itself uses), so only the signal is handled; handling
+	# both ran the autosave, and any failure alert, twice per close.
 	get_tree().auto_accept_quit = false
 	var root_window := get_tree().root
 	if root_window != null and not root_window.close_requested.is_connected(_on_root_window_close_requested):
@@ -146,10 +149,6 @@ func _exit_tree() -> void:
 	var root_window := scene_tree.root
 	if root_window != null and root_window.close_requested.is_connected(_on_root_window_close_requested):
 		root_window.close_requested.disconnect(_on_root_window_close_requested)
-
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		request_safe_quit("window_close")
 
 func _on_root_window_close_requested() -> void:
 	request_safe_quit("window_close")

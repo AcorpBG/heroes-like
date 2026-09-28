@@ -2862,7 +2862,10 @@ func _validate_native_close(shell: Node, source_id: String, package_state: Dicti
 	await _settle()
 	if not _assert_dialog(shell, "quit", "", "Keep Editing", "LoadMap"):
 		return {}
+	# A second OS close arrives as the node notification followed by the root
+	# signal; together they must count as exactly one duplicate request.
 	AppRouter.notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	get_tree().root.close_requested.emit()
 	await _settle()
 	var duplicate: Dictionary = shell.call("validation_dirty_transition_snapshot")
 	if int(duplicate.get("duplicate_request_count", 0)) != 1 or int(duplicate.get("request_count", 0)) != 1:

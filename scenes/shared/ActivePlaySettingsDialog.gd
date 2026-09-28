@@ -30,12 +30,14 @@ const ACTIVE_PLAY_SETTINGS_SECTION_LABELS := [&"SoundTitle", &"GameplayTitle", &
 @onready var _reduce_repetitive_sounds_toggle: CheckButton = %ReduceRepetitiveSoundsToggle
 
 var _syncing := false
+var _dragging_volume_sliders: Array[HSlider] = []
 
 func _ready() -> void:
 	visible = false
 	set_process_input(false)
 	_apply_visual_theme()
 	_connect_focus_visibility()
+	_connect_volume_slider_drags()
 
 func open_dialog() -> void:
 	_sync_controls()
@@ -168,12 +170,20 @@ func _on_close_pressed() -> void:
 func _on_master_volume_changed(value: float) -> void:
 	if _syncing:
 		return
+	if _master_slider in _dragging_volume_sliders:
+		SettingsService.preview_master_volume_percent(int(round(value)))
+		_master_value.text = "%d%%" % SettingsService.master_volume_percent()
+		return
 	var result: Dictionary = SettingsService.set_master_volume_percent(int(round(value)))
 	_master_value.text = "%d%%" % SettingsService.master_volume_percent()
 	_finish_setting_change(result, "master_volume")
 
 func _on_music_volume_changed(value: float) -> void:
 	if _syncing:
+		return
+	if _music_slider in _dragging_volume_sliders:
+		SettingsService.preview_music_volume_percent(int(round(value)))
+		_music_value.text = "%d%%" % SettingsService.music_volume_percent()
 		return
 	var result: Dictionary = SettingsService.set_music_volume_percent(int(round(value)))
 	_music_value.text = "%d%%" % SettingsService.music_volume_percent()
@@ -182,9 +192,46 @@ func _on_music_volume_changed(value: float) -> void:
 func _on_effects_volume_changed(value: float) -> void:
 	if _syncing:
 		return
+	if _effects_slider in _dragging_volume_sliders:
+		SettingsService.preview_effects_volume_percent(int(round(value)))
+		_effects_value.text = "%d%%" % SettingsService.effects_volume_percent()
+		return
 	var result: Dictionary = SettingsService.set_effects_volume_percent(int(round(value)))
 	_effects_value.text = "%d%%" % SettingsService.effects_volume_percent()
 	_finish_setting_change(result, "effects_volume")
+
+# A mouse drag previews each step live and saves once on release; keyboard and
+# controller steps are not drags and still save immediately.
+func _connect_volume_slider_drags() -> void:
+	for slider in [_master_slider, _music_slider, _effects_slider]:
+		var started := _on_volume_slider_drag_started.bind(slider)
+		if not slider.drag_started.is_connected(started):
+			slider.drag_started.connect(started)
+		var ended := _on_volume_slider_drag_ended.bind(slider)
+		if not slider.drag_ended.is_connected(ended):
+			slider.drag_ended.connect(ended)
+		# Hiding a slider mid-drag cancels the grab without drag_ended.
+		var interrupted := _finish_volume_slider_drag.bind(slider)
+		if not slider.visibility_changed.is_connected(interrupted):
+			slider.visibility_changed.connect(interrupted)
+
+func _on_volume_slider_drag_started(slider: HSlider) -> void:
+	if slider not in _dragging_volume_sliders:
+		_dragging_volume_sliders.append(slider)
+
+func _on_volume_slider_drag_ended(_value_changed: bool, slider: HSlider) -> void:
+	_finish_volume_slider_drag(slider)
+
+func _finish_volume_slider_drag(slider: HSlider) -> void:
+	if slider not in _dragging_volume_sliders:
+		return
+	_dragging_volume_sliders.erase(slider)
+	if slider == _master_slider:
+		_on_master_volume_changed(slider.value)
+	elif slider == _music_slider:
+		_on_music_volume_changed(slider.value)
+	elif slider == _effects_slider:
+		_on_effects_volume_changed(slider.value)
 
 func _on_battle_playback_speed_selected(index: int) -> void:
 	if _syncing or index < 0 or index >= _battle_speed_picker.get_item_count():
