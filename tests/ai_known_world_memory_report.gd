@@ -1924,7 +1924,7 @@ func _legacy_known_world_sight_sources_control(session, config: Dictionary, fact
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or EnemyAdventureRules._town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or EnemyAdventureRules._town_controller_faction_id(town) != faction_id:
 			continue
 		var radius := EnemyAdventureRules.AI_HERO_TOWN_SIGHT_RADIUS
 		if OverworldRules.town_strategic_role(town) in ["capital", "stronghold"]:
