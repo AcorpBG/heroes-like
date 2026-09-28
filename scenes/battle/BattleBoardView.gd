@@ -243,6 +243,13 @@ var _battle_board_cursor_semantic_pending: Dictionary = {}
 var _battle_board_cursor_result_request_generation := 0
 var _controller_dispatch_in_progress := false
 var _terrain_ambient_phase := TERRAIN_AMBIENT_STATIC_PHASE
+# Rules queries (legal moves, targets, footer labels) that drawing, hover and
+# the footer would otherwise repeat every frame. Resolved once per battle
+# state; see _board_queries().
+var _board_query_cache: Dictionary = {}
+var _board_query_signature := 0
+var _board_query_in_draw := false
+var _presentation_was_animating := false
 
 @onready var _battle_board_cursor_live_label: Label = get_node_or_null("%BattleBoardCursorLive") as Label
 
@@ -255,7 +262,6 @@ func _ready() -> void:
 	focus_exited.connect(_on_controller_focus_exited)
 	mouse_exited.connect(func(): set_consequence_preview({}))
 	_configure_battle_board_cursor_semantic_timer()
-	_load_terrain_textures()
 	_load_battle_vfx_manifest()
 	_load_field_objective_art_manifest()
 	_load_battle_status_effect_art_manifest()
@@ -264,7 +270,7 @@ func _exit_tree() -> void:
 	_cancel_battle_board_cursor_semantic()
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_RESIZED:
+	if what in [NOTIFICATION_RESIZED, NOTIFICATION_THEME_CHANGED, NOTIFICATION_VISIBILITY_CHANGED]:
 		queue_redraw()
 
 func _process(delta: float) -> void:
@@ -276,9 +282,23 @@ func _process(delta: float) -> void:
 		_expire_animation_playback_records()
 		_activate_due_audio_cue_playback()
 		_cleanup_audio_players()
-		queue_redraw()
+		# Idle loops, ambient motes and playback need every frame. With reduced
+		# motion and nothing playing the board is static; state, hover, focus
+		# and cursor changes queue their own redraw. One more frame after
+		# motion stops draws the resting pose.
+		var animating := _presentation_animating()
+		if animating or _presentation_was_animating:
+			queue_redraw()
+		_presentation_was_animating = animating
 	if String(_battle_board_cursor_semantic_pending.get("kind", "")) == "result_clear" and not _battle_board_cursor_result_guard_matches(_battle_board_cursor_semantic_pending):
 		_cancel_battle_board_cursor_semantic()
+
+func _presentation_animating() -> bool:
+	return (
+		not SettingsService.reduced_motion_enabled()
+		or not _stack_animation_playback_until_msec.is_empty()
+		or not _stack_animation_cue_playback_records.is_empty()
+	)
 
 func _gui_input(event: InputEvent) -> void:
 	if _handle_controller_navigation_input(event):
@@ -353,7 +373,7 @@ func _ensure_controller_cursor() -> void:
 	if _cell_in_bounds(selected_cell):
 		_controller_cursor_cell = selected_cell
 		return
-	for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):
+	for destination in _legal_destinations():
 		if destination is Dictionary:
 			var destination_cell := Vector2i(int(destination.get("q", -1)), int(destination.get("r", -1)))
 			if _cell_in_bounds(destination_cell):
@@ -897,6 +917,7 @@ func finish_action_playback(session) -> void:
 
 func _apply_battle_dictionary(battle: Dictionary) -> void:
 	set_meta("contextual_help_revision", int(get_meta("contextual_help_revision", 0)) + 1)
+	_board_query_cache = {}
 	_cancel_battle_board_cursor_semantic()
 	_consequence_preview = _staged_order_preview.duplicate(true)
 	_consequence_hover_key = ""
@@ -2074,7 +2095,12 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), FRAME_FILL, true)
 	if _battle.is_empty():
 		return
+	_board_queries()
+	_board_query_in_draw = true
+	_draw_board()
+	_board_query_in_draw = false
 
+func _draw_board() -> void:
 	var board_rect := Rect2(Vector2(14.0, 14.0), size - Vector2(28.0, 28.0))
 	draw_rect(board_rect, BOARD_FILL, true)
 	draw_rect(board_rect, FRAME_COLOR, false, 3.0)
@@ -2275,10 +2301,6 @@ func _draw_hex_procedural_detail(center: Vector2, radius: float, terrain: String
 		_:
 			if detail_roll > 0.48:
 				draw_line(center + Vector2(-radius * 0.26, radius * 0.22), center + Vector2(radius * 0.18, radius * 0.02), Color(0.16, 0.23, 0.12, 0.24), 1.6, true)
-
-func _load_terrain_textures() -> void:
-	for terrain_id_value in TERRAIN_TEXTURE_PATHS.keys():
-		_load_terrain_texture(String(terrain_id_value))
 
 func _load_terrain_texture(terrain_id: String) -> void:
 	if _terrain_textures.has(terrain_id) or _terrain_texture_missing.has(terrain_id):
@@ -2790,8 +2812,8 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	var player_input_active := String(_active_stack.get("side", "")) == "player"
 
 	if player_input_active:
-		var legal_destinations: Array = BattleRulesScript.legal_destinations_for_active_stack(_battle)
-		var movement_range_region := _movement_range_contour_summary(legal_destinations)
+		var legal_destinations: Array = _legal_destinations()
+		var movement_range_region := _movement_range_region()
 		var legal_cell_keys: Dictionary = movement_range_region.get("cell_keys", {})
 		for destination in legal_destinations:
 			if not (destination is Dictionary):
@@ -2804,8 +2826,8 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 	_draw_body_outline(active_id, hex_layout, radius * 1.02, ACTIVE_COLOR, 3.4)
 
 	if player_input_active:
-		var legal_melee_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, false)
-		var legal_ranged_targets: Array = BattleRulesScript.legal_attack_targets_for_active_stack(_battle, true)
+		var legal_melee_targets: Array = _legal_attack_targets(false)
+		var legal_ranged_targets: Array = _legal_attack_targets(true)
 		for battle_id_value in legal_ranged_targets:
 			var ranged_id := String(battle_id_value)
 			if not stack_cells.has(ranged_id):
@@ -2822,7 +2844,7 @@ func _draw_tactical_affordances(hex_layout: Dictionary, stack_cells: Dictionary)
 		if stack_cells.has(target_id):
 			var target_cell: Vector2i = stack_cells.get(target_id)
 			var target_center := _hex_center(target_cell, hex_layout)
-			var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
+			var continuity_context := _selected_target_continuity_context()
 			var preserved_setup_target := not continuity_context.is_empty() and String(continuity_context.get("battle_id", "")) == target_id
 			if _selected_target_is_blocked():
 				_draw_body_outline(target_id, hex_layout, radius * 1.02, BLOCKED_TARGET_COLOR, 3.2)
@@ -5552,33 +5574,62 @@ func _battle_camera_offset_for_records(records: Array) -> Vector2:
 		offset = offset.normalized() * BATTLE_CAMERA_MAX_OFFSET_PX
 	return offset
 
+## The board's cached rules queries for the current battle state. A new state
+## from set_battle_state() clears them; the hash also catches in-place edits to
+## the shared session battle. A draw pass checks it once, other callers
+## (input, tooltips, validation) on every call.
+func _board_queries() -> Dictionary:
+	if not _board_query_in_draw:
+		var signature := _battle.hash()
+		if signature != _board_query_signature:
+			_board_query_signature = signature
+			_board_query_cache = {}
+	return _board_query_cache
+
+## Read-only: callers share the cached result.
+func _board_query(key: String, compute: Callable) -> Variant:
+	var cache := _board_queries()
+	if not cache.has(key):
+		cache[key] = compute.call()
+	return cache[key]
+
+func _legal_destinations() -> Array:
+	return _board_query("legal_destinations", func(): return BattleRulesScript.legal_destinations_for_active_stack(_battle))
+
+func _movement_range_region() -> Dictionary:
+	return _board_query("movement_range_region", func(): return _movement_range_contour_summary(_legal_destinations()))
+
+func _legal_attack_targets(ranged: bool) -> Array:
+	return _board_query("legal_ranged_targets" if ranged else "legal_melee_targets", func(): return BattleRulesScript.legal_attack_targets_for_active_stack(_battle, ranged))
+
+func _selected_target_continuity_context() -> Dictionary:
+	return _board_query("continuity_context", func(): return BattleRulesScript.selected_target_continuity_context(_battle))
+
 func _is_legal_destination_cell(cell: Vector2i) -> bool:
 	if not _cell_in_bounds(cell):
 		return false
-	for destination in BattleRulesScript.legal_destinations_for_active_stack(_battle):
-		if not (destination is Dictionary):
-			continue
-		if int(destination.get("q", -1)) == cell.x and int(destination.get("r", -1)) == cell.y:
-			return true
-	return false
+	var legal_cell_keys: Dictionary = _movement_range_region().get("cell_keys", {})
+	return legal_cell_keys.has(_movement_range_cell_key(cell))
 
 func _selected_target_is_blocked() -> bool:
 	var selected_target_id := String(_battle.get("selected_target_id", ""))
 	if selected_target_id == "" or _battle.is_empty():
 		return false
-	var legality := BattleRulesScript.selected_target_legality(_battle)
-	return bool(legality.get("blocked", false))
+	return bool(_board_query("selected_target_blocked", func(): return bool(BattleRulesScript.selected_target_legality(_battle).get("blocked", false))))
 
 func _target_state_label() -> String:
+	return String(_board_query("target_state_label", _resolve_target_state_label))
+
+func _resolve_target_state_label() -> String:
 	if _target_stack.is_empty():
 		return ""
 	var active_side := String(_active_stack.get("side", ""))
 	if active_side != "" and active_side != "player":
 		return "Input locked"
-	var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
+	var continuity_context := _selected_target_continuity_context()
 	if not continuity_context.is_empty():
 		return String(continuity_context.get("footer_label", "Setup target"))
-	var closing_context := BattleRulesScript.selected_target_closing_context(_battle)
+	var closing_context := BattleRulesScript.selected_target_closing_context(_battle, false)
 	if not closing_context.is_empty():
 		return String(closing_context.get("footer_label", "Closing target"))
 	var click_intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, String(_target_stack.get("battle_id", "")))
@@ -5609,7 +5660,7 @@ func _movement_state_label() -> String:
 			return "Move: %s -> close target" % detail
 		if detail != "":
 			return "Move: %s" % detail
-	var movement_intent := BattleRulesScript.active_movement_board_click_intent(_battle)
+	var movement_intent: Dictionary = _board_query("active_movement_intent", func(): return BattleRulesScript.active_movement_board_click_intent(_battle, _legal_destinations()))
 	if String(movement_intent.get("action", "")) == "move":
 		if bool(movement_intent.get("selected_target_blocked", false)):
 			return "Move: choose destination"
@@ -5620,7 +5671,8 @@ func _movement_state_label() -> String:
 
 func _hover_destination_preview() -> Dictionary:
 	if _is_legal_destination_cell(_hover_destination_cell):
-		return BattleRulesScript.movement_intent_for_destination(_battle, _hover_destination_cell.x, _hover_destination_cell.y)
+		var cell := _hover_destination_cell
+		return _board_query("movement_intent:%d,%d" % [cell.x, cell.y], func(): return BattleRulesScript.movement_intent_for_destination(_battle, cell.x, cell.y))
 	return {}
 
 func _stack_board_tooltip(battle_id: String) -> String:
@@ -5639,10 +5691,10 @@ func _stack_board_tooltip(battle_id: String) -> String:
 			"a friendly" if side == "player" else "an enemy",
 		]
 	if String(_active_stack.get("side", "")) == "player" and side == "enemy":
-		var continuity_context := BattleRulesScript.selected_target_continuity_context(_battle)
+		var continuity_context := _selected_target_continuity_context()
 		if not continuity_context.is_empty() and String(continuity_context.get("battle_id", "")) == battle_id:
 			return String(continuity_context.get("message", tooltip_text))
-		var closing_context := BattleRulesScript.selected_target_closing_context(_battle)
+		var closing_context := BattleRulesScript.selected_target_closing_context(_battle, false)
 		if not closing_context.is_empty() and String(closing_context.get("battle_id", "")) == battle_id:
 			return String(closing_context.get("message", tooltip_text))
 		var click_intent := BattleRulesScript.board_click_attack_intent_for_target(_battle, battle_id)

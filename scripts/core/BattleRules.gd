@@ -22,6 +22,10 @@ const ProfileLogScript = preload("res://scripts/core/ProfileLog.gd")
 # repeated hover and the legacy summaries share the same exact exchange.
 static var _consequence_cache_battle: Dictionary = {}
 static var _consequence_cache: Dictionary = {}
+# Last resolved hero payload per side, reused while its source dictionaries
+# compare equal. Building one deep-copies and re-normalizes the commander, and
+# every trait, initiative and damage check asks for it. Never saved.
+static var _hero_payload_cache: Dictionary = {}
 
 const STATUS_HARRIED := "status_harried"
 const STATUS_STAGGERED := "status_staggered"
@@ -50,6 +54,11 @@ const DAMAGE_RNG_STATE_KEY := "damage_rng_state"
 const DAMAGE_RNG_ROLL_COUNT_KEY := "damage_rng_roll_count"
 const DAMAGE_RNG_INTEGRITY_KEY := "damage_rng_integrity"
 const DAMAGE_RNG_VERSION := 1
+const BATTLE_SEED_SERIAL_KEY := "battle_seed_serial"
+# Transient keys for playback captions; never stored in battle state.
+const PLAYBACK_APPLIED_DAMAGE_KEY := "_playback_applied_damage"
+const PLAYBACK_APPLIED_CASUALTIES_KEY := "_playback_applied_casualties"
+const PLAYBACK_TARGET_BEFORE_KEY := "_playback_target_before"
 const COMMANDER_SPELL_CAST_ROUNDS_KEY := "commander_spell_cast_rounds"
 const ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY := "_enemy_commander_spell_cast_in_drain"
 const SELECTED_TARGET_CONTINUITY_KEY := "selected_target_continuity_id"
@@ -215,7 +224,7 @@ static func create_battle_payload(session: SessionStateStoreScript.SessionData, 
 		"terrain": String(encounter.get("terrain", "plains")),
 		"encounter_difficulty": _battle_difficulty_value(encounter_placement, encounter),
 		"battlefield_tags": battlefield_tags,
-		"combat_seed": int(encounter_placement.get("combat_seed", 0)),
+		"combat_seed": _new_battle_combat_seed(session, encounter_placement, encounter_id),
 		"round": 1,
 		"max_rounds": max(1, int(encounter.get("max_rounds", 12))),
 		"distance": _starting_distance_for_encounter(encounter, battle_context),
@@ -1457,13 +1466,18 @@ static func selected_target_continuity_context(battle: Dictionary) -> Dictionary
 	context["target_line"] = fallback_message
 	return context
 
-static func selected_target_closing_context(battle: Dictionary) -> Dictionary:
+## clear_stale: false makes this a pure query (for drawing); by default a
+## stale or superseded closing target is also erased from the battle.
+static func selected_target_closing_context(battle: Dictionary, clear_stale: bool = true) -> Dictionary:
 	if battle.is_empty():
 		return {}
 	if not selected_target_continuity_context(battle).is_empty():
-		_clear_selected_target_closing(battle)
+		if clear_stale:
+			_clear_selected_target_closing(battle)
 		return {}
-	if _clear_stale_selected_target_closing(battle):
+	if _selected_target_closing_is_stale(battle):
+		if clear_stale:
+			_clear_selected_target_closing(battle)
 		return {}
 	var context_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
 	if not (context_value is Dictionary):
@@ -2325,12 +2339,20 @@ static func attack_consequence_preview(battle: Dictionary, action: String, targe
 	var every_retaliation := true
 	var min_roll := int(moved.get("min_damage", 1))
 	var max_roll := maxi(min_roll, int(moved.get("max_damage", 1)))
+	# Every roll starts from the same prepared state, so the damage modifier is
+	# resolved once (as in _damage_for_roll) and rolls that land on the same
+	# damage share one trial. Each distinct damage is still simulated in full.
+	var attacker_count := maxi(1, _alive_count(moved))
+	var damage_modifier := _damage_modifier(moved, defender, prepared, ranged, false, distance)
+	var simulated_damage := {}
 	for roll in range(min_roll, max_roll + 1):
+		var damage: int = max(1, int(round(attacker_count * roll * damage_modifier)))
+		if simulated_damage.has(damage): continue
+		simulated_damage[damage] = true
 		var trial := prepared.duplicate(true)
 		var a := _get_stack_by_id(trial, actor_id)
 		var d := _get_stack_by_id(trial, target_id)
 		var before := d.duplicate(true)
-		var damage := _damage_for_roll(a, d, trial, roll, ranged, false, distance)
 		_apply_damage_to_stack(trial, target_id, damage)
 		if ranged: _consume_shot(trial, actor_id)
 		_apply_attack_ability_effects(trial, a, d, ranged, distance, before)
@@ -5819,9 +5841,11 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	var active_stack = get_active_stack(session.battle)
 	if _commander_spell_cast_this_round(session.battle, "player"):
 		return {"ok": false, "message": "The commander has already cast a spell this round.", "state": "invalid"}
+	_ensure_damage_rng_state(session, session.battle)
 	var resolution := _player_spell_resolution(session, spell_id, target_id)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "Spell casting failed.")), "state": "invalid"}
+	_commit_spell_resistance_roll(session.battle, resolution)
 	_clear_stack_animation_states(session.battle)
 	_clear_selected_target_continuity(session.battle)
 	_clear_selected_target_closing(session.battle)
@@ -5843,6 +5867,7 @@ static func cast_player_spell(session: SessionStateStoreScript.SessionData, spel
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var target_battle_id = String(resolution.get("target_battle_id", ""))
+			animation_resolution[PLAYBACK_TARGET_BEFORE_KEY] = _get_stack_by_id(session.battle, target_battle_id).duplicate()
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
 			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
@@ -6201,7 +6226,7 @@ static func _resolve_attack_action(
 	var damage_pressure_messages := _apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack")
 	messages.append_array(damage_pressure_messages)
 	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
-	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")), {}, target_before)
 	var ranged_return_messages := _apply_ranged_damage_return(
 		session.battle,
 		String(attacker.get("battle_id", "")),
@@ -6257,7 +6282,7 @@ static func _resolve_attack_action(
 		)
 		messages.append_array(retaliation_pressure_messages)
 		_append_text_presentation_event(session.battle, "morale", retaliation_pressure_messages, defender_after, attacker_after_retaliation, "retaliation")
-		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")), {}, attacker_before_retaliation)
 		retaliated = true
 
 	var action_id := "shoot" if is_ranged else "strike"
@@ -6537,30 +6562,7 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_move")
 			return _complete_enemy_action(session, advance_message)
 		"defend":
-			_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
-			_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
-			_append_presentation_event(
-				session.battle,
-				"buff",
-				"%s braces for impact." % _stack_label(active_stack),
-				{"action_id": "defend", "actor_battle_id": String(active_stack.get("battle_id", ""))}
-			)
-			var defend_message = "%s braces for impact." % _stack_label(active_stack)
-			var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
-			if defend_pressure != "":
-				defend_message += " %s" % defend_pressure
-				_append_text_presentation_event(session.battle, "morale", [defend_pressure], active_stack, {}, "defend")
-			var defend_objective_messages = _apply_field_objective_action_pressure(
-				session.battle,
-				{
-					"action": "defend",
-					"side": "enemy",
-					"battle_id": String(active_stack.get("battle_id", "")),
-				}
-			)
-			if not defend_objective_messages.is_empty():
-				defend_message = _join_messages([defend_message, " ".join(defend_objective_messages)])
-			return _complete_enemy_action(session, defend_message)
+			return _resolve_enemy_defend(session, active_stack)
 		_:
 			var fallback = _lowest_health_stack(targets)
 			if bool(active_stack.get("ranged", false)) and int(active_stack.get("shots_remaining", 0)) > 0:
@@ -6598,6 +6600,32 @@ static func _run_enemy_turn(session: SessionStateStoreScript.SessionData, active
 				return _complete_enemy_action(session, fallback_advance_message)
 			return _resolve_ai_attack(session, active_stack, fallback, false)
 
+static func _resolve_enemy_defend(session: SessionStateStoreScript.SessionData, active_stack: Dictionary) -> Dictionary:
+	_set_stack_defending(session.battle, String(active_stack.get("battle_id", "")))
+	_mark_stack_animation_event(session.battle, String(active_stack.get("battle_id", "")), "battle_unit_defend")
+	_append_presentation_event(
+		session.battle,
+		"buff",
+		"%s braces for impact." % _stack_label(active_stack),
+		{"action_id": "defend", "actor_battle_id": String(active_stack.get("battle_id", ""))}
+	)
+	var defend_message = "%s braces for impact." % _stack_label(active_stack)
+	var defend_pressure = _apply_defend_pressure(session.battle, String(active_stack.get("battle_id", "")))
+	if defend_pressure != "":
+		defend_message += " %s" % defend_pressure
+		_append_text_presentation_event(session.battle, "morale", [defend_pressure], active_stack, {}, "defend")
+	var defend_objective_messages = _apply_field_objective_action_pressure(
+		session.battle,
+		{
+			"action": "defend",
+			"side": "enemy",
+			"battle_id": String(active_stack.get("battle_id", "")),
+		}
+	)
+	if not defend_objective_messages.is_empty():
+		defend_message = _join_messages([defend_message, " ".join(defend_objective_messages)])
+	return _complete_enemy_action(session, defend_message)
+
 static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, active_stack: Dictionary, action: Dictionary) -> Dictionary:
 	var target = _get_stack_by_id(session.battle, String(action.get("target_battle_id", "")))
 	var raw_enemy_hero: Dictionary = session.battle.get("enemy_hero", {}) if session.battle.get("enemy_hero", {}) is Dictionary else {}
@@ -6606,6 +6634,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	)
 	if resolved_enemy_hero.is_empty():
 		resolved_enemy_hero = raw_enemy_hero
+	_ensure_damage_rng_state(session, session.battle)
 	var resolution = SpellRulesScript.resolve_battle_spell(
 		resolved_enemy_hero,
 		session.battle,
@@ -6616,6 +6645,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	)
 	if not bool(resolution.get("ok", false)):
 		return {"ok": false, "message": String(resolution.get("message", "")), "state": "invalid"}
+	_commit_spell_resistance_roll(session.battle, resolution)
 	_mark_commander_spell_cast(session.battle, "enemy")
 	session.battle[ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY] = true
 
@@ -6634,6 +6664,7 @@ static func _cast_enemy_spell(session: SessionStateStoreScript.SessionData, acti
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var target_battle_id = String(resolution.get("target_battle_id", ""))
+			animation_resolution[PLAYBACK_TARGET_BEFORE_KEY] = _get_stack_by_id(session.battle, target_battle_id).duplicate()
 			_apply_damage_to_stack(session.battle, target_battle_id, int(resolution.get("damage", 0)))
 			var target_after = _get_stack_by_id(session.battle, target_battle_id)
 			if not target_after.is_empty() and _alive_count(target_after) <= 0:
@@ -6779,7 +6810,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 	var damage_pressure_messages := _apply_damage_pressure(session.battle, attacker, target_before, defender_after, is_ranged, "attack")
 	messages.append_array(damage_pressure_messages)
 	_append_text_presentation_event(session.battle, "morale", damage_pressure_messages, attacker, defender_after, "shoot" if is_ranged else "strike")
-	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")))
+	_mark_damage_target_animation(session.battle, String(target.get("battle_id", "")), not ability_messages.is_empty(), String(attacker.get("battle_id", "")), {}, target_before)
 	var ranged_return_messages := _apply_ranged_damage_return(
 		session.battle,
 		String(attacker.get("battle_id", "")),
@@ -6834,7 +6865,7 @@ static func _resolve_ai_attack(session: SessionStateStoreScript.SessionData, att
 		)
 		messages.append_array(retaliation_pressure_messages)
 		_append_text_presentation_event(session.battle, "morale", retaliation_pressure_messages, defender_after, attacker_after_retaliation, "retaliation")
-		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")))
+		_mark_damage_target_animation(session.battle, String(attacker.get("battle_id", "")), not retaliation_ability_messages.is_empty(), String(defender_after.get("battle_id", "")), {}, attacker_before_retaliation)
 	var objective_messages = _apply_field_objective_action_pressure(
 		session.battle,
 		{
@@ -6866,6 +6897,16 @@ static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> 
 		if String(active_stack.get("side", "")) != "enemy":
 			break
 		var enemy_result = _run_enemy_turn(session, active_stack)
+		if String(enemy_result.get("state", "continue")) == "invalid":
+			# An enemy stack that cannot act would keep the turn and lock player
+			# input. Brace it instead so initiative moves on.
+			var stuck_stack := get_active_stack(session.battle)
+			if String(stuck_stack.get("battle_id", "")) == String(active_stack.get("battle_id", "")) and String(stuck_stack.get("side", "")) == "enemy":
+				var invalid_message := String(enemy_result.get("message", ""))
+				enemy_result = _resolve_enemy_defend(session, stuck_stack)
+				enemy_result["message"] = _join_messages([invalid_message, String(enemy_result.get("message", ""))])
+			else:
+				enemy_result["state"] = "continue"
 		var enemy_message := String(enemy_result.get("message", ""))
 		if enemy_message != "":
 			_record_event(session.battle, enemy_message)
@@ -6877,8 +6918,6 @@ static func _drain_enemy_turns(session: SessionStateStoreScript.SessionData) -> 
 			terminal_result["state"] = enemy_state
 			terminal_result["message"] = " ".join(messages)
 			return terminal_result
-		if enemy_state == "invalid":
-			break
 
 	session.battle.erase(ENEMY_COMMANDER_SPELL_DRAIN_LOCK_KEY)
 	return {"state": "continue", "message": " ".join(messages)}
@@ -8873,16 +8912,20 @@ static func _clear_selected_target_closing(battle: Dictionary) -> void:
 	battle.erase(SELECTED_TARGET_CLOSING_KEY)
 
 static func _clear_stale_selected_target_closing(battle: Dictionary, clear_attackable: bool = true) -> bool:
+	if not _selected_target_closing_is_stale(battle, clear_attackable):
+		return false
+	_clear_selected_target_closing(battle)
+	return true
+
+static func _selected_target_closing_is_stale(battle: Dictionary, clear_attackable: bool = true) -> bool:
 	if battle.is_empty() or not battle.has(SELECTED_TARGET_CLOSING_KEY):
 		return false
 	var context_value: Variant = battle.get(SELECTED_TARGET_CLOSING_KEY, {})
 	if not (context_value is Dictionary):
-		_clear_selected_target_closing(battle)
 		return true
 	var stored_context: Dictionary = context_value
 	var target_id := String(stored_context.get("battle_id", ""))
 	if target_id == "" or String(battle.get("selected_target_id", "")) != target_id:
-		_clear_selected_target_closing(battle)
 		return true
 	var active_stack = get_active_stack(battle)
 	var expected_active_id := String(stored_context.get("active_battle_id", ""))
@@ -8891,17 +8934,12 @@ static func _clear_stale_selected_target_closing(battle: Dictionary, clear_attac
 		or String(active_stack.get("side", "")) != "player"
 		or (expected_active_id != "" and String(active_stack.get("battle_id", "")) != expected_active_id)
 	):
-		_clear_selected_target_closing(battle)
 		return true
 	var target = _get_stack_by_id(battle, target_id)
 	if target.is_empty() or _alive_count(target) <= 0 or String(target.get("side", "")) == String(active_stack.get("side", "")):
-		_clear_selected_target_closing(battle)
 		return true
 	var legality := _attack_legality_for_target(active_stack, target, battle)
-	if (clear_attackable and bool(legality.get("attackable", false))) or not bool(legality.get("blocked", false)):
-		_clear_selected_target_closing(battle)
-		return true
-	return false
+	return (clear_attackable and bool(legality.get("attackable", false))) or not bool(legality.get("blocked", false))
 
 static func _set_selected_target(battle: Dictionary, target_id: String, explicit_retarget: bool = false) -> void:
 	if battle.is_empty():
@@ -8961,9 +8999,8 @@ static func _apply_auto_advance_movement(battle: Dictionary, active_stack: Dicti
 	)
 	if not destination.is_empty():
 		_set_stack_hex(battle, String(active_stack.get("battle_id", "")), destination)
-		_sync_distance_from_hexes(battle)
-	else:
-		battle["distance"] = max(0, start_distance - distance_delta)
+	# Without a destination nobody moved, so the band must not shrink.
+	_sync_distance_from_hexes(battle)
 	return distance_delta
 
 static func _hex_label(cell: Dictionary) -> String:
@@ -9045,6 +9082,7 @@ static func _prepare_round(battle: Dictionary, round_number: int) -> void:
 		_record_event(battle, message)
 		_append_presentation_event(battle, "heal", message, {"action_id": "town_root_ward", "target_battle_id": String(healing.stack.get("battle_id", "")), "healing": int(healing.amount)})
 	_sync_occupied_hexes(battle)
+	_sync_distance_from_hexes(battle)
 	_apply_round_pressure_shifts(battle)
 	battle["turn_order"] = _sorted_turn_order(battle)
 	battle["turn_index"] = 0
@@ -9068,31 +9106,32 @@ static func _sorted_turn_order(battle: Dictionary) -> Array:
 			continue
 		candidates.append(String(stack.get("battle_id", "")))
 
+	# Initiative is resolved once per stack; the selection order below is
+	# unchanged, so ties still fall back to speed, then player first.
+	var keys := {}
+	for battle_id in candidates:
+		var stack := _get_stack_by_id(battle, battle_id)
+		keys[battle_id] = {
+			"score": _stack_initiative_total(stack, battle),
+			"speed": int(stack.get("speed", 0)),
+			"player": String(stack.get("side", "")) == "player",
+		}
 	var sorted = []
 	while not candidates.is_empty():
 		var best_index = 0
 		for index in range(1, candidates.size()):
-			if _compare_stack_order(battle, candidates[index], candidates[best_index]):
+			if _compare_stack_order_keys(keys[candidates[index]], keys[candidates[best_index]]):
 				best_index = index
 		sorted.append(candidates[best_index])
 		candidates.remove_at(best_index)
 	return sorted
 
-static func _compare_stack_order(battle: Dictionary, lhs_id: String, rhs_id: String) -> bool:
-	var lhs = _get_stack_by_id(battle, lhs_id)
-	var rhs = _get_stack_by_id(battle, rhs_id)
-	var lhs_score = _stack_initiative_total(lhs, battle)
-	var rhs_score = _stack_initiative_total(rhs, battle)
-	if String(battle.get("terrain", "")) == "mire":
-		lhs_score -= 1
-		rhs_score -= 1
-	if lhs_score == rhs_score:
-		var lhs_speed = int(lhs.get("speed", 0))
-		var rhs_speed = int(rhs.get("speed", 0))
-		if lhs_speed == rhs_speed:
-			return String(lhs.get("side", "")) == "player" and String(rhs.get("side", "")) != "player"
-		return lhs_speed > rhs_speed
-	return lhs_score > rhs_score
+static func _compare_stack_order_keys(lhs: Dictionary, rhs: Dictionary) -> bool:
+	if int(lhs.score) == int(rhs.score):
+		if int(lhs.speed) == int(rhs.speed):
+			return bool(lhs.player) and not bool(rhs.player)
+		return int(lhs.speed) > int(rhs.speed)
+	return int(lhs.score) > int(rhs.score)
 
 static func _advance_to_next_alive(battle: Dictionary, start_index: int) -> String:
 	var turn_order = battle.get("turn_order", [])
@@ -9354,7 +9393,8 @@ static func _apply_ranged_damage_return(
 		attacker_battle_id,
 		false,
 		String(defender_after.get("battle_id", "")),
-		{"ability_id": "shielding"}
+		{"ability_id": "shielding"},
+		attacker_before
 	)
 	_append_damage_presentation_event(
 		battle,
@@ -9380,16 +9420,22 @@ static func _apply_ranged_damage_return(
 
 static func _apply_damage_to_stack(battle: Dictionary, battle_id: String, damage: int) -> void:
 	var stacks = battle.get("stacks", [])
+	var killed := false
 	for index in range(stacks.size()):
 		var stack = stacks[index]
 		if stack is Dictionary and String(stack.get("battle_id", "")) == battle_id:
 			var absorbed := TownBattle.absorb(stack, damage)
+			var was_alive := int(stack.get("total_health", 0)) > 0
 			stack["total_health"] = max(0, int(stack.get("total_health", 0)) - max(0, damage - absorbed))
 			if absorbed > 0: _record_event(battle, "Pressure shield absorbs %d damage for %s." % [absorbed, _stack_label(stack)])
 			stacks[index] = stack
+			killed = was_alive and int(stack.get("total_health", 0)) <= 0
 			break
 	battle["stacks"] = stacks
 	_sync_occupied_hexes(battle)
+	# A kill can remove the closest pair of opposing stacks.
+	if killed:
+		_sync_distance_from_hexes(battle)
 
 static func _restore_stack_health(battle: Dictionary, battle_id: String, amount: int) -> int:
 	var restored := 0
@@ -10038,7 +10084,8 @@ static func _apply_pressure_artillery(
 			String(secondary_target.get("battle_id", "")),
 			true,
 			String(attacker.get("battle_id", "")),
-			{"ability_id": "pressure_artillery"}
+			{"ability_id": "pressure_artillery"},
+			secondary_before
 		)
 		_append_damage_presentation_event(
 			battle,
@@ -12947,18 +12994,25 @@ static func _merge_spell_school_resistance(left: Variant, right: Variant) -> Dic
 		merged[school_id] = clamp(int(merged.get(school_id, 0)) + int(right_normalized[school_id]), 0, SpellRulesScript.MAX_SPELL_RESISTANCE_PCT)
 	return merged
 
+## Read-only: the result may be shared with later calls on an unchanged side.
 static func _hero_payload_for_side(battle: Dictionary, side: String) -> Dictionary:
-	if side == "player":
-		return _side_payload_with_commander_fallback(
-			battle.get("player_hero", {}),
-			battle.get("player_commander_state", {}),
-			"player"
-		)
-	return _side_payload_with_commander_fallback(
-		battle.get("enemy_hero_payload", {}),
-		battle.get("enemy_hero", {}),
-		"enemy"
-	)
+	var cache_side := "player" if side == "player" else "enemy"
+	var payload_value = battle.get("player_hero" if cache_side == "player" else "enemy_hero_payload", {})
+	var commander_value = battle.get("player_commander_state" if cache_side == "player" else "enemy_hero", {})
+	var payload_source: Dictionary = payload_value if payload_value is Dictionary else {}
+	var commander_source: Dictionary = commander_value if commander_value is Dictionary else {}
+	var cached: Dictionary = _hero_payload_cache.get(cache_side, {})
+	if not cached.is_empty() and cached.payload_source == payload_source and cached.commander_source == commander_source:
+		return cached.payload
+	# Without a commander the fallback returns the live payload itself; keep a
+	# private copy so later in-place edits cannot leak into a cache hit.
+	var payload := _side_payload_with_commander_fallback(payload_source, commander_source, cache_side).duplicate(true)
+	_hero_payload_cache[cache_side] = {
+		"payload_source": payload_source.duplicate(true),
+		"commander_source": commander_source.duplicate(true),
+		"payload": payload,
+	}
+	return payload
 
 static func _side_payload_with_commander_fallback(
 	existing_payload_value: Variant,
@@ -13919,11 +13973,39 @@ static func _highest_momentum_stack_for_side(battle: Dictionary, side: String) -
 			best_score = score
 	return best
 
+## Placements with an authored seed keep it. Guards placed without one (for
+## example on generated maps, or towns under assault) draw a fresh seed for each
+## battle, so copies of a guard and re-fights after a retreat do not replay the
+## same rolls. The serial persists in the session.
+static func _new_battle_combat_seed(session: SessionStateStoreScript.SessionData, encounter_placement: Dictionary, encounter_id: String) -> int:
+	var authored := int(encounter_placement.get("combat_seed", 0))
+	if authored != 0:
+		return authored
+	var serial := int(session.overworld.get(BATTLE_SEED_SERIAL_KEY, 0)) + 1
+	session.overworld[BATTLE_SEED_SERIAL_KEY] = serial
+	# An Array hash mixes every part; a String hash of text that differs only in
+	# the serial would give neighbouring battles neighbouring seeds.
+	var seed := hash([
+		session.session_id,
+		encounter_id,
+		OverworldRulesScript.encounter_key(encounter_placement),
+		int(session.day),
+		serial,
+	])
+	return seed if seed != 0 else 1
+
+## Legacy battles saved before any roll may still carry no seed.
 static func _resolved_damage_seed(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> int:
 	var seed := int(battle.get("combat_seed", 0))
 	if seed != 0:
 		return seed
-	seed = hash("%s:%s:%d" % [session.session_id, String(battle.get("encounter_id", "")), int(battle.get("round", 1))])
+	seed = hash([
+		session.session_id,
+		String(battle.get("encounter_id", "")),
+		String(battle.get("resolved_key", "")),
+		int(session.day),
+		int(battle.get("round", 1)),
+	])
 	return seed if seed != 0 else 1
 
 static func _initialize_damage_rng_state(session: SessionStateStoreScript.SessionData, battle: Dictionary) -> void:
@@ -13992,6 +14074,15 @@ static func _commit_damage_rng_roll(battle: Dictionary, rng: RandomNumberGenerat
 	battle[DAMAGE_RNG_ROLL_COUNT_KEY] = roll_count
 	battle[DAMAGE_RNG_INTEGRITY_KEY] = _damage_rng_integrity(int(battle.get("combat_seed", 1)), state_text, roll_count)
 
+## A control-resistance roll peeks at the damage stream; the cast commits it.
+static func _commit_spell_resistance_roll(battle: Dictionary, resolution: Dictionary) -> void:
+	var state_text := String(resolution.get(SpellRulesScript.RESISTANCE_RNG_STATE_KEY, "")).strip_edges()
+	if not state_text.is_valid_int():
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.state = int(state_text)
+	_commit_damage_rng_roll(battle, rng)
+
 static func _damage_rng_integrity(seed: int, state_text: String, roll_count: int) -> String:
 	return ("damage_rng_v%d|%d|%s|%d" % [DAMAGE_RNG_VERSION, seed, state_text, roll_count]).sha256_text()
 
@@ -14022,7 +14113,10 @@ static func _mark_side_animation_event(battle: Dictionary, side: String, event_i
 			continue
 		_mark_stack_animation_event(battle, String(stack.get("battle_id", "")), event_id)
 
-static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "", extra_context: Dictionary = {}) -> void:
+## target_before is the stack as it was before this hit. Its health loss is
+## the playback caption's damage; the previous playback frame may already show
+## this hit when an ability struck another stack in between.
+static func _mark_damage_target_animation(battle: Dictionary, battle_id: String, had_status_effect: bool = false, source_battle_id: String = "", extra_context: Dictionary = {}, target_before: Dictionary = {}) -> void:
 	if battle_id == "":
 		return
 	var target := _get_stack_by_id(battle, battle_id)
@@ -14031,6 +14125,12 @@ static func _mark_damage_target_animation(battle: Dictionary, battle_id: String,
 	var context := extra_context.duplicate(true)
 	if source_battle_id != "":
 		context["source_battle_id"] = source_battle_id
+	if not target_before.is_empty():
+		var unit_hp := maxi(1, int(target.get("unit_hp", 1)))
+		var health_before := int(target_before.get("total_health", 0))
+		var health_after := int(target.get("total_health", 0))
+		context[PLAYBACK_APPLIED_DAMAGE_KEY] = maxi(0, health_before - health_after)
+		context[PLAYBACK_APPLIED_CASUALTIES_KEY] = maxi(0, int(ceil(float(health_before) / unit_hp)) - int(ceil(float(health_after) / unit_hp)))
 	if _alive_count(target) <= 0:
 		_mark_stack_animation_event(battle, battle_id, "battle_unit_death", context)
 	elif had_status_effect:
@@ -14059,7 +14159,8 @@ static func _mark_spell_animation_states(battle: Dictionary, caster_stack: Dicti
 	match String(resolution.get("resolution_type", "")):
 		"damage":
 			var post_damage_effect = resolution.get("post_damage_effect", {})
-			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")), target_context)
+			var target_before: Dictionary = resolution.get(PLAYBACK_TARGET_BEFORE_KEY, {}) if resolution.get(PLAYBACK_TARGET_BEFORE_KEY, {}) is Dictionary else {}
+			_mark_damage_target_animation(battle, target_id, post_damage_effect is Dictionary and not post_damage_effect.is_empty(), String(caster_stack.get("battle_id", "")), target_context, target_before)
 		"effect", "recover_effect":
 			_mark_stack_animation_event(battle, target_id, "battle_status_applied", target_context)
 		"cleanse_effect":
@@ -14098,7 +14199,13 @@ static func _mark_stack_animation_event(battle: Dictionary, battle_id: String, e
 		"turn_index": int(battle.get("turn_index", 0)),
 	}
 	if event_id != "battle_unit_move":
-		ActionPlayback.capture(battle, record)
+		var capture_record := record
+		if context.has(PLAYBACK_APPLIED_DAMAGE_KEY):
+			# Playback-only: the stored animation state keeps its usual fields.
+			capture_record = record.duplicate()
+			capture_record["damage"] = int(context.get(PLAYBACK_APPLIED_DAMAGE_KEY, 0))
+			capture_record["casualties"] = int(context.get(PLAYBACK_APPLIED_CASUALTIES_KEY, 0))
+		ActionPlayback.capture(battle, capture_record)
 	if existing_state != "" and existing_priority > priority:
 		return
 	battle[ANIMATION_EVENT_SERIAL_KEY] = serial

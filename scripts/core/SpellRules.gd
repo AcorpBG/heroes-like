@@ -13,6 +13,10 @@ const SPELL_SCHOOL_IDS := ["beacon", "mire", "lens", "root", "furnace", "veil", 
 const STATUS_EFFECT_IDS := ["status_harried", "status_staggered", "status_rooted", "status_overheated"]
 const MAX_SPELL_RESISTANCE_PCT := 75
 const MAX_CONTROL_RESISTANCE_PCT := 80
+# The battle's persisted seeded stream (BattleRules owns the other RNG keys).
+const BATTLE_RNG_STATE_KEY := "damage_rng_state"
+# Resolution field: stream state after a resistance roll, committed by the cast.
+const RESISTANCE_RNG_STATE_KEY := "resistance_rng_state"
 const SPELL_ROLE_CATEGORIES := ["damage", "buff", "debuff", "control", "recovery", "summon_terrain", "economy_map_utility", "countermagic"]
 const SPELL_PRIMARY_ROLES := [
 	"movement_support",
@@ -1124,6 +1128,7 @@ static func resolve_battle_spell(
 				"blocked_status_id": String(status_resolution.get("blocked_status_id", "")),
 				"control_resistance_pct": int(status_resolution.get("control_resistance_pct", 0)),
 				"resistance_roll": int(status_resolution.get("resistance_roll", -1)),
+				RESISTANCE_RNG_STATE_KEY: String(status_resolution.get(RESISTANCE_RNG_STATE_KEY, "")),
 				"message": message,
 			}
 		"control_enemy":
@@ -1149,6 +1154,7 @@ static func resolve_battle_spell(
 				"blocked_status_id": String(control_resolution.get("blocked_status_id", "")),
 				"control_resistance_pct": int(control_resolution.get("control_resistance_pct", 0)),
 				"resistance_roll": int(control_resolution.get("resistance_roll", -1)),
+				RESISTANCE_RNG_STATE_KEY: String(control_resolution.get(RESISTANCE_RNG_STATE_KEY, "")),
 				"message": control_message,
 			}
 		"recover_ally":
@@ -1413,9 +1419,14 @@ static func battle_spell_status_resolution(
 			"resistance_roll": -1,
 		}
 	var resistance_pct := control_resistance_pct(battle, target_stack, spell)
-	var roll := _status_resistance_roll(battle, active_stack, target_stack, spell, status_id)
+	var roll := -1
+	var rng_state := ""
+	if resistance_pct > 0:
+		var draw := _status_resistance_roll(battle, active_stack, target_stack, spell, status_id)
+		roll = int(draw.get("roll", -1))
+		rng_state = String(draw.get("rng_state", ""))
 	var resisted := resistance_pct > 0 and roll < resistance_pct
-	return {
+	var resolution := {
 		"blocked": resisted,
 		"immune": false,
 		"resisted": resisted,
@@ -1423,6 +1434,9 @@ static func battle_spell_status_resolution(
 		"control_resistance_pct": resistance_pct,
 		"resistance_roll": roll,
 	}
+	if rng_state != "":
+		resolution[RESISTANCE_RNG_STATE_KEY] = rng_state
+	return resolution
 
 static func active_effects_for_round(stack: Dictionary, round_number: int) -> Array:
 	var results := []
@@ -1951,33 +1965,51 @@ static func _hero_payload_for_target_side(battle: Dictionary, target_stack: Dict
 		_:
 			return {}
 
+## Draws the next value of the battle's persisted seeded stream without
+## advancing it: a preview only peeks, and a cast commits "rng_state" (see
+## BattleRules._commit_spell_resistance_roll). Battles without a seed, such as
+## test fixtures, fall back to a hash of the cast.
 static func _status_resistance_roll(
 	battle: Dictionary,
 	active_stack: Dictionary,
 	target_stack: Dictionary,
 	spell: Dictionary,
 	status_id: String
-) -> int:
-	return _stable_percent(
-		[
-			int(battle.get("round", 1)),
-			String(active_stack.get("battle_id", "")),
-			String(target_stack.get("battle_id", "")),
-			String(spell.get("id", "")),
-			status_id,
-			str(battle.get("resistance_seed", "")),
-		]
-	)
+) -> Dictionary:
+	var rng := _battle_stream_rng(battle)
+	if rng != null:
+		var roll := rng.randi_range(0, 99)
+		return {"roll": roll, "rng_state": str(rng.state)}
+	return {
+		"roll": _stable_percent(
+			[
+				int(battle.get("round", 1)),
+				String(active_stack.get("battle_id", "")),
+				String(target_stack.get("battle_id", "")),
+				String(spell.get("id", "")),
+				status_id,
+				str(battle.get("resistance_seed", "")),
+			]
+		),
+	}
+
+static func _battle_stream_rng(battle: Dictionary) -> RandomNumberGenerator:
+	var seed := int(battle.get("combat_seed", 0))
+	var state_text := String(battle.get(BATTLE_RNG_STATE_KEY, "")).strip_edges()
+	if seed == 0 and not state_text.is_valid_int():
+		return null
+	var rng := RandomNumberGenerator.new()
+	# Same construction as the damage stream: seed, then the persisted state.
+	rng.seed = seed if seed != 0 else 1
+	if state_text.is_valid_int():
+		rng.state = int(state_text)
+	return rng
 
 static func _stable_percent(parts: Array) -> int:
 	var text_parts := []
 	for part in parts:
 		text_parts.append(str(part))
-	var text := "|".join(text_parts)
-	var hash_value := 2166136261
-	for index in range(text.length()):
-		hash_value = int((hash_value + text.unicode_at(index) * 16777619 + 1013904223) % 1000003)
-	return int(hash_value % 100)
+	return posmod(hash(text_parts), 100)
 
 static func _append_status_resolution_message(
 	message: String,
