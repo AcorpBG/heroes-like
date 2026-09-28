@@ -1,0 +1,624 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_004",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "attack_h3_006",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "attack_h3_008",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              1152,
+              832
+            ]
+          ],
+          "anchor": [
+            576,
+            692
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 16
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/original_lossless.mkv",
+          "sha256": "6e84479bd73869f893fb6cfd3ee0cfe7b88df7043f341d6337586718b6931365"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/original.json",
+          "sha256": "ed349c19afb8da0e78083e55312999576805319340122289c2156ce14eacab3a"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/workflow_api.json",
+          "sha256": "cf75a3ba6d93d32cdb064e88bc4ce5cd11873bfdfcd9cb875b46adcdb12a79e9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/prompt.txt",
+          "sha256": "244fd8a2e2950f8f1c1ef3358ba8a8b60a14932be0fca2bf13675e53269c68e5"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/reference.json",
+          "sha256": "566627ae4195681843271f4787a0dfe58bf8cd0e3cab28a2aae7ce77010a2451"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/matte.json",
+          "sha256": "f45f2b5b0e6ebf8f3c06ea7c6e7c5a09b6856122d22a9d21aad7783aff0febe4"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/staged_generation.json",
+          "sha256": "cde15994f7b20a1ee7fd5ec1aeb3b08f571f304f81374b48f80add9b759c577b"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "f63fbb18e6eccb11455548b6107f79a0a1d15ab1f95a034be6078060f4962656"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/sampling_submission.json",
+          "sha256": "252fe21a5da5f0826a8794de38e0d497d3de35952be2c71603f247044f13169f"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/sampling_history.json",
+          "sha256": "c251660fdc25a1be95e7d2c586f70db746f6c3b016b4fa48f22f3e97f62e79e5"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_wakechain_boarders_veteran/attack_h3_v2/original.latent",
+          "sha256": "314a86526164219329caf8506db56c3ad13518338a91d5aeebd8b9952c4111b8"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all 124 chronological originals and enlarged swing/grip details. Increased canvas retains the whole grapnel above the hood and around the body, without changing anatomical scale. Selected connected-chain windup, forward strike and full recovery; excluded originals 40-41 where the hanging chain loop briefly separates, and trimmed stationary holds. The short 39-to-42 source interval retains overhead-to-contact motion. Twenty-five original frames over 1.5 seconds; contact at original 42, selected index 16. No effect flash, duplicate padding, reversal, interpolation or painted reconstruction."
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_wakechain_boarders_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            272
+          ]
+        ],
+        "anchor": [
+          256,
+          256
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7e9e7242fddfc55298fae4cb16f4e9261f3126912a84b0cb686f35e30ab2f4a0",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f3933059ba16a51be5b9937c00ffcc093a8daf0bccc4274f0d4299230f799ed3",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakechain_boarders_veteran.png",
+        "rects": [
+          [
+            1024,
+            272,
+            1536,
+            544
+          ]
+        ],
+        "anchor": [
+          1280,
+          528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7e9e7242fddfc55298fae4cb16f4e9261f3126912a84b0cb686f35e30ab2f4a0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "21de373d17e3e00f836cb987084a3a71e21a4027b2b1b122c8aca49d7d1c1ba6",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    596
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    569,
+    "51bb9a09-1e26-4882-b43b-0cd77f264fb3",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked elevated orthographic three-quarter fantasy strategy camera facing screen right. One adult Gravetide Anchor human, exactly two arms and two legs, dirty ivory pointed hood hiding face, torn ivory tabard over dark navy-black long coat and cloak tails, brown leather armor and boots, brass round ship-wheel belt buckle. Exactly ONE heavy dark iron three-fluked grapnel with short central shank, attached to ONE continuous heavy chain. Both hands control the continuous chain during the swing, moving their grips between chain segments as guided. The single grapnel remains attached to that chain even when it swings beyond arm reach. Keep the original grapnel size, flukes and handle unchanged. No pole, sword, second anchor, extra hand, disconnected chain or added props. Fixed body size, stationary camera and anatomical ground line. Entire body, chain and weapon remain inside the frame. Static solid saturated green background throughout, no floor, scenery, lettering, particles or magical effects. One heavy chained-grapnel melee attack. Wind up by lifting the single grapnel up and back over the near shoulder as in the first intermediate pose, then swing it forward toward screen right as in the second contact pose. Two real arms control the one continuous chain; hands may change which chain segment they hold but never detach the weapon from the chain. Recover the heavy grapnel and both hands into the original ready pose. Visible shoulders, elbows and knees work together, no teleporting weapon, spinning body or second anchor. Keep the entire chain swing well away from all canvas edges, with generous empty green above and below the weapon path. No impact flash, sparks, burst, streaks or particles: only the physical creature and chain weapon.",
+          "width": 1152,
+          "height": 832,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928947
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gravetide_attack_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gravetide_attack_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "gravetide_attack_h3_v2_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 58,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "gravetide_h3/attack_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "gravetide_h3",
+      "create_time": 1790587555594
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "gravetide_h3\\attack_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "51bb9a09-1e26-4882-b43b-0cd77f264fb3",
+          "timestamp": 1790587555595
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "51bb9a09-1e26-4882-b43b-0cd77f264fb3",
+          "timestamp": 1790587555617
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "51bb9a09-1e26-4882-b43b-0cd77f264fb3",
+          "timestamp": 1790588303429
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
