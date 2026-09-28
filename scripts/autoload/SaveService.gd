@@ -2623,6 +2623,14 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		return _finalize_and_cache_summary(summary)
 
 	summary = _populate_summary_from_payload(summary, raw_payload)
+	# Restore refuses newer save versions, so mark them unloadable here too;
+	# otherwise Continue keeps selecting a save that can never load.
+	if int(summary.get("source_save_version", 0)) > SessionStateStoreScript.SAVE_VERSION:
+		summary["validity"] = "newer_version"
+		summary["status_text"] = "Written by a newer build of the game."
+		summary["resume_target"] = "blocked"
+		summary["loadable"] = false
+		return _finalize_and_cache_summary(summary)
 	var structure_report := _payload_structure_report(raw_payload, slot_type)
 	if not bool(structure_report.get("ok", false)):
 		summary["validity"] = String(structure_report.get("validity", "invalid_payload"))
