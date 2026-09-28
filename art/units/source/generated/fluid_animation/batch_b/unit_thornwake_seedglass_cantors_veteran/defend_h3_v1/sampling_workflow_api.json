@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Blossomchoir Cantor plant humanoid facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two long bark arms with twig fingers and two root-shaped legs. Pale wood oval face framed by pink-white blossoms, layered sage-green and ivory leaf robe, blossom shoulder mantle, green hanging seed pods, and tall pink-ivory trumpet flower pipes fixed on its back. One ornate curved wooden lyre with green strings held in front on screen right: far hand supports its frame, near hand articulates to pluck or gesture. Preserve exact face, silhouette, instrument, pipes, blossoms, seed pods, robe colors and proportions. Fixed body scale and ground registration, full body and every prop inside generous margins. Flat saturated BLUE background, no floor, scenery, extra limbs or instruments, text, camera motion, shadows, emitted particles or projectiles. Dedicated defensive brace. Far hand pulls lyre protectively close, near hand leaves strings and raises open palm across chest. Widen the two root feet and bend knees into a stable held stance. Exactly two hands: supporting instrument and guarding. Finish holding guard, no return to ready.",
+      "width": 960,
+      "height": 704,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 942016
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "blossomchoir_defend_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "blossomchoir_defend_h3_v1_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "blossomchoir_h3/defend_h3_v1/sampled"
+    }
+  }
+}

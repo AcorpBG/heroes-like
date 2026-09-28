@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_thornwake_seedglass_cantors_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/support_guard_v2.png",
+      "rects": [
+        [
+          887,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1270,
+        834
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "prompt": "One original Blossomchoir Cantor plant humanoid facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two long bark arms with twig fingers and two root-shaped legs. Pale wood oval face framed by pink-white blossoms, layered sage-green and ivory leaf robe, blossom shoulder mantle, green hanging seed pods, and tall pink-ivory trumpet flower pipes fixed on its back. One ornate curved wooden lyre with green strings held in front on screen right: far hand supports its frame, near hand articulates to pluck or gesture. Preserve exact face, silhouette, instrument, pipes, blossoms, seed pods, robe colors and proportions. Fixed body scale and ground registration, full body and every prop inside generous margins. Flat saturated BLUE background, no floor, scenery, extra limbs or instruments, text, camera motion, shadows, emitted particles or projectiles. Blossomchoir support invocation. Far hand continues holding lyre. Near hand releases strings, rises upward and forward above shoulder with open twig fingers in a clear invocation gesture. Briefly hold, then lower the same arm back to strings and return to ready. Two hands only, no plucking hand left behind. Root feet planted, instrument and flower pipes retain identity. No emitted effects.",
+  "clip": "cast",
+  "seed": 942017
+}

@@ -1,0 +1,33 @@
+{
+  "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+  "identity": "One original Blossomchoir Cantor plant humanoid facing screen right in a locked elevated orthographic three-quarter fantasy strategy camera. Exactly two long bark arms with twig fingers and two root-shaped legs. Pale wood oval face framed by pink-white blossoms, layered sage-green and ivory leaf robe, blossom shoulder mantle, green hanging seed pods, and tall pink-ivory trumpet flower pipes fixed on its back. One ornate curved wooden lyre with green strings held in front on screen right: far hand supports its frame, near hand articulates to pluck or gesture. Preserve exact face, silhouette, instrument, pipes, blossoms, seed pods, robe colors and proportions. Fixed body scale and ground registration, full body and every prop inside generous margins. Flat saturated BLUE background, no floor, scenery, extra limbs or instruments, text, camera motion, shadows, emitted particles or projectiles. ",
+  "required_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_accepted_clips": [],
+  "status": "completed",
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "selected_original_frames": 234,
+  "focused_validation": {
+    "candidate_checks": 788,
+    "live_checks": 792,
+    "platform": "Windows Godot 4.6.2",
+    "full_suite": false
+  }
+}

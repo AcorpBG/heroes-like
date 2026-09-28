@@ -1,0 +1,16 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "death_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Coordinator reviewed complete chronological source frames, enlarged anatomy/equipment and matte boundaries, all 234 native-size candidate phases and battle contact scene. Dedicated near-hand idle plucking; reciprocal root-foot walking; separate palm-strike melee and lyre-strum ranged release with recovery; recoil; held open-palm guard; raised-hand support invocation; kneel and continuous sideways fall to a grounded corpse. Two arms, lyre grip, pipes, pods, face and anatomical scale retained. Rejected three-arm guide V1 and contaminated cast V1 preserved but excluded. Move uses only the reviewed stable green interval; cast V2 remains clean blue throughout. Candidate passed 788 focused Windows Godot checks including Normal/Fast/reduced motion, contact timing, simulation/save preservation and actual shell recovery. Review used complete chronological frames and native rendered phases; no claim of continuous video playback, manual game playtest, Linux execution or full-suite validation."
+  }
+}

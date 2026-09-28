@@ -1,0 +1,650 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_thornwake_seedglass_cantors_veteran",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_052",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "hit_h3_056",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_080",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_120",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte/rgba_120.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              704
+            ]
+          ],
+          "anchor": [
+            448,
+            628
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 120,
+          "video_time_seconds": 5.0
+        }
+      ],
+      "clips": {
+        "hit": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "frame_durations_msec": [
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            80,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35,
+            35
+          ]
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/original_lossless.mkv",
+          "sha256": "c17d03cba11459e0541e12882baaa5754c77bc765f59dd9bfae4ba0062c8a5c5"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/original.json",
+          "sha256": "a970e0c8eb6111e0f288da91292b6a26317ca9418719ba0c762ca0242f960843"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/workflow_api.json",
+          "sha256": "ad59a2e7366ca2731ed567834399483012e2125a482ce256590ff3cbace7d8f0"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/prompt.txt",
+          "sha256": "7d2d9e75c225026645194ee35ab624a52013ed001e4f388e0afb49011dc15cf9"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/reference.json",
+          "sha256": "481180c5e7c79a3c31130da848c4887ee2e7f53022ac04aecf27ecf12f1487bc"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/matte.json",
+          "sha256": "f303594ce1ea980fdeb9b9102362786dacb5a40f359b9c5b3387c9ee293df0f0"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/staged_generation.json",
+          "sha256": "5b1a1ed37a64e88bd9d94ba6bdcb21e74eeb73335e54617844db3482088af4e5"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "1d270d5d431b69ce3ee40ed7fa2f396edc328a098f7158eaf642c5181f88168c"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/sampling_submission.json",
+          "sha256": "3decdb88bca788f1cb13787f6033b2731676aaaab44e1807f4c0a74acca7786e"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/sampling_history.json",
+          "sha256": "1411dcb84ce924e9f40548ff955819ff2602ac8350691a0580ee42f22eaca6c8"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_thornwake_seedglass_cantors_veteran/hit_h3_v1/original.latent",
+          "sha256": "e44fadd85d6a735a79c5e896911e1caac7267dd1cafd6c5ccf9104d30f43c7a1"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All 124 chronological original mattes and enlarged 12,20,24,28,40,60,88,112 inspected. Clear backward shoulder recoil with near hand bracing the upper chest, retained far-hand lyre grip and two grounded root feet; body returns upright without collapsing. Identity, thin strings, pods and pipes preserved. Generated long recoil hold shortened; 25 observed frames over 920 ms, Native 128 px phases reviewed; full candidate passed 788 focused Windows Godot checks."
+      }
+    }
+  ]
+}
