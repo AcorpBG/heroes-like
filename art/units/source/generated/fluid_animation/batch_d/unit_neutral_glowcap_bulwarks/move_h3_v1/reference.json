@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "contact_original",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            710,
+            0,
+            1086,
+            355
+          ]
+        ],
+        "anchor": [
+          916,
+          347
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9c1179474830bf3b56e6e1f7f37eaf7f51a2c2a23e977695bbf79263ed639454",
+      "runtime_source_scale": 0.5207999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

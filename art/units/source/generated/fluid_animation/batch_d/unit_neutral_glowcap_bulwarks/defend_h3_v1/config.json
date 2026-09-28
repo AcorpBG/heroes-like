@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    550
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          338
+        ],
+        [
+          85,
+          338,
+          360,
+          357
+        ]
+      ],
+      "anchor": [
+        211,
+        347
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_deep",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          1185,
+          355,
+          1448,
+          511
+        ],
+        [
+          1160,
+          511,
+          1448,
+          710
+        ]
+      ],
+      "anchor": [
+        1280,
+        695
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "prompt": "One original Glowcap Bulwark, a stout bearded adult dwarf with exactly two arms and two booted legs, facing screen right in a fixed elevated orthographic three-quarter game view. Grey beard, green scarf and embroidered hanging green tabard, brown leather armor, belt and wrapped boots. His right hand at screen left holds ONE straight wooden spear with one pointed metal head. His left arm at screen right carries ONE large overlapping grey-lilac bracket-mushroom shield with small cyan-blue bioluminescent caps. The same small blue mushrooms grow on his metal helmet and shoulders. Preserve his stout proportions, beard, helmet, shield layers, spear length and both grips. Raise the mushroom shield inward in front of the chest and lower into a sturdy defensive crouch. Bend both knees and brace the shield with the same left arm, keeping the spear upright and gripped in the right hand. Hold the final compact guard stance behind the shield, never stand back up. Locked stationary camera, fixed body size and ground reference; retain both complete boots, shield and spear tip inside frame. Completely uniform saturated GREEN RGB 0,255,0 studio background throughout every frame and every gap. No ground, cast shadow, scene, camera movement, cuts, lettering or extra equipment.",
+  "clip": "defend",
+  "seed": 958103
+}

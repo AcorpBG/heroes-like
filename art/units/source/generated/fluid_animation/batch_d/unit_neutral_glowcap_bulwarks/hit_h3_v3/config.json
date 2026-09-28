@@ -1,0 +1,82 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    550
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          338
+        ],
+        [
+          85,
+          338,
+          360,
+          357
+        ]
+      ],
+      "anchor": [
+        211,
+        347
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          711,
+          359,
+          1060
+        ]
+      ],
+      "anchor": [
+        201,
+        1033
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      63,
+      1
+    ]
+  ],
+  "prompt": "One original Glowcap Bulwark, a stout bearded adult dwarf with exactly two arms and two booted legs, facing screen right in a fixed elevated orthographic three-quarter game view. Grey beard, green scarf and embroidered hanging green tabard, brown leather armor, belt and wrapped boots. His right hand at screen left holds ONE straight wooden spear with one pointed metal head. His left arm at screen right carries ONE large overlapping grey-lilac bracket-mushroom shield with small cyan-blue bioluminescent caps. The same small blue mushrooms grow on his metal helmet and shoulders. Preserve his stout proportions, beard, helmet, shield layers, spear length and both grips. The dwarf makes ONE smooth backward recoil and recovers. Gradually lean the chest and head backward while the knees flex slightly, then bring the chest back upright. Keep the right forearm and the whole spear UPRIGHT throughout, with the same closed fist wrapped around its shaft. The spear tip stays visible above the right fist throughout every frame and the wooden butt stays below it. Keep the spear as a single rigid vertical object as the elbow absorbs the reaction. The left arm steadily carries the intact shield. Show a simple backward lean and recovery only: do not dip forward, duck or lower the spear. Both boots remain planted. The dwarf is entirely alone, reacting with his body; no attacker or external object is present. Fixed camera, steady anatomical scale. One continuous shot on an evenly lit saturated GREEN RGB 0,255,0 background that stays completely unchanged. No beams, flashes, particles, trails, text, shadows or scenery.",
+  "clip": "hit",
+  "seed": 958362
+}

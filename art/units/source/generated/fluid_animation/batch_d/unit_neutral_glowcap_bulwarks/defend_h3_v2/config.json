@@ -1,0 +1,88 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "canvas": [
+    960,
+    640
+  ],
+  "scale": 0.5,
+  "anchor": [
+    416,
+    550
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          338
+        ],
+        [
+          85,
+          338,
+          360,
+          357
+        ]
+      ],
+      "anchor": [
+        211,
+        347
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_deep",
+      "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+      "rects": [
+        [
+          1185,
+          355,
+          1448,
+          511
+        ],
+        [
+          1160,
+          511,
+          1448,
+          710
+        ]
+      ],
+      "anchor": [
+        1280,
+        695
+      ],
+      "scale": 0.5207999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      87,
+      1
+    ]
+  ],
+  "prompt": "One original Glowcap Bulwark, a stout bearded adult dwarf with exactly two arms and two booted legs, facing screen right in a fixed elevated orthographic three-quarter game view. Grey beard, green scarf and embroidered hanging green tabard, brown leather armor, belt and wrapped boots. His right hand at screen left holds ONE straight wooden spear with one pointed metal head. His left arm at screen right carries ONE large overlapping grey-lilac bracket-mushroom shield with small cyan-blue bioluminescent caps. The same small blue mushrooms grow on his metal helmet and shoulders. Preserve his stout proportions, beard, helmet, shield layers, spear length and both grips. Animate a compact shield guard. Bend both knees and draw the left mushroom shield across the chest as the body lowers slightly behind it. Keep the right hand gripping the upright spear. End in the supplied grounded guard and hold it steadily. Fixed orthographic camera, fixed body scale and planted ground contacts. Bright flat saturated GREEN RGB 0,255,0 studio background, evenly lit and UNCHANGING throughout the whole video. Keep that exact flat green behind every frame and through every gap. One continuous take of the dwarf alone on the green backdrop, full body, complete spear and shield in view.",
+  "clip": "defend",
+  "seed": 958233
+}

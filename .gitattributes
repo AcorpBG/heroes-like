@@ -239,3 +239,8 @@ art/units/source/generated/video_trials/aurora_ballista_h3/wheel_phase_guides_v[
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_lanternet_throwers/**/*.txt -text
 art/animation/source/fluid/unit_neutral_lanternet_throwers/*.json -text
+
+# Preserve hash-bound Glowcap Bulwarks H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_glowcap_bulwarks/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_glowcap_bulwarks/**/*.txt -text
+art/animation/source/fluid/unit_neutral_glowcap_bulwarks/*.json -text

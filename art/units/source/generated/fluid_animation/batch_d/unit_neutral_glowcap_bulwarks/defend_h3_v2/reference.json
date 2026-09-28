@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            338
+          ],
+          [
+            85,
+            338,
+            360,
+            357
+          ]
+        ],
+        "anchor": [
+          211,
+          347
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99433ca96583c71113316fe294a5f6b204cb41e35bf2caceb1c3362971830b0f",
+      "runtime_source_scale": 0.5207999999999999
+    },
+    {
+      "source_frame": {
+        "name": "guard_deep",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            1185,
+            355,
+            1448,
+            511
+          ],
+          [
+            1160,
+            511,
+            1448,
+            710
+          ]
+        ],
+        "anchor": [
+          1280,
+          695
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "94b59b6f6f6d0bdfdd32328f1d1cd6a1f0d986d686780d0500dc9815073c422b",
+      "runtime_source_scale": 0.5207999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

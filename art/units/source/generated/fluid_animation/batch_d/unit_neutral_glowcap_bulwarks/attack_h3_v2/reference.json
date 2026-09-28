@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            338
+          ],
+          [
+            85,
+            338,
+            360,
+            357
+          ]
+        ],
+        "anchor": [
+          211,
+          347
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99433ca96583c71113316fe294a5f6b204cb41e35bf2caceb1c3362971830b0f",
+      "runtime_source_scale": 0.5207999999999999
+    },
+    {
+      "source_frame": {
+        "name": "spear_thrust",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            709,
+            365,
+            1184,
+            510
+          ],
+          [
+            709,
+            510,
+            1086,
+            704
+          ]
+        ],
+        "anchor": [
+          895,
+          696
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d38fa2d1cfd7a6a410238ad12a85f981f43232f769655812127fce87f1e17ced",
+      "runtime_source_scale": 0.5207999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

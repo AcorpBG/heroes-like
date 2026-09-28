@@ -2480,29 +2480,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        83.0,
+        83,
         216
       ],
       "painted_extent": 211,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_glowcap_bulwarks.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_glowcap_bulwarks.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        173,
-        20,
-        349,
-        247
+        113,
+        28,
+        289,
+        255
       ],
-      "source_sha256": "2bb9473af1cdd74fe49228f29952b158b835f7fecfc4e4cb9f28b4c277b4d120",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_glowcap_bulwarks/provenance.json",
+      "source_sha256": "ffd8279c479f5817ed87abe1c1ed590bc36853c6a70bdd6d3bcf85212a320c01",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_glowcap_bulwarks/provenance.json",
       "sha256": "a3478fe3a3eb148c27473c99e7dee3c88c6070c8f48bc018cc8a37142f545dc3"
     },
     "unit_neutral_sporelamp_tossers": {

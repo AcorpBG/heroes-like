@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    773,
+    "0689aa23-6d3e-4438-aee7-f6c0964aab97",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Glowcap Bulwark, a stout bearded adult dwarf with exactly two arms and two booted legs, facing screen right in a fixed elevated orthographic three-quarter game view. Grey beard, green scarf and embroidered hanging green tabard, brown leather armor, belt and wrapped boots. His right hand at screen left holds ONE straight wooden spear with one pointed metal head. His left arm at screen right carries ONE large overlapping grey-lilac bracket-mushroom shield with small cyan-blue bioluminescent caps. The same small blue mushrooms grow on his metal helmet and shoulders. Preserve his stout proportions, beard, helmet, shield layers, spear length and both grips. Make one deliberate physical rallying salute. Raise the spear vertically above shoulder height with the spear arm, straighten the elbow, hold it visibly aloft, then lower the spear back to the original ready grip. The other arm keeps the mushroom shield at the torso. Both boots remain planted and the body stays centered. This is a nonmagical support signal, no projectile or spell effects. Return fully to the original ready stance. Locked stationary camera, fixed body size and ground reference; retain both complete boots, shield and spear tip inside frame. Completely uniform saturated GREEN RGB 0,255,0 studio background throughout every frame and every gap. No ground, cast shadow, scene, camera movement, cuts, lettering or extra equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 958104
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "glowcap_cast_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "glowcap_h3/cast_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "glowcap_h3",
+      "create_time": 1790632804893
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "glowcap_h3\\cast_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "0689aa23-6d3e-4438-aee7-f6c0964aab97",
+          "timestamp": 1790632805526
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "0689aa23-6d3e-4438-aee7-f6c0964aab97",
+          "timestamp": 1790632805533
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "0689aa23-6d3e-4438-aee7-f6c0964aab97",
+          "timestamp": 1790632990151
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

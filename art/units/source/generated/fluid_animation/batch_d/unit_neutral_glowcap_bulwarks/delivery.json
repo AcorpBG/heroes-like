@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v3",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Accepted after chronological review of every original frame in the six selected takes, enlarged grips/feet/alpha details, all 156 selected native Godot phases and battle phase renders. Reciprocal gait, rigid spear thrust and recovery, intact-spear recoil, held mushroom shield brace, physical support salute and continuous grounded collapse retain identity. Existing articulated eight-pose idle preserved. Candidate 237 focused checks passed. Frame-by-frame review; no continuous-playback or manual-playtest claim."
+  }
+}

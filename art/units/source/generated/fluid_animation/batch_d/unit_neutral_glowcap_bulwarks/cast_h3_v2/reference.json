@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_glowcap_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            338
+          ],
+          [
+            85,
+            338,
+            360,
+            357
+          ]
+        ],
+        "anchor": [
+          211,
+          347
+        ],
+        "scale": 1.0415999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fc2d44fae57f33007be142436fdd6af1ca9a21e0804e57525ed52bfe33ad67df",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "99433ca96583c71113316fe294a5f6b204cb41e35bf2caceb1c3362971830b0f",
+      "runtime_source_scale": 0.5207999999999999
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_glowcap_bulwarks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1154,
+            0,
+            1536,
+            506
+          ]
+        ],
+        "anchor": [
+          1352,
+          476
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "57fd26b66d7ca7b41856070d13d00f3e26f51a3a178d4b95f018b834d166cba9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c09a90369b3ee8de4cb914a4a0b002ea38d6962e277cf52173096ec08eee2e0c",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    416,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

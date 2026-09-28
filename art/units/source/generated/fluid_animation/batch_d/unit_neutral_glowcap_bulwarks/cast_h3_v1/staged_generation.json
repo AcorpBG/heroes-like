@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "063a07db7edc9289b3012e119605bf2033c3627486e66e404192a081338526da",
+  "latent_sha256": "4ab05006dd44715102383eaf8f430afd03a721019cd5c4f047dd7be3560a69cd",
+  "decode_workflow_sha256": "cf1e6fae2c6e7c578acb2496d94b6e4e625071c15e7852aab0ee4add7d779096",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "glowcap_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

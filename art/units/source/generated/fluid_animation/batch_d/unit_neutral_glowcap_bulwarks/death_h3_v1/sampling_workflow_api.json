@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Glowcap Bulwark, a stout bearded adult dwarf with exactly two arms and two booted legs, facing screen right in a fixed elevated orthographic three-quarter game view. Grey beard, green scarf and embroidered hanging green tabard, brown leather armor, belt and wrapped boots. His right hand at screen left holds ONE straight wooden spear with one pointed metal head. His left arm at screen right carries ONE large overlapping grey-lilac bracket-mushroom shield with small cyan-blue bioluminescent caps. The same small blue mushrooms grow on his metal helmet and shoulders. Preserve his stout proportions, beard, helmet, shield layers, spear length and both grips. Collapse once from the standing ready pose. Knees lose support and fold; the body lowers to one knee then tips onto its side, placing the shield, body and spear down on the same ground plane. Keep both arms and legs and the same equipment throughout. End completely grounded in the supplied curled side-lying corpse pose, with the spear flat on the ground and shield resting across the body. Remain motionless at the end. No rebound or standing back up. Locked stationary camera, fixed body size and ground reference; retain both complete boots, shield and spear tip inside frame. Completely uniform saturated GREEN RGB 0,255,0 studio background throughout every frame and every gap. No ground, cast shadow, scene, camera movement, cuts, lettering or extra equipment.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 958105
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "glowcap_death_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "glowcap_death_h3_v1_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "glowcap_h3/death_h3_v1/sampled"
+    }
+  }
+}
