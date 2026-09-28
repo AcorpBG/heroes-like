@@ -213,6 +213,7 @@ const TAB_HELP_TOPIC := {
 
 var _save_summaries: Array = []
 var _selected_save_key := ""
+var _selected_save_name_action := {}
 var _save_browser_loaded := false
 var _campaign_browser_loaded := false
 var _save_load_notice := ""
@@ -800,7 +801,9 @@ func _on_delete_selected_save_pressed() -> void:
 	_focus_destructive_confirmation_cancel.call_deferred(_save_delete_dialog, "save_delete")
 
 func _on_save_name_text_changed(_new_text: String) -> void:
-	_refresh_save_name_action()
+	# Typing only changes the requested name. Reuse the action read when the save
+	# was selected instead of inspecting the save file on every keystroke.
+	_refresh_save_name_action(_selected_save_name_action)
 
 func _on_save_name_submitted(_new_text: String) -> void:
 	_on_apply_save_name_pressed()
@@ -2533,6 +2536,7 @@ func _refresh_selected_save() -> void:
 		_delete_selected_save_button.tooltip_text = "Select an occupied autosave or manual slot first."
 		_save_name_edit.visible = false
 		_apply_save_name_button.visible = false
+		_selected_save_name_action = {}
 		_load_selected_button.text = "Load Save"
 		_load_selected_button.disabled = true
 		_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
@@ -2550,6 +2554,7 @@ func _refresh_selected_save() -> void:
 	_save_name_edit.text = String(name_action.get("current_name", ""))
 	_save_name_edit.placeholder_text = "Optional save name"
 	_save_name_edit.tooltip_text = String(name_action.get("message", ""))
+	_selected_save_name_action = name_action
 	_refresh_save_name_action()
 	_delete_selected_save_button.text = String(delete_action.get("label", "Delete Save"))
 	_delete_selected_save_button.disabled = bool(delete_action.get("disabled", true))
@@ -2559,11 +2564,11 @@ func _refresh_selected_save() -> void:
 	_load_selected_button.disabled = not SaveService.can_load_summary(summary)
 	_load_selected_button.tooltip_text = _selected_save_command_tooltip(summary)
 
-func _refresh_save_name_action() -> void:
+func _refresh_save_name_action(selected_action: Dictionary = {}) -> void:
 	if not _save_name_edit.visible:
 		_apply_save_name_button.disabled = true
 		return
-	var action := SaveService.build_manual_slot_name_action(_selected_summary())
+	var action := selected_action if not selected_action.is_empty() else SaveService.build_manual_slot_name_action(_selected_summary())
 	var current_name := String(action.get("current_name", ""))
 	var requested_name := _save_name_edit.text.strip_edges()
 	_apply_save_name_button.text = "Clear Name" if requested_name == "" and current_name != "" else "Save Name"
