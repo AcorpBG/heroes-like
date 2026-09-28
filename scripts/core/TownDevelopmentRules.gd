@@ -136,7 +136,12 @@ static func price(artifact: Dictionary) -> int:
 	var tier := String(artifact.get("rarity", "common"))
 	return int({"common": 1500, "uncommon": 2500, "rare": 4000, "epic": 6500, "legendary": 10000}.get(tier, 2500))
 
-static func offers(town: Dictionary, day: int) -> Array:
+static func objective_artifact_ids(session) -> Array:
+	# Loaded lazily: ScenarioRules preloads this script.
+	if session == null: return []
+	return load("res://scripts/core/ScenarioRules.gd").objective_artifact_ids(session)
+
+static func offers(town: Dictionary, day: int, excluded_ids: Array = []) -> Array:
 	var eligible: Array = []
 	for a in ContentService.load_json("res://content/artifacts.json").get("items", []):
 		# Authored quest/relic rewards stay outside the merchant inventory.
@@ -147,7 +152,12 @@ static func offers(town: Dictionary, day: int) -> Array:
 	if eligible.is_empty(): return result
 	var week := maxi(0, (day - 1) / 7)
 	var start := posmod(String(town.get("placement_id", "")).hash() + week * 3, eligible.size())
-	for i in range(mini(3, eligible.size())): result.append(eligible[(start+i) % eligible.size()])
+	# Scenario objective artifacts are skipped in place, so the rest of the
+	# weekly rotation stays the same.
+	for i in range(eligible.size()):
+		if result.size() >= 3: break
+		var id: String = eligible[(start+i) % eligible.size()]
+		if id not in excluded_ids: result.append(id)
 	return result
 
 static func can_pay(resources: Dictionary, cost: Dictionary) -> bool:
@@ -199,19 +209,19 @@ static func upgrade_army(town: Dictionary, stacks: Array, base: String, resource
 	for key in cost: resources[key] = int(resources.get(key, 0)) - int(cost[key])
 	return {"ok": true, "stacks": upgraded, "count": count, "cost": cost}
 
-static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary) -> Dictionary:
+static func trade_artifact(hero: Dictionary, town: Dictionary, day: int, artifact_id: String, buying: bool, resources: Dictionary, excluded_ids: Array = []) -> Dictionary:
 	var exchange := false
 	for id in active_buildings(town):
 		if ContentService.get_building(String(id)).get("artifact_exchange", false): exchange = true
 	var artifact := ContentService.get_artifact(artifact_id)
-	if not exchange or artifact.is_empty() or bool(artifact.get("quest_item", false)):
+	if not exchange or artifact.is_empty() or bool(artifact.get("quest_item", false)) or artifact_id in excluded_ids:
 		return {"ok": false, "hero": hero}
 	var week := str(maxi(0, (day - 1) / 7))
 	var purchases: Dictionary = town.get("artifact_shop_purchases", {}).duplicate(true)
 	var purchased: Array = purchases.get(week, [])
 	var result: Dictionary
 	if buying:
-		if artifact_id not in offers(town, day) or artifact_id in purchased or Artifacts.has_artifact(hero, artifact_id) or not can_pay(resources, {"gold": price(artifact)}):
+		if artifact_id not in offers(town, day, excluded_ids) or artifact_id in purchased or Artifacts.has_artifact(hero, artifact_id) or not can_pay(resources, {"gold": price(artifact)}):
 			return {"ok": false, "hero": hero}
 		result = Artifacts.claim_artifact(hero, artifact_id, "Purchased", false)
 	else:
@@ -255,13 +265,14 @@ static func service_actions(session, town: Dictionary) -> Array:
 		if bool(b.get("artifact_exchange", false)) and present:
 			var week := maxi(0,(int(session.day)-1)/7)
 			var sold: Array = town.get("artifact_shop_purchases",{}).get(str(week),[])
-			for aid in offers(town,session.day):
+			var objective_ids := objective_artifact_ids(session)
+			for aid in offers(town,session.day,objective_ids):
 				var a := ContentService.get_artifact(String(aid))
 				var cost := price(a)
 				actions.append({"id":"town_buy:"+String(aid),"label":"Buy %s — %d gold" % [a.get("name",aid),cost],"summary":Artifacts.artifact_effect_summary(String(aid)),"disabled":aid in sold or Artifacts.has_artifact(hero,String(aid)) or int(resources.get("gold",0))<cost})
 			for aid in Artifacts.normalize_hero_artifacts(hero.get("artifacts",{})).get("inventory",[]):
 				var a := ContentService.get_artifact(String(aid))
-				if bool(a.get("quest_item",false)): continue
+				if bool(a.get("quest_item",false)) or String(aid) in objective_ids: continue
 				actions.append({"id":"town_sell:"+String(aid),"label":"Sell %s — %d gold" % [a.get("name",aid),price(a)/2],"summary":"Sell this unequipped artifact. The sale is permanent.","disabled":false})
 	return actions
 
@@ -300,12 +311,12 @@ static func perform_service(session, town: Dictionary, action_id: String) -> Dic
 			Heroes._set_holder_stacks(session,town,parts[1],result.stacks)
 			message="Upgraded %d creatures for %s." % [result.count,cost_text(result.cost)]
 		"town_buy":
-			var result := trade_artifact(hero, town, session.day, parts[1], true, resources)
+			var result := trade_artifact(hero, town, session.day, parts[1], true, resources, objective_artifact_ids(session))
 			if not bool(result.get("ok",false)): return result
 			hero=result.hero
 			message="Bought "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."
 		"town_sell":
-			var result := trade_artifact(hero, town, session.day, parts[1], false, resources)
+			var result := trade_artifact(hero, town, session.day, parts[1], false, resources, objective_artifact_ids(session))
 			if not bool(result.get("ok",false)): return result
 			hero=result.hero
 			message="Sold "+String(ContentService.get_artifact(parts[1]).get("name",parts[1]))+"."

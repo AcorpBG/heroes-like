@@ -2705,15 +2705,23 @@ static func _max_market_affordable_count(
 	unit_cost: Variant,
 	available_count: int
 ) -> int:
-	for recruit_count in range(max(available_count, 0), 0, -1):
-		if OverworldRulesScript.can_afford_cost_with_town_market(
-			town,
-			resources,
-			_multiply_resource_cost(unit_cost, recruit_count),
-			int(session.day) if session != null else -1
-		):
-			return recruit_count
-	return 0
+	# Market affordability only shrinks as the count grows, so search for the
+	# largest affordable count instead of simulating every count from the top.
+	var current_day := int(session.day) if session != null else -1
+	var high: int = max(available_count, 0)
+	if high <= 0:
+		return 0
+	if OverworldRulesScript.can_afford_cost_with_town_market(town, resources, _multiply_resource_cost(unit_cost, high), current_day):
+		return high
+	var low := 0
+	high -= 1
+	while low < high:
+		var middle := (low + high + 1) / 2
+		if OverworldRulesScript.can_afford_cost_with_town_market(town, resources, _multiply_resource_cost(unit_cost, middle), current_day):
+			low = middle
+		else:
+			high = middle - 1
+	return low
 
 static func _multiply_resource_cost(cost: Variant, multiplier: int) -> Dictionary:
 	var scaled := {}

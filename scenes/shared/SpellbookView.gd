@@ -11,6 +11,11 @@ const ROLES := ["", "damage", "buff", "debuff"]
 
 var _hero: Dictionary = {}
 var _spells: Array = []
+# Per-configure caches. Mana costs deep-copy the hero, so compute them once
+# instead of on every filter keystroke and inside the sort comparator.
+var _spells_by_id: Dictionary = {}
+var _mana_costs: Dictionary = {}
+var _buttons: Dictionary = {}
 var _availability: Dictionary = {}
 var _mode := "inspect"
 var _selected_id := ""
@@ -102,6 +107,7 @@ func _ready() -> void:
 		if not _prepare.disabled and _selected_id != "": spell_requested.emit(_selected_id))
 	add_child(_prepare)
 	resized.connect(_layout_columns)
+	_build_cards()
 	_rebuild()
 
 func _filter(parent: Control, control_name: String, label: String, options: Array) -> OptionButton:
@@ -120,12 +126,16 @@ func configure(hero: Dictionary, spell_ids: Array, mode: String = "inspect", ava
 	_mode = mode
 	_availability = availability.duplicate(true)
 	_spells.clear()
+	_spells_by_id.clear()
+	_mana_costs.clear()
 	var seen := {}
 	for spell_id in spell_ids:
 		var spell := ContentService.get_spell(String(spell_id))
 		if spell.is_empty() or seen.has(spell_id): continue
 		seen[spell_id] = true
 		_spells.append(spell)
+		_spells_by_id[String(spell.id)] = spell
+		_mana_costs[String(spell.id)] = Spells.adjusted_spell_mana_cost(_hero, spell)
 	_spells.sort_custom(func(a: Dictionary, b: Dictionary): return String(a.name).naturalnocasecmp_to(String(b.name)) < 0)
 	if is_node_ready():
 		_context.select(1 if mode == "battle" else 0)
@@ -145,32 +155,39 @@ func configure(hero: Dictionary, spell_ids: Array, mode: String = "inspect", ava
 			_school.add_item(String(school).capitalize())
 			_school.set_item_metadata(_school.item_count - 1, school)
 		_school.select(0)
+		_build_cards()
 		_rebuild()
 
 func visible_spell_ids() -> Array:
 	var ids := []
+	var query := _search.text.strip_edges().to_lower() if _search != null else ""
+	var mana := int(_hero.get("spellbook", {}).get("mana", {}).get("current", 0))
 	for spell in _spells:
 		if _context != null and CONTEXTS[_context.selected] != "" and String(spell.get("context", "")) != CONTEXTS[_context.selected]: continue
 		if _role != null and ROLES[_role.selected] != "" and ROLES[_role.selected] not in Spells.spell_role_categories(spell): continue
-		if _search != null and not _search.text.strip_edges().is_empty() and not String(spell.get("name", "")).to_lower().contains(_search.text.strip_edges().to_lower()): continue
+		if not query.is_empty() and not String(spell.get("name", "")).to_lower().contains(query): continue
 		if _school != null and _school.selected > 0 and String(spell.get("school_id", "")) != String(_school.get_selected_metadata()): continue
-		if _affordable != null and _affordable.button_pressed and Spells.adjusted_spell_mana_cost(_hero, spell) > int(_hero.get("spellbook", {}).get("mana", {}).get("current", 0)): continue
+		if _affordable != null and _affordable.button_pressed and _mana_cost(spell) > mana: continue
 		ids.append(String(spell.id))
 	if _sort != null and _sort.selected > 0:
 		ids.sort_custom(func(a, b):
-			var left := ContentService.get_spell(a)
-			var right := ContentService.get_spell(b)
-			var x := Spells.adjusted_spell_mana_cost(_hero, left)
-			var y := Spells.adjusted_spell_mana_cost(_hero, right)
-			if x == y: return String(left.name).naturalnocasecmp_to(String(right.name)) < 0
+			var x := int(_mana_costs.get(a, 0))
+			var y := int(_mana_costs.get(b, 0))
+			if x == y: return String(_spells_by_id.get(a, {}).get("name", a)).naturalnocasecmp_to(String(_spells_by_id.get(b, {}).get("name", b))) < 0
 			return x < y if _sort.selected == 1 else x > y)
 	return ids
+
+func _mana_cost(spell: Dictionary) -> int:
+	var spell_id := String(spell.get("id", ""))
+	if not _mana_costs.has(spell_id):
+		_mana_costs[spell_id] = Spells.adjusted_spell_mana_cost(_hero, spell)
+	return int(_mana_costs[spell_id])
 
 func focus_controls() -> Array[Control]:
 	var controls: Array[Control] = [_context, _role, _school, _search, _sort]
 	if not _affordable.disabled: controls.append(_affordable)
 	for child in _grid.get_children():
-		if child is Button: controls.append(child)
+		if child is Button and child.visible: controls.append(child)
 	controls.append(_details)
 	if _prepare.visible and not _prepare.disabled: controls.append(_prepare)
 	return controls
@@ -178,20 +195,20 @@ func focus_controls() -> Array[Control]:
 func _layout_columns() -> void:
 	if _grid != null: _grid.columns = maxi(1, mini(4, int((_scroll.size.x - 16.0) / 238.0)))
 
-func _rebuild() -> void:
+func _build_cards() -> void:
+	# One card per spell per configure. Filters only show, hide and reorder them.
 	if _grid == null: return
 	for child in _grid.get_children():
 		_grid.remove_child(child)
 		child.queue_free()
-	var ids := visible_spell_ids()
-	_scroll.scroll_vertical = 0
-	for spell_id in ids:
-		var spell := ContentService.get_spell(spell_id)
+	_buttons.clear()
+	for spell in _spells:
+		var spell_id := String(spell.id)
 		var button := Button.new()
 		button.name = spell_id
 		button.set_meta("spell_id", spell_id)
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		button.text = "%s\n%d mana · %s" % [String(spell.name), Spells.adjusted_spell_mana_cost(_hero, spell), String(spell.get("context", "")).capitalize()]
+		button.text = "%s\n%d mana · %s" % [String(spell.name), _mana_cost(spell), String(spell.get("context", "")).capitalize()]
 		button.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		button.expand_icon = true
@@ -201,11 +218,25 @@ func _rebuild() -> void:
 		button.add_theme_constant_override("icon_max_width", 48)
 		button.add_theme_constant_override("h_separation", 12)
 		button.tooltip_text = _description(spell)
-		button.accessibility_name = "%s, %s, %d mana" % [String(spell.name), String(spell.get("context", "")), Spells.adjusted_spell_mana_cost(_hero, spell)]
+		button.accessibility_name = "%s, %s, %d mana" % [String(spell.name), String(spell.get("context", "")), _mana_cost(spell)]
 		button.accessibility_description = button.tooltip_text
 		button.pressed.connect(_select.bind(spell_id))
 		button.focus_entered.connect(_select.bind(spell_id))
 		_grid.add_child(button)
+		_buttons[spell_id] = button
+
+func _rebuild() -> void:
+	if _grid == null: return
+	var ids := visible_spell_ids()
+	_scroll.scroll_vertical = 0
+	# Matching cards lead in display order; the rest stay hidden behind them.
+	var shown := {}
+	for index in range(ids.size()):
+		shown[ids[index]] = true
+		var button: Button = _buttons.get(ids[index])
+		if button != null: _grid.move_child(button, index)
+	for spell_id in _buttons:
+		(_buttons[spell_id] as Button).visible = shown.has(spell_id)
 	_count.text = "%d / %d spells%s" % [ids.size(), _spells.size(), " · Mana %d / %d" % [int(_hero.get("spellbook", {}).get("mana", {}).get("current", 0)), int(_hero.get("spellbook", {}).get("mana", {}).get("max", 0))] if not _hero.is_empty() else " · Town archives"]
 	_empty.visible = ids.is_empty()
 	_empty.text = "No spells match these filters." if not _spells.is_empty() else ("Build the town's spell archives to unlock its library. Visiting heroes learn available spells automatically." if _mode == "town" else "This hero has not learned any spells. Visit an owned town with spell archives.")
@@ -219,7 +250,7 @@ func _rebuild() -> void:
 func _description(spell: Dictionary) -> String:
 	# Actual effect comes first so the bounded hover card describes what it does,
 	# rather than truncating after name/cost or showing only flavour text.
-	return "%s — %s\n%s\n%s · Tier %d · %d mana" % [String(spell.get("name", "Spell")), Spells._spell_effect_summary(spell, _hero), String(spell.get("description", "")), Spells.spell_category_label(spell), int(spell.get("tier", 1)), Spells.adjusted_spell_mana_cost(_hero, spell)]
+	return "%s — %s\n%s\n%s · Tier %d · %d mana" % [String(spell.get("name", "Spell")), Spells._spell_effect_summary(spell, _hero), String(spell.get("description", "")), Spells.spell_category_label(spell), int(spell.get("tier", 1)), _mana_cost(spell)]
 
 func _select(spell_id: String) -> void:
 	_selected_id = spell_id
