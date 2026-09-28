@@ -122,7 +122,10 @@ func attach_control(control: Control) -> bool:
 	elif control is Button:
 		(control as Button).pressed.connect(_on_button_pressed.bind(control))
 		connected = true
-	elif control is Range:
+	elif control is Slider or control is SpinBox:
+		# Only user-adjustable ranges. Progress bars and scrollbars are also
+		# Range controls, and code updates them every frame (enemy-turn progress,
+		# list scrolling), which would otherwise play an adjust cue each time.
 		(control as Range).value_changed.connect(_on_range_changed.bind(control))
 		connected = true
 	elif control is TabContainer:

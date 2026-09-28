@@ -8,6 +8,7 @@ const EnemyAdventureRulesScript = preload("res://scripts/core/EnemyAdventureRule
 const ArtifactRulesScript = preload("res://scripts/core/ArtifactRules.gd")
 const SpellRulesScript = preload("res://scripts/core/SpellRules.gd")
 const GeneratedObjectives = preload("res://scripts/core/GeneratedScenarioObjectiveRules.gd")
+const TownDevelopmentRulesScript = preload("res://scripts/core/TownDevelopmentRules.gd")
 
 static var _scenario_dependency_metadata_cache: Dictionary = {}
 
@@ -1625,7 +1626,7 @@ static func _objective_met(session: SessionStateStoreScript.SessionData, objecti
 			return (
 				not building_town.is_empty()
 				and String(building_town.get("owner", "neutral")) == "player"
-				and String(objective.get("building_id", "")) in building_town.get("built_buildings", [])
+				and _town_has_objective_building(building_town, String(objective.get("building_id", "")))
 			)
 		"hero_stationed_at_player_town":
 			return bool(_hero_stationing_progress(session, objective).get("complete", false))
@@ -1698,7 +1699,7 @@ static func _objective_label(session: SessionStateStoreScript.SessionData, objec
 			var completed: bool = (
 				not building_town.is_empty()
 				and String(building_town.get("owner", "neutral")) == "player"
-				and building_id in building_town.get("built_buildings", [])
+				and _town_has_objective_building(building_town, building_id)
 			)
 			return "%s (%s)" % [base_label, "Built" if completed else "Unbuilt"]
 		"hero_stationed_at_player_town":
@@ -2194,6 +2195,24 @@ static func _objective_marker(is_victory: bool, met: bool) -> String:
 	if is_victory:
 		return "[x]" if met else "[ ]"
 	return "[!]" if met else "[ ]"
+
+static func _town_has_objective_building(town: Dictionary, building_id: String) -> bool:
+	if building_id == "":
+		return false
+	var built = town.get("built_buildings", [])
+	if not (built is Array):
+		return false
+	if building_id in built:
+		return true
+	# Current-development towns store only the active stage of each building
+	# line under current ids. Map older objective ids through the faction's
+	# migration table and accept any later stage of that line.
+	var migration: Dictionary = TownDevelopmentRulesScript.data().get("migration", {}).get(
+		TownDevelopmentRulesScript.faction_id(town),
+		{}
+	)
+	var required := String(migration.get(building_id, building_id))
+	return TownDevelopmentRulesScript.satisfies(built, required)
 
 static func _find_town(session: SessionStateStoreScript.SessionData, objective: Dictionary) -> Dictionary:
 	var placement_id := String(objective.get("placement_id", ""))
