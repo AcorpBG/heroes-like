@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "98828cf47461507e1aa005d9003a2f5ff0f93ac555e280b49e98117e6e804f53",
+  "latent_sha256": "d5c7cbc2bfc5d75048459d230ca239cbf00afa6afb6e7c6ba3f890aedaff4ebd",
+  "decode_workflow_sha256": "645f5419f72b9ba97f3b6d1a24be7fca56edf1365388301054e8bc0e1b615615",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "keelbreaker_h3\\ranged_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

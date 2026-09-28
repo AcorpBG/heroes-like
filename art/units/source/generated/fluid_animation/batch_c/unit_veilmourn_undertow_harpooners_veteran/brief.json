@@ -1,0 +1,35 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "identity": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, near hand on rear grip and far hand under forward shaft, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. No crossbow limbs, firearm barrel, second weapon, extra hand or added equipment. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; no floor, scenery, glow, smoke, sparks, text, shadows or particles. ",
+  "required_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_accepted_clips": [],
+  "status": "complete",
+  "accepted_clips": [
+    "idle",
+    "move",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "selected_originals": 174,
+  "review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomously reviewed all 1,240 chronological H3 originals across ten takes, enlarged equipment/anatomy details, loop boundaries and every selected native battle phase. Accepted eight distinct actions: articulated forearm/launcher idle, reciprocal gait, continuous short bayonet thrust, aimed ranged release with recoil/recovery, hit recovery, held braced guard, physical raised-fist support and grounded collapse/corpse. Rejected attack v1 for abrupt pose switching and ranged v1 for a generated glowing projectile. Excluded brief effect-contaminated intervals in hit v1 and ranged v2; selected footage retains clean anatomy and equipment with safe opaque canvas margins. All 174 selected poses are original frames at one fixed anatomical scale, without reversed/interpolated frames or duplicate padding. Review used chronological originals and native phase rendering; no continuous playback, manual game playtest or Linux validation is claimed."
+  },
+  "validation": {
+    "candidate": 599,
+    "live": 603
+  }
+}

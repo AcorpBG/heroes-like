@@ -1,0 +1,48 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, near hand on rear grip and far hand under forward shaft, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. No crossbow limbs, firearm barrel, second weapon, extra hand or added equipment. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; no floor, scenery, glow, smoke, sparks, text, shadows or particles. Walk steadily in place through a complete natural reciprocal gait. Alternate near and far boot forward contact, loading, passing and toe-off. Knees and ankles articulate with stable torso scale. Both hands carry the launcher low and steady; winch stays attached, net bundle and coat follow the gait. No sliding body translation, hopping, marching straight legs or firing.",
+  "clip": "move",
+  "seed": 929011
+}

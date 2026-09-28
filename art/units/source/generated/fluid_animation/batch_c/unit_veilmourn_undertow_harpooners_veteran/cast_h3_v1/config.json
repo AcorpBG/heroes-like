@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_undertow_harpooners_veteran/keys/cast_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1721,
+          914
+        ]
+      ],
+      "anchor": [
+        877,
+        860
+      ],
+      "scale": 0.298,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      48,
+      1
+    ]
+  ],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, far hand supports forward shaft while the near hand releases rear grip for the signal and returns to it, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. No crossbow limbs, firearm barrel, second weapon, extra hand or added equipment. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; no floor, scenery, glow, smoke, sparks, text, shadows or particles. Physical boarding-command signal. Far hand keeps the compact launcher balanced across the hips. Near hand releases rear grip and raises a closed fist beside and above the hood, then lowers and reacquires the rear grip in ready. Exactly two hands; no third hand left on weapon, floating equipment, magic or firing.",
+  "clip": "cast",
+  "seed": 929022
+}

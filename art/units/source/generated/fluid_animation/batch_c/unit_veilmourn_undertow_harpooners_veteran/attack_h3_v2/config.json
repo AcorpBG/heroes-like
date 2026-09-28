@@ -1,0 +1,70 @@
+{
+  "unit_id": "unit_veilmourn_undertow_harpooners_veteran",
+  "canvas": [
+    960,
+    704
+  ],
+  "scale": 0.5,
+  "anchor": [
+    448,
+    628
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          272
+        ]
+      ],
+      "anchor": [
+        256,
+        256
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_undertow_harpooners_veteran.png",
+      "rects": [
+        [
+          512,
+          272,
+          1024,
+          544
+        ]
+      ],
+      "anchor": [
+        768,
+        528
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      56,
+      1
+    ]
+  ],
+  "prompt": "Locked elevated orthographic three-quarter fantasy strategy view facing screen right. Exactly one Keelbreaker Lancer humanoid, two arms and two legs, dark teal pointed hood and torn naval coat, dark weathered iron shoulder and leg armor, brown boots and gloves, ivory net bundles hanging from the near hip, and one fixed bronze rope winch mounted on the upper back. Exactly ONE compact heavy harpoon launcher held across the body, near hand on rear grip and far hand under forward shaft, with a single original forked dark iron harpoon tip at the muzzle. Preserve the exact original launcher length, narrow shaft, forked tip, rope winch, net bundle and body proportions. Fixed camera, anatomical body size and ground line. Keep entire body, weapon and equipment within generous empty margins. Flat saturated green background throughout; Only the unchanged opaque creature and its original equipment appear on the empty flat green plate. Continuous slow-motion physical bayonet thrust with the attached forked spear point. Motion starts immediately and continues smoothly over the whole shot. During the first third the elbows draw the shaft slightly inward and the knees dip to gather weight. During the middle third both forearms extend progressively to push the shaft forward into a short close-range stab, the front knee taking the weight. During the last third both elbows bend again, drawing the launcher back while the torso and knees smoothly recover to the initial ready stance. Keep both hands wrapped around their exact grips, and show many intermediate arm, shoulder and knee positions. One connected uninterrupted action; the background stays empty and every part of the equipment retains its original painted appearance.",
+  "clip": "attack",
+  "seed": 929040
+}
