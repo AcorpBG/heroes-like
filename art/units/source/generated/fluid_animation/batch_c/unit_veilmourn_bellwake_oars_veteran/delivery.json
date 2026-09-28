@@ -1,0 +1,20 @@
+{
+  "takes": [
+    "idle_h3_v1",
+    "move_h3_v1",
+    "defend_h3_v1",
+    "hit_h3_v3",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "attack_segments": [
+    "attack_entry_h3_v2",
+    "attack_h3_v1"
+  ],
+  "attack_frame_msec": 35,
+  "attack_contact_frame": 15,
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all chronological original sequences, enlarged anatomy/equipment/alpha phases, and every selected phase at native 128px battle reference height. Visible hand/oar idle, reciprocal slow cloak-covered walk, paddle approach/contact/recovery with stable join, dedicated held guard, corrected near-shield shoulder recoil, chest-salute physical support, and grounded side-collapse corpse. Rejected swapped-shield keys/hit footage, v1 melee onset with reversed paddle, v1 hit effects, and clipped support paddle. Accepted corrected guides and only clean source intervals. Continuous video playback, manual game playtest and Linux validation were not performed."
+  }
+}

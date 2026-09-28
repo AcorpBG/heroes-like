@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "clip": "defend",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v2.png",
+      "rects": [
+        [
+          0,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        835,
+        850
+      ],
+      "scale": 0.235,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 1,
+  "guides": [],
+  "seed": 928606,
+  "prompt": "Locked orthographic three-quarter elevated fantasy strategy camera, full body facing screen right. One hooded adult human warden, two arms and two legs, charcoal layered cloak and cowl hiding the face, dark leather gloves and boots. One small dark oval wooden shield with thin brass cross motif is strapped on the near forearm at screen-left. Both gloved hands grip one long dark wooden oar diagonally across the body. Oar has a broad flat paddle at its upper screen-right end and a single small brass bell attached immediately below that paddle. Preserve oar length, paddle shape, shaft, bell attachment, two-handed grip and shield attachment throughout. No extra props, magic, particles, fog, glow, shadows, text or effects. Uniform perfectly flat saturated green background, no green illumination. Fixed camera and anatomical size; do not zoom. Smoothly settle into the supplied defensive stance. Bend both knees, brace the long oar at a shallow diagonal across the chest and bring the small near-forearm shield forward protectively. Keep both hands fixed on their respective shaft grips, the shield on the same near screen-left forearm, and the single small bell attached below the paddle. Hold the final grounded defensive crouch without returning to ready. No attack, foot travel, extra limbs, shield transfer or weapon duplication.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

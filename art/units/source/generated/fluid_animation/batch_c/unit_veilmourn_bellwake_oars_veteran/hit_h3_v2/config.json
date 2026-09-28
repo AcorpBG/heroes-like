@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_bellwake_oars_veteran",
+  "clip": "hit",
+  "scale": 0.5,
+  "anchor": [
+    480,
+    480
+  ],
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 20,
+  "references": [
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          0,
+          0,
+          512,
+          256
+        ]
+      ],
+      "anchor": [
+        256,
+        240
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/animation/runtime/poses/unit_veilmourn_bellwake_oars_veteran.png",
+      "rects": [
+        [
+          1024,
+          256,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1280,
+        496
+      ],
+      "scale": 1,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      36,
+      1
+    ]
+  ],
+  "seed": 928701,
+  "prompt": "Locked orthographic three-quarter elevated fantasy strategy camera, full body facing screen right. One hooded adult human warden, two arms and two legs, charcoal layered cloak and cowl hiding the face, dark leather gloves and boots. One small dark oval wooden shield with thin brass cross motif is strapped on the near forearm at screen-left. Both gloved hands grip one long dark wooden oar diagonally across the body. Oar has a broad flat paddle at its upper screen-right end and a single small brass bell attached immediately below that paddle. Preserve oar length, paddle shape, shaft, bell attachment, two-handed grip and shield attachment throughout. No extra props, magic, particles, fog, glow, shadows, text or effects. Uniform perfectly flat saturated green background, no green illumination. Fixed camera and anatomical size; do not zoom. A brief acted bodily flinch, matching the supplied middle pose: bend both knees, lean shoulders and hood backward, raise the forearm shield defensively while retaining the oar shaft with both gloved hands. The front boot briefly unweights as the rear boot supports the body. Then settle both boots and recover to the initial ready stance. Show only this single costumed figure performing a shoulder recoil and recovery in an empty studio with perfectly uniform green background and constant neutral lighting. Cloth and attached bells follow the body naturally.",
+  "tiled_decode": {
+    "tile_size": 256,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

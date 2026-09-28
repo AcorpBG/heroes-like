@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    478,
+    "feefaee6-71df-4c9b-9c29-535e9c5677b6",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Locked orthographic three-quarter elevated fantasy strategy camera, full body facing screen right. One hooded adult human warden, two arms and two legs, charcoal layered cloak and cowl hiding the face, dark leather gloves and boots. One small dark oval wooden shield with thin brass cross motif is strapped on the near forearm at screen-left. Both gloved hands grip one long dark wooden oar diagonally across the body. Oar has a broad flat paddle at its upper screen-right end and a single small brass bell attached immediately below that paddle. Preserve oar length, paddle shape, shaft, bell attachment, two-handed grip and shield attachment throughout. No extra props, magic, particles, fog, glow, shadows, text or effects. Uniform perfectly flat saturated green background, no green illumination. Fixed camera and anatomical size; do not zoom. One physical recoil and recovery. Boots remain grounded while shoulders and head flinch backward and knees bend slightly, maintaining both hands on the same diagonal oar shaft and keeping shield strapped to the same near forearm. Then straighten and settle exactly into initial ready. No visible attacker, projectile, magic, circles, impact flash or second weapon.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 928603
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "knellwake_hit_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "knellwake_h3/hit_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "knellwake_h3",
+      "create_time": 1790569757495
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "knellwake_h3\\hit_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "feefaee6-71df-4c9b-9c29-535e9c5677b6",
+          "timestamp": 1790569757496
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "feefaee6-71df-4c9b-9c29-535e9c5677b6",
+          "timestamp": 1790569757503
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "feefaee6-71df-4c9b-9c29-535e9c5677b6",
+          "timestamp": 1790569968387
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

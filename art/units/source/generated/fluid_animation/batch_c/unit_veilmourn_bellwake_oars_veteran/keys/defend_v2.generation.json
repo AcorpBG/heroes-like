@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v2.png",
+    "sha256": "639ad4e8c562135f2a405cc4090075590e3e4aba9b7a0a86d647ed304a5f5cde"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v2.prompt.txt",
+    "sha256": "2600049a7f601b38fbebc6c45694d01d036f32acd601f75fc40ad91393419fc3"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/defend_v1.png",
+      "sha256": "168f457cf72ccca3b189d45d46be9554d2b3ec73def51121c39ff303e6c97ecc"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_c/unit_veilmourn_bellwake_oars_veteran/keys/ready_reference.png",
+      "sha256": "cd342edbffbfae5e8265bfa8271814d5da8dd47c5027c496b838eb58a2d55e6a"
+    }
+  ],
+  "review": "Shield corrected to near forearm; two hands retain shaft; crouch with both boots grounded."
+}
