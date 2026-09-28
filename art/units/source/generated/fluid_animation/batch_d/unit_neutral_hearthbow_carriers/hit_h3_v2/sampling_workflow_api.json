@@ -1,0 +1,229 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Hearthbow Carrier facing RIGHT in an elevated three-quarter orthographic fantasy strategy sprite view. A slim adult human woman with a fair face, short auburn hair under a dark brown hood, a ragged red shoulder cape and split red cloth tails, fitted brown leather armor with crossing chest straps and small bronze clasps, brown trousers, leather bracers and tall strapped brown boots. A back quiver with a small bundle of red-fletched arrows, a rolled pack, belt pouches and a small enclosed amber lantern at the hip stay attached. Exactly two arms, two hands, two legs and two boots. Her LEFT far hand on the right side of the image holds the center grip of ONE curved reddish wooden bow, which has two intact limbs and ONE taut bowstring. Her RIGHT near hand stays pressed against her upper chest. The bow remains undrawn and lowered in her LEFT hand throughout. Preserve bow length, grip, curve, quiver and her original anatomy, face, body size and clothing. Do not add a sword, shield, crossbow or another bow. Locked camera, no zoom, no whole-body sliding, full figure and bow visible. Uniform BLUE RGB0,0,255 background, no scenery, floor, shadows, text, glow, particles, sparks, trails or extra flying projectiles. React once to a hit by recoiling the shoulders and head backward, bending the waist and knees while both boots stay planted. Right hand draws toward chest protectively; left hand keeps hold of the one unchanged bow. Cape swings with the recoil. Recover balance and return naturally to the original ready stance. No projectile, wounds or spell effects. This is only a passive stagger reaction. She is struck from the front immediately, her shoulders and head recoil, then she returns to balance. The bow arm stays lowered at hip height and only follows her recoiling torso, right hand stays against chest, fingers never approach the bowstring or quiver. No archery action, arrow, nocking, aiming, firing or colored projectile at any moment. Follow the ready-to-recoil guides directly without inventing a preparatory attack.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 987103
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "hearthbow_hit_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "hearthbow_hit_h3_v2_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 16,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 42,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 66,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "43": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "42",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 90,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "43",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "hearthbow_h3/hit_h3_v2/sampled"
+    }
+  }
+}

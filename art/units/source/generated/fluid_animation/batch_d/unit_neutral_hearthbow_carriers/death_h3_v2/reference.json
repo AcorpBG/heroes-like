@@ -1,0 +1,134 @@
+{
+  "unit_id": "unit_neutral_hearthbow_carriers",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            512,
+            1024,
+            1024,
+            1280
+          ]
+        ],
+        "anchor": [
+          768,
+          1268
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "050185391c935c7be0e807305cbb974d908d2f521abffd8842df072d9d089397",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            1024,
+            768,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1280,
+          1012
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "56bdf301d0125e84f652b2d56807a38ec5278dca2d88d65d4a8f8dfd1cca1641",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            0,
+            1024,
+            512,
+            1280
+          ]
+        ],
+        "anchor": [
+          256,
+          1268
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "24e70f2f292c8cdba2db54f0caa266fd126a5c797b35b1dcae787d34b15ee520",
+      "runtime_source_scale": 1.0
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_neutral_hearthbow_carriers.png",
+        "rects": [
+          [
+            1536,
+            768,
+            2048,
+            975
+          ],
+          [
+            1536,
+            975,
+            1889,
+            994
+          ],
+          [
+            1894,
+            975,
+            2048,
+            994
+          ],
+          [
+            1536,
+            994,
+            2048,
+            1024
+          ]
+        ],
+        "anchor": [
+          1792,
+          1012
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8,
+        "crop_recipe": {
+          "original_pixel_exclusion": [
+            1889,
+            975,
+            1894,
+            994
+          ],
+          "reason": "Exclude disconnected71-pixel duplicate bow-tip fragment beside the complete fallen bow/body component; component separation verified."
+        }
+      },
+      "source_sha256": "942a724af4085b450900364b6780ee99a797c2cb4dc695012a40e1541b35a95b",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "5ec7911397656f932b2795925407a46fec3cd97982ee38258a33bc5fa7aa93bf",
+      "runtime_source_scale": 1.0
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    490
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
