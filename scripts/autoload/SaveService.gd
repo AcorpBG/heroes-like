@@ -29,6 +29,8 @@ const SAVE_METADATA_LAUNCH_MODE_KEY := "saved_from_launch_mode"
 const SAVE_METADATA_MANUAL_NAME_KEY := "manual_slot_name"
 const MANUAL_SLOT_NAME_MAX_LENGTH := 32
 const SUMMARY_INLINE_PAYLOAD_MAX_BYTES := 8 * 1024 * 1024
+# Covers coarse filesystem timestamps (FAT keeps two-second modification times).
+const SUMMARY_CACHE_TIMESTAMP_SETTLE_SECONDS := 2
 const TRANSITION_AUTOSAVE_INTENT_FLAGS := [
 	"runtime_autosave_dirty",
 	"runtime_autosave_pending_intent",
@@ -49,6 +51,7 @@ const PROGRESSION_STORAGE_STATUS_CURRENT_VALID := "current_valid"
 const PROGRESSION_STORAGE_STATUS_RECOVERED := "recovered"
 const PROGRESSION_STORAGE_STATUS_INVALID := "invalid"
 const PROGRESSION_STORAGE_STATUS_FUTURE_VERSION := "future_version"
+const PROGRESSION_MIN_SUPPORTED_VERSION := 1
 const MAIN_MENU_ACTION_LABEL := "Main Menu"
 
 var _selected_manual_slot := int(MANUAL_SLOT_IDS[0])
@@ -57,10 +60,19 @@ var _summary_inspection_trace_enabled := false
 var _summary_inspection_trace_counts := {}
 var _last_runtime_save_profile := {}
 var _verified_save_receipts := {}
+var _latest_loadable_summary_cache := {}
+var _latest_loadable_summary_fingerprint := ""
 
 # Named saves use the same versioned payload and transaction writer as legacy
 # slots. The basename is the identity; callers can never supply an arbitrary path.
 func save_file_identity(requested_name: String) -> Dictionary:
+	var validated := _validated_save_file_name(requested_name)
+	if not bool(validated.get("ok", false)):
+		return validated
+	var directory := DirAccess.open(SAVE_DIR)
+	return _save_file_identity_in_directory(String(validated.name), directory, directory.get_files() if directory != null else PackedStringArray())
+
+func _validated_save_file_name(requested_name: String) -> Dictionary:
 	var name := requested_name.strip_edges()
 	if name.is_empty() or name.length() > 64 or name.to_utf8_buffer().size() > 200 or name.begins_with(".") or name.ends_with("."):
 		return {"ok": false, "message": "Use a save name of 1–64 characters, without a trailing period."}
@@ -70,12 +82,17 @@ func save_file_identity(requested_name: String) -> Dictionary:
 	var device := name.get_slice(".", 0).strip_edges().to_upper().replace("¹", "1").replace("²", "2").replace("³", "3")
 	if device in ["CON", "PRN", "AUX", "NUL", "COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9", "LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9"]:
 		return {"ok": false, "message": "That name is reserved by Windows. Choose another name."}
+	return {"ok": true, "name": name}
+
+# Listing callers pass one directory listing for every name instead of listing
+# the save folder again per file.
+func _save_file_identity_in_directory(validated_name: String, directory: DirAccess, entries: PackedStringArray) -> Dictionary:
+	var name := validated_name
 	var filename := name + NAMED_SAVE_SUFFIX
-	var directory := DirAccess.open(SAVE_DIR)
 	if directory != null:
 		# Windows identities are case-insensitive. Apply the same rule on Linux,
 		# including interrupted transactions, so a save cannot fork by casing.
-		for entry in directory.get_files():
+		for entry in entries:
 			var base := entry.trim_suffix(SAVE_TRANSACTION_CANDIDATE_SUFFIX).trim_suffix(SAVE_TRANSACTION_BACKUP_SUFFIX)
 			if base.to_lower() == filename.to_lower():
 				filename = base
@@ -92,18 +109,27 @@ func inspect_save_file(name: String) -> Dictionary:
 		return {}
 	return _inspect_slot(SLOT_TYPE_FILE, String(identity.name), String(identity.path))
 
+func _inspect_listed_save_file(name: String, directory: DirAccess, entries: PackedStringArray) -> Dictionary:
+	var identity := _validated_save_file_name(name)
+	if bool(identity.get("ok", false)):
+		identity = _save_file_identity_in_directory(String(identity.name), directory, entries)
+	if not bool(identity.get("ok", false)):
+		return {}
+	return _inspect_slot(SLOT_TYPE_FILE, String(identity.name), String(identity.path))
+
 func list_save_files() -> Array:
 	var names := {}
 	var directory := DirAccess.open(SAVE_DIR)
 	if directory == null:
 		return []
-	for filename in directory.get_files():
+	var entries := directory.get_files()
+	for filename in entries:
 		var base := filename.trim_suffix(SAVE_TRANSACTION_CANDIDATE_SUFFIX).trim_suffix(SAVE_TRANSACTION_BACKUP_SUFFIX)
 		if base.ends_with(NAMED_SAVE_SUFFIX):
 			names[base.trim_suffix(NAMED_SAVE_SUFFIX)] = true
 	var summaries := []
 	for name in names:
-		var summary := inspect_save_file(String(name))
+		var summary := _inspect_listed_save_file(String(name), directory, entries)
 		if not summary.is_empty() and FileAccess.file_exists(String(summary.get("path", ""))):
 			summaries.append(summary)
 	summaries.sort_custom(func(a: Dictionary, b: Dictionary): return summary_recency_timestamp(a) > summary_recency_timestamp(b))
@@ -155,6 +181,7 @@ func validation_summary_cache_snapshot() -> Dictionary:
 func validation_clear_summary_cache() -> void:
 	_slot_summary_cache.clear()
 	_verified_save_receipts.clear()
+	_invalidate_latest_loadable_summary()
 
 func validation_transaction_artifact_paths(file_path: String) -> Dictionary:
 	return {
@@ -225,10 +252,11 @@ func save_autosave_session(payload: Dictionary) -> String:
 	return _save_payload(normalized, _autosave_path(), SLOT_TYPE_AUTOSAVE)
 
 func load_session(slot: int = 1) -> Dictionary:
-	return _load_summary_payload_for_restore(inspect_manual_slot(slot))
+	# Callers own the returned payload; the summary's copy stays with the cache.
+	return _load_summary_payload_for_restore(inspect_manual_slot(slot)).duplicate(true)
 
 func load_autosave() -> Dictionary:
-	return _load_summary_payload_for_restore(inspect_autosave())
+	return _load_summary_payload_for_restore(inspect_autosave()).duplicate(true)
 
 func restore_manual_session(slot: int = 1):
 	return restore_session_from_summary(inspect_manual_slot(slot))
@@ -484,6 +512,8 @@ func save_progression(payload: Dictionary) -> String:
 	if not bool(storage.get("writable", false)):
 		push_warning(String(storage.get("message", "Campaign progress storage cannot be overwritten safely.")))
 		return ""
+	if payload_report.has("migrated_from_version"):
+		return _save_raw_dictionary(_current_progression_payload(payload, payload_report), _progression_path())
 	return _save_raw_dictionary(payload, _progression_path())
 
 func load_progression() -> Dictionary:
@@ -494,9 +524,10 @@ func load_progression() -> Dictionary:
 	if not bool(raw.get("ok", false)):
 		return {}
 	var payload: Dictionary = raw.get("payload", {}) if raw.get("payload", {}) is Dictionary else {}
-	if String(_progression_payload_semantic_report(payload).get("status", "")) != PROGRESSION_STORAGE_STATUS_CURRENT_VALID:
+	var semantic_report := _progression_payload_semantic_report(payload)
+	if String(semantic_report.get("status", "")) != PROGRESSION_STORAGE_STATUS_CURRENT_VALID:
 		return {}
-	return payload.duplicate(true)
+	return _current_progression_payload(payload, semantic_report)
 
 func has_progression() -> bool:
 	return bool(inspect_progression_storage().get("usable", false))
@@ -595,13 +626,42 @@ func list_loadable_session_summaries() -> Array:
 
 func latest_loadable_summary() -> Dictionary:
 	_trace_summary_inspection("latest_loadable_summary")
+	# Every overworld refresh asks for this. Reuse the answer until this service
+	# writes a save or any file in the save folder changes.
+	var fingerprint := _save_folder_fingerprint()
+	if fingerprint != "" and fingerprint == _latest_loadable_summary_fingerprint:
+		return _latest_loadable_summary_cache.duplicate()
 	var latest := {}
 	for summary in list_session_summaries():
 		if not can_load_summary(summary):
 			continue
 		if latest.is_empty() or summary_recency_timestamp(summary) > summary_recency_timestamp(latest):
 			latest = summary
+	# Inspection may have recovered an interrupted save, so fingerprint afterwards.
+	_latest_loadable_summary_cache = latest.duplicate()
+	_latest_loadable_summary_fingerprint = _save_folder_fingerprint()
 	return latest
+
+# Names, modification times and sizes of everything in the save folder, including
+# transaction artifacts. Empty while any file is fresh enough that a same-size
+# rewrite could keep its timestamp; the caller then inspects the saves again.
+func _save_folder_fingerprint() -> String:
+	var directory := DirAccess.open(SAVE_DIR)
+	if directory == null:
+		return ""
+	var parts := PackedStringArray()
+	for entry in directory.get_files():
+		var path := SAVE_DIR.path_join(entry)
+		var modified_timestamp := FileAccess.get_modified_time(path)
+		if _slot_file_modified_recently(modified_timestamp):
+			return ""
+		parts.append("%s|%d|%d" % [entry, modified_timestamp, FileAccess.get_size(path)])
+	parts.sort()
+	return "\n".join(parts)
+
+func _invalidate_latest_loadable_summary() -> void:
+	_latest_loadable_summary_cache = {}
+	_latest_loadable_summary_fingerprint = ""
 
 func summary_recency_timestamp(summary: Dictionary) -> float:
 	return _summary_sort_timestamp(summary)
@@ -1867,7 +1927,9 @@ func _save_runtime_session(
 			_runtime_save_profile_step(profile, "write_payload_done")
 			cache_slot_id = save_file_name if slot_type == SLOT_TYPE_FILE else str(normalized_slot)
 			if path != "" and include_summary:
-				_selected_manual_slot = normalized_slot
+				# Named files have no manual slot; keep the player's slot selection.
+				if slot_type == SLOT_TYPE_MANUAL:
+					_selected_manual_slot = normalized_slot
 				_runtime_save_profile_step(profile, "summary_cache_store_start")
 				var summary_cache_started := ProfileLogScript.begin_usec()
 				_store_runtime_summary_cache(saved_payload, slot_type, cache_slot_id, path, authoritative_resume_target, profile)
@@ -2273,10 +2335,14 @@ func _read_json_dictionary_unrecovered(file_path: String, include_payload: bool 
 		return result
 	result["ok"] = true
 	if include_payload:
-		result["payload"] = (parser.data as Dictionary).duplicate(true)
+		# The parser's result is not shared with anything else, so hand it over
+		# instead of copying the whole world a second time.
+		result["payload"] = parser.data as Dictionary
 	return result
 
-func _recover_save_transaction(file_path: String) -> Dictionary:
+# Callers that go on to read the live file pass include_live_read to reuse the
+# parse recovery already did, instead of reading and parsing the file again.
+func _recover_save_transaction(file_path: String, include_live_read: bool = false) -> Dictionary:
 	var candidate_path := _save_transaction_candidate_path(file_path)
 	var backup_path := _save_transaction_backup_path(file_path)
 	var live := _read_json_dictionary_unrecovered(file_path)
@@ -2298,12 +2364,12 @@ func _recover_save_transaction(file_path: String) -> Dictionary:
 		var live_payload: Dictionary = live.get("payload", {}) if live.get("payload", {}) is Dictionary else {}
 		_remove_save_transaction_artifact(candidate_path)
 		_remove_save_transaction_artifact(backup_path)
-		return {
+		return _with_live_read({
 			"ok": true,
 			"recovered": false,
 			"live_valid": true,
 			"retained_manual_name": _manual_slot_name_from_payload(live_payload),
-		}
+		}, live, include_live_read)
 
 	var backup := _read_json_dictionary_unrecovered(backup_path)
 	if _save_transaction_payload_valid(file_path, backup):
@@ -2333,24 +2399,29 @@ func _recover_save_transaction(file_path: String) -> Dictionary:
 			}
 		_remove_save_transaction_artifact(candidate_path)
 		_invalidate_summary_cache_for_path(file_path)
-		return {
+		return _with_live_read({
 			"ok": true,
 			"recovered": true,
 			"live_valid": true,
 			"retained_manual_name": _manual_slot_name_from_payload(
 				restored.get("payload", {}) if restored.get("payload", {}) is Dictionary else {}
 			),
-		}
+		}, restored, include_live_read)
 
 	# A candidate is never recovery authority. Without a valid backup, retain any
 	# malformed live/backup bytes for diagnostics and discard staging only.
 	_remove_save_transaction_artifact(candidate_path)
-	return {
+	return _with_live_read({
 		"ok": not bool(live.get("exists", false)),
 		"recovered": false,
 		"live_valid": false,
 		"reason": "no_valid_backup" if bool(live.get("exists", false)) else "live_missing",
-	}
+	}, live, include_live_read)
+
+func _with_live_read(recovery: Dictionary, live_read: Dictionary, include_live_read: bool) -> Dictionary:
+	if include_live_read:
+		recovery["live_read"] = live_read
+	return recovery
 
 func _save_transaction_payload_valid(file_path: String, raw: Dictionary) -> bool:
 	if not bool(raw.get("ok", false)):
@@ -2413,13 +2484,20 @@ func _progression_payload_semantic_report(payload: Dictionary) -> Dictionary:
 			"version": version,
 			"expected_version": expected_version,
 		}
-	if version != expected_version:
+	if version < PROGRESSION_MIN_SUPPORTED_VERSION:
 		return {
 			"status": PROGRESSION_STORAGE_STATUS_INVALID,
 			"reason": "unsupported_version",
 			"version": version,
 			"expected_version": expected_version,
 		}
+	if version < expected_version:
+		# Older profiles are upgraded, never blocked; the upgraded profile is held
+		# to the same checks as one written by this build.
+		var migrated_report := _progression_payload_semantic_report(_migrate_progression_payload(payload, version))
+		migrated_report["version"] = version
+		migrated_report["migrated_from_version"] = version
+		return migrated_report
 	for string_key in ["last_campaign_id", "last_scenario_id"]:
 		if not payload.has(string_key):
 			return {
@@ -2500,6 +2578,24 @@ func _progression_payload_semantic_report(payload: Dictionary) -> Dictionary:
 		"expected_version": expected_version,
 	}
 
+func _migrate_progression_payload(payload: Dictionary, from_version: int) -> Dictionary:
+	var migrated := payload.duplicate(true)
+	for version in range(from_version, int(CampaignRulesScript.PROFILE_VERSION)):
+		migrated = _migrate_progression_payload_step(migrated, version)
+		migrated["version"] = version + 1
+	return migrated
+
+func _migrate_progression_payload_step(payload: Dictionary, _from_version: int) -> Dictionary:
+	# When a CampaignRules.PROFILE_VERSION bump changes the stored shape, convert
+	# `_from_version` data to the next version here. Bumps that only add optional
+	# fields need no step: CampaignRules.normalize_profile fills their defaults.
+	return payload
+
+func _current_progression_payload(payload: Dictionary, semantic_report: Dictionary) -> Dictionary:
+	if semantic_report.has("migrated_from_version"):
+		return _migrate_progression_payload(payload, int(semantic_report.get("migrated_from_version", 0)))
+	return payload.duplicate(true)
+
 func _progression_storage_result(
 	status: String,
 	path: String,
@@ -2579,8 +2675,17 @@ func _rename_save_transaction_path(from_path: String, to_path: String) -> int:
 	)
 
 func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionary:
-	_recover_save_transaction(file_path)
-	var raw := _read_json_dictionary_unrecovered(file_path)
+	var recovery := _recover_save_transaction(file_path, true)
+	return _payload_from_raw_read(_recovered_live_read(recovery, file_path), file_path, warn_if_missing)
+
+# Recovery already parsed the live file; reuse that read instead of parsing again.
+func _recovered_live_read(recovery: Dictionary, file_path: String) -> Dictionary:
+	var live_read = recovery.get("live_read", {})
+	if live_read is Dictionary and not (live_read as Dictionary).is_empty():
+		return live_read
+	return _read_json_dictionary_unrecovered(file_path)
+
+func _payload_from_raw_read(raw: Dictionary, file_path: String, warn_if_missing: bool) -> Dictionary:
 	if not bool(raw.get("exists", false)):
 		if warn_if_missing:
 			push_warning("Missing save file: %s" % file_path)
@@ -2594,7 +2699,8 @@ func _load_raw_dictionary(file_path: String, warn_if_missing: bool) -> Dictionar
 			% [file_path, int(raw.get("error_line", 0)), String(raw.get("error_message", "Invalid JSON dictionary."))]
 		)
 		return {}
-	return (raw.get("payload", {}) as Dictionary).duplicate(true)
+	# A fresh parse is owned by the caller; no copy is needed.
+	return raw.get("payload", {}) as Dictionary
 
 func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	_trace_summary_inspection("slot_file_inspections")
@@ -2602,13 +2708,14 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		FileAccess.file_exists(_save_transaction_candidate_path(file_path))
 		or FileAccess.file_exists(_save_transaction_backup_path(file_path))
 	)
+	var recovery := {}
 	if transaction_artifacts_present:
-		_recover_save_transaction(file_path)
+		recovery = _recover_save_transaction(file_path, true)
 	var cached_summary := _cached_slot_summary(slot_type, slot_id, file_path)
 	if not cached_summary.is_empty():
 		return cached_summary
 	if not transaction_artifacts_present:
-		_recover_save_transaction(file_path)
+		recovery = _recover_save_transaction(file_path, true)
 
 	var summary := _empty_summary(slot_type, slot_id, file_path)
 	if not FileAccess.file_exists(file_path):
@@ -2616,7 +2723,8 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 
 	summary["modified_timestamp"] = FileAccess.get_modified_time(file_path)
 	summary["payload_bytes"] = FileAccess.get_size(file_path)
-	var raw_payload := _load_raw_dictionary(file_path, false)
+	var raw_payload := _payload_from_raw_read(_recovered_live_read(recovery, file_path), file_path, false)
+	recovery.clear()
 	if raw_payload.is_empty():
 		summary["validity"] = "corrupt_json"
 		summary["status_text"] = "Corrupt or unreadable save data."
@@ -2655,7 +2763,11 @@ func _inspect_slot(slot_type: String, slot_id: String, file_path: String) -> Dic
 		summary["payload_deferred"] = true
 	summary["valid"] = true
 	summary["status_text"] = _status_text_for_summary(summary)
-	return _finalize_and_cache_summary(summary)
+	# One normalized session feeds every detail block, instead of rebuilding a
+	# session for the resume recap, continuity lines and progress recap each.
+	var finalized := _finalize_runtime_summary(summary, {}, true)
+	_store_slot_summary_cache(finalized)
+	return finalized
 
 func _normalize_restore_result(payload: Dictionary, slot_type: String = "") -> Dictionary:
 	var source_save_version: int = max(0, int(payload.get("save_version", SessionStateStoreScript.SAVE_VERSION)))
@@ -3159,13 +3271,18 @@ func _finalize_summary(summary: Dictionary) -> Dictionary:
 	summary["detail"] = describe_slot_details(summary)
 	return summary
 
-func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}) -> Dictionary:
+# stored_payload marks a payload read back from disk rather than one this
+# session just normalized and saved: detail text then reads a normalized copy.
+func _finalize_runtime_summary(summary: Dictionary, profile: Dictionary = {}, stored_payload: bool = false) -> Dictionary:
 	var payload: Dictionary = summary.get("payload", {}) if summary.get("payload", {}) is Dictionary else {}
 	if bool(summary.get("payload_deferred", false)) or payload.is_empty():
 		if not profile.is_empty():
 			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
 		return _finalize_summary(summary)
-	var trusted_session: SessionStateStoreScript.SessionData = _session_from_owned_detached_payload(payload)
+	var trusted_session: SessionStateStoreScript.SessionData = _session_from_payload(payload) if stored_payload else _session_from_owned_detached_payload(payload)
+	if stored_payload and trusted_session != null and trusted_session.scenario_id != "":
+		OverworldRulesScript.normalize_overworld_state(trusted_session)
+		load("res://scripts/core/ScenarioRules.gd").normalize_scenario_state(trusted_session)
 	if trusted_session == null or trusted_session.scenario_id == "":
 		if not profile.is_empty():
 			profile["summary_detail_direct_fallback_count"] = int(profile.get("summary_detail_direct_fallback_count", 0)) + 1
@@ -3196,7 +3313,9 @@ func _finalize_and_cache_summary(summary: Dictionary) -> Dictionary:
 func _cached_slot_summary(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	var cached := _cached_slot_summary_entry(slot_type, slot_id, file_path)
 	var summary = cached.get("summary", {})
-	return summary.duplicate(true) if summary is Dictionary else {}
+	# Callers get their own top-level fields but share the cached payload, which
+	# is only ever read. A deep copy here duplicated a whole world per lookup.
+	return summary.duplicate() if summary is Dictionary else {}
 
 func _cached_slot_summary_entry(slot_type: String, slot_id: String, file_path: String) -> Dictionary:
 	var key := _summary_cache_key(slot_type, slot_id, file_path)
@@ -3205,15 +3324,21 @@ func _cached_slot_summary_entry(slot_type: String, slot_id: String, file_path: S
 	var cached = _slot_summary_cache.get(key, {})
 	if not (cached is Dictionary):
 		return {}
-	var signature := _slot_file_signature(file_path)
+	var signature := _slot_file_signature(file_path, false)
 	if bool(cached.get("exists", false)) != bool(signature.get("exists", false)):
 		return {}
 	if int(cached.get("modified_timestamp", 0)) != int(signature.get("modified_timestamp", 0)):
 		return {}
 	if int(cached.get("file_size", -1)) != int(signature.get("file_size", -1)):
 		return {}
-	if String(cached.get("named_file_sha256", "")) != String(signature.get("named_file_sha256", "")):
-		return {}
+	var cached_sha256 := String(cached.get("named_file_sha256", ""))
+	if cached_sha256 != "":
+		if FileAccess.get_sha256(file_path) != cached_sha256:
+			return {}
+		# Once the timestamp tick has passed, any later edit changes the
+		# modification time, so this file no longer needs hashing.
+		if not _slot_file_modified_recently(int(signature.get("modified_timestamp", 0))):
+			cached["named_file_sha256"] = ""
 	return cached
 
 func _store_slot_summary_cache(summary: Dictionary) -> void:
@@ -3223,13 +3348,14 @@ func _store_slot_summary_cache(summary: Dictionary) -> void:
 	if slot_type == "" or slot_id == "" or file_path == "":
 		return
 	var signature := _slot_file_signature(file_path)
+	_invalidate_latest_loadable_summary()
 	_slot_summary_cache[_summary_cache_key(slot_type, slot_id, file_path)] = {
 		"exists": bool(signature.get("exists", false)),
 		"file_path": file_path,
 		"modified_timestamp": int(signature.get("modified_timestamp", 0)),
 		"file_size": int(signature.get("file_size", -1)),
 		"named_file_sha256": String(signature.get("named_file_sha256", "")),
-		"summary": summary.duplicate(true),
+		"summary": summary.duplicate(),
 	}
 
 func _store_runtime_summary_cache(
@@ -3269,6 +3395,7 @@ func _store_runtime_summary_cache(
 func _invalidate_summary_cache_for_path(file_path: String) -> void:
 	if file_path == "":
 		return
+	_invalidate_latest_loadable_summary()
 	for key in _slot_summary_cache.keys().duplicate():
 		var cached = _slot_summary_cache.get(key, {})
 		if cached is Dictionary and String(cached.get("file_path", "")) == file_path:
@@ -3277,20 +3404,33 @@ func _invalidate_summary_cache_for_path(file_path: String) -> void:
 func _summary_cache_key(slot_type: String, slot_id: String, file_path: String) -> String:
 	return "%s|%s|%s" % [slot_type, slot_id, file_path]
 
-func _slot_file_signature(file_path: String) -> Dictionary:
+func _slot_file_signature(file_path: String, include_named_file_sha256: bool = true) -> Dictionary:
 	var exists := FileAccess.file_exists(file_path)
+	var modified_timestamp := FileAccess.get_modified_time(file_path) if exists else 0
 	return {
 		"exists": exists,
-		"modified_timestamp": FileAccess.get_modified_time(file_path) if exists else 0,
+		"modified_timestamp": modified_timestamp,
 		"file_size": FileAccess.get_size(file_path) if exists else -1,
 		# Named files may be copied or edited outside the game. A same-size edit
-		# within one filesystem timestamp tick must not return an old cached save.
-		"named_file_sha256": FileAccess.get_sha256(file_path) if exists and file_path.ends_with(NAMED_SAVE_SUFFIX) else "",
+		# within one filesystem timestamp tick must not return an old cached save,
+		# so a file that fresh is also hashed. Settled files are identified by
+		# modification time and size, instead of hashing every save per refresh.
+		"named_file_sha256": (
+			FileAccess.get_sha256(file_path)
+			if include_named_file_sha256 and exists and file_path.ends_with(NAMED_SAVE_SUFFIX) and _slot_file_modified_recently(modified_timestamp)
+			else ""
+		),
 	}
 
+func _slot_file_modified_recently(modified_timestamp: int) -> bool:
+	return modified_timestamp >= int(Time.get_unix_time_from_system()) - SUMMARY_CACHE_TIMESTAMP_SETTLE_SECONDS
+
+# Summary payloads are shared with the summary cache and must only be read.
+# Every caller hands this to SessionData.from_dict or normalize_payload, which
+# deep-copy the world branches they keep, so copying here doubled that work.
 func _summary_payload(summary: Dictionary) -> Dictionary:
 	var payload = summary.get("payload", {})
-	return payload.duplicate(true) if payload is Dictionary else {}
+	return payload if payload is Dictionary else {}
 
 func _load_summary_payload_for_restore(summary: Dictionary) -> Dictionary:
 	var payload := _summary_payload(summary)
