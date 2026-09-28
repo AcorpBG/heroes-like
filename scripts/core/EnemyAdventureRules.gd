@@ -2493,7 +2493,11 @@ static func advance_raids(
 					event_records.append(event_value)
 		_advance_profile_add_ms(profile, "post_move_grouping_ms", phase_started)
 
+		# Judge pillage by what the raid arrived at. Arrival can seize the target
+		# or retarget the raid, and neither should change today's pillage.
+		var arrived_at_player_target := false
 		if bool(encounter.get("arrived", false)):
+			arrived_at_player_target = _raid_target_pillages_player(session, encounter, faction_id)
 			var arrival_kind := String(encounter.get("target_kind", "unknown"))
 			phase_started = _advance_profile_timer(profile_enabled)
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
@@ -2548,7 +2552,7 @@ static func advance_raids(
 			pressure_counts[target_label] = int(pressure_counts.get(target_label, 0)) + 1
 			if (
 				int(encounter.get("days_active", 0)) >= max(1, int(config.get("raid_pillage_delay", 1)))
-				and _raid_target_pillages_player(session, encounter, faction_id)
+				and arrived_at_player_target
 			):
 				total_pillage = _merge_resources(
 					total_pillage,
