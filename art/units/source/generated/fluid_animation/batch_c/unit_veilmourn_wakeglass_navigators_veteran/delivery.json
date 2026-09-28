@@ -1,0 +1,15 @@
+{
+  "takes": [
+    "idle_h3_v2",
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "death_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all1240 chronological original frames, enlarged anatomy/equipment and every selected native-scale phase. Accepted seven dedicated actions: compass-inspection idle, reciprocal walk, controlled staff strike with100ms contact hold, recovered recoil, widening brace, raised-compass navigation support and continuous grounded collapse. Separate grips, rigid staff, full robe/boots and terminal corpse retained. Rejected weak idle, deformed overhead strike and sinking collapse preserved as source only. Focused Windows candidate249 checks pass including every attack/recovery pose. Continuous playback, manual game and Linux validation not performed."
+  }
+}

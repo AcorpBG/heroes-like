@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7daeaaedf4a2f36a2859e4e4395f64bec0842ce7cd50eff7a3b45a6130a06239",
+  "latent_sha256": "bea5da3f33e8ed4d1fc32d1f407edd140dca7658c474f4010c8374d3654bef9e",
+  "decode_workflow_sha256": "a0461c12eb4c0baea24250c606b368221d42161a855e9f85da31de41e8c3b5bd",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "meridian_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

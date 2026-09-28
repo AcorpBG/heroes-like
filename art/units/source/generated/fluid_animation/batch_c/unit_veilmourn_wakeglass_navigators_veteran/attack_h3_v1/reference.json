@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_veilmourn_wakeglass_navigators_veteran",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators_veteran.png",
+        "rects": [
+          [
+            0,
+            0,
+            512,
+            272
+          ]
+        ],
+        "anchor": [
+          256,
+          256
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85e029e166bbb71c7abd20d5c43b742887ff9d6601af83613011fe15f973d20e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2aa1e61408715b24e8cb671793d9aba33ac65d97ea32d785a933a6389c8336b1",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators_veteran.png",
+        "rects": [
+          [
+            0,
+            272,
+            512,
+            544
+          ]
+        ],
+        "anchor": [
+          256,
+          528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85e029e166bbb71c7abd20d5c43b742887ff9d6601af83613011fe15f973d20e",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "61c77dbeed8735de78842aed31bb4f3ef0ad5d70ec6e27196e03afab8537c976",
+      "runtime_source_scale": 1
+    },
+    {
+      "source_frame": {
+        "source": "art/animation/runtime/poses/unit_veilmourn_wakeglass_navigators_veteran.png",
+        "rects": [
+          [
+            512,
+            272,
+            1024,
+            544
+          ]
+        ],
+        "anchor": [
+          768,
+          528
+        ],
+        "scale": 2.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85e029e166bbb71c7abd20d5c43b742887ff9d6601af83613011fe15f973d20e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "229bc433137aa3821ea9df5ca26a3cfb03497e5f8bc9271ed875efda6fea1119",
+      "runtime_source_scale": 1
+    }
+  ],
+  "canvas": [
+    960,
+    704
+  ],
+  "ground_anchor": [
+    448,
+    628
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
