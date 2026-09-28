@@ -2982,9 +2982,8 @@ func _authoring_dependencies_for_detail(detail: Dictionary) -> Dictionary:
 
 func _objective_links_for_placement(placement_id: String) -> Array:
 	var links := []
-	var scenario := ContentService.get_scenario(_session.scenario_id)
-	var objectives = scenario.get("objectives", {})
-	if not (objectives is Dictionary):
+	var objectives := _editor_scenario_objectives()
+	if objectives.is_empty():
 		return links
 	for bucket in ["victory", "defeat"]:
 		var objective_bucket = objectives.get(bucket, [])
@@ -3150,13 +3149,12 @@ func _authoring_warnings_for_detail(
 func _scenario_authoring_validation_payload() -> Dictionary:
 	if _session == null:
 		return {}
-	var scenario := ContentService.get_scenario(_session.scenario_id)
 	var placement_ids := _all_current_placement_ids()
 	var objective_anchors := []
 	var missing_objective_anchors := []
 	var covered_objective_anchors := []
-	var objectives = scenario.get("objectives", {})
-	if objectives is Dictionary:
+	var objectives := _editor_scenario_objectives()
+	if not objectives.is_empty():
 		for bucket in ["victory", "defeat"]:
 			var objective_bucket = objectives.get(bucket, [])
 			if not (objective_bucket is Array):
@@ -6326,6 +6324,24 @@ func _authored_scenario_export_contract_payload(include_draft: bool = true) -> D
 		"draft_signature_hash": hash(draft_signature),
 		"export_scope": "authored_scenario_and_terrain_layers_draft",
 	}
+
+func _editor_scenario_objectives() -> Dictionary:
+	# Maps-folder packages are not registered with ContentService, so read the
+	# objectives from the same runtime record the export draft is built from.
+	# Returned read-only; callers must not mutate it.
+	if _session == null or _session.scenario_id == "":
+		return {}
+	var authored := ContentService.get_scenario(_session.scenario_id)
+	var objectives: Variant = {}
+	if not authored.is_empty():
+		objectives = authored.get("objectives", {})
+	else:
+		var runtime_record = _session.flags.get("native_random_map_runtime_scenario_record", {})
+		if not (runtime_record is Dictionary) or runtime_record.is_empty():
+			runtime_record = _session.overworld.get("native_random_map_runtime_scenario_record", {})
+		if runtime_record is Dictionary:
+			objectives = runtime_record.get("objectives", {})
+	return objectives if objectives is Dictionary else {}
 
 func _editor_scenario_template() -> Dictionary:
 	if _session == null or _session.scenario_id == "":
