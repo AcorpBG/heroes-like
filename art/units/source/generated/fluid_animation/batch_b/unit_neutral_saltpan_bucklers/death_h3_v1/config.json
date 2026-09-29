@@ -1,0 +1,98 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093015,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        184,
+        500
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          378,
+          769,
+          667,
+          1054
+        ]
+      ],
+      "anchor": [
+        523,
+        1029
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/continuity-alpha/club-recovery-guard-and-directional-rest.png",
+      "rects": [
+        [
+          50,
+          1180,
+          977,
+          1500
+        ]
+      ],
+      "anchor": [
+        515,
+        1445
+      ],
+      "scale": 0.26,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Saltpan Buckler, a stocky adult bearded human soldier. Red headband over a trailing ivory headwrap, ivory scarf, red cloth sleeves and skirt strips, crossed brown chest straps, patchwork ivory leg wrappings, brown leather boots and metal kneecaps. Exactly two arms and two legs. His right hand at screen left firmly holds ONE short brown wooden club by its handle. His left forearm at screen right carries ONE round pale salt-stained wooden buckler with a dark central boss and radial leather straps. Preserve the round shield, club length, beard, face, outfit and original adult proportions. Perform one continuous collapse. Knees buckle, descend onto both knees, then tip onto the left side with head moving toward screen left and boots toward screen right. The club and shield lower with their hands to the ground. Finish lying still in the supplied grounded side-rest pose. Maintain continuous body motion through the fall. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire actor and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and equipment attached, physical joints and stable foot contacts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0,
+      4.0,
+      8.0
+    ]
+  }
+}

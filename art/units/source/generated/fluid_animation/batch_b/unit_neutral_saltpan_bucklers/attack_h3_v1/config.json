@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093011,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        184,
+        500
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "club_windup",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          391,
+          369,
+          565,
+          410
+        ],
+        [
+          391,
+          410,
+          675,
+          737
+        ]
+      ],
+      "anchor": [
+        532,
+        727
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "club_strike",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/alpha/poses.png",
+      "rects": [
+        [
+          718,
+          402,
+          1009,
+          738
+        ]
+      ],
+      "anchor": [
+        862,
+        728
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      54,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Saltpan Buckler, a stocky adult bearded human soldier. Red headband over a trailing ivory headwrap, ivory scarf, red cloth sleeves and skirt strips, crossed brown chest straps, patchwork ivory leg wrappings, brown leather boots and metal kneecaps. Exactly two arms and two legs. His right hand at screen left firmly holds ONE short brown wooden club by its handle. His left forearm at screen right carries ONE round pale salt-stained wooden buckler with a dark central boss and radial leather straps. Preserve the round shield, club length, beard, face, outfit and original adult proportions. Perform one forceful club strike. Raise the club above the right shoulder with the elbow bent, then step and swing the same club down and forward across the body. Keep the shield protecting the left side. Recover the arm and step smoothly back to the starting ready stance. Maintain one continuous grip on the handle. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire actor and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and equipment attached, physical joints and stable foot contacts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 8,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0,
+      3.0,
+      6.0
+    ]
+  }
+}

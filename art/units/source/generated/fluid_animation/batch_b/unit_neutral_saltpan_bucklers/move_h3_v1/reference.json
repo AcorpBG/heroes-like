@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          184,
+          500
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "300ff9b7556a7128f32340da4c3dc5ac7483b1a6f8a05bb539caf7b854bbe03b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7a0808f089802cc3318dbd2064b7bc4fdf7849b30d6cbe881690cdf65eefa907",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

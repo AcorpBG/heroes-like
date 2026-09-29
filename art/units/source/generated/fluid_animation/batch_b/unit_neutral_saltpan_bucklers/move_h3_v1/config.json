@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093010,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_saltpan_bucklers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        184,
+        500
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Saltpan Buckler, a stocky adult bearded human soldier. Red headband over a trailing ivory headwrap, ivory scarf, red cloth sleeves and skirt strips, crossed brown chest straps, patchwork ivory leg wrappings, brown leather boots and metal kneecaps. Exactly two arms and two legs. His right hand at screen left firmly holds ONE short brown wooden club by its handle. His left forearm at screen right carries ONE round pale salt-stained wooden buckler with a dark central boss and radial leather straps. Preserve the round shield, club length, beard, face, outfit and original adult proportions. Walk steadily in place for three reciprocal gait cycles. Alternate both boots through heel contact, weight-bearing, passing and lift. Carry the club loosely pointed down, with a small natural arm counter-swing, and carry the shield upright. The scarf and skirt respond subtly to the steps. Finish in the starting stance. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire actor and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and equipment attached, physical joints and stable foot contacts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 7,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e2c706f5ed9fa9aadf6d43634d7e28be7b1547d689018c6c61b3f5956b00ccff",
+  "latent_sha256": "decef2fbf6600004a153679214233371fff841aaeb3bde84e646e96e7fa5640c",
+  "decode_workflow_sha256": "bc61b276fdfa0f6ac4e4aed64a010c656e0deff36bcb06290a1072cceabe2187",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "saltpan_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

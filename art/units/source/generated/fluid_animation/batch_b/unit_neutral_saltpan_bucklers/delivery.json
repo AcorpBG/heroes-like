@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_neutral_saltpan_bucklers",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all744 original extracted frames chronologically, enlarged club/shield grips and alpha edges, complete229 selected native phases plus eight retained idle frames, and three offscreen candidate battle renders. Move alternates both boots; attack raises and sweeps the same club before recovery; hit steps/recoils and recovers; defend finishes crouched behind buckler; support performs a guarded physical readiness gesture; death kneels, falls sideways and lowers shield/club to ground. Native scale, silhouette and fixed anatomical anchor retained. Candidate focused Windows runtime/save/simulation/Fast/reduced-motion checks:779 pass, zero failures. This review uses complete frame chronology and native phase renders, not continuous video playback or manual playtesting."
+  }
+}
