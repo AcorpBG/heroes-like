@@ -3005,29 +3005,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        88.0,
+        88,
         223
       ],
       "painted_extent": 218,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cairnshield_porters.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_cairnshield_porters.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        168,
-        13,
-        341,
-        247
+        44,
+        41,
+        217,
+        275
       ],
-      "source_sha256": "b519d1ca6153748f65933155475098addd94bbd385db1d1b69027593fc4de9a3",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_cairnshield_porters/provenance.json",
+      "source_sha256": "960a1aeb477d2782b21a120bd0f2b513578d8a84037edff05eff46d7490f5de9",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_cairnshield_porters/provenance.json",
       "sha256": "f52d22e9a6d53525e83041a5a9ccffc0dd81755d424786faa1e26a1dd78df204"
     },
     "unit_neutral_saltpan_bucklers": {

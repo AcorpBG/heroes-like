@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "980a50a2cc0a1dfd9f1a5f0715cfbb1d2f76220aebd4b4e2cf528825d92d786d",
+  "latent_sha256": "4b95e2c4cfa6357adac6831621d701de09040b05765e1e36e3e6415eae6d54ac",
+  "decode_workflow_sha256": "3d365dd4c0059c8a9a81b2963658523af3f38e27735abf80838403a8285f96d2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cairnshield_h3\\attack_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

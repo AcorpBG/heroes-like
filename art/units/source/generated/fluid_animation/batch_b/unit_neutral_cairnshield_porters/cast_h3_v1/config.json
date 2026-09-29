@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026093004,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          396,
+          515
+        ]
+      ],
+      "anchor": [
+        222,
+        510
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          515
+        ]
+      ],
+      "anchor": [
+        1358,
+        510
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      75,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Cairnshield Porter, an adult human traveler with dark tied-back hair, a blue scarf, yellow and blue tabard, gray padded trousers, blue metal forearm guards and brown boots. Exactly two arms and two legs. One hand holds the vertical grip of ONE tall rectangular pale stone-faced wooden shield with black iron bands and crossed rope. A large wooden backpack frame holds beige sacks, coiled rope and one rolled blue blanket. Preserve the pack, shield pattern, face and stocky adult proportions. Original elevated three-quarter painted fantasy camera, same view as the reference. The shield stays one rigid object, attached to the gripping hand. Give a clear physical support signal to an ally: keep the shield steady in its original hand, bring the free gloved hand up to the chest strap, tighten the strap with a firm elbow movement and nod once. Hold briefly, then lower the free hand and return to the starting stance. This porter is a nonmagical shield bearer. Locked orthographic camera and fixed anatomical scale, centered body root, entire shield, backpack and boots in frame. The background remains uniform pure saturated MAGENTA in every frame. Only the body and carried equipment move. Maintain the original materials and costume colors, clear limb joints, physical weight and stable ground contacts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 17,
+  "foreground_measurement": {
+    "rule": "Eroded opaque min(red,blue)-green maximum plus two across original guides.",
+    "per_guide_max": [
+      14.0,
+      15.0
+    ]
+  }
+}

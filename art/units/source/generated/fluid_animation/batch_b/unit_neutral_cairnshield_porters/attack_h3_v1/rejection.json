@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Cross-body swing changes the original shield grip/arm assignment and produces ghosted shield geometry around frames 36-42. Conflicting legacy contact orientation must not be published.",
+  "correction": "Use only original ready identity and a short same-hand shield shove; no cross-body contact guide."
+}

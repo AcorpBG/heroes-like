@@ -1,0 +1,5 @@
+{
+  "status": "rejected",
+  "reason": "Simpler grip route avoids the earlier cross-body swap, but background drifts through low-saturation purple/blue and orange during the action. Cannot safely key full gesture.",
+  "correction": "Retain same-hand action and ready reference, switch all guide pixels and prompt to pure green with measured foreground protection."
+}

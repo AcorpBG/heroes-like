@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    450,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093074,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          396,
+          515
+        ]
+      ],
+      "anchor": [
+        222,
+        510
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Cairnshield Porter, an adult human traveler with dark tied-back hair, a blue scarf, yellow and blue tabard, gray padded trousers, blue metal forearm guards and brown boots. Exactly two arms and two legs. One hand holds the vertical grip of ONE tall rectangular pale stone-faced wooden shield with black iron bands and crossed rope. A large wooden backpack frame holds beige sacks, coiled rope and one rolled blue blanket. Preserve the pack, shield pattern, face and stocky adult proportions. Original elevated three-quarter painted fantasy camera, same view as the reference. The shield stays one rigid object, attached to the gripping hand. Perform one decisive shield bash in the direction the shield already faces. Keep the original shield hand locked on the same upright grip for the entire action. Bend the knees and draw the shield a little inward, then drive it forward using that arm and one small step. The free near hand braces against the shield inner edge beside the original gripping hand, never replacing it. Recoil the shield and recover the step, then lower the free hand to the initial position. Torso remains at its original three-quarter camera angle throughout. One forceful straight shove, not a sweeping swing, turn, spin or hand transfer. Locked orthographic camera and fixed anatomical scale, centered body root, entire shield, backpack and boots in frame. The background remains uniform pure saturated GREEN in every frame. Only the body and carried equipment move. Maintain the original materials and costume colors, clear limb joints, physical weight and stable ground contacts.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 8,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green minus max(red,blue) maximum plus two.",
+    "per_guide_max": [
+      6.0
+    ]
+  }
+}

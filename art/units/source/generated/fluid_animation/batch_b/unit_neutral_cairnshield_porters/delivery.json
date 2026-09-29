@@ -1,0 +1,24 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v3",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed complete original frame chronology across ten takes (1240 RGB frames), enlarged selected motion and alpha details, all 245 selected native battle phases plus eight retained idle poses, and three offscreen candidate battle renders. Candidate focused runtime/save/simulation/Fast/reduced-motion checks passed: 827 checks, zero failures. Move alternates boots with a loaded shield carry; shield bash retains its grip and returns; hit retains its sharp original impact jolt then recovers; defense braces both hands; support adjusts the chest strap without invented magic; death kneels and falls onto the shield with pack attached. Fixed anatomical scale/ground anchor preserved. Four defective takes excluded. Review used full chronological frames and phase renders, not continuous playback or a manual game playtest."
+  },
+  "rejected_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "death_h3_v1"
+  ]
+}

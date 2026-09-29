@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_neutral_cairnshield_porters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            396,
+            515
+          ]
+        ],
+        "anchor": [
+          222,
+          510
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "40899ead400a2927a45bbd2df10ac5ed8ff78a97b5a7949eec8e7e329c14e3fa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2c048c9316a61aa11faf338bb9eeab70ec3cc5ac5199470100d8bab8e6c3d505",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/alpha/poses.png",
+        "rects": [
+          [
+            301,
+            850,
+            607,
+            951
+          ],
+          [
+            301,
+            951,
+            580,
+            1136
+          ],
+          [
+            301,
+            1136,
+            607,
+            1177
+          ]
+        ],
+        "anchor": [
+          455,
+          1165
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dbf31d55e3ac13fba27531def46b612131b8a4d8e35ecd512407709cece0628f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "90c3cb625289a93570928bb4a3a8fe7cc4eb5e6aa3e96fc1114beb685034f46e",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_left",
+        "source": "art/animation/source/poses/unit_neutral_cairnshield_porters/alpha/poses.png",
+        "rects": [
+          [
+            874,
+            935,
+            1249,
+            1080
+          ],
+          [
+            880,
+            1080,
+            1249,
+            1165
+          ]
+        ],
+        "anchor": [
+          1068,
+          1146
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "dbf31d55e3ac13fba27531def46b612131b8a4d8e35ecd512407709cece0628f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e32454d45a18ecea85df2ddeb775eb5d38f9f89780cd7cd895b8b078cedbf0d3",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    450,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

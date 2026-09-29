@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Cairnshield Porter, an adult human traveler with dark tied-back hair, a blue scarf, yellow and blue tabard, gray padded trousers, blue metal forearm guards and brown boots. Exactly two arms and two legs. One hand holds the vertical grip of ONE tall rectangular pale stone-faced wooden shield with black iron bands and crossed rope. A large wooden backpack frame holds beige sacks, coiled rope and one rolled blue blanket. Preserve the pack, shield pattern, face and stocky adult proportions. Original elevated three-quarter painted fantasy camera, same view as the reference. The shield stays one rigid object, attached to the gripping hand. Perform one short shield bash in the direction the shield already faces. Keep the original shield hand locked on the same upright grip for the entire action. Bend the knees and draw the shield a little inward, then drive it forward using that arm and one small step. The free near hand braces against the shield inner edge beside the original gripping hand, never replacing it. Recoil the shield and recover the step, then lower the free hand to the initial position. Torso remains at its original three-quarter camera angle throughout. One modest straight shove, not a sweeping swing, turn, spin or hand transfer. Locked orthographic camera and fixed anatomical scale, centered body root, entire shield, backpack and boots in frame. The background remains uniform pure saturated MAGENTA in every frame. Only the body and carried equipment move. Maintain the original materials and costume colors, clear limb joints, physical weight and stable ground contacts.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026093071
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "cairnshield_attack_h3_v2_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "cairnshield_h3/attack_h3_v2/sampled"
+    }
+  }
+}
