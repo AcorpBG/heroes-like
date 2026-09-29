@@ -1,0 +1,98 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093205,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        203,
+        488
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          858,
+          330,
+          1160
+        ]
+      ],
+      "anchor": [
+        167,
+        1125
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+      "rects": [
+        [
+          750,
+          982,
+          1254,
+          1205
+        ]
+      ],
+      "anchor": [
+        1001,
+        1168
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Scarshield Veteran, a broad-shouldered adult human man with tousled dark brown hair, short beard and stern weathered face. Dark layered steel and bronze armor, grey neck scarf, torn red cape and red cloth skirt, brown armored boots. Exactly two arms and two legs. His right hand at screen left holds ONE short heavy square-headed warhammer with a brown handle, orange seams and red cloth ties. His left arm at screen right carries ONE tall pointed dark shield with a bronze central boss, jagged metal edge and orange seams. Keep the same solid hammer, shield outline, armor and face throughout. The hammer stays in the right hand and shield attached to the left arm. Perform one continuous defeat collapse. Knees buckle and lower onto the knees as shoulders droop. Tip onto the right side with head toward screen right and boots toward screen left. The left arm lowers the shield onto the ground in front of the chest, and the right arm lowers the hammer to rest beside the body. Finish lying motionless in the supplied side-rest pose. Shield and hammer stay solid and settle on the ground. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills the entire background. Continuous physical joint movement, stable ground contacts, only this one warrior in the shot.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 6,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      4.0,
+      4.0,
+      3.0
+    ]
+  }
+}

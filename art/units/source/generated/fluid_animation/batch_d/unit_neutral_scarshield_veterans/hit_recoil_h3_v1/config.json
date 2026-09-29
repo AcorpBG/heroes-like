@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093302,
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_018.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_025.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_045.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Scarshield Veteran, a broad-shouldered adult human man with tousled dark brown hair, short beard and stern weathered face. Dark layered steel and bronze armor, grey neck scarf, torn red cape and red cloth skirt, brown armored boots. Exactly two arms and two legs. His right hand at screen left holds ONE short heavy square-headed warhammer with a brown handle, orange seams and red cloth ties. His left arm at screen right carries ONE tall pointed dark shield with a bronze central boss, jagged metal edge and orange seams. Keep the same solid hammer, shield outline, armor and face throughout. The hammer stays in the right hand and shield attached to the left arm. Perform just the backward recoil, slowly and continuously. Start upright. Gradually bend both knees, tilt the shoulders backward and lift the chin, ending in the supplied off-balance but supported standing pose. Hair stays attached to the scalp in the same short tousled silhouette. No loose curls, flying particles or detached fragments. The right hand keeps the hammer low; the shield stays on the left forearm. Both boots support the body. Show continuous intermediate shoulder, elbow and knee positions, with no sudden head jerk. End at the recoil extreme and hold. No recovery in this shot.  Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills the entire background. Continuous physical joint movement, stable ground contacts, only this one warrior in the shot.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      4.0,
+      7.0
+    ]
+  },
+  "correction_reason": "Original hit frames 26-32 contain a detached floating hair fragment. Preserve recovery; replace the active recoil with attached-hair motion."
+}

@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_018.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "e8d124580beb89af62c67525e1bd5c71b980cc3c594642193c0474f70ccfafbe",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7ad9ae323975f4b6e3fae0f4c26a00887c9a7fe3c72883f54e3f255881bb769b",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_025.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "dc3ab583ab5619ab390dabca999621c340a3d6b7dfe0881894f959e6a37bbb5c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2aa08e46e76f0715ce9ac67cc322dcbf9a2d8e9b3830357751e80d1fe65a4c4e",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/hit_h3_v1/matte/rgba_045.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "586fcadfa7683ba0e1f1e4822ad319cf1abaab12453e0e652d73b1ba1bef6c7a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5fff546b67bf7e0db012486ba301af8f4f29ab03f825000825152309f989e098",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

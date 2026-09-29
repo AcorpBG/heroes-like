@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          203,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b588ad814017cb9257d5bfe27f4ee10a701e4e938f87a529a0ed8192a4fa9405",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d5b33372c68f277cd9efd385aa1bfa915604c47e4fe19e34326b68aa0765d196",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

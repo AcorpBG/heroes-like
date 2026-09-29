@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "31ca5de5bca27337b4c3e2e70fc6d1f0f3ccb8eaa983e2b0e588245de5d603b4",
+  "latent_sha256": "8557ab78facac9ef5f0c3aa9dd38b9ae0e5bba7ccecdd930c516564f35df9b99",
+  "decode_workflow_sha256": "791aa02c37b0b8733b7cf0bc27b2c0f46dcba7f65238e9b0a69388ebb4c971b4",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scarshield_h3\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

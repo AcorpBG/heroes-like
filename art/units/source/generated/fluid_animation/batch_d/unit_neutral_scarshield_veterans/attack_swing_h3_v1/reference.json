@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/attack_h3_v1/matte/rgba_044.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "a577bd69819aa5bc42fa13a41341a4003c4e1dd70985e882f51cff94bae9c1dd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e46acf0e4cebdb43e0775e8bc295ba8e669332a062fae13f802c9c30e2e8d70d",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/attack_h3_v1/matte/rgba_046.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "83d3a97c63e0fc4ab8d783100efe1e75d439b8e65727dee429d8a6e512aceffd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4b04ee728be2fc6a356a482e16089ef10b9de2f9c66bb35aa3ac8ada40794b56",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/attack_h3_v1/matte/rgba_054.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "b95c148711eb37e98cd5bee3043519d72b36bd456dade585428f97386796e33e",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "888bd8b1238e587abc371f6fe926aa7df37d1f2edf9fd7503909b1abb15b7aa1",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

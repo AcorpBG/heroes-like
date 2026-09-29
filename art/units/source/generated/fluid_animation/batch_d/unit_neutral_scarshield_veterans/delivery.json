@@ -1,0 +1,899 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "takes": [
+    "move_h3_v1",
+    "defend_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all 1116 chronological H3 frames across nine preserved takes, enlarged equipment/edges and corrected attack/hit joins. Preserve original eight-pose articulated idle. Walking, brace and grounded death selected; attack hidden-forearm interval, detached-hair recoil and abrupt support return replaced with original H3 corrections. No continuous playback or manual playtest claimed. Reviewed all 306 selected action phases plus eight retained idle poses at native reference size, enlarged correction joins and three offscreen battle renders. Fixed scale, grounded corpse and readable equipment preserved. Focused Windows candidate passed 1010 checks after contact hold correction; actual shell observed every authored attack pose. Continuous playback and manual game playtest were not performed."
+  },
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 8
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 9
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 10
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 11
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 13
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 15
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 17
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 37
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 43
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 46
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 49
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 52
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 55
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 61
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 67
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 73
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 79
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 85
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 91
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 110
+        },
+        {
+          "take": "attack_swing_h3_v1",
+          "video_frame": 123
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 54
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 77
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 79
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 81
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 83
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 85
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 87
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 89
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 91
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 93
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 95
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 97
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 99
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 101
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 102
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 103
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 104
+        }
+      ],
+      "timing": {
+        "frame_msec": 30,
+        "contact_frame": 47,
+        "frame_durations_msec": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          120,
+          50,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ]
+      },
+      "review_note": "Reviewed corrected continuous hammer arc plus original windup, low follow-through and recovery. Added original settling samples through correction frame 123 and original frame 54 to avoid a head jump at recovery. Contact occurs at correction frame 94, before settling. All original pixels with fixed scale/anchor; retimed to 30 ms. Native review pending. First native shell check skipped contact poses 47-48 at 30 ms. Give impact pose 47 a deliberate 120 ms weight/readability hold and first settling pose 48 50 ms; other poses remain 30 ms. No duplicated frames or test exemptions."
+    },
+    "hit": {
+      "frames": [
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 38
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 42
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 46
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 48
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 50
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 52
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 54
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 56
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 60
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "hit_recoil_h3_v1",
+          "video_frame": 108
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 61
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 63
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 65
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 66
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 67
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 69
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 71
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 73
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 75
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 77
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 79
+        },
+        {
+          "take": "hit_h3_v1",
+          "video_frame": 80
+        }
+      ],
+      "timing": {
+        "frame_msec": 30
+      },
+      "review_note": "Corrected attached-hair recoil joined to original recovery; no detached-hair frames included. Native review pending."
+    },
+    "cast": {
+      "frames": [
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 35
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 48
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 62
+        },
+        {
+          "take": "cast_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 2
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 4
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 6
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 8
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 10
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 36
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 38
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 42
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 46
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 48
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 50
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 52
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 54
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 56
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 58
+        },
+        {
+          "take": "cast_lower_h3_v1",
+          "video_frame": 60
+        }
+      ],
+      "timing": {
+        "frame_msec": 35,
+        "contact_frame": 19
+      },
+      "review_note": "Original raising signal plus corrected continuous wrist/elbow return. Same guide 74 joins the takes at fixed anatomical scale/anchor. Native review pending."
+    }
+  }
+}

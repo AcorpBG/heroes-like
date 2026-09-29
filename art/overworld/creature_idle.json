@@ -3292,29 +3292,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        87.0,
+        87,
         207
       ],
       "painted_extent": 202,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_scarshield_veterans.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_scarshield_veterans.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        169,
-        29,
-        346,
-        247
+        49,
+        33,
+        226,
+        251
       ],
-      "source_sha256": "17f163c38af879337ce3ecd965be11ca61bdb17c872d9e6dfa571021d85dfadd",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_scarshield_veterans/provenance.json",
+      "source_sha256": "dac7f1767b480f9bc9421230e60abf455559ff6239b5dc72d3dab4c5b1133c57",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_scarshield_veterans/provenance.json",
       "sha256": "76aa092f693eb3e903d9db417c464399b7a741fdbc92d95f8730cc381a19f8d4"
     },
     "unit_neutral_ashdart_stalkers": {

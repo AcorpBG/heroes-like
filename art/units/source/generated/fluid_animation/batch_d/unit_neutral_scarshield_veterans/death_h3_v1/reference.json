@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          203,
+          488
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b588ad814017cb9257d5bfe27f4ee10a701e4e938f87a529a0ed8192a4fa9405",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d5b33372c68f277cd9efd385aa1bfa915604c47e4fe19e34326b68aa0765d196",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            858,
+            330,
+            1160
+          ]
+        ],
+        "anchor": [
+          167,
+          1125
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ed0c188d198b24448a70e02232c326fa6b233e1a3610d177a8b0b9fe1eb42b1c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9a8f7b3208c376b85602b2ce3e85e1989439be8b4b3151f2ede576e256cd306c",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_scarshield_veterans/alpha/poses.png",
+        "rects": [
+          [
+            750,
+            982,
+            1254,
+            1205
+          ]
+        ],
+        "anchor": [
+          1001,
+          1168
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ed0c188d198b24448a70e02232c326fa6b233e1a3610d177a8b0b9fe1eb42b1c",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "16ee4b3cc3fc82a7a76ba6dd9dfc20ee6ed870a582293c1f91101f55c460faa7",
+      "runtime_source_scale": 0.52
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

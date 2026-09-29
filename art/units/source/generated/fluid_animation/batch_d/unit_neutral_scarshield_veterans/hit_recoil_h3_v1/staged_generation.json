@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "285742e3c203116a799bd27c5866da2e3bd1cb53313f433132302d1d670ce87b",
+  "latent_sha256": "66106ae1f98ddd05e75c9e29f2a32d5fa676ae432c051677bf4b7036ebc6db91",
+  "decode_workflow_sha256": "c0d44bcdaf84add65fc9f2243ecc3bf964873e60b01b207f81ac4f2ec3e84b1e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scarshield_h3\\hit_recoil_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

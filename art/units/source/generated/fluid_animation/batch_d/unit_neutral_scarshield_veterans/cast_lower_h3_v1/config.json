@@ -1,0 +1,73 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093303,
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/cast_h3_v1/matte/rgba_074.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/cast_h3_v1/matte/rgba_083.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Scarshield Veteran, a broad-shouldered adult human man with tousled dark brown hair, short beard and stern weathered face. Dark layered steel and bronze armor, grey neck scarf, torn red cape and red cloth skirt, brown armored boots. Exactly two arms and two legs. His right hand at screen left holds ONE short heavy square-headed warhammer with a brown handle, orange seams and red cloth ties. His left arm at screen right carries ONE tall pointed dark shield with a bronze central boss, jagged metal edge and orange seams. Keep the same solid hammer, shield outline, armor and face throughout. The hammer stays in the right hand and shield attached to the left arm. Start with the hammer held diagonally across the chest in the first reference. Over the whole shot, slowly lower the right hand and hammer to the right thigh. Continuously open the bent right elbow and rotate the wrist so the same short solid hammer traces a gradual downward arc. Show many intermediate positions between chest, waist, hip and thigh. Finish at the supplied ready pose. The right hand stays closed around the handle. The left shield arm and both planted boots remain steady. This is a controlled nonmagical readiness gesture, not an attack or an instantaneous drop. Do not raise the hammer again.  Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and equipment stay visible. Uniform pure saturated green RGB0,255,0 fills the entire background. Continuous physical joint movement, stable ground contacts, only this one warrior in the shot.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 6,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      4.0,
+      3.0
+    ]
+  },
+  "correction_reason": "Original support frames 75-76 jump directly from chest to hip. Retain the raising gesture and replace the lowering interval."
+}

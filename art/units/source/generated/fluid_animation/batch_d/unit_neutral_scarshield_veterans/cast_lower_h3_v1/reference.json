@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_scarshield_veterans",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/cast_h3_v1/matte/rgba_074.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "56ce5e2c6b757e78e27b72b2667ef2e2ea6c26decb111174360e14f6ef98c8b3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62bef5b533a31ed4c84d5698a33e6e18a8b8e76612d0524956ba31e2a9c7a20e",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/cast_h3_v1/matte/rgba_083.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "affa0a31d57b560f909b1414ce82a3a149f545e7dc70df3359593a24ec0e6586",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "58face9c8ce08d4b08412ef035a678f5533d89dde5ee664ab9df4091ed45d1d1",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
