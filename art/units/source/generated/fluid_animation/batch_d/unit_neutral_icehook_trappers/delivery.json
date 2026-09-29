@@ -1,0 +1,25 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "takes": [
+    "move_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all992 original extracted frames chronologically, enlarged hook grips/rope/alpha edges, both attack joins, all248 selected native phases and eight retained idle poses, plus three offscreen candidate battle renders. Reciprocal gait, backward recoil/recovery, held hook/palm guard, physical rope-loop support and grounded side fall retain identity and fixed anatomical scale. Abrupt initial attack windup and compressed swing excluded; dedicated original windup/strike videos join to the valid recovery. Candidate focused Windows checks836 pass, zero failures. Review uses complete chronological frames and native phase renders, not continuous playback or manual playtesting."
+  },
+  "attack_segments": [
+    "anticipation_h3_v1",
+    "strike_h3_v1",
+    "attack_h3_v1"
+  ],
+  "attack_frame_msec": 30,
+  "attack_contact_frame": 67,
+  "attack_edit": "Original chronological windup12..88/2 -> downswing0..84/3 -> recovery90..104, matching original posed boundaries; no duplicated/reversed/interpolated frames. Retimed slower generation into2490ms gameplay attack."
+}

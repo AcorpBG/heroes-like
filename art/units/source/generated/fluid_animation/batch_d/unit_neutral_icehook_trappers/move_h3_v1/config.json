@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093030,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_icehook_trappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        489
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Icehook Trapper, an athletic adult human man with short tousled brown hair and stubble. Ivory fur-trimmed winter leather coat, vivid blue scarf, blue-grey trousers, crossed brown leather straps, brown bracers and wrapped leather boots. Rope coils remain attached at his belt. Exactly two arms and two legs. His right hand at screen left grips ONE short icehook by its brown handle, with one curved silver-blue hooked blade. His left hand at screen right is free. Preserve the same compact hooked tool, grip, face, fur and clothing throughout. Walk steadily in place for three full reciprocal gait cycles. Alternate both boots through contact, weight-bearing, passing and lift. The free arm counter-swings naturally while the tool hand carries the short icehook pointed down away from the legs. Scarf and coat tails follow the stride subtly. Finish in the starting stance. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and equipment remain visible. Uniform pure saturated green RGB0,255,0 fills the entire background throughout. The only subject is this trapper, physical joints, stable foot contacts and continuous equipment geometry.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 7,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0
+    ]
+  }
+}

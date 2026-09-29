@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_icehook_trappers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_091",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_093",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_095",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_097",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_099",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_101",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "attack_h3_103",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "attack_h3_104",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/original_lossless.mkv",
+          "sha256": "795cb00a0e3d9c3cf816a1d30752262f470bbe2ff24b7dbdb2a30eab95e658ab"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/original.json",
+          "sha256": "e5cf003c3cc4a6a24fbdb2f969f5cfcc28201a23aee43ef911ba7d6751fa5e01"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/workflow_api.json",
+          "sha256": "8995c698f43e43f38ad278239e844f9ddd7106c93f7a336ad214f6f75ae0fe10"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/prompt.txt",
+          "sha256": "41e77bd3306d5de53a82f33572ff5897bcd69595278b14b2e2d0d8c81e0d6859"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/reference.json",
+          "sha256": "cf59503fe715209998a0f52856960e730ee5f2ba6f5f786ad7cfa46281688402"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/matte.json",
+          "sha256": "4f037f9fab62d7c358cb5c074cba3501eef8d614e86e2d4a32ed408831cf20bd"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/staged_generation.json",
+          "sha256": "2ea03e13b814073c0873b228689ce6bfcbdc40dda5e68f3e77c094ca062a1ab1"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "8cf3d871fc07b32da9d6448cb13f658d2ff30702e8b6f3bfbe678096b5a2ce03"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/sampling_submission.json",
+          "sha256": "87c3c08ffbc38b4dbd8ad78a57fb0aa5855e311c46b64e41aafb5f81e56298fb"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/sampling_history.json",
+          "sha256": "66c7fb1424cd2d0f66fb36cc156b382173379d1643f09b3f86b36202891e2d00"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_icehook_trappers/attack_h3_v1/original.latent",
+          "sha256": "f729c5079dfacc94c25486466dd8995245a22d93d216f84747feec293565bdcd"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Only original recovery frames90..104 retained. Reject earlier abrupt windup and compressed strike; preserve discarded footage as original provenance. Full original chronology and enlarged hands/hook reviewed; native phases reviewed;836 candidate checks pass. Include the two original contact-settling frames before recovery for the reviewed join."
+      }
+    }
+  ]
+}

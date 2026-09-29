@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "hook_windup",
+        "source": "art/animation/source/poses/unit_neutral_icehook_trappers/continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+        "rects": [
+          [
+            0,
+            0,
+            511,
+            508
+          ]
+        ],
+        "anchor": [
+          233,
+          479
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3aee9302e05eb5f7b4ade2363affe38a95c629a9e99499b8afd693a7f111cbc7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "1787ee6bf0c1393ce60bb1696fe21b92afae7e5ccd37ae9f804d45e253be531d",
+      "runtime_source_scale": 0.43
+    },
+    {
+      "source_frame": {
+        "name": "hook_contact",
+        "source": "art/animation/source/poses/unit_neutral_icehook_trappers/continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+        "rects": [
+          [
+            512,
+            0,
+            1024,
+            508
+          ]
+        ],
+        "anchor": [
+          760,
+          473
+        ],
+        "scale": 0.86,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3aee9302e05eb5f7b4ade2363affe38a95c629a9e99499b8afd693a7f111cbc7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9e5203002c1f06e846071c5ffbed1c4ec78e4518f81bd5b5b09cc2ca78e0ed52",
+      "runtime_source_scale": 0.43
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

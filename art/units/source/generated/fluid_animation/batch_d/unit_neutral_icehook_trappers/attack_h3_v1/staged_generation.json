@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8cf3d871fc07b32da9d6448cb13f658d2ff30702e8b6f3bfbe678096b5a2ce03",
+  "latent_sha256": "f729c5079dfacc94c25486466dd8995245a22d93d216f84747feec293565bdcd",
+  "decode_workflow_sha256": "8995c698f43e43f38ad278239e844f9ddd7106c93f7a336ad214f6f75ae0fe10",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "icehook_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -3226,25 +3226,25 @@
         216
       ],
       "painted_extent": 211,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_icehook_trappers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_icehook_trappers.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        172,
-        20,
-        336,
-        247
+        72,
+        44,
+        236,
+        271
       ],
-      "source_sha256": "1a9887d6d7a0d9e9ebd989bbdb7914c77eea6ffe681913e7713f3285837bbdcf",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_icehook_trappers/provenance.json",
+      "source_sha256": "54db14dc79694689770f6f3be6f5ad9a70a2543549ea0bdb7f9a7d4ea1c37b4a",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_icehook_trappers/provenance.json",
       "sha256": "5ca6a422cbef329dd1d4709820995d8d3563ce2de8e7209a59796323c25c7681"
     },
     "unit_neutral_whitepike_keepers": {

@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_icehook_trappers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          194,
+          489
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c4e35960deebe5d9ba922f1cff0a5a85ec01be658f8e982e7106298206623d0a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62fbd96b459ee817bd739a9246c29eac6621ce4ab586affbac5e45b8803feaea",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_icehook_trappers/alpha/poses-unaccepted.png",
+        "rects": [
+          [
+            394,
+            698,
+            715,
+            991
+          ]
+        ],
+        "anchor": [
+          561,
+          960
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "975df507fb4254fc338ba5613778989fb60f0928b3bcfd8f6763e939f76fc844",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "30e0e8021d0d023711aff9386b6cec2f9ec463ed55a4d114cc8e0fe4a8b933c1",
+      "runtime_source_scale": 0.61
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_icehook_trappers/alpha/poses-unaccepted.png",
+        "rects": [
+          [
+            1073,
+            761,
+            1536,
+            884
+          ],
+          [
+            1105,
+            884,
+            1536,
+            950
+          ]
+        ],
+        "anchor": [
+          1301,
+          919
+        ],
+        "scale": 1.22,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "975df507fb4254fc338ba5613778989fb60f0928b3bcfd8f6763e939f76fc844",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5e5b688208c9c7d902d6111b75ebbf0d8c5c592f627f19ef9cff3670ce5c06b1",
+      "runtime_source_scale": 0.61
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

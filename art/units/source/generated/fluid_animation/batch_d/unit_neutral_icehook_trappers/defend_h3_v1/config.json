@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_icehook_trappers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093033,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_icehook_trappers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        194,
+        489
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_icehook_trappers/continuity-alpha/matched-icehook-strike-guard-and-travel.png",
+      "rects": [
+        [
+          512,
+          509,
+          1024,
+          1009
+        ]
+      ],
+      "anchor": [
+        771,
+        987
+      ],
+      "scale": 0.43,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      49,
+      1
+    ],
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Icehook Trapper, an athletic adult human man with short tousled brown hair and stubble. Ivory fur-trimmed winter leather coat, vivid blue scarf, blue-grey trousers, crossed brown leather straps, brown bracers and wrapped leather boots. Rope coils remain attached at his belt. Exactly two arms and two legs. His right hand at screen left grips ONE short icehook by its brown handle, with one curved silver-blue hooked blade. His left hand at screen right is free. Preserve the same compact hooked tool, grip, face, fur and clothing throughout. Brace for danger. Bend both knees and bring the icehook in front of the chest in a compact protective grip. Lift the open left palm in front of the face. End holding this guarded crouch, both boots planted and the short hook still held by the right hand. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and equipment remain visible. Uniform pure saturated green RGB0,255,0 fills the entire background throughout. The only subject is this trapper, physical joints, stable foot contacts and continuous equipment geometry.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0,
+      7.0
+    ]
+  }
+}
