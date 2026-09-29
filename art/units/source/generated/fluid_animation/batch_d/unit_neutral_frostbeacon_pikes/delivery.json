@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v3",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all 1240 original chronological RGB frames across ten takes, enlarged hands/pike/alpha details and every native Godot overview pose. Accepted six dedicated H3 actions: reciprocal move35, two-handed thrust59 with 100ms contact at source48 and full recovery, physical hit33, held defense23, physical salute44 and continuous death45 with persistent grounded corpse. Rejected three magenta takes for background cycling (hit also added a beam), and attack-v2 for source-tip clipping. Green plates preserve the blue/silver/brown original design; attack-v3 adds128px overhead clearance without rescaling anatomy. Both hands, distinct pike ends, original scale and anatomical anchors remain coherent. Existing eight articulated idle paintings and overworld timing retained. Candidate809 focused Windows checks passed; native battle phases reviewed. Review uses chronological original frames and native phases, not continuous browser playback or a manual game playtest. No full suite or Linux run claimed."
+  }
+}

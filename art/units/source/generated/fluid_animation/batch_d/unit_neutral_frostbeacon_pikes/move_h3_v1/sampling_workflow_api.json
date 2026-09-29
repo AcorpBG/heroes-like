@@ -1,0 +1,135 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "ONE original human Frostbeacon Pikeman, an adult soldier facing screen right in elevated three-quarter view. Preserve the blue fur-trimmed hood, blue quilted long coat with pale fur edging, silver steel chest and shoulder plates, small round amber chest badge, brown leather gloves, belt, trousers and fur-cuffed brown boots. Exactly two arms, two hands and two legs. Hold ONE long straight rigid brown wooden pike with ONE broad steel spearhead on one end and ONE small metal butt spike on the other. The large spearhead and tiny butt spike NEVER swap ends, grow, bend or disappear. Hands grip the same continuous shaft naturally. No shield, sword, new weapon, extra limbs or equipment. Keep the original adult proportions, body size and painted materials. Walk in place through two complete reciprocal gait cycles. Alternate near and far knees and boots through forward contact, loading, passing, lift and opposite contact. Both hands carry the pike diagonally with its broad spearhead toward upper screen right and butt toward lower screen left, without spinning it. Keep the torso centered for engine-driven travel, boots visibly lifting and planting, coat hem swaying gently. Finish in the starting gait phase. Locked orthographic camera and fixed body scale. Full body, hands and both pike ends stay inside the canvas. Perfectly flat uniform bright MAGENTA background throughout all frames. No changing background colors, scenery, shadow, camera motion, zoom, magic, glow, sparks, smoke or projectile. Boots remain grounded except the deliberately lifted walking or falling limb.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092940
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "frostbeacon_move_h3_v1_guide_0.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "frostbeacon_h3/move_h3_v1/sampled"
+    }
+  }
+}

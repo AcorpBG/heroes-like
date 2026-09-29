@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          210,
+          504
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b313eb64efd2e273ce0e74e60c06e327ba479967545f892b622d9a38b9a2224a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dd6c8a6cd11b30b5c018a41e265f8f2afec49ca9d6823c7d75d97d4b8eeeb8c9",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+        "rects": [
+          [
+            313,
+            820,
+            563,
+            1170
+          ]
+        ],
+        "anchor": [
+          425,
+          1148
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "67cdf0a03f27f4f2caff45a5b894a0405dfd67b63cdbb2d77d35d96b827ffa15",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+        "rects": [
+          [
+            565,
+            960,
+            889,
+            1150
+          ]
+        ],
+        "anchor": [
+          717,
+          1128
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a7ee492be32474e4426215870a3b7bed49e36a3dfc2d9e4040d04474f82a471a",
+      "runtime_source_scale": 0.62
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+        "rects": [
+          [
+            900,
+            990,
+            1254,
+            1145
+          ]
+        ],
+        "anchor": [
+          1065,
+          1122
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "dd542d9786793d0c534715695e1d7966ccd3e0cc5a2473b28cad0bae1ea0b9f8",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

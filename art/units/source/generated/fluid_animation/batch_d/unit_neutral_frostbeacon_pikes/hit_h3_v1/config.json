@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 34,
+  "seed": 2026092942,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        210,
+        504
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          820,
+          313,
+          1170
+        ]
+      ],
+      "anchor": [
+        154,
+        1150
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      43,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original human Frostbeacon Pikeman, an adult soldier facing screen right in elevated three-quarter view. Preserve the blue fur-trimmed hood, blue quilted long coat with pale fur edging, silver steel chest and shoulder plates, small round amber chest badge, brown leather gloves, belt, trousers and fur-cuffed brown boots. Exactly two arms, two hands and two legs. Hold ONE long straight rigid brown wooden pike with ONE broad steel spearhead on one end and ONE small metal butt spike on the other. The large spearhead and tiny butt spike NEVER swap ends, grow, bend or disappear. Hands grip the same continuous shaft naturally. No shield, sword, new weapon, extra limbs or equipment. Keep the original adult proportions, body size and painted materials. Perform one compact physical recoil: shoulders pull backward, elbows flex, torso leans back and knees absorb the motion, then recover to ready. Retain the pike in both hands in the same upper-left broad-head orientation throughout. Boots stay planted. No visible attacker, impact ray or falling. Locked orthographic camera and fixed body scale. Full body, hands and both pike ends stay inside the canvas. Perfectly flat uniform bright MAGENTA background throughout all frames. No changing background colors, scenery, shadow, camera motion, zoom, magic, glow, sparks, smoke or projectile. Boots remain grounded except the deliberately lifted walking or falling limb.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

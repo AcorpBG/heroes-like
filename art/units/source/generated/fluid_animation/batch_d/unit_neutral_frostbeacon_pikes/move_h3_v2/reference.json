@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+        "rects": [
+          [
+            626,
+            0,
+            927,
+            425
+          ]
+        ],
+        "anchor": [
+          750,
+          405
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "767c1b4df3ff77c6777f816665030004e6e88dfeb4385b35d13ef3985007f7bf",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

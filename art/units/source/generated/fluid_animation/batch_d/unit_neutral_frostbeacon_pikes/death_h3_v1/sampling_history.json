@@ -1,0 +1,263 @@
+{
+  "prompt": [
+    860,
+    "722b2c3d-6c9e-44aa-9d3c-e29f92b52c32",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original human Frostbeacon Pikeman, an adult soldier facing screen right in elevated three-quarter view. Preserve the blue fur-trimmed hood, blue quilted long coat with pale fur edging, silver steel chest and shoulder plates, small round amber chest badge, brown leather gloves, belt, trousers and fur-cuffed brown boots. Exactly two arms, two hands and two legs. Hold ONE long straight rigid brown wooden pike with ONE broad steel spearhead on one end and ONE small metal butt spike on the other. The large spearhead and tiny butt spike NEVER swap ends, grow, bend or disappear. Hands grip the same continuous shaft naturally. No shield, sword, new weapon, extra limbs or equipment. Keep the original adult proportions, body size and painted materials. Collapse continuously: knees buckle, lower onto one knee, then bring the torso and hip down toward screen right. The pike descends with the hands and rotates onto the ground, with the broad steel spearhead finally pointing right. The soldier rolls onto the side, head at screen right, boots extending left. Both hands release or rest naturally beside the grounded straight shaft. End as one fully grounded motionless body and one pike. No recovery, floating weapon, extra limb or disappearing equipment. Locked orthographic camera and fixed body scale. Full body, hands and both pike ends stay inside the canvas. Perfectly flat uniform bright GREEN background throughout all frames. No changing background colors, scenery, shadow, camera motion, zoom, magic, glow, sparks, smoke or projectile. Boots remain grounded except the deliberately lifted walking or falling limb.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026093045
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "frostbeacon_death_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "frostbeacon_death_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "frostbeacon_death_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "frostbeacon_death_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 34,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 83,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "frostbeacon_h3/death_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "frostbeacon_h3",
+      "create_time": 1790651712546
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "frostbeacon_h3\\death_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "722b2c3d-6c9e-44aa-9d3c-e29f92b52c32",
+          "timestamp": 1790651712547
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "722b2c3d-6c9e-44aa-9d3c-e29f92b52c32",
+          "timestamp": 1790651712574
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "722b2c3d-6c9e-44aa-9d3c-e29f92b52c32",
+          "timestamp": 1790651882626
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

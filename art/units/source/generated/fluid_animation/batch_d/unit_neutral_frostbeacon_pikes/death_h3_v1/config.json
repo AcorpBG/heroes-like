@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 13,
+  "seed": 2026093045,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        210,
+        504
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+      "rects": [
+        [
+          313,
+          820,
+          563,
+          1170
+        ]
+      ],
+      "anchor": [
+        425,
+        1148
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+      "rects": [
+        [
+          565,
+          960,
+          889,
+          1150
+        ]
+      ],
+      "anchor": [
+        717,
+        1128
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+      "rects": [
+        [
+          900,
+          990,
+          1254,
+          1145
+        ]
+      ],
+      "anchor": [
+        1065,
+        1122
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      83,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original human Frostbeacon Pikeman, an adult soldier facing screen right in elevated three-quarter view. Preserve the blue fur-trimmed hood, blue quilted long coat with pale fur edging, silver steel chest and shoulder plates, small round amber chest badge, brown leather gloves, belt, trousers and fur-cuffed brown boots. Exactly two arms, two hands and two legs. Hold ONE long straight rigid brown wooden pike with ONE broad steel spearhead on one end and ONE small metal butt spike on the other. The large spearhead and tiny butt spike NEVER swap ends, grow, bend or disappear. Hands grip the same continuous shaft naturally. No shield, sword, new weapon, extra limbs or equipment. Keep the original adult proportions, body size and painted materials. Collapse continuously: knees buckle, lower onto one knee, then bring the torso and hip down toward screen right. The pike descends with the hands and rotates onto the ground, with the broad steel spearhead finally pointing right. The soldier rolls onto the side, head at screen right, boots extending left. Both hands release or rest naturally beside the grounded straight shaft. End as one fully grounded motionless body and one pike. No recovery, floating weapon, extra limb or disappearing equipment. Locked orthographic camera and fixed body scale. Full body, hands and both pike ends stay inside the canvas. Perfectly flat uniform bright GREEN background throughout all frames. No changing background colors, scenery, shadow, camera motion, zoom, magic, glow, sparks, smoke or projectile. Boots remain grounded except the deliberately lifted walking or falling limb.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

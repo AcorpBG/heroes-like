@@ -2690,29 +2690,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        70.0,
+        70,
         226
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_frostbeacon_pikes.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_frostbeacon_pikes.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        186,
-        10,
-        340,
-        247
+        62,
+        78,
+        216,
+        315
       ],
-      "source_sha256": "4c80fc9bb21080947789489fec9f4e736aba022c5ec1f30081620152d15a861f",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_frostbeacon_pikes/provenance.json",
+      "source_sha256": "ef4b430ec0db7780a72348050e161f8aad70a7dc93a8fbaee62ee37e00a74834",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_frostbeacon_pikes/provenance.json",
       "sha256": "3505e42316ba83adde834775de649684263f018c70cbdb5a4d8046e1c7c7e544"
     },
     "unit_neutral_snowglass_markers": {

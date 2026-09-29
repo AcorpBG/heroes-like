@@ -1,0 +1,147 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          210,
+          504
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b313eb64efd2e273ce0e74e60c06e327ba479967545f892b622d9a38b9a2224a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "517e7428d3e4e1a3ce994adb902e31b7f0d0debc04d91fff9635c07aad9e7166",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_ready",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+        "rects": [
+          [
+            1270,
+            453,
+            1448,
+            510
+          ],
+          [
+            749,
+            510,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          1036,
+          1033
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0f41bf9c0c06941ff5e982831d45e1b2efbf43452a10aa4a9c048faa28a6d9b1",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "pike_windup",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+        "rects": [
+          [
+            0,
+            0,
+            698,
+            480
+          ]
+        ],
+        "anchor": [
+          236,
+          459
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "6fb6e3385794124207eff52f4988dfc168084f9d4991a856d08c01a7ca225620",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "pike_thrust",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+        "rects": [
+          [
+            698,
+            0,
+            1448,
+            453
+          ],
+          [
+            698,
+            453,
+            1270,
+            479
+          ]
+        ],
+        "anchor": [
+          954,
+          457
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "36956333422a762b9f076a6d287f61d030ae9189b4fd9be7f317b4f6add8343a",
+      "runtime_source_scale": 0.36
+    },
+    {
+      "source_frame": {
+        "name": "pike_recovery",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/continuity-alpha/connected-full-pike-thrust.png",
+        "rects": [
+          [
+            0,
+            480,
+            748,
+            1086
+          ]
+        ],
+        "anchor": [
+          307,
+          1023
+        ],
+        "scale": 0.72,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c4de29f7df042f15a2697b01dfe50bdd74debffc0a350978c2cec61fd46c7ee4",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "e72da248c5d0d1b124e575c9ffbf9e37559bce9f238f1df0ca04abadd13d8243",
+      "runtime_source_scale": 0.36
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    430,
+    688
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

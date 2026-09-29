@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "c3b2c03a8c81f910909da37de21d100a0cc72b6f809cab8247d8c6217a26d932",
+  "latent_sha256": "b96a85dba327fe08231bfc6d6b3a067957f150e724cbe75d1ba12b37b805e4ad",
+  "decode_workflow_sha256": "85d2499f7b6bb241babef990c6959ea9ac093ccb7844cd2c1f86da7742220827",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "frostbeacon_h3\\attack_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

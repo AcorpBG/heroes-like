@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          210,
+          504
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b313eb64efd2e273ce0e74e60c06e327ba479967545f892b622d9a38b9a2224a",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dd6c8a6cd11b30b5c018a41e265f8f2afec49ca9d6823c7d75d97d4b8eeeb8c9",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_brace",
+        "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+        "rects": [
+          [
+            953,
+            480,
+            1254,
+            611
+          ],
+          [
+            990,
+            611,
+            1254,
+            815
+          ]
+        ],
+        "anchor": [
+          1094,
+          786
+        ],
+        "scale": 1.24,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "fb02d33692a383cc1b29db3133bb20bf503c9de3b986924a9b425c91f1a386c6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "93a66960beddbe5101a46306c6c0fc88565df09ac1d260470aa0feee7fc4df63",
+      "runtime_source_scale": 0.62
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,11 @@
+{
+  "reason": "Earlier magenta takes cycle background hue, overlapping foreground and preventing safe extraction.",
+  "source_take": "death_h3_v1",
+  "opaque_interior_green_excess": [
+    4,
+    6,
+    13,
+    6
+  ],
+  "method": "Original RGBA alpha>240 eroded three pixels; green-minus-max(red,blue) maximum, no per-frame color manipulation."
+}

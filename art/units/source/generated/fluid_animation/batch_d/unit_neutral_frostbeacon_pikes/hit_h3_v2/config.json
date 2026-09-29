@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_frostbeacon_pikes",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 6,
+  "seed": 2026093042,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        210,
+        504
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_frostbeacon_pikes/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          820,
+          313,
+          1170
+        ]
+      ],
+      "anchor": [
+        154,
+        1150
+      ],
+      "scale": 0.62,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      43,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original human Frostbeacon Pikeman, an adult soldier facing screen right in elevated three-quarter view. Preserve the blue fur-trimmed hood, blue quilted long coat with pale fur edging, silver steel chest and shoulder plates, small round amber chest badge, brown leather gloves, belt, trousers and fur-cuffed brown boots. Exactly two arms, two hands and two legs. Hold ONE long straight rigid brown wooden pike with ONE broad steel spearhead on one end and ONE small metal butt spike on the other. The large spearhead and tiny butt spike NEVER swap ends, grow, bend or disappear. Hands grip the same continuous shaft naturally. No shield, sword, new weapon, extra limbs or equipment. Keep the original adult proportions, body size and painted materials. The soldier performs one acted balance-recovery gesture: bend the knees, lean the shoulders and head backward, tighten both elbows and keep the pike close. Then bring the chest forward and straighten to the starting ready stance. The hands keep the broad spearhead upper left and small butt spike lower right. Both boots stay planted. One compact body gesture only. Locked orthographic camera, fixed body size and ground anchor. Uniform solid bright GREEN background for every frame. The soldier and held pike are the only visible objects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
