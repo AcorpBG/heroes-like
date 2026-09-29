@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          189,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b06ef80d4aad2b0b96a5c63b2f3c4e6c7c0a7a2eb4db8b2125c666733bbc2674",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8831e30497f127535181bc96c455142e6beae382aeba99b8a3c61db1a8771458",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "pot_gather",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            0,
+            623,
+            311,
+            940
+          ]
+        ],
+        "anchor": [
+          171,
+          926
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b4c8ebdcc645ffaae164db4e1699101a3d643fe0cae7b62f3e15da48350031f9",
+      "runtime_source_scale": 0.6587999999999999
+    },
+    {
+      "source_frame": {
+        "name": "pot_windup",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            312,
+            623,
+            626,
+            940
+          ]
+        ],
+        "anchor": [
+          474,
+          931
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ab7384aff1f746848587d183e7f195efda4b9598a920f8fcaa0814f49ffbf850",
+      "runtime_source_scale": 0.6587999999999999
+    },
+    {
+      "source_frame": {
+        "name": "pot_release",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            627,
+            623,
+            943,
+            940
+          ]
+        ],
+        "anchor": [
+          779,
+          922
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "4e8c692147d38b69fb8b9ea96a7b01a786076659a61930e8810b30ece3f7d11a",
+      "runtime_source_scale": 0.6587999999999999
+    },
+    {
+      "source_frame": {
+        "name": "pot_recovery",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            944,
+            623,
+            1254,
+            940
+          ]
+        ],
+        "anchor": [
+          1101,
+          928
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "8932e8cb0bc8bb1b946173ea562aaab2a19b257c02df9c736e379ec9d98e3b66",
+      "runtime_source_scale": 0.6587999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

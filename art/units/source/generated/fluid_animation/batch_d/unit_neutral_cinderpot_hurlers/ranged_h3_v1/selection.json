@@ -1,0 +1,66 @@
+{
+  "source_frames": [
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    28,
+    30,
+    32,
+    34,
+    36,
+    38,
+    40,
+    47,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    70,
+    77,
+    80,
+    82,
+    84,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110
+  ],
+  "frame_msec": 42,
+  "contact_frame": 21,
+  "runtime_projectile_separation": {
+    "58": {
+      "split_x": 618,
+      "reason": "Fully detached thrown pot is rendered by the game projectile layer; vertical gap contains no subject pixels. Original video and complete matte preserved."
+    },
+    "59": {
+      "split_x": 690,
+      "reason": "Fully detached thrown pot is rendered by the game projectile layer; vertical gap contains no subject pixels. Original video and complete matte preserved."
+    },
+    "60": {
+      "split_x": 750,
+      "reason": "Fully detached thrown pot is rendered by the game projectile layer; vertical gap contains no subject pixels. Original video and complete matte preserved."
+    }
+  },
+  "review_note": "All124 original phases and enlarged gather/windup/release53-61/recovery87-102 reviewed. One pot is gripped, raised overhead, released once and followed by open-hand recovery. Keep every rapid-release phase; condense aim/followthrough holds. Original disconnected pot on58-60 separated only across verified empty columns to leave projectile ownership to runtime. Native review pending."
+}

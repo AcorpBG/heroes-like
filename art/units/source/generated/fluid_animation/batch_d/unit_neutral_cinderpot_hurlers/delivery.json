@@ -1,0 +1,19 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2",
+    "ranged_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Autonomously reviewed all992 original RGB frames across eight H3 takes, chronological action phases, enlarged equipment/anatomy/alpha and all native Godot overview rows plus three battle phases. Seven selected actions retain continuous limb motion, original hood/pots/cloth, reciprocal gait, punch contact/recovery, one thrown pot release, dedicated recoil/guard/readiness and grounded collapse/corpse. Rejected hue-cycling death-v1; green death-v2 uses measured interior chroma to unmix edge spill. Punch impact held100ms after focused shell playback exposed a missed42ms contact; final769 candidate checks pass. Existing eight-pose articulated idle retained. No continuous-video or manual-playtest claim."
+  }
+}

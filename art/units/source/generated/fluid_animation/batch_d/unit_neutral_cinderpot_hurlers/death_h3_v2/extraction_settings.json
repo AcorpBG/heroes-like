@@ -1,0 +1,4 @@
+{
+  "protected_foreground_chroma": 5,
+  "reason": "Green band38 came from legacy corpse edge contamination. Actual opaque costume interiors, alpha>240 eroded three source pixels, measure maxima4,2,5 in the submitted guides. Preserve that measured band and unmix green boundary spill; no geometry changes."
+}

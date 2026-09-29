@@ -1,0 +1,76 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 10,
+  "seed": 2026092914,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        189,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1343,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      43,
+      1
+    ],
+    [
+      72,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original human Cinderpot Hurler, a lean adult hooded fantasy skirmisher facing screen right in elevated three-quarter view. Preserve the dark charcoal hood with thin orange edging, shadowed face and nose, layered brown leather shoulder armor, wrapped forearms and hands, brown armored boots, dark trousers, orange hanging waist cloth, leather belts and the small round orange clay pots strapped across the chest. Exactly two arms, two hands and two legs. No sword, staff, shield, helmet or added equipment. Keep the same lean adult anatomy, silhouette, pot belt, hood, orange trim and hand-painted materials. Perform a physical readiness signal, not a spell: lift both hands from the belt to chest level, deliberately check and tighten the leather wrist wraps, briefly hold the prepared fists together in front of the chest, then lower them to the initial belt-level ready pose. Keep all clay pots strapped in place; no throwing or conjuring. Both boots remain planted. Locked orthographic camera, unchanged body scale and root location. Full body and both hands remain inside the canvas. Perfectly flat uniform bright MAGENTA background throughout every frame, never another color. No scenery, ground shadow, camera motion, zoom, extra people, extra limbs, smoke, fire, sparks, beams or magic effects. Only this character moves; keep boots grounded except the explicitly lifted walking or falling limb.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

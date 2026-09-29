@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "7dc8a0cb7c233059a9ca2216fb056e932fae85188606c51f044673d1f8be6dd0",
+  "latent_sha256": "e8424ebffd0c3646438a40cabb445cd97cb95e109e789d159e9ab772c1a41766",
+  "decode_workflow_sha256": "9a182d9de3423084a751400d73bd1b347b6dbe7612fa36a82e2c98e18e2fa91f",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cinderpot_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

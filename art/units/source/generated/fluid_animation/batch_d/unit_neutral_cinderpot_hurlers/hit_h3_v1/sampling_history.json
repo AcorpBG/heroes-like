@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    839,
+    "35910e7c-38ec-48a4-917f-6ef1bd96367c",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original human Cinderpot Hurler, a lean adult hooded fantasy skirmisher facing screen right in elevated three-quarter view. Preserve the dark charcoal hood with thin orange edging, shadowed face and nose, layered brown leather shoulder armor, wrapped forearms and hands, brown armored boots, dark trousers, orange hanging waist cloth, leather belts and the small round orange clay pots strapped across the chest. Exactly two arms, two hands and two legs. No sword, staff, shield, helmet or added equipment. Keep the same lean adult anatomy, silhouette, pot belt, hood, orange trim and hand-painted materials. Act one compact recoil gesture: tip the torso backward, contract both shoulders, bend the elbows and knees, then regain balance and return to ready. Boots remain planted. Hands briefly spread away from the belt and recover naturally. No visible cause, attacker or projectile. Do not fall. Locked orthographic camera, unchanged body scale and root location. Full body and both hands remain inside the canvas. Perfectly flat uniform bright MAGENTA background throughout every frame, never another color. No scenery, ground shadow, camera motion, zoom, extra people, extra limbs, smoke, fire, sparks, beams or magic effects. Only this character moves; keep boots grounded except the explicitly lifted walking or falling limb.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092912
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cinderpot_hit_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "cinderpot_hit_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 38,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "cinderpot_h3/hit_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "cinderpot_h3",
+      "create_time": 1790646938556
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "cinderpot_h3\\hit_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "35910e7c-38ec-48a4-917f-6ef1bd96367c",
+          "timestamp": 1790646939131
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "35910e7c-38ec-48a4-917f-6ef1bd96367c",
+          "timestamp": 1790646939143
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "35910e7c-38ec-48a4-917f-6ef1bd96367c",
+          "timestamp": 1790647130652
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          189,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b06ef80d4aad2b0b96a5c63b2f3c4e6c7c0a7a2eb4db8b2125c666733bbc2674",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8831e30497f127535181bc96c455142e6beae382aeba99b8a3c61db1a8771458",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

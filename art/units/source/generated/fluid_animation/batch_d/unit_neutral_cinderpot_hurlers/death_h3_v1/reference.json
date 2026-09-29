@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          189,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b06ef80d4aad2b0b96a5c63b2f3c4e6c7c0a7a2eb4db8b2125c666733bbc2674",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8831e30497f127535181bc96c455142e6beae382aeba99b8a3c61db1a8771458",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            312,
+            970,
+            621,
+            1210
+          ]
+        ],
+        "anchor": [
+          464,
+          1193
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b7ef7e419f1c947d0f054790bd26bd75ff28899f9f2fb5ad298e30726d0e566a",
+      "runtime_source_scale": 0.6587999999999999
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+        "rects": [
+          [
+            622,
+            1010,
+            916,
+            1200
+          ]
+        ],
+        "anchor": [
+          764,
+          1180
+        ],
+        "scale": 1.3175999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "866cabfd8cfe73fa4cd467dca52139973c5c538437119cebcb567dc188c498b2",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "534740b067f190c2c3ead494a67b42c93c1e245972bf675a58a32c04f195345c",
+      "runtime_source_scale": 0.6587999999999999
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_left",
+        "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+        "rects": [
+          [
+            670,
+            770,
+            1374,
+            1145
+          ]
+        ],
+        "anchor": [
+          1006,
+          1088
+        ],
+        "scale": 0.7320000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "89e92537c8ae1cdf66f92d4f239c7b063f432649fab799dafa24e87a6f1ab0df",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "438a6c1579901489a4194b0cd490f71716082ef535db03a09a4f228acc6f5c1b",
+      "runtime_source_scale": 0.36600000000000005
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

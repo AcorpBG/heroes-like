@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_neutral_cinderpot_hurlers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 38,
+  "seed": 2026092961,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        189,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/alpha/poses-corrected.png",
+      "rects": [
+        [
+          312,
+          970,
+          621,
+          1210
+        ]
+      ],
+      "anchor": [
+        464,
+        1193
+      ],
+      "scale": 0.6588,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_cinderpot_hurlers/continuity-alpha/passing-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          670,
+          770,
+          1374,
+          1145
+        ]
+      ],
+      "anchor": [
+        1006,
+        1088
+      ],
+      "scale": 0.36600000000000005,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original human Cinderpot Hurler, a lean adult hooded fantasy skirmisher facing screen right in elevated three-quarter view. Preserve the dark charcoal hood with thin orange edging, shadowed face and nose, layered brown leather shoulder armor, wrapped forearms and hands, brown armored boots, dark trousers, orange hanging waist cloth, leather belts and the small round orange clay pots strapped across the chest. Exactly two arms, two hands and two legs. No sword, staff, shield, helmet or added equipment. Keep the same lean adult anatomy, silhouette, pot belt, hood, orange trim and hand-painted materials. One continuous physical collapse. Knees buckle as the shoulders sag. Lower onto one knee with a supporting hand on the floor, then smoothly tip the hip and torso onto the left side. Lower the head toward screen left as the legs settle toward screen right. Both hands and boots settle fully on the floor, and the small pots remain strapped on. End in the original grounded side-lying corpse pose. No recovery or extra equipment. Locked camera and body scale; full body always visible. The entire studio background stays exactly the same solid pure GREEN throughout the whole video. Keep this one uniform green color permanently unchanged from first to last frame. No shadows, scenery, effects or lighting changes.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "foreground_chroma_measurement": "Maximum green-minus-max(red,blue) on alpha>240 pixels of the three actual submitted RGBA guides:4,2,38. Legacy corpse original contains several residual green edge pixels; fixed reference downsampling yields38."
+}

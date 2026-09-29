@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "cd42ab90571ad1c71568df9f98e46511cf5ce186b85de72fbc6dff02ae33f31b",
+  "latent_sha256": "cb513d251591cf042b8b85219898c33abf6e218efa004a4e89aa36c9f4bebbbc",
+  "decode_workflow_sha256": "71b3fa6a76e44dd7a476f101a3ebf1b9c2c1290ea181f420bd562c487ac872a9",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "cinderpot_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

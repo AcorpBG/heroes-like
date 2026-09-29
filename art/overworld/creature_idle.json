@@ -2655,29 +2655,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        65.0,
+        65,
         211
       ],
       "painted_extent": 206,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cinderpot_hurlers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_cinderpot_hurlers.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        191,
-        25,
-        322,
-        247
+        115,
+        45,
+        246,
+        267
       ],
-      "source_sha256": "6c1728143577ae2f9e2fd07cfd426cbe38ca60cc2073a8e837a45ba21bd275bb",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_cinderpot_hurlers/provenance.json",
+      "source_sha256": "59624160a0e857dae0b93c386594b2cb55619704ba5fb0e3ac68306c6649691e",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_cinderpot_hurlers/provenance.json",
       "sha256": "58d0173a5643bb20250a64bdc7424b6565074502852ee6c78a5a93667123348a"
     },
     "unit_neutral_frostbeacon_pikes": {
