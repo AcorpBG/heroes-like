@@ -1,0 +1,121 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092985,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        222,
+        506
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          838,
+          596,
+          1185
+        ]
+      ],
+      "anchor": [
+        469,
+        1161
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          609,
+          930,
+          924,
+          1210
+        ]
+      ],
+      "anchor": [
+        755,
+        1186
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+      "rects": [
+        [
+          543,
+          900,
+          1227,
+          1282
+        ]
+      ],
+      "anchor": [
+        866,
+        1227
+      ],
+      "scale": 0.37,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      33,
+      1
+    ],
+    [
+      76,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original adult male Orchard Halberd soldier facing screen right in elevated three-quarter view. Preserve the brown broad-brimmed hat with red apples and green leaves, dark moustache and short beard, olive green scarf, long red quilted coat with cream edging, brown belt and apple pouch, loose brown trousers, calf wraps and brown boots. Exactly two arms, two hands and two legs. His right hand carries ONE long straight wooden billhook polearm: a single broad curved steel blade and small back hook at the upper end, a small metal ferrule on the other end. His left forearm carries ONE oval wicker shield with dark metal cross braces and a round steel boss. Keep the same rigid shaft length, blade shape, shield size, grips, adult body proportions and painted materials. Collapse continuously: knees buckle, lower onto one knee, then tip the hips sideways and lower the torso toward screen left. The shield follows the left arm onto the body; the polearm descends with the right hand and rotates onto the ground. End on the side with the head at screen left and boots at screen right, shield resting over the torso and one straight billhook lying horizontally in front. Keep the hat, apples, shield, blade and limbs intact. Final corpse is motionless and fully grounded, with no recovery or floating equipment. Locked orthographic camera and fixed body scale. Entire soldier, shield, polearm blade and butt stay inside the canvas. Perfectly flat uniform saturated BLUE background throughout every frame, unchanged in color and brightness. No scenery, ground shadow, camera motion, zoom, spells, particles, sparks, new weapons or extra limbs. Natural articulated limb motion with physical grounding.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 35,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      20.0,
+      33.0,
+      6.0,
+      8.0
+    ]
+  }
+}

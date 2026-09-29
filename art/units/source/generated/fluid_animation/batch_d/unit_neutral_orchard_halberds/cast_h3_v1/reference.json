@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          222,
+          506
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a43b1f4fd37d8ee6938fa1a0830bb31dbc14f1fff635948e33cc04ca16960ba2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dd3822db76794d1c9d21ac0a6a2e5cd92a2aed35d6e76b19f58a11910ece9cb6",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1152,
+            0,
+            1536,
+            514
+          ]
+        ],
+        "anchor": [
+          1336,
+          506
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a43b1f4fd37d8ee6938fa1a0830bb31dbc14f1fff635948e33cc04ca16960ba2",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d550f4278a9b6199e6e15c44b2da827e47c4293e39adba327a6aea04412de745",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

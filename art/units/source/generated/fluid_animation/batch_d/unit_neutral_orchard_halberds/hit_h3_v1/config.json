@@ -1,0 +1,85 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092982,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        222,
+        506
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          804,
+          84,
+          830
+        ],
+        [
+          0,
+          830,
+          312,
+          1190
+        ]
+      ],
+      "anchor": [
+        156,
+        1167
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      43,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult male Orchard Halberd soldier facing screen right in elevated three-quarter view. Preserve the brown broad-brimmed hat with red apples and green leaves, dark moustache and short beard, olive green scarf, long red quilted coat with cream edging, brown belt and apple pouch, loose brown trousers, calf wraps and brown boots. Exactly two arms, two hands and two legs. His right hand carries ONE long straight wooden billhook polearm: a single broad curved steel blade and small back hook at the upper end, a small metal ferrule on the other end. His left forearm carries ONE oval wicker shield with dark metal cross braces and a round steel boss. Keep the same rigid shaft length, blade shape, shield size, grips, adult body proportions and painted materials. Act one compact recoil and recovery. Shoulders tilt back, chin lifts, knees flex to absorb the motion, and the left shield arm yields briefly. Right hand retains the upright billhook. Regain balance on both boots and return smoothly to ready. Remain standing with all equipment held. Locked orthographic camera and fixed body scale. Entire soldier, shield, polearm blade and butt stay inside the canvas. Perfectly flat uniform saturated BLUE background throughout every frame, unchanged in color and brightness. No scenery, ground shadow, camera motion, zoom, spells, particles, sparks, new weapons or extra limbs. Natural articulated limb motion with physical grounding.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 43,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      20.0,
+      41.0
+    ]
+  }
+}

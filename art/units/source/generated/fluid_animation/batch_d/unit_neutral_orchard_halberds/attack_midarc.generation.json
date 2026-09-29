@@ -1,0 +1,23 @@
+{
+  "tool": "image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_midarc.png",
+    "sha256": "079065cc1945e4a67b5750e22eee2754e7aad27216300b8d56c878373e212051"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_midarc.prompt.txt",
+    "sha256": "4fc2c53b20b50d1f78dd91fd9124288c3c8df5c6a17023853821745ae510ab67"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_h3_v1/guide_0_chroma.png",
+      "sha256": "52879d88de0c35467f345ee341857e55b2742eaa9fcceb94cb3c9aa603e8594b"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_h3_v1/guide_1_chroma.png",
+      "sha256": "d67f073a268148f0779b250ac35c4fe1310e0bfe4d1e780d4245bd1d1b15015b"
+    }
+  ],
+  "original_tool_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-5ede0f24-6c82-4e1a-ae3b-a44c7380d312.png",
+  "scale_reason": "One .30 source scale matches the new 610-pixel adult body to the original roughly 365-pixel body at .50 extraction scale. Ground contact 964, body root 670. No generated video frame normalization."
+}

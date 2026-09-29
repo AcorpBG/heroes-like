@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+        "rects": [
+          [
+            626,
+            0,
+            930,
+            426
+          ]
+        ],
+        "anchor": [
+          798,
+          421
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a04bde04f580b52b9ff08a79dcfba5ceffed386a63f86b54078fd1426bfcfbe4",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ef151df62693537b8e4a8afde85e02006d0b0b2e60fabcf63b388efa1f22ad04",
+      "runtime_source_scale": 0.55
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

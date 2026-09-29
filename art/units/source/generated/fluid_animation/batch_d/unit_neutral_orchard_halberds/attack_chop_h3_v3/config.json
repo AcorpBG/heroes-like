@@ -1,0 +1,140 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "clip": "attack",
+  "canvas": [
+    960,
+    768
+  ],
+  "anchor": [
+    430,
+    688
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092995,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          514
+        ]
+      ],
+      "anchor": [
+        222,
+        506
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "billhook_windup",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          268,
+          420,
+          622,
+          575
+        ],
+        [
+          284,
+          575,
+          622,
+          815
+        ]
+      ],
+      "anchor": [
+        469,
+        807
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "billhook_midarc",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_midarc.png",
+      "rects": [
+        [
+          0,
+          0,
+          1402,
+          1122
+        ]
+      ],
+      "anchor": [
+        670,
+        964
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "billhook_strike",
+      "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+      "rects": [
+        [
+          623,
+          440,
+          975,
+          735
+        ],
+        [
+          623,
+          735,
+          994,
+          788
+        ],
+        [
+          623,
+          788,
+          980,
+          828
+        ]
+      ],
+      "anchor": [
+        788,
+        813
+      ],
+      "scale": 0.55,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      72,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original adult male Orchard Halberd soldier facing screen right in elevated three-quarter view. Preserve the brown broad-brimmed hat with red apples and green leaves, dark moustache and short beard, olive green scarf, long red quilted coat with cream edging, brown belt and apple pouch, loose brown trousers, calf wraps and brown boots. Exactly two arms, two hands and two legs. His right hand carries ONE long straight wooden billhook polearm: a single broad curved steel blade and small back hook at the upper end, a small metal ferrule on the other end. His left forearm carries ONE oval wicker shield with dark metal cross braces and a round steel boss. Keep the same rigid shaft length, blade shape, shield size, grips, adult body proportions and painted materials. Perform ONE slow overhead chop, then STOP with the blade down at screen right. Begin upright ready. Raise the right hand smoothly above the right shoulder into the supplied overhead windup. Bring the blade forward through the supplied horizontal chest-height intermediate pose. Continue downward toward screen right into the supplied low strike pose. The blade follows exactly ONE downward arc. Hold the final LOW position; DO NOT recover, raise the weapon again, rotate it in a circle or attack twice. Fixed elevated orthographic camera, fixed original body scale and planted foot registration. Exactly two arms and legs. Left arm holds the same wicker shield throughout; right hand grips one straight wooden shaft and its small single SILVER billhook blade. Move the weapon only within the image plane; never point toward the camera, enlarge the blade or spin the shaft. Full figure and all weapon tips remain inside the canvas. Uniform flat saturated blue background throughout. No scenery, light effects, trails, shadows or particles.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 44.0,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      20.0,
+      40.0,
+      11.0,
+      42.0,
+      12.0
+    ]
+  }
+}

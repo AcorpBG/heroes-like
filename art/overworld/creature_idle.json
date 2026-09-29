@@ -2760,29 +2760,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        80.0,
+        80,
         227
       ],
       "painted_extent": 221,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_orchard_halberds.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_orchard_halberds.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        176,
-        9,
-        337,
-        246
+        52,
+        45,
+        213,
+        282
       ],
-      "source_sha256": "2e058386a53ee4e38629910f6cc3e81afdb9abf972074b8e063808d66931a800",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_orchard_halberds/provenance.json",
+      "source_sha256": "bc21a534f24ac924f6b30ce5166878ac84d222d91797e1eb6f643b97a8c6a81a",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_orchard_halberds/provenance.json",
       "sha256": "eb0ad2dc778d768fd5e2029b5d87f3f5df85955debe4f826bd05b11b2ee4c3f7"
     },
     "unit_neutral_millstone_slingers": {

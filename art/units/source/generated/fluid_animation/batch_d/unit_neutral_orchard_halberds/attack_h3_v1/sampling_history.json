@@ -1,0 +1,285 @@
+{
+  "prompt": [
+    886,
+    "714f98f7-4a70-4b00-aea2-364e762b78cc",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original adult male Orchard Halberd soldier facing screen right in elevated three-quarter view. Preserve the brown broad-brimmed hat with red apples and green leaves, dark moustache and short beard, olive green scarf, long red quilted coat with cream edging, brown belt and apple pouch, loose brown trousers, calf wraps and brown boots. Exactly two arms, two hands and two legs. His right hand carries ONE long straight wooden billhook polearm: a single broad curved steel blade and small back hook at the upper end, a small metal ferrule on the other end. His left forearm carries ONE oval wicker shield with dark metal cross braces and a round steel boss. Keep the same rigid shaft length, blade shape, shield size, grips, adult body proportions and painted materials. Perform ONE broad overhead billhook chop toward screen right. Raise the polearm diagonally above the right shoulder while keeping the left wicker shield in front of the chest. Rotate the shoulder and extend the right elbow, driving the single curved blade forward and down in one continuous arc. Bend the front knee and shift weight into the strike. Draw the shaft back, straighten and lift the same blade to the original upright ready carry. The right hand grips the continuous shaft throughout; the left arm keeps its shield. No weapon throw, thrust, spinning shaft or extra attack. Locked orthographic camera and fixed body scale. Entire soldier, shield, polearm blade and butt stay inside the canvas. Perfectly flat uniform saturated BLUE background throughout every frame, unchanged in color and brightness. No scenery, ground shadow, camera motion, zoom, spells, particles, sparks, new weapons or extra limbs. Natural articulated limb motion with physical grounding.",
+          "width": 960,
+          "height": 768,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092981
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "orchard_attack_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "orchard_attack_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "orchard_attack_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "orchard_attack_h3_v1_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 53,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 76,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "orchard_h3/attack_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "orchard_h3",
+      "create_time": 1790657783769
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "orchard_h3\\attack_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "714f98f7-4a70-4b00-aea2-364e762b78cc",
+          "timestamp": 1790657783770
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "714f98f7-4a70-4b00-aea2-364e762b78cc",
+          "timestamp": 1790657783794
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "714f98f7-4a70-4b00-aea2-364e762b78cc",
+          "timestamp": 1790658018972
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

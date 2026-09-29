@@ -1,0 +1,153 @@
+{
+  "unit_id": "unit_neutral_orchard_halberds",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          222,
+          506
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a43b1f4fd37d8ee6938fa1a0830bb31dbc14f1fff635948e33cc04ca16960ba2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "52879d88de0c35467f345ee341857e55b2742eaa9fcceb94cb3c9aa603e8594b",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "billhook_windup",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+        "rects": [
+          [
+            268,
+            420,
+            622,
+            575
+          ],
+          [
+            284,
+            575,
+            622,
+            815
+          ]
+        ],
+        "anchor": [
+          469,
+          807
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a04bde04f580b52b9ff08a79dcfba5ceffed386a63f86b54078fd1426bfcfbe4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d67f073a268148f0779b250ac35c4fe1310e0bfe4d1e780d4245bd1d1b15015b",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "billhook_strike",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/alpha/poses.png",
+        "rects": [
+          [
+            623,
+            440,
+            975,
+            735
+          ],
+          [
+            623,
+            735,
+            994,
+            788
+          ],
+          [
+            623,
+            788,
+            980,
+            828
+          ]
+        ],
+        "anchor": [
+          788,
+          813
+        ],
+        "scale": 1.1,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a04bde04f580b52b9ff08a79dcfba5ceffed386a63f86b54078fd1426bfcfbe4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "3063a13defb8dbc26e1c1fb809e0ea934db757878e02c6c02b4e8f22724277a5",
+      "runtime_source_scale": 0.55
+    },
+    {
+      "source_frame": {
+        "name": "billhook_recovery",
+        "source": "art/animation/source/poses/unit_neutral_orchard_halberds/continuity-alpha/billhook-recovery-supported-step-and-corpse.png",
+        "rects": [
+          [
+            620,
+            0,
+            1227,
+            647
+          ]
+        ],
+        "anchor": [
+          860,
+          615
+        ],
+        "scale": 0.74,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9dc18220e27e71e13b57edd3310194e3c98fa5f5fb102c9be88f9a01f29308e5",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "8a3ce4ef7fb000b79f4d9e364a2a0675d232086c17b2725418fc6b0238298814",
+      "runtime_source_scale": 0.37
+    },
+    {
+      "source_frame": {
+        "name": "billhook_midarc",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_orchard_halberds/attack_midarc.png",
+        "rects": [
+          [
+            0,
+            0,
+            1402,
+            1122
+          ]
+        ],
+        "anchor": [
+          670,
+          964
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "079065cc1945e4a67b5750e22eee2754e7aad27216300b8d56c878373e212051",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "17b789fd2f6898641b8ed61b880de92472c821e762445d796b5a849e5cbf7fb2",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    430,
+    688
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

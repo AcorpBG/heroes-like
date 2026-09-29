@@ -1,0 +1,9 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      72
+    ]
+  ],
+  "reason": "Full raw sequence inspected. Recoil and recovery finish on the original blue plate by frame 72. Unused idle tail changes to green at 73 and back at 116; exclude that tail rather than relaxing matte safeguards."
+}

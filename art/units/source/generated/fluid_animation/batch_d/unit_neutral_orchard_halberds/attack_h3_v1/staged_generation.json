@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2eb0e016d134862c7d1e7eb48533b04501438a495370376dc70553532a9348a1",
+  "latent_sha256": "e8112d8ed8775a3537b8ff0e29e24f352d9eaef950388451f27356f5f5563682",
+  "decode_workflow_sha256": "1d512ca7528ea3f9e7bae4a69e7ffb301a25cc014985bc317b142c6abda3613c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "orchard_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
