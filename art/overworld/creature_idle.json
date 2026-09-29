@@ -3257,29 +3257,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        96.0,
+        96,
         228
       ],
       "painted_extent": 223,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_whitepike_keepers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_whitepike_keepers.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        160,
-        8,
-        326,
-        247
+        80,
+        52,
+        246,
+        291
       ],
-      "source_sha256": "b933d0728543f269ae049b2bceba7c774cdab25b637463be0a0d5358d46da398",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_whitepike_keepers/provenance.json",
+      "source_sha256": "d7b34a3ef35544e4e077c029e67cdc399dce625d20ff71d62b5df79d9b4b7c1e",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_whitepike_keepers/provenance.json",
       "sha256": "71d16948043887bfbb0d712677d513cdb3ef84c51472f0330008a6948c80feae"
     },
     "unit_neutral_scarshield_veterans": {

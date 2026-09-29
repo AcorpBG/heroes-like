@@ -1,0 +1,6 @@
+{
+  "status": "accepted_selected_frames",
+  "replaces": "attack_h3_v1 thrust interval 35..43",
+  "defect": "Pike shaft telescopes through the thrust; windup and recovery retained pending join review.",
+  "strategy": "Dedicated endpoint-controlled slow thrust with rigid shaft and explicit sliding hand roles."
+}

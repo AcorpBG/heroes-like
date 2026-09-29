@@ -1,0 +1,623 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_whitepike_keepers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_009",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_011",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_013",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_023",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_031",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        }
+      ],
+      "clips": {
+        "defend": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 24
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/original_lossless.mkv",
+          "sha256": "c583c2f56f5f3f6390dfe2e53c7811e332d7376792f4a91c0a9a1097211e299b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/original.json",
+          "sha256": "f80e8b72a4695a9f16e67f07a66b5ea4563b37df0b2e3ca32c0daa9e59f822e6"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/workflow_api.json",
+          "sha256": "f796da1ed97c922dc6abf28651fe4696b5e4f586b54e987c481076b99faf3032"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/prompt.txt",
+          "sha256": "c6419ed0ad1bc27fbda2a99084fa1f20a74b2b32cbc1458a87ef79930ee4dc99"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/reference.json",
+          "sha256": "6a177be967b0355e47343307478b769a82e05917301ef59aef28ea5f800e8fd4"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/matte.json",
+          "sha256": "db95810c16b18b0648712db0d726e11ccb5d82bc4e26c02cb64a706aff1ed894"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/staged_generation.json",
+          "sha256": "bca443989eccaff4a673653bc6074ae93e7daabc380099c636bfca3c769524bf"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "bc0112bad48987d6c39c1f4a0b8243f06209a1354637aa6bdbbe53cea2fd93f6"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/sampling_submission.json",
+          "sha256": "bcec16cea380d0a7cf639c5c6b59eb90b1e2a83fcb40c51c594b5cd81e08d0c9"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/sampling_history.json",
+          "sha256": "5014f073d0d9a4ff2ae415336cbf9b789698b4b063dba4a0f6f1aabfc0c0fd9f"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/defend_h3_v1/original.latent",
+          "sha256": "36167fb4739205a3b8ac79bfd9545bf9aa63583dc214d1e3eb52db663ea2a567"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all124 chronological frames and enlarged8..32. Two-handed pike rotation into a deep planted crouch; both tips and shaft retained. End on stable held guard, exclude long terminal hold. Native render review pending."
+      }
+    }
+  ]
+}

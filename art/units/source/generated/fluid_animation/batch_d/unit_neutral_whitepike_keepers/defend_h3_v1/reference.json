@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          239,
+          508
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "501f187725e0222520a2daf505fe6452d872392de667a1e2983fd6d8cd004e5e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2b0a1c18eb95a0c15bf5053e2480e9fe38e5cf749345ae0c41623f244c1b2f83",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_crouch",
+        "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/alpha/poses-unaccepted.png",
+        "rects": [
+          [
+            1230,
+            436,
+            1536,
+            492
+          ],
+          [
+            1170,
+            492,
+            1536,
+            682
+          ]
+        ],
+        "anchor": [
+          1310,
+          658
+        ],
+        "scale": 1.18,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "952f5c630809810a93d5b223fa6c6b21351e10bdda972a26ac5c969f8c2da321",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "db5fbce13dd0df8a14c9b730f2950ea3eb046a05add8514eb9f87230f752d31d",
+      "runtime_source_scale": 0.59
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

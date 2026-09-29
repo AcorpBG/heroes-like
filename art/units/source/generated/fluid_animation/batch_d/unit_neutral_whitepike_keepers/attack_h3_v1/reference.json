@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          239,
+          508
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "501f187725e0222520a2daf505fe6452d872392de667a1e2983fd6d8cd004e5e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2b0a1c18eb95a0c15bf5053e2480e9fe38e5cf749345ae0c41623f244c1b2f83",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "pike_windup",
+        "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/alpha/poses-unaccepted.png",
+        "rects": [
+          [
+            325,
+            390,
+            739,
+            499
+          ],
+          [
+            325,
+            499,
+            651,
+            678
+          ]
+        ],
+        "anchor": [
+          477,
+          658
+        ],
+        "scale": 1.18,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "952f5c630809810a93d5b223fa6c6b21351e10bdda972a26ac5c969f8c2da321",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2c33cdde9dafc7d56a1610eaec12bc43bf222d32560e8c80054bc6ffc866e84f",
+      "runtime_source_scale": 0.59
+    },
+    {
+      "source_frame": {
+        "name": "pike_full_thrust",
+        "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/continuity-alpha/full-pike-thrust-recovery-brace-and-step.png",
+        "rects": [
+          [
+            0,
+            0,
+            727,
+            287
+          ],
+          [
+            0,
+            287,
+            612,
+            570
+          ]
+        ],
+        "anchor": [
+          296,
+          523
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4c7e2f4a7f5d020dd033dab4bd82bdc92cb5b588f1a1c92745f636462ce5e638",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "19f3e6637ec21972e17aac6329983cc288dce18e0de6f437db28d2c643d932ba",
+      "runtime_source_scale": 0.42
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,557 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_whitepike_keepers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_037",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_039",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_041",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_043",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_045",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_047",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 21
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/original_lossless.mkv",
+          "sha256": "009490160c0c0a4d3caf9f21f0a3201e7d63a49e06e142ed0b7c687fb47d4622"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/original.json",
+          "sha256": "d797044fe9ca7f048d6e05ef339050b9da332122b9a9c0f4ef3c05fd31969790"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/workflow_api.json",
+          "sha256": "f0c193709e2857309058e607a267bf798565b2317c8ac83fb3ac5925a064d9d0"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/prompt.txt",
+          "sha256": "4a462b8c9fa2008df22919b0949e19dabdfe995789457fd38d3fa7b9e1564b66"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/reference.json",
+          "sha256": "0c9bbeb3b48b346a6b2103454b6f29c6c8e9feaea55578f9dc6668c6cffe3dda"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/matte.json",
+          "sha256": "2dc96c71caffb417616e71bffab3a0033c6d72f259131f9ed31d1d668f413b4f"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/staged_generation.json",
+          "sha256": "8d34fcc173ecccd354b238db9d12767058fdb95dd1c5f468fc00a5b245c15d80"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "e0208320041d6c3f96b3b1cc19d9eb5b83d51e469956cb034fa0c29745566559"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/sampling_submission.json",
+          "sha256": "ab0edb8eb8ea89df85662ddaa00415599fb4b206f834b2469c9d93ecacb68615"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/sampling_history.json",
+          "sha256": "cca9bb08c005dbf1201d3a549086c82477a0b52c537e040120b51f2dc021c544"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/death_h3_v1/original.latent",
+          "sha256": "d4cfe1194638d398cc00f19332e6a806d9e56ac392c54e8e341b85d7e1278ad8"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all124 original frames plus enlarged37..58; retain the continuous side fall and grounded body/pike only. Initial kneeling rotation35..37 rejected and replaced by dedicated kneel video, pending join/native review."
+      }
+    }
+  ]
+}

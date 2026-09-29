@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_whitepike_keepers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093192,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        239,
+        508
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_whitepike_keepers/alpha/poses-unaccepted.png",
+      "rects": [
+        [
+          322,
+          742,
+          651,
+          990
+        ]
+      ],
+      "anchor": [
+        494,
+        961
+      ],
+      "scale": 0.59,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Whitepike Keeper, an adult bearded human man in an ivory fur-trimmed winter coat, blue cloth cap with white fur rim, blue scarf, leather lamellar armor, blue central coat panel, brown gloves and tall brown boots. Exactly two arms and two legs. Both gloved hands hold ONE long straight ivory wooden pike with a large silver spearhead at one end and a small pointed steel butt at the other. Brown bindings below both metal tips. The same rigid straight shaft, fixed length, two metal tips and two continuous hand grips remain throughout. Preserve his face, costume and proportions. Gradually lose strength and lower from standing onto both knees. While descending, slowly rotate the entire rigid pike from its diagonal raised ready orientation into the supplied low horizontal kneeling pose, large head pointing screen right. Both hands continuously carry and guide the same rigid shaft through a visible smooth arc. The elbows bend as the shoulders droop. Complete the slow kneeling descent over the entire shot, finishing slumped on the knees in the supplied pose.  Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and both pike tips stay visible. Uniform pure saturated green RGB0,255,0 fills the entire background. Continuous physical joint movement and stable ground contacts, with only this one keeper in the shot.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 8,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      2.0,
+      4.0,
+      6.0
+    ]
+  }
+}

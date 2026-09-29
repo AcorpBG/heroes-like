@@ -1,0 +1,201 @@
+{
+  "prompt": [
+    1040,
+    "05ac0373-7522-4352-9b0d-6fcb68fdf4b1",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Whitepike Keeper, an adult bearded human man in an ivory fur-trimmed winter coat, blue cloth cap with white fur rim, blue scarf, leather lamellar armor, blue central coat panel, brown gloves and tall brown boots. Exactly two arms and two legs. Both gloved hands hold ONE long straight ivory wooden pike with a large silver spearhead at one end and a small pointed steel butt at the other. Brown bindings below both metal tips. The same rigid straight shaft, fixed length, two metal tips and two continuous hand grips remain throughout. Preserve his face, costume and proportions. Starting with the horizontal pike raised near the shoulder, perform one slow controlled forward thrust into the supplied low lunging pose. The front hand slides along the shaft while the rear hand pushes; both arms gradually extend and the lead knee bends. Treat the entire pike as a single rigid solid object of unchanged length. The shaft never stretches or bends; the metal head stays rigidly attached. Gradually complete this one action over the entire shot and finish holding the lunge.  Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. Full body and both pike tips stay visible. Uniform pure saturated green RGB0,255,0 fills the entire background. Continuous physical joint movement and stable ground contacts, with only this one keeper in the shot.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026093191
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "whitepike_thrust_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "whitepike_thrust_h3_v1_guide_1.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "whitepike_h3/thrust_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "whitepike_h3",
+      "create_time": 1790692712146
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "whitepike_h3\\thrust_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "05ac0373-7522-4352-9b0d-6fcb68fdf4b1",
+          "timestamp": 1790692712187
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "05ac0373-7522-4352-9b0d-6fcb68fdf4b1",
+          "timestamp": 1790692712203
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "05ac0373-7522-4352-9b0d-6fcb68fdf4b1",
+          "timestamp": 1790692902337
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

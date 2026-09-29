@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3ef9e6cf773bd108cd9f335f9bc4d50ea39960e28e6949ba587fee7890a2e4a4",
+  "latent_sha256": "90270aa73cfeb26f1d910deb61293b689e85b08ed512e2e76aaa6f8778d4ff5e",
+  "decode_workflow_sha256": "82a0003651bd4d7f72ebef8c9a65761bf87f0c0594672e45810d8784805273b2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "whitepike_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

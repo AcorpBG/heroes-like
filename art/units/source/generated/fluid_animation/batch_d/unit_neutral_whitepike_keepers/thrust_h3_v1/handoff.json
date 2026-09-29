@@ -1,0 +1,668 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_whitepike_keepers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_012",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "attack_h3_015",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_021",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_051",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_057",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "attack_h3_060",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "attack_h3_063",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_081",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_087",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26
+          ],
+          "frame_msec": 33,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 26
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/original_lossless.mkv",
+          "sha256": "4a2a41629345eb344844def6e7dd02d7722c7943d0445721c65c466999e3436d"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/original.json",
+          "sha256": "f8f2d439d8e0383a6db45ad09cbe5e2a5ca81533145551eff36182224e91d9a0"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/workflow_api.json",
+          "sha256": "2745c5e71215c4c9dfa78bb6acda07bc1dc6d505ab1ba23c2ad0ba194f12c978"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/prompt.txt",
+          "sha256": "46799d13258bcd228d869cd417168512c8806204fdaae38fd0a1415103a0ee63"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/reference.json",
+          "sha256": "77c955ff9c7400a5bd4df529910c731bd5bcb80a7799dce9338a417f3ea680b8"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/matte.json",
+          "sha256": "fdd9621ffd64c613cc26b0a496d387526351946d04444812a03d1d221d18cb5e"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/staged_generation.json",
+          "sha256": "235aecb1a517c18de86e06357e4037fd3104c314c6d78dc5e5197b07c9e2771a"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/sampling_workflow_api.json",
+          "sha256": "27bf3727a10024c7d08fc0c10228661855fbc2aaf69c6f7cf40aef8fbf444379"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/sampling_submission.json",
+          "sha256": "875ed28238b8b3fd7b34136e92e692f53c78c2f0aea445b7888d88bea686f5a5"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/sampling_history.json",
+          "sha256": "eb7ba43ea893aa36568cae93955179af3ff72f16a4ae56fe1dc2e35cb367b1b1"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/thrust_h3_v1/original.latent",
+          "sha256": "0f1adf8e6dc6ca77ab801efe6eb6a21fbc94b7c1c0063b10dce8c210c6917b30"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Reviewed all124 original frames, enlarged both grips and rigid shaft, and unchanged-scale joins to original attack34 and82. Smooth controlled thrust with sliding foregrip and planted lunge; source12..90/3 retimed to gameplay. No telescoping interval retained. Native review pending."
+      }
+    }
+  ]
+}

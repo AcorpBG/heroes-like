@@ -1,0 +1,6 @@
+{
+  "status": "accepted_selected_frames",
+  "replaces": "death_h3_v1 kneeling interval through37",
+  "defect": "Pike rotates too abruptly between35..37; subsequent side fall retained.",
+  "strategy": "Separate continuous endpoint-controlled kneeling descent and slow two-handed pike rotation."
+}

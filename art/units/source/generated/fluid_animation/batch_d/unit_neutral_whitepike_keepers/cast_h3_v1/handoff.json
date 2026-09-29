@@ -1,0 +1,1020 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_whitepike_keepers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_027",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_033",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_035",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "cast_h3_036",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "cast_h3_037",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_039",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_041",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_043",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_045",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_055",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "cast_h3_065",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_086",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "cast_h3_089",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "cast_h3_090",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "cast_h3_091",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "cast_h3_092",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "cast_h3_093",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "cast_h3_094",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "cast_h3_095",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "cast_h3_096",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "cast_h3_097",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "cast_h3_098",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "cast_h3_099",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "cast_h3_100",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "cast_h3_101",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "cast_h3_102",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "cast_h3_103",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_105",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "cast_h3_106",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        }
+      ],
+      "clips": {
+        "cast": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 20
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/original_lossless.mkv",
+          "sha256": "c9b1f703f7c6e52b69c463104f9643299e274b497b77dcd5145d674ca36ebe06"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/original.json",
+          "sha256": "18f04ecd36e5124b75f8cbb41fa732a59c404b115a09f23c8771c82369b85320"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/workflow_api.json",
+          "sha256": "8ba3a6ab0698eb453002e9f771b6c7f54842e27ff0ec660ebec12f0515ce8176"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/prompt.txt",
+          "sha256": "da2c146b9a50887d28dc25f8ac09e7fe6d1fb85a1bf1b7b5e13c86572f8af103"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/reference.json",
+          "sha256": "8d37a12e586fa42e6fa3c91a1a604987085a79b0b412c95c350c3f13f3b8edb5"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/matte.json",
+          "sha256": "32e9500a346237609b3c3018a798143fb67c59e3642525e09012c6ae7b15bd49"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/staged_generation.json",
+          "sha256": "0426b8f45ad96e7697eba4093cf0af977420581b3d2e0d55311d1ec8e9decb2a"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "98ba0256fbc03c140492d59c7596d24fe2f536f59b0ccaad58002ad5d98b1f24"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/sampling_submission.json",
+          "sha256": "839716ce82a0a0238b38570f11953479b30add35d42de0045a504ea64d4e6049"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/sampling_history.json",
+          "sha256": "810844b6b9f6ebdf0de3f3964d87a51de51a785a706636aa6c7e69d40e5503e5"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_whitepike_keepers/cast_h3_v1/original.latent",
+          "sha256": "bff391ab9f9efcef43a71f250e091051a63477fbf0eab3710b601921a86a8fe4"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames reviewed chronologically. Lower gloved hand slides up the fixed diagonal shaft toward chest, tightens the grip, then returns to the lower grip. Both arms visibly articulate without invented magic. Long holds shortened; native review pending."
+      }
+    }
+  ]
+}
