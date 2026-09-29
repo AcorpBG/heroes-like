@@ -1,0 +1,279 @@
+{
+  "prompt": [
+    915,
+    "6f428f3e-b605-4456-b964-3e6ba1d467af",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original adult female Hedgehook Watch warrior, facing screen right in elevated three-quarter view. Keep her youthful brown-haired face, muted olive green hood and scarf with small gold embroidery, brown overlapping leaf-shaped leather shoulder armour, fitted dark leather tunic, cream upper sleeves, brown gloves and bracers, belts, green ragged tabard, olive trousers, brown knee guards and wrapped leather boots. Exactly two arms, two hands, two legs. Her RIGHT hand holds ONE short-handled hooked steel billknife: brown grip, small round pommel, broad curved silver blade with notched inner edge and one pointed hooked tip. Her LEFT forearm carries ONE small round wooden buckler with metal rim, central steel boss, crossing twigs and short perimeter thorns. Preserve the original weapon length, hooked silhouette, shield size, right-hand grip, left shield straps, materials and adult proportions. Animate one measured physical fencing exercise. Slowly lift the right hand and its short hooked knife above the shoulder, then move that solid steel blade through a clearly observed downward-forward cutting arc. The blade and arm remain sharply painted at every instant. Bend the forward knee into the extended position, then retract the right elbow and knife to the waist and recover ready. Left arm keeps its small wooden shield in front of the chest. Only the solid hand, short grip and steel hook move; all space behind and ahead of the blade stays the exact flat blue background. No luminous arc, swoosh, trail, ribbon, motion blur, duplicate blade, sparks, light, streaks or spell effect. The steel hook is ordinary dull metal with a constant silver surface, never glowing or enlarged. One cut followed by recovery, not repeated attacks. Locked orthographic camera, fixed anatomical scale and centered body. Keep the full hood, limbs, boots, hook and shield within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092910
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hedgehook_attack_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hedgehook_attack_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hedgehook_attack_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "hedgehook_attack_h3_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 64,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 88,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "hedgehook_h3/attack_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "hedgehook_h3",
+      "create_time": 1790663218341
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "hedgehook_h3\\attack_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "6f428f3e-b605-4456-b964-3e6ba1d467af",
+          "timestamp": 1790663218527
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "6f428f3e-b605-4456-b964-3e6ba1d467af",
+          "timestamp": 1790663218552
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "6f428f3e-b605-4456-b964-3e6ba1d467af",
+          "timestamp": 1790663620719
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

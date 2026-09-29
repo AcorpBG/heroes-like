@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          181,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a871d2609595e71c31d7c6deeae5525e08a9cdc7e202e2a5ef2df2c7478484a1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5614690fba8988e1b901b35f60c98c156654f21ae3142af9e03988a17582a906",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hook_windup",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            462,
+            335,
+            529,
+            383
+          ],
+          [
+            374,
+            379,
+            728,
+            734
+          ]
+        ],
+        "anchor": [
+          530,
+          728
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "aa3abab5b8bb111b09ad121acc26df722126bdd5980bf9d90319aa96bb0eff62",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "name": "hook_slash",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            730,
+            392,
+            1085,
+            740
+          ]
+        ],
+        "anchor": [
+          906,
+          728
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a1e4ad52afa6f97cd4b3dcb4363e36972cd5b5543941fd4347f8644927ff278c",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "name": "hook_recovery",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            0,
+            0,
+            616,
+            621
+          ]
+        ],
+        "anchor": [
+          327,
+          610
+        ],
+        "scale": 0.7,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f5a5f6e839871ceb599717dfac73c1a856174d7fdf0fdb27109415f0dc6c9734",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "e1d8ce20ddc80bf9e52c264a3847ff140abe4ef6f8e13d9d4ba91693db473992",
+      "runtime_source_scale": 0.35
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

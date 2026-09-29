@@ -1,0 +1,104 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092911,
+  "references": [
+    {
+      "name": "hook_windup",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+      "rects": [
+        [
+          462,
+          335,
+          529,
+          383
+        ],
+        [
+          374,
+          379,
+          728,
+          734
+        ]
+      ],
+      "anchor": [
+        530,
+        728
+      ],
+      "scale": 0.58,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hedgehook_watch/keypose/attack_midarc_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        720,
+        874
+      ],
+      "scale": 0.32,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "name": "hook_slash",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+      "rects": [
+        [
+          730,
+          392,
+          1085,
+          740
+        ]
+      ],
+      "anchor": [
+        906,
+        728
+      ],
+      "scale": 0.58,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      56,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original adult female Hedgehook Watch warrior, facing screen right in elevated three-quarter view. Keep her youthful brown-haired face, muted olive green hood and scarf with small gold embroidery, brown overlapping leaf-shaped leather shoulder armour, fitted dark leather tunic, cream upper sleeves, brown gloves and bracers, belts, green ragged tabard, olive trousers, brown knee guards and wrapped leather boots. Exactly two arms, two hands, two legs. Her RIGHT hand holds ONE short-handled hooked steel billknife: brown grip, small round pommel, broad curved silver blade with notched inner edge and one pointed hooked tip. Her LEFT forearm carries ONE small round wooden buckler with metal rim, central steel boss, crossing twigs and short perimeter thorns. Preserve the original weapon length, hooked silhouette, shield size, right-hand grip, left shield straps, materials and adult proportions. A slow controlled arm-position demonstration from the first pose to the last pose, with no return or extra movement. At first the right elbow is raised and bent with the short hook above the shoulder. Lower the right wrist slightly across the chest into the middle reference pose, keeping the right elbow bent. Then extend that right elbow forward toward screen right and lower the hand to chest height into the final reference pose. The left hand and forearm keep the wooden buckler at the ribs. Both boots remain planted while the front knee loads slightly. The small curved steel hook and brown handle are rigid physical objects. Only their physical position changes, at an unhurried demonstration pace. Every moment shows one sharply painted short hooked knife and clean empty blue space around it. No motion effect of any kind, no trail, arc, sweep graphic, light, white streak, cyan glow, ribbon, blur, enlargement or duplicate outline. Finish holding the forward extended knife exactly like the last reference. Locked orthographic camera, fixed anatomical scale and centered body. Keep the full hood, limbs, boots, hook and shield within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 11,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      3.0,
+      2.0,
+      2.0,
+      9.0
+    ]
+  }
+}

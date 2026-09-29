@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092900,
+  "references": [
+    {
+      "name": "walk_near_support_attempt",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png",
+      "rects": [
+        [
+          0,
+          622,
+          616,
+          1275
+        ]
+      ],
+      "anchor": [
+        294,
+        1230
+      ],
+      "scale": 0.35,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "ONE original adult female Hedgehook Watch warrior, facing screen right in elevated three-quarter view. Keep her youthful brown-haired face, muted olive green hood and scarf with small gold embroidery, brown overlapping leaf-shaped leather shoulder armour, fitted dark leather tunic, cream upper sleeves, brown gloves and bracers, belts, green ragged tabard, olive trousers, brown knee guards and wrapped leather boots. Exactly two arms, two hands, two legs. Her RIGHT hand holds ONE short-handled hooked steel billknife: brown grip, small round pommel, broad curved silver blade with notched inner edge and one pointed hooked tip. Her LEFT forearm carries ONE small round wooden buckler with metal rim, central steel boss, crossing twigs and short perimeter thorns. Preserve the original weapon length, hooked silhouette, shield size, right-hand grip, left shield straps, materials and adult proportions. Walk in place through two complete reciprocal cycles. Alternate near and far legs through forward contact, weight loading, passing and lift. Her torso stays centered for engine-driven travel. The right hand carries the short billknife low across the waist, and the left forearm carries the round buckler in front of the ribs. Allow small natural arm and cloth motion. Both knees articulate, each boot alternates taking weight and swinging; finish in the original gait phase. Locked orthographic camera, fixed anatomical scale and centered body. Keep the full hood, limbs, boots, hook and shield within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 15,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      8.0
+    ]
+  }
+}

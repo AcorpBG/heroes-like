@@ -2834,25 +2834,25 @@
         212
       ],
       "painted_extent": 206,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_hedgehook_watch.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_hedgehook_watch.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        177,
+        49,
         24,
-        347,
+        219,
         246
       ],
-      "source_sha256": "87ff07aebf41af9bece73771baba218c3cd7cb90dd73fb8510cf489e44548655",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_hedgehook_watch/provenance.json",
+      "source_sha256": "a3cbac0b3e587985fe61c7692e27eec22befa251046e9e6d14d0c164a61433db",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_hedgehook_watch/provenance.json",
       "sha256": "e6ffe945c808c142424a096e5eab1d5f936eb85881dba1c601f617bcaf134498"
     },
     "unit_neutral_thornbow_scouts": {

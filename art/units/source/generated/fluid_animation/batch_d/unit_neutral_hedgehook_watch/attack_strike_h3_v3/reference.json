@@ -1,0 +1,92 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "hook_windup",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            462,
+            335,
+            529,
+            383
+          ],
+          [
+            374,
+            379,
+            728,
+            734
+          ]
+        ],
+        "anchor": [
+          530,
+          728
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "aa3abab5b8bb111b09ad121acc26df722126bdd5980bf9d90319aa96bb0eff62",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hedgehook_watch/keypose/attack_midarc_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          720,
+          874
+        ],
+        "scale": 0.64,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "80990e97d554881c618274f4686bf9a0184f160d249beb82148d372fd2a9ca42",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e93c59eed12301d07d5e53dc5b97dcedddf6e8d3e1d3e4089d1eb53e75d1e329",
+      "runtime_source_scale": 0.32
+    },
+    {
+      "source_frame": {
+        "name": "hook_slash",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            730,
+            392,
+            1085,
+            740
+          ]
+        ],
+        "anchor": [
+          906,
+          728
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a1e4ad52afa6f97cd4b3dcb4363e36972cd5b5543941fd4347f8644927ff278c",
+      "runtime_source_scale": 0.58
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

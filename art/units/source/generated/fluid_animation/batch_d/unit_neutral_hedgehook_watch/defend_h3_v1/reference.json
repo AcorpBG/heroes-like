@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          181,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a871d2609595e71c31d7c6deeae5525e08a9cdc7e202e2a5ef2df2c7478484a1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5614690fba8988e1b901b35f60c98c156654f21ae3142af9e03988a17582a906",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_ready",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            616,
+            0,
+            1233,
+            621
+          ]
+        ],
+        "anchor": [
+          912,
+          612
+        ],
+        "scale": 0.7,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f5a5f6e839871ceb599717dfac73c1a856174d7fdf0fdb27109415f0dc6c9734",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f321c3854bb21fa2711f6c4cb900f83929de9c93bfa95aaa8619be70a50ce225",
+      "runtime_source_scale": 0.35
+    },
+    {
+      "source_frame": {
+        "name": "guard_crouch",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            1140,
+            437,
+            1428,
+            718
+          ]
+        ],
+        "anchor": [
+          1284,
+          700
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "fa2e5b76c420029972bbd602c6f1638d2b614b1348e87bd61c88981efa13c24e",
+      "runtime_source_scale": 0.58
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

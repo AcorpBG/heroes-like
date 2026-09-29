@@ -1,0 +1,21 @@
+{
+  "status": "rejected",
+  "frames": [
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49
+  ],
+  "defect": "White motion trail instead of removed cyan trail. Prompt-only correction did not establish a clean solid-blade strike.",
+  "correction": "Reassess guidance: new original bent-elbow midpoint and a dedicated windup-to-contact video. Preserve valid anticipation/recovery from v1; do not erase any trail pixels."
+}

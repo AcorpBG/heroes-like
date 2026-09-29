@@ -1,0 +1,121 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092905,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        181,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+      "rects": [
+        [
+          364,
+          761,
+          648,
+          1047
+        ]
+      ],
+      "anchor": [
+        510,
+        1027
+      ],
+      "scale": 0.58,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+      "rects": [
+        [
+          639,
+          839,
+          1040,
+          1053
+        ]
+      ],
+      "anchor": [
+        835,
+        1024
+      ],
+      "scale": 0.58,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+      "rects": [
+        [
+          1040,
+          888,
+          1448,
+          1071
+        ]
+      ],
+      "anchor": [
+        1244,
+        1053
+      ],
+      "scale": 0.58,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      74,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original adult female Hedgehook Watch warrior, facing screen right in elevated three-quarter view. Keep her youthful brown-haired face, muted olive green hood and scarf with small gold embroidery, brown overlapping leaf-shaped leather shoulder armour, fitted dark leather tunic, cream upper sleeves, brown gloves and bracers, belts, green ragged tabard, olive trousers, brown knee guards and wrapped leather boots. Exactly two arms, two hands, two legs. Her RIGHT hand holds ONE short-handled hooked steel billknife: brown grip, small round pommel, broad curved silver blade with notched inner edge and one pointed hooked tip. Her LEFT forearm carries ONE small round wooden buckler with metal rim, central steel boss, crossing twigs and short perimeter thorns. Preserve the original weapon length, hooked silhouette, shield size, right-hand grip, left shield straps, materials and adult proportions. Collapse continuously from standing. Knees buckle onto one knee, then lower the hips and tip the torso toward screen right. The left shield hand reaches down and the right billknife hand descends with the body. Lie motionless on the side with head at screen right and feet at screen left; the round buckler and short hook rest on the ground in front. Preserve both arms and legs, green hood, original short weapon and shield. No floating equipment, recovery or disappearing body. Locked orthographic camera, fixed anatomical scale and centered body. Keep the full hood, limbs, boots, hook and shield within frame. The background is perfectly flat saturated BLUE throughout, no gradients or changes of hue. No scenery, floor shadow, camera motion, zoom, additional weapons, magic, glow, particles or extra limbs. Articulate joints naturally with physical planted-foot support; do not morph the equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 11,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) over alpha>240 opaque interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      3.0,
+      3.0,
+      0.0,
+      9.0
+    ]
+  }
+}

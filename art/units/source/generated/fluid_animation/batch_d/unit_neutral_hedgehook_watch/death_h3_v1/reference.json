@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          181,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a871d2609595e71c31d7c6deeae5525e08a9cdc7e202e2a5ef2df2c7478484a1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5614690fba8988e1b901b35f60c98c156654f21ae3142af9e03988a17582a906",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            364,
+            761,
+            648,
+            1047
+          ]
+        ],
+        "anchor": [
+          510,
+          1027
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5994791d5baed335b512a1503dec2793bbf9ae1849e7baba6d92eb3ae6f6a8c4",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            639,
+            839,
+            1040,
+            1053
+          ]
+        ],
+        "anchor": [
+          835,
+          1024
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "41a63971478dd8cd5bfd3522e0768d72f78f6a0d2a8bfd0b3ee628c822309aa0",
+      "runtime_source_scale": 0.58
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/alpha/poses.png",
+        "rects": [
+          [
+            1040,
+            888,
+            1448,
+            1071
+          ]
+        ],
+        "anchor": [
+          1244,
+          1053
+        ],
+        "scale": 1.16,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d0f0e666f435734b891bc855d72cf1717a0284aecbc64711732f5f8e12ed2673",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "454c230f05804a7ed53681039be2550f0c8f7c4a264a88372e0af5dd63de9901",
+      "runtime_source_scale": 0.58
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

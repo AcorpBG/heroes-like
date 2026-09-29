@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_near_support_attempt",
+        "source": "art/animation/source/poses/unit_neutral_hedgehook_watch/continuity-alpha/hook-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            0,
+            622,
+            616,
+            1275
+          ]
+        ],
+        "anchor": [
+          294,
+          1230
+        ],
+        "scale": 0.7,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f5a5f6e839871ceb599717dfac73c1a856174d7fdf0fdb27109415f0dc6c9734",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e7c1d188dbc0e71bed9f4bed0a27b9dc883be2562e89376ae8a4679c625c74ea",
+      "runtime_source_scale": 0.35
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

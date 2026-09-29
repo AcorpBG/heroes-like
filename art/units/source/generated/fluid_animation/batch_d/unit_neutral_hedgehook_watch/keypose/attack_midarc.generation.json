@@ -1,0 +1,39 @@
+{
+  "tool": "builtin image_gen",
+  "original_tool_path": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-6d948595-b998-4cff-87fd-ffa3ee6948f5.png",
+  "master": "attack_midarc.png",
+  "master_sha256": "4e1fd0ca06f2cfa565495bd339f4d80ee98d2cddf646eb3024d8b97986102c69",
+  "prompt": "attack_midarc.prompt.txt",
+  "prompt_sha256": "d29907a4fddf5a645b0aefe2a86b9a827260423c92ecac1f4dbe8a083d4843cb",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hedgehook_watch/attack_h3_v1/guide_0_chroma.png",
+      "sha256": "5614690fba8988e1b901b35f60c98c156654f21ae3142af9e03988a17582a906"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hedgehook_watch/attack_h3_v1/guide_1_chroma.png",
+      "sha256": "aa3abab5b8bb111b09ad121acc26df722126bdd5980bf9d90319aa96bb0eff62"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_hedgehook_watch/attack_h3_v1/guide_2_chroma.png",
+      "sha256": "a1e4ad52afa6f97cd4b3dcb4363e36972cd5b5543941fd4347f8644927ff278c"
+    }
+  ],
+  "matte": {
+    "background_rgb": [
+      0.0,
+      3.0,
+      253.0
+    ],
+    "corner_median_spread": 0.0,
+    "mode": "flat_blue_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rgba_sha256": "80990e97d554881c618274f4686bf9a0184f160d249beb82148d372fd2a9ca42",
+  "anatomical_anchor": [
+    720,
+    874
+  ],
+  "fixed_runtime_scale": 0.32,
+  "scale_reason": "Original midarc figure stands about630px from hood to planted boot; fixed0.32 yields202px anatomical height, matching existing roughly200px body. Same frame and scale used throughout the video guide."
+}

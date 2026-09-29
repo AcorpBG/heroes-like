@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ab0965d73c9cc6a2767215eba2c3cc9cfaf87067b786d34092f024083d9e1aea",
+  "latent_sha256": "dc7e975e4b6728ad553d562ccf3039e7e6216b642ad7a78f39b32821bbf6af92",
+  "decode_workflow_sha256": "79354f69576f8442040bb34b37bf96e379d6789a15dee9115daa58cb76f19c54",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "hedgehook_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

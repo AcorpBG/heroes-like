@@ -1,0 +1,394 @@
+{
+  "unit_id": "unit_neutral_hedgehook_watch",
+  "takes": [
+    "move_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Reviewed all 992 chronological original frames, enlarged grips/anatomy/alpha, gait loop and attack joins, all selected native-size phases and three candidate battle renders. Reciprocal gait, hooked-knife anticipation/contact/recovery, recoil, held shield brace, physical support and grounded collapse are coherent. Rejected cyan/white strike trails; original mid-swing guide supplied a clean strike interval joined to valid first-take anticipation/recovery. Preserve reviewed eight-pose articulated idle. Candidate 317 focused Windows checks passed. Review used chronological frames and phase renders, not continuous playback or a manual playtest; no full suite or Linux run."
+  },
+  "clip_sequences": {
+    "attack": {
+      "frames": [
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 8
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 9
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 10
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 11
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 13
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 15
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 17
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 0
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 3
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 6
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 9
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 12
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 15
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 18
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 21
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 24
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 27
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 30
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 33
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 36
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 39
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 42
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 45
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 48
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 51
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 54
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 57
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 60
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 63
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 66
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 69
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 72
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 75
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 78
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 81
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 84
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 87
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 90
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 93
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 99
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 102
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 105
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 108
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 111
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 114
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 117
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 120
+        },
+        {
+          "take": "attack_strike_h3_v3",
+          "video_frame": 123
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 64
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 68
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 69
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 70
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 71
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 72
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 73
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 74
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 75
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 76
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 77
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 78
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 79
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 106
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 114
+        },
+        {
+          "take": "attack_h3_v1",
+          "video_frame": 123
+        }
+      ],
+      "timing": {
+        "frame_msec": 30,
+        "contact_frame": 50,
+        "frame_durations_msec": [
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          90,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30,
+          30
+        ]
+      }
+    }
+  }
+}
