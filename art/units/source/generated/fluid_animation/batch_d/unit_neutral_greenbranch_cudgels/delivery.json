@@ -1,0 +1,23 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all 1116 original chronological frames across nine takes, enlarged active intervals and equipment, all 236 selected action poses at native Godot reference scale, eight preserved original idle poses, and three actual BattleShell captures. Reciprocal walk retains right cudgel grip and left round shield; attack includes anticipation, contact and return; hit recoils and recovers; dedicated planted shield brace; nonmagical physical club-arm support gesture; knees buckle then body, club and shield settle into grounded final corpse. Corrected static-green defend/cast/death v2 replace rejected color-cycling v1 takes. Fixed anatomical scale and anchor; no synthetic articulation or per-frame normalization. Candidate passed 800 focused checks including actual battle playback. Review used chronological frame sequences and offscreen runtime captures, not continuous video playback or a manual game playtest."
+  },
+  "rejected_takes": {
+    "defend_h3_v1": "Color-cycling backdrop creates visible ghost residue in active defense, including native-size frames9/10. Regenerate static plate and planted-foot brace.",
+    "cast_h3_v1": "Color-cycling plate crosses costume hues during required raise/return; preserve original, regenerate with static green background.",
+    "death_h3_v1": "Color-cycling plate crosses costume hues/low saturation during required action; no safe complete chromakey extraction. Preserve all original frames. Death also needs smoother grounded knee-to-side transition."
+  }
+}

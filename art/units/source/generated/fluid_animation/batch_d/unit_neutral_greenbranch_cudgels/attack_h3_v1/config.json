@@ -1,0 +1,108 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026093301,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        221,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "cudgel_windup",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          426,
+          183,
+          475
+        ],
+        [
+          0,
+          475,
+          325,
+          844
+        ]
+      ],
+      "anchor": [
+        163,
+        816
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "cudgel_strike",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          325,
+          475,
+          651,
+          844
+        ]
+      ],
+      "anchor": [
+        487,
+        818
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Greenbranch Cudgel, a sturdy adult human woodland militia man with a short brown beard. Brown segmented wooden armor, olive green scarf and ragged green skirt, brown strapped boots and knee guards. Brown helmet with a crown of small bare branching twigs. Exactly two arms and two legs. His right hand at screen left grips ONE wooden cudgel with a knotted rounded head, vines and tiny leaves. His left arm at screen right carries ONE round woven branch shield with crisscross wooden ribs. Keep the same face, solid cudgel, round shield outline and branching helmet throughout. Perform ONE powerful cudgel strike. Bend and raise the right elbow, lifting the club above the right shoulder into the supplied windup. Step forward and swing the same rigid wooden cudgel downward in front of the shield into the supplied low contact pose. Retract the cudgel with visible elbow and wrist motion and recover smoothly to the original upright ready stance. Keep the right hand connected to the shaft throughout. Locked elevated three-quarter orthographic camera matching the reference, fixed anatomical scale and centered root. Full body and all equipment visible. Uniform pure saturated magenta RGB255,0,255 fills the entire background. Continuous physical joint motion, stable ground contacts, only this one woodland man.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 5,
+  "foreground_measurement": {
+    "rule": "Eroded opaque min(red,blue)-green maximum plus two across original guides.",
+    "per_guide_max": [
+      3.0,
+      2.0,
+      1.0
+    ]
+  }
+}

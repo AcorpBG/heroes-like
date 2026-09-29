@@ -1,0 +1,80 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093401,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        221,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_crouch",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          651,
+          475,
+          915,
+          844
+        ]
+      ],
+      "anchor": [
+        795,
+        802
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      80,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Greenbranch Cudgel, a sturdy adult human woodland militia man with a short brown beard. Brown segmented wooden armor, olive green scarf and ragged green skirt, brown strapped boots and knee guards. Brown helmet with a crown of small bare branching twigs. Exactly two arms and two legs. His right hand at screen left grips ONE wooden cudgel with a knotted rounded head, vines and tiny leaves. His left arm at screen right carries ONE round woven branch shield with crisscross wooden ribs. Keep the same face, solid cudgel, round shield outline and branching helmet throughout. Slowly lower into a firm defensive crouch. Keep the same facing throughout. Both feet remain planted, both knees bend steadily and the left elbow draws the woven shield up in front of the torso. Keep the round front of the shield visible while raising it. The right hand carries the club upright beside the right shoulder. Complete the lowering motion gradually, then hold the supplied final crouched guard. Locked elevated three-quarter orthographic camera, unchanged body size and centered root. Uniform pure saturated green RGB0,255,0 background throughout every frame. Keep this green plate completely static, even while the man moves. Full body, equipment and small helmet branches visible. Crisp continuous elbow and knee movement.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue), plus two.",
+    "per_guide_max": [
+      7.0,
+      3.0
+    ]
+  },
+  "correction_reason": "First take cycles its plate and leaves visible background ghosts during active defense. Replace this action with a static green plate and planted-foot gradual brace; preserve rejected original."
+}

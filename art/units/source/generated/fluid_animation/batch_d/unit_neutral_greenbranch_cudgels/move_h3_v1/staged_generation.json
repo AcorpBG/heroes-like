@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "05138bb7a4fc9f25227d4ef773dd8faf78b573ac9c347c453bdb226b354f4f65",
+  "latent_sha256": "11423f9a967a88c76d15024f5a716e48afdd47220050351ac95b47c9874fe25b",
+  "decode_workflow_sha256": "8b6e7f9b5835aeb8e5571fca61fcd8908a6a8263975545a83c1e53f9325e6462",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "greenbranch_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

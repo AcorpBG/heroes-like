@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026093302,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        221,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          915,
+          475,
+          1254,
+          844
+        ]
+      ],
+      "anchor": [
+        1099,
+        813
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      45,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Greenbranch Cudgel, a sturdy adult human woodland militia man with a short brown beard. Brown segmented wooden armor, olive green scarf and ragged green skirt, brown strapped boots and knee guards. Brown helmet with a crown of small bare branching twigs. Exactly two arms and two legs. His right hand at screen left grips ONE wooden cudgel with a knotted rounded head, vines and tiny leaves. His left arm at screen right carries ONE round woven branch shield with crisscross wooden ribs. Keep the same face, solid cudgel, round shield outline and branching helmet throughout. Perform one startled backward impact recoil. Shoulders and head lean back, knees flex and the shield arm absorbs the jolt. The right hand retains the wooden club beside the hip. Regain balance and return to the original ready stance. One physical flinch with continuous recovery. Locked elevated three-quarter orthographic camera matching the reference, fixed anatomical scale and centered root. Full body and all equipment visible. Uniform pure saturated magenta RGB255,0,255 fills the entire background. Continuous physical joint motion, stable ground contacts, only this one woodland man.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 5,
+  "foreground_measurement": {
+    "rule": "Eroded opaque min(red,blue)-green maximum plus two across original guides.",
+    "per_guide_max": [
+      3.0,
+      2.0
+    ]
+  }
+}

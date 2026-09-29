@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          221,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d93c89a29e0c7df9b47332514922ec86baab14488680cee5eb56ba0cbcb4bfaa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "155033e968940fc22fc7f72cc72014df1274b14057280e6fe13cb130f03c14f2",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1152,
+            0,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1361,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d93c89a29e0c7df9b47332514922ec86baab14488680cee5eb56ba0cbcb4bfaa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "330daa94899c44d0010c3faf1695cc0b5f51faf1e488bdb99be8edc4e1f9a7f6",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,122 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093403,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        221,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          845,
+          316,
+          1178
+        ]
+      ],
+      "anchor": [
+        177,
+        1146
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall_head_right",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+      "rects": [
+        [
+          317,
+          908,
+          710,
+          1180
+        ]
+      ],
+      "anchor": [
+        520,
+        1150
+      ],
+      "scale": 0.54,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png",
+      "rects": [
+        [
+          735,
+          704,
+          1536,
+          989
+        ]
+      ],
+      "anchor": [
+        1130,
+        945
+      ],
+      "scale": 0.42,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      80,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Greenbranch Cudgel, a sturdy adult human woodland militia man with a short brown beard. Brown segmented wooden armor, olive green scarf and ragged green skirt, brown strapped boots and knee guards. Brown helmet with a crown of small bare branching twigs. Exactly two arms and two legs. His right hand at screen left grips ONE wooden cudgel with a knotted rounded head, vines and tiny leaves. His left arm at screen right carries ONE round woven branch shield with crisscross wooden ribs. Keep the same face, solid cudgel, round shield outline and branching helmet throughout. Perform one slow continuous defeat collapse under body weight. Both knees gradually buckle and contact the ground while the shoulders droop. From the kneeling pose, tip toward screen right onto the right hip and forearm into the supplied side-fall pose. Then settle fully onto the right side, head to screen right and boots to screen left, into the supplied motionless final corpse. The body stays in contact with the ground through knees, hip and side. Settle the club beside the right hand and the woven shield across the torso. Preserve both legs and both arms with natural bending throughout. Locked elevated three-quarter orthographic camera at the reference angle, unchanged body scale and centered root. Full body and all equipment visible. Uniform pure saturated green RGB0,255,0 background throughout every frame. Keep this green plate completely static while the man moves. Continuous physical joints and stable material colors.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue), plus two.",
+    "per_guide_max": [
+      7.0,
+      2.0,
+      2.0,
+      3.0
+    ]
+  },
+  "correction_reason": "Replace unsafe color-cycling background; preserve first take unchanged. Death also receives an intermediate side-fall guide for grounded collapse."
+}

@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          221,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d93c89a29e0c7df9b47332514922ec86baab14488680cee5eb56ba0cbcb4bfaa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "dedd68b6c336ff2520aa01f20b4da063fe68a1189f4109ba554f546069b64e58",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            845,
+            316,
+            1178
+          ]
+        ],
+        "anchor": [
+          177,
+          1146
+        ],
+        "scale": 1.08,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24165b26c1b3467bc1a6370ad72370d488debad146794b2affe05c4b73f384e8",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9955dcd45a7412408754a3ccda487472cf47204c43f3e7e35dc1dacd7ae0a6bd",
+      "runtime_source_scale": 0.54
+    },
+    {
+      "source_frame": {
+        "name": "death_fall_head_right",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/alpha/poses.png",
+        "rects": [
+          [
+            317,
+            908,
+            710,
+            1180
+          ]
+        ],
+        "anchor": [
+          520,
+          1150
+        ],
+        "scale": 1.08,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24165b26c1b3467bc1a6370ad72370d488debad146794b2affe05c4b73f384e8",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "43199d54534446cef8e0c817f66be9e8ba2317effde773136910fecd8ede352f",
+      "runtime_source_scale": 0.54
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_greenbranch_cudgels/continuity-alpha/cudgel-recovery-ready-step-and-directional-rest.png",
+        "rects": [
+          [
+            735,
+            704,
+            1536,
+            989
+          ]
+        ],
+        "anchor": [
+          1130,
+          945
+        ],
+        "scale": 0.84,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "15924844e7cb4450a2a0b2913bd3154d5fe4ed3017c4051ca6fb3a5b7b4ff8c6",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "fcc32b5e4cb1a4235114848951ad9ae48ab940c33480ec4e6fdec8f9395737a1",
+      "runtime_source_scale": 0.42
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

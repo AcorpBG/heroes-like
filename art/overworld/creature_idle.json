@@ -3362,29 +3362,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        85.0,
+        85,
         207
       ],
       "painted_extent": 202,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_greenbranch_cudgels.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_greenbranch_cudgels.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        171,
-        29,
-        339,
-        247
+        83,
+        41,
+        251,
+        259
       ],
-      "source_sha256": "2206912fa6ebc470f66be4d81ca4a96d93d63e8409d34c6189ac45a4fdb54420",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_greenbranch_cudgels/provenance.json",
+      "source_sha256": "f6b7e0fe0f177e811829c0a8ab51d768a463bae392614ea898793db9920c6b00",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_greenbranch_cudgels/provenance.json",
       "sha256": "5b23d9034887d41624f1ad3cbf256d9a218ac64412973dafeb64c078538f8b59"
     },
     "unit_neutral_sapwhistle_callers": {
