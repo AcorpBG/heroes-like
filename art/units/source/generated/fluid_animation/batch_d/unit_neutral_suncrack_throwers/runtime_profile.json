@@ -1,0 +1,122 @@
+{
+  "model_manifest": {
+    "repository": "Comfy-Org/MiniMax-H3",
+    "revision": "1c41cfca8ebba91d0af792a05c5761fb2c3a7975",
+    "files": [
+      {
+        "file": "diffusion_models/minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "bytes": 20970379616,
+        "sha256": "e889202c41dafb67b10d67b97f0d8541508036a6090af23425a5c2615d03c47a"
+      },
+      {
+        "file": "text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "bytes": 15687142551,
+        "sha256": "35a88d51044231fe332301d7a62aa81e3f2cba62febeb446e2c1e3e0ef76f2c6"
+      },
+      {
+        "file": "vae/minimax_h3_video_vae_int8_convrot.safetensors",
+        "bytes": 2811065184,
+        "sha256": "52a2c8c73583c86e4f41cdcce3a6ad0ea562987bc0bf3d60a0cef5f5c8e60c0e"
+      }
+    ]
+  },
+  "hash_source": "Inherited installed model hashes from Greenbranch provenance; installed file sizes and service settings verified for Suncrack, not a fresh full-model hash.",
+  "comfy_recorded_commit": "1568e6cfd04586a4b3c4e1817ea7dde09b1bf9e7",
+  "comfy_version": "0.37.0",
+  "gpu": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+  "reserve_vram_gb": 10,
+  "hosted_api_nodes": false,
+  "dynamic_vram": false,
+  "settings": {
+    "width": 960,
+    "height": 640,
+    "frames": 124,
+    "fps": 24,
+    "steps": 20,
+    "sampler": "res_multistep",
+    "scheduler": "simple",
+    "turbo_lora": false
+  },
+  "decode": "Preserve original sampler latent; release encoder/denoiser/cache before tiled VAE decode 512/64/16/4.",
+  "observed_argv": [
+    "main.py",
+    "--listen",
+    "127.0.0.1",
+    "--port",
+    "8189",
+    "--reserve-vram",
+    "10",
+    "--disable-api-nodes",
+    "--disable-dynamic-vram"
+  ],
+  "live_verified_service_version": "0.37.0",
+  "live_verified_queue": "empty",
+  "checked_for_unit": "unit_neutral_suncrack_throwers",
+  "current_service": {
+    "system": {
+      "os": "win32",
+      "ram_total": 68625412096,
+      "ram_free": 54892294144,
+      "comfyui_version": "0.37.0",
+      "required_frontend_version": "1.53.6",
+      "installed_templates_version": "0.11.69",
+      "required_templates_version": "0.11.69",
+      "comfy_package_versions": [
+        {
+          "name": "comfyui-frontend-package",
+          "installed": "1.53.6",
+          "required": "1.53.6"
+        },
+        {
+          "name": "comfyui-workflow-templates",
+          "installed": "0.11.69",
+          "required": "0.11.69"
+        },
+        {
+          "name": "comfyui-embedded-docs",
+          "installed": "0.5.12",
+          "required": "0.5.12"
+        },
+        {
+          "name": "comfy-kitchen",
+          "installed": "0.2.35",
+          "required": "0.2.35"
+        },
+        {
+          "name": "comfy-aimdo",
+          "installed": "0.5.5",
+          "required": "0.5.5"
+        }
+      ],
+      "python_version": "3.12.14 | packaged by conda-forge | (main, Sep  2 2026, 23:18:20) [MSC v.1944 64 bit (AMD64)]",
+      "pytorch_version": "2.14.0+cu130",
+      "embedded_python": false,
+      "deploy_environment": "local-git",
+      "argv": [
+        "main.py",
+        "--listen",
+        "127.0.0.1",
+        "--port",
+        "8189",
+        "--reserve-vram",
+        "10",
+        "--disable-api-nodes",
+        "--disable-dynamic-vram"
+      ]
+    },
+    "devices": [
+      {
+        "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+        "type": "cuda",
+        "index": 0,
+        "vram_total": 34190458880,
+        "vram_free": 32159825920,
+        "torch_vram_total": 67108864,
+        "torch_vram_free": 33554432
+      }
+    ]
+  },
+  "unit_id": "unit_neutral_greenbranch_cudgels",
+  "inherited_model_hashes_from": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scarshield_veterans/runtime_profile.json",
+  "verification_note": "Live queue empty; service 0.37.0, reserve VRAM 10 GB, hosted nodes and dynamic VRAM disabled."
+}

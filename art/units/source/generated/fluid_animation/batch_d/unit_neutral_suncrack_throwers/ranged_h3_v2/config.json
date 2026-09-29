@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093500,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        166,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "flask_windup",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          315,
+          637,
+          615,
+          864
+        ],
+        [
+          315,
+          864,
+          603,
+          964
+        ]
+      ],
+      "anchor": [
+        466,
+        951
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "flask_release",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          610,
+          638,
+          963,
+          938
+        ]
+      ],
+      "anchor": [
+        786,
+        924
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ],
+    [
+      50,
+      1
+    ],
+    [
+      62,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Suncrack Thrower, an athletic adult human woman with tan skin and brown hair in a messy high bun. Brass goggles with pale blue lenses rest on her forehead. Turquoise scarf with long gold-trimmed tails, ivory sleeveless wrapped tunic and split ragged skirt over ivory trousers, crossed brown chest straps, white wrist wraps and brown knee-high strapped sandals. A brown belt carries round brass flasks with blue glass centers. Exactly two arms, two hands and two legs, same face and outfit throughout. No shield, sword, staff or additional people. The woman performs ONE short controlled overarm toss of the small opaque BLUE flask. The same small blue glass flask stays visibly enclosed in her RIGHT hand from the belt through the raised position, with unchanged size and blue color; it must never become an empty fist or disappear before release. Draw it beside her right ear and pause in that exact pose. Then rotate the right shoulder forward, extend the elbow toward screen right and open the fingers to release the flask. The small blue flask leaves the hand once and exits screen right without growing. Follow through with the empty right hand and recover to the starting stance. Left hand counterbalances. Scarf, goggles and belt remain unchanged. No fire, magical glow or additional objects. Fixed elevated three-quarter orthographic camera matching the reference, fixed body scale, centered root. Full body and scarf remain visible. Entire background stays perfectly uniform pure green RGB0,255,0 throughout, no color change, no floor, shadow, horizon, dust, text or scenery. Continuous physical joint articulation.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 50,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      38.0,
+      48.0,
+      43.0
+    ]
+  }
+}

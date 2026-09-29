@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          166,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5e562b5bfc7523357b2251667ed80ca703b92308d8faf17b2786019d18deb032",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "19dc04e14e97f81b9367aa4d715f9dc7ea515a0b9f92ed683f162ca77677cb91",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            949,
+            282,
+            1246
+          ]
+        ],
+        "anchor": [
+          139,
+          1232
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "374fb417689de7ad45ac60bb4081e5cdde8a5b112f1f749c6b850950e8e4e25b",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "death_tipping",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+        "rects": [
+          [
+            296,
+            983,
+            612,
+            1100
+          ],
+          [
+            296,
+            1100,
+            593,
+            1150
+          ],
+          [
+            296,
+            1150,
+            612,
+            1205
+          ]
+        ],
+        "anchor": [
+          454,
+          1190
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "752d9933dbfc3f17a02834ebadc3796761bf1d1c1e55d97b9e0e44c75c32ab83",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_left",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+        "rects": [
+          [
+            911,
+            1056,
+            1254,
+            1145
+          ],
+          [
+            936,
+            1145,
+            1254,
+            1160
+          ],
+          [
+            960,
+            1160,
+            1254,
+            1194
+          ]
+        ],
+        "anchor": [
+          1087,
+          1172
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "21ecd79d08c67dc134b41ba992550d3a2a320f0a3a92c87641b622cfdabdefd1",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

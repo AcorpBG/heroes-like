@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    1080,
+    "80e7bd6e-aa75-476e-820f-58ef3e646223",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Suncrack Thrower, an athletic adult human woman with tan skin and brown hair in a messy high bun. Brass goggles with pale blue lenses rest on her forehead. Turquoise scarf with long gold-trimmed tails, ivory sleeveless wrapped tunic and split ragged skirt over ivory trousers, crossed brown chest straps, white wrist wraps and brown knee-high strapped sandals. A brown belt carries round brass flasks with blue glass centers. Exactly two arms, two hands and two legs, same face and outfit throughout. No shield, sword, staff or additional people. Walk briskly in place with three complete reciprocal gait cycles. Alternate the two feet through contact, loading, passing and lift, with bent knees and coordinated opposing arm swing. Belt flasks stay secured, scarf follows the stride. Maintain centered hips and same scale. Finish in the initial stance. Fixed elevated three-quarter orthographic camera matching the reference, fixed body scale, centered root. Full body and scarf remain visible. Entire background stays perfectly uniform pure green RGB0,255,0 throughout, no color change, no floor, shadow, horizon, dust, text or scenery. Continuous physical joint articulation.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026093400
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "suncrack_move_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "suncrack_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "suncrack_h3",
+      "create_time": 1790704378766
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "suncrack_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "80e7bd6e-aa75-476e-820f-58ef3e646223",
+          "timestamp": 1790704378767
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "80e7bd6e-aa75-476e-820f-58ef3e646223",
+          "timestamp": 1790704378774
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "80e7bd6e-aa75-476e-820f-58ef3e646223",
+          "timestamp": 1790704574027
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

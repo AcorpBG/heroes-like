@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          166,
+          492
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5e562b5bfc7523357b2251667ed80ca703b92308d8faf17b2786019d18deb032",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "19dc04e14e97f81b9367aa4d715f9dc7ea515a0b9f92ed683f162ca77677cb91",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_crouch",
+        "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+        "rects": [
+          [
+            963,
+            363,
+            1248,
+            629
+          ]
+        ],
+        "anchor": [
+          1109,
+          617
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3538f09100a8b2c2801479b30acd27f09fee333a4fadcc82b5d6f5b2ab24471d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "af8cd87934b995a2314ea94ac1b53529a2fda97cd28836fcb390ab644127a041",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

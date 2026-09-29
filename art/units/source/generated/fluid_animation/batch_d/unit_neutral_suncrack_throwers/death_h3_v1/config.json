@@ -1,0 +1,145 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026093406,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        166,
+        492
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          949,
+          282,
+          1246
+        ]
+      ],
+      "anchor": [
+        139,
+        1232
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_tipping",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          296,
+          983,
+          612,
+          1100
+        ],
+        [
+          296,
+          1100,
+          593,
+          1150
+        ],
+        [
+          296,
+          1150,
+          612,
+          1205
+        ]
+      ],
+      "anchor": [
+        454,
+        1190
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_suncrack_throwers/alpha/poses.png",
+      "rects": [
+        [
+          911,
+          1056,
+          1254,
+          1145
+        ],
+        [
+          936,
+          1145,
+          1254,
+          1160
+        ],
+        [
+          960,
+          1160,
+          1254,
+          1194
+        ]
+      ],
+      "anchor": [
+        1087,
+        1172
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Suncrack Thrower, an athletic adult human woman with tan skin and brown hair in a messy high bun. Brass goggles with pale blue lenses rest on her forehead. Turquoise scarf with long gold-trimmed tails, ivory sleeveless wrapped tunic and split ragged skirt over ivory trousers, crossed brown chest straps, white wrist wraps and brown knee-high strapped sandals. A brown belt carries round brass flasks with blue glass centers. Exactly two arms, two hands and two legs, same face and outfit throughout. No shield, sword, staff or additional people. Perform one continuous defeat collapse. Knees buckle, lower onto one knee with shoulders drooping, then lean forward and reach both hands toward the ground. Lower the hip and roll onto the side with head toward screen left and legs toward screen right. Settle into the supplied curled side-rest pose, scarf and belt flasks resting with the body. End motionless on the ground with both arms and legs intact. Fixed elevated three-quarter orthographic camera matching the reference, fixed body scale, centered root. Full body and scarf remain visible. Entire background stays perfectly uniform pure green RGB0,255,0 throughout, no color change, no floor, shadow, horizon, dust, text or scenery. Continuous physical joint articulation.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 52,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      38.0,
+      45.0,
+      50.0,
+      31.0
+    ]
+  }
+}

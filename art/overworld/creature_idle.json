@@ -3075,29 +3075,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        69.0,
+        69,
         218
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_suncrack_throwers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_suncrack_throwers.png",
       "source_indices": [
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24,
-        25
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        187,
-        18,
-        359,
-        247
+        83,
+        38,
+        255,
+        267
       ],
-      "source_sha256": "8c732c36f93e3814902f046783831bdf60080b7ba18b119a45d15299d560bb91",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_suncrack_throwers/provenance.json",
+      "source_sha256": "b0180a3b1954238be067986c0ff4bd19e968700e865613d53e28d4ef350054e4",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_suncrack_throwers/provenance.json",
       "sha256": "ebf8277d00cf343bfc250d886c564f5d9765eb6750275aacef3e235b01d33749"
     },
     "unit_neutral_sumpstone_guards": {

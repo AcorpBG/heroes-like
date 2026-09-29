@@ -1,0 +1,24 @@
+{
+  "unit_id": "unit_neutral_suncrack_throwers",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "ranged_h3_v2",
+    "hit_h3_v3",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed all1240 original chronological frames across ten H3 takes, enlarged action/alpha details, all268 selected native-scale action poses, eight retained articulated idle poses and three actual offscreen BattleShell phase renders. Accepted reciprocal gait, punch and recovery, continuous held flask through release, grounded recoil/recovery, forearm guard, physical flask support and continuous grounded collapse. Ranged flight is runtime-owned: only fully detached projectile pixels separated across verified empty gaps at59/60. Rejected rangedv1 lost flask and hitv1/v2 incoming debris; replacement hitv3 has clean solo recoil. Source holds shortened chronologically; no reverse/interpolated/padded motion. Candidate904 checks pass. This is chronological-frame/enlarged/native-phase review, not continuous playback or a manual playtest."
+  },
+  "rejected_takes": {
+    "ranged_h3_v1": "Held flask disappears into empty fist at53-55 and reappears oversized before release57. No frames accepted.",
+    "hit_h3_v1": "Unrequested incoming dark object and debris overlap the recoil at27-44. Reject; regenerate isolated flinch without an incoming effect.",
+    "hit_h3_v2": "Again invents incoming dark streaks and debris that overlap the recoil. Reassessment: remove all impact/projectile vocabulary from prompt and use an immediate solo standing backbend with earlier held guide."
+  }
+}

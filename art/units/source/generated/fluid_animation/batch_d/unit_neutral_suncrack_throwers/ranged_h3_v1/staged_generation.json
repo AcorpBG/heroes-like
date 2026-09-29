@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6b50b9af769471ace4317adac791de05b574c2286f97cde04629a41fbe1521a0",
+  "latent_sha256": "87fbd8e8b5b3d7c31cce5617152bf5e291615f330e76982028b45837d75bf5ec",
+  "decode_workflow_sha256": "15975459a9aa50fdbbf1a442f998e17f74208e8c1523c396f0754df07d261e17",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "suncrack_h3\\ranged_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
