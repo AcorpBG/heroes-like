@@ -1,0 +1,19 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomous review of all 868 original chronological H3 frames, enlarged identity/alpha/equipment details, every native 128px phase and three battle-shell phases. Reciprocal gait, bow-shove anticipation/contact/recovery, one ranged draw/release/recovery, upright recoil, held crouched defense, physical hand/strap support signal and continuous grounded collapse retain original design, bow, goggles and winter clothes. Excluded unstable opening arrow handling by selecting the clean nocked stance; detached flying arrow separated across empty gaps in two release frames because runtime owns flight. Preserved eight reviewed articulated idle paintings and map timing. 271 selected original frames; no interpolated, reversed or duplicate padding. Candidate 913 focused checks passed. This is chronological-frame and native-phase review, not continuous browser playback or a manual game playtest."
+  }
+}

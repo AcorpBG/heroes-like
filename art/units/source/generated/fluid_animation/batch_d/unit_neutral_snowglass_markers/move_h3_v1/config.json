@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026092960,
+  "references": [
+    {
+      "name": "walk_contact",
+      "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          927,
+          332
+        ]
+      ],
+      "anchor": [
+        754,
+        322
+      ],
+      "scale": 0.65,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "ONE original Snowglass Marker archer facing screen right in elevated three-quarter view. Preserve the white fur-trimmed hood and white winter coat, cobalt blue scarf over the mouth, round amber goggles, blue cape with white embroidered geometric edging, brown leather gloves, belt, fitted blue trousers, knee pads and fur-cuffed brown boots. A quiver of blue-fletched arrows stays behind the shoulder. Exactly two arms, two hands and two legs. The left bow hand carries ONE brown recurved bow with golden metal tips and a round blue gem at the handle; the right hand draws the string or gestures. Preserve the bow length, curvature, string and grip, adult proportions and painted materials. Walk in place through two complete reciprocal cycles, alternately lifting and planting each boot. Near and far legs alternate contact, loading, passing and extension. Keep the body centered for engine travel; the left hand carries the bow low and the free right arm swings naturally. The cape follows the stride. End in the starting gait phase. Locked orthographic camera, unchanged body scale and full-body view. Keep all boots, hood, bow tips and equipment inside the canvas. Perfectly uniform bright GREEN background, exactly the same green throughout the entire video. The flat green background remains empty. No scenery, camera motion, zoom, magic, glow, sparks, smoke or added equipment. Natural articulated limb movement with stable anatomy and physical ground contact.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 29,
+  "foreground_measurement": {
+    "rule": "Maximum green-minus-max(red,blue) over opaque alpha>240 interiors eroded three pixels, plus two levels.",
+    "per_guide_max": [
+      27.0
+    ]
+  }
+}

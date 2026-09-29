@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_snowglass_markers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            414,
+            260
+          ],
+          [
+            0,
+            260,
+            384,
+            310
+          ],
+          [
+            0,
+            310,
+            384,
+            514
+          ]
+        ],
+        "anchor": [
+          221,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bea64d05902e99e5248ff29d024e3d91f94b523bfd8154c48c168f1c34128d10",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "09671b75e55ead738e10862f0a905d5742ddd73260725c61a21079164540d8db",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_snowglass_markers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1152,
+            0,
+            1536,
+            514
+          ]
+        ],
+        "anchor": [
+          1351,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "bea64d05902e99e5248ff29d024e3d91f94b523bfd8154c48c168f1c34128d10",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bffb8ae27caf5c6a4ca559fbc7e33d1285bc77a28fb7e7ccd8e76e628cfa39a4",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

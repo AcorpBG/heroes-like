@@ -2725,29 +2725,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        96.0,
+        96,
         212
       ],
       "painted_extent": 207,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_snowglass_markers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_snowglass_markers.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        160,
-        24,
-        346,
-        247
+        40,
+        28,
+        226,
+        251
       ],
-      "source_sha256": "69717ad906ddacbfa1906a737bb65332c745026d626c4847bd78a5915cf3a3de",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_snowglass_markers/provenance.json",
+      "source_sha256": "a417971ea425ec0a77dd353d5e3d2e94a52171affefc5868da1703ea2abbb2e1",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_snowglass_markers/provenance.json",
       "sha256": "4bda07705d5f83f0299f7164fd70c51ce45730583a314a1ce9dd88cf795ba78d"
     },
     "unit_neutral_orchard_halberds": {

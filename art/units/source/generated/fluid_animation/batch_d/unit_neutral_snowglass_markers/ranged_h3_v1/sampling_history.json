@@ -1,0 +1,307 @@
+{
+  "prompt": [
+    875,
+    "a3617573-7c62-4b4f-9ae6-5902634821b4",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original Snowglass Marker archer facing screen right in elevated three-quarter view. Preserve the white fur-trimmed hood and white winter coat, cobalt blue scarf over the mouth, round amber goggles, blue cape with white embroidered geometric edging, brown leather gloves, belt, fitted blue trousers, knee pads and fur-cuffed brown boots. A quiver of blue-fletched arrows stays behind the shoulder. Exactly two arms, two hands and two legs. The left bow hand carries ONE brown recurved bow with golden metal tips and a round blue gem at the handle; the right hand draws the string or gestures. Preserve the bow length, curvature, string and grip, adult proportions and painted materials. Shoot ONE arrow toward screen right. Right hand nocks a single blue-fletched arrow onto the bowstring, left arm extends and aims the bow, right elbow draws the string and nock back beside the cheek. Briefly hold full draw, release once, and let the right hand follow through backward. The arrow leaves cleanly toward screen right; bow and string remain in the left grip. Lower the bow and recover the starting stance. Only one shot; preserve both real arms and the quiver. Locked orthographic camera, unchanged body scale and full-body view. Keep all boots, hood, bow tips and equipment inside the canvas. Perfectly uniform bright GREEN background, exactly the same green throughout the entire video. The flat green background remains empty. No scenery, camera motion, zoom, magic, glow, sparks, smoke or added equipment. Natural articulated limb movement with stable anatomy and physical ground contact.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092962
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "snowglass_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "snowglass_ranged_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "snowglass_ranged_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "snowglass_ranged_h3_v1_guide_3.png"
+        }
+      },
+      "34": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "snowglass_ranged_h3_v1_guide_4.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 23,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 48,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 65,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 89,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "34",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "snowglass_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "snowglass_h3",
+      "create_time": 1790655352749
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "snowglass_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a3617573-7c62-4b4f-9ae6-5902634821b4",
+          "timestamp": 1790655352882
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "a3617573-7c62-4b4f-9ae6-5902634821b4",
+          "timestamp": 1790655352910
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a3617573-7c62-4b4f-9ae6-5902634821b4",
+          "timestamp": 1790655568690
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_snowglass_markers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_neutral_snowglass_markers/alpha/poses.png",
+        "rects": [
+          [
+            616,
+            0,
+            927,
+            332
+          ]
+        ],
+        "anchor": [
+          754,
+          322
+        ],
+        "scale": 1.3,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3c4e63c44f8e7c28288a8ab6bfe4f9798cf6f1926c5cef371075c7fb7de28767",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "c6f36b521b663ae8476502d675c726e4f0322437897556e3a08a7ac782a1bf69",
+      "runtime_source_scale": 0.65
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
