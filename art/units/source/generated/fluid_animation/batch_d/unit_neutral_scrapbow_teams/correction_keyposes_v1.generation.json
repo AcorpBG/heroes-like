@@ -1,0 +1,19 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.png",
+    "sha256": "b2a6c809f2d67f4c91f430e1a3eecdef1aecd322483931ec3c04250692072764"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.prompt.txt",
+    "sha256": "5b5a7d069f4306c633e87108fd6b998bfb3d92be3f5ad09f2570c1ba5462bd2d"
+  },
+  "tool": "built-in image_gen",
+  "original_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-da70df20-a3a5-4cd5-a124-7084676aee3d.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "bd1e5978613f729dec65edc0ffa00fe559187f63a2842e751d7d15e62040c7ba"
+    }
+  ],
+  "rule": "Two new original key poses; one source-wide anatomical scale; no synthetic articulation."
+}

@@ -244,3 +244,8 @@ art/animation/source/fluid/unit_neutral_lanternet_throwers/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_glowcap_bulwarks/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_glowcap_bulwarks/**/*.txt -text
 art/animation/source/fluid/unit_neutral_glowcap_bulwarks/*.json -text
+
+# Preserve hash-bound Scrapbow Teams H3 provenance.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/**/*.txt -text
+art/animation/source/fluid/unit_neutral_scrapbow_teams/*.json -text

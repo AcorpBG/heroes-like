@@ -1,0 +1,5132 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_scrapbow_teams",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_003",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_009",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_015",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_021",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_057",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "ranged_h3_012",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "ranged_h3_014",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "ranged_h3_016",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "ranged_h3_018",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "ranged_h3_020",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "ranged_h3_022",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "ranged_h3_024",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "ranged_h3_026",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "ranged_h3_030",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "ranged_h3_034",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "ranged_h3_038",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "ranged_h3_040",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "ranged_h3_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "ranged_h3_042",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "ranged_h3_043",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "ranged_h3_044",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "ranged_h3_045",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "ranged_h3_046",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "ranged_h3_047",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "ranged_h3_048",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              632,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 632,
+            "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+          }
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              623,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 623,
+            "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+          }
+        },
+        {
+          "name": "ranged_h3_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              623,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 623,
+            "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+          }
+        },
+        {
+          "name": "ranged_h3_068",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+          }
+        },
+        {
+          "name": "ranged_h3_069",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              650,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 650,
+            "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+          }
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_072",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "ranged_h3_076",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_045",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "attack_h3_046",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "attack_h3_047",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_050",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "attack_h3_054",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "attack_h3_058",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_065",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_067",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_021",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_023",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_025",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_027",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "hit_h3_028",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "hit_h3_029",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "hit_h3_030",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_034",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "hit_h3_060",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_084",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "hit_h3_088",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "hit_h3_090",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_094",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "hit_h3_095",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "hit_h3_096",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "hit_h3_097",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "hit_h3_098",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "hit_h3_099",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "hit_h3_100",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "hit_h3_102",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "defend_h3_008",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_015",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_017",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_019",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_021",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_027",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_029",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_031",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_044",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_066",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_075",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_077",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_079",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_071",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_073",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_075",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_077",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_079",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_081",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            550
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20
+          ],
+          "frame_msec": 50,
+          "loop": true,
+          "static_frame": 0
+        },
+        "ranged": {
+          "indices": [
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 26
+        },
+        "attack": {
+          "indices": [
+            64,
+            65,
+            66,
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 13
+        },
+        "hit": {
+          "indices": [
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122,
+            123,
+            124,
+            125
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 14
+        },
+        "cast": {
+          "indices": [
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 7
+        },
+        "death": {
+          "indices": [
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 35
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/original_lossless.mkv",
+          "sha256": "e95098f24ae03ce4de8a413a2140fe13167f4156eda71930212834d819326708"
+        },
+        "move_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/original.json",
+          "sha256": "be6dae174c5f194f4c10051d5ec92d9cb2a4d41ea2eb920d70557e7481897c9c"
+        },
+        "move_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/workflow_api.json",
+          "sha256": "ad2bb75a3bebe2239904e4099950b3e96dc9eca1c78dbb932c5ad7c2b8e0e441"
+        },
+        "move_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/prompt.txt",
+          "sha256": "b4cf1bd9052ad3df3fc82811092b2e024a5a0f6e31b8334d48b7edc3d54c23c1"
+        },
+        "move_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/reference.json",
+          "sha256": "b44b274902dca40288ba1e5083c42cb7213ca6e054927f7efbfb83ecb2022c70"
+        },
+        "move_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte.json",
+          "sha256": "d35e9fa46b5542a5387c72f1a0d469d477bef2933a5e2b5b332ef16f3f507f3c"
+        },
+        "move_h3_v2_extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/extraction_settings.json",
+          "sha256": "3df05b76466c7fdcf17ddb23a854bb2eeb1564481677bc70bed43680b4e1e88e"
+        },
+        "move_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/staged_generation.json",
+          "sha256": "dede766442795b60a76e79318bfc3346c2a2fd87f040a34993fc4505249323e6"
+        },
+        "move_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "15d8935fd3e5c61227691de256d933bb2174ea1337bddf8a3de069bab437a62a"
+        },
+        "move_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/sampling_submission.json",
+          "sha256": "48f882c783ded051767574f031b28554c9af6907a3b3aa709eb821dd55fb612f"
+        },
+        "move_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/sampling_history.json",
+          "sha256": "043ffd25b4568610fc18cecfe8414172064d452ab14c72d9d8e4cc9c09c04428"
+        },
+        "move_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/original.latent",
+          "sha256": "54236a818822fbf9ad5b377942d4ea30a43d1f200b12826bfc77dc5caed29f90"
+        },
+        "ranged_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/original_lossless.mkv",
+          "sha256": "9c69c4aea6eec56d4a870b496b7ab40df1302f7e6919761a7474bcdf9553bf01"
+        },
+        "ranged_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/original.json",
+          "sha256": "d6b574fec6df6fd8e00e0ec5023cea0b850d33e3ed3440aba64082ea0ca7ce4c"
+        },
+        "ranged_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/workflow_api.json",
+          "sha256": "91f1f743e670a50325a678197a6b38bd2f18f978f0530ab9dc2d5434829bfd44"
+        },
+        "ranged_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/prompt.txt",
+          "sha256": "87fb6e2117f6d49a80e2b4725a0304c3693a238db232417f965454446310af00"
+        },
+        "ranged_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/reference.json",
+          "sha256": "1d560b7376b94748636b14ddd36104bca02d8b57017ead4ec1ee2b78890822f7"
+        },
+        "ranged_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte.json",
+          "sha256": "034c469cc98838351f9131bb74b3e6c691fe89c6a5589ff89d12e9a73d9df037"
+        },
+        "ranged_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/staged_generation.json",
+          "sha256": "cd0ec3db51a77ebade6f13d6be3d56c68fb4ec77c2b4478182b745625e3214b7"
+        },
+        "ranged_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/sampling_workflow_api.json",
+          "sha256": "5c60b6d77bacd2e96d56321b9b5018fc5cc8a6dfda9cd4c62adc02f402128558"
+        },
+        "ranged_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/sampling_submission.json",
+          "sha256": "b428f1f120a0225f731ea345be16392d82c131c269ba9ef340ea5a52216d0b5e"
+        },
+        "ranged_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/sampling_history.json",
+          "sha256": "bef36a5a4f758c44c2be0085be86231abd389fb69480934efebff534790fc8c4"
+        },
+        "ranged_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/original.latent",
+          "sha256": "5691e4b27b989cd447b5dd340d33015c309ad8c39ecab9a41e9ef612b1c44174"
+        },
+        "attack_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/original_lossless.mkv",
+          "sha256": "a08f75c903dbe6d57c261b29c59a79a75cd2a7fdf7137886f5515689968897d9"
+        },
+        "attack_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/original.json",
+          "sha256": "7d782211eaa77b8e3ca3f4dc155a5123198ef567f93559de50501062f8cb3f83"
+        },
+        "attack_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/workflow_api.json",
+          "sha256": "a9c68793d4b087a8c9c2f7b0401eb0ba60e638df723116e64d0fffbcd92e2513"
+        },
+        "attack_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/prompt.txt",
+          "sha256": "88d0f77187f88ca68f2c37a579c70eba8ce04de172a9ca46f53d336eb90f00d7"
+        },
+        "attack_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/reference.json",
+          "sha256": "800b53809730eb8a048ceebf9fdc698ff3ea342f300da66c2b65f59754fe0a39"
+        },
+        "attack_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte.json",
+          "sha256": "a18d9686d164223e8bfb068c5cf024bb6017275c3d4aa9eea4b5204b71477f4e"
+        },
+        "attack_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/staged_generation.json",
+          "sha256": "2a8ff91f1525cb276022c83096007a4bbf0d94e7efd6ba8bf6725c67b2fc9c58"
+        },
+        "attack_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/sampling_workflow_api.json",
+          "sha256": "e877b5b30b9de44ea064f7133b30a9864b1b2f21f00f50b03208fbff6615dd68"
+        },
+        "attack_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/sampling_submission.json",
+          "sha256": "8fdee4c442b899caf82b42a924b1c5bf18505302fc32486090971ac579012b8c"
+        },
+        "attack_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/sampling_history.json",
+          "sha256": "cc1bf7804ceba0dcf648e852702a5ce39e0007d1a674b84ffcf185197924f202"
+        },
+        "attack_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/original.latent",
+          "sha256": "aea6667f5a9cbca0d3ed3327479465f8c528d570ac9a1b3fbbd454a9d60a6deb"
+        },
+        "attack_h3_v2_guide_image_correction_keyposes_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.png",
+          "sha256": "b2a6c809f2d67f4c91f430e1a3eecdef1aecd322483931ec3c04250692072764"
+        },
+        "attack_h3_v2_guide_prompt_correction_keyposes_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.prompt.txt",
+          "sha256": "5b5a7d069f4306c633e87108fd6b998bfb3d92be3f5ad09f2570c1ba5462bd2d"
+        },
+        "attack_h3_v2_guide_generation_correction_keyposes_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.generation.json",
+          "sha256": "81c9ba57a4e6ea58bed5e64504c97ed0dda3e877cede1416bcd8555557d6ab31"
+        },
+        "hit_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/original_lossless.mkv",
+          "sha256": "3aacf9f4f8ff343e1c7f2fe93cd10deb5c4cea9bfb9425252c42995a385e3b28"
+        },
+        "hit_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/original.json",
+          "sha256": "f6d6488a808b1cd23dc708d2b3f275321c44abc1263abe9927a9a483d93cce74"
+        },
+        "hit_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/workflow_api.json",
+          "sha256": "f50db520d463c806764c6c72088d23fbdad3c423be914824f83936a006213a57"
+        },
+        "hit_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/prompt.txt",
+          "sha256": "f2a78d3f4a39540a5a13005e2ddd12f2e2aea0e73b98770b6876a9211bed0d6f"
+        },
+        "hit_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/reference.json",
+          "sha256": "281a6651c864ff81ad67ef1296b417b2294c6500549fa861da616edbb56632ea"
+        },
+        "hit_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte.json",
+          "sha256": "f4b6bbbf727cc26ef93c8a007b645c9b049ceae6c1213ef5cbdaece9d5774ae3"
+        },
+        "hit_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/staged_generation.json",
+          "sha256": "6d073f73ca0577f82304b596de268157c48be98a34f176cb60ab3c4f21795b9a"
+        },
+        "hit_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "9cb72c9403fea67b1953cf21240b932393d25ea97876d287c6f852429471494e"
+        },
+        "hit_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/sampling_submission.json",
+          "sha256": "2e4738ea986d468bb63c5cf69d236f21281352ab2a5c417751e769ba76b5aa4f"
+        },
+        "hit_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/sampling_history.json",
+          "sha256": "c2cb473c2ad1d26153e009701c0102989f1d0eb16cdb4545821bdf91bdcaa04e"
+        },
+        "hit_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/original.latent",
+          "sha256": "480e10c854fea608ec8ece43d3a734ad9c9d5c9a8335947e671f795548a17668"
+        },
+        "hit_h3_v2_guide_image_correction_keyposes_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.png",
+          "sha256": "b2a6c809f2d67f4c91f430e1a3eecdef1aecd322483931ec3c04250692072764"
+        },
+        "hit_h3_v2_guide_prompt_correction_keyposes_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.prompt.txt",
+          "sha256": "5b5a7d069f4306c633e87108fd6b998bfb3d92be3f5ad09f2570c1ba5462bd2d"
+        },
+        "hit_h3_v2_guide_generation_correction_keyposes_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.generation.json",
+          "sha256": "81c9ba57a4e6ea58bed5e64504c97ed0dda3e877cede1416bcd8555557d6ab31"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/original_lossless.mkv",
+          "sha256": "88bba4f3401d270d23e3865999f53e11ea31142996c96d53e127a2a5357d343d"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/original.json",
+          "sha256": "885cc65ad843f8e2c5b435a2b85461cad877d14dbfeec18f99be394dd8a79c65"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/workflow_api.json",
+          "sha256": "e15767700774eed2ea06a28c652dea0230dec1a69fb9aafd633ab4a6c6fd6454"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/prompt.txt",
+          "sha256": "806924b7d505fdc33b75311bd73bd64d093ddde4da849f0f7c8daa91db659895"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/reference.json",
+          "sha256": "62712b215fab1e241837314aa25fd8c644732558b748cd0bda1d450b9f5b1f32"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte.json",
+          "sha256": "1d3c83b0ee61b69d3ed2ee1a0594a6649027850a4943105d39184d60792cfb50"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/staged_generation.json",
+          "sha256": "46195019de1c27299846dbaeafee18b1486ef0e866476aa75fab57cbc4284874"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "ef588b553293494e0daa32643e31d4637b28d8815896543fe5347e6942b55062"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/sampling_submission.json",
+          "sha256": "493ab0d4727a863e5a6d0899ae1cc2e40a4f9fae8eef92f04e20ffc10bb299e6"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/sampling_history.json",
+          "sha256": "1bf591970d1bedeea7543ca31cb9f780d2027d8724218f2db93f3895da54c2a2"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/original.latent",
+          "sha256": "eab5ca5c09d2d3308d3f08b88cf668026886438c0a1bdd6180159db5eb9299ed"
+        },
+        "cast_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/original_lossless.mkv",
+          "sha256": "c477d319d952b7de3fdb8efb59cb2e349633a99a2e3c1e4c4bbad2cf9387c623"
+        },
+        "cast_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/original.json",
+          "sha256": "93c110d369cd866f2bd9932ab5af0eac61eb06225a09e6b3cdfab444b822c379"
+        },
+        "cast_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/workflow_api.json",
+          "sha256": "c1e02dcbbf648de9cadb84e6811ce4509f93923f310dbbb9f6cf584d6c117d37"
+        },
+        "cast_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/prompt.txt",
+          "sha256": "c11a72c8ea0192ad22552c36cedf2a504d2b035cc88a4251af07fe22a9825ed4"
+        },
+        "cast_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/reference.json",
+          "sha256": "19e5922f505f624ea5566b8bc97b4a6dfe10ae8834cf2ae0ffd61f227d14b55d"
+        },
+        "cast_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte.json",
+          "sha256": "37a71ba99f9f180b8d77e0c393d8e75707de37abd301dad1ae527f34ac1cc233"
+        },
+        "cast_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/staged_generation.json",
+          "sha256": "9578c6e08b3d83491c768b52eed5407f98c6ae77c9ea453af82885e7500a235b"
+        },
+        "cast_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/sampling_workflow_api.json",
+          "sha256": "6fa62ca40553d993ad916057fef2057afadb4ec778cd0839df9fc96e93492570"
+        },
+        "cast_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/sampling_submission.json",
+          "sha256": "1ab04d561a4687e9a22dc9e9a7caad6e116caeb204920c71d3df3221b6be316a"
+        },
+        "cast_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/sampling_history.json",
+          "sha256": "28467dbe8f79ae52f4a16f02dbc908fed8f53ce2b1d036c0d02f0ced291d867e"
+        },
+        "cast_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/original.latent",
+          "sha256": "6e1ff6878dfdb3a8727ba2507b1dc85c01ffc7e9bfd5cabea2fc9d7a8c184c82"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/original_lossless.mkv",
+          "sha256": "2b38ef16d9b277c8c6bab989d7db3f6cce24a697dbbe35e69b559416f70ac298"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/original.json",
+          "sha256": "48ac7f9670011ee7eed940f1ee5e2ca7b1ac27164a513f8803b57bd252a6757b"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/workflow_api.json",
+          "sha256": "49b218d6e1e4820b068cd510921e9a90440a3c46a220bc180e9082887d0f1032"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/prompt.txt",
+          "sha256": "95513e75307e946a6e3e6826b62ec589714648c1145054f2c67ff8ce9e1c0073"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/reference.json",
+          "sha256": "a151a00601b2f229ded93afe084dbe1dd2895534616a3fffe89791607861dc22"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte.json",
+          "sha256": "03b600736aaa9cb3e33a9a44f376d2582d30fdcf323cacf04c74679c0d46ab79"
+        },
+        "death_h3_v1_extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/extraction_settings.json",
+          "sha256": "3df05b76466c7fdcf17ddb23a854bb2eeb1564481677bc70bed43680b4e1e88e"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/staged_generation.json",
+          "sha256": "96a1fcc4e4cb9fff294e2166633a0e64902a8377557b3a68d419f6d9a4d578db"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "e62e973f9195f941181628856faca32fb4618a2ca7f0885e91763a71be7ce2c2"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/sampling_submission.json",
+          "sha256": "f6733d565b66514488be0ffb16a4e4ee81fd9b5960fc46e1ad20db08ab3dd8a7"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/sampling_history.json",
+          "sha256": "3b01bbe56e41176678a7879fd1f1dd242a6d9535f4f67c38841e0db982649e50"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/original.latent",
+          "sha256": "fc1142ea7258c5f58109c61154a68c9aa4845320515582fb0ba466043431a8d8"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/runtime_profile.json",
+          "sha256": "3e6d0a55d38620a48888358e55fad2ba142d96a2b1d1afb8fc56ed549a43a519"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Autonomous frame-by-frame review of all selected-take chronologies, enlarged hands/crossbow/feet, light-dark alpha edges and every native Godot action phase. Two crew remain distinct, gunner grips one intact crossbow; reciprocal crew gait, loading/aim/recoil/recovery, forward melee shove, ducking hit, held guard, loader fist signal and grounded paired collapse accepted. Ranged65-69 exclude only detached runtime-owned projectile pixels across verified empty gaps; attached-effect63-64 are omitted. Existing eight articulated idle and map poses retained. No continuous-playback or manual-playtest claim."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_003.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_009.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_057.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/move_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/ranged_h3_v2/matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/attack_h3_v2/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_023.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_095.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_097.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_099.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/hit_h3_v2/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_019.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_021.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/defend_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/cast_h3_v2/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_077.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_079.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_081.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/death_h3_v1/matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "ranged",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

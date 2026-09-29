@@ -2589,25 +2589,25 @@
         160
       ],
       "painted_extent": 169,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_scrapbow_teams.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_scrapbow_teams.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        176,
-        76,
-        361,
-        247
+        96,
+        -4,
+        281,
+        167
       ],
-      "source_sha256": "0fcd937c91beef478772f4d6f5024e42cb714d0e8ef326be40a3660c99063f28",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_scrapbow_teams/provenance.json",
+      "source_sha256": "f221f3da9f82434703ab196d926f7a9fdb79f9533d2b8c6b220bf41cbb1e37ed",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_scrapbow_teams/provenance.json",
       "sha256": "22daeeb793a3f53e227a9987df060e17450d254fb66f7d3656ab730e49dbf8a5"
     },
     "unit_neutral_kilnward_mallets": {

@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            380,
+            260
+          ]
+        ],
+        "anchor": [
+          180,
+          253
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b362fc81d8cdca31e72f7f54a6e1476299bb06edc7b2450aa435484d331ca319",
+      "runtime_source_scale": 0.612
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            380,
+            795,
+            750,
+            993
+          ]
+        ],
+        "anchor": [
+          565,
+          982
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c1eed33301d47ecc5c778594d35bd61b32c2600951facf5be112bd2a0d07f535",
+      "runtime_source_scale": 0.612
+    },
+    {
+      "source_frame": {
+        "name": "death_lower",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+        "rects": [
+          [
+            516,
+            504,
+            1038,
+            1024
+          ]
+        ],
+        "anchor": [
+          785,
+          916
+        ],
+        "scale": 0.7776000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bacc36d80a907916883c80b843dd3c3d341e401a2492250293c051519239f5f6",
+      "runtime_source_scale": 0.38880000000000003
+    },
+    {
+      "source_frame": {
+        "name": "dead_pair",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            1145,
+            830,
+            1536,
+            1009
+          ]
+        ],
+        "anchor": [
+          1335,
+          968
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a4748f401287d5caf7f6d1c9e13ab0b88c0dbeff274adde2650ea1e582509dea",
+      "runtime_source_scale": 0.612
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

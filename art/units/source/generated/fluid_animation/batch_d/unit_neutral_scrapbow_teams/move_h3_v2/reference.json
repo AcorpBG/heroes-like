@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "crew_step",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+        "rects": [
+          [
+            0,
+            0,
+            519,
+            503
+          ]
+        ],
+        "anchor": [
+          254,
+          468
+        ],
+        "scale": 0.7776000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "43768731be16cf8b50fff32c2820b68a2f4cc272fb4cd99d2cf5ba8befaffee1",
+      "runtime_source_scale": 0.38880000000000003
+    },
+    {
+      "source_frame": {
+        "name": "crew_lift",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+        "rects": [
+          [
+            520,
+            0,
+            1024,
+            503
+          ]
+        ],
+        "anchor": [
+          766,
+          461
+        ],
+        "scale": 0.7776000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d0c2965d8b87334eb4510e4f33797f6799bec96cb865042994bdbba5706e2507",
+      "runtime_source_scale": 0.38880000000000003
+    },
+    {
+      "source_frame": {
+        "name": "crew_settle",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+        "rects": [
+          [
+            1024,
+            0,
+            1536,
+            503
+          ]
+        ],
+        "anchor": [
+          1280,
+          462
+        ],
+        "scale": 0.7776000000000001,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6c0f5486d9e2befe0a29735009563b1fbf8bf1f112046bf55891e64c2d97e117",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "edca1bb193b90a288f2ab663d2bdd631d0de9f6be317e9879ae2a5a77f57798e",
+      "runtime_source_scale": 0.38880000000000003
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

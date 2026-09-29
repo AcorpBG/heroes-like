@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            380,
+            260
+          ]
+        ],
+        "anchor": [
+          180,
+          253
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "18c4c7de27ab827c1e20f1fb6a5e5d66b63c8982dd34a7980a19c43386a552b4",
+      "runtime_source_scale": 0.612
+    },
+    {
+      "source_frame": {
+        "name": "stock_windup",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            380,
+            260,
+            756,
+            512
+          ]
+        ],
+        "anchor": [
+          565,
+          502
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "15f89f200ef647cf9748f4b2bc03a257766d323427dae2d6010cf30024b0138d",
+      "runtime_source_scale": 0.612
+    },
+    {
+      "source_frame": {
+        "name": "stock_shove",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            756,
+            260,
+            1145,
+            512
+          ]
+        ],
+        "anchor": [
+          946,
+          504
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bee3f27de4d506f7c0eacfd3184050864262bf5510c1903d5829a4eca39e5547",
+      "runtime_source_scale": 0.612
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

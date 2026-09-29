@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          166,
+          455
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9db3cc6e8f393d0983c0bbc37326875759f29fb26a08637922aeaa24502f04d1",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "513bec5a8451ccdf99cf13817002f0efbc29a692472f228e9eb576489edba26c",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_1",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            384,
+            0,
+            768,
+            512
+          ]
+        ],
+        "anchor": [
+          551,
+          455
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9db3cc6e8f393d0983c0bbc37326875759f29fb26a08637922aeaa24502f04d1",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9ec01a6896493b5531d915f3c53006ccaac938cb452bec7777c8ff000d7e2c78",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

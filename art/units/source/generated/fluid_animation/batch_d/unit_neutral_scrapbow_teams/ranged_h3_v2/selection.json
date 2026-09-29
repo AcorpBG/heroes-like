@@ -1,0 +1,72 @@
+{
+  "source_frames": [
+    8,
+    10,
+    12,
+    14,
+    16,
+    18,
+    20,
+    22,
+    24,
+    26,
+    30,
+    34,
+    38,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    50,
+    54,
+    58,
+    62,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    72,
+    76,
+    82,
+    88,
+    92,
+    94,
+    96,
+    98,
+    100,
+    104,
+    108
+  ],
+  "frame_msec": 35,
+  "contact_frame": 26,
+  "runtime_projectile_separation": {
+    "65": {
+      "split_x": 632,
+      "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+    },
+    "66": {
+      "split_x": 623,
+      "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+    },
+    "67": {
+      "split_x": 623,
+      "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+    },
+    "68": {
+      "split_x": 626,
+      "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+    },
+    "69": {
+      "split_x": 650,
+      "reason": "Fully detached generated projectile/flash to right of an empty vertical gap; runtime owns projectile flight. Retain both full crew and all held crossbow pixels, original matte/video unchanged."
+    }
+  },
+  "review_note": "All124 original frames and enlarged loading/raise44-48, release62-70 and recovery76-106 reviewed. Both crew and rigid crossbow remain; bow rolls edge-on during aim raise, returns correctly. Omit attached-flash63 and insufficient-gap64. Retain actual recoil65-69 with only fully separated runtime-owned projectile layer excluded across verified empty gaps. This preserves action rather than erasing attached equipment. Long loading/aim holds shortened; dense raise/release frames retained. Native Godot phases reviewed and accepted."
+}

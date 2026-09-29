@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            380,
+            260
+          ]
+        ],
+        "anchor": [
+          180,
+          253
+        ],
+        "scale": 1.224,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c335a3722174624880afbd9d58d20e4cbb0a6bbb0798dbe30d506dede47820ec",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "b362fc81d8cdca31e72f7f54a6e1476299bb06edc7b2450aa435484d331ca319",
+      "runtime_source_scale": 0.612
+    },
+    {
+      "source_frame": {
+        "name": "hit_corrected_key",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_scrapbow_teams/correction_keyposes_v1.png",
+        "rects": [
+          [
+            990,
+            0,
+            1774,
+            887
+          ]
+        ],
+        "anchor": [
+          1296,
+          755
+        ],
+        "scale": 0.52,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2a6c809f2d67f4c91f430e1a3eecdef1aecd322483931ec3c04250692072764",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3fd19a7bd04932eaaa2d5449cf6a3115d6bcbb8991c8d3e76ed61f67f0b97b04",
+      "runtime_source_scale": 0.26
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    550
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

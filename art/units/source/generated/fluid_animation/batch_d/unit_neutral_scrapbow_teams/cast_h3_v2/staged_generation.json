@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6fa62ca40553d993ad916057fef2057afadb4ec778cd0839df9fc96e93492570",
+  "latent_sha256": "6e1ff6878dfdb3a8727ba2507b1dc85c01ffc7e9bfd5cabea2fc9d7a8c184c82",
+  "decode_workflow_sha256": "c1e02dcbbf648de9cadb84e6811ce4509f93923f310dbbb9f6cf584d6c117d37",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "scrapbow_h3\\cast_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

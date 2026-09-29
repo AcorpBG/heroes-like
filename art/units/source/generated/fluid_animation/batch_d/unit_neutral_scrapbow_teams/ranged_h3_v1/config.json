@@ -1,0 +1,120 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    550
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 32,
+  "seed": 2026092901,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          380,
+          260
+        ]
+      ],
+      "anchor": [
+        180,
+        253
+      ],
+      "scale": 0.612,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "load_bolt",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          512,
+          380,
+          757
+        ]
+      ],
+      "anchor": [
+        185,
+        743
+      ],
+      "scale": 0.612,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "aim",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          380,
+          512,
+          758,
+          757
+        ]
+      ],
+      "anchor": [
+        570,
+        747
+      ],
+      "scale": 0.612,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "fire",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/alpha/poses.png",
+      "rects": [
+        [
+          758,
+          512,
+          1145,
+          757
+        ]
+      ],
+      "anchor": [
+        946,
+        748
+      ],
+      "scale": 0.612,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      25,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      58,
+      3
+    ],
+    [
+      104,
+      0
+    ]
+  ],
+  "prompt": "Original fantasy strategy game sprite animation, locked orthographic elevated three-quarter camera looking at a TWO-PERSON SCRAPBOW CREW facing screen right. The tall muscular human gunner stands at screen right and the shorter crouching loader stands at screen left, behind his near leg. Exactly TWO people throughout; each has exactly two arms, two hands and two legs. Keep both masked faces, brown leather armor, blue headbands and blue cloth, gunner leather boots, loader goggles and back quiver, all unchanged. ONE heavy wooden crossbow with steel fittings and blue limbs remains a rigid intact assembly held by the gunner with both hands, with consistent grips and string, never splits into two weapons. Loader never merges into gunner. Maintain their size difference, relative positions, body proportions and painterly detail. One coordinated crossbow firing cycle: the loader reaches forward and places a bolt into the lowered weapon, retracts his hand, gunner raises the crossbow level toward screen right, aims, squeezes trigger with small arm recoil, then lowers it smoothly and both return ready. Keep crossbow bow limbs, stock, stirrup, string and grip consistent. The projectile is supplied by the game renderer: do not show a flying bolt, streak or muzzle flash. Only the string snaps forward and gunner absorbs the small recoil. No camera motion or zoom, no body resizing, no rotation away from this view. Full crew and weapon remain inside frame with generous margins. Exactly uniform vivid MAGENTA RGB(255,0,255) background for EVERY frame, no gradients, no horizon, no floor texture or cast shadow, no darkening or lighting shift. No text, effects, sparks, dust, rays, explosions, new tools or extra people. Coherent real limb articulation, not a sliding still picture.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

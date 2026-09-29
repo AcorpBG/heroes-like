@@ -1,0 +1,98 @@
+{
+  "unit_id": "unit_neutral_scrapbow_teams",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    550
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 32,
+  "seed": 2026092900,
+  "references": [
+    {
+      "name": "crew_step",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          0,
+          0,
+          519,
+          503
+        ]
+      ],
+      "anchor": [
+        254,
+        468
+      ],
+      "scale": 0.38880000000000003,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "crew_lift",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          520,
+          0,
+          1024,
+          503
+        ]
+      ],
+      "anchor": [
+        766,
+        461
+      ],
+      "scale": 0.38880000000000003,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "crew_settle",
+      "source": "art/animation/source/poses/unit_neutral_scrapbow_teams/continuity-alpha/paired-travel-recovery-and-collapse.png",
+      "rects": [
+        [
+          1024,
+          0,
+          1536,
+          503
+        ]
+      ],
+      "anchor": [
+        1280,
+        462
+      ],
+      "scale": 0.38880000000000003,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "last": 0,
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      92,
+      2
+    ]
+  ],
+  "prompt": "Original fantasy strategy game sprite animation, locked orthographic elevated three-quarter camera looking at a TWO-PERSON SCRAPBOW CREW facing screen right. The tall muscular human gunner stands at screen right and the shorter crouching loader stands at screen left, behind his near leg. Exactly TWO people throughout; each has exactly two arms, two hands and two legs. Keep both masked faces, brown leather armor, blue headbands and blue cloth, gunner leather boots, loader goggles and back quiver, all unchanged. ONE heavy wooden crossbow with steel fittings and blue limbs remains a rigid intact assembly held by the gunner with both hands, with consistent grips and string, never splits into two weapons. Loader never merges into gunner. Maintain their size difference, relative positions, body proportions and painterly detail. Continuous in-place walking loop of both crew members. Gunner alternates left and right boot lift, swing, contact and weight transfer while carrying the crossbow stably at waist. Shorter loader follows with his own two visible feet stepping under his body, carrying his quiver. Both walk at the same pace; root remains centered for engine-driven translation. Two full reciprocal gait cycles then return to the first contact pose. No feet sliding or crew member vanishing. No camera motion or zoom, no body resizing, no rotation away from this view. Full crew and weapon remain inside frame with generous margins. Exactly uniform vivid MAGENTA RGB(255,0,255) background for EVERY frame, no gradients, no horizon, no floor texture or cast shadow, no darkening or lighting shift. No text, effects, sparks, dust, rays, explosions, new tools or extra people. Coherent real limb articulation, not a sliding still picture.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

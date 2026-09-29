@@ -1,0 +1,279 @@
+{
+  "prompt": [
+    796,
+    "a2e00d3a-774a-4e49-a9ad-fa023e9d95f8",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original fantasy strategy game sprite animation, locked orthographic elevated three-quarter camera looking at a TWO-PERSON SCRAPBOW CREW facing screen right. The tall muscular human gunner stands at screen right and the shorter crouching loader stands at screen left, behind his near leg. Exactly TWO people throughout; each has exactly two arms, two hands and two legs. Keep both masked faces, brown leather armor, blue headbands and blue cloth, gunner leather boots, loader goggles and back quiver, all unchanged. ONE heavy wooden crossbow with steel fittings and blue limbs remains a rigid intact assembly held by the gunner with both hands, with consistent grips and string, never splits into two weapons. Loader never merges into gunner. Maintain their size difference, relative positions, body proportions and painterly detail. One physical team support signal, NOT spellcasting: crouching loader raises one clenched gloved hand beside his head as an acknowledgement, then lowers it. Gunner simultaneously lifts his crossbow a little with bending elbows into an alert ready position, then settles it at waist. Neither releases equipment or fires. Full relaxed recovery to starting pose. No magic or added accessories. No camera motion or zoom, no body resizing, no rotation away from this view. Full crew and weapon remain inside frame with generous margins. Exactly uniform vivid GREEN RGB(0,255,0) background for EVERY frame, no gradients, no horizon, no floor texture or cast shadow, no darkening or lighting shift. No text, effects, sparks, dust, rays, explosions, new tools or extra people. Coherent real limb articulation, not a sliding still picture.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092905
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "scrapbow_cast_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "scrapbow_cast_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "scrapbow_cast_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 58,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 98,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "scrapbow_h3/cast_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "scrapbow_h3",
+      "create_time": 1790637687815
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "scrapbow_h3\\cast_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a2e00d3a-774a-4e49-a9ad-fa023e9d95f8",
+          "timestamp": 1790637687816
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "a2e00d3a-774a-4e49-a9ad-fa023e9d95f8",
+          "timestamp": 1790637687853
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a2e00d3a-774a-4e49-a9ad-fa023e9d95f8",
+          "timestamp": 1790637864191
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}
