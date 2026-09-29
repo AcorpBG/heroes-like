@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    440,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026092950,
+  "references": [
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          0,
+          978,
+          308
+        ],
+        [
+          620,
+          308,
+          989,
+          412
+        ]
+      ],
+      "anchor": [
+        798,
+        400
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_passing_attempt",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          705,
+          505,
+          1190
+        ],
+        [
+          0,
+          1190,
+          470,
+          1441
+        ]
+      ],
+      "anchor": [
+        258,
+        1408
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      31,
+      1
+    ],
+    [
+      93,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult female Tidepool Cutter, elevated three-quarter view facing screen right. Keep her teal headscarf with long trailing ties, long dark-brown beaded hair, white pearl earrings and gold medallion. She wears a weathered teal long coat over cream cloth, brown cross-body straps, rope belt, netted hip pouch with white shells, dark trousers, black fingerless gloves and brown rope-wrapped boots. Exactly TWO arms, TWO hands and TWO legs. Each hand firmly grips its OWN short silver hook-bladed cutter, with gold handle and dangling white shell charm. Maintain both distinct short curved blades, their hook tips, metal shapes and handle connections in every frame. No third blade, swapped hands, long sword, shield or missing weapon. Keep her original adult face, body proportions, equipment, original painted fantasy texture and camera. Briskly walk in place through two complete reciprocal gait cycles. Both boots alternate contact, loading, passing and forward extension. Keep the body root centered for engine movement, not drifting across the image. Carry both blades safely down and outward with lightly swinging elbows. End in the initial gait phase. Locked orthographic camera, fixed anatomical scale and centered root. Full figure including every blade tip, headscarf and boot inside the canvas. Uniform saturated MAGENTA background throughout, no scene, floor, shadow, gradient or camera motion. Natural joint articulation, real support and stable grips, no body morphing, extra limbs, trails, glow or magical effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Opaque interiors eroded three pixels; maximum magenta excess plus two.",
+    "per_guide_max": [
+      5.0,
+      7.0
+    ]
+  }
+}

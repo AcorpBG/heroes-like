@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_attempt",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+        "rects": [
+          [
+            620,
+            0,
+            978,
+            308
+          ],
+          [
+            620,
+            308,
+            989,
+            412
+          ]
+        ],
+        "anchor": [
+          798,
+          400
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5f6716676952ae4c0c547cfeaf8d5e399a5847f241f34ab80ea7485d2b5b7538",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "walk_passing_attempt",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+        "rects": [
+          [
+            0,
+            705,
+            505,
+            1190
+          ],
+          [
+            0,
+            1190,
+            470,
+            1441
+          ]
+        ],
+        "anchor": [
+          258,
+          1408
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dee3018450a4deaac381845cefcaa50d32af10b74b5102001f8ba49aadb12962",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

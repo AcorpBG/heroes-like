@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    440,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026092952,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        185,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          830,
+          321,
+          1216
+        ]
+      ],
+      "anchor": [
+        168,
+        1205
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult female Tidepool Cutter, elevated three-quarter view facing screen right. Keep her teal headscarf with long trailing ties, long dark-brown beaded hair, white pearl earrings and gold medallion. She wears a weathered teal long coat over cream cloth, brown cross-body straps, rope belt, netted hip pouch with white shells, dark trousers, black fingerless gloves and brown rope-wrapped boots. Exactly TWO arms, TWO hands and TWO legs. Each hand firmly grips its OWN short silver hook-bladed cutter, with gold handle and dangling white shell charm. Maintain both distinct short curved blades, their hook tips, metal shapes and handle connections in every frame. No third blade, swapped hands, long sword, shield or missing weapon. Keep her original adult face, body proportions, equipment, original painted fantasy texture and camera. React once to a chest impact. Shoulders recoil, head tilts back and knees flex while both hands keep their hooked blades low and away from the torso. Recover balance onto both planted boots and return to the original stance. No fall, attack or loose weapon. Locked orthographic camera, fixed anatomical scale and centered root. Full figure including every blade tip, headscarf and boot inside the canvas. Uniform saturated MAGENTA background throughout, no scene, floor, shadow, gradient or camera motion. Natural joint articulation, real support and stable grips, no body morphing, extra limbs, trails, glow or magical effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Opaque interiors eroded three pixels; maximum magenta excess plus two.",
+    "per_guide_max": [
+      7.0,
+      5.0
+    ]
+  }
+}

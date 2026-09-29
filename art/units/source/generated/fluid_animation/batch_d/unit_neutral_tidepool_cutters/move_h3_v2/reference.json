@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          185,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9b412e130c9544c3115c2472a1758cd44b02cf778a6573b5d43fb845a6c4944f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "df18a2b855ac6b18374a520b46ea8158e9930fd6ff03b93706f2ea23b913fae1",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

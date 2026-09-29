@@ -1,0 +1,84 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    440,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092963,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        185,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_ready",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          540,
+          0,
+          1092,
+          704
+        ]
+      ],
+      "anchor": [
+        817,
+        700
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ],
+    [
+      68,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult female Tidepool Cutter, elevated three-quarter view facing screen right. Keep her teal headscarf with long trailing ties, long dark-brown beaded hair, white pearl earrings and gold medallion. She wears a weathered teal long coat over cream cloth, brown cross-body straps, rope belt, netted hip pouch with white shells, dark trousers, black fingerless gloves and brown rope-wrapped boots. Exactly TWO arms, TWO hands and TWO legs. Each hand firmly grips its OWN short silver hook-bladed cutter, with gold handle and dangling white shell charm. Maintain both distinct short curved blades, their hook tips, metal shapes and handle connections in every frame. No third blade, swapped hands, long sword, shield or missing weapon. Keep her original adult face, body proportions, equipment, original painted fantasy texture and camera. Give ONE nonmagical readiness salute: smoothly bring both hooked blades up to cross at chest height while remaining upright. Keep both hands separate, each on its own gold handle. Briefly hold the crossed-blade salute, then uncross and lower both blades to the original relaxed stance. Boots remain planted; this is a physical support gesture, no spell, attack or crouch. Locked orthographic camera, fixed anatomical scale and centered root. Full figure including every blade tip, headscarf and boot inside the canvas. Uniform saturated BLUE background throughout, no scene, floor, shadow, gradient or camera motion. Natural joint articulation, real support and stable grips, no body morphing, extra limbs, trails, glow or magical effects. The background stays plain pure blue throughout the entire shot, without color cycling or darkening.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 136,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue minus red foreground band plus two; protects teal costume.",
+    "per_guide_max": [
+      117.0,
+      134.0
+    ]
+  },
+  "blue_chroma_axis": "blue_minus_red"
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "79b2c6256a9354e3bdcbbbd1610c5891bf833838bd16e1db4ec4475f843e6a11",
+  "latent_sha256": "ea28a3a354a7b026ff9f5d15707e8b914d11893c7dd01ed948ab449a512ba0a9",
+  "decode_workflow_sha256": "2c66cfb8150a8a94dd3a521664c80ebdfe4a20879a0aa558769883ccd20f0029",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tidepool_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

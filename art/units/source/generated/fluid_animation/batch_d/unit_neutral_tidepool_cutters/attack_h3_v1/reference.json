@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          185,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9b412e130c9544c3115c2472a1758cd44b02cf778a6573b5d43fb845a6c4944f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9aedc30f409c9f349beb52117119824f800a774f1630ff995eeb9ecb4215be13",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "right_blade_windup",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+        "rects": [
+          [
+            344,
+            414,
+            613,
+            536
+          ],
+          [
+            370,
+            536,
+            655,
+            640
+          ],
+          [
+            370,
+            640,
+            614,
+            665
+          ],
+          [
+            344,
+            665,
+            614,
+            829
+          ]
+        ],
+        "anchor": [
+          478,
+          818
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4322e21bf2d13b3f1665e70b4a3c8774acbfadb58feba0ae99fcac266f37db1c",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "right_blade_slash",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+        "rects": [
+          [
+            655,
+            430,
+            968,
+            662
+          ],
+          [
+            630,
+            662,
+            968,
+            824
+          ]
+        ],
+        "anchor": [
+          796,
+          815
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "64ff14e014fdca2fccb7073c164a9faecae8989524a8c73b2d77bbdae3bb61d3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "566e2bf22b91959103c5e6ddb6ecadd05a5367c86d91e611848fc3805f839c68",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "blade_recovery",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+        "rects": [
+          [
+            0,
+            0,
+            540,
+            704
+          ]
+        ],
+        "anchor": [
+          275,
+          700
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f9c7cba809c9293cfe6365e2f4f8168a2ecd3d0869f11760046f7beb5f042d3d",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

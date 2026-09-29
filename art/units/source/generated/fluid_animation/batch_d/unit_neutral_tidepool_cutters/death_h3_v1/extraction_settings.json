@@ -1,0 +1,69 @@
+{
+  "protected_foreground_chroma": 28,
+  "reviewed_key_ranges": [
+    {
+      "start": 12,
+      "end": 24,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 37,
+      "end": 48,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 61,
+      "end": 72,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 86,
+      "end": 96,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    },
+    {
+      "start": 109,
+      "end": 120,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ]
+    }
+  ],
+  "foreground_measurement": [
+    {
+      "magenta": 7.0,
+      "green": 17.0
+    },
+    {
+      "magenta": 6.0,
+      "green": 22.0
+    },
+    {
+      "magenta": 7.0,
+      "green": 22.0
+    },
+    {
+      "magenta": 10.0,
+      "green": 26.0
+    }
+  ],
+  "reason": "All124 original RGB frames reviewed; only the observed flat magenta and green intervals authorized. Measure both chroma axes on every original guide. Preserve original pixels, fixed scale and anchors; native alpha review still required."
+}

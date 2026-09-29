@@ -1,0 +1,149 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    440,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026092951,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        185,
+        479
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "right_blade_windup",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+      "rects": [
+        [
+          344,
+          414,
+          613,
+          536
+        ],
+        [
+          370,
+          536,
+          655,
+          640
+        ],
+        [
+          370,
+          640,
+          614,
+          665
+        ],
+        [
+          344,
+          665,
+          614,
+          829
+        ]
+      ],
+      "anchor": [
+        478,
+        818
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "right_blade_slash",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/alpha/poses.png",
+      "rects": [
+        [
+          655,
+          430,
+          968,
+          662
+        ],
+        [
+          630,
+          662,
+          968,
+          824
+        ]
+      ],
+      "anchor": [
+        796,
+        815
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "blade_recovery",
+      "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+      "rects": [
+        [
+          0,
+          0,
+          540,
+          704
+        ]
+      ],
+      "anchor": [
+        275,
+        700
+      ],
+      "scale": 0.3,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      55,
+      2
+    ],
+    [
+      86,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult female Tidepool Cutter, elevated three-quarter view facing screen right. Keep her teal headscarf with long trailing ties, long dark-brown beaded hair, white pearl earrings and gold medallion. She wears a weathered teal long coat over cream cloth, brown cross-body straps, rope belt, netted hip pouch with white shells, dark trousers, black fingerless gloves and brown rope-wrapped boots. Exactly TWO arms, TWO hands and TWO legs. Each hand firmly grips its OWN short silver hook-bladed cutter, with gold handle and dangling white shell charm. Maintain both distinct short curved blades, their hook tips, metal shapes and handle connections in every frame. No third blade, swapped hands, long sword, shield or missing weapon. Keep her original adult face, body proportions, equipment, original painted fantasy texture and camera. Perform ONE right-hand hooked-blade slash toward screen right. Raise the right blade over the right shoulder in anticipation while the left blade remains low and outward as a guard. Step into a short controlled slash with the right arm sweeping down and forward across the chest, then retract it, recover both blades and return to the original ready stance. Exactly two blades remain in their original hands; never merge or detach them. No thrown weapon, spinning, repeated strikes or weapon morphing. Locked orthographic camera, fixed anatomical scale and centered root. Full figure including every blade tip, headscarf and boot inside the canvas. Uniform saturated MAGENTA background throughout, no scene, floor, shadow, gradient or camera motion. Natural joint articulation, real support and stable grips, no body morphing, extra limbs, trails, glow or magical effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Opaque interiors eroded three pixels; maximum magenta excess plus two.",
+    "per_guide_max": [
+      7.0,
+      6.0,
+      6.0,
+      8.0
+    ]
+  }
+}

@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    955,
+    "86c7b82d-60fe-40bf-bbdf-0a3c9713bc38",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original adult female Tidepool Cutter, elevated three-quarter view facing screen right. Keep her teal headscarf with long trailing ties, long dark-brown beaded hair, white pearl earrings and gold medallion. She wears a weathered teal long coat over cream cloth, brown cross-body straps, rope belt, netted hip pouch with white shells, dark trousers, black fingerless gloves and brown rope-wrapped boots. Exactly TWO arms, TWO hands and TWO legs. Each hand firmly grips its OWN short silver hook-bladed cutter, with gold handle and dangling white shell charm. Maintain both distinct short curved blades, their hook tips, metal shapes and handle connections in every frame. No third blade, swapped hands, long sword, shield or missing weapon. Keep her original adult face, body proportions, equipment, original painted fantasy texture and camera. Immediately begin one continuous defensive brace: raise both forearms, cross the two blades in front of the face with both separate hands visible, and bend knees gradually into the final low crouch. Lower the hips without changing anatomical scale. Finish holding the crossed-blade crouching guard. No return to standing, strike or scene cut. Locked orthographic camera, fixed anatomical scale and centered root. Full figure including every blade tip, headscarf and boot inside the canvas. Uniform saturated BLUE background throughout, no scene, floor, shadow, gradient or camera motion. Natural joint articulation, real support and stable grips, no body morphing, extra limbs, trails, glow or magical effects. Keep the exact bright saturated blue plate visible at every instant; no fade to black or change of background lighting. The only movement is the woman raising her two blades and settling into the original crouch. The background stays plain pure blue throughout the entire shot, without color cycling or darkening.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092962
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tidepool_defend_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tidepool_defend_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 45,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 90,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tidepool_h3/defend_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tidepool_h3",
+      "create_time": 1790673805121
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tidepool_h3\\defend_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "86c7b82d-60fe-40bf-bbdf-0a3c9713bc38",
+          "timestamp": 1790673805122
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "86c7b82d-60fe-40bf-bbdf-0a3c9713bc38",
+          "timestamp": 1790673805136
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "86c7b82d-60fe-40bf-bbdf-0a3c9713bc38",
+          "timestamp": 1790673974889
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

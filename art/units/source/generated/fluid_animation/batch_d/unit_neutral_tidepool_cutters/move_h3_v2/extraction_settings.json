@@ -1,0 +1,8 @@
+{
+  "protected_foreground_chroma": 41,
+  "blue_chroma_axis": "blue_minus_max_red_green",
+  "foreground_measurement": [
+    39.0
+  ],
+  "reason": "Decoded plate is pure blue, not cyan. Blue minus max(red,green) separates that plate from original teal cloth more precisely than blue minus red, without changing geometry or discarding opaque foreground colors. Original eroded interiors measured across all guides; edge-only unmix/despill."
+}

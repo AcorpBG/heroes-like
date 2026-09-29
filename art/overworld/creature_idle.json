@@ -2900,29 +2900,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        79.0,
+        79,
         213
       ],
       "painted_extent": 207,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_tidepool_cutters.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_tidepool_cutters.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        177,
-        23,
-        337,
-        246
+        37,
+        43,
+        197,
+        266
       ],
-      "source_sha256": "bb9df5f15715d598347158a587758bd789272ad68e627a9888c2c963beaa4584",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_tidepool_cutters/provenance.json",
+      "source_sha256": "d2c1313c4385c30823773bf7d30af1fa9e8e839567158e0b0dcafe9069cc2111",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_tidepool_cutters/provenance.json",
       "sha256": "2720c9de5970cd87e574484e705879da0f895a0c7f0ea04b4e9a6c899e9e57ea"
     },
     "unit_neutral_reefbolt_crews": {

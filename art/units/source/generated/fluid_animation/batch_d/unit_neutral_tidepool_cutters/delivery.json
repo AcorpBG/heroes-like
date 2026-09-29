@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Autonomously reviewed complete original chronology, enlarged two-hand/two-blade continuity and alpha on light/dark backgrounds, reciprocal walking loop seam, all native 128px phases and three offscreen battle renders. Candidate891 focused Windows checks passed. 267 original frames: move35, attack54, hit40, defend25, physical support56, death57. Preserve eight accepted articulated idle poses/map; final corpse grounded. Reject sprint-to-march first gait, dark/color-cycling plates, cyan-fringed collapse and beam-contaminated hit frames16..21. No continuous playback, manual playtest, Linux or full-suite claim."
+  }
+}

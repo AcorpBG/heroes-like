@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9f0852c3a93ecd0195c4477e10123dfa0bc790e066729e574e8732cf9a58147e",
+  "latent_sha256": "e13de600112e3fc714a26fc255bd2d15f757bd2c6aee4aaaa5719e05a6bf7928",
+  "decode_workflow_sha256": "5d58f369c98ffb8fe21795476b7630e20b3181f5d24b25eb496ce5eeabf892fc",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tidepool_h3\\defend_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

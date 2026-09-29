@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_tidepool_cutters",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          185,
+          479
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9b412e130c9544c3115c2472a1758cd44b02cf778a6573b5d43fb845a6c4944f",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9aedc30f409c9f349beb52117119824f800a774f1630ff995eeb9ecb4215be13",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_ready",
+        "source": "art/animation/source/poses/unit_neutral_tidepool_cutters/continuity-alpha/twin-blade-recovery-and-directional-corpse.png",
+        "rects": [
+          [
+            540,
+            0,
+            1092,
+            704
+          ]
+        ],
+        "anchor": [
+          817,
+          700
+        ],
+        "scale": 0.6,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "24d3948a8e03b7f237303c469c843a3458b324e5f7f6c59c923044818b1a7fa9",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e1bf34d271bfac34b584f23796d22fded8fd7fa555f2eaeded0ef05cbc09db6c",
+      "runtime_source_scale": 0.3
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    440,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,1374 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "11052775f7554c4f3175f574aa9bf0826f5265d90c8a330d509335763ea43c9d",
+    "49e918305447044c732064899cf68189d2ad2430aed829bc3451744dedf1813c",
+    "b0c1c41c8a955db3103655dd0081332b1b05a5d8b8dadfc6e1e7ee9c876d28b9",
+    "c19041acc4c31885a23f7e4662c3bb1575a66a81c28aabcf2931605ef9ac1915",
+    "137e8348e85d2af600c26db94422cc41cff4152c2d66ed0ee854a3c9a0160b42",
+    "6c666ae3e70414ffe59652e5e42d24642cb9ba93b754ef19ba4019e523bbdc8f",
+    "4d0b998eb9c01a7603b3aacf880c74a9e2f08f095e06a490e1dcbd8adde8b80a",
+    "bcaac836dd3a71511990cc74b7980eb656d96a6bbef6e1577561f90ee77feda2",
+    "527d18a44c02b304dc62f6941b9b0f1e478224dff427d5a8713f74c79ea22abd",
+    "5ac890f9c4442bd4c4782f4933be0daf33b502f9515de3d0a5db1633484add41",
+    "4361bcd52b1f12637f6e6ab1a72cdbc70b8fd6e9488837ecc84bf2b3aaf1a7f8",
+    "6c825b69669acd13284672e6f63a004614056b3522c877edfa3391ca65ea99cc",
+    "870d498d8c507f6f47df5fe278c141d37a496721752c80e2a3092588976ee305",
+    "b7a08302e5fbbfd94b65f43f6dd2ecce293706f9d821d98910a9687117a4eb5d",
+    "eab560f9b8c051e8a16e96f2d80fdb292d60d482811323a96a76e1f522cb91b2",
+    "ecdbd73fb4d52d7d3b06e282286170b51af72f3d3c8cbb8ad6f5501e1c71392c",
+    "8e7fd3d7e03d26c8f4e5b102879e99ff76352fba5cfcf697c8e56a8bcbf14ad9",
+    "279be8e83d7ce698bbb1ec9d94a9d945ae74b960db1f9f41eb17006a3e687f13",
+    "e9622bad23a3ef8d19704fdddc0c320ab7d5809803be17760b42d8a4874541fa",
+    "b0221fcae6f3e7083b2c706fbba291ea280926c8bfebd947f6cd2474c2484c4e",
+    "727fccba6176ca074ecc8639de72a2da6ff9fb01d438e9cecb55341826f6b068",
+    "6755a1378d206c0abe0768df5be60ca36745a054116d1468aa8c2174050f4a80",
+    "c5c79c8164df293677d30c0be9cdfdb6d8c12baa4219b208ea652a6e0843088d",
+    "59de486f13cea9728e7977375338b0120a1024b75905cb15f0e48411e506a190",
+    "342190426a3123b9df982002112e73f348fcb47629f8515f00fd09d2e804e98c",
+    "dfdc91df2a7484c1248150967844322a7cc25bda75ec93864349b1f6b0b5235b",
+    "a6f7b27fb8759feff8c7d50e21f585f008bcdadc14c81542540136b9ac677460",
+    "fe6d764c3a31e538590783d004861605833ba6636494d47f39259eb3d1541c17",
+    "647ee174c63861b442e4d815ae7841d992c6f34b3fb9fe61f3dc3b86c6ce53a2",
+    "493b46487225ccb9fa6a9dd4b15ea3d4bc74269b97b7b48849c80642218e5690",
+    "557bf01f4b8047e7c4fdabf29b86b5ed0311ad049d5d84dc62a46672de58534d",
+    "47c028c400e0b701d674aaa01fb3232534f84172f6c9750bf6b352d2c1de81ad",
+    "fadc8517d7810c8b8cb0cc10cf9d636cea99ce3d58976c5beb89aba45b2eb1f2",
+    "5239378fd22d493603f6321cc14eafb061613c8f1ebf52b6bdd4415c88f527ef",
+    "90756a87c64a402287cef6de37a7c227d61e1f81af46885d189130ac751b944c",
+    "37adcdfb3f4034442f414cc50126ca60831bbb179f64399fd40e1bf97d2d7b46",
+    "0fd4888a6e3fb839d8183917ab8ac476dd348a7b09d86ab4aedd1db33a7695f0",
+    "c609761561829f18058f5f1a1157c59e3ff813443d20c27d2dbd8ad4b88a9f82",
+    "571b54e4e5be440101243ddb6101da6b492f21a33805b44613248e392b4b99fd",
+    "fae6c2b732df6f2f02777c70a947b4521163812d41ad1f2540ca760ef4c56eb2",
+    "f7256c6839d545cbd1b4bca1c096992c966365173a44930241e55eb6be9b4ebf",
+    "515ad74eb0c162f0438c6218cb7425ab3b72ca439378bfdaa49c455d336ba05f",
+    "0e23f9df130378a7fde335b74b8a8f39a76360a11208e4a5ce852b14f32807a8",
+    "2b5b48202cea5330ac76210a2c7e9d73d7266da4f87d27d5b1abdfffad37c906",
+    "c02401e8a54314794a47a0708029943aa2e7296932165a776dfd9b18b0fd7337",
+    "7007ac1d388bb9de62b31d1e7cacef5e59d64098c7c1a8101793bcce3571ebc0",
+    "3eb712d2e185ee240eab5795032f0935213c37a96d181cb55e3bdf84dcaf5669",
+    "d7e8b665dee4c8273fb1d09dd5db68d806819ac555e5f95cfbada4712c35f84e",
+    "6374196958496771f777252b842271b9551ecc3e8e646dadc4219d5109c217ef",
+    "2ed2d49c83a91b09b43911ee9abe21ed263364020d81f5e3f75c9b1eac53abe1",
+    "c0378789a4e46e9e879b7ce6bc5f265d15da79975bebf3415b1fc6a659cb4969",
+    "543d11b6df4fca7fed7b5ae87c9818590d7cc431f7c1e5400d7b3742f76409ae",
+    "08bf5160a3aed4f539031ae08806bf4a46cf2ac6894bfc125473f94c6866d328",
+    "930f0b60d4eaa29ce99e2c9f2ae41131186c54ff23c223cfe942234862d1ef2b",
+    "b901c41ae424da3aaf4c665b1209870b1e72ebb79b186ead1a108ad56ec80c92",
+    "b99fbfadbf293675346eedcccc4cb20f5cd18ee8f68366f94229de19789ec549",
+    "8517a6e2a3eeb65c1688c8674c953ad19ec19f2ac61be9389cc9ecffc2a06945",
+    "0a085c7a77ff870293a113a758086d1205f941514692c7964a98fac3c44d0e1f",
+    "4b2fbb45f77d74e9afaa8b0fbb7f05860302792f684bd7afeb500cc955428da3",
+    "670ca2e6a12c6c93e39b6babd42c10ee5064ec6485e3f34ef6a85823b7179907",
+    "ca4eb0f63d98157ad21cab405378d4baa3a1f692104c26f9b4ce592f62ab68cd",
+    "75592bcb60325035e863915ee8fa4e7d8aaed9a0a280014310fb71637a9912a5",
+    "2673793dfc612ffa2ce5e8a85b14d80340f912e8c40201d39f66a4a5a6393843",
+    "8bba8f32aa422075b7c92503cca2fb76fa8fc0a27129f35576759c09653ad270",
+    "fc0cca774eb6cb4bca9e2a44b99d22fbab3d13a7725556aa5eb35dc40285fd97",
+    "eaf014ea2291a45854159ee1d62f6d316bb945b7f656a100a622c5653b7c87de",
+    "315e11e51c0fd3ebac6a38051ff98269eb4638c8b47a80ca102413d742964237",
+    "43a08d06be5e51ae302161c1d094516531eb993ba63f1d70502c817a43c4ac0d",
+    "9199856c262ded28f1a6dcf4b1f27e3029612141496abd8712f2ac61055c3258",
+    "4a306cb2cc12f903bb361e0d0da644a173b1082f2029662f46749480a79c395b",
+    "4345e342b59b246d27b1837ff7766d267e13cd4fac15195fd8b2e13dd758bb22",
+    "4cd8b18f9d8314033ee46454f39c83b326e135f56f972699fc78513423f66e24",
+    "97a28b3cd4161f79401d9c11d87112833e3e6b1840528d7032874bf2f79b3c63",
+    "14dcf41f51506b3f9d0ecf4fd3b8c5d92d3474fb7e4448de7b83103c8b9897d0",
+    "d563d3518995abf26092bd27fcbdd3dccfef75d8b9cc68dc346af6772e70735f",
+    "847e5950dcc62bd6e7653502546f19257245626878e6ed0783618d57eb41951b",
+    "3d4c1e73f0ec786ba8d37acf3be452c30f4efe2b32babebb2488601c6430f27d",
+    "e0be4ad5fe690bb8f8d43fcc62b9b1ac6c99d555040fcc920271cc520ba33116",
+    "6c5cf9874dc42360c3b346ecae5ae7fb038a5b2bab9b4c57f29e68fbb2428932",
+    "ee7650426ff76c11e4435551cdfd570b3f3aac158a226a7990c86ef6bc60746f",
+    "7b0b02ac1dfd2a849dcb3451d3bfe743564e7dc55c8f88206f064e169cb5d45f",
+    "7d4eb4e99420b0ee2fff9c273f8e431246b583bf8b8b04de72cf2504821ae1eb",
+    "383bd8982bf574ec9c96916406ee54f93a2d92c534a25d2103566b1839fd9b2e",
+    "17edf583de1876543172b46314a823cbf7f1ba4f85903502542218f872df14a9",
+    "58dfec1c482cd72aff27e8ecaed0b289f202c54ff6f2088e78f3f865f9c96a51",
+    "2e21f15ea24799cd98d66366031e864bc683b56ff31a4ec27764d0116ddc8a9e",
+    "143565b9c76d44d994532c6765453d45971f29059040f080c407d3fd4238cca8",
+    "e072a2d7e8d4f67291f2de4b2b855bd471db7002d4b1c7f0e2234cf6c6addbbb",
+    "b8611beb9769d4d46121c4c9bdf98e5cb96675d635cad320bea4d8687102dda8",
+    "31815e78a3af563ad0f1bdc8f4ac71bfa85331141355e33f9392cd7a1f0e589a",
+    "fa3d6450cebdb1c9033d4c0c416f9e57464d92555e15978da82edc6cf1872504",
+    "9a8bf6cf5804e4497c03eda6aaed6f9499eed63374080840ead2c1894aaa45fe",
+    "c2e891e27933d46b3a027638f52893245c1a0576fc462bb238b2fa42fd4ddf94",
+    "667bed0e34f248ad77d5a9208a75102339fa9f4d5aeb351b7990266b05bcb0c1",
+    "fd8cd4de9c24eaa30d908c9580411b107a7f1be37038057f7c0f3cfdf122030c",
+    "271f38e6300d1548d5b01a7a5c60c7e326791dbd7ba7c98e1505ab1de5159716",
+    "338518afefa792dc43d658b0c2ce4671e6efaf476066cba1f15339ddb55c9beb",
+    "24b58f75517f9bd4b2d510cf2c53753ef1b1e47560369fd7504bbd884b0b188a",
+    "76ff606eba237adddaa651b3d97f3625120fbf84c1dd5757ab4920744df539a0",
+    "77ffbe647ce6951683c87a8e90ac929d6f81dd49dd4c229276ef87faacb782eb",
+    "732da17101b2b2b4d0ccc79d0fd15904e742ed0f6b55dcd531dbd1240590fafd",
+    "2ab0f5a023f87022bb0fc935b0842dfe5ddedfbc5ea0abfeea6a6c137a1fb5ab",
+    "dcb172ffe4dd5af84b74f06d7661848f7254d12d6b4ba52198869ec0c4edf2cb",
+    "4c2b7f6b9ac54f57d2e36cae6b2e5f74493006b248792d4fd4b9416bad1f03a6",
+    "d67a3b3b35470848234ff8de9d3d172565fa674d9e9dc1274cf74d97e0331ebb",
+    "587898ea385011e0415b3d5be64441c8240606c61aa2260c2bc25c6949478826",
+    "d3725605bb37a282867ef9ac815c43eb27efef6c4b4f4318fe7c532b7a483492",
+    "21f7b944ae8b72bf335657ce7188be6c47d1fbedabd5c2720240f34949cafbd3",
+    "acff97b7217c765292e336c8116fae31871aa7b2a7df5e5bed6cdf816b764b7d",
+    "21b2c35b1ebc82bb1f78bbd6e17c2318e83e9f987806e7851219e166432bd131",
+    "5ea968c47ed8599ee1bfa2492d182eff0c64ed80e6a6b9cadd41b4ad752d06a6",
+    "c48b2db72a49f7a0299de20e22f13729b713ad11e8d9d1445c67ce6495a9c443",
+    "59b4a76b54466ac78eb6e287b2ca80a20d348e40003162dcd9d4cc4924da0535",
+    "94cb09014ba59b247a00736253747f5c97294bead6b0dae9a862d0dd52ed86c4",
+    "b38bae5e068669f095a643b888269c7da227cdb9088ca90332e1eb58be50d8c7",
+    "2c29e02b70eea2f097b7bf4d45ea0b1f0b33580f6117e87efbdbc7ed0716e605",
+    "aa048fac26d087bc3f8db819215da9e91563771517dfac54c75c9a05182affd7",
+    "495a87559a9b14a787b0291ca3302faca7304de8dffba62785c63693ec19e34c",
+    "d2243ce2d922b22fbeae6aa31095b22366549fbd76fbef4590fd2c6b8b6ca57c",
+    "134579d81929b4e60e1b7aa001bf2fa30a38662faece1e6ab0b624e2aa7a6acc",
+    "0a2dbcafc44785fa3238dcdf0858e113ee6f431616360b55468d553ea2efc369",
+    "cec0489f0d61678888820ff969fb51f5a48822e0ed9a7eef1a8c4d82b82234d1",
+    "68d8ff0132a15d5112a289becdd667379611dcf97849e82715a2900430ae9f3a",
+    "1a5fae2ccfd2f630ed417cf7d9871f70fe3a07dca113e645046affcd9ee463ed"
+  ],
+  "background_frames": [
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.0
+      ],
+      "corner_median_spread": 1.414,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.0
+      ],
+      "corner_median_spread": 1.414,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.25
+      ],
+      "corner_median_spread": 1.25,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        254.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.0,
+        252.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        251.75
+      ],
+      "corner_median_spread": 1.25,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        252.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        254.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.0,
+        252.0
+      ],
+      "corner_median_spread": 2.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.414,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.0,
+        252.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.414,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 0.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        254.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        252.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        251.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        253.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.5
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        252.5
+      ],
+      "corner_median_spread": 1.118,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.0,
+        253.0
+      ],
+      "corner_median_spread": 1.0,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        253.5
+      ],
+      "corner_median_spread": 0.707,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        7.5,
+        251.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        251.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        251.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        5.5,
+        252.0
+      ],
+      "corner_median_spread": 1.5,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    },
+    {
+      "background_rgb": [
+        255.0,
+        6.5,
+        252.5
+      ],
+      "corner_median_spread": 1.581,
+      "mode": "flat_magenta_chroma_unmix",
+      "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+    }
+  ],
+  "protected_foreground_chroma": 9,
+  "recipe": "Measured uniform guide plate; corner spread<=10, chroma separation>=80; protected foreground chroma band, color-specific alpha unmix and edge-only despill; alpha>=8 regions retained when containing alpha>=128 pixels. Original geometry unchanged."
+}

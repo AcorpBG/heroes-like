@@ -1,0 +1,4 @@
+{
+  "status": "decode_trial_not_selected",
+  "reason": "The unchanged latent decoded with full temporal window still has the same background color cycle. The defect is not resolved by larger temporal tiles. Retain original decode; inspect measured alternate-color extraction or regenerate."
+}

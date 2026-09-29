@@ -1,0 +1,10 @@
+{
+  "source_take": "death_h3_v1",
+  "latent_sha256": "311e9d9dccd8f3389dc1f9af47ee69da5d9f919c3eefc4bebc703de75cf0c92e",
+  "source_latent_sha256": "311e9d9dccd8f3389dc1f9af47ee69da5d9f919c3eefc4bebc703de75cf0c92e",
+  "model_release": {
+    "free_vram_bytes": 32033699604,
+    "required_free_vram_bytes": 17179869184
+  },
+  "reason": "Inspect repeated color shifts at 12-frame temporal tile boundaries. Decode the identical latent with one 128-frame window, retaining spatial tiling and all original failed outputs. No resampling or interpolation."
+}
