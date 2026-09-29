@@ -1,0 +1,231 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Original fantasy strategy game sprite of ONE burly human blacksmith warrior facing screen right in elevated three-quarter view. Keep his black beard, brown tied headband, weathered copper shoulder plates, dark leather apron with red kiln emblems, metal wrist cuffs, segmented thigh armor and leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE long straight wooden mallet shaft with ONE heavy rectangular dark iron hammer head bearing red markings at its far end. Right hand at screen left grips the butt half, left hand at screen right grips nearer the head. Preserve the same head, straight shaft, constant handle length and both grips. No shield, helmet or additional weapon. Retain his stocky adult anatomy and original painted materials. Animate ONE continuous deliberate two-handed mallet strike with smooth transitions throughout. Begin lifting immediately from the waist, bending both elbows through a gradual arc to the vertical raised mallet guide. Without pausing, lean forward and lower the intact mallet through the diagonal downstroke guide toward a low forward strike. Then recover continuously: draw the shaft backward with both hands, stand upright, bend the elbows and bring the mallet back to the original ready angle at the waist. Use the entire video for this single connected movement. Both firmly closed hands remain around the same continuous straight shaft. The iron head is a rigid rectangular box throughout. Keep exactly two arms and two legs. Locked orthographic camera, unchanged body scale and steady diffuse lighting. Full body and hammer stay inside the frame. The only background is flat uniform GREEN for every frame. No cuts, pose switches, scene changes, motion smear or visual effects.",
+      "width": 960,
+      "height": 768,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026093419
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_2.png"
+    }
+  },
+  "33": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_3.png"
+    }
+  },
+  "34": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_4.png"
+    }
+  },
+  "35": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kilnward_attack_h3_v3_guide_5.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 34,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "34",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 68,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "35",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 85,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "kilnward_h3/attack_h3_v3/sampled"
+    }
+  }
+}

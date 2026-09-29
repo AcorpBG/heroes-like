@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "276921a233cd56b8962fc73a0253b8087439f8ae14ef8f47a91800262591dea1",
+  "latent_sha256": "fd932368aef56b8976cbec4c906db452ee6f1104056015e0e210d88466a5da01",
+  "decode_workflow_sha256": "eda7e39aed7b276442d647a85bc1577af3675fa07a598254fd7a6edb55659143",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "kilnward_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

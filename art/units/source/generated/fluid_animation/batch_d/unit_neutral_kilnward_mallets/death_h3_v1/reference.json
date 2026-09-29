@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            382
+          ]
+        ],
+        "anchor": [
+          179,
+          371
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f87c4c3de627f9b7ed21dfb959f43708302c24d462b2ef2ae9dfb198ed858ea9",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            355,
+            729,
+            668,
+            979
+          ],
+          [
+            355,
+            979,
+            665,
+            995
+          ],
+          [
+            355,
+            995,
+            658,
+            1024
+          ],
+          [
+            355,
+            1024,
+            650,
+            1086
+          ]
+        ],
+        "anchor": [
+          509,
+          1042
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4c50b9fe084c582c5fd7f6dedbf51633088fa214c73da8a6b362460dff0e6c1e",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            668,
+            850,
+            1040,
+            979
+          ],
+          [
+            666,
+            979,
+            1040,
+            995
+          ],
+          [
+            659,
+            995,
+            1040,
+            1086
+          ]
+        ],
+        "anchor": [
+          845,
+          1028
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ee04aabdba1260d7bfcead0cb96a85ca3a08c63432390f6959d0f5cc8c716d19",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "dead_side",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            1041,
+            830,
+            1448,
+            1061
+          ]
+        ],
+        "anchor": [
+          1240,
+          1023
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "88f07dea9cb9638e0a4f42c14ec4479aebdc9531bd8f9b2fe7563274d64008a8",
+      "runtime_source_scale": 0.546
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

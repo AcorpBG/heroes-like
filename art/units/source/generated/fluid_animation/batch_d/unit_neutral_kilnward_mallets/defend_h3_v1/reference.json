@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            382
+          ]
+        ],
+        "anchor": [
+          179,
+          371
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f87c4c3de627f9b7ed21dfb959f43708302c24d462b2ef2ae9dfb198ed858ea9",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "guard_brace",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            1091,
+            383,
+            1448,
+            728
+          ]
+        ],
+        "anchor": [
+          1261,
+          715
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e269de32ba2ca739090bfba50c534d1433e4ce5fd0422a06808b18ad170e6f04",
+      "runtime_source_scale": 0.546
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

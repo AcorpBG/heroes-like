@@ -1,0 +1,159 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            382
+          ]
+        ],
+        "anchor": [
+          179,
+          371
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "137bea8d70aab642898620e2d59a980224a5b9b9fb195d3a5a74dd490ad52e98",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_windup",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            354,
+            383,
+            684,
+            728
+          ]
+        ],
+        "anchor": [
+          523,
+          713
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3ed26efc5906e814505e153035280b7e6b8b268656f0aac4c6d97ae39d0f1dbb",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_strike",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            684,
+            383,
+            1090,
+            728
+          ]
+        ],
+        "anchor": [
+          852,
+          715
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2b2963cbb3586fdbcf937c112b56cef5ca75e01a17cc11abc824045c005d79fd",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_recovery",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-alpha/guided-passing-and-mallet-recovery.png",
+        "rects": [
+          [
+            0,
+            646,
+            607,
+            1295
+          ]
+        ],
+        "anchor": [
+          317,
+          1220
+        ],
+        "scale": 0.6552,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6a98d8df571934d89cdc2c24e1cfe9557a26fa3c24136f73d30623d3865bf3a9",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f562da285fda2a0f5319e152b690b31ec55c895a63dcca65a527a94f02a51775",
+      "runtime_source_scale": 0.3276
+    },
+    {
+      "source_frame": {
+        "name": "mallet_mid_lift",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            720,
+            1024
+          ]
+        ],
+        "anchor": [
+          377,
+          926
+        ],
+        "scale": 0.646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32d3e5f003ff73a468feb032ab382cd3305829d37e79407938d85bf766c8c26d",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "7a7b025144865f5e3c5aa7d464aa643f62655af2b469de00368975714894c4ab",
+      "runtime_source_scale": 0.323
+    },
+    {
+      "source_frame": {
+        "name": "mallet_mid_downstroke",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+        "rects": [
+          [
+            720,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1036,
+          920
+        ],
+        "scale": 0.646,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32d3e5f003ff73a468feb032ab382cd3305829d37e79407938d85bf766c8c26d",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "689703fb7ddc43638f23237d0ad8f616d0e5b61fde441bd1c291a6fde533378e",
+      "runtime_source_scale": 0.323
+    }
+  ],
+  "canvas": [
+    960,
+    768
+  ],
+  "ground_anchor": [
+    430,
+    680
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

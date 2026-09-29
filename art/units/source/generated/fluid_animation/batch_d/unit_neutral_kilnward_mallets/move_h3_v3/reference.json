@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            716,
+            0,
+            1057,
+            382
+          ]
+        ],
+        "anchor": [
+          858,
+          371
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "efe2e719f65f9c62045538ae602830c615d98ad561d68ee56d2e29da2d2932b0",
+      "runtime_source_scale": 0.546
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e20805c6fe7e15beec7755f1df277815b573a1b7cbe3dab85467e9875a7b1dfa",
+  "latent_sha256": "acba7a344f0b6991c1a09942b3730dae7388fb9bda7a59851ee068860ba52121",
+  "decode_workflow_sha256": "efe8c69623e1551984f0ce34f870db794abc7050d06eefbc4e0f80d268dd0feb",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "kilnward_h3\\move_h3_v4",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

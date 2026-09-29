@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "clip": "attack",
+  "canvas": [
+    960,
+    768
+  ],
+  "anchor": [
+    430,
+    680
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "protected_foreground_chroma": 34,
+  "seed": 2026093419,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          382
+        ]
+      ],
+      "anchor": [
+        179,
+        371
+      ],
+      "scale": 0.546,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "mallet_windup",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+      "rects": [
+        [
+          354,
+          383,
+          684,
+          728
+        ]
+      ],
+      "anchor": [
+        523,
+        713
+      ],
+      "scale": 0.546,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "mallet_strike",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+      "rects": [
+        [
+          684,
+          383,
+          1090,
+          728
+        ]
+      ],
+      "anchor": [
+        852,
+        715
+      ],
+      "scale": 0.546,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "mallet_recovery",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-alpha/guided-passing-and-mallet-recovery.png",
+      "rects": [
+        [
+          0,
+          646,
+          607,
+          1295
+        ]
+      ],
+      "anchor": [
+        317,
+        1220
+      ],
+      "scale": 0.3276,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "mallet_mid_lift",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          720,
+          1024
+        ]
+      ],
+      "anchor": [
+        377,
+        926
+      ],
+      "scale": 0.323,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "mallet_mid_downstroke",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+      "rects": [
+        [
+          720,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1036,
+        920
+      ],
+      "scale": 0.323,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      4
+    ],
+    [
+      68,
+      5
+    ],
+    [
+      85,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original fantasy strategy game sprite of ONE burly human blacksmith warrior facing screen right in elevated three-quarter view. Keep his black beard, brown tied headband, weathered copper shoulder plates, dark leather apron with red kiln emblems, metal wrist cuffs, segmented thigh armor and leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE long straight wooden mallet shaft with ONE heavy rectangular dark iron hammer head bearing red markings at its far end. Right hand at screen left grips the butt half, left hand at screen right grips nearer the head. Preserve the same head, straight shaft, constant handle length and both grips. No shield, helmet or additional weapon. Retain his stocky adult anatomy and original painted materials. Animate ONE continuous deliberate two-handed mallet strike with smooth transitions throughout. Begin lifting immediately from the waist, bending both elbows through a gradual arc to the vertical raised mallet guide. Without pausing, lean forward and lower the intact mallet through the diagonal downstroke guide toward a low forward strike. Then recover continuously: draw the shaft backward with both hands, stand upright, bend the elbows and bring the mallet back to the original ready angle at the waist. Use the entire video for this single connected movement. Both firmly closed hands remain around the same continuous straight shaft. The iron head is a rigid rectangular box throughout. Keep exactly two arms and two legs. Locked orthographic camera, unchanged body scale and steady diffuse lighting. Full body and hammer stay inside the frame. The only background is flat uniform GREEN for every frame. No cuts, pose switches, scene changes, motion smear or visual effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

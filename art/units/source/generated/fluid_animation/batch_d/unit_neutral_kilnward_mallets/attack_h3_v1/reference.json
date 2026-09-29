@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            360,
+            382
+          ]
+        ],
+        "anchor": [
+          179,
+          371
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "92ba19f3fb473bd499a576e09a2e10bb8c7f2c78d04c600fe5f856d0e9b46c21",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_windup",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            354,
+            383,
+            684,
+            728
+          ]
+        ],
+        "anchor": [
+          523,
+          713
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1c2a8f62472f7a76ff31184430322233f59e5b746f07779bf0348d46f09370bb",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_strike",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+        "rects": [
+          [
+            684,
+            383,
+            1090,
+            728
+          ]
+        ],
+        "anchor": [
+          852,
+          715
+        ],
+        "scale": 1.092,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15ca9dc27515ad9307da2ccf44fd8c83eee2a45b057f07a7d06e4f164c5aecd",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "97e9b90e03ec68657a3dbfaa0e984e3b440d2bb77028f0e9973de585d4566e16",
+      "runtime_source_scale": 0.546
+    },
+    {
+      "source_frame": {
+        "name": "mallet_recovery",
+        "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/continuity-alpha/guided-passing-and-mallet-recovery.png",
+        "rects": [
+          [
+            0,
+            646,
+            607,
+            1295
+          ]
+        ],
+        "anchor": [
+          317,
+          1220
+        ],
+        "scale": 0.6552,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6a98d8df571934d89cdc2c24e1cfe9557a26fa3c24136f73d30623d3865bf3a9",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "bd480a97ab17e7971c614a412a0fb6c9a2ba61d66acd26323d425c01371514f2",
+      "runtime_source_scale": 0.3276
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

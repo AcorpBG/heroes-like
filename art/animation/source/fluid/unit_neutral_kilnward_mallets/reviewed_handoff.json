@@ -1,0 +1,4063 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_kilnward_mallets",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_027",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_029",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_031",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_047",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_049",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_053",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_062",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_065",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "attack_h3_066",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "attack_h3_067",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "attack_h3_068",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "attack_h3_069",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "attack_h3_070",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "attack_h3_071",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_073",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "attack_h3_074",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "attack_h3_075",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_094",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "attack_h3_096",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "attack_h3_098",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_102",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              768
+            ]
+          ],
+          "anchor": [
+            430,
+            680
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_022",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "hit_h3_024",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_032",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "hit_h3_036",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "hit_h3_038",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "hit_h3_040",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_044",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "hit_h3_046",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "hit_h3_048",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_034",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_038",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "defend_h3_040",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_044",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "cast_h3_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_032",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "cast_h3_040",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_070",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_074",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_078",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "cast_h3_080",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "cast_h3_082",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "cast_h3_084",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_032",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_036",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_040",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        },
+        "attack": {
+          "indices": [
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 24
+        },
+        "hit": {
+          "indices": [
+            67,
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 0
+        },
+        "defend": {
+          "indices": [
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 15
+        },
+        "cast": {
+          "indices": [
+            99,
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122
+          ],
+          "frame_msec": 60,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 12
+        },
+        "death": {
+          "indices": [
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159,
+            160
+          ],
+          "frame_msec": 50,
+          "loop": false,
+          "static_frame": 37
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v4_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/original_lossless.mkv",
+          "sha256": "49f29ed36dd0de56a64b16d7e83b2324bd819041cf502ede185e4d633dc59a61"
+        },
+        "move_h3_v4_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/original.json",
+          "sha256": "58a122a1811c2bdf7820d696f022f69c5c36b0c21b8dfba3ecdd7527f3db185a"
+        },
+        "move_h3_v4_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/workflow_api.json",
+          "sha256": "efe8c69623e1551984f0ce34f870db794abc7050d06eefbc4e0f80d268dd0feb"
+        },
+        "move_h3_v4_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/prompt.txt",
+          "sha256": "597adeb49246f769521182cb393d661dc77a6548595deaf3b9bdb322361f266b"
+        },
+        "move_h3_v4_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/reference.json",
+          "sha256": "a2f230a5246453da27712e4388f60faa82e225b36e6e119004cbf5fc4db35f09"
+        },
+        "move_h3_v4_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte.json",
+          "sha256": "fbf0b242fbd74339698589de61fc6bba287da828f0bc5ab5b631ce32361eba23"
+        },
+        "move_h3_v4_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/staged_generation.json",
+          "sha256": "f78baadf141629eab6ca884ae435624e0df8f769b0a96951c10995d1700f12b2"
+        },
+        "move_h3_v4_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/sampling_workflow_api.json",
+          "sha256": "e20805c6fe7e15beec7755f1df277815b573a1b7cbe3dab85467e9875a7b1dfa"
+        },
+        "move_h3_v4_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/sampling_submission.json",
+          "sha256": "9cc7cec49eeabe0a3b52dac48311a78a4cfa37630bdae34f465783e062c15661"
+        },
+        "move_h3_v4_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/sampling_history.json",
+          "sha256": "b493a69b53e31656137b0fcbbca3b4199363d41c3ef16a00c32748e7f0e5c18b"
+        },
+        "move_h3_v4_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/original.latent",
+          "sha256": "acba7a344f0b6991c1a09942b3730dae7388fb9bda7a59851ee068860ba52121"
+        },
+        "attack_h3_v3_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/original_lossless.mkv",
+          "sha256": "6e1ebfe9ba8a748c7e0dacb524b6f384140e2a5888fb2eb01c362850eb36886d"
+        },
+        "attack_h3_v3_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/original.json",
+          "sha256": "104f5185e82f32a5516780eaef71f0123007fd7b24562a4a0abcbc374167c4b0"
+        },
+        "attack_h3_v3_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/workflow_api.json",
+          "sha256": "2ed538fc5f9586ba259129a89c4698e3ffa62fa1f59b24c660e261fe1dda1142"
+        },
+        "attack_h3_v3_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/prompt.txt",
+          "sha256": "ddd36b3e8f4e2778e75b2f1a2ac07c464189ece78d2f7e90af00f55459fd2c5c"
+        },
+        "attack_h3_v3_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/reference.json",
+          "sha256": "305367d71b198199da4807623540a97093570877a935a53d3fd8a2cae1eca768"
+        },
+        "attack_h3_v3_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte.json",
+          "sha256": "6e37b56a97e4987cb89765fcbec84f584025ff8493507306bc1c053fd4c9b42a"
+        },
+        "attack_h3_v3_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/staged_generation.json",
+          "sha256": "bcbc348e491fc03dab7bd6492b067e67517745a9797d37f0614f22cfcd997120"
+        },
+        "attack_h3_v3_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/sampling_workflow_api.json",
+          "sha256": "e0e6266b263fbe1bd81576c93082e12198af66f091e3cdd9bec130719954de09"
+        },
+        "attack_h3_v3_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/sampling_submission.json",
+          "sha256": "fb9ec31420565ababa146d35f239bb95afba4240460a7a0e727655c3d62e26e5"
+        },
+        "attack_h3_v3_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/sampling_history.json",
+          "sha256": "54b1f5fb5ee391a98e9af2d1c2d085cde91375062e415b1d81712a3b9f5b7563"
+        },
+        "attack_h3_v3_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/original.latent",
+          "sha256": "a7e8f732e994b882e73e64d8832b46f839e6f806a188eebfb131afc072775274"
+        },
+        "attack_h3_v3_guide_image_attack_keyposes_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+          "sha256": "32d3e5f003ff73a468feb032ab382cd3305829d37e79407938d85bf766c8c26d"
+        },
+        "attack_h3_v3_guide_prompt_attack_keyposes_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.prompt.txt",
+          "sha256": "675d3e5ade9e55a6495c5dd0d8ade526a8d826a1309d704817aa4f4d0517f5d6"
+        },
+        "attack_h3_v3_guide_generation_attack_keyposes_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.generation.json",
+          "sha256": "004b18d563932c1068342d5f75536e629da40cfdc7389168dc3d7000f113bc22"
+        },
+        "hit_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/original_lossless.mkv",
+          "sha256": "5517f8a789a154c3bad9ccec8e6192c559ee73c2ecd23af6cefe8b0849902b10"
+        },
+        "hit_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/original.json",
+          "sha256": "f817403935c1ef5022254c5f906f3131911d04fc476d4fdfdcf7cdef022628b7"
+        },
+        "hit_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/workflow_api.json",
+          "sha256": "756972189a9f34bf55bd3efb08a17bd10e9d2b7ceaac692c9714c9326ba6f7c9"
+        },
+        "hit_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/prompt.txt",
+          "sha256": "8a800a8ce81287d5a83265dfdaefc1b57428d086fb0c576955bfd10d4495edbe"
+        },
+        "hit_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/reference.json",
+          "sha256": "122244bb753f1d9490a58a5bded9e0c2d8bc2064160b14b2cebedeb918c5006b"
+        },
+        "hit_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte.json",
+          "sha256": "9a5a2eff233879d14f53d831307d48a3658a78ff74ee3532d142f9c92d7ef4e2"
+        },
+        "hit_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/staged_generation.json",
+          "sha256": "f4c8ed8ed4956869a1a18c6cea51af5d2481f153a6a56ac4c3c61d6551107e96"
+        },
+        "hit_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/sampling_workflow_api.json",
+          "sha256": "29dbb7351f2faeca41e904445b7e2d9a7560ea8b13a41be61c4d1230838eb7af"
+        },
+        "hit_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/sampling_submission.json",
+          "sha256": "6bd73227394ae76cb3c068afc0b79f6a02951a9aa35c3f3b488a32a8edb1503a"
+        },
+        "hit_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/sampling_history.json",
+          "sha256": "c6805e701c1370c9fac828aac053d9f20f5918dcfeb76b27b0c30643943654c3"
+        },
+        "hit_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/original.latent",
+          "sha256": "e9d6760291c1e027a8042fa890d473b0ec91ba5110c21a6e9b4227f0853b16aa"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/original_lossless.mkv",
+          "sha256": "873c7c0655af4b7548fc5a8d11b18b780954c2fcef9e6fc026e5e0229be71b33"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/original.json",
+          "sha256": "132d839b67cd142f7006436c6a0521caae3d74b379937c0a74e363431a7d83d8"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/workflow_api.json",
+          "sha256": "71630aa3a97d80319292d2d2c04c8599bba1cfd92f4ebd790cc0434938927429"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/prompt.txt",
+          "sha256": "0442c6071bf16461e24eb4b6551a7c5c6cc61e49910ee98114176f6dd1f3b0fa"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/reference.json",
+          "sha256": "609cd0b5c42215ec185044c501ce5f1652b6898f32db083d827807781a8fcfe3"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte.json",
+          "sha256": "41cc5fb155483f6b12707bd6df7a6ca3ab3d2f21a50c46f19ae2eb90d15d56c1"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/staged_generation.json",
+          "sha256": "249b5444bdc02bd2862ebd4ede97693d355de027ca2cda1192ae913d94addd78"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "6b0f841af292e4f24522802ac3b3aa3ac6fb46a4d286197897379dfd96547515"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/sampling_submission.json",
+          "sha256": "badf240ae9987587c8a7c0655e989caf5a88138919964884fb14a38120214aca"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/sampling_history.json",
+          "sha256": "ccd8cea42dd999401ec4318b571f584a5b7cd09a190bf4eeb85b14d619b642c1"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/original.latent",
+          "sha256": "a282796d4ee1e08423deff0bc66db87fc51522ad1b23d2ee93be94f56843bd57"
+        },
+        "cast_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/original_lossless.mkv",
+          "sha256": "f975fc99d39cf895f8b0a7bb5d69cfc560feae15ebb9c91984cdb98820ccf5b3"
+        },
+        "cast_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/original.json",
+          "sha256": "b3e8898b128ca318a93de783207f05ae0108d650b20f1516a0d2d5df754c6043"
+        },
+        "cast_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/workflow_api.json",
+          "sha256": "05ecf956d8ec89e1527827f64b7324775b2bc7d062d5174657a0133807ebffc5"
+        },
+        "cast_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/prompt.txt",
+          "sha256": "c35ede52c32207fa51af35b39e0f69145c98b97c799e37a1ee87aef8a49141e3"
+        },
+        "cast_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/reference.json",
+          "sha256": "dbfdab38c9809ff739cc2013ff333bdd25a1801cb07269c6760384ecf3969b7c"
+        },
+        "cast_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte.json",
+          "sha256": "c8b6e6547edb36c8311d4c7244100aa2120883e80143cbf5d4233ba318ebc387"
+        },
+        "cast_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/staged_generation.json",
+          "sha256": "a47c339cdd94b0a42f0993673d06e274f26e9c059a2c5d2a9719cbd78f259200"
+        },
+        "cast_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/sampling_workflow_api.json",
+          "sha256": "ff92c44ec289961ac068a24ab6af60aec60636f47a1064f7dc9de26545b38bcd"
+        },
+        "cast_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/sampling_submission.json",
+          "sha256": "e9a174ba9c1858f0817a62e8618eaf5e1169dda9e2cfa7b1d96cbd06f6af30c5"
+        },
+        "cast_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/sampling_history.json",
+          "sha256": "7a1dd20c81697b9252dabd41eb96ce4a2994cd379888bd0e2f61f62a9a672388"
+        },
+        "cast_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/original.latent",
+          "sha256": "5ceee7b585b6725a4f4b7e03c5bafdc1c1a14bea50de0a48e7f0b2a449f00508"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/original_lossless.mkv",
+          "sha256": "060bd17c772dac63b44dfdd5a236328f9137104036e19f9faa663b7f11390000"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/original.json",
+          "sha256": "930b7b1829b143f23755aa91924fec0a9a5a2d65537844c78d467d3a9f8569da"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/workflow_api.json",
+          "sha256": "6cee851f52bc62e47808c6202635d31839fd60641d3d9654bcd6805fad6f8f7e"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/prompt.txt",
+          "sha256": "b1dddcd35838d87a769f092ce73852ae845e2dfef4f0c3931bb77f088cf7a098"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/reference.json",
+          "sha256": "090ffd3d44fd0b9139a8f3f1b6f19cd6257712c0b0e029eb2bc709ff21991ee6"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte.json",
+          "sha256": "d83c5bceb9f6965d34a59fac806a8b3822313defb30cf19e02ce888cee151211"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/staged_generation.json",
+          "sha256": "305b1dabbfe9ba75f7f1f10986e6f032dbb41a5cef381909634ce85f2ed11b2c"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "0136fb56f6b44d5267824389c391e98a0c8f444a143838804d060444a3af0e07"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/sampling_submission.json",
+          "sha256": "3a75770fd1a1ebc85a9d564fb86b901e98181309b006ca1578301a9eaff5cbcd"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/sampling_history.json",
+          "sha256": "53a9ce6b47af963461f45999851311fbab63f0fec6e78304d567bac21b830948"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/original.latent",
+          "sha256": "abc30327ceed55a88acc004452d15e380059d645174868e497e5df5b154e8bbb"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/runtime_profile.json",
+          "sha256": "a7cd4fc50759b4e8bf6e3e6492f2eccc9c92aa58711d42aa06ce14a085b6e138"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Accepted six dedicated Kilnward Mallets H3 actions after complete chronological frame review, enlarged anatomy/grip/mallet/alpha and loop review, all native128px phase rows and battle phase renders;575 focused candidate checks pass. Move retains long red-emblem apron and alternating grounded gait; strike uses controlled rigid mallet arc/contact72 and full recovery; recoil has no added beam; brace, physical salute and grounded side-fall are distinct. Preserve articulated eight-frame idle/map artwork and timing. No continuous-video-playback or manual game-playtest claim."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_045.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_047.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_049.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/move_h3_v4/matte/rgba_053.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_075.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_094.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_098.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v3/matte/rgba_102.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/hit_h3_v2/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/defend_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/cast_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/death_h3_v1/matte/rgba_088.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

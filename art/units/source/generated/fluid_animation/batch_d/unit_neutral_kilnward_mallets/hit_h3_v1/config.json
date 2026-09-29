@@ -1,0 +1,76 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "protected_foreground_chroma": 8,
+  "seed": 2026092902,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          360,
+          382
+        ]
+      ],
+      "anchor": [
+        179,
+        371
+      ],
+      "scale": 0.546,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_kilnward_mallets/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          729,
+          355,
+          1086
+        ]
+      ],
+      "anchor": [
+        174,
+        1044
+      ],
+      "scale": 0.546,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      86,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original fantasy strategy game sprite of ONE burly human blacksmith warrior facing screen right in elevated three-quarter view. Keep his black beard, brown tied headband, weathered copper shoulder plates, dark leather apron with red kiln emblems, metal wrist cuffs, segmented thigh armor and leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE long straight wooden mallet shaft with ONE heavy rectangular dark iron hammer head bearing red markings at its far end. Right hand at screen left grips the butt half, left hand at screen right grips nearer the head. Preserve the same head, straight shaft, constant handle length and both grips. No shield, helmet or additional weapon. Retain his stocky adult anatomy and original painted materials. React to one unseen hit. Torso recoils backward, elbows and knees bend, shoulders contract and head tips back briefly, while both hands keep the intact mallet across his waist. Absorb the impact through planted boots, then return naturally to the original ready posture. A compact recoil and recovery, not a collapse. No attacker, projectile or impact effect is visible. Locked orthographic camera and fixed body scale throughout. Full body, boots and mallet remain completely inside the frame. The studio background is perfectly flat uniform bright MAGENTA and remains exactly that one color in every frame. Only the warrior moves. No camera movement, zoom, scene, cast shadow, flash, sparks, flames, magic, smoke, debris, extra people, limbs or equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

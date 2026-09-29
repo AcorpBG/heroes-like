@@ -1,0 +1,28 @@
+{
+  "tool": "image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.png",
+    "sha256": "32d3e5f003ff73a468feb032ab382cd3305829d37e79407938d85bf766c8c26d"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_keyposes_v1.prompt.txt",
+    "sha256": "675d3e5ade9e55a6495c5dd0d8ade526a8d826a1309d704817aa4f4d0517f5d6"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "515edbb7822ea2cf8a3caf0bbda6606368e03b42f8088bbc222b34ee80cfce8a"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v1/guide_1_rgba.png",
+      "sha256": "fb6875b9e0f10137d130f58ce31d3472af2e22551e842d7aad7071be5f85f381"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kilnward_mallets/attack_h3_v1/guide_2_rgba.png",
+      "sha256": "33410e49664105ecc01363ab0097c512ed64ae37855e65ba9c8512fa80cb9bfb"
+    }
+  ],
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-913e3b2c-5d23-4280-a136-5ea0e46792bb.png",
+  "status": "accepted_key_poses",
+  "notes": "Two original full-body intermediate poses, continuous rigid mallet and two legitimate grips; transparent background verified. One source-wide scale0.323; separate anatomical ground anchors; used as H3 guides, not padded runtime frames."
+}

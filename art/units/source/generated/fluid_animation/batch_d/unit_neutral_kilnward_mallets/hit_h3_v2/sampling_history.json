@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    827,
+    "55932653-9220-4f8b-bfbd-0626f3052581",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "Original fantasy strategy game sprite of ONE burly human blacksmith warrior facing screen right in elevated three-quarter view. Keep his black beard, brown tied headband, weathered copper shoulder plates, dark leather apron with red kiln emblems, metal wrist cuffs, segmented thigh armor and leather boots. Exactly two arms, two hands and two legs. Both hands hold ONE long straight wooden mallet shaft with ONE heavy rectangular dark iron hammer head bearing red markings at its far end. Right hand at screen left grips the butt half, left hand at screen right grips nearer the head. Preserve the same head, straight shaft, constant handle length and both grips. No shield, helmet or additional weapon. Retain his stocky adult anatomy and original painted materials. Perform one brief backward torso recoil and recovery, purely a physical acting gesture. From ready, bend both knees slightly, tilt the shoulders backward and chin upward, contract the elbows while maintaining both hands around the mallet shaft. Boots stay planted. Then bring the shoulders forward and straighten into the same original ready position. The arm and chest movement is compact and controlled. Maintain the rectangular iron mallet head and straight solid shaft throughout. The entire scene consists only of this warrior and a perfectly flat uniform bright GREEN background. Locked orthographic camera, fixed body scale, steady diffuse lighting, full body and mallet inside the frame. No other objects or visual effects appear.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026093209
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kilnward_hit_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kilnward_hit_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 24,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 72,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "kilnward_h3/hit_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "kilnward_h3",
+      "create_time": 1790643414666
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "kilnward_h3\\hit_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "55932653-9220-4f8b-bfbd-0626f3052581",
+          "timestamp": 1790643415318
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "55932653-9220-4f8b-bfbd-0626f3052581",
+          "timestamp": 1790643415333
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "55932653-9220-4f8b-bfbd-0626f3052581",
+          "timestamp": 1790643612355
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

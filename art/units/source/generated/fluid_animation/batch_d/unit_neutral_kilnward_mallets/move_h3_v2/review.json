@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "notes": "Flat green extraction and weapon integrity pass, but close chronological gait review exposes forward-knee to backward-foot resets near frames32/33 and93/94. Do not hide a reset in a loop or omit necessary gait phases. V3 removes intermediate passing-pose guides, retains matching contact endpoints, and requests a continuous natural alternating walk. Installed AddGuide implementation anchors at the exact supplied pixel frame; no undocumented frame-grid adjustment was assumed."
+}

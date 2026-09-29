@@ -2620,29 +2620,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        74.0,
+        74,
         204
       ],
       "painted_extent": 199,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_kilnward_mallets.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_kilnward_mallets.png",
       "source_indices": [
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21,
-        22
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        182,
-        32,
-        349,
-        247
+        50,
+        100,
+        217,
+        315
       ],
-      "source_sha256": "697dcbba54a2fc2e823448b878e95556266458a24847bebb2cc3a48e125676e3",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_kilnward_mallets/provenance.json",
+      "source_sha256": "e5126de0035fcdb411feb63ab9f17dab776500895b998d2afaea6105086d05c5",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_kilnward_mallets/provenance.json",
       "sha256": "dc18846f6fe5a3b91f741abef9f4122ecd188eacf82afce303259f5bdef0feef"
     },
     "unit_neutral_cinderpot_hurlers": {

@@ -1,0 +1,18 @@
+{
+  "unit_id": "unit_neutral_kilnward_mallets",
+  "takes": [
+    "move_h3_v4",
+    "attack_h3_v3",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Accepted six dedicated Kilnward Mallets H3 actions after complete chronological frame review, enlarged anatomy/grip/mallet/alpha and loop review, all native128px phase rows and battle phase renders;575 focused candidate checks pass. Move retains long red-emblem apron and alternating grounded gait; strike uses controlled rigid mallet arc/contact72 and full recovery; recoil has no added beam; brace, physical salute and grounded side-fall are distinct. Preserve articulated eight-frame idle/map artwork and timing. No continuous-video-playback or manual game-playtest claim."
+  }
+}
