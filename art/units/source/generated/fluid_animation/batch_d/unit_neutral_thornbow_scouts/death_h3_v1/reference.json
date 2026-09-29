@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          156,
+          496
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f327c827ac5d38bc976f119eb1e7b6bd709825d6186bbea332d171fc8fa51acf",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62208f3605e9af3e3c829ff8ac2fd2fb413d3f893228349bb4ce93ae6051ab77",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            300,
+            991,
+            598,
+            1225
+          ]
+        ],
+        "anchor": [
+          450,
+          1205
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "56b3dc0ca1989e22c8c316e271e3bb874a0670617a5b0bcdd7964e41a46dd4b9",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            601,
+            1052,
+            908,
+            1168
+          ],
+          [
+            601,
+            1168,
+            924,
+            1221
+          ]
+        ],
+        "anchor": [
+          762,
+          1201
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e7182f86a397955635bab34d329f8234f8bf212521316e133769bdffd9f996f9",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            905,
+            1059,
+            1254,
+            1168
+          ],
+          [
+            937,
+            1168,
+            1254,
+            1225
+          ]
+        ],
+        "anchor": [
+          1080,
+          1202
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "87318535ee25a804db9313dc2108e5ab9d94dff11b3893d3eff7088427c62da7",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

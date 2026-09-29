@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          156,
+          496
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f327c827ac5d38bc976f119eb1e7b6bd709825d6186bbea332d171fc8fa51acf",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62208f3605e9af3e3c829ff8ac2fd2fb413d3f893228349bb4ce93ae6051ab77",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "guard_ready",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            610,
+            0,
+            1221,
+            624
+          ]
+        ],
+        "anchor": [
+          903,
+          615
+        ],
+        "scale": 0.69,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6fbfc9483af4036594c176f75e1501be924e627d6626d57f38ef0f4e20ce1647",
+      "runtime_source_scale": 0.345
+    },
+    {
+      "source_frame": {
+        "name": "guard_crouch",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            1000,
+            342,
+            1239,
+            619
+          ]
+        ],
+        "anchor": [
+          1102,
+          608
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "9164c27d61ebb3b11c9a1cfa3e0ee8f36c5e6860f18e730e92c031255632a53c",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

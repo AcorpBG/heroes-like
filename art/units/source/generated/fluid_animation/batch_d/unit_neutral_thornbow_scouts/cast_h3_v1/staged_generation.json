@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4ba6d60ce68754a7dd6863c86ff85a01c352b343be929711f0ce764ee7e76fab",
+  "latent_sha256": "6eed62ad26cdb6fa490b8d51fce989038db9bb158816a36679389db66740707d",
+  "decode_workflow_sha256": "d5c627ebc80ba95b1b1a81ec3cb1ef033c875131649f35046a1653f2c7547345",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "thornbow_h3\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

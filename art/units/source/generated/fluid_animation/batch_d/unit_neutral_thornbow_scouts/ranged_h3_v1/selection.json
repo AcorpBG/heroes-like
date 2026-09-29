@@ -1,0 +1,60 @@
+{
+  "source_frames": [
+    17,
+    19,
+    21,
+    23,
+    25,
+    27,
+    29,
+    31,
+    33,
+    35,
+    37,
+    39,
+    41,
+    43,
+    45,
+    47,
+    50,
+    54,
+    58,
+    61,
+    62,
+    63,
+    65,
+    66,
+    67,
+    70,
+    74,
+    78,
+    82,
+    85,
+    86,
+    88,
+    90,
+    92,
+    94,
+    96,
+    98,
+    100,
+    102,
+    104,
+    106,
+    108,
+    110
+  ],
+  "frame_msec": 40,
+  "review_note": "All124 frames reviewed. Exclude faulty opening arrow appearance0..15 and blurred release64; retain nock, draw, release65, follow-through and recovery. Two detached projectile frames separated across verified empty gaps for runtime-owned flight; native review pending.",
+  "contact_frame": 22,
+  "runtime_projectile_separation": {
+    "65": {
+      "split_x": 628,
+      "reason": "Fully detached arrow in flight; empty vertical gap separates it from the unchanged archer. Runtime owns projectile movement."
+    },
+    "66": {
+      "split_x": 800,
+      "reason": "Fully detached arrow in flight; empty vertical gap separates it from the unchanged archer. Runtime owns projectile movement."
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092926,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        156,
+        496
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          300,
+          991,
+          598,
+          1225
+        ]
+      ],
+      "anchor": [
+        450,
+        1205
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          601,
+          1052,
+          908,
+          1168
+        ],
+        [
+          601,
+          1168,
+          924,
+          1221
+        ]
+      ],
+      "anchor": [
+        762,
+        1201
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          905,
+          1059,
+          1254,
+          1168
+        ],
+        [
+          937,
+          1168,
+          1254,
+          1225
+        ]
+      ],
+      "anchor": [
+        1080,
+        1202
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      76,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original adult female Thornbow Scout, facing screen right in elevated three-quarter view. Preserve her brown braided hair, leaf hair clasp, pointed ears, olive scarf, layered olive leaf-shaped shoulder and skirt panels, fitted brown leather tunic, belts, long brown bracers and fingerless gloves, brown trousers and knee-high wrapped leather boots. A small green tattoo is visible on her left upper arm. A brown quiver of arrows sits at her right rear hip. Exactly two arms, two hands and two legs. The LEFT hand grips the wrapped central handle of ONE short golden-brown wooden thornbow. Keep its original curved limbs, small wooden thorns, curled tips, thin bowstring, size and grip position unchanged. The RIGHT hand is the free drawing hand. Preserve her face, adult proportions, original equipment and painted fantasy style. Collapse continuously from standing. Knees buckle and she lowers onto one knee; the free right hand reaches for the ground. Her hips descend, torso tips toward screen right and she lies on her side with head at screen right and feet at screen left. The left hand lowers the same bow flat to the ground in front as the body lands. Keep both arms and legs intact. Finish motionless, bow and quiver grounded, no recovery, floating equipment or disappearing body. Locked orthographic camera, centered anatomical root at fixed scale. Entire head, boots and bow remain within the canvas. Perfectly flat saturated BLUE background through every frame, with no gradients, scenery, floor shadow, camera motion or zoom. Natural joint articulation with physical support. No extra limbs, extra bows, swords, shields, magic, glowing effects or trails.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 3,
+  "foreground_measurement": {
+    "rule": "Maximum blue-minus-max(red,green) in alpha>240 interiors eroded three pixels plus two.",
+    "per_guide_max": [
+      1.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  }
+}

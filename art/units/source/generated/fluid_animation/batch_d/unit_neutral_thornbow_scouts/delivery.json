@@ -1,0 +1,25 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "takes": [
+    "move_h3_v1",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Coordinator inspected all1364 original frames chronologically (including rejected takes), enlarged grips/face/bow/string/arrow and guide details, all candidate native128px phases and three battle scene phases. Retained move30/ranged43/hit31/defend43/cast44/death46/attack71 actual H3 frames. Corrected raise joins original guard/shove/recovery; two hands and original bow retained, no opening smear, both legs articulate, crouch holds, corpse grounded. Excluded failed backgrounds and static-cut defense; detached projectile separated only across verified empty gap. Preserve original eight-pose idle and map pixels. Candidate1024 focused Windows checks passed. Review is original chronological frames and native phase renders, not continuous playback, manual playtest, Linux validation or full suite."
+  },
+  "attack_segments": [
+    "attack_raise_h3_v4",
+    "attack_h3_v1"
+  ],
+  "attack_frame_msec": 32,
+  "attack_contact_frame": 43,
+  "attack_timing_reason": "Retimed selected original24fps frames to32ms for a2.272-second anticipation/contact/recovery. Dense original samples around contacts; long source holds shortened. No synthetic frames."
+}

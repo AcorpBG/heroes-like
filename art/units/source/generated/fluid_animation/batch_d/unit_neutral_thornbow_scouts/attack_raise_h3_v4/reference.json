@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          156,
+          496
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f327c827ac5d38bc976f119eb1e7b6bd709825d6186bbea332d171fc8fa51acf",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62208f3605e9af3e3c829ff8ac2fd2fb413d3f893228349bb4ce93ae6051ab77",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "painted_half_raise",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/raise_mid_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          688,
+          896
+        ],
+        "scale": 0.625,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4be1723cb2838905918ef41c46d9672c49d47e28a46497e7ec65fdfcb7299d4c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7934c8e4582fbfaa410e7fb69b860aa587477d89b326428e1c603b1b3c67aad2",
+      "runtime_source_scale": 0.3125
+    },
+    {
+      "source_frame": {
+        "name": "bow_shove_windup",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            350,
+            331,
+            611,
+            614
+          ],
+          [
+            350,
+            614,
+            445,
+            626
+          ],
+          [
+            539,
+            614,
+            611,
+            626
+          ]
+        ],
+        "anchor": [
+          480,
+          617
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5012ad062e28a5f17f50c624103cf37bf60d3f8ffb62f21cc16b7dcb18b05d59",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,13 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      44
+    ],
+    [
+      66,
+      123
+    ]
+  ],
+  "reason": "Exclude hallucinated scenery and adjacent contaminated transition during held peak. Retain only original clean raising/held/recovery intervals; verify matching peak before selection."
+}

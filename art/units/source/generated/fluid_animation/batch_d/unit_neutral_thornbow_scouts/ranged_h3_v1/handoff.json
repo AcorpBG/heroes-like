@@ -1,0 +1,1036 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_thornbow_scouts",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_017",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "ranged_h3_019",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_019.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 19,
+          "video_time_seconds": 0.7916666666666666
+        },
+        {
+          "name": "ranged_h3_021",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_021.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 21,
+          "video_time_seconds": 0.875
+        },
+        {
+          "name": "ranged_h3_023",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_023.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 23,
+          "video_time_seconds": 0.9583333333333334
+        },
+        {
+          "name": "ranged_h3_025",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "ranged_h3_027",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "ranged_h3_029",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "ranged_h3_031",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "ranged_h3_033",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "ranged_h3_035",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "ranged_h3_037",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "ranged_h3_039",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "ranged_h3_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "ranged_h3_043",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "ranged_h3_045",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "ranged_h3_047",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        },
+        {
+          "name": "ranged_h3_050",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "ranged_h3_054",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "ranged_h3_058",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "ranged_h3_061",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "ranged_h3_062",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "ranged_h3_063",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "ranged_h3_065",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              628,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 628,
+            "reason": "Fully detached arrow in flight; empty vertical gap separates it from the unchanged archer. Runtime owns projectile movement."
+          }
+        },
+        {
+          "name": "ranged_h3_066",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              800,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 800,
+            "reason": "Fully detached arrow in flight; empty vertical gap separates it from the unchanged archer. Runtime owns projectile movement."
+          }
+        },
+        {
+          "name": "ranged_h3_067",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "ranged_h3_070",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "ranged_h3_074",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "ranged_h3_078",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "ranged_h3_082",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "ranged_h3_085",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "ranged_h3_086",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "ranged_h3_088",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "ranged_h3_090",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "ranged_h3_092",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "ranged_h3_094",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        },
+        {
+          "name": "ranged_h3_096",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "ranged_h3_098",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_098.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 98,
+          "video_time_seconds": 4.083333333333333
+        },
+        {
+          "name": "ranged_h3_100",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "ranged_h3_102",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_102.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 102,
+          "video_time_seconds": 4.25
+        },
+        {
+          "name": "ranged_h3_104",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "ranged_h3_106",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_106.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 106,
+          "video_time_seconds": 4.416666666666667
+        },
+        {
+          "name": "ranged_h3_108",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "ranged_h3_110",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte/rgba_110.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            430,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 110,
+          "video_time_seconds": 4.583333333333333
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42
+          ],
+          "frame_msec": 40,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 22
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/original_lossless.mkv",
+          "sha256": "ceb1dde93e6ddc4cdded6dffd169ed2fdb02940d96c97b53ab0c7dc54f85b622"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/original.json",
+          "sha256": "36ae38adb47c09f203baa7ec07b56fd7ea5bf01494300c9ab35c2141767c3211"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/workflow_api.json",
+          "sha256": "abf7dc71d749f6571afd2ee83eaf8e002f81160d618a90c5ffd516001b0232d9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/prompt.txt",
+          "sha256": "cc2c20ae9cea41f0db11c8408abe2fe15e67d8a064fd73a0cd7ae170e20ff0df"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/reference.json",
+          "sha256": "21810a5828e143ca3c1d932953012ce7a435e09aa3d833d0089598fe9a05872f"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/matte.json",
+          "sha256": "8428dc555bb5effcb56bf5441b5c6f66e865681dca7d20c69f2b5a36ace50df2"
+        },
+        "extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/extraction_settings.json",
+          "sha256": "798ecd10a75456108c57d2e92384198366a3faf5cea0265654f04853cc4112f7"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/staged_generation.json",
+          "sha256": "9c9b75b68c10254a6e0ceff077473943aca270613fca888170be5cb96f54c418"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/sampling_workflow_api.json",
+          "sha256": "5899a01390013b2ccd7ee6419de3aaf001b55068ad6a8a92c14ca24fa66dfae0"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/sampling_submission.json",
+          "sha256": "e8b4efa24b4d7c563dfde0e5b8d0124b7fc0c13993517bea0b5300360f13c4ad"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/sampling_history.json",
+          "sha256": "2e223c6dd8d5df92f18f0c35503f0e5dec45ad063f35296703653769587f6d5c"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/ranged_h3_v1/original.latent",
+          "sha256": "4d892dd163f693e41bdb99d866681bd36e967b967d5b402b5e71d364114c6693"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 frames reviewed. Exclude faulty opening arrow appearance0..15 and blurred release64; retain nock, draw, release65, follow-through and recovery. Two detached projectile frames separated across verified empty gaps for runtime-owned flight; native review pending."
+      }
+    }
+  ]
+}

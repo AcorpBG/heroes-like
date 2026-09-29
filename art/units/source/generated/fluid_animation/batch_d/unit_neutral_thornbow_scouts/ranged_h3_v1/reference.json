@@ -1,0 +1,153 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          156,
+          496
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f327c827ac5d38bc976f119eb1e7b6bd709825d6186bbea332d171fc8fa51acf",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "62208f3605e9af3e3c829ff8ac2fd2fb413d3f893228349bb4ce93ae6051ab77",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "arrow_nock",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            630,
+            305,
+            941
+          ],
+          [
+            0,
+            941,
+            82,
+            948
+          ],
+          [
+            202,
+            941,
+            305,
+            948
+          ]
+        ],
+        "anchor": [
+          154,
+          940
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "0e11fb4a190f1f66c75da609960551479af3d169270098571de6bcbdc5a4b99b",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "bow_draw",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            470,
+            617,
+            550,
+            631
+          ],
+          [
+            335,
+            631,
+            612,
+            955
+          ]
+        ],
+        "anchor": [
+          456,
+          947
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "2d20c09efbc7f2881e527acfb3c574a24fcb39c63e22ede34295ec35d54ac9c5",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "bow_release",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+        "rects": [
+          [
+            629,
+            619,
+            922,
+            954
+          ]
+        ],
+        "anchor": [
+          768,
+          949
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "32712aa8d2a5ce4533634001189d1dd3a33ceea0b7b61ff03c6f68e0d14877a5",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "07128c353f06174cb7056d25a5d62f0a5e75840cca642671f14dc4b28da3134f",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "bow_shove_recovery",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            0,
+            0,
+            610,
+            623
+          ]
+        ],
+        "anchor": [
+          320,
+          615
+        ],
+        "scale": 0.69,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "9072acbf588135fcce546a09f7ec3377860685210f887014f65d880d7ccc62b4",
+      "runtime_source_scale": 0.345
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

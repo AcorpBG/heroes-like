@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_attempt",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            0,
+            628,
+            610,
+            1288
+          ]
+        ],
+        "anchor": [
+          330,
+          1218
+        ],
+        "scale": 0.69,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7973dd9d4fb2d542bdd89aab5c8e3d936aa62f88c7a410a3569519efc78d4f37",
+      "runtime_source_scale": 0.345
+    },
+    {
+      "source_frame": {
+        "name": "walk_passing_attempt",
+        "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/continuity-alpha/bow-recovery-and-grounded-travel.png",
+        "rects": [
+          [
+            610,
+            628,
+            1221,
+            1288
+          ]
+        ],
+        "anchor": [
+          920,
+          1231
+        ],
+        "scale": 0.69,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "700b8688cd627cda57f03412a1efe6ea761ed676166aa84dca87e5177b6631e3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "a828e4d36dc8887e7cb2f216fc822098c8ca2c69f53b9059624f3099c70c96ff",
+      "runtime_source_scale": 0.345
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

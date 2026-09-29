@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    927,
+    "2801ac2e-c374-45b5-b580-3e5bb8059712",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original adult female Thornbow Scout, facing screen right in elevated three-quarter view. Preserve her brown braided hair, leaf hair clasp, pointed ears, olive scarf, layered olive leaf-shaped shoulder and skirt panels, fitted brown leather tunic, belts, long brown bracers and fingerless gloves, brown trousers and knee-high wrapped leather boots. A small green tattoo is visible on her left upper arm. A brown quiver of arrows sits at her right rear hip. Exactly two arms, two hands and two legs. The LEFT hand grips the wrapped central handle of ONE short golden-brown wooden thornbow. Keep its original curved limbs, small wooden thorns, curled tips, thin bowstring, size and grip position unchanged. The RIGHT hand is the free drawing hand. Preserve her face, adult proportions, original equipment and painted fantasy style. Raise the bow upright close beside the left shoulder, bring the free right forearm in front of the chest and duck into a low braced crouch. Bend both knees with planted boots. Finish holding the low guard with bow held securely, no firing and no return to standing. Locked orthographic camera, centered anatomical root at fixed scale. Entire head, boots and bow remain within the canvas. Perfectly flat saturated BLUE background through every frame, with no gradients, scenery, floor shadow, camera motion or zoom. Natural joint articulation with physical support. No extra limbs, extra bows, swords, shields, magic, glowing effects or trails.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092924
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "thornbow_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "thornbow_defend_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "thornbow_defend_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 28,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 68,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "thornbow_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "thornbow_h3",
+      "create_time": 1790667212585
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "thornbow_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "2801ac2e-c374-45b5-b580-3e5bb8059712",
+          "timestamp": 1790667212829
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "2801ac2e-c374-45b5-b580-3e5bb8059712",
+          "timestamp": 1790667212854
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "2801ac2e-c374-45b5-b580-3e5bb8059712",
+          "timestamp": 1790667507759
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "status": "full_take_rejected_valid_intervals_retained",
+  "bad_frames": [
+    23,
+    24
+  ],
+  "reason": "Opening transition smears face/body and changes bow geometry before snapping upright. Generate a slower separately guided raise; inspect its join into the valid shove and recovery."
+}

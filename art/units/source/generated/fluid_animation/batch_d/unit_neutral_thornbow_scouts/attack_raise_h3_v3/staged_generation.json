@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "9e77117f4400a87d60daf98f3a08436ec7af9a03da0d849949d103e5726c1eae",
+  "latent_sha256": "13d6de6b21bb9521883d98d8dbe7557fc35b541dbca6f57eda4c4bd2cd8912f0",
+  "decode_workflow_sha256": "9406312f778d26731e2f3679eb7b99b76467782ed880c7ea756a45d9aba4215b",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "thornbow_h3\\attack_raise_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

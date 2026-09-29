@@ -1,0 +1,141 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "Flat uniform saturated MAGENTA chroma-key background remains unchanged throughout the video. ONE original adult female Thornbow Scout, facing screen right in elevated three-quarter view. Preserve her brown braided hair, leaf hair clasp, pointed ears, olive scarf, layered olive leaf-shaped shoulder and skirt panels, fitted brown leather tunic, belts, long brown bracers and fingerless gloves, brown trousers and knee-high wrapped leather boots. A small green tattoo is visible on her left upper arm. A brown quiver of arrows sits at her right rear hip. Exactly two arms, two hands and two legs. The LEFT hand grips the wrapped central handle of ONE short golden-brown wooden thornbow. Keep its original curved limbs, small wooden thorns, curled tips, thin bowstring, size and grip position unchanged. The RIGHT hand is the free drawing hand. Preserve her face, adult proportions, original equipment and painted fantasy style. Slowly prepare a melee shove without performing the shove. Begin moving immediately: bend the left elbow to raise the short bow from the waist into the final vertical chest guard. Move the free right hand smoothly across the abdomen to join the left hand at the central grip. Gradually widen the stance and bend both knees, keeping boots grounded. Hold the completed two-handed guard. Preserve the full gradual arm and knee articulation, face and rigid bow. No arrow, string drawing, lunge, blur, scene change or sudden pose change.  Locked orthographic camera, centered anatomical root at fixed scale. Entire head, boots and bow remain within the canvas. Perfectly flat saturated MAGENTA background through every frame, with no gradients, scenery, floor shadow, camera motion or zoom. Natural joint articulation with physical support. No extra limbs, extra bows, swords, shields, magic, glowing effects or trails.  The empty background is pure bright magenta, never green, olive, brown or scenery.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "31",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026092933
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "thornbow_attack_raise_h3_v3_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "thornbow_attack_raise_h3_v3_guide_1.png"
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "5",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "thornbow_h3/attack_raise_h3_v3/sampled"
+    }
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "unit_id": "unit_neutral_thornbow_scouts",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026092934,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        156,
+        496
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "painted_half_raise",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_thornbow_scouts/raise_mid_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        688,
+        896
+      ],
+      "scale": 0.3125,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "bow_shove_windup",
+      "source": "art/animation/source/poses/unit_neutral_thornbow_scouts/alpha/poses.png",
+      "rects": [
+        [
+          350,
+          331,
+          611,
+          614
+        ],
+        [
+          350,
+          614,
+          445,
+          626
+        ],
+        [
+          539,
+          614,
+          611,
+          626
+        ]
+      ],
+      "anchor": [
+        480,
+        617
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      50,
+      2
+    ],
+    [
+      86,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "ONE original adult female Thornbow Scout, facing screen right in elevated three-quarter view. Preserve her brown braided hair, leaf hair clasp, pointed ears, olive scarf, layered olive leaf-shaped shoulder and skirt panels, fitted brown leather tunic, belts, long brown bracers and fingerless gloves, brown trousers and knee-high wrapped leather boots. A small green tattoo is visible on her left upper arm. A brown quiver of arrows sits at her right rear hip. Exactly two arms, two hands and two legs. The LEFT hand grips the wrapped central handle of ONE short golden-brown wooden thornbow. Keep its original curved limbs, small wooden thorns, curled tips, thin bowstring, size and grip position unchanged. The RIGHT hand is the free drawing hand. Preserve her face, adult proportions, original equipment and painted fantasy style. A single continuous preparation for a melee bow shove. Immediately raise the left-hand bow diagonally toward the chest while the right hand moves in to join the central handle. Smoothly pass through the halfway pose, widen the feet and bend knees, then finish in the final two-handed upright guard. The right hand travels toward the wooden grip and never draws the string. No arrow, shooting or actual shove; no sudden pose swaps.  Locked orthographic camera, centered anatomical root at fixed scale. Entire head, boots and bow remain within the canvas. Perfectly flat saturated BLUE background through every frame, with no gradients, scenery, floor shadow, camera motion or zoom. Natural joint articulation with physical support. No extra limbs, extra bows, swords, shields, magic, glowing effects or trails.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 3,
+  "foreground_measurement": {
+    "rule": "Opaque eroded guide interior blue excess plus two.",
+    "per_guide_max": [
+      1.0,
+      1.0,
+      1.0
+    ]
+  }
+}
