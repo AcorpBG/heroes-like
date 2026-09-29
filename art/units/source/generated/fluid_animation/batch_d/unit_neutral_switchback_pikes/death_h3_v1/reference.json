@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          243,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1279118f60b84978b4ee0d06b3f50f558ffdd78319947dd0e113eff3cc34ba83",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3330eb981a440d37a11b80ea005ce04d28b9d73a11a572316d0545964d166514",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+        "rects": [
+          [
+            311,
+            758,
+            605,
+            1056
+          ]
+        ],
+        "anchor": [
+          472,
+          1025
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b271092ec0cd83573ee93cac36d39e02b769dd48bc47f4f69ff70db1f18fe8dd",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "death_side_fall",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+        "rects": [
+          [
+            605,
+            852,
+            965,
+            984
+          ],
+          [
+            605,
+            984,
+            970,
+            1011
+          ],
+          [
+            605,
+            1011,
+            1058,
+            1050
+          ]
+        ],
+        "anchor": [
+          814,
+          1025
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "8f2b11baed26fd2c1ae359aa9ae9fc8b60f0cd5ba99cbbec3ec63254828d5bc6",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+        "rects": [
+          [
+            655,
+            716,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          1094,
+          977
+        ],
+        "scale": 0.78,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "156eb0aa73882af7ac63c769db6aecdaad69e0005ab901ddebc8b13e567cd8b1",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "137f9e1c263014bd205160729add3d3341abef841f4866d23f1d8ada46b3043d",
+      "runtime_source_scale": 0.39
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,134 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "blue_chroma_axis": "blue_minus_max_red_green",
+  "seed": 2026092975,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        243,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+      "rects": [
+        [
+          311,
+          758,
+          605,
+          1056
+        ]
+      ],
+      "anchor": [
+        472,
+        1025
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_side_fall",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+      "rects": [
+        [
+          605,
+          852,
+          965,
+          984
+        ],
+        [
+          605,
+          984,
+          970,
+          1011
+        ],
+        [
+          605,
+          1011,
+          1058,
+          1050
+        ]
+      ],
+      "anchor": [
+        814,
+        1025
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+      "rects": [
+        [
+          655,
+          716,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        1094,
+        977
+      ],
+      "scale": 0.39,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      74,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "ONE original adult male Switchback Pike mountain guide, elevated three-quarter view facing screen right. He has a short dark beard, olive broad-brimmed hat with a red-orange feather, green scarf and green-edged gray poncho, gray trousers, brown leather gloves and bracers, brown heavy spiked hiking boots. Preserve the brown backpack, rolled blanket, rope coil, belt pouches and small hanging metal cup. Exactly two arms, two hands and two legs. He carries ONE long rigid orange-brown wooden pike: one large silver leaf spearhead with two small backward hooks, metal shaft collars, and one small silver butt spike at the opposite end. Keep the shaft straight and continuous, both ends distinct and visible, and each glove connected to its proper arm. No shield, second spear, flag, sword, shortening, stretching or rubber shaft. Preserve original face, adult proportions, painted fantasy texture, camera and equipment. Collapse continuously with the original equipment. Knees buckle, lower onto a knee, then tip sideways toward screen right. The pike lowers with the body, rotating naturally onto the ground, never changing ends or passing through the torso. Finish lying with the head at screen right and feet at screen left, one hand resting on the grounded pike in front. Backpack and hat stay attached. No recovery, floating limbs, extra weapon or scene cut. Locked orthographic camera, fixed anatomical scale and centered root. Entire figure, both pike ends, hat and boots stay within the frame. Uniform pure saturated BLUE background for every frame; no scene, floor, shadow, gradient, color changes, camera motion, glow, projectile or magic. Move joints naturally while maintaining stable grips and coherent ground support.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue minus max(red,green) maximum plus two across original guides.",
+    "per_guide_max": [
+      3.0,
+      6.0,
+      6.0,
+      8.0
+    ]
+  }
+}

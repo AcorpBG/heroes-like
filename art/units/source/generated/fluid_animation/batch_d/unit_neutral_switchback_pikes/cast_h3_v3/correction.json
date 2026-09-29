@@ -1,0 +1,12 @@
+{
+  "replaces": "cast_h3_v2",
+  "defect": "Yellow interval has a mixed magenta/yellow region inside the arm gap; whole-take publication rejected instead of cutting away the rise gesture.",
+  "change": "Second targeted correction changes control: pin an actually reviewed original raised-pike frame at 40 and 80 on the same blue plate as the original ready guide.",
+  "raised_guide": {
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_switchback_pikes/cast_h3_v2/matte/rgba_060.png",
+    "sha256": "3082ef490398ec99d0ba6607fd6e5eb4a52706af3fde955a83152cb6294df549",
+    "original_video": "cast_h3_v2/original_lossless.mkv",
+    "video_frame": 60,
+    "extraction": "cast_h3_v2/extraction_settings.json"
+  }
+}

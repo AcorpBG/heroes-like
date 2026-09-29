@@ -1,0 +1,80 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "blue_chroma_axis": "blue_minus_max_red_green",
+  "seed": 2026092982,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        243,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          737,
+          312,
+          1055
+        ]
+      ],
+      "anchor": [
+        177,
+        1038
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult male Switchback Pike mountain guide, elevated three-quarter view facing screen right. He has a short dark beard, olive broad-brimmed hat with a red-orange feather, green scarf and green-edged gray poncho, gray trousers, brown leather gloves and bracers, brown heavy spiked hiking boots. Preserve the brown backpack, rolled blanket, rope coil, belt pouches and small hanging metal cup. Exactly two arms, two hands and two legs. He carries ONE long rigid orange-brown wooden pike: one large silver leaf spearhead with two small backward hooks, metal shaft collars, and one small silver butt spike at the opposite end. Keep the shaft straight and continuous, both ends distinct and visible, and each glove connected to its proper arm. No shield, second spear, flag, sword, shortening, stretching or rubber shaft. Preserve original face, adult proportions, painted fantasy texture, camera and equipment. The solitary actor demonstrates one quick startled flinch and recovery. Starting from the ready pose, jerk the shoulders backward, bend both knees and lean the torso back into the reference pose. The supporting glove holds the pike; the free glove opens briefly for balance. Then straighten naturally, close the free glove around the shaft and settle into the starting ready stance. This is a self-contained acting exercise performed by the one character alone. Every visible pixel belongs either to the character with his original equipment or to the uninterrupted flat saturated blue background. Locked orthographic camera, fixed body scale, boots planted at the same ground reference. Entire hat, boots and both pike ends remain inside the frame. Only his body, clothing and carried equipment move.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 17,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue minus max(red,green) maximum plus two across original guides.",
+    "per_guide_max": [
+      3.0,
+      15.0
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026092984,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        243,
+        491
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      12,
+      0
+    ],
+    [
+      112,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "ONE original adult male Switchback Pike mountain guide, elevated three-quarter view facing screen right. He has a short dark beard, olive broad-brimmed hat with a red-orange feather, green scarf and green-edged gray poncho, gray trousers, brown leather gloves and bracers, brown heavy spiked hiking boots. Preserve the brown backpack, rolled blanket, rope coil, belt pouches and small hanging metal cup. Exactly two arms, two hands and two legs. He carries ONE long rigid orange-brown wooden pike: one large silver leaf spearhead with two small backward hooks, metal shaft collars, and one small silver butt spike at the opposite end. Keep the shaft straight and continuous, both ends distinct and visible, and each glove connected to its proper arm. No shield, second spear, flag, sword, shortening, stretching or rubber shaft. Preserve original face, adult proportions, painted fantasy texture, camera and equipment. Perform one clear nonmagical readiness signal: keep both boots planted, lift the diagonally held pike upward a handspan using the shoulders and elbows, tighten both grips and nod once to an ally. Pause briefly with the raised pike, then lower it and relax into the original ready stance. Keep the same large spearhead at the upper left and small butt spike at lower right throughout. This is a physical support salute, not an attack, spell or whole-body bounce. Flat vivid saturated MAGENTA background, exactly the same brightness and color in every frame. The magenta fills all space around the actor, including the gaps between his arms, boots and pike. Even constant illumination. Locked orthographic camera, fixed body scale and planted boot contacts. Every part of the figure and both weapon ends stays inside the canvas.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 5,
+  "foreground_measurement": {
+    "rule": "Eroded original opaque min(red,blue)-green maximum plus two.",
+    "per_guide_max": [
+      3.0
+    ]
+  }
+}

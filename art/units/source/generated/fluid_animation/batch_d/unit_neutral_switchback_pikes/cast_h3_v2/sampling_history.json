@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    975,
+    "d7c246d5-72ae-4139-bb4e-f487fe21d85d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "ONE original adult male Switchback Pike mountain guide, elevated three-quarter view facing screen right. He has a short dark beard, olive broad-brimmed hat with a red-orange feather, green scarf and green-edged gray poncho, gray trousers, brown leather gloves and bracers, brown heavy spiked hiking boots. Preserve the brown backpack, rolled blanket, rope coil, belt pouches and small hanging metal cup. Exactly two arms, two hands and two legs. He carries ONE long rigid orange-brown wooden pike: one large silver leaf spearhead with two small backward hooks, metal shaft collars, and one small silver butt spike at the opposite end. Keep the shaft straight and continuous, both ends distinct and visible, and each glove connected to its proper arm. No shield, second spear, flag, sword, shortening, stretching or rubber shaft. Preserve original face, adult proportions, painted fantasy texture, camera and equipment. Perform one clear nonmagical readiness signal: keep both boots planted, lift the diagonally held pike upward a handspan using the shoulders and elbows, tighten both grips and nod once to an ally. Pause briefly with the raised pike, then lower it and relax into the original ready stance. Keep the same large spearhead at the upper left and small butt spike at lower right throughout. This is a physical support salute, not an attack, spell or whole-body bounce. Flat vivid saturated MAGENTA background, exactly the same brightness and color in every frame. The magenta fills all space around the actor, including the gaps between his arms, boots and pike. Even constant illumination. Locked orthographic camera, fixed body scale and planted boot contacts. Every part of the figure and both weapon ends stays inside the canvas.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026092984
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "switchback_cast_h3_v2_guide_0.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 12,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 112,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "switchback_h3/cast_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "switchback_h3",
+      "create_time": 1790677643599
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "switchback_h3\\cast_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d7c246d5-72ae-4139-bb4e-f487fe21d85d",
+          "timestamp": 1790677643600
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "d7c246d5-72ae-4139-bb4e-f487fe21d85d",
+          "timestamp": 1790677643607
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d7c246d5-72ae-4139-bb4e-f487fe21d85d",
+          "timestamp": 1790677814995
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

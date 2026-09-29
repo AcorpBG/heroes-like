@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          243,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1279118f60b84978b4ee0d06b3f50f558ffdd78319947dd0e113eff3cc34ba83",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3330eb981a440d37a11b80ea005ce04d28b9d73a11a572316d0545964d166514",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "pike_windup",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/alpha/poses.png",
+        "rects": [
+          [
+            301,
+            422,
+            756,
+            520
+          ],
+          [
+            301,
+            520,
+            632,
+            740
+          ]
+        ],
+        "anchor": [
+          493,
+          729
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "36a5a787ef43c9e02e51d831a4af0a0fac7e1057851c3ba6c5ffd7584045093d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "c1685fa23d5c6dc55f204356720ecd34af6e1989b7e656c934352d9cd04fdd0e",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "full_pike_thrust",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+        "rects": [
+          [
+            0,
+            0,
+            920,
+            200
+          ],
+          [
+            0,
+            200,
+            759,
+            430
+          ],
+          [
+            0,
+            430,
+            600,
+            491
+          ]
+        ],
+        "anchor": [
+          350,
+          471
+        ],
+        "scale": 0.78,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "156eb0aa73882af7ac63c769db6aecdaad69e0005ab901ddebc8b13e567cd8b1",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "ab77385924ab355fcec88413b9f018c2f36beaac204ae84c595bd8c7f1585f82",
+      "runtime_source_scale": 0.39
+    },
+    {
+      "source_frame": {
+        "name": "pike_recovery",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/continuity-alpha/full-pike-thrust-recovery-and-rest.png",
+        "rects": [
+          [
+            955,
+            0,
+            1536,
+            190
+          ],
+          [
+            789,
+            190,
+            1536,
+            490
+          ]
+        ],
+        "anchor": [
+          1108,
+          481
+        ],
+        "scale": 0.78,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "156eb0aa73882af7ac63c769db6aecdaad69e0005ab901ddebc8b13e567cd8b1",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "8a49992ea141d177486d420edf48dc97f26b9a651e06527119213a0b7c8e2d78",
+      "runtime_source_scale": 0.39
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

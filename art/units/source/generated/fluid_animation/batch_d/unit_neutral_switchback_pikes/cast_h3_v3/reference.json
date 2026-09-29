@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          243,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1279118f60b84978b4ee0d06b3f50f558ffdd78319947dd0e113eff3cc34ba83",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3330eb981a440d37a11b80ea005ce04d28b9d73a11a572316d0545964d166514",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "original_h3_support_peak_60",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_switchback_pikes/cast_h3_v2/matte/rgba_060.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          420,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "3082ef490398ec99d0ba6607fd6e5eb4a52706af3fde955a83152cb6294df549",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "436d7049b4487189f50fb58cecbd224d473345200b816d380a4afa5f20fc3bb3",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

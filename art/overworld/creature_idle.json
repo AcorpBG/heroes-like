@@ -2970,29 +2970,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        91.0,
+        91,
         219
       ],
       "painted_extent": 214,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_switchback_pikes.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_switchback_pikes.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        165,
-        17,
-        322,
-        247
+        109,
+        57,
+        266,
+        287
       ],
-      "source_sha256": "cfcec54541d4111d270473946f19418b38ebcf9b37de556a26bdbb77d6ec55bb",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_switchback_pikes/provenance.json",
+      "source_sha256": "d678de5c992efff728c9794a444b7d7d5a066e920833fb0dc1593b144bda50c1",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_switchback_pikes/provenance.json",
       "sha256": "1d3f47f71c2a81f7bf4daa50acad93e4e2ad0a6432c21552b29bb632159d160e"
     },
     "unit_neutral_cairnshield_porters": {

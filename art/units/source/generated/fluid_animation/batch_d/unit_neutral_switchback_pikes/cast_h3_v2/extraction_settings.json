@@ -1,0 +1,36 @@
+{
+  "protected_foreground_chroma": 5,
+  "foreground_measurement": [
+    3.0
+  ],
+  "blue_chroma_axis": "blue_minus_max_red_green",
+  "reviewed_key_ranges": [
+    {
+      "start": 20,
+      "end": 29,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ],
+      "protected_foreground_chroma": 42,
+      "measured_original_interiors": [
+        40.0
+      ]
+    },
+    {
+      "start": 30,
+      "end": 49,
+      "key_rgb": [
+        255,
+        255,
+        0
+      ],
+      "protected_foreground_chroma": 91,
+      "measured_original_interiors": [
+        89.0
+      ]
+    }
+  ],
+  "reason": "Full original chronology reviewed. Background-only hue changes are uniform in these intervals; measure each axis on every original guide before unmixing. Retain opaque costume, hands, face and pike. No geometry editing. Support frames 0-19 are unused ready holds including a gradient transition."
+}

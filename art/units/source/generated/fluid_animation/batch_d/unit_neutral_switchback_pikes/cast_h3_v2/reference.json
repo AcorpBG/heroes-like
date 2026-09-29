@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_switchback_pikes/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          243,
+          491
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1279118f60b84978b4ee0d06b3f50f558ffdd78319947dd0e113eff3cc34ba83",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "df0a4a9c67d7da15c4c7d8988f1cb1ad7bef4ff1c3c6f8321dfd02fe55543c38",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

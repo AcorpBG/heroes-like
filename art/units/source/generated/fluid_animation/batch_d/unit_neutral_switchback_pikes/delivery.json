@@ -1,0 +1,23 @@
+{
+  "unit_id": "unit_neutral_switchback_pikes",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v3",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Accepted after full original-frame chronological review, enlarged hand/pike/alpha inspection, all 281 new frames in native 128px overview and three Godot battle phases. Move has reciprocal boot contacts; attack preserves the rigid pike, regrips, contact and recovery; hit flinches and regrips without the rejected beam; defense holds a low brace; support raises and lowers the same pike without magic; death settles to a grounded side-lying corpse before the rejected later pose jump. Existing eight-frame articulated hand idle is preserved for battle and map. Original color-changing plates measured separately; support regenerated with a clean raised-pike guide. Review was frame-by-frame plus offscreen runtime phases, not continuous video playback or manual playtest. Candidate 935 focused Windows checks passed."
+  },
+  "rejected_takes": {
+    "hit_h3_v1": "Incoming beam overlaps recoil onset.",
+    "cast_h3_v1": "Plate fades near-black during gesture.",
+    "cast_h3_v2": "Mixed yellow/magenta in arm gap; clean original frame 60 retained as v3 guide only."
+  }
+}
