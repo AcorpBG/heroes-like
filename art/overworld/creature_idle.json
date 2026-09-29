@@ -3397,29 +3397,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        64.0,
+        64,
         212
       ],
       "painted_extent": 206,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_sapwhistle_callers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_sapwhistle_callers.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        192,
-        24,
-        354,
-        246
+        64,
+        16,
+        226,
+        238
       ],
-      "source_sha256": "4709f4411728a2de3fc5d4afd54c957a3806f268e5f79e53d05942f6ef83419f",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_sapwhistle_callers/provenance.json",
+      "source_sha256": "4a1fb6e4b499f85124ad07e72449ba153bea1f494173a16839ed35d67754c09f",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_sapwhistle_callers/provenance.json",
       "sha256": "9a42020ea35f6501b960f91b37936078f4360ef5fd255b6a9f3211134431141f"
     },
     "unit_neutral_harbor_polearms": {

@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_near_v1.png",
+    "sha256": "b893ede4c135d1e799f4f153525875152fac90c9da8086399eba3b3fe73839b6"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_near_v1.prompt.txt",
+    "sha256": "1b2066e4277e6a4594193cfa578dc5c5ac286184dc8996229146cd366dc144f9"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/move_h3_v1/guide_0_rgba.png",
+      "sha256": "40abb0d3376ccbe796023a1e91563165a178cd5de5d0bda3fa047818d4a62bf6"
+    }
+  ],
+  "tool_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-eb095a38-ee1a-4827-a6a8-57f6bf50365d.png",
+  "review": "rejected: repeated contact and unwanted halo"
+}

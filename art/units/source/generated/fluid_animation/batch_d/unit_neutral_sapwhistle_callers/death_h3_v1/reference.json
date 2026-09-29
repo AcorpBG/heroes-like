@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          174,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d82d87e5bac1a15df52118a464fef55243430e407f7febe8a93f15d17d277501",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "10eb538c549ec3a328720c153b62dcf65bedbad97a36dfb8750f8251ea6818a0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            959,
+            262,
+            1220
+          ]
+        ],
+        "anchor": [
+          141,
+          1197
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "7965be4776cbdb5d6762f600f957b99dc4658f06c8a84df60b91df1760ed8a1c",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "death_tip",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png",
+        "rects": [
+          [
+            263,
+            1000,
+            551,
+            1202
+          ]
+        ],
+        "anchor": [
+          423,
+          1175
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "26a3f337ed79d184d57d55ab988d86bf04932b0f4ae8651582f4d645fd7bd406",
+      "runtime_source_scale": 0.64
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png",
+        "rects": [
+          [
+            860,
+            1044,
+            1254,
+            1214
+          ]
+        ],
+        "anchor": [
+          1055,
+          1190
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "a3e0dc9ded716d8c48270519eadd1ad8cc612cae73afa99bb9cec0f78fbf61c3",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

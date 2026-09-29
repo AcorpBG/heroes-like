@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_lift_v1.png",
+    "sha256": "300a2c2e4d33737919a90a2dbc730b10bf0f478e114ee7e93a0df2f379d3c216"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_lift_v1.prompt.txt",
+    "sha256": "f466c579720041010f36dc1d72da55b29d8e8cc2d029f51e5c85887e9785c533"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/move_h3_v1/guide_0_rgba.png",
+      "sha256": "40abb0d3376ccbe796023a1e91563165a178cd5de5d0bda3fa047818d4a62bf6"
+    }
+  ],
+  "tool_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-004016f2-883e-4902-8235-850583563a2b.png",
+  "review": "reviewed guide: visibly raised whistle-side knee and grounded opposite leg"
+}

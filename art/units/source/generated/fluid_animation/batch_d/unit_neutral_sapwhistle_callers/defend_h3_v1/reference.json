@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          174,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d82d87e5bac1a15df52118a464fef55243430e407f7febe8a93f15d17d277501",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "10eb538c549ec3a328720c153b62dcf65bedbad97a36dfb8750f8251ea6818a0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "left_grip_defense",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/continuity-alpha/left-grip-crouched-defense.png",
+        "rects": [
+          [
+            0,
+            0,
+            1378,
+            1142
+          ]
+        ],
+        "anchor": [
+          696,
+          1080
+        ],
+        "scale": 0.4,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "af0f0c8904c7103cc49d23c7f1fbd4b40398264c47977d36295a95aa1e1f0c4c",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "042853aecbf2bf09fc45be405309df05ebdf7c9e18a8d49b9194827bf191f038",
+      "runtime_source_scale": 0.2
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

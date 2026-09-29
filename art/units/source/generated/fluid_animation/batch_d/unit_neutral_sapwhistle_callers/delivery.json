@@ -1,0 +1,24 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "takes": [
+    "move_h3_v3",
+    "attack_h3_v2",
+    "ranged_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Coordinator reviewed every chronological original for all ten H3 takes, enlarged grips/legs/contact/collapse and all340 selected frames at actual128px reference height, retained eight articulated idle poses and three actual BattleShell phase renders. Accepted movev3 double-support-guided opposite steps; rejected movev1/v2 and attackv1 with recorded defects. Clean inert-tube melee, runtime-owned ranged projectile separated only across verified empty gaps, recoil/recovery, held crouching guard, nonmagical hand signal and grounded side-fall. No continuous playback claim: chronological and native phase inspection plus actual runtime pose observation. First candidate1120 check run missed final attack observation; unchanged instrumented rerun observed every59 attack frame and passed1120 checks. Live verification follows."
+  },
+  "rejected_takes": {
+    "move_h3_v1": "All124 originals reviewed: color cycling; clean early section still repeats a predominantly single-leg step with the other planted. Reject, guide missing lifted-knee phase and slower complete two-step cycle.",
+    "attack_h3_v1": "All124 originals reviewed: color-cycling background and unwanted muzzle flash/projectile during purported melee shove. Reject, use blue plate and inert-tube arm-extension wording.",
+    "move_h3_v2": "All124 chronological frames and enlarged16-123 reviewed. Opposed guides blend a raised leg across the body without a grounded foot plant between phases. Rejected. Next control adds original double-support stance between and after the opposite steps."
+  }
+}

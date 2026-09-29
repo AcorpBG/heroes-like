@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          174,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d82d87e5bac1a15df52118a464fef55243430e407f7febe8a93f15d17d277501",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9ea611efad101144851ef8144b5046c49a0543000f68e0688c14cba8ba0de6f3",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

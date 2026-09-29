@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "24cb62d67d386cdd738285e1c277e25731d83669b06b32a0c93f1fae1935d951",
+  "latent_sha256": "a59ed5e7f5cc42211fbb3fa24b86d686e3f4f31ac464b33d91f80e54a01a4f17",
+  "decode_workflow_sha256": "58d91efcefeb3a172fb47b742f0a279ba23d4074c64b9ecbcfae5feb6be63f85",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "sapwhistle_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

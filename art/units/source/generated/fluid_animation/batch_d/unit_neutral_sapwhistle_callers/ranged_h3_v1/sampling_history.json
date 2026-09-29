@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    1104,
+    "dfd7a1de-0323-4e50-9ee2-169d66758853",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Sapwhistle Caller, an athletic adult woman with fair skin and brown shoulder-length hair, a pointed green hood with orange-yellow feathers, layered green and ochre leaf cloak, ivory wrapped chest armor, brown leather straps, brown trousers, pale round knee guards and wrapped brown leather boots. Her LEFT hand grips one short brass-and-wood cylindrical dart launcher with a pale brass muzzle and dangling green leaf charm. Her RIGHT hand is free to hold the small whistle near her chin. A belt carries short orange resin darts. Exactly two arms and two legs. Preserve the same face, launcher length, left-hand grip and layered cloak throughout. Perform one aimed launcher shot. Raise the left-hand dart launcher, straighten that arm toward screen right, sight along the barrel and briefly hold aim. The left trigger finger fires once; a small backward forearm recoil follows, then lower the same launcher to ready. Right hand remains near the whistle. Only the shooter is visible; projectile flight and impact are rendered separately by the game. No muzzle flash or smoke. Fixed elevated three-quarter orthographic camera and body scale matching the original references. Keep the complete body, launcher, cloak and fallen equipment inside the frame. The entire background remains perfectly flat pure magenta RGB255,0,255 in every frame: no hue changes, floor, shadow, horizon, scenery, text or other people. Smooth physical joint articulation.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026093702
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sapwhistle_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sapwhistle_ranged_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "sapwhistle_ranged_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 32,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 56,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "sapwhistle_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "sapwhistle_h3",
+      "create_time": 1790708823764
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "sapwhistle_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "dfd7a1de-0323-4e50-9ee2-169d66758853",
+          "timestamp": 1790708824211
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "dfd7a1de-0323-4e50-9ee2-169d66758853",
+          "timestamp": 1790708824230
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "dfd7a1de-0323-4e50-9ee2-169d66758853",
+          "timestamp": 1790709030073
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

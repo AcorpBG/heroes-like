@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          174,
+          505
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d82d87e5bac1a15df52118a464fef55243430e407f7febe8a93f15d17d277501",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "10eb538c549ec3a328720c153b62dcf65bedbad97a36dfb8750f8251ea6818a0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "whistle_side_knee_lift",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_lift_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1537,
+            1023
+          ]
+        ],
+        "anchor": [
+          735,
+          945
+        ],
+        "scale": 0.446,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "300a2c2e4d33737919a90a2dbc730b10bf0f478e114ee7e93a0df2f379d3c216",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "2f774dfa3d274abdf210f6e1f3d496b6516781f86c8ded79c9b340b127308e4f",
+      "runtime_source_scale": 0.223
+    },
+    {
+      "source_frame": {
+        "name": "run_extension_attempt",
+        "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png",
+        "rects": [
+          [
+            624,
+            0,
+            946,
+            357
+          ]
+        ],
+        "anchor": [
+          790,
+          330
+        ],
+        "scale": 1.28,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c2ddbf74381e5b523a8aee7222722c768052d1fc6c151de193b48bc35ca673af",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "72c578b9b9cf8f4e758fed03c23b4e0768c75e39c6778225eca05b43495b801b",
+      "runtime_source_scale": 0.64
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

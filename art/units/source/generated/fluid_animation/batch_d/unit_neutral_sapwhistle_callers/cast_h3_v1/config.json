@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026093705,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        174,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1310,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      65,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sapwhistle Caller, an athletic adult woman with fair skin and brown shoulder-length hair, a pointed green hood with orange-yellow feathers, layered green and ochre leaf cloak, ivory wrapped chest armor, brown leather straps, brown trousers, pale round knee guards and wrapped brown leather boots. Her LEFT hand grips one short brass-and-wood cylindrical dart launcher with a pale brass muzzle and dangling green leaf charm. Her RIGHT hand is free to hold the small whistle near her chin. A belt carries short orange resin darts. Exactly two arms and two legs. Preserve the same face, launcher length, left-hand grip and layered cloak throughout. Perform a practical ready signal and equipment check. Bring the launcher inward and upward across the chest in the left hand. The right hand briefly checks the launcher near its breech, then lifts toward the small whistle at her chin as a rally signal. Return both hands and the launcher to the initial ready pose. Physical hand and elbow movement, not magic; no shooting, glowing effects or added equipment. Fixed elevated three-quarter orthographic camera and body scale matching the original references. Keep the complete body, launcher, cloak and fallen equipment inside the frame. The entire background remains perfectly flat pure blue RGB0,0,255 in every frame: no hue changes, floor, shadow, horizon, scenery, text or other people. Smooth physical joint articulation.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 5,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue-minus-max(red,green) maximum plus two across original guides.",
+    "per_guide_max": [
+      2.0,
+      3.0
+    ]
+  }
+}

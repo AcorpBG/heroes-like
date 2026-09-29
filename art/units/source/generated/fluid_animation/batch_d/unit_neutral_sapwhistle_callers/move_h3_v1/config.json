@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026093700,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        174,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Sapwhistle Caller, an athletic adult woman with fair skin and brown shoulder-length hair, a pointed green hood with orange-yellow feathers, layered green and ochre leaf cloak, ivory wrapped chest armor, brown leather straps, brown trousers, pale round knee guards and wrapped brown leather boots. Her LEFT hand grips one short brass-and-wood cylindrical dart launcher with a pale brass muzzle and dangling green leaf charm. Her RIGHT hand is free to hold the small whistle near her chin. A belt carries short orange resin darts. Exactly two arms and two legs. Preserve the same face, launcher length, left-hand grip and layered cloak throughout. Walk briskly in place with three reciprocal stride cycles. Alternate both legs through heel contact, loading, passing and toe lift. Keep hips centered as the knees flex; the left hand carries the same launcher pointing safely down and right. The right forearm counterbalances naturally, leaf cloak follows each stride. End in the initial stance. Fixed elevated three-quarter orthographic camera and body scale matching the original references. Keep the complete body, launcher, cloak and fallen equipment inside the frame. The entire background remains perfectly flat pure magenta RGB255,0,255 in every frame: no hue changes, floor, shadow, horizon, scenery, text or other people. Smooth physical joint articulation.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 7,
+  "foreground_measurement": {
+    "rule": "Eroded opaque min(red,blue)-green maximum plus two across original guides.",
+    "per_guide_max": [
+      5.0
+    ]
+  }
+}

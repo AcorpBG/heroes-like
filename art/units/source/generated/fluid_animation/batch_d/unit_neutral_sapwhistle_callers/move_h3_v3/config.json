@@ -1,0 +1,110 @@
+{
+  "unit_id": "unit_neutral_sapwhistle_callers",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026093900,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        174,
+        505
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "whistle_side_knee_lift",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_sapwhistle_callers/walk_lift_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        735,
+        945
+      ],
+      "scale": 0.223,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_sapwhistle_callers/alpha/poses.png",
+      "rects": [
+        [
+          624,
+          0,
+          946,
+          357
+        ]
+      ],
+      "anchor": [
+        790,
+        330
+      ],
+      "scale": 0.64,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      44,
+      0
+    ],
+    [
+      70,
+      2
+    ],
+    [
+      98,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Sapwhistle Caller, an athletic adult woman with fair skin and brown shoulder-length hair, a pointed green hood with orange-yellow feathers, layered green and ochre leaf cloak, ivory wrapped chest armor, brown leather straps, brown trousers, pale round knee guards and wrapped brown leather boots. Her LEFT hand grips one short brass-and-wood cylindrical brass tube with a pale brass muzzle and dangling green leaf charm. Her RIGHT hand is free to hold the small whistle near her chin. A belt carries short orange resin darts. Exactly two arms and two legs. Preserve the same face, tube length, left-hand grip and layered cloak throughout. Perform two distinct steps in place with a grounded weight transfer between them. First lift the whistle-side knee as the first guide shows, then lower that SAME boot fully onto the ground and return BOTH feet to the standing middle guide. Both boots visibly touch the ground at the middle standing pose. Only AFTER that contact, lift the opposite launcher-side leg and extend it forward as the second action guide shows. Lower that boot back onto the ground and finish with BOTH boots in the starting stance. Each raised knee belongs to the same hip and never crosses into the opposite leg. Keep the brass tube held downward, fixed orthographic camera, same body scale, motion only from limbs, hips and following cloak. Uniform blue RGB0,0,255 background and empty space.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue-minus-max(red,green) maximum plus two across original guides.",
+    "per_guide_max": [
+      2.0,
+      4.0,
+      8.0
+    ]
+  }
+}
