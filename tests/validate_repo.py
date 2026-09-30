@@ -41337,7 +41337,7 @@ def validate_ai_known_world_memory_candidate_compatibility(errors: list[str]) ->
         'var objective_town_ids: Array = objective_anchor_surface.get("town_placement_ids", [])',
         "_town_started_enemy_in_scenario(scenario",
         "_artifact_target_priority(session, node, objective_anchor_tiles)",
-        "_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface)",
+        "_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface, resolved_lookup)",
         "_append_delivery_interception_target_descriptors",
         "_append_hero_target_descriptors",
         "return descriptors",
@@ -43375,7 +43375,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             "_redirect_unreachable_raid_target(session, config, encounter, faction_id, assignment_path_context)",
             "_path_distance_hero_fingerprint(session, observer_faction_id)",
             "blocked_for_observer_flag",
-            "_player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id)",
+            "_player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id, sighting_sources)",
         ):
             ensure(required_token in enemy_adventure_text, errors, f"EnemyAdventureRules.gd is missing active-raid assignment path-context reuse token: {required_token}")
     if AI_RAID_MOVEMENT_PATH_PLAN_REUSE_SCENE_PATH.exists():

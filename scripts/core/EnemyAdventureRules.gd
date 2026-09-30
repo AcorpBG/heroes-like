@@ -16,6 +16,8 @@ const PlayerRules = preload("res://scripts/core/PlayerIdentityRules.gd")
 static var OverworldRulesScript: Variant = load("res://scripts/core/OverworldRules.gd")
 static var _path_distance_surface_cache: Dictionary = {}
 static var _native_navigation_surface_cache: Dictionary = {}
+static var _enemy_turn_terrain_surfaces: Dictionary = {}
+static var _enemy_turn_path_caches_active := false
 
 const COMMANDER_STATUS_AVAILABLE := "available"
 const COMMANDER_STATUS_ACTIVE := "active"
@@ -91,6 +93,10 @@ const AI_HERO_RAID_SIGHT_RADIUS := 5
 const AI_HERO_RESOURCE_SITE_MIN_SIGHT_RADIUS := 3
 const AI_EXPLORATION_MIN_ROUTE_DISTANCE := 3
 const AI_EXPLORATION_MAX_ROUTE_DISTANCE := 14
+# Enemy-state fields that commander, hero-task and memory helpers persist
+# directly on the session entry during a turn. Everything else in an enemy
+# state (pressure, raid_counter, treasury, posture) belongs to the empire cycle.
+const SESSION_OWNED_ENEMY_STATE_KEYS := ["commander_roster", "known_world_memory", "hero_task_state", "rebuild_pressure_request"]
 const LOGISTICS_SITE_FAMILIES := ["neutral_dwelling", "faction_outpost", "frontier_shrine"]
 const AI_RESOURCE_VALUE_BY_ID := {
 	"gold": 1,
@@ -855,24 +861,34 @@ static func _assignment_plan_for_raid_without_valid_target(
 		plan = ai_hero_task_saved_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
 		plan = ai_active_front_support_target_selection_plan(session, config, raid, preloaded_path_context)
+	# The live task plan and choose_target are read-only scans, and each can
+	# fall through to the whole-map exploration search. Run each at most once
+	# and reuse the result on the later fallback rungs.
+	var live_plan := {}
+	var live_plan_checked := false
 	if plan.is_empty():
-		var live_plan := ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
+		live_plan = ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
+		live_plan_checked = true
 		if not live_plan.is_empty() and _live_task_plan_can_preempt_explicit_objective(config, live_plan):
 			plan = live_plan
+	var chosen_plan := {}
+	var chosen_plan_checked := false
 	if plan.is_empty() and _config_has_explicit_objective_targets(config):
-		plan = choose_target(
+		chosen_plan = choose_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
 			raid,
 			preloaded_path_context
 		)
+		chosen_plan_checked = true
+		plan = chosen_plan
 		if plan.is_empty():
 			plan = _explicit_objective_fallback_target_selection_plan(session, config, raid, faction_id)
 	if plan.is_empty():
-		plan = ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
+		plan = live_plan if live_plan_checked else ai_hero_task_live_target_selection_plan(session, config, raid, preloaded_path_context)
 	if plan.is_empty():
-		plan = choose_target(
+		plan = chosen_plan if chosen_plan_checked else choose_target(
 			session,
 			config,
 			{"x": int(raid.get("x", 0)), "y": int(raid.get("y", 0))},
@@ -2088,7 +2104,7 @@ static func ai_post_capture_town_support_target_selection_plan(
 	if int(town_result.get("index", -1)) < 0:
 		return {}
 	var town: Dictionary = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+	if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 		return {}
 	if not _target_army_admission_possible(session, raid, "town", town_id):
 		return {}
@@ -2477,7 +2493,11 @@ static func advance_raids(
 					event_records.append(event_value)
 		_advance_profile_add_ms(profile, "post_move_grouping_ms", phase_started)
 
+		# Judge pillage by what the raid arrived at. Arrival can seize the target
+		# or retarget the raid, and neither should change today's pillage.
+		var arrived_at_player_target := false
 		if bool(encounter.get("arrived", false)):
+			arrived_at_player_target = _raid_target_pillages_player(session, encounter, faction_id)
 			var arrival_kind := String(encounter.get("target_kind", "unknown"))
 			phase_started = _advance_profile_timer(profile_enabled)
 			var arrival_result = _resolve_arrived_target(session, encounter, state, faction_id, config)
@@ -2530,7 +2550,10 @@ static func advance_raids(
 			target_label = "the frontier"
 		if bool(encounter.get("arrived", false)):
 			pressure_counts[target_label] = int(pressure_counts.get(target_label, 0)) + 1
-			if int(encounter.get("days_active", 0)) >= max(1, int(config.get("raid_pillage_delay", 1))):
+			if (
+				int(encounter.get("days_active", 0)) >= max(1, int(config.get("raid_pillage_delay", 1)))
+				and arrived_at_player_target
+			):
 				total_pillage = _merge_resources(
 					total_pillage,
 					_scale_resources(config.get("raid_pillage", {}), raid_pillage_weight(encounter))
@@ -3053,7 +3076,7 @@ static func _town_is_valid_grouping_target(town: Dictionary, faction_id: String,
 				return true
 		return false
 	if owner == "enemy":
-		var town_faction_id := _town_faction_id(town)
+		var town_faction_id := _town_controller_faction_id(town)
 		if town_faction_id == faction_id:
 			for code in ["town_defense", "front_stabilization", "defend_front"]:
 				if code in normalized_codes:
@@ -3814,7 +3837,7 @@ static func _enemy_hero_sighting_sources(
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
 		var radius := AI_HERO_TOWN_SIGHT_RADIUS
 		if OverworldRulesScript.town_strategic_role(town) in ["capital", "stronghold"]:
@@ -4315,7 +4338,7 @@ static func _target_army_admission_possible(session: SessionStateStoreScript.Ses
 		return bool(_raid_site_recruit_admission(raid, ContentService.get_resource_site(String(node.get("site_id", "")))).get("ok", false))
 	if kind == "town":
 		var town: Dictionary = _find_town_by_placement(session, target_id).get("town", {})
-		if String(town.get("owner", "")) == "enemy" and _town_faction_id(town) == PlayerRules.raid_controller_id(raid):
+		if String(town.get("owner", "")) == "enemy" and _town_controller_faction_id(town) == PlayerRules.raid_controller_id(raid):
 			return bool(_army_merge_admission(town.get("garrison", []), _raid_reinforcement_army(raid).get("stacks", [])).get("ok", false))
 	return true
 
@@ -5034,7 +5057,9 @@ static func _redirect_raid_away_from_nearby_player_threat(
 	_ai_hero_task_record_live_assignment(session, config, raid, _current_target_snapshot(raid), {})
 	return raid
 
-static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData) -> Array:
+static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScript.SessionData, read_only: bool = false) -> Array:
+	# read_only callers only inspect the records (path fingerprints, blocked
+	# tiles), so they get the live hero dictionaries instead of deep copies.
 	var heroes := []
 	if session == null:
 		return heroes
@@ -5042,7 +5067,7 @@ static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScrip
 	for hero_value in session.overworld.get("player_heroes", []):
 		if not (hero_value is Dictionary):
 			continue
-		var hero: Dictionary = hero_value.duplicate(true)
+		var hero: Dictionary = hero_value if read_only else hero_value.duplicate(true)
 		var hero_id := String(hero.get("id", ""))
 		if hero_id == "":
 			continue
@@ -5052,7 +5077,7 @@ static func _player_hero_snapshots_for_intercept(session: SessionStateStoreScrip
 	if active_hero_id != "" and not seen.has(active_hero_id):
 		var active_hero_value = session.overworld.get("hero", {})
 		if active_hero_value is Dictionary and not active_hero_value.is_empty():
-			var active_hero: Dictionary = active_hero_value.duplicate(true)
+			var active_hero: Dictionary = active_hero_value.duplicate(not read_only)
 			active_hero["id"] = active_hero_id
 			var active_position = active_hero.get("position", {})
 			if not (active_position is Dictionary) or active_position.is_empty():
@@ -5866,7 +5891,7 @@ static func _best_threatened_defense_town(
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
 		if not bool(front_state.get("active", false)):
@@ -6162,7 +6187,7 @@ static func _nearest_regroup_town(
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "enemy":
 			continue
-		if _town_faction_id(town) != faction_id:
+		if _town_controller_faction_id(town) != faction_id:
 			continue
 		var tile := _town_entrance_tile(town)
 		var distance := _path_distance_with_context(preloaded_path_context, current, [tile]) \
@@ -7671,10 +7696,10 @@ static func _active_town_defender_entry(
 		return {}
 	var faction_id := PlayerRules.defender_controller_id(town)
 	if faction_id == "":
-		faction_id = _town_faction_id(town)
+		faction_id = _town_controller_faction_id(town)
 	if faction_filter != "" and faction_id != faction_filter:
 		return {}
-	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+	if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 		return {}
 	var front: Dictionary = town.get("front", {}) if town.get("front", {}) is Dictionary else {}
 	var front_state: Dictionary = OverworldRulesScript.town_front_state(session, town)
@@ -8605,8 +8630,11 @@ static func _no_known_target_exploration_plan(
 	var path_context := preloaded_path_context
 	if path_context.is_empty():
 		path_context = _path_distance_surface_context(session, "", faction_id, _commander_map_level(commander_source))
-	for y in range(map_size.y):
-		for x in range(map_size.x):
+	# Only tiles within AI_EXPLORATION_MAX_ROUTE_DISTANCE (Manhattan) of the
+	# origin can qualify, so scan that box instead of the whole map. Rows and
+	# columns keep their ascending order, so ties resolve exactly as before.
+	for y in range(max(0, origin_pos.y - AI_EXPLORATION_MAX_ROUTE_DISTANCE), min(map_size.y, origin_pos.y + AI_EXPLORATION_MAX_ROUTE_DISTANCE + 1)):
+		for x in range(max(0, origin_pos.x - AI_EXPLORATION_MAX_ROUTE_DISTANCE), min(map_size.x, origin_pos.x + AI_EXPLORATION_MAX_ROUTE_DISTANCE + 1)):
 			var tile := Vector2i(x, y)
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
@@ -8654,6 +8682,11 @@ static func _no_known_target_exploration_plan(
 					"target_debug_reason": "no reachable known target candidates; scouting reachable frontier instead of holding passively",
 				}
 	return best
+
+static func _exploration_sweep_start(origin_coord: int, step: int) -> int:
+	# First multiple of step at or after the lowest coordinate in range.
+	var low: int = max(0, origin_coord - AI_EXPLORATION_MAX_ROUTE_DISTANCE)
+	return int(ceili(float(low) / float(step))) * step
 
 static func _enemy_exploration_frontier_score(sources: Array, tile: Vector2i, level: int = 0) -> int:
 	var best_gap := 9999
@@ -8708,8 +8741,10 @@ static func _no_known_target_frontier_sweep_plan(
 	if path_context.is_empty():
 		path_context = _path_distance_surface_context(session, "", faction_id, _commander_map_level(commander_source))
 	var step := 3 if max(map_size.x, map_size.y) >= 64 else 2
-	for y in range(0, map_size.y, step):
-		for x in range(0, map_size.x, step):
+	# Same sweep grid as a full-map pass (multiples of step), limited to the
+	# box around the origin that AI_EXPLORATION_MAX_ROUTE_DISTANCE allows.
+	for y in range(_exploration_sweep_start(origin_pos.y, step), min(map_size.y, origin_pos.y + AI_EXPLORATION_MAX_ROUTE_DISTANCE + 1), step):
+		for x in range(_exploration_sweep_start(origin_pos.x, step), min(map_size.x, origin_pos.x + AI_EXPLORATION_MAX_ROUTE_DISTANCE + 1), step):
 			var tile := Vector2i(x, y)
 			var direct_distance: int = abs(tile.x - origin_pos.x) + abs(tile.y - origin_pos.y)
 			if direct_distance < AI_EXPLORATION_MIN_ROUTE_DISTANCE or direct_distance > AI_EXPLORATION_MAX_ROUTE_DISTANCE:
@@ -8784,7 +8819,7 @@ static func _no_known_target_regroup_plan(
 		if not (town_value is Dictionary) or not LevelRules.on_level(town_value, level):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
 		var town_tile := _town_entrance_tile(town)
 		var distance := _path_distance(session, origin_pos, [town_tile], "", faction_id, level)
@@ -9651,7 +9686,7 @@ static func _ai_hero_task_planner_origins(
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
 		var x := int(town.get("x", 0))
 		var y := int(town.get("y", 0))
@@ -9704,7 +9739,7 @@ static func _ai_hero_task_planner_origin(
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
 		var candidate := {
 			"placement_id": String(town.get("placement_id", "")),
@@ -10128,6 +10163,33 @@ static func _strategy_regroup_floor(
 		"strategy_multiplier": multiplier,
 	}
 
+static func _raid_target_pillages_player(
+	session: SessionStateStoreScript.SessionData,
+	raid: Dictionary,
+	faction_id: String
+) -> bool:
+	# Pillage drains the human treasury, so only a raid pressing something the
+	# human holds may take from it: never a neutral or rival town, an unclaimed
+	# site, or anything while the raiding controller is allied with the human.
+	if session == null or raid.is_empty() or PlayerRules.allied(session, faction_id, "player"):
+		return false
+	var target_id := String(raid.get("target_placement_id", ""))
+	if target_id == "":
+		return false
+	match String(raid.get("target_kind", "")):
+		"town":
+			var town: Dictionary = _find_town_by_placement(session, target_id).get("town", {})
+			return String(town.get("owner", "neutral")) == "player"
+		"resource":
+			var node: Dictionary = _find_resource_by_placement(session, target_id).get("node", {})
+			return String(node.get("collected_by_faction_id", "")) == "player"
+		"hero":
+			return (
+				not _find_player_hero(session, target_id).is_empty()
+				or String(session.overworld.get("active_hero_id", "")) == target_id
+			)
+	return false
+
 static func raid_pillage_weight(encounter: Dictionary) -> int:
 	var base_strength: int = max(
 		1,
@@ -10234,18 +10296,20 @@ static func _target_candidate_descriptors(
 			knowledge_snapshot
 		)
 
+	var resolved_lookup := _resolved_encounter_lookup(session.overworld.get("resolved_encounters", []))
 	for encounter in session.overworld.get("encounters", []):
 		_append_encounter_target_descriptor(
 			session,
 			descriptors,
 			seen,
 			encounter,
-			_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface),
+			_encounter_target_priority(session, encounter, objective_anchor_tiles, objective_anchor_surface, resolved_lookup),
 			config,
 			faction_id,
 			include_unscouted,
 			objective_anchor_surface,
-			knowledge_snapshot
+			knowledge_snapshot,
+			resolved_lookup
 		)
 
 	_append_delivery_interception_target_descriptors(session, descriptors, seen, config, faction_id)
@@ -10651,14 +10715,15 @@ static func _append_encounter_target_descriptor(
 	faction_id: String,
 	include_unscouted: bool = false,
 	preloaded_objective_anchor_surface: Variant = null,
-	knowledge_snapshot: Dictionary = {}
+	knowledge_snapshot: Dictionary = {},
+	preloaded_resolved_lookup: Variant = null
 ) -> void:
 	if not (encounter is Dictionary):
 		return
-	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var resolved_encounters = preloaded_resolved_lookup if preloaded_resolved_lookup is Dictionary else session.overworld.get("resolved_encounters", [])
 	if _encounter_is_pressure_host_candidate(encounter, faction_id, resolved_encounters):
 		return
-	if OverworldRulesScript.is_encounter_resolved(session, encounter):
+	if _encounter_resolved_with_lookup(session, encounter, preloaded_resolved_lookup):
 		return
 	var placement_id = String(encounter.get("placement_id", ""))
 	var seen_key = "encounter:%s" % placement_id
@@ -15183,7 +15248,7 @@ static func _ai_hero_task_reconciled_town_task(
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
 	var town: Dictionary = town_result.get("town", {})
 	var owner := String(town.get("owner", "neutral"))
-	var town_faction := _town_faction_id(town)
+	var town_faction := _town_controller_faction_id(town)
 	var task_class := String(task.get("task_class", ""))
 	var reason_codes := _normalize_string_array(task.get("priority_reason_codes", []))
 	var same_faction_town := owner == "enemy" and town_faction == faction_id
@@ -15266,7 +15331,7 @@ static func _ai_hero_task_reconciled_regroup_task(
 	if int(town_result.get("index", -1)) < 0:
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_target_missing")
 	var town: Dictionary = town_result.get("town", {})
-	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+	if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 		return _ai_hero_task_with_lifecycle(task, "invalid", "invalid_controller_changed")
 	return task
 
@@ -15454,6 +15519,26 @@ static func _ai_hero_task_enemy_state_for_faction(session: SessionStateStoreScri
 		if state is Dictionary and PlayerRules.controller_id(state) == faction_id:
 			return state
 	return {}
+
+static func _enemy_state_after_session_writes(
+	session: SessionStateStoreScript.SessionData,
+	faction_id: String,
+	state: Dictionary
+) -> Dictionary:
+	# Hero-task, sighting and commander helpers write their fields straight into
+	# the session's enemy state, while the caller's copy still owns economy and
+	# spawn fields such as pressure, raid_counter and treasury. Returning the
+	# session entry wholesale would drop those, so pull only the session-owned
+	# fields into the caller's copy.
+	var live := _ai_hero_task_enemy_state_for_faction(session, faction_id)
+	if state.is_empty() or live.is_empty() or is_same(state, live):
+		return live if not live.is_empty() else state
+	for runtime_key in SESSION_OWNED_ENEMY_STATE_KEYS:
+		if live.has(runtime_key):
+			state[runtime_key] = live.get(runtime_key)
+		else:
+			state.erase(runtime_key)
+	return state
 
 static func _ai_hero_task_class_for_role(role: String, target_kind: String, role_status: String = "") -> String:
 	if role == COMMANDER_ROLE_RAIDER and target_kind == "town":
@@ -16928,11 +17013,12 @@ static func _encounter_target_priority(
 	session: SessionStateStoreScript.SessionData,
 	encounter: Variant,
 	preloaded_objective_anchor_tiles: Variant = null,
-	preloaded_objective_anchor_surface: Variant = null
+	preloaded_objective_anchor_surface: Variant = null,
+	preloaded_resolved_lookup: Variant = null
 ) -> int:
 	if not (encounter is Dictionary):
 		return 0
-	if PlayerRules.raid_controller_id(encounter) != "" or OverworldRulesScript.is_encounter_resolved(session, encounter):
+	if PlayerRules.raid_controller_id(encounter) != "" or _encounter_resolved_with_lookup(session, encounter, preloaded_resolved_lookup):
 		return 0
 	var encounter_template = ContentService.get_encounter(String(encounter.get("encounter_id", encounter.get("id", ""))))
 	var priority = 95 + int(min(80, _target_resource_value(encounter_template.get("rewards", {})) / 130))
@@ -17266,10 +17352,12 @@ static func _tile_has_unresolved_route_pickup_blocker(
 			continue
 		if PlayerRules.raid_controller_id(encounter) == faction_id:
 			continue
+		# Cheap position test first; the resolved list grows all game.
+		if Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))) != tile:
+			continue
 		if OverworldRulesScript.is_encounter_resolved(session, encounter):
 			continue
-		if Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))) == tile:
-			return true
+		return true
 	return false
 
 static func _secure_opportunistic_route_resource(
@@ -17583,7 +17671,7 @@ static func _resolve_arrived_target(
 			if (
 				not town.is_empty()
 				and String(town.get("owner", "neutral")) == "enemy"
-				and _town_faction_id(town) == faction_id
+				and _town_controller_faction_id(town) == faction_id
 				and "town_defense" in reason_codes
 			):
 				return _defend_town_target(session, raid, state, faction_id)
@@ -17664,7 +17752,7 @@ static func _resolve_hero_intercept_target(
 		var missing_target := _retarget_after_lost_hero_sighting(session, config, raid, faction_id, hero_id)
 		return {
 			"encounter": missing_target.get("encounter", raid),
-			"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+			"state": _enemy_state_after_session_writes(session, faction_id, state),
 			"event_message": "",
 			"ai_event": missing_target.get("ai_event", {}),
 		}
@@ -17696,7 +17784,7 @@ static func _resolve_hero_intercept_target(
 			event = ai_target_assignment_event(session, config, retargeted, {})
 		return {
 			"encounter": retargeted,
-			"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+			"state": _enemy_state_after_session_writes(session, faction_id, state),
 			"event_message": "",
 			"ai_event": event,
 		}
@@ -17706,7 +17794,7 @@ static func _resolve_hero_intercept_target(
 	_remove_enemy_player_hero_sighting(session, faction_id, hero_id)
 	return {
 		"encounter": lost_target.get("encounter", raid),
-		"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+		"state": _enemy_state_after_session_writes(session, faction_id, state),
 		"event_message": "",
 		"ai_event": lost_target.get("ai_event", {}),
 	}
@@ -17811,14 +17899,14 @@ static func _resolve_exploration_target(
 		continued = assign_target(session, config, continued)
 	var next_target := _current_target_snapshot(continued)
 	if _target_signature(next_target) == "" or _target_signature(next_target) == _target_signature(previous_target):
-		return {"encounter": raid, "state": _ai_hero_task_enemy_state_for_faction(session, faction_id), "event_message": ""}
+		return {"encounter": raid, "state": _enemy_state_after_session_writes(session, faction_id, state), "event_message": ""}
 	continued["arrived"] = false
 	var event := ai_target_assignment_event(session, config, continued, previous_target)
 	if event.is_empty():
 		event = ai_target_assignment_event(session, config, continued, {})
 	return {
 		"encounter": continued,
-		"state": _ai_hero_task_enemy_state_for_faction(session, faction_id),
+		"state": _enemy_state_after_session_writes(session, faction_id, state),
 		"event_message": "",
 		"ai_event": event,
 	}
@@ -18570,7 +18658,7 @@ static func _defend_town_target(
 	var town_index := int(town_result.get("index", -1))
 	if town_index < 0 or town.is_empty():
 		return {"encounter": raid, "state": state, "event_message": ""}
-	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+	if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 		return {"encounter": raid, "state": state, "event_message": ""}
 
 	var army := _raid_reinforcement_army(raid)
@@ -19140,7 +19228,7 @@ static func _regroup_raid_at_town(
 	var town_index := int(town_result.get("index", -1))
 	if town_index < 0 or town.is_empty():
 		return {"encounter": raid, "state": state, "event_message": ""}
-	if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+	if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 		return {"encounter": raid, "state": state, "event_message": ""}
 
 	var before_strength := raid_strength(raid)
@@ -19391,7 +19479,7 @@ static func _nearby_town_resupply_candidate(
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
-		if String(town.get("owner", "neutral")) != "enemy" or _town_faction_id(town) != faction_id:
+		if String(town.get("owner", "neutral")) != "enemy" or _town_controller_faction_id(town) != faction_id:
 			continue
 		var tile := _town_entrance_tile(town)
 		var distance: int = abs(tile.x - current.x) + abs(tile.y - current.y)
@@ -19427,7 +19515,7 @@ static func _town_resupply_reserve_strength(
 	if bool(front_state.get("active", false)):
 		var resolved_faction_id := faction_id
 		if resolved_faction_id == "":
-			resolved_faction_id = _town_faction_id(town)
+			resolved_faction_id = _town_controller_faction_id(town)
 		if PlayerRules.controller_id(front_state, resolved_faction_id) == resolved_faction_id:
 			reserve = max(reserve, _town_defense_commitment_need(town, front_state))
 	reserve = max(reserve, int(town.get("ai_defense_rating", 0)))
@@ -19838,14 +19926,17 @@ static func _path_plan_toward(
 			"next_goal_distance": 0,
 			"goal_field_count": 0,
 		}
-	var goal_fields := []
+	var goal_field_indexes := []
 	for goal_index_value in goal_lookup.keys():
 		var goal_index := int(goal_index_value)
 		if goal_index < 0 or encounter_blocked.has(goal_index) or hero_blocked.has(goal_index):
 			continue
-		goal_fields.append(_path_distance_field_for_start(path_context, goal_index))
-	if goal_fields.is_empty():
+		goal_field_indexes.append(goal_index)
+	if goal_field_indexes.is_empty():
 		return unreachable
+	# One search seeded with every usable goal gives each tile its distance to
+	# the nearest goal, the same minimum the per-goal fields produced.
+	var goal_field := _path_distance_field_for_goals(path_context, goal_field_indexes)
 	var best_step := start
 	var best_distance := 9999
 	for delta in PATH_MOVEMENT_DELTAS:
@@ -19856,13 +19947,10 @@ static func _path_plan_toward(
 		if _path_step_cuts_blocked_corner_index(start_index, candidate_index, map_size, encounter_blocked, resource_blocked, hero_blocked, terrain_blocked):
 			continue
 		var candidate_distance := 9999
-		for distance_field_value in goal_fields:
-			var distance_field: PackedInt32Array = distance_field_value
-			if candidate_index < 0 or candidate_index >= distance_field.size():
-				continue
-			var distance := int(distance_field[candidate_index])
+		if candidate_index >= 0 and candidate_index < goal_field.size():
+			var distance := int(goal_field[candidate_index])
 			if distance >= 0:
-				candidate_distance = min(candidate_distance, distance)
+				candidate_distance = distance
 		if candidate_distance < best_distance:
 			best_step = candidate
 			best_distance = candidate_distance
@@ -19874,7 +19962,7 @@ static func _path_plan_toward(
 		"goal_distance": current_distance,
 		"next_step": best_step,
 		"next_goal_distance": best_distance,
-		"goal_field_count": goal_fields.size(),
+		"goal_field_count": goal_field_indexes.size(),
 	}
 
 static func _verified_next_step_toward(
@@ -19971,6 +20059,23 @@ static func _path_distance_with_context(
 		if goal_distance >= 0:
 			best_distance = min(best_distance, goal_distance)
 	return best_distance
+
+static func begin_enemy_turn_path_caches() -> void:
+	# Path cache keys include the day, so nothing from an earlier turn can be
+	# hit again. Start each enemy turn empty and allow turn-scoped terrain reuse.
+	clear_path_caches()
+	_enemy_turn_path_caches_active = true
+
+static func end_enemy_turn_path_caches() -> void:
+	# Release the turn's path surfaces instead of holding them until the size
+	# limit is reached on some later turn.
+	_enemy_turn_path_caches_active = false
+	clear_path_caches()
+
+static func clear_path_caches() -> void:
+	_path_distance_surface_cache.clear()
+	_native_navigation_surface_cache.clear()
+	_enemy_turn_terrain_surfaces.clear()
 
 static func _path_distance_surface_context(
 	session: SessionStateStoreScript.SessionData,
@@ -20131,8 +20236,9 @@ static func _local_path_distance_surface_context_for_key(
 	var encounter_blocked := _occupied_tiles(session, ignore_placement_id, level)
 	var resource_blocked := _overworld_body_blocked_tiles(session, ignore_placement_id, observer_faction_id, level, actor_blocked_indexes)
 	var hero_blocked := _player_hero_blocked_tiles(session, observer_faction_id, level)
-	var terrain_blocked := _impassable_terrain_tiles(session, level)
 	var map_size: Vector2i = OverworldRulesScript.derive_map_size(session)
+	var terrain_surface := _terrain_blocked_surface(session, level, map_size)
+	var terrain_blocked: Dictionary = terrain_surface.get("tiles", {})
 	var context := {
 		"map_size": map_size,
 		"level": level,
@@ -20143,7 +20249,7 @@ static func _local_path_distance_surface_context_for_key(
 		"encounter_blocked_indices": _blocked_tile_index_lookup(encounter_blocked, map_size),
 		"resource_blocked_indices": _blocked_tile_index_lookup(resource_blocked, map_size),
 		"hero_blocked_indices": _blocked_tile_index_lookup(hero_blocked, map_size),
-		"terrain_blocked_indices": _blocked_tile_index_lookup(terrain_blocked, map_size),
+		"terrain_blocked_indices": terrain_surface.get("indices", {}),
 		"distance_field_cache": {},
 	}
 	if cache_key != "":
@@ -20151,6 +20257,27 @@ static func _local_path_distance_surface_context_for_key(
 			_path_distance_surface_cache.clear()
 		_path_distance_surface_cache[cache_key] = context
 	return context
+
+static func _terrain_blocked_surface(
+	session: SessionStateStoreScript.SessionData,
+	level: int,
+	map_size: Vector2i
+) -> Dictionary:
+	# Terrain never changes during an enemy turn, but the surface cache key
+	# includes every army's position, so each raid step misses it. Inside a
+	# turn, reuse each level's blocked terrain instead of rescanning the map.
+	var rows = LevelRules.terrain_rows(session, level)
+	var key := ""
+	if _enemy_turn_path_caches_active and session != null:
+		key = "%s|%s|%d|%d,%d" % [String(session.session_id), String(session.scenario_id), level, map_size.x, map_size.y]
+		var cached: Dictionary = _enemy_turn_terrain_surfaces.get(key, {})
+		if not cached.is_empty() and is_same(cached.get("rows"), rows):
+			return cached
+	var tiles := _impassable_terrain_tiles(session, level)
+	var surface := {"rows": rows, "tiles": tiles, "indices": _blocked_tile_index_lookup(tiles, map_size)}
+	if key != "":
+		_enemy_turn_terrain_surfaces[key] = surface
+	return surface
 
 static func _path_distance_surface_cache_key(
 	session: SessionStateStoreScript.SessionData,
@@ -20234,16 +20361,23 @@ static func _path_distance_hero_fingerprint(
 	var fingerprint := _fingerprint_seed()
 	var count := 0
 	var sheltered_count := 0
-	for hero_value in _player_hero_snapshots_for_intercept(session):
+	# Every path query builds this key, so scan the observer's sighting sources
+	# once for all heroes rather than once per hero, and read heroes in place.
+	var sighting_sources: Array = []
+	var sighting_sources_loaded := false
+	for hero_value in _player_hero_snapshots_for_intercept(session, true):
 		if not (hero_value is Dictionary):
 			continue
 		var hero: Dictionary = hero_value
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
 		var sheltered := _player_hero_sheltered_in_town(session, hero)
 		var sheltered_flag := 1 if sheltered else 0
+		if not sheltered and not sighting_sources_loaded and observer_faction_id != "":
+			sighting_sources = _enemy_hero_sighting_sources(session, {}, observer_faction_id)
+			sighting_sources_loaded = true
 		var blocked_for_observer_flag := 1 if (
 			not sheltered
-			and _player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id)
+			and _player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id, sighting_sources)
 		) else 0
 		count += 1
 		sheltered_count += sheltered_flag
@@ -20321,12 +20455,50 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 	var field_cache: Dictionary = path_context.get("distance_field_cache", {}) if path_context.get("distance_field_cache", {}) is Dictionary else {}
 	if field_cache.has(start_index):
 		return field_cache[start_index]
+	var distances := _path_distance_field_from_seeds(path_context, [start_index])
+	var tile_count: int = distances.size()
+	if start_index < 0 or start_index >= tile_count:
+		return distances
+	field_cache[start_index] = distances
+	path_context["distance_field_cache"] = field_cache
+	return distances
+
+static func _path_distance_field_for_goals(path_context: Dictionary, goal_indexes: Array) -> PackedInt32Array:
+	# A single goal keeps its per-tile cache entry. Several goals share one
+	# multi-source field, cached under the sorted goal set.
+	if goal_indexes.size() == 1:
+		return _path_distance_field_for_start(path_context, int(goal_indexes[0]))
+	var sorted_indexes := goal_indexes.duplicate()
+	sorted_indexes.sort()
+	var cache_key := "goals:" + ",".join(sorted_indexes.map(func(index): return str(index)))
+	var field_cache: Dictionary = path_context.get("distance_field_cache", {}) if path_context.get("distance_field_cache", {}) is Dictionary else {}
+	if field_cache.has(cache_key):
+		return field_cache[cache_key]
+	var distances := _path_distance_field_from_seeds(path_context, sorted_indexes)
+	field_cache[cache_key] = distances
+	path_context["distance_field_cache"] = field_cache
+	return distances
+
+static func _path_distance_field_from_seeds(path_context: Dictionary, seed_indexes: Array) -> PackedInt32Array:
+	# Breadth-first walking distances from every seed at once. The step rules
+	# never depend on which seed a tile was reached from, so each tile gets the
+	# minimum over single-seed searches. Seeds may sit on blocked tiles.
 	var map_size: Vector2i = path_context.get("map_size", Vector2i.ZERO)
 	var tile_count: int = max(0, map_size.x * map_size.y)
 	var distances := PackedInt32Array()
 	distances.resize(tile_count)
 	distances.fill(-1)
-	if start_index < 0 or start_index >= tile_count:
+	var queue := PackedInt32Array()
+	queue.resize(tile_count)
+	var tail := 0
+	for seed_value in seed_indexes:
+		var seed_index := int(seed_value)
+		if seed_index < 0 or seed_index >= tile_count or int(distances[seed_index]) == 0:
+			continue
+		distances[seed_index] = 0
+		queue[tail] = seed_index
+		tail += 1
+	if tail == 0:
 		return distances
 	var blocked_mask: PackedByteArray = path_context.get("blocked_tile_mask", PackedByteArray())
 	if blocked_mask.size() != tile_count:
@@ -20338,12 +20510,7 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 			path_context.get("terrain_blocked_indices", {})
 		)
 		path_context["blocked_tile_mask"] = blocked_mask
-	var queue := PackedInt32Array()
-	queue.resize(tile_count)
-	queue[0] = start_index
-	distances[start_index] = 0
 	var head := 0
-	var tail := 1
 	var width := map_size.x
 	var height := map_size.y
 	while head < tail:
@@ -20368,8 +20535,6 @@ static func _path_distance_field_for_start(path_context: Dictionary, start_index
 			distances[next_index] = next_distance
 			queue[tail] = next_index
 			tail += 1
-	field_cache[start_index] = distances
-	path_context["distance_field_cache"] = field_cache
 	return distances
 
 static func _path_distance_to_goal_index(
@@ -20407,14 +20572,14 @@ static func _path_distance_to_goal_index(
 
 static func _occupied_tiles(session: SessionStateStoreScript.SessionData, ignore_placement_id: String, level: int = 0) -> Dictionary:
 	var occupied = {}
-	var resolved_encounters = session.overworld.get("resolved_encounters", [])
+	var resolved_lookup := _resolved_encounter_lookup(session.overworld.get("resolved_encounters", []))
 	for encounter in session.overworld.get("encounters", []):
 		if not (encounter is Dictionary) or not LevelRules.on_level(encounter, level):
 			continue
 		var placement_id = String(encounter.get("placement_id", ""))
 		if placement_id == ignore_placement_id:
 			continue
-		if resolved_encounters is Array and placement_id in resolved_encounters:
+		if resolved_lookup.has(placement_id):
 			continue
 		occupied[_pos_key(Vector2i(int(encounter.get("x", 0)), int(encounter.get("y", 0))))] = true
 	return occupied
@@ -20476,13 +20641,18 @@ static func _player_hero_blocked_tiles(
 	var blocked := {}
 	if session == null or observer_faction_id == "":
 		return blocked
-	for hero_value in _player_hero_snapshots_for_intercept(session):
+	var sighting_sources: Array = []
+	var sighting_sources_loaded := false
+	for hero_value in _player_hero_snapshots_for_intercept(session, true):
 		if not (hero_value is Dictionary) or not LevelRules.on_level(hero_value, level):
 			continue
 		var hero: Dictionary = hero_value
 		if _player_hero_sheltered_in_town(session, hero):
 			continue
-		if not _player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id):
+		if not sighting_sources_loaded:
+			sighting_sources = _enemy_hero_sighting_sources(session, {}, observer_faction_id)
+			sighting_sources_loaded = true
+		if not _player_hero_currently_visible_to_enemy_faction(session, hero, observer_faction_id, sighting_sources):
 			continue
 		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
 		if position.is_empty():
@@ -20513,7 +20683,8 @@ static func _player_hero_tile_occupied(
 static func _player_hero_currently_visible_to_enemy_faction(
 	session: SessionStateStoreScript.SessionData,
 	hero: Dictionary,
-	observer_faction_id: String
+	observer_faction_id: String,
+	preloaded_sources: Variant = null
 ) -> bool:
 	if session == null or hero.is_empty() or observer_faction_id == "":
 		return false
@@ -20521,7 +20692,8 @@ static func _player_hero_currently_visible_to_enemy_faction(
 	if position.is_empty():
 		return false
 	var tile := Vector2i(int(position.get("x", 0)), int(position.get("y", 0)))
-	for source_value in _enemy_hero_sighting_sources(session, {}, observer_faction_id):
+	var sources: Array = preloaded_sources if preloaded_sources is Array else _enemy_hero_sighting_sources(session, {}, observer_faction_id)
+	for source_value in sources:
 		if not (source_value is Dictionary) or not LevelRules.same_level(source_value, hero):
 			continue
 		var source: Dictionary = source_value
@@ -20802,7 +20974,7 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 				valid = String(town.get("owner", "neutral")) == "player" or (
 					"town_defense" in reason_codes
 					and String(town.get("owner", "neutral")) == "enemy"
-					and _town_faction_id(town) == PlayerRules.raid_controller_id(raid)
+					and _town_controller_faction_id(town) == PlayerRules.raid_controller_id(raid)
 				) or (
 					String(town.get("owner", "neutral")) == "neutral"
 					and ("town_expansion" in reason_codes or "neutral_town_claim" in reason_codes or "neutral_town_siege" in reason_codes)
@@ -20812,7 +20984,7 @@ static func _raid_target_valid(session: SessionStateStoreScript.SessionData, rai
 			valid = (
 				int(town_result.get("index", -1)) >= 0
 				and String(town_result.get("town", {}).get("owner", "neutral")) == "enemy"
-				and _town_faction_id(town_result.get("town", {})) == PlayerRules.raid_controller_id(raid)
+				and _town_controller_faction_id(town_result.get("town", {})) == PlayerRules.raid_controller_id(raid)
 			)
 		"resource":
 			var resource_result = _find_resource_by_placement(session, String(raid.get("target_placement_id", "")))
@@ -20908,7 +21080,7 @@ static func _is_active_raid(encounter: Variant, faction_id: String, resolved_enc
 	elif raid_faction != faction_id:
 		return false
 	var placement_id = String(encounter.get("placement_id", ""))
-	return not (resolved_encounters is Array and placement_id in resolved_encounters)
+	return not _placement_resolved(placement_id, resolved_encounters)
 
 static func is_active_pressure_host(encounter: Variant, faction_id: String = "", resolved_encounters: Variant = []) -> bool:
 	if not _is_active_raid(encounter, faction_id, resolved_encounters):
@@ -20936,7 +21108,7 @@ static func _encounter_is_pressure_host_candidate(encounter: Variant, faction_id
 	var placement_id := String(raid.get("placement_id", ""))
 	if _is_active_raid(raid, faction_id, resolved_encounters):
 		return true
-	if resolved_encounters is Array and placement_id in resolved_encounters:
+	if _placement_resolved(placement_id, resolved_encounters):
 		return false
 	if PlayerRules.raid_controller_id(raid) != "":
 		return true
@@ -20952,6 +21124,31 @@ static func _encounter_is_pressure_host_candidate(encounter: Variant, faction_id
 	if commander_state is Dictionary and not commander_state.is_empty():
 		return true
 	return placement_id.begins_with("faction_") and placement_id.find("_raid_") >= 0
+
+static func _placement_resolved(placement_id: String, resolved_encounters: Variant) -> bool:
+	# resolved_encounters is the session's list, or a lookup from
+	# _resolved_encounter_lookup when a caller checks many encounters at once.
+	if resolved_encounters is Dictionary:
+		return resolved_encounters.has(placement_id)
+	return resolved_encounters is Array and placement_id in resolved_encounters
+
+static func _resolved_encounter_lookup(resolved_encounters: Variant) -> Dictionary:
+	# The resolved list grows all game. Loops over every encounter build this
+	# once instead of scanning the list for each encounter.
+	var lookup := {}
+	if resolved_encounters is Array:
+		for value in resolved_encounters:
+			lookup[String(value)] = true
+	return lookup
+
+static func _encounter_resolved_with_lookup(
+	session: SessionStateStoreScript.SessionData,
+	encounter: Dictionary,
+	preloaded_resolved_lookup: Variant = null
+) -> bool:
+	if preloaded_resolved_lookup is Dictionary:
+		return preloaded_resolved_lookup.has(OverworldRulesScript.encounter_key(encounter))
+	return OverworldRulesScript.is_encounter_resolved(session, encounter)
 
 static func _find_town_by_placement(session: SessionStateStoreScript.SessionData, placement_id: String) -> Dictionary:
 	for index in range(session.overworld.get("towns", []).size()):
@@ -20987,16 +21184,22 @@ static func _resource_guard_encounter_for_node(
 		return {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
+		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
+		# Test the guard link before the resolved-list checks, which scan a
+		# list that grows all game; only a matching guard needs them.
+		var guard := _guard_link_for_encounter(encounter)
+		if not (
+			(not guard.is_empty() and _resource_guard_link_targets_node(guard, node, site))
+			or _generated_object_guard_targets(encounter, "resource", String(node.get("placement_id", "")))
+		):
+			continue
+		if OverworldRulesScript.is_encounter_resolved(session, encounter):
+			continue
 		if _encounter_is_pressure_host_candidate(encounter, "", resolved_encounters):
 			continue
-		var guard := _guard_link_for_encounter(encounter)
-		if not guard.is_empty() and _resource_guard_link_targets_node(guard, node, site):
-			return encounter
-		if _generated_object_guard_targets(encounter, "resource", String(node.get("placement_id", ""))):
-			return encounter
+		return encounter
 	return {}
 
 static func _resource_guard_link_targets_node(guard: Dictionary, node: Dictionary, site: Dictionary) -> bool:
@@ -21020,16 +21223,20 @@ static func _artifact_guard_encounter_for_node(session: SessionStateStoreScript.
 		return {}
 	var resolved_encounters = session.overworld.get("resolved_encounters", [])
 	for encounter_value in session.overworld.get("encounters", []):
-		if not (encounter_value is Dictionary) or OverworldRulesScript.is_encounter_resolved(session, encounter_value):
+		if not (encounter_value is Dictionary):
 			continue
 		var encounter: Dictionary = encounter_value
+		var guard := _guard_link_for_encounter(encounter)
+		if not (
+			(not guard.is_empty() and _artifact_guard_link_targets_node(guard, node))
+			or _generated_object_guard_targets(encounter, "artifact", String(node.get("placement_id", "")))
+		):
+			continue
+		if OverworldRulesScript.is_encounter_resolved(session, encounter):
+			continue
 		if _encounter_is_pressure_host_candidate(encounter, "", resolved_encounters):
 			continue
-		var guard := _guard_link_for_encounter(encounter)
-		if not guard.is_empty() and _artifact_guard_link_targets_node(guard, node):
-			return encounter
-		if _generated_object_guard_targets(encounter, "artifact", String(node.get("placement_id", ""))):
-			return encounter
+		return encounter
 	return {}
 
 static func _artifact_guard_link_targets_node(guard: Dictionary, node: Dictionary) -> bool:
@@ -21239,7 +21446,9 @@ static func _town_name(town_state: Dictionary) -> String:
 	var town = ContentService.get_town(String(town_state.get("town_id", "")))
 	return String(town.get("name", town_state.get("town_id", "Town")))
 
-static func _town_faction_id(town_state: Dictionary) -> String:
+# Controlling player (or legacy faction key) of the town, matching
+# EnemyTurnRules._town_controller_faction_id. Not the town's content faction.
+static func _town_controller_faction_id(town_state: Dictionary) -> String:
 	return PlayerRules.town_controller_id(town_state)
 
 static func _describe_count_map(verb: String, counts: Dictionary) -> String:

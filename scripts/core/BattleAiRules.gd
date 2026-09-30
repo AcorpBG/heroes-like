@@ -584,7 +584,9 @@ static func _battle_with_side_hero_payload(battle: Dictionary, side: String, com
 	var normalized_payload := _commander_payload_for_tactical_scoring(source_payload)
 	if normalized_payload.is_empty():
 		return battle
-	var scored := battle.duplicate(true)
+	# Scoring only reads the battle and the one swapped payload key, so share
+	# the stacks and other nested state instead of deep-copying per decision.
+	var scored := battle.duplicate()
 	scored[payload_key] = normalized_payload
 	return scored
 
