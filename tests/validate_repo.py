@@ -69345,7 +69345,7 @@ def validate_native_rmg_no_godot_export_boundary(errors: list[str]) -> None:
         ):
             ensure(required_signature in native_package_bridge_text, errors, f"Generated guarded-reward adoption must accept the bridge's Dictionary-or-Vector map-size payload: {required_signature}")
         ensure(
-            native_package_bridge_text.find("_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_document(map_document))")
+            native_package_bridge_text.find("_ensure_generated_rare_source_guards(resource_nodes, _encounters_from_objects(source_objects))")
             < native_package_bridge_text.find("static func _ensure_generated_guarded_reward_site_guards(resource_nodes: Array, encounters: Array, map_size: Variant) -> Array:"),
             errors,
             "Native package bridge must preserve existing generated guards before adding guarded-reward contract guards",

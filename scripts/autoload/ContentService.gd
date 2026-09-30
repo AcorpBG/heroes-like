@@ -28,6 +28,7 @@ const SPELL_ICONS_PATH := "%s/spell_icons.json" % CONTENT_DIR
 const SPELL_SCHOOL_ICONS_PATH := "%s/spell_school_icons.json" % CONTENT_DIR
 const BUILDING_CATEGORY_ICONS_PATH := "%s/building_category_icons.json" % CONTENT_DIR
 const CAMPAIGNS_PATH := "%s/campaigns.json" % CONTENT_DIR
+const BIOME_TERRAIN_INDEX_KEY := "%s#map_tile_ids" % BIOMES_PATH
 
 var _cache: Dictionary = {}
 var _lookup_indexes: Dictionary = {}
@@ -178,12 +179,51 @@ func get_biome_for_terrain(terrain_id: String) -> Dictionary:
 	var normalized_terrain := normalize_terrain_id(terrain_id)
 	if normalized_terrain == "":
 		return {}
-	for biome in _items_from_raw(load_json(BIOMES_PATH)):
+	var items := _items_from_raw(load_json(BIOMES_PATH))
+	var index: Variant = _lookup_indexes.get(BIOME_TERRAIN_INDEX_KEY)
+	if index == null or not is_same(index["source"], items) or int(index["count"]) != items.size():
+		index = _build_biome_terrain_index(items)
+	if not bool(index["indexed"]):
+		return _scan_biome_for_terrain(items, normalized_terrain)
+	var biome: Variant = index["by_terrain"].get(normalized_terrain)
+	return biome if biome != null else {}
+
+func _scan_biome_for_terrain(items: Array, normalized_terrain: String) -> Dictionary:
+	for biome in items:
 		if not (biome is Dictionary):
 			continue
 		if normalized_terrain in biome.get("map_tile_ids", []):
 			return biome
 	return {}
+
+# Blocked-tile and terrain-profile checks resolve a biome per tile, so index the
+# first biome listing each map tile id instead of scanning every biome. Rows are
+# borrowed exactly as the linear scan returned them. The index lives in the
+# lookup indexes, so clear_cache() drops it and a replaced biome list rebuilds it.
+# If any biome's map_tile_ids is not an Array, keep the original scan: `in` on
+# other Variant types is not a plain membership test.
+func _build_biome_terrain_index(items: Array) -> Dictionary:
+	var indexed := true
+	var by_terrain := {}
+	for biome in items:
+		if not (biome is Dictionary):
+			continue
+		var tile_ids = biome.get("map_tile_ids", [])
+		if not (tile_ids is Array):
+			indexed = false
+			by_terrain.clear()
+			break
+		for tile_id in tile_ids:
+			# Array membership matches String and StringName alike and never
+			# matches a String against any other Variant type.
+			if not (tile_id is String or tile_id is StringName):
+				continue
+			var key := String(tile_id)
+			if not by_terrain.has(key):
+				by_terrain[key] = biome
+	var index := {"source": items, "count": items.size(), "indexed": indexed, "by_terrain": by_terrain}
+	_lookup_indexes[BIOME_TERRAIN_INDEX_KEY] = index
+	return index
 
 func get_map_object(id: String) -> Dictionary:
 	return get_content_by_id(MAP_OBJECTS_PATH, id)

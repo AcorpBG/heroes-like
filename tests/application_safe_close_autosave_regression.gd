@@ -278,6 +278,23 @@ func _validate_reentrant_and_completed_guards() -> Dictionary:
 
 
 func _validate_window_close_notification() -> Dictionary:
+	# One OS close reaches AppRouter as NOTIFICATION_WM_CLOSE_REQUEST and then as
+	# the root close_requested signal; a failing autosave must run (and alert) once.
+	_clear_autosave()
+	SessionState.active_session = _session_for_state("overworld", 41)
+	_reset_router()
+	OS.set_environment(FAILURE_ENV, "precommit")
+	AppRouter.notification(NOTIFICATION_WM_CLOSE_REQUEST)
+	get_tree().root.close_requested.emit()
+	OS.unset_environment(FAILURE_ENV)
+	var failed_snapshot: Dictionary = AppRouter.validation_safe_quit_snapshot()
+	if int(failed_snapshot.get("request_count", -1)) != 1 \
+			or int(failed_snapshot.get("save_attempt_count", -1)) != 1 \
+			or int(failed_snapshot.get("quit_attempt_count", -1)) != 0 \
+			or bool(failed_snapshot.get("completed", true)):
+		_fail("One native window close did not make exactly one failed safe-close attempt: %s" % JSON.stringify(_compact_snapshot(failed_snapshot)))
+		return {}
+
 	_clear_autosave()
 	SessionState.active_session = _session_for_state("overworld", 40)
 	_reset_router()
@@ -289,7 +306,7 @@ func _validate_window_close_notification() -> Dictionary:
 			or not bool(snapshot.get("completed", false)):
 		_fail("Root Window close_requested did not use the safe-close path: %s" % JSON.stringify(_compact_snapshot(snapshot)))
 		return {}
-	return {"source": "window_close", "root_signal_connected": true, "saved": true, "quit_attempts": 1}
+	return {"source": "window_close", "root_signal_connected": true, "saved": true, "quit_attempts": 1, "single_attempt_per_native_close": true}
 
 
 func _validate_main_menu_delegation() -> Dictionary:
