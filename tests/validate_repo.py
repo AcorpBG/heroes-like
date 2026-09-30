@@ -67189,7 +67189,7 @@ def validate_legacy_scenario_package_conversion(errors: list[str]) -> None:
             "validate_map_document_structural_report(map_document)",
             "validate_scenario_document_structural_report(scenario_document, map_document)",
             'metadata["native_runtime_authoritative"] = true',
-            'workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size()',
+            'workflow->template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size()',
             'component_counts["town_count"] = town_count',
         ):
             ensure(required_token in native_text, errors, f"Native legacy scenario conversion is missing required token: {required_token}")

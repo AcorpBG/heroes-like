@@ -17,6 +17,7 @@
 #include <queue>
 #include <set>
 #include <sstream>
+#include <string>
 #include <utility>
 #include <vector>
 
@@ -48,6 +49,42 @@ bool AllowedTerrainFlags0x85_0x8c::enabled(int32_t terrain_id) const {
 }
 
 namespace {
+
+struct RmgTraceEnvValue {
+	bool present = false;
+	std::string value;
+};
+
+std::map<std::string, RmgTraceEnvValue, std::less<>> &rmg_trace_env_cache() {
+	thread_local std::map<std::string, RmgTraceEnvValue, std::less<>> cache;
+	return cache;
+}
+
+// Every AURELION_RMG_* trace and profile switch is read through here. getenv
+// scans the whole environment on each call, and several trace filters are
+// consulted once per generated cell (over a million lookups for a Large map),
+// so each name is read once per thread and remembered until the next
+// generation starts (see rmg_trace_env_reload). Callers use the returned
+// text right away and never keep the pointer.
+const char *rmg_trace_env(const char *name) {
+	auto &cache = rmg_trace_env_cache();
+	auto found = cache.find(name);
+	if (found == cache.end()) {
+		RmgTraceEnvValue cached;
+		if (const char *text = std::getenv(name)) {
+			cached.present = true;
+			cached.value = text;
+		}
+		found = cache.emplace(name, std::move(cached)).first;
+	}
+	return found->second.present ? found->second.value.c_str() : nullptr;
+}
+
+// Called as each generation starts, so a switch set between generations in
+// the same process (as the runtime profile report does) still takes effect.
+void rmg_trace_env_reload() {
+	rmg_trace_env_cache().clear();
+}
 
 struct Coord {
 	int32_t x = 0;
@@ -3240,8 +3277,22 @@ bool same_source_object_record_0x4c(const SourceObjectRecord0x4c &left, const So
 }
 
 int32_t source_object_catalog_index_0x49da08(const SourceObjectRecord0x4c &record) {
+	// The generator asks for this index hundreds of thousands of times per map.
+	// Equal records always share source_row, so only catalog entries with the
+	// same row are compared, in catalog order, which keeps the first match.
 	const std::vector<SourceObjectRecord0x4c> &records = source_object_catalog_0x49da08();
-	for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+	static const std::unordered_map<int32_t, std::vector<int32_t>> indexes_by_source_row = [&records]() {
+		std::unordered_map<int32_t, std::vector<int32_t>> indexes;
+		for (int32_t index = 0; index < int32_t(records.size()); ++index) {
+			indexes[records[size_t(index)].source_row].push_back(index);
+		}
+		return indexes;
+	}();
+	const auto found = indexes_by_source_row.find(record.source_row);
+	if (found == indexes_by_source_row.end()) {
+		return -1;
+	}
+	for (int32_t index : found->second) {
 		if (same_source_object_record_0x4c(records[size_t(index)], record)) {
 			return index;
 		}
@@ -4113,15 +4164,15 @@ static bool relation_high_owner_candidate_allowed_49a318(const GeneratedCellReco
 RelationHighOwnerPropagationResult49a318 relation_high_owner_propagation_49a318(GeneratedCellRecordGrid0x30 &grid, const std::vector<GeneratorRelationOwnerState4a218c> &owners, const std::vector<ObjectRecordReference4a54a7> *object_records) {
 	RelationHighOwnerPropagationResult49a318 result;
 	result.applied = true;
-	static uint64_t trace_call_counter_49a318 = 0;
-	const bool trace_49a318 = std::getenv("AURELION_RMG_TRACE_49A318") != nullptr;
+	thread_local uint64_t trace_call_counter_49a318 = 0;
+	const bool trace_49a318 = rmg_trace_env("AURELION_RMG_TRACE_49A318") != nullptr;
 	const uint64_t trace_call_index_49a318 = trace_call_counter_49a318++;
 	int32_t trace_cell_x_49a318 = -1;
 	int32_t trace_cell_y_49a318 = -1;
-	if (const char *value = std::getenv("AURELION_RMG_TRACE_49A318_CELL_X")) {
+	if (const char *value = rmg_trace_env("AURELION_RMG_TRACE_49A318_CELL_X")) {
 		trace_cell_x_49a318 = int32_t(std::strtol(value, nullptr, 0));
 	}
-	if (const char *value = std::getenv("AURELION_RMG_TRACE_49A318_CELL_Y")) {
+	if (const char *value = rmg_trace_env("AURELION_RMG_TRACE_49A318_CELL_Y")) {
 		trace_cell_y_49a318 = int32_t(std::strtol(value, nullptr, 0));
 	}
 	const int32_t tile_count = int32_t(grid.records.size());
@@ -4721,7 +4772,7 @@ RewardGuardRelationPriorityResult4ad7f7 reward_guard_relation_priority_ordering_
 	} else if (result.ordered_owner_vector_indexes_0x4ccecb.empty()) {
 		result.blocked_reason = "0x4ad7f7_ordered_relation_vector_empty_before_0x4aa9b7";
 	}
-	if (std::getenv("AURELION_RMG_TRACE_4AD7F7_EMPTY") != nullptr
+	if (rmg_trace_env("AURELION_RMG_TRACE_4AD7F7_EMPTY") != nullptr
 			&& result.ordered_owner_vector_indexes_0x4ccecb.empty()) {
 		std::fprintf(stderr,
 				"RMG_TRACE_4AD7F7_EMPTY source_owner=%d source_index=%d rng_before=0x%08x rng_after=0x%08x owners=%d reset=%d relax=%d missing=%d priority_reject=%d type_reject=%d terrain_reject=%d unknown=%d\n",
@@ -5648,7 +5699,7 @@ static RewardGuardProjectionChainResult49c0a6 reward_guard_projection_chain_0x49
 		projection_member.footprint_allows_existing_bit26_0x4aa603 = true;
 	}
 	static const uint32_t trace_projection_key_0x4ad947 = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AD947_KEY");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AD947_KEY");
 		return value != nullptr ? uint32_t(std::strtoul(value, nullptr, 0)) : 0U;
 	}();
 	if (trace_projection_key_0x4ad947 != 0U
@@ -5826,12 +5877,12 @@ ConnectionRegionWriterResult4a606b connection_region_writer_4a606b(GeneratedCell
 }
 
 static bool projected_cell_chain_trace_4a5a23_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A5A23") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A5A23") != nullptr;
 	return enabled;
 }
 
 static bool projected_cell_chain_trace_4a5a23_env_int(const char *name, int32_t &value) {
-	const char *text = std::getenv(name);
+	const char *text = rmg_trace_env(name);
 	if (text == nullptr || text[0] == '\0') {
 		return false;
 	}
@@ -5902,12 +5953,12 @@ static void projected_cell_chain_trace_4a5a23(
 }
 
 static bool workflow_phase_cell_trace_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_WORKFLOW_CELLS") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_WORKFLOW_CELLS") != nullptr;
 	return enabled;
 }
 
 static bool workflow_phase_cell_trace_env_int(const char *name, int32_t &value) {
-	const char *text = std::getenv(name);
+	const char *text = rmg_trace_env(name);
 	if (text == nullptr || text[0] == '\0') {
 		return false;
 	}
@@ -6012,7 +6063,7 @@ static void workflow_phase_full_grid_trace(
 		const char *environment_name,
 		const char *phase,
 		const GeneratedCellRecordGrid0x30 &grid) {
-	if (std::getenv(environment_name) == nullptr) {
+	if (rmg_trace_env(environment_name) == nullptr) {
 		return;
 	}
 	for (size_t flat = 0; flat < grid.records.size(); ++flat) {
@@ -6035,7 +6086,7 @@ static void workflow_phase_full_grid_trace(
 }
 
 static bool route_cell_trace_enabled_0x4a8260() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_ROUTE_CELL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_ROUTE_CELL") != nullptr;
 	return enabled;
 }
 
@@ -6098,12 +6149,12 @@ static void route_cell_trace_emit_0x4a8260(
 }
 
 static bool route_stamp_trace_enabled_0x4a8260() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_ROUTE_STAMPS") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_ROUTE_STAMPS") != nullptr;
 	return enabled;
 }
 
 static bool route_rng_trace_enabled_0x4a8260() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A8260_RNG") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A8260_RNG") != nullptr;
 	return enabled;
 }
 
@@ -6685,7 +6736,7 @@ static void generated_grid_stamp_object_footprint_0x49abd6(
 			if (stamped) {
 				result.generator_body_stamp_count_0x49abd6 += 1;
 			}
-			if (std::getenv("AURELION_RMG_TRACE_49ABD6_CELL") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_49ABD6_CELL") != nullptr) {
 				int32_t trace_x = -1;
 				int32_t trace_y = -1;
 				int32_t trace_level = 0;
@@ -8255,35 +8306,35 @@ static RewardGuardSlotAllocationResult4ad640 reward_guard_slot_allocator_0x4ad64
 }
 
 static bool reward_guard_trace_selector_0x4a9f1c_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A9F1C") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A9F1C") != nullptr;
 	return enabled;
 }
 
 static int32_t reward_guard_trace_selector_call_0x4a9f1c() {
 	static const int32_t call_index = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4A9F1C_CALL");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4A9F1C_CALL");
 		return value != nullptr ? std::atoi(value) : 0;
 	}();
 	return call_index;
 }
 
 static bool reward_guard_trace_rng_0x4aab7e_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AAB7E_RNG") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AAB7E_RNG") != nullptr;
 	return enabled;
 }
 
 static bool reward_guard_trace_all_0x4aa9b7_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA9B7_ALL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA9B7_ALL") != nullptr;
 	return enabled;
 }
 
 static bool reward_guard_trace_commit_0x4aa3e9_4a54a7_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA3E9_4A54A7") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA3E9_4A54A7") != nullptr;
 	return enabled;
 }
 
 static bool reward_guard_trace_overlap_0x4aa3e9_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA3E9_OVERLAP") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA3E9_OVERLAP") != nullptr;
 	return enabled;
 }
 
@@ -8310,7 +8361,9 @@ static bool reward_guard_trace_overlap_0x4aa3e9_coord_allowed(int32_t x, int32_t
 	return true;
 }
 
-static int32_t reward_guard_trace_current_materialization_call_0x4aa354 = 0;
+// Trace-only bookkeeping is per thread so concurrent generations cannot race
+// on it and each generation numbers its own trace calls from its own thread.
+static thread_local int32_t reward_guard_trace_current_materialization_call_0x4aa354 = 0;
 
 struct RewardGuardTraceMaterializationScope4aa354 {
 	int32_t previous_call = 0;
@@ -8326,7 +8379,7 @@ struct RewardGuardTraceMaterializationScope4aa354 {
 };
 
 static bool reward_guard_trace_wrapper_cell_0x4aa354_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_WRAPPER_CELL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_WRAPPER_CELL") != nullptr;
 	return enabled;
 }
 
@@ -8498,7 +8551,7 @@ static void reward_guard_trace_wrapper_cell_grid_0x4aa354(
 }
 
 static bool reward_guard_trace_wrapper_cell_0x4aa3e9_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA3E9_WRAPPER_CELL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA3E9_WRAPPER_CELL") != nullptr;
 	return enabled;
 }
 
@@ -8638,18 +8691,18 @@ static void reward_guard_trace_wrapper_cell_grid_0x4aa3e9(
 }
 
 static bool reward_guard_trace_materialization_0x4aa354_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA354") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA354") != nullptr;
 	return enabled;
 }
 
 static bool reward_guard_trace_secondary_detail_0x49d471_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_49D471_DETAIL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_49D471_DETAIL") != nullptr;
 	return enabled;
 }
 
 static int32_t reward_guard_trace_secondary_detail_0x49d471_call() {
 	static const int32_t call_index = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_49D471_CALL");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_49D471_CALL");
 		return value != nullptr ? std::atoi(value) : 0;
 	}();
 	return call_index;
@@ -8657,7 +8710,7 @@ static int32_t reward_guard_trace_secondary_detail_0x49d471_call() {
 
 static int32_t reward_guard_trace_candidate_call_0x4aa9b7() {
 	static const int32_t call_index = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AA9B7_CANDIDATE_CALL");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AA9B7_CANDIDATE_CALL");
 		return value != nullptr ? std::atoi(value) : 0;
 	}();
 	return call_index;
@@ -8665,20 +8718,20 @@ static int32_t reward_guard_trace_candidate_call_0x4aa9b7() {
 
 static int32_t reward_guard_trace_wrapper_call_0x4aa9b7() {
 	static const int32_t call_index = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AA9B7_WRAPPER_CALL");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AA9B7_WRAPPER_CALL");
 		return value != nullptr ? std::atoi(value) : 0;
 	}();
 	return call_index;
 }
 
 static bool reward_guard_trace_direction_0x4aa603_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4AA603_DIRECTION") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4AA603_DIRECTION") != nullptr;
 	return enabled;
 }
 
 static int32_t reward_guard_trace_direction_call_0x4aa603() {
 	static const int32_t call_index = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AA603_DIRECTION_CALL");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AA603_DIRECTION_CALL");
 		return value != nullptr ? std::atoi(value) : 0;
 	}();
 	return call_index;
@@ -8686,7 +8739,7 @@ static int32_t reward_guard_trace_direction_call_0x4aa603() {
 
 static int32_t reward_guard_trace_direction_candidate_x_0x4aa603() {
 	static const int32_t candidate_x = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AA603_DIRECTION_X");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AA603_DIRECTION_X");
 		return value != nullptr ? std::atoi(value) : -9999;
 	}();
 	return candidate_x;
@@ -8694,19 +8747,19 @@ static int32_t reward_guard_trace_direction_candidate_x_0x4aa603() {
 
 static int32_t reward_guard_trace_direction_candidate_y_0x4aa603() {
 	static const int32_t candidate_y = []() {
-		const char *value = std::getenv("AURELION_RMG_TRACE_4AA603_DIRECTION_Y");
+		const char *value = rmg_trace_env("AURELION_RMG_TRACE_4AA603_DIRECTION_Y");
 		return value != nullptr ? std::atoi(value) : -9999;
 	}();
 	return candidate_y;
 }
 
 static bool decorative_trace_score_cache_0x49e1bf_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_49E1BF_SCORE_CACHE") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_49E1BF_SCORE_CACHE") != nullptr;
 	return enabled;
 }
 
 static bool decorative_trace_target_0x49e1bf_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_49E1BF_TARGET") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_49E1BF_TARGET") != nullptr;
 	return enabled;
 }
 
@@ -8764,7 +8817,7 @@ static void reward_guard_trace_rng_0x4aab7e(
 
 static bool reward_guard_trace_interesting_candidate_0x4a9f1c(
 		const RewardGuardCandidateDecision4a9f1c &decision) {
-	static const bool trace_all_candidates = std::getenv("AURELION_RMG_TRACE_4A9F1C_ALL_CANDIDATES") != nullptr;
+	static const bool trace_all_candidates = rmg_trace_env("AURELION_RMG_TRACE_4A9F1C_ALL_CANDIDATES") != nullptr;
 	if (trace_all_candidates) {
 		return true;
 	}
@@ -9181,8 +9234,8 @@ static RewardGuardSpellScrollSelection49ccec reward_guard_spell_scroll_row_pick_
 	return result;
 }
 
-RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args, SourceObjectResolverState4af785 *resolver_state) {
-	static int32_t trace_call_counter_0x4a9f1c = 0;
+static RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_scan_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args, SourceObjectResolverState4af785 *resolver_state) {
+	thread_local int32_t trace_call_counter_0x4a9f1c = 0;
 	const bool trace_selector_0x4a9f1c = reward_guard_trace_selector_0x4a9f1c_enabled();
 	const int32_t trace_call_index_0x4a9f1c = trace_selector_0x4a9f1c ? ++trace_call_counter_0x4a9f1c : 0;
 	RewardGuardSelectorResult4a9f1c result;
@@ -9682,6 +9735,36 @@ RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(G
 		projection_object.selected_source_subtype_0x20 =
 				result.selected_source_record_known_0x4a9e40 ? result.selected_source_record_copy.subtype_0x20 : -1;
 	}
+	return result;
+}
+
+// Every selection scores every candidate, and generation keeps each selector
+// result it produces (per attempt, per wrapper), so the per-candidate list grew
+// to hundreds of MB on Large maps. Only the selected decision is read after
+// the scan; the full list is kept only while AURELION_RMG_TRACE_4A9F1C is set.
+static void reward_guard_selector_keep_selected_decision_0x4a9f1c(RewardGuardSelectorResult4a9f1c &result) {
+	const bool keep_all_decisions = reward_guard_trace_selector_0x4a9f1c_enabled();
+	if (result.selected_candidate_index >= 0
+			&& size_t(result.selected_candidate_index) < result.candidate_decisions.size()) {
+		RewardGuardCandidateDecision4a9f1c &selected = result.candidate_decisions[size_t(result.selected_candidate_index)];
+		result.selected_candidate_decision_known = true;
+		result.selected_candidate_decision = keep_all_decisions ? selected : std::move(selected);
+	}
+	if (!keep_all_decisions) {
+		std::vector<RewardGuardCandidateDecision4a9f1c>().swap(result.candidate_decisions);
+	}
+}
+
+RewardGuardSelectorResult4a9f1c reward_guard_selected_create_dispatch_0x4a9f1c(GeneratorObjectPrivateState &state, const GeneratorRelationOwnerState4a218c *selector, int32_t lower_value_bound, int32_t upper_value_bound, H3MapedRng &rng, const RewardGuardSelectorCallsiteArgs4a9f1c &callsite_args, SourceObjectResolverState4af785 *resolver_state) {
+	RewardGuardSelectorResult4a9f1c result = reward_guard_selected_create_dispatch_scan_0x4a9f1c(
+			state,
+			selector,
+			lower_value_bound,
+			upper_value_bound,
+			rng,
+			callsite_args,
+			resolver_state);
+	reward_guard_selector_keep_selected_decision_0x4a9f1c(result);
 	return result;
 }
 
@@ -11331,7 +11414,7 @@ static RewardGuardSecondaryMemberResult49d471 reward_guard_secondary_member_vali
 	const int32_t max_y = wrapper.generated_cell_grid_0x08_0x10.height - 3;
 	std::vector<CoordinateCandidate4a17f5> accepted_candidates;
 
-	static int32_t trace_invocation_counter = 0;
+	thread_local int32_t trace_invocation_counter = 0;
 	const bool trace_secondary_detail_all = reward_guard_trace_secondary_detail_0x49d471_enabled();
 	const int32_t trace_secondary_detail_target = reward_guard_trace_secondary_detail_0x49d471_call();
 	int32_t trace_invocation_index = 0;
@@ -11736,7 +11819,7 @@ RewardGuardSelectedObjectResult4aa1db reward_guard_selected_object_create_shell_
 }
 
 RewardGuardMaterializationDriverResult4aa354 reward_guard_materialization_driver_shell_0x4aa354(GeneratorObjectPrivateState &state, RewardGuardWrapperState4aa3e9 &wrapper, const GeneratorRelationOwnerState4a218c *selector, int32_t policy_word_0x10, int32_t low_value_0x14, int32_t high_value_0x18, H3MapedRng &rng) {
-	static int32_t trace_call_counter_0x4aa354 = 0;
+	thread_local int32_t trace_call_counter_0x4aa354 = 0;
 	const bool trace_materialization_0x4aa354 = reward_guard_trace_materialization_0x4aa354_enabled();
 	const bool trace_context_0x4aa354 =
 			trace_materialization_0x4aa354 || reward_guard_trace_wrapper_cell_0x4aa354_enabled();
@@ -12079,7 +12162,7 @@ RewardGuardSourceStreamResult4aab7e reward_guard_source_stream_materialization_0
 						lane.high_value_0xa4,
 						rng);
 				result.materialization_attempt_count += 1;
-				if (std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_OBJECT_PHASE_REWARD_ATTEMPT ordinal=%d lane=%d policy=%d retry=%d low=%d high=%d applied=%d count_before=%d count_after=%zu delta=%d rng_before=0x%08x rng_after=0x%08x reason=%s\n",
@@ -12983,7 +13066,7 @@ constexpr size_t DECORATIVE_FIRST_POP_ACCEPTED_SAMPLE_LIMIT_0X49E904 = 1200;
 constexpr size_t DECORATIVE_FIRST_DISPATCH_POP_SAMPLE_LIMIT_0X49E700 = 128;
 
 static bool decorative_dispatch_target_pop_trace_0x49e700_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_49E700_TARGET_POP") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_49E700_TARGET_POP") != nullptr;
 	return enabled;
 }
 
@@ -13685,7 +13768,7 @@ static void decorative_dispatch_probe_valid_cell_0x49e700(
 				result.blocked_reason = "0x49e700_vtable_slot_0x04_commit_did_not_append";
 				return;
 			}
-			if (std::getenv("AURELION_RMG_TRACE_49E700_COMMIT_STREAM") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_49E700_COMMIT_STREAM") != nullptr) {
 				std::fprintf(stderr,
 						"RMG_TRACE_49E700_COMMIT_STREAM vector_index=%zu pop_index=%d pop=%d,%d,%d selected=%d,%d,%d source_row=%d source_type=%d source_def=%s score=%d candidates=%zu total=%d rng=%d remainder=%d selected_index=%d\n",
 						state.object_records_0xec4_ecc.size() - 1,
@@ -14773,7 +14856,7 @@ static RewardGuardWrapperProjectionResult4aa3e9 reward_guard_wrapper_project_and
 
 	std::vector<int32_t> selected_member_object_record_indices;
 	selected_member_object_record_indices.reserve(wrapper.selected_members_0x2c_0x30.size());
-	static int32_t trace_commit_0x4aa3e9_4a54a7_counter = 0;
+	thread_local int32_t trace_commit_0x4aa3e9_4a54a7_counter = 0;
 	const bool trace_commit_0x4aa3e9_4a54a7 = reward_guard_trace_commit_0x4aa3e9_4a54a7_enabled();
 	for (size_t member_index_0x4aa3e9 = 0; member_index_0x4aa3e9 < wrapper.selected_members_0x2c_0x30.size(); ++member_index_0x4aa3e9) {
 		const RewardGuardWrapperMember4aa3e9 &member = wrapper.selected_members_0x2c_0x30[member_index_0x4aa3e9];
@@ -15370,7 +15453,7 @@ static RewardGuardCoordinateScanResult4aa9b7 reward_guard_coordinate_scan_and_co
 		bool policy_byte_0x13,
 		H3MapedRng &rng,
 		bool allow_projection_slot_dispatch_0x4aa3e9) {
-	static int32_t trace_call_counter_0x4aa9b7 = 0;
+	thread_local int32_t trace_call_counter_0x4aa9b7 = 0;
 	const bool trace_all_0x4aa9b7 = reward_guard_trace_all_0x4aa9b7_enabled();
 	const int32_t trace_candidate_call_0x4aa9b7 = reward_guard_trace_candidate_call_0x4aa9b7();
 	const int32_t trace_wrapper_call_0x4aa9b7 = reward_guard_trace_wrapper_call_0x4aa9b7();
@@ -17731,7 +17814,7 @@ static ConnectionMonsterMaterializationResult4a5e03 connection_monster_materiali
 		return result;
 	}
 	GeneratedCellRecord0x30 &target = state.generated_cell_buffer.records[size_t(target_flat)];
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_CONNECTION_GUARD stage=0x4a5e03 x=%d y=%d level=%d value=%d refs_known=%d refs=%zu\n",
@@ -17974,7 +18057,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 						true,
 							owner,
 							rng);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_CONNECTION_PICKER stage=0x4a7312 owner_runtime=%d owner_source=%d bounds=%d,%d,%d,%d accepted=%d rng=%d selected=%d,%d,%d blocked=%s\n",
@@ -18027,7 +18110,7 @@ static ConnectionDirectEndpointDispatchResult4a7605 connection_direct_endpoint_d
 			if (!apply_guard) {
 				return true;
 			}
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_CONNECTION_ENDPOINT stage=after_0x4a7312 x=%d y=%d level=%d guard_x=%d guard_y=%d guard_value=%d companion=%d\n",
@@ -18226,7 +18309,7 @@ static ConnectionPairMaterializationPrefixResult4a61bc connection_pair_materiali
 		const ConnectionFrontierCandidate4a79a3 selected = best_candidates[size_t(selected_index)];
 		best_candidates.erase(best_candidates.begin() + selected_index);
 		result.selected_loop_count += 1;
-		if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_CONNECTION_FRONTIER stage=0x4a61bc source_owner=%d target_owner=%d candidates=%d selected_index=%d rng=%d source=%d,%d neighbor=%d,%d level=%d score=%d\n",
@@ -18599,7 +18682,7 @@ static ConnectionFallbackGateResult4a696b connection_fallback_gate_0x4a696b(
 				result.auxiliary_gate_invocation_count_0x4a6795 += 1;
 				const bool auxiliary_passed = connection_candidate_auxiliary_gate_0x4a6795(
 						state, candidate_x, candidate_y, level);
-				if (std::getenv("AURELION_RMG_TRACE_4A6795") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_4A6795") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_4A6795 source_owner=%d target_owner=%d candidate=%d,%d,%d passed=%d\n",
@@ -18881,7 +18964,7 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 							target_owner_id,
 							target_owner.terrain_policy_0x0c,
 							&target_reject_reason);
-			if (std::getenv("AURELION_RMG_TRACE_4A6CF2_ELIGIBILITY") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_4A6CF2_ELIGIBILITY") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_4A6CF2_ELIGIBILITY source_owner=%d target_owner=%d candidate=%d,%d source_level=%d target_level=%d score=%d source_eligible=%d source_reason=%s target_eligible=%d target_reason=%s\n",
@@ -19028,7 +19111,7 @@ static ConnectionCrossLevelPairResult4a6cf2 connection_cross_level_pair_0x4a6cf2
 					int32_t(state.object_records_0xec4_ecc.size() - object_count_before);
 		}
 	}
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_CONNECTION_CROSS_LEVEL stage=0x4a6cf2 source_owner=%d target_owner=%d candidates=%d selected=%d,%d source_level=%d target_level=%d descriptor_rng=%d candidate_rng=%d base_commits=%d guard_budget=%d guard_commits=%d\n",
@@ -19054,7 +19137,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 	ConnectionTailReplayResult4a79a3 result;
 	result.invoked = true;
 	int32_t fallback_call_index_0x4a696b = 0;
-	const bool trace_fallback_0x4a696b = std::getenv("AURELION_RMG_TRACE_4A696B") != nullptr;
+	const bool trace_fallback_0x4a696b = rmg_trace_env("AURELION_RMG_TRACE_4A696B") != nullptr;
 	auto trace_fallback_call_0x4a696b = [&](const char *pass,
 			const GeneratorRelationOwnerState4a218c &source_owner,
 			const GeneratorRelationOwnerState4a218c &target_owner,
@@ -19106,7 +19189,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 				fallback_gate.returned_true ? 1 : 0,
 				fallback_gate.blocked_reason.c_str());
 	};
-	if (std::getenv("AURELION_RMG_TRACE_CONNECTION_GRID") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_CONNECTION_GRID") != nullptr) {
 		for (int32_t level = 0; level < state.generated_cell_buffer.level_count; ++level) {
 			for (int32_t y = 0; y < state.generated_cell_buffer.height; ++y) {
 				std::fprintf(stderr, "RMG_TRACE_CONNECTION_GRID level=%d y=%d byte2=", level, y);
@@ -19544,7 +19627,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 								frontier_candidates,
 								rng,
 								bridge_payload_sequence_available);
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_CONNECTION_PREFIX stage=0x4a61bc call=%d source_owner=%d source_identity=%d target_owner=%d target_identity=%d returned=%d frontier=%d selected=%d loops=%d rng=%d guard=%d blocked=%s\n",
@@ -19626,7 +19709,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 						result.cross_level_0x4a6cf2_guard_object_commit_count += cross_level.guard_object_commit_count;
 						result.cross_level_0x4a6cf2_local_vector_append_count_0x404 += cross_level.local_vector_append_count_0x404;
 						result.cross_level_0x4a6cf2_cell_stamp_count += cross_level.cell_stamp_count;
-						if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+						if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 							std::fprintf(
 									stderr,
 									"RMG_TRACE_CONNECTION_CROSS_LEVEL_RESULT stage=0x4a6cf2 source_owner=%d source_identity=%d source_coord=%d,%d,%d target_owner=%d target_identity=%d target_coord=%d,%d,%d invoked=%d applied=%d returned=%d scanned=%d owner_matches=%d eligibility=%d candidates=%d descriptor_rng=%d candidate_rng=%d selected=%d,%d,%d target_level=%d base_commits=%d guard_budget=%d guard_commits=%d blocked=%s\n",
@@ -19674,7 +19757,7 @@ static ConnectionTailReplayResult4a79a3 connection_tail_replay_0x4a79a3(Generato
 						&& result.blocked_reason.empty()) {
 					result.blocked_reason = prefix.blocked_reason;
 				}
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					const int32_t pair_object_count_after =
 							int32_t(state.object_records_0xec4_ecc.size());
 					std::fprintf(
@@ -21664,7 +21747,7 @@ static bool final_object_serialize_payload_pass_0x4ad3eb(
 		const FinalObjectDefinitionTableBuild4ad3eb &definition_table,
 		bool first_flagged_pass,
 		int32_t pass_arg) {
-	const bool trace_payload = std::getenv("AURELION_RMG_TRACE_FINAL_OBJECT_PAYLOAD") != nullptr;
+	const bool trace_payload = rmg_trace_env("AURELION_RMG_TRACE_FINAL_OBJECT_PAYLOAD") != nullptr;
 	for (int32_t index = 0; index < result.generated_object_count; ++index) {
 		const ObjectRecordReference4a54a7 &record = state.object_records_0xec4_ecc[size_t(index)];
 		const int32_t pass_split_type_id_0x1c = final_object_pass_split_type_id_0x4ad1e3(record, state);
@@ -22703,7 +22786,7 @@ static bool road_cell_descriptor_type_0x4aae7b(
 }
 
 static bool road_path_cell_trace_enabled_0x4aae7b() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_ROAD_PATH_CELL") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_ROAD_PATH_CELL") != nullptr;
 	return enabled;
 }
 
@@ -22739,7 +22822,7 @@ static bool road_path_cell_trace_filter_0x4aae7b(int32_t x, int32_t y, int32_t l
 }
 
 static bool road_line_trace_enabled_0x458e61() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_ROAD_LINE") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_ROAD_LINE") != nullptr;
 	return enabled;
 }
 
@@ -23318,7 +23401,7 @@ static bool road_final_write_0x458a2f(
 			trace_x,
 			trace_y,
 			trace_level);
-	bool trace_road_art = std::getenv("AURELION_RMG_TRACE_ROAD_ART") != nullptr && trace_coord_known;
+	bool trace_road_art = rmg_trace_env("AURELION_RMG_TRACE_ROAD_ART") != nullptr && trace_coord_known;
 	int32_t trace_filter = 0;
 	if (trace_road_art && workflow_phase_cell_trace_env_int("AURELION_RMG_TRACE_ROAD_ART_X", trace_filter)) {
 		trace_road_art = trace_x == trace_filter;
@@ -23499,7 +23582,7 @@ static bool road_line_walk_to_0x458d66(
 		H3MapedRng &rng,
 		RoadToolkitResult4ab37f4b4243 &result,
 		std::set<int32_t> &final_write_cells) {
-	if (std::getenv("AURELION_RMG_TRACE_ROAD_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_ROAD_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_ROAD_PATH stage=0x458d66 current=%d,%d,%d target=%d,%d,%d type=%d rng=0x%08x\n",
 				line_current.x,
@@ -24091,7 +24174,7 @@ static bool river_final_write_0x458a2f(
 	if (current_class == classification.art_class
 			&& current_flip_a == classification.flip_a
 			&& current_flip_b == classification.flip_b) {
-		if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 			std::fprintf(stderr,
 					"RMG_TRACE_RIVER_PATH stage=0x458a2f_stable coord=%d,%d,%d type=%d art=%d class=%d flip=%d,%d rng=0x%08x\n",
 					x,
@@ -24108,7 +24191,7 @@ static bool river_final_write_0x458a2f(
 		return true;
 	}
 	const int32_t bucket_count = RIVER_BUCKET_COUNTS_0X458A2F[size_t(classification.art_class)];
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x458a2f_rng coord=%d,%d,%d type=%d art=%d class=%d flip=%d,%d next_class=%d next_flip=%d,%d rng=0x%08x\n",
 				x,
@@ -24211,7 +24294,7 @@ static bool river_line_walk_to_0x458d66(
 		H3MapedRng &rng,
 		RoadRiverObjectAdjacencyResult4ab52a &result,
 		std::set<int32_t> &final_write_cells) {
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x458d66 current=%d,%d,%d target=%d,%d,%d type=%d rng=0x%08x\n",
 				line_current.x,
@@ -24332,7 +24415,7 @@ static bool river_path_writeback_0x4ab6ac(
 		const RoadCoordinateRecord14b0 &seed,
 		H3MapedRng &rng,
 		RoadRiverObjectAdjacencyResult4ab52a &result) {
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x4ab6ac_entry seed=%d,%d,%d rng=0x%08x\n",
 				seed.x,
@@ -24465,7 +24548,7 @@ static bool river_path_writeback_0x4ab6ac(
 		result.blocked_reason = "0x4ab6ac_no_bit29_terminal_reached";
 		return false;
 	}
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x4ab6ac_terminal terminal=%d,%d,%d low=%d rng=0x%08x\n",
 				terminal.x,
@@ -24621,7 +24704,7 @@ static bool river_side_object_commit_0x4abd5f(
 	object_record.copied_source_record_carried = true;
 	object_record.source_record_copy = source;
 	build_object_record_score_cache_0x49b89c(object_record);
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x4abd5f_side_object terminal=%d,%d,%d lane=%d terrain=%d source_row=%d source=%s wrapper=%d object=%d,%d,%d count=%zu\n",
 				terminal.x,
@@ -24734,8 +24817,8 @@ static bool river_path_writeback_0x4abd5f(
 		const RoadCoordinateRecord14b0 &seed,
 		H3MapedRng &rng,
 		RoadRiverObjectAdjacencyResult4ab52a &result) {
-	const bool trace_search = std::getenv("AURELION_RMG_TRACE_RIVER_SEARCH") != nullptr;
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	const bool trace_search = rmg_trace_env("AURELION_RMG_TRACE_RIVER_SEARCH") != nullptr;
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x4abd5f_entry seed=%d,%d,%d rng=0x%08x\n",
 				seed.x,
@@ -24934,7 +25017,7 @@ static bool river_path_writeback_0x4abd5f(
 			terminal.x,
 			terminal.y,
 			terminal.level))];
-	if (std::getenv("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RIVER_PATH") != nullptr) {
 		std::fprintf(stderr,
 				"RMG_TRACE_RIVER_PATH stage=0x4abd5f_terminal terminal=%d,%d,%d low=%d rng=0x%08x\n",
 				terminal.x,
@@ -25382,7 +25465,7 @@ static RoadRiverObjectAdjacencyResult4ab52a road_river_object_adjacency_0x4ab52a
 			state.road_coordinate_vector_0x14b0_present
 			&& state.road_coordinate_vector_0x14b0_contents_known;
 	result.coordinate_record_count_0x14b0 = int32_t(state.road_coordinate_records_0x14b0.size());
-	const bool trace_road_callstream = std::getenv("AURELION_RMG_TRACE_ROAD_CALLSTREAM") != nullptr;
+	const bool trace_road_callstream = rmg_trace_env("AURELION_RMG_TRACE_ROAD_CALLSTREAM") != nullptr;
 	if (trace_road_callstream) {
 		std::fprintf(stderr,
 				"RMG_TRACE_ROAD_CALLSTREAM stage=entry records=%d rng=0x%08x\n",
@@ -25731,7 +25814,7 @@ static int32_t relation_source_order_route_clamp_0x4a8722(int32_t value, int32_t
 }
 
 static bool relation_source_order_route_trace_4a8722_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A8722") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A8722") != nullptr;
 	return enabled;
 }
 
@@ -25865,7 +25948,7 @@ static bool relation_source_order_route_helper_0x4a8722(
 		result.blocked_reason = "0x4a8722_source_random_span_limit_0x1c_missing_or_nonpositive";
 		return false;
 	}
-	static int32_t trace_call_counter = 0;
+	thread_local int32_t trace_call_counter = 0;
 	const int32_t trace_call_index = relation_source_order_route_trace_4a8722_enabled()
 			? ++trace_call_counter
 			: 0;
@@ -26061,7 +26144,7 @@ static RelationSourceOrderScanResult4a89da relation_source_order_scan_prefix_0x4
 		}
 		const uint32_t owner_rng_before = rng.state;
 		auto trace_owner_rng = [&](const char *stage, int32_t local_vector_count) {
-			if (std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") == nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") == nullptr) {
 				return;
 			}
 			std::fprintf(
@@ -26251,7 +26334,7 @@ static RelationScanConsumerResult4a5767 relation_scan_consumers_after_0x4a1f3b_b
 			state != nullptr ? &state->object_records_0xec4_ecc : nullptr;
 
 	CoordinateCandidate4a17f5 first_pass_selected_coordinate_0x24 { -1, -1, -1 };
-	const bool trace_4a5767 = std::getenv("AURELION_RMG_TRACE_4A5767") != nullptr;
+	const bool trace_4a5767 = rmg_trace_env("AURELION_RMG_TRACE_4A5767") != nullptr;
 	int32_t trace_owner_4a5767 = -1;
 	int32_t trace_x_4a5767 = -1;
 	int32_t trace_y_4a5767 = -1;
@@ -26827,7 +26910,7 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 					source_relation.terrain_policy_0x0c_known ? source_relation.terrain_policy_0x0c : -1,
 					&eligibility_reject_reason)) {
 				result.eligibility_reject_count_0x49aa93 += 1;
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr
 						&& result.eligibility_reject_count_0x49aa93 <= 5) {
 					std::fprintf(
 							stderr,
@@ -26845,7 +26928,7 @@ SourceBoundedCandidatePickerResult4a7312 source_bounded_endpoint_candidate_picke
 		}
 	}
 	result.accepted_candidate_count = int32_t(result.accepted_candidates_0x4ae1fd.size());
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		for (int32_t index = 0; index < result.accepted_candidate_count; ++index) {
 			const SourceBoundedCandidate4a7312 &candidate =
 					result.accepted_candidates_0x4ae1fd[size_t(index)];
@@ -29453,7 +29536,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		prune_candidates_4a1ad8_single_level(coordinate_zone_from_relation_owner_0x10(*current_owner, zones), *current_owner, zones, relation_owners, level_count, result.coordinate_prune_span_budget_4a218c, candidates);
 		step.candidate_count_after_prune = int32_t(candidates.size());
 		step.candidates_after_prune_4a1ad8 = candidates;
-		if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A1F3B") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A1F3B") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_COORDINATE_4A1F3B pass=%s owner=%d before=%d after=%d",
@@ -29487,7 +29570,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 		step.selected_candidate_index = selected_index;
 		step.selected_candidate_known = true;
 		step.selected_candidate = selected;
-		if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A1F3B") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A1F3B") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_COORDINATE_4A1F3B_SELECTED pass=%s owner=%d rng=%d index=%d selected=%d,%d,%d\n",
@@ -29523,7 +29606,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 				place_relation_owner_4a1f3b(zone_position, pass == 0 ? "0x4a22b3_refinement_pass_1" : "0x4a22b3_refinement_pass_2", &owner);
 			}
 		}
-	if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
 		for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
 			std::fprintf(
 					stderr,
@@ -29625,7 +29708,7 @@ CoordinateSeedResult4a218c coordinate_seed_runtime_zone_boundary_inputs_4a218c_4
 				owner.boundary_payload_span_limit_0x1c = std::max<int32_t>(1, zone.scaled_size > 0 ? zone.scaled_size : zone.source_base_size);
 			}
 		}
-	if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
 		for (const GeneratorRelationOwnerState4a218c &owner : relation_owners) {
 			std::fprintf(
 					stderr,
@@ -30100,7 +30183,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 						&scanned_count,
 						&matched_count,
 						&coordinate_changed);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_4A2FFA owner=%d identity=%d before=%d,%d,%d bounds=%d,%d,%d,%d scanned=%d matched=%d after=%d,%d,%d known=%d changed=%d\n",
@@ -30414,7 +30497,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				return false;
 			}
 			}
-			if (std::getenv("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL") != nullptr) {
 				int32_t trace_filter = -1;
 				const bool trace_match =
 						(!workflow_phase_cell_trace_env_int("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL_X", trace_filter) || x == trace_filter)
@@ -30839,7 +30922,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 	// 0x4a4025 passes generator+0x0c without the level offset, so the
 	// terrain-8 prefill covers surface level 0 only.
 	run_full_map_terrain_scope_4bd099(0, 8, true);
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_PHASE_RNG phase=terrain_repaint_after_full_map_0x4a405a state=0x%08x\n",
@@ -30899,7 +30982,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 				result.zone_repaint_candidate_count_0x4a4082 += 1;
 				result.zone_repaint_write_count_0x4a4163 += 1;
 				const uint32_t candidate_rng_state_before_0x4a4163 = live_visual_rng.state;
-				if (std::getenv("AURELION_RMG_TRACE_TERRAIN_REPAINT_CANDIDATES") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_TERRAIN_REPAINT_CANDIDATES") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_TERRAIN_REPAINT_CANDIDATE seq=%d owner=%d terrain=%d level=%d x=%d y=%d low=(%d,%d) high=(%d,%d) word20=0x%08x word28=0x%08x rng=0x%08x\n",
@@ -30998,7 +31081,7 @@ TerrainRepaintResult4a3f27 terrain_repaint_4a3f27(
 					owner.coordinate_x_0x10,
 					owner.coordinate_y_0x14,
 					owner.coordinate_level_0x18);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_PHASE_RNG phase=terrain_repaint_owner_0x4a419d owner=%d terrain=%d state=0x%08x candidates=%d\n",
@@ -31497,7 +31580,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 			selected_candidate_source_vector_count_0x4a3c77 >= 0
 					? selected_candidate_source_vector_count_0x4a3c77
 					: original_surface_source_record_count;
-	if (std::getenv("AURELION_RMG_TRACE_SYNTHETIC_4A3DBC") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_SYNTHETIC_4A3DBC") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_SYNTHETIC_4A3DBC_INPUT width=%d height=%d mode=%d level=%d candidates=%d source_count=%zu\n",
@@ -32190,7 +32273,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 
 	result.allocated_node_pair_count = int32_t(model.nodes.size() / 2);
 	result.active_node_pair_count = model.active_node_pair_count();
-	if (std::getenv("AURELION_RMG_TRACE_SOURCE_FINALIZE") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_SOURCE_FINALIZE") != nullptr) {
 		for (int32_t ordinal = 0; ordinal < int32_t(model.active_order_0x04.size()); ++ordinal) {
 			const int32_t node_index = model.active_order_0x04[size_t(ordinal)];
 			const SourcePolygonNode4ccb64 &node = model.nodes[size_t(node_index)];
@@ -32212,7 +32295,7 @@ SourceNodeFootprintResult4a3a03 build_source_node_footprints_4a3a03_4ccb64_4cca5
 		}
 	}
 	result.finalized_triplet_count = result.blocked ? 0 : model.finalize_4ccdfc();
-	if (std::getenv("AURELION_RMG_TRACE_SOURCE_FINALIZE") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_SOURCE_FINALIZE") != nullptr) {
 		for (int32_t node_index = 0; node_index < int32_t(model.nodes.size()); ++node_index) {
 			const SourcePolygonNode4ccb64 &node = model.nodes[size_t(node_index)];
 			if (!node.finalized) {
@@ -32641,7 +32724,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 				!materialized_owner_indices.empty()
 				&& int32_t(materialized_owner_indices.size()) < int32_t(relation_owners->size());
 		if (source_indexed_pointer_slots) {
-			if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_4A3710_SOURCE_INDEXED slots=%d materialized=%d original=%d final=%d\n",
@@ -32699,7 +32782,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 
 		const int32_t source_count = result.original_same_level_runtime_zone_count;
 		const int32_t reset_limit = std::min<int32_t>(result.final_runtime_zone_count, int32_t(relation_owners->size()));
-		if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_4A3710_COMPACT slots=%d source_count=%d reset_limit=%d original=%d final=%d\n",
@@ -32768,7 +32851,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 					}
 				}
 				if (edge_node == nullptr || !edge_node->finalized) {
-					if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+					if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 						std::fprintf(stderr, "RMG_TRACE_4A3710_FIRST_PASS source_owner=%d target_owner=%d status=edge_missing\n", owner_index, target_index);
 					}
 					continue;
@@ -32781,7 +32864,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 					}
 				}
 				if (previous_node == nullptr || !previous_node->finalized) {
-					if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+					if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 						std::fprintf(stderr, "RMG_TRACE_4A3710_FIRST_PASS source_owner=%d target_owner=%d status=previous_missing edge_node=%d previous_node=%d\n", owner_index, target_index, edge_node->model_node_index, edge_node->previous_index);
 					}
 					continue;
@@ -32792,7 +32875,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 						previous_node->finalized_x_0x1c,
 						previous_node->finalized_y_0x20,
 						bounds);
-				if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_4A3710_FIRST_PASS source_owner=%d target_owner=%d edge=(%d,%d) previous=(%d,%d) clipped=(%d,%d) inside=%d\n",
@@ -32818,7 +32901,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 			}
 		}
 		(void)relation_order_vector_propagate_0x4a3554(*relation_owners, source_count);
-		if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 			for (int32_t owner_index = 0; owner_index < reset_limit; ++owner_index) {
 				const GeneratorRelationOwnerState4a218c &owner = (*relation_owners)[size_t(owner_index)];
 				std::fprintf(
@@ -32902,7 +32985,7 @@ FootprintFinalizerResult4a3710 footprint_finalizer_4a3710(int32_t level_count, i
 						break;
 					}
 				}
-				if (std::getenv("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_4A3710_SOURCE_INDEXED") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_4A3710_POLYGON_MATCH source_owner=%d target_owner=%d insert=%d rejected_slot=%d\n",
@@ -33389,7 +33472,7 @@ static GeneratorRelationOwnerState4a218c relation_owner_from_synthetic_source_re
 			seed.allowed_town_mask_0x41_0x49,
 			rng,
 			town_choice_rng_call_count_0x49b3c1);
-	if (std::getenv("AURELION_RMG_TRACE_SYNTHETIC_4A3DBC") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_SYNTHETIC_4A3DBC") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_SYNTHETIC_4A3DBC owner=%d x=%d y=%d level=%d source_word=%d source_zone=%d origin_owner=%d origin_source=%d allowed_town_mask=0x%03x rng_before=0x%08x rng_after=0x%08x draws=%d selected_town=%d\n",
@@ -33638,7 +33721,7 @@ BoundaryOwnerGridResult4a3a03 materialize_boundary_owner_grid_from_relation_owne
 					synthetic_relation_owner_rng_0x49b452);
 		}
 	}
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_PHASE_RNG phase=0x4a3dbc_source_base_handoff water=%d recovered=%d input_owners=%zu synthetic=%zu output_owners=%zu\n",
@@ -33980,7 +34063,7 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 							carried_relation_owners,
 							original_same_level_runtime_zone_count,
 							caller_level_argument_0x0c);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_PHASE_RNG phase=boundary_level_0x4a3a03 level=%d state_before=0x%08x state_after=0x%08x input_owners=%zu output_owners=%zu\n",
@@ -34056,7 +34139,7 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 		}
 	}
 	if (result.owner_grid_executed) {
-		if (std::getenv("AURELION_RMG_TRACE_PRE_TERRAIN_GRID") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_PRE_TERRAIN_GRID") != nullptr) {
 			for (size_t flat = 0;
 					flat < result.owner_grid.materialization.generated_cell_word_0x20.size();
 					++flat) {
@@ -34067,7 +34150,7 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 						result.owner_grid.materialization.generated_cell_word_0x20[flat]);
 			}
 		}
-		if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr
+		if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr
 				&& !result.owner_grid.materialization.generated_cell_word_0x20.empty()
 				&& !result.owner_grid.materialization.generated_cell_word_0x28.empty()) {
 			std::fprintf(
@@ -34103,7 +34186,7 @@ CoordinateOwnerGridResult4a218c coordinate_seed_and_materialize_owner_grid_4a218
 					result.owner_grid.materialization.rng_state_after,
 					original_relation_owner_count_0x4a3f27);
 		result.terrain_repaint_executed = result.terrain_repaint.executed;
-		if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
 			if (!result.terrain_repaint.generated_cell_word_0x20.empty()
 					&& !result.terrain_repaint.generated_cell_word_0x24.empty()
 					&& !result.terrain_repaint.generated_cell_word_0x28.empty()) {
@@ -34620,7 +34703,7 @@ static RewardGuardSourceStreamResult4aab7e reward_guard_source_order_loop_0x4ac5
 		owner_growth.stream_materialization_attempt_count = stream.materialization_attempt_count;
 		owner_growth.stream_successful_coordinate_scan_count = stream.successful_coordinate_scan_count;
 		owner_growth.stream_blocked_reason = stream.blocked_reason;
-		if (std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_OBJECT_PHASE_REWARD_OWNER owner=%d runtime_zone=%d count_before=%d count_after=%d delta=%d attempts=%d successes=%d rng_before=0x%08x rng_after=0x%08x\n",
@@ -34960,7 +35043,7 @@ static bool mine_resource_coordinate_eligibility_0x49aa93(
 }
 
 static bool mine_resource_eligibility_trace_4a9641_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A9641_ELIGIBILITY") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A9641_ELIGIBILITY") != nullptr;
 	return enabled;
 }
 
@@ -35001,7 +35084,7 @@ static bool mine_resource_eligibility_trace_4a9641_allowed(
 			&& y > filter) {
 		return false;
 	}
-	const char *def_filter = std::getenv("AURELION_RMG_TRACE_4A9641_ELIGIBILITY_DEF");
+	const char *def_filter = rmg_trace_env("AURELION_RMG_TRACE_4A9641_ELIGIBILITY_DEF");
 	if (def_filter != nullptr
 			&& def_filter[0] != '\0'
 			&& selected.source_record_copy.def_name != def_filter) {
@@ -35099,7 +35182,7 @@ static int32_t mine_resource_body_pressure_count_0x4a9641(
 	const std::vector<CoordinateCandidate4a17f5> body_offsets =
 			source_descriptor_contour_offsets_0x49b76d(descriptor.source_record_copy);
 	const auto trace_env_int_matches = [](const char *name, int32_t value) {
-		const char *filter = std::getenv(name);
+		const char *filter = rmg_trace_env(name);
 		if (filter == nullptr || *filter == '\0') {
 			return true;
 		}
@@ -35108,16 +35191,16 @@ static int32_t mine_resource_body_pressure_count_0x4a9641(
 		return end != filter && parsed == long(value);
 	};
 	const bool trace_body =
-			std::getenv("AURELION_RMG_TRACE_4A9641_BODY") != nullptr
+			rmg_trace_env("AURELION_RMG_TRACE_4A9641_BODY") != nullptr
 			&& trace_env_int_matches(
 					"AURELION_RMG_TRACE_4A9641_BODY_SOURCE",
 					descriptor.source_catalog_index_0x49da08)
 			&& [&]() {
-				const char *def_filter = std::getenv("AURELION_RMG_TRACE_4A9641_BODY_DEF");
+				const char *def_filter = rmg_trace_env("AURELION_RMG_TRACE_4A9641_BODY_DEF");
 				return def_filter == nullptr || *def_filter == '\0'
 						|| descriptor.source_record_copy.def_name == def_filter;
 			}();
-	static int32_t trace_candidate_sequence_0x4a9641 = 0;
+	thread_local int32_t trace_candidate_sequence_0x4a9641 = 0;
 	const int32_t trace_candidate_id = trace_body ? ++trace_candidate_sequence_0x4a9641 : 0;
 	if (trace_body) {
 		std::fprintf(
@@ -35256,7 +35339,7 @@ static int32_t mine_resource_guard_budget_value_0x4a9911(int32_t category_index)
 }
 
 static bool mine_resource_guard_trace_4a9911_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A9911_GUARD") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A9911_GUARD") != nullptr;
 	return enabled;
 }
 
@@ -35283,7 +35366,7 @@ static bool mine_resource_guard_trace_4a9911_allowed(
 			&& coordinate_builder.coordinate_builder_selected_level != filter) {
 		return false;
 	}
-	const char *def_filter = std::getenv("AURELION_RMG_TRACE_4A9911_GUARD_DEF");
+	const char *def_filter = rmg_trace_env("AURELION_RMG_TRACE_4A9911_GUARD_DEF");
 	if (def_filter != nullptr && selected.source_record_copy.def_name != def_filter) {
 		return false;
 	}
@@ -35504,7 +35587,7 @@ static int32_t mine_resource_support_scan_width_0x4a9911(const SourceObjectRecor
 }
 
 static bool mine_resource_support_trace_4a9911_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A9911_SUPPORT") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A9911_SUPPORT") != nullptr;
 	return enabled;
 }
 
@@ -35533,7 +35616,7 @@ static bool mine_resource_support_trace_4a9911_allowed(
 			&& level != filter) {
 		return false;
 	}
-	const char *def_filter = std::getenv("AURELION_RMG_TRACE_4A9911_SUPPORT_DEF");
+	const char *def_filter = rmg_trace_env("AURELION_RMG_TRACE_4A9911_SUPPORT_DEF");
 	if (def_filter != nullptr && selected.source_record_copy.def_name != def_filter) {
 		return false;
 	}
@@ -36312,7 +36395,7 @@ static int32_t mine_resource_density_threshold_0x4a9c7c(int32_t density_total) {
 }
 
 static bool mine_resource_materialization_trace_4a9d6a_enabled() {
-	static const bool enabled = std::getenv("AURELION_RMG_TRACE_4A9D6A") != nullptr;
+	static const bool enabled = rmg_trace_env("AURELION_RMG_TRACE_4A9D6A") != nullptr;
 	return enabled;
 }
 
@@ -36665,7 +36748,7 @@ static MineResourceMaterializationResult4a9d6a mine_resource_materialization_0x4
 			return result;
 		}
 		result.categories.insert(result.categories.end(), owner_categories.begin(), owner_categories.end());
-		if (std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_OBJECT_PHASE_MINE_OWNER owner=%d runtime_zone=%d count=%zu\n",
@@ -36904,7 +36987,7 @@ static int32_t apply_relation_owner_coast_segment_0x4a2cdc(
 							generated_cell_word_0x20[size_t(flat)]) == owner_byte2) {
 				generated_cell_word_0x28[size_t(flat)] |= CELL_TERRAIN_RELATION_ELIGIBLE_BIT_28;
 				write_count += 1;
-				if (std::getenv("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_COORDINATE_4A2301") != nullptr) {
 					std::fprintf(
 							stderr,
 							"RMG_TRACE_COAST_4A2E91 owner=%d level=%d x=%d y=%d flat=%lld\n",
@@ -37196,7 +37279,7 @@ static void apply_relation_owner_coordinate_recenter_from_generated_cells_0x4a2f
 					&scanned_count,
 					&matched_count,
 					&changed);
-		if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_4A2FFA owner=%d identity=%d before=%d,%d,%d bounds=%d,%d,%d,%d scanned=%d matched=%d after=%d,%d,%d known=%d changed=%d\n",
@@ -38062,7 +38145,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 						owner.source_order_source_record_0x00.field_0x24_known,
 						owner.source_order_source_record_0x00.field_0x24,
 						owner.source_order_source_record_0x00.source_id_0x00);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				int32_t accepted_candidate_count = 0;
 				for (const SourceOrderObjectDispatcherBranch4a8d2c &branch : direct.branches) {
 					accepted_candidate_count += branch.placement_0x4a93a2.placement_state_0x4a93a2.accepted_candidate_count;
@@ -38106,7 +38189,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 		prepared.descriptor_required = descriptor_required;
 		prepared_replays.push_back(prepared);
 	}
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a8d2c_0x4ac749 state=0x%08x\n", rng.state);
 	}
 
@@ -38144,7 +38227,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 				int32_t source_order_anchor_y_0x14 = owner.coordinate_y_0x14;
 				int32_t source_order_anchor_level_0x18 = owner.coordinate_level_0x18;
 				const uint32_t scheduler_rng_before_0x4a8db2 = rng.state;
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					const SourceOrderSchedulerSourceRecord4a8db2 &source_record =
 							owner.source_order_source_record_0x00;
 					std::fprintf(
@@ -38185,7 +38268,7 @@ static bool replay_relation_pointer_source_order_loop_0x4ac552_0x4a8d2c_0x4a8db2
 							true,
 								source_order_anchor_x_0x10,
 								source_order_anchor_y_0x14);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				int32_t accepted_candidate_count = 0;
 				for (const SourceOrderSchedulerCall4a8db2 &call : scheduler.calls) {
 					accepted_candidate_count += call.direct_candidate_accepted_count_0x4a93a2;
@@ -39720,7 +39803,7 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 				std::vector<uint8_t> &,
 				bool &,
 				std::string &)> *after_initial_feed_0x4a7f8a = nullptr) {
-	static int32_t trace_invocation_sequence_0x4bcff5 = 0;
+	thread_local int32_t trace_invocation_sequence_0x4bcff5 = 0;
 	const int32_t trace_invocation_0x4bcff5 = trace_invocation_sequence_0x4bcff5++;
 	TerrainPlacementBrushApplyResult4a4522 brush_result;
 	brush_result.requested_cell_count = int32_t(points.size());
@@ -39738,7 +39821,7 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 			}
 		}
 	}
-	if (std::getenv("AURELION_RMG_TRACE_TERRAINPLACEMENT_INVOCATIONS") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_TERRAINPLACEMENT_INVOCATIONS") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_TERRAINPLACEMENT_INVOCATION sequence=%d level=%d active_terrain=%d point_count=%d switched_terrains=%d rng_before=0x%08x",
@@ -40019,7 +40102,7 @@ static TerrainPlacementBrushApplyResult4a4522 terrainplacement_apply_points_to_g
 				return false;
 			}
 			}
-			if (std::getenv("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL") != nullptr) {
 				int32_t trace_filter = -1;
 				const bool trace_match =
 						(!workflow_phase_cell_trace_env_int("AURELION_RMG_TRACE_TERRAIN_VISUAL_CELL_X", trace_filter) || x == trace_filter)
@@ -40668,7 +40751,7 @@ static int32_t relation_bridge_brush_0x4a4522(
 		int32_t level,
 		H3MapedRng &rng,
 		MaterializationBridgeRelationLoopResult4a4913 &result) {
-	if (std::getenv("AURELION_RMG_TRACE_4A4522") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_4A4522") != nullptr) {
 		std::fprintf(
 				stderr,
 				"RMG_TRACE_4A4522 low_x=%d low_y=%d high_x=%d high_y=%d level=%d rng_before=0x%08x\n",
@@ -40975,7 +41058,7 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 						result.relation_lookup_skip_count += 1;
 						continue;
 					}
-					if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+					if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 						std::fprintf(
 								stderr,
 								"RMG_TRACE_PHASE_RNG phase=0x4a4fc5_mutation_source x=%d y=%d level=%d owner_byte2=%d owner_byte3=%d replacement_terrain=%d\n",
@@ -41025,7 +41108,7 @@ static MaterializationBridgeWaterEdgeWriterResult4a4fc5 materialization_bridge_w
 							staged_repaints_0x4ae1fd_0x40bb26.push_back(
 									WaterEdgeRepaintRecord4a4fc5 { mutation_x, mutation_y, level, replacement_terrain_id });
 							result.visual_repaint_pending_count += 1;
-							if (std::getenv("AURELION_RMG_TRACE_4A4FC5_STAGING") != nullptr) {
+							if (rmg_trace_env("AURELION_RMG_TRACE_4A4FC5_STAGING") != nullptr) {
 								std::fprintf(
 										stderr,
 										"RMG_TRACE_4A4FC5_STAGING sequence=%d source_x=%d source_y=%d x=%d y=%d level=%d terrain=%d\n",
@@ -41443,7 +41526,8 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	result.current_phase_id = "entry_scope";
 	result.supported_scope = supports_workflow_execution_scope(config);
 
-	const bool profile_workflow_phases = std::getenv("AURELION_RMG_PROFILE_PHASES") != nullptr;
+	rmg_trace_env_reload();
+	const bool profile_workflow_phases = rmg_trace_env("AURELION_RMG_PROFILE_PHASES") != nullptr;
 	const auto workflow_profile_started_at = std::chrono::steady_clock::now();
 	auto previous_phase_profile_at = workflow_profile_started_at;
 	auto profile_checkpoint = [profile_workflow_phases, workflow_profile_started_at, &previous_phase_profile_at](const char *id) {
@@ -41471,7 +41555,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			previous_phase_profile_at = now;
 		}
 	};
-	const bool trace_object_phase_counts = std::getenv("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr;
+	const bool trace_object_phase_counts = rmg_trace_env("AURELION_RMG_TRACE_OBJECT_PHASE_COUNTS") != nullptr;
 	auto trace_object_phase_count = [&](const char *phase, uint32_t source_boundary) {
 		if (!trace_object_phase_counts) {
 			return;
@@ -41610,7 +41694,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					result.template_selection_0x4ac552.runtime_seed.runtime_links,
 					result.setup_mode_0x49ecf2.generator_field_0x08_known,
 					result.setup_mode_0x49ecf2.generator_field_0x08);
-	if (std::getenv("AURELION_RMG_TRACE_POST_TERRAIN_GRID") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_POST_TERRAIN_GRID") != nullptr) {
 		const TerrainRepaintResult4a3f27 &terrain = result.coordinate_owner_grid_0x4a218c.terrain_repaint;
 		const size_t record_count = std::min({
 				terrain.generated_cell_word_0x20.size(),
@@ -41629,7 +41713,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					terrain.generated_cell_word_0x2c[flat]);
 		}
 	}
-	if (std::getenv("AURELION_RMG_TRACE_RELATION_OWNERS_4AC721") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_RELATION_OWNERS_4AC721") != nullptr) {
 		const auto &owners = result.coordinate_owner_grid_0x4a218c.terrain_repaint
 				.relation_owners_after_scan_bounds_0x4a1f3b_0x4a2ffa;
 		for (size_t index = 0; index < owners.size(); ++index) {
@@ -41649,7 +41733,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					owner.scan_bound_high_y_0x2c);
 		}
 	}
-	if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 		const CoordinateOwnerGridResult4a218c &coordinate = result.coordinate_owner_grid_0x4a218c;
 		std::fprintf(
 				stderr,
@@ -41739,7 +41823,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 	}
 	if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 		trace_object_phase_count("before_source_order_0x4ac6fc", 0x004ac6fcU);
-		if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 			std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4a8d2c_0x4ac721 state=0x%08x\n", route_free_cell_rng.state);
 		}
 		const bool source_order_relation_pointer_loop_owned =
@@ -41749,7 +41833,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				"AURELION_RMG_TRACE_POST_SOURCE_ORDER_GRID",
 				"after_source_order_0x4ac771",
 				result.generator_object_private_state.generated_cell_buffer);
-		if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 			std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a8db2_0x4ac771 state=0x%08x\n", route_free_cell_rng.state);
 		}
 		if (!source_order_relation_pointer_loop_owned) {
@@ -41776,7 +41860,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			replay_generic_non_type98_source_order_pairs_0x4a8d2c_0x4a8db2(
 					result.generator_object_private_state,
 					route_free_cell_rng);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_generic_non_type98_before_0x4a8260 state=0x%08x\n", route_free_cell_rng.state);
 			}
 		const GeneratorObjectPrivateState &generic_state = result.generator_object_private_state;
@@ -41799,7 +41883,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 							result.generator_object_private_state.relation_owner_vectors_10e4_10e8,
 							route_free_cell_rng);
 				profile_checkpoint("route_free_cell_phase_0x4a8260_0x4a4c8e");
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a8260_0x4a4c8e state=0x%08x\n", route_free_cell_rng.state);
 				}
 		result.generator_object_private_state.route_container_free_cell_sweep_0x4a8260_ported = route_free_cell_phase.route_0x4a8260_ported;
@@ -41867,7 +41951,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			const MaterializationBridgeRelationLoopResult4a4913 relation_loop =
 					materialization_bridge_relation_loop_0x4a4913(result.generator_object_private_state, route_free_cell_rng);
 			profile_checkpoint("materialization_bridge_relation_loop_0x4a4913");
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_relation_loop_0x4a4913 state=0x%08x\n", route_free_cell_rng.state);
 			}
 		result.generator_object_private_state.materialization_bridge_relation_loop_0x4a4913_input_known = relation_loop.input_known;
@@ -41913,7 +41997,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					result.generator_object_private_state,
 					route_free_cell_rng);
 			profile_checkpoint("materialization_bridge_relation_normalization_0x4a5767_pre_water");
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_pre_water_0x4a5767 state=0x%08x\n", route_free_cell_rng.state);
 			}
 			workflow_phase_cell_trace("after_pre_water_relation_normalization_0x4a5767", result.generator_object_private_state.generated_cell_buffer);
@@ -41931,7 +42015,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 						config.water_mode,
 						route_free_cell_rng);
 			profile_checkpoint("materialization_bridge_water_edge_writer_0x4a4fc5");
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_PHASE_RNG phase=after_0x4a4fc5 state=0x%08x source_water=%d relation_lookup_skips=%d mutation_sources=%d repaint_pending=%d bit25_probes=%d\n",
@@ -42009,7 +42093,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 				config.setup_object_0x44_known,
 				config.setup_object_0x44);
 		profile_checkpoint("apply_endpoint_materialization_state_d014");
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4a79a3 state=0x%08x\n", route_free_cell_rng.state);
 			}
 			result.generator_object_private_state.connection_tail_replay_0x4a79a3_ported = true;
@@ -42039,7 +42123,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					"AURELION_RMG_TRACE_POST_4A8C15_GRID",
 					"after_0x4a8c15_0x4ac778",
 					result.generator_object_private_state.generated_cell_buffer);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a79a3 state=0x%08x\n", route_free_cell_rng.state);
 			}
 			workflow_phase_cell_trace("after_connection_tail_replay_0x4a79a3", result.generator_object_private_state.generated_cell_buffer);
@@ -42092,7 +42176,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 			}
 			if (result.generator_object_private_state.remaining_private_state_blockers.empty()) {
 				workflow_phase_cell_trace("before_mine_resource_materialization_0x4a9d6a", result.generator_object_private_state.generated_cell_buffer);
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4a9d6a state=0x%08x\n", route_free_cell_rng.state);
 				}
 				if (trace_object_phase_counts) {
@@ -42107,7 +42191,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 						"AURELION_RMG_TRACE_POST_4A9D6A_GRID",
 						"after_0x4a9d6a_0x4ac7b6",
 						result.generator_object_private_state.generated_cell_buffer);
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a9d6a state=0x%08x\n", route_free_cell_rng.state);
 				}
 				if (trace_object_phase_counts) {
@@ -42153,7 +42237,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					result.generator_object_private_state.generated_cell_buffer);
 			result.generator_object_private_state.reward_guard_materialization_driver_0x4aa354_ported = true;
 			result.generator_object_private_state.reward_guard_source_stream_0x4aab7e_ported = true;
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4aab7e state=0x%08x\n", route_free_cell_rng.state);
 			}
 			result.generator_object_private_state.reward_guard_source_stream_0x4aab7e =
@@ -42164,7 +42248,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					"AURELION_RMG_TRACE_POST_4AAB7E_GRID",
 					"after_0x4aab7e_0x4ac826",
 					result.generator_object_private_state.generated_cell_buffer);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4aab7e state=0x%08x\n", route_free_cell_rng.state);
 			}
 			workflow_phase_cell_trace("after_reward_guard_source_stream_0x4aab7e", result.generator_object_private_state.generated_cell_buffer);
@@ -42244,14 +42328,14 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 					"AURELION_RMG_TRACE_PRE_4A7ECC_GRID",
 					"before_0x4a7ecc_0x4ac82e",
 					result.generator_object_private_state.generated_cell_buffer);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x4a7ecc state=0x%08x\n", route_free_cell_rng.state);
 			}
 			const TerrainPlacementBrushApplyResult4a4522 underground_repaint =
 					underground_visual_repaint_0x4a7ecc(
 							result.generator_object_private_state,
 							route_free_cell_rng);
-			if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 				std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=after_0x4a7ecc state=0x%08x\n", route_free_cell_rng.state);
 			}
 			if (!underground_repaint.applied || !underground_repaint.blocked_reason.empty()) {
@@ -42290,7 +42374,7 @@ H3MapedRmgWorkflowResult run_h3maped_rmg_entry_to_writeout_workflow(const H3Mape
 						"after_0x49a1ef_0x4ac83d",
 						result.generator_object_private_state.generated_cell_buffer);
 				workflow_phase_cell_trace("before_decorative_dispatch_0x49eb8d", result.generator_object_private_state.generated_cell_buffer);
-				if (std::getenv("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
+				if (rmg_trace_env("AURELION_RMG_TRACE_PHASE_RNG") != nullptr) {
 					std::fprintf(stderr, "RMG_TRACE_PHASE_RNG phase=before_0x49eb8d state=0x%08x\n", route_free_cell_rng.state);
 				}
 				result.generator_object_private_state.decorative_flagged_cell_dispatch_0x49eb8d_ported = true;
@@ -43558,7 +43642,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 			line = boundary_line_writer_4a261a(width, height, level_count, generator_mode_0x10b8, x1, y1, x2, y2, zone_word, level);
 			result.deterministic_writer_segment_count += 1;
 		}
-		if (std::getenv("AURELION_RMG_TRACE_BOUNDARY_SEGMENTS") != nullptr) {
+		if (rmg_trace_env("AURELION_RMG_TRACE_BOUNDARY_SEGMENTS") != nullptr) {
 			std::fprintf(
 					stderr,
 					"RMG_TRACE_BOUNDARY_SEGMENT owner=%d generated_owner=%d writer=%s from=(%d,%d) to=(%d,%d) level=%d random_span_limit=%d rng_before=0x%08x rng_after=0x%08x writes=%zu id=%s branch=%s\n",
@@ -43856,7 +43940,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 				continue;
 			}
 			const ClipResult from_clip = clip_point_4a2b33(from.x, from.y, to.x, to.y, bounds);
-			if (std::getenv("AURELION_RMG_TRACE_BOUNDARY_SEGMENTS") != nullptr) {
+			if (rmg_trace_env("AURELION_RMG_TRACE_BOUNDARY_SEGMENTS") != nullptr) {
 				std::fprintf(
 						stderr,
 						"RMG_TRACE_BOUNDARY_EDGE owner=%d model=%d next_model=%d from=(%d,%d) to=(%d,%d) from_clip=(%d,%d) from_inside=%d retained=(%d,%d)\n",
@@ -43915,7 +43999,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		result.zones.push_back(std::move(zone));
 	}
 
-	if (std::getenv("AURELION_RMG_TRACE_PRE_SPAN_FILL_GRID") != nullptr) {
+	if (rmg_trace_env("AURELION_RMG_TRACE_PRE_SPAN_FILL_GRID") != nullptr) {
 		const int32_t trace_level = cycles.empty() ? -1 : cycles.front().level;
 		for (size_t flat = 0; flat < result.generated_cell_word_0x20.size(); ++flat) {
 			std::fprintf(
@@ -43927,7 +44011,7 @@ BoundaryMaterialization4a2777 materialize_boundary_cycles_4a2777(int32_t width, 
 		}
 	}
 	std::map<int64_t, bool> span_fill_unique_cells;
-	const bool trace_span_fill_summary = std::getenv("AURELION_RMG_TRACE_SPAN_FILL_SUMMARY") != nullptr;
+	const bool trace_span_fill_summary = rmg_trace_env("AURELION_RMG_TRACE_SPAN_FILL_SUMMARY") != nullptr;
 	for (BoundaryZoneMaterialization4a2777 &zone : result.zones) {
 		if (!zone.has_span_seed_4a325d) {
 			continue;
@@ -44056,7 +44140,7 @@ BoundaryMaterialization4a2777 materialize_boundary_source_handoffs_4a2777_4a325d
 SpanFillResult span_fill_4a325d(std::vector<uint32_t> &zone_words, std::vector<uint32_t> &generated_cell_word_0x20, std::vector<uint32_t> &generated_cell_word_0x28, std::vector<uint8_t> &cell_flags, int32_t width, int32_t height, int32_t level_count, int32_t generator_mode_0x10b8, int32_t private_zone_id, int32_t generated_cell_owner_byte2, const SpanRecord &seed) {
 	SpanFillResult result;
 	int32_t trace_owner_filter = -1;
-	const bool trace_span_fill = std::getenv("AURELION_RMG_TRACE_SPAN_FILL") != nullptr
+	const bool trace_span_fill = rmg_trace_env("AURELION_RMG_TRACE_SPAN_FILL") != nullptr
 			&& (!workflow_phase_cell_trace_env_int("AURELION_RMG_TRACE_SPAN_FILL_OWNER", trace_owner_filter)
 					|| trace_owner_filter == private_zone_id);
 	std::vector<SpanRecord> pending;

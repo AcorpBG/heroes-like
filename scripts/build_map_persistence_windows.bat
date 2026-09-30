@@ -118,15 +118,20 @@ popd >nul
 exit /b 0
 
 :build_msvc
+rem Visual Studio builds every --config from one godot-cpp flavour, so the
+rem editor/debug and release DLLs each get their own build tree.
 set "MSVC_BUILD_DIR=.artifacts\map_persistence_native_build_windows_msvc"
-call :run cmake -S src\gdextension -B "%MSVC_BUILD_DIR%" -G "Visual Studio 17 2022" -A x64
-if errorlevel 1 exit /b 1
+set "MSVC_RELEASE_BUILD_DIR=.artifacts\map_persistence_native_build_windows_msvc_release"
 if "%BUILD_DEBUG%"=="1" (
-	call :run cmake --build "%MSVC_BUILD_DIR%" --config Debug --parallel %PARALLEL%
+	call :run cmake -S src\gdextension -B "%MSVC_BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DAURELION_GODOTCPP_TARGET=template_debug
+	if errorlevel 1 exit /b 1
+	call :run cmake --build "%MSVC_BUILD_DIR%" --config RelWithDebInfo --parallel %PARALLEL%
 	if errorlevel 1 exit /b 1
 )
 if "%BUILD_RELEASE%"=="1" (
-	call :run cmake --build "%MSVC_BUILD_DIR%" --config Release --parallel %PARALLEL%
+	call :run cmake -S src\gdextension -B "%MSVC_RELEASE_BUILD_DIR%" -G "Visual Studio 17 2022" -A x64 -DAURELION_GODOTCPP_TARGET=template_release
+	if errorlevel 1 exit /b 1
+	call :run cmake --build "%MSVC_RELEASE_BUILD_DIR%" --config Release --parallel %PARALLEL%
 	if errorlevel 1 exit /b 1
 )
 exit /b 0
@@ -134,7 +139,7 @@ exit /b 0
 :build_mingw
 if "%BUILD_DEBUG%"=="1" (
 	set "MINGW_DEBUG_DIR=.artifacts\map_persistence_native_build_windows_mingw_debug"
-	call :run cmake -S src\gdextension -B "!MINGW_DEBUG_DIR!" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug
+	call :run cmake -S src\gdextension -B "!MINGW_DEBUG_DIR!" -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=RelWithDebInfo
 	if errorlevel 1 exit /b 1
 	call :run cmake --build "!MINGW_DEBUG_DIR!" --parallel %PARALLEL%
 	if errorlevel 1 exit /b 1

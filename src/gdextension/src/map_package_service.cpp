@@ -14,7 +14,10 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <memory>
+#include <mutex>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -41,6 +44,9 @@ constexpr const char *MAP_OBJECT_CATALOG_PATH = "res://content/map_objects.json"
 constexpr const char *RESOURCE_SITE_CATALOG_PATH = "res://content/resource_sites.json";
 constexpr const char *ARTIFACT_CATALOG_PATH = "res://content/artifacts.json";
 constexpr uint64_t HASH_MODULUS = 4294967296ULL;
+// A two-level XL package is a few tens of MB of JSON; refuse anything far past
+// that before parsing it.
+constexpr uint64_t MAX_PACKAGE_FILE_BYTES = 256ULL * 1024ULL * 1024ULL;
 
 using SteadyClock = std::chrono::steady_clock;
 
@@ -92,15 +98,18 @@ String canonical_variant(const Variant &value) {
 		case Variant::STRING_NAME:
 			return "string:" + escaped_atom(String(value));
 		case Variant::DICTIONARY: {
-			Dictionary dictionary = value;
-			Array keys = dictionary.keys();
-			std::vector<String> sorted_keys;
+			// Read values through the original keys with const access: looking up
+			// String(key) for a non-string key would miss, and the non-const
+			// operator[] would insert a null entry into the caller's document.
+			const Dictionary dictionary = value;
+			const Array keys = dictionary.keys();
+			std::vector<std::pair<String, Variant>> sorted_keys;
 			sorted_keys.reserve(keys.size());
 			for (int64_t index = 0; index < keys.size(); ++index) {
-				sorted_keys.push_back(String(keys[index]));
+				sorted_keys.emplace_back(String(keys[index]), keys[index]);
 			}
-			std::sort(sorted_keys.begin(), sorted_keys.end(), [](const String &left, const String &right) {
-				return left < right;
+			std::sort(sorted_keys.begin(), sorted_keys.end(), [](const std::pair<String, Variant> &left, const std::pair<String, Variant> &right) {
+				return left.first < right.first;
 			});
 
 			String result = "{";
@@ -108,14 +117,15 @@ String canonical_variant(const Variant &value) {
 				if (index > 0) {
 					result += ",";
 				}
-				const String &key = sorted_keys[index];
-				result += escaped_atom(key) + ":" + canonical_variant(dictionary[key]);
+				result += escaped_atom(sorted_keys[index].first) + ":" + canonical_variant(dictionary.get(sorted_keys[index].second, Variant()));
 			}
 			result += "}";
 			return result;
 		}
 		case Variant::ARRAY: {
-			Array array = value;
+			// Const access: document object arrays are read-only, and non-const
+			// indexing of a read-only array goes through a shared scratch slot.
+			const Array array = value;
 			String result = "[";
 			for (int64_t index = 0; index < array.size(); ++index) {
 				if (index > 0) {
@@ -138,8 +148,41 @@ String canonical_variant(const Variant &value) {
 			result += "]";
 			return result;
 		}
+		case Variant::OBJECT:
+			// An object prints as its instance id, which changes every run, so it
+			// cannot take part in a stable hash. compute_document_hash rejects
+			// documents holding one; this marker keeps other callers stable.
+			return "object:unsupported";
 		default:
 			return String("variant:") + escaped_atom(String(value));
+	}
+}
+
+bool variant_contains_object(const Variant &value) {
+	switch (value.get_type()) {
+		case Variant::OBJECT:
+			return true;
+		case Variant::DICTIONARY: {
+			const Dictionary dictionary = value;
+			const Array keys = dictionary.keys();
+			for (int64_t index = 0; index < keys.size(); ++index) {
+				if (variant_contains_object(keys[index]) || variant_contains_object(dictionary.get(keys[index], Variant()))) {
+					return true;
+				}
+			}
+			return false;
+		}
+		case Variant::ARRAY: {
+			const Array array = value;
+			for (int64_t index = 0; index < array.size(); ++index) {
+				if (variant_contains_object(array[index])) {
+					return true;
+				}
+			}
+			return false;
+		}
+		default:
+			return false;
 	}
 }
 
@@ -474,7 +517,7 @@ const char *runtime_object_kind(int32_t type_id) {
 	return aurelion::runtime_object_kind(type_id);
 }
 
-Dictionary runtime_json_dictionary(const String &path) {
+Dictionary parse_runtime_json_dictionary(const String &path) {
 	if (!FileAccess::file_exists(path)) {
 		return Dictionary();
 	}
@@ -489,6 +532,51 @@ Dictionary runtime_json_dictionary(const String &path) {
 	}
 	Variant data = parser->get_data();
 	return data.get_type() == Variant::DICTIONARY ? Dictionary(data) : Dictionary();
+}
+
+// Content catalogs (about 2.2 MB of JSON) are read by every generation. Keep
+// each parsed file, keyed on the exact content hash like the package manifest
+// cache, and hand every caller its own deep copy. Hashing and copying cost
+// about a third of reading and parsing the files again, and the copy keeps
+// generations on different threads from sharing any container. The cache
+// lives on the heap and is emptied when the extension unloads, before Godot
+// tears down the Variant system.
+struct CachedContentCatalog {
+	String source_sha256;
+	Dictionary data;
+};
+
+std::mutex &runtime_content_cache_mutex() {
+	static std::mutex mutex;
+	return mutex;
+}
+
+std::unordered_map<std::string, CachedContentCatalog> *&runtime_content_cache() {
+	static std::unordered_map<std::string, CachedContentCatalog> *cache = nullptr;
+	return cache;
+}
+
+Dictionary runtime_json_dictionary(const String &path) {
+	const std::string key(path.utf8().get_data());
+	const String source_sha256 = FileAccess::file_exists(path) ? FileAccess::get_sha256(path) : String();
+	{
+		std::lock_guard<std::mutex> lock(runtime_content_cache_mutex());
+		const auto *cache = runtime_content_cache();
+		if (cache != nullptr) {
+			const auto found = cache->find(key);
+			if (found != cache->end() && found->second.source_sha256 == source_sha256) {
+				return found->second.data.duplicate(true);
+			}
+		}
+	}
+	Dictionary data = parse_runtime_json_dictionary(path);
+	std::lock_guard<std::mutex> lock(runtime_content_cache_mutex());
+	auto *&cache = runtime_content_cache();
+	if (cache == nullptr) {
+		cache = new std::unordered_map<std::string, CachedContentCatalog>();
+	}
+	(*cache)[key] = CachedContentCatalog { source_sha256, data.duplicate(true) };
+	return data;
 }
 
 bool runtime_string_array_contains(const Variant &value, const String &needle) {
@@ -628,16 +716,17 @@ Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
 				}
 			}
 		}
-		for (int64_t item_index = 1; item_index < candidates.size(); ++item_index) {
-			Variant current = candidates[item_index];
-			const String current_id = String(Dictionary(current).get("id", ""));
-			int64_t insert_index = item_index;
-			while (insert_index > 0
-					&& String(Dictionary(candidates[insert_index - 1]).get("id", "")) > current_id) {
-				candidates[insert_index] = candidates[insert_index - 1];
-				--insert_index;
-			}
-			candidates[insert_index] = current;
+		// Stable sort by id, the same order the previous insertion sort produced.
+		std::vector<std::pair<String, Variant>> sorted_candidates;
+		sorted_candidates.reserve(candidates.size());
+		for (int64_t item_index = 0; item_index < candidates.size(); ++item_index) {
+			sorted_candidates.emplace_back(String(Dictionary(candidates[item_index]).get("id", "")), candidates[item_index]);
+		}
+		std::stable_sort(sorted_candidates.begin(), sorted_candidates.end(), [](const std::pair<String, Variant> &left, const std::pair<String, Variant> &right) {
+			return left.first < right.first;
+		});
+		for (int64_t item_index = 0; item_index < candidates.size(); ++item_index) {
+			candidates[item_index] = sorted_candidates[size_t(item_index)].second;
 		}
 		result[pool_id] = candidates;
 	}
@@ -645,23 +734,10 @@ Dictionary runtime_authored_pool_candidates(const Dictionary &registry) {
 }
 
 Array runtime_live_proxy_catalog_entries() {
-	if (!FileAccess::file_exists(HOMM3_RE_PROXY_CATALOG_PATH)) {
+	const Dictionary catalog = runtime_json_dictionary(HOMM3_RE_PROXY_CATALOG_PATH);
+	if (catalog.is_empty()) {
 		return Array();
 	}
-	Ref<FileAccess> file = FileAccess::open(HOMM3_RE_PROXY_CATALOG_PATH, FileAccess::READ);
-	if (file.is_null() || !file->is_open()) {
-		return Array();
-	}
-	Ref<JSON> parser;
-	parser.instantiate();
-	if (parser->parse(file->get_as_text()) != OK) {
-		return Array();
-	}
-	Variant data = parser->get_data();
-	if (data.get_type() != Variant::DICTIONARY) {
-		return Array();
-	}
-	Dictionary catalog = data;
 	if (String(catalog.get("schema_id", "")) != HOMM3_RE_PROXY_CATALOG_SCHEMA
 			|| String(catalog.get("asset_policy", "")) != "provenance_only_original_proxy_art") {
 		return Array();
@@ -1225,7 +1301,14 @@ Dictionary runtime_objects(
 		}
 		object["blocking_body"] = !source.body_tiles.empty();
 		apply_runtime_live_proxy_entry(object, live_proxy);
-		if (source.cross_level_peer_serialized_index_0x4a6cf2 >= 0) {
+		if (source.cross_level_peer_serialized_index_0x4a6cf2 >= 0
+				&& size_t(source.cross_level_peer_serialized_index_0x4a6cf2) >= projection.objects.size()) {
+			Dictionary failure;
+			failure["code"] = "native_cave_pair_peer_index_out_of_range";
+			failure["serialized_index"] = source.serialized_index;
+			failure["peer_serialized_index"] = source.cross_level_peer_serialized_index_0x4a6cf2;
+			failures.append(failure);
+		} else if (source.cross_level_peer_serialized_index_0x4a6cf2 >= 0) {
 			const auto &peer = projection.objects[size_t(source.cross_level_peer_serialized_index_0x4a6cf2)];
 			if (source.action_tiles.size() != 1U || peer.action_tiles.size() != 1U) {
 				Dictionary failure;
@@ -1263,6 +1346,14 @@ Dictionary runtime_objects(
 				transit["one_way"] = source.type_id != 45;
 				Array destinations;
 				for (int32_t peer_index : source.monolith_destination_serialized_indices_0x4a7605) {
+					if (peer_index < 0 || size_t(peer_index) >= projection.objects.size()) {
+						Dictionary failure;
+						failure["code"] = "native_portal_destination_index_out_of_range";
+						failure["serialized_index"] = source.serialized_index;
+						failure["peer_serialized_index"] = peer_index;
+						failures.append(failure);
+						continue;
+					}
 					const auto &peer = projection.objects[size_t(peer_index)];
 					if (peer.action_tiles.size() != 1U) {
 						Dictionary failure;
@@ -1314,6 +1405,15 @@ Dictionary runtime_objects(
 		}
 		if (kind == "town") {
 			const auto *slot = runtime_slot_for_town(source, projection);
+			if (slot != nullptr && projection.team_count > 0
+					&& (slot->color < 0 || size_t(slot->color) >= projection.player_team_assignments.size())) {
+				Dictionary failure;
+				failure["code"] = "native_town_owner_color_out_of_range";
+				failure["serialized_index"] = source.serialized_index;
+				failure["color"] = slot->color;
+				failures.append(failure);
+				slot = nullptr;
+			}
 			object["owner"] = slot == nullptr ? "neutral" : (slot->human ? "player" : "enemy");
 			object["owner_slot"] = slot == nullptr ? 0 : slot->color + 1;
 			object["player_slot"] = slot == nullptr ? 0 : slot->color + 1;
@@ -1591,7 +1691,9 @@ Dictionary package_failure(const String &operation, const String &path, const St
 }
 
 Dictionary package_success(const String &operation, const String &path, const Dictionary &payload, const Array &warnings = Array()) {
-	Dictionary result = payload.duplicate(true);
+	// Every caller builds payload for this result alone, so a shallow copy is
+	// enough; a deep copy here duplicated whole map packages on every load.
+	Dictionary result = payload.duplicate(false);
 	result["ok"] = true;
 	result["status"] = "pass";
 	result["operation"] = operation;
@@ -1615,6 +1717,9 @@ Dictionary read_package_dictionary(const String &operation, const String &path) 
 	Ref<FileAccess> file = FileAccess::open(path, FileAccess::READ);
 	if (file.is_null() || !file->is_open()) {
 		return package_failure(operation, path, "open_failed", "Package file could not be opened for reading.");
+	}
+	if (file->get_length() > MAX_PACKAGE_FILE_BYTES) {
+		return package_failure(operation, path, "package_too_large", "Package file is larger than any supported map package.");
 	}
 	const String text = file->get_as_text();
 	Ref<JSON> parser;
@@ -1753,6 +1858,30 @@ Dictionary read_browser_manifest_cache(const String &source_path, const String &
 	return payload;
 }
 
+// Writes to a sibling temporary file, checks the write, then renames it over
+// the target. A crash or a full disk leaves the previous file in place instead
+// of a truncated one, and a failed write is reported instead of ignored.
+Error replace_file_with_text(const String &path, const String &text) {
+	const String temporary_path = path + String(".tmp");
+	Ref<FileAccess> file = FileAccess::open(temporary_path, FileAccess::WRITE);
+	if (file.is_null() || !file->is_open()) {
+		return ERR_FILE_CANT_OPEN;
+	}
+	const bool stored = file->store_string(text);
+	file->flush();
+	const Error write_error = file->get_error();
+	file->close();
+	if (!stored || write_error != OK) {
+		DirAccess::remove_absolute(temporary_path);
+		return ERR_FILE_CANT_WRITE;
+	}
+	if (DirAccess::rename_absolute(temporary_path, path) != OK) {
+		DirAccess::remove_absolute(temporary_path);
+		return ERR_FILE_CANT_WRITE;
+	}
+	return OK;
+}
+
 bool write_browser_manifest_cache(const String &source_path, const String &source_sha256, const Dictionary &payload) {
 	if (source_sha256.is_empty() || !browser_manifest_cache_payload_is_valid(payload)) {
 		return false;
@@ -1795,27 +1924,33 @@ bool write_browser_manifest_cache(const String &source_path, const String &sourc
 	cache["source_sha256"] = source_sha256;
 	cache["inspection_payload"] = stable_payload.duplicate(true);
 	cache["inspection_payload_hash"] = "fnv1a32:" + hash32_hex(canonical_variant(stable_payload));
-	Ref<FileAccess> file = FileAccess::open(cache_path, FileAccess::WRITE);
-	if (file.is_null() || !file->is_open()) {
-		return false;
-	}
-	file->store_string(JSON::stringify(cache, "\t", true, false));
-	file->flush();
-	file->close();
-	return true;
+	return replace_file_with_text(cache_path, JSON::stringify(cache, "\t", true, false)) == OK;
 }
 
 Dictionary write_package_dictionary(const String &operation, const String &path, const Dictionary &package, bool return_package = true, bool include_cache_profile = false) {
 	if (!ensure_parent_dir(path)) {
 		return package_failure(operation, path, "create_directory_failed", "Package parent directory could not be created.");
 	}
-	Ref<FileAccess> file = FileAccess::open(path, FileAccess::WRITE);
+	// Write beside the target and rename over it only after a checked write, so
+	// a crash or a full disk never truncates the previous package. The manifest
+	// cache below is filled only once the package file is closed and in place.
+	const String temporary_path = path + String(".tmp");
+	Ref<FileAccess> file = FileAccess::open(temporary_path, FileAccess::WRITE);
 	if (file.is_null() || !file->is_open()) {
 		return package_failure(operation, path, "open_failed", "Package file could not be opened for writing.");
 	}
-	file->store_string(JSON::stringify(package, "\t", true, false));
+	const bool stored = file->store_string(JSON::stringify(package, "\t", true, false));
 	file->flush();
+	const Error write_error = file->get_error();
 	file->close();
+	if (!stored || write_error != OK) {
+		DirAccess::remove_absolute(temporary_path);
+		return package_failure(operation, path, "write_failed", "Package file could not be written completely.");
+	}
+	if (DirAccess::rename_absolute(temporary_path, path) != OK) {
+		DirAccess::remove_absolute(temporary_path);
+		return package_failure(operation, path, "replace_failed", "Written package could not replace the previous file.");
+	}
 	const String source_sha256 = FileAccess::get_sha256(path);
 	const bool cache_written = write_browser_manifest_cache(path, source_sha256, package_inspection_payload(package));
 	Dictionary payload;
@@ -1834,16 +1969,13 @@ Dictionary write_package_dictionary(const String &operation, const String &path,
 	return package_success(operation, path, payload);
 }
 
+// The stored objects, read-only and uncopied. Package writers only read them
+// for hashing and JSON output.
 Array document_objects(Ref<MapDocument> map_document) {
-	Array objects;
 	if (map_document.is_null()) {
-		return objects;
+		return Array();
 	}
-	const int32_t object_count = map_document->get_object_count();
-	for (int32_t index = 0; index < object_count; ++index) {
-		objects.append(map_document->get_object_by_index(index));
-	}
-	return objects;
+	return map_document->objects_view();
 }
 
 Dictionary map_document_payload(Ref<MapDocument> map_document) {
@@ -1859,9 +1991,15 @@ Dictionary map_document_payload(Ref<MapDocument> map_document) {
 	document["width"] = map_document->get_width();
 	document["height"] = map_document->get_height();
 	document["level_count"] = map_document->get_level_count();
-	document["metadata"] = map_document->get_metadata();
-	document["terrain_layers"] = map_document->get_terrain_layers();
-	document["route_graph"] = map_document->get_route_graph();
+	// Read the stored containers without copying: this payload is only hashed
+	// and serialized, and write_package_dictionary deep-copies it before
+	// handing a package back to a caller.
+	Dictionary metadata = map_document->metadata_view().duplicate(false);
+	metadata["schema_id"] = MAP_SCHEMA_ID;
+	metadata["schema_version"] = MapDocument::SCHEMA_VERSION;
+	document["metadata"] = metadata;
+	document["terrain_layers"] = map_document->terrain_layers_view();
+	document["route_graph"] = map_document->route_graph_view();
 	document["objects"] = document_objects(map_document);
 	return document;
 }
@@ -1898,6 +2036,23 @@ Dictionary map_document_state_from_payload(const Dictionary &document) {
 	state["route_graph"] = document.get("route_graph", Dictionary());
 	state["objects"] = document.get("objects", Array());
 	return state;
+}
+
+// Loaded dimensions come from untrusted JSON, which may hold floats or huge
+// numbers, so they are range-checked before any integer conversion.
+bool payload_dimension_in_range(const Dictionary &document, const String &key, const Variant &fallback, int32_t maximum) {
+	const Variant value = document.get(key, fallback);
+	if (value.get_type() != Variant::INT && value.get_type() != Variant::FLOAT) {
+		return false;
+	}
+	const double number = double(value);
+	return number >= 1.0 && number <= double(maximum) && number == double(int64_t(number));
+}
+
+bool map_payload_dimensions_in_range(const Dictionary &document) {
+	return payload_dimension_in_range(document, "width", 0, MapDocument::MAX_DIMENSION)
+			&& payload_dimension_in_range(document, "height", 0, MapDocument::MAX_DIMENSION)
+			&& payload_dimension_in_range(document, "level_count", 1, MapDocument::MAX_LEVEL_COUNT);
 }
 
 Dictionary scenario_document_state_from_payload(const Dictionary &document) {
@@ -1963,8 +2118,10 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 	const int32_t width = map_document->get_width();
 	const int32_t height = map_document->get_height();
 	const int32_t level_count = map_document->get_level_count();
-	const int32_t tile_count = map_document->get_tile_count();
-	const int32_t expected_level_tile_count = width * height;
+	// 64-bit so oversized dimensions cannot wrap to a small or zero count.
+	const int64_t tile_count = map_document->get_tile_count();
+	const int64_t expected_level_tile_count = int64_t(width) * int64_t(height);
+	const bool dimensions_in_range = width <= MapDocument::MAX_DIMENSION && height <= MapDocument::MAX_DIMENSION && level_count <= MapDocument::MAX_LEVEL_COUNT;
 	const String map_id = map_document->get_map_id();
 	const String map_hash = map_document->get_map_hash();
 
@@ -1979,13 +2136,20 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 	if (map_hash.strip_edges().is_empty()) {
 		append_document_validation_issue(failures, "missing_map_hash", "fail", "map_hash", "Map document hash is required.");
 	}
-	if (width <= 0 || height <= 0 || level_count <= 0 || tile_count != width * height * level_count) {
+	if (width <= 0 || height <= 0 || level_count <= 0 || !dimensions_in_range || tile_count != expected_level_tile_count * int64_t(level_count)) {
 		Dictionary context;
 		context["width"] = width;
 		context["height"] = height;
 		context["level_count"] = level_count;
 		context["tile_count"] = tile_count;
-		append_document_validation_issue(failures, "invalid_map_dimensions", "fail", "dimensions", "Map dimensions, levels, and tile count must be positive and internally consistent.", context);
+		context["max_dimension"] = MapDocument::MAX_DIMENSION;
+		context["max_level_count"] = MapDocument::MAX_LEVEL_COUNT;
+		append_document_validation_issue(failures, "invalid_map_dimensions", "fail", "dimensions", "Map dimensions, levels, and tile count must be positive, within supported limits, and internally consistent.", context);
+	}
+	if (!dimensions_in_range) {
+		// Per-tile checks below would walk the oversized layers; the dimension
+		// failure above already rejects the document.
+		return validation_report_result("validate_map_document", "aurelion_map_validation_report", map_id, map_hash, failures, warnings, metrics);
 	}
 
 	PackedStringArray layer_ids = map_document->get_terrain_layer_ids();
@@ -2007,7 +2171,7 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 			}
 		}
 	}
-	Dictionary terrain_layers = map_document->get_terrain_layers();
+	const Dictionary &terrain_layers = map_document->terrain_layers_view();
 	Variant roads_value = terrain_layers.get("roads", Variant());
 	if (roads_value.get_type() == Variant::ARRAY) {
 		Array roads = roads_value;
@@ -2059,8 +2223,10 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 	}
 
 	Dictionary placement_ids;
-	for (int32_t index = 0; index < map_document->get_object_count(); ++index) {
-		Dictionary object = map_document->get_object_by_index(index);
+	const Array &objects = map_document->objects_view();
+	for (int32_t index = 0; index < int32_t(objects.size()); ++index) {
+		const Variant &object_value = objects[index];
+		const Dictionary object = object_value.get_type() == Variant::DICTIONARY ? Dictionary(object_value) : Dictionary();
 		if (object.is_empty()) {
 			Dictionary context;
 			context["index"] = index;
@@ -2095,7 +2261,7 @@ Dictionary validate_map_document_structural_report(Ref<MapDocument> map_document
 	return validation_report_result("validate_map_document", "aurelion_map_validation_report", map_id, map_hash, failures, warnings, metrics);
 }
 
-Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> scenario_document, Ref<MapDocument> map_document) {
+Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> scenario_document, Ref<MapDocument> map_document, const Dictionary &precomputed_map_validation = Dictionary()) {
 	Array failures;
 	Array warnings;
 	Dictionary metrics;
@@ -2127,7 +2293,11 @@ Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> sc
 	if (map_document.is_null()) {
 		append_document_validation_issue(failures, "missing_map_document", "fail", "map_document", "Scenario validation requires the referenced MapDocument.");
 	} else {
-		Dictionary map_validation = validate_map_document_structural_report(map_document);
+		// Callers that already validated this map pass the report in, so the
+		// map is not walked a second time.
+		Dictionary map_validation = precomputed_map_validation.is_empty()
+				? validate_map_document_structural_report(map_document)
+				: precomputed_map_validation;
 		Dictionary map_report = map_validation.get("report", Dictionary());
 		if (String(map_report.get("status", "")) != "pass") {
 			append_document_validation_issue(failures, "referenced_map_invalid", "fail", "map_document", "Referenced map document did not pass structural validation.", map_report);
@@ -2143,6 +2313,12 @@ Dictionary validate_scenario_document_structural_report(Ref<ScenarioDocument> sc
 }
 
 } // namespace
+
+void MapPackageService::release_runtime_caches() {
+	std::lock_guard<std::mutex> lock(runtime_content_cache_mutex());
+	delete runtime_content_cache();
+	runtime_content_cache() = nullptr;
+}
 
 void MapPackageService::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_api_version"), &MapPackageService::get_api_version);
@@ -2245,11 +2421,16 @@ Dictionary MapPackageService::load_map_package(String path, Dictionary options) 
 	if (String(document_payload.get("schema_id", "")) != MAP_SCHEMA_ID) {
 		return package_failure(operation, path, "wrong_document_schema", "Map package document schema is not supported.");
 	}
+	if (!map_payload_dimensions_in_range(document_payload)) {
+		return package_failure(operation, path, "invalid_map_dimensions", "Map package dimensions or level count are outside the supported range.");
+	}
 	Ref<MapDocument> document;
 	document.instantiate();
 	document->configure(map_document_state_from_payload(document_payload));
+	// The parsed package is not shared with anything else, so it is handed
+	// back as is; the document above holds its own copies.
 	Dictionary payload;
-	payload["package"] = package.duplicate(true);
+	payload["package"] = package;
 	payload["map_document"] = document;
 	payload["package_hash"] = package.get("package_hash", "");
 	payload["map_ref"] = package.get("map_ref", Dictionary());
@@ -2280,7 +2461,7 @@ Dictionary MapPackageService::load_scenario_package(String path, Dictionary opti
 	document.instantiate();
 	document->configure(scenario_document_state_from_payload(document_payload));
 	Dictionary payload;
-	payload["package"] = package.duplicate(true);
+	payload["package"] = package;
 	payload["scenario_document"] = document;
 	payload["package_hash"] = package.get("package_hash", "");
 	payload["scenario_ref"] = package.get("scenario_ref", Dictionary());
@@ -2738,6 +2919,14 @@ Dictionary MapPackageService::convert_generated_payload(Dictionary generated_map
 Dictionary MapPackageService::compute_document_hash(Variant document, Dictionary options) const {
 	(void)options;
 	Dictionary result;
+	if (variant_contains_object(document)) {
+		result["ok"] = false;
+		result["status"] = "fail";
+		result["error_code"] = "unhashable_object_value";
+		result["message"] = "Document hashes cover plain data only; object values have no stable identity.";
+		result["algorithm"] = "canonical_variant_fnv1a32";
+		return result;
+	}
 	result["ok"] = true;
 	result["status"] = "pass";
 	result["algorithm"] = "canonical_variant_fnv1a32";
@@ -2948,13 +3137,24 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 			aurelion::h3maped_rmg_core::DIRECT_ENTRY_OPTIONAL_HANDLER_SENTINEL_0X4602C1;
 
 	const auto workflow_started_at = SteadyClock::now();
-	const auto workflow =
-			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config);
+	// The workflow result holds every private generator buffer (hundreds of MB
+	// on Large and XL maps). Only a few fields are read after projection, so
+	// copy those and free the rest before building the runtime documents.
+	auto workflow = std::make_unique<aurelion::h3maped_rmg_core::H3MapedRmgWorkflowResult>(
+			aurelion::h3maped_rmg_core::run_h3maped_rmg_entry_to_writeout_workflow(workflow_config));
 	record_bucket("recovered_workflow", workflow_started_at);
 	const auto projection_started_at = SteadyClock::now();
 	const auto projection =
-			aurelion::h3maped_rmg_core::project_runtime_map_from_native_owned_final_payload(workflow);
+			aurelion::h3maped_rmg_core::project_runtime_map_from_native_owned_final_payload(*workflow);
 	record_bucket("final_payload_projection", projection_started_at);
+	const String workflow_status = String(workflow->status.c_str());
+	const String workflow_phase = String(workflow->current_phase_id.c_str());
+	const String workflow_blocked_reason = String(workflow->blocked_reason.c_str());
+	const String payload_token = hash32_hex_bytes(workflow->final_payload_writeout_0x4ad1e3.payload_bytes);
+	const int32_t final_payload_byte_count = workflow->final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+	const int32_t selected_template_catalog_index = workflow->template_selection_0x4ac552.selected_source_catalog_index;
+	const int32_t runtime_zone_count = int32_t(workflow->template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+	workflow.reset();
 	if (!projection.applied) {
 		Dictionary blocked;
 		blocked["ok"] = false;
@@ -2962,16 +3162,15 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		blocked["generation_status"] = "native_rmg_workflow_blocked";
 		blocked["error_code"] = "native_rmg_final_payload_projection_blocked";
 		blocked["message"] = String(projection.blocked_reason.c_str());
-		blocked["workflow_status"] = String(workflow.status.c_str());
-		blocked["workflow_phase"] = String(workflow.current_phase_id.c_str());
-		blocked["workflow_blocked_reason"] = String(workflow.blocked_reason.c_str());
+		blocked["workflow_status"] = workflow_status;
+		blocked["workflow_phase"] = workflow_phase;
+		blocked["workflow_blocked_reason"] = workflow_blocked_reason;
 		blocked["normalized_config"] = normalized.duplicate(true);
 		blocked["runtime_generation_allowed"] = false;
 		blocked["native_runtime_authoritative"] = false;
 		return blocked;
 	}
 
-	const String payload_token = hash32_hex_bytes(workflow.final_payload_writeout_0x4ad1e3.payload_bytes);
 	const Dictionary player_setup = normalized.get("player_setup", Dictionary());
 	const String player_faction_id = String(player_setup.get("faction_id", "")).strip_edges();
 	const String player_hero_id = String(player_setup.get("hero_id", "")).strip_edges();
@@ -2996,7 +3195,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	metadata["source_template_authority"] = "h3maped_exe_rng";
 	metadata["source_order_authority"] = "recovered_h3maped_exe_source_order";
 	const String source_template_id = String("h3maped_template_")
-			+ String::num_int64(workflow.template_selection_0x4ac552.selected_source_catalog_index).pad_zeros(3);
+			+ String::num_int64(selected_template_catalog_index).pad_zeros(3);
 	metadata["source_template_id"] = source_template_id;
 	metadata["template_id"] = source_template_id;
 	metadata["full_generation_status"] = "native_runtime_ready";
@@ -3011,7 +3210,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	package_normalized_config["source_template_id"] = source_template_id;
 	package_normalized_config["full_generation_status"] = "native_runtime_ready";
 	metadata["normalized_config"] = package_normalized_config;
-	metadata["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+	metadata["final_payload_byte_count"] = final_payload_byte_count;
 	metadata["final_payload_fnv1a32"] = payload_token;
 	metadata["runtime_player_setup"] = player_setup.duplicate(true);
 	Dictionary component_counts;
@@ -3019,7 +3218,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	component_counts["object_count"] = projection.object_count;
 	component_counts["object_definition_count"] = projection.object_definition_count;
 	component_counts["road_cell_count"] = int32_t(projection.road_tiles.size());
-	component_counts["zone_count"] = int32_t(workflow.template_selection_0x4ac552.runtime_seed.runtime_zone_seeds.size());
+	component_counts["zone_count"] = runtime_zone_count;
 	int32_t town_count = 0;
 	for (const auto &object : projection.objects) {
 		if (object.type_id == 98) {
@@ -3048,7 +3247,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		blocked["message"] = "Native final-payload objects did not all resolve through an original-content pool or an explicit nonvisitable/passthrough owner.";
 		blocked["object_pool_resolution"] = runtime_object_projection;
 		blocked["final_payload_fnv1a32"] = payload_token;
-		blocked["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+		blocked["final_payload_byte_count"] = final_payload_byte_count;
 		return blocked;
 	}
 	Dictionary metadata_pool_resolution;
@@ -3066,7 +3265,8 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	map_state["objects"] = runtime_object_projection.get("objects", Array());
 	Ref<MapDocument> map_document;
 	map_document.instantiate();
-	map_document->configure(map_state);
+	// Everything in map_state was built above for this document alone.
+	map_document->configure_owned(map_state);
 
 	Array player_slots;
 	Array enemy_factions;
@@ -3075,6 +3275,15 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 	for (const auto &slot : projection.player_slots) {
 		if (!slot.active) {
 			continue;
+		}
+		if (slot.color < 0 || size_t(slot.color) >= projection.player_team_assignments.size()) {
+			Dictionary blocked;
+			blocked["ok"] = false;
+			blocked["status"] = "blocked";
+			blocked["error_code"] = "native_rmg_player_color_out_of_range";
+			blocked["message"] = "Native player slot color is outside the recovered eight-player team table.";
+			blocked["player_color"] = slot.color;
+			return blocked;
 		}
 		Dictionary player_slot;
 		player_slot["slot"] = slot.color + 1;
@@ -3168,7 +3377,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 
 	const auto validation_started_at = SteadyClock::now();
 	Dictionary map_validation = validate_map_document_structural_report(map_document);
-	Dictionary scenario_validation = validate_scenario_document_structural_report(scenario_document, map_document);
+	Dictionary scenario_validation = validate_scenario_document_structural_report(scenario_document, map_document, map_validation);
 	record_bucket("document_validation", validation_started_at);
 	if (!bool(map_validation.get("ok", false)) || !bool(scenario_validation.get("ok", false))) {
 		Dictionary blocked;
@@ -3199,7 +3408,7 @@ Dictionary MapPackageService::generate_random_map(Dictionary config, Dictionary 
 		performance_profile["total_ms"] = elapsed_milliseconds(total_started_at);
 		result["performance_profile"] = performance_profile;
 	}
-	result["final_payload_byte_count"] = workflow.final_payload_writeout_0x4ad1e3.total_payload_byte_count;
+	result["final_payload_byte_count"] = final_payload_byte_count;
 	result["final_payload_fnv1a32"] = payload_token;
 	result["runtime_tile_count"] = projection.tile_count;
 	result["runtime_object_count"] = projection.object_count;
