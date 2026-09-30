@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_ACTIVE_COHORT_QUEUE_CLEAR_REGRESSION"
 const SCENARIO_PLACEMENTS := {
 	"river-pass": ["river_pass_ghoul_grove", "river_pass_hollow_mire", "river_pass_reed_totemists"],

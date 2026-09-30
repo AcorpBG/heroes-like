@@ -1,6 +1,6 @@
 extends Node
 
-const BalanceHarness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BalanceHarness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_REEDBARROW_MIREFORD_GUARD_PRESSURE_REGRESSION"
 const MAX_TERMINAL_MARGIN_PCT := 89
 const MIN_ROUND := 2

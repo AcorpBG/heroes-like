@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_BELLWAKE_WRECK_BALANCE_REGRESSION"
 const SCENARIO_ID := "bellwake-wreck-claim"
 const MAX_TERMINAL_MARGIN_PCT := 90

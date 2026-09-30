@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "BATTLE_AUTOPLAY_RUNTIME_CONSEQUENCE_MATRIX_REPORT"
 const REQUIRED_MATRIX_SCHEMA := "battle_autoplay_runtime_consequence_matrix_v1"

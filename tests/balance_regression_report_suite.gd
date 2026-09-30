@@ -1,7 +1,7 @@
 extends Node
 
-const BalanceRegressionReportRulesScript = preload("res://scripts/core/BalanceRegressionReportRules.gd")
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BalanceRegressionReportRulesScript = preload("res://tests/support/BalanceRegressionReportRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"
 
 func _ready() -> void:

@@ -2805,23 +2805,36 @@ func _ensure_generated_random_map_scenario_registered(normalized_payload: Dictio
 		}
 
 	var identity: Dictionary = provenance.get("generated_identity", {}) if provenance.get("generated_identity", {}) is Dictionary else {}
-	var expected_signature := String(identity.get("stable_signature", ""))
-	if expected_signature != "" and String(payload.get("stable_signature", "")) != expected_signature:
-		return {"ok": false, "registered": false, "message": "Generated random-map save identity signature no longer matches saved provenance."}
-	var expected_materialized_signature := String(identity.get("materialized_map_signature", ""))
-	var materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
-	if expected_materialized_signature != "" and String(materialization.get("materialized_map_signature", "")) != expected_materialized_signature:
-		return {"ok": false, "registered": false, "message": "Generated random-map save materialized-map signature no longer matches saved provenance."}
-	var expected_export_signature := String(identity.get("generated_export_signature", ""))
 	var generated_export: Dictionary = payload.get("generated_export", {}) if payload.get("generated_export", {}) is Dictionary else {}
-	if expected_export_signature != "" and String(generated_export.get("round_trip_signature", "")) != expected_export_signature:
-		return {"ok": false, "registered": false, "message": "Generated random-map save export signature no longer matches saved provenance."}
 	var export_contract: Dictionary = provenance.get("generated_export", {}) if provenance.get("generated_export", {}) is Dictionary else {}
-	if not export_contract.is_empty():
-		if String(export_contract.get("tile_stream_signature", "")) != "" and String(generated_export.get("tile_stream_signature", "")) != String(export_contract.get("tile_stream_signature", "")):
-			return {"ok": false, "registered": false, "message": "Generated random-map save tile stream signature no longer matches saved provenance."}
-		if String(export_contract.get("object_writeout_signature", "")) != "" and String(generated_export.get("object_writeout_signature", "")) != String(export_contract.get("object_writeout_signature", "")):
-			return {"ok": false, "registered": false, "message": "Generated random-map save object writeout signature no longer matches saved provenance."}
+	# Gate on the gameplay signatures: terrain, road and river tile bytes and the
+	# object writeout. The whole-payload, materialized-map and export signatures also
+	# hash diagnostic text and the full catalog template, so any generator or catalog
+	# edit would reject the save; they are checked only for saves that predate the
+	# gameplay signatures.
+	var checked_gameplay_signature := false
+	for signature_check in [
+		{"key": "tile_stream_signature", "label": "tile stream"},
+		{"key": "object_writeout_signature", "label": "object writeout"},
+	]:
+		var signature_key := String(signature_check.get("key", ""))
+		var expected_gameplay_signature := String(export_contract.get(signature_key, identity.get(signature_key, "")))
+		if expected_gameplay_signature == "":
+			continue
+		checked_gameplay_signature = true
+		if String(generated_export.get(signature_key, "")) != expected_gameplay_signature:
+			return {"ok": false, "registered": false, "message": "Generated random-map save %s signature no longer matches saved provenance." % String(signature_check.get("label", ""))}
+	if not checked_gameplay_signature:
+		var expected_signature := String(identity.get("stable_signature", ""))
+		if expected_signature != "" and String(payload.get("stable_signature", "")) != expected_signature:
+			return {"ok": false, "registered": false, "message": "Generated random-map save identity signature no longer matches saved provenance."}
+		var expected_materialized_signature := String(identity.get("materialized_map_signature", ""))
+		var materialization: Dictionary = payload.get("runtime_materialization", {}) if payload.get("runtime_materialization", {}) is Dictionary else {}
+		if expected_materialized_signature != "" and String(materialization.get("materialized_map_signature", "")) != expected_materialized_signature:
+			return {"ok": false, "registered": false, "message": "Generated random-map save materialized-map signature no longer matches saved provenance."}
+		var expected_export_signature := String(identity.get("generated_export_signature", ""))
+		if expected_export_signature != "" and String(generated_export.get("round_trip_signature", "")) != expected_export_signature:
+			return {"ok": false, "registered": false, "message": "Generated random-map save export signature no longer matches saved provenance."}
 
 	var registration: Dictionary = ContentService.register_generated_scenario_draft(
 		scenario,

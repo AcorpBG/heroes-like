@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_CAUSEWAY_REED_CAMP_PRODUCTION_LINE_REPORT"
 const SCENARIO_ID := "causeway-stand"
 const PLACEMENT_ID := "causeway_reed_camp"

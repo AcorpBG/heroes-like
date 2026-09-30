@@ -1,6 +1,6 @@
 extends Node
 
-const BalanceRegressionReportRulesScript = preload("res://scripts/core/BalanceRegressionReportRules.gd")
+const BalanceRegressionReportRulesScript = preload("res://tests/support/BalanceRegressionReportRules.gd")
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
 

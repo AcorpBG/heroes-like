@@ -5,7 +5,7 @@ const RandomMapGeneratorRulesScript = preload("res://scripts/core/RandomMapGener
 const ScenarioFactoryScript = preload("res://scripts/core/ScenarioFactory.gd")
 const ScenarioSelectRulesScript = preload("res://scripts/core/ScenarioSelectRules.gd")
 const SessionStateStoreScript = preload("res://scripts/core/SessionStateStore.gd")
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_SCHEMA_ID := "balance_regression_report_suite_v1"
 const REPORT_ID := "BALANCE_REGRESSION_REPORT_SUITE"

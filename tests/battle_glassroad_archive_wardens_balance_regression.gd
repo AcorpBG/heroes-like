@@ -1,6 +1,6 @@
 extends Node
 
-const Harness = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const Harness = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_GLASSROAD_ARCHIVE_WARDENS_BALANCE_REGRESSION"
 const SCENARIO_ID := "glassroad-sundering"
 const PLACEMENT_IDS := ["glassroad_archive_wardens", "glassroad_bridgeward_levies", "glassroad_beacon_wardens"]

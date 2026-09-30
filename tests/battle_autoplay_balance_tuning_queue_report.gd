@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 
 const REPORT_ID := "BATTLE_AUTOPLAY_BALANCE_TUNING_QUEUE_REPORT"
 const REQUIRED_SCHEMA := "battle_autoplay_balance_tuning_queue_v1"

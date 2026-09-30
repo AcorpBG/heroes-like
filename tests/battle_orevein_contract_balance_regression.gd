@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_OREVEIN_CONTRACT_BALANCE_REGRESSION"
 const SCENARIO_ID := "orevein-contract"
 const MAX_TERMINAL_MARGIN_PCT := 90

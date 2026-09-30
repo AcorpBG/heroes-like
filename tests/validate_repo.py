@@ -341,7 +341,7 @@ SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "s
 SCENARIO_OUTCOME_NORMAL_ENTRY_FOCUS_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_normal_entry_focus_regression.tscn"
 SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCRIPT_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.gd"
 SCENARIO_OUTCOME_NEW_SESSION_CONFIRMATION_REGRESSION_SCENE_PATH = ROOT / "tests" / "scenario_outcome_new_session_confirmation_safe_cancel_regression.tscn"
-HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd"
+HEADLESS_SIMULATION_HARNESS_RULES_PATH = ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd"
 STRATEGIC_AI_BASELINE_KPI_REPORT_SCRIPT_PATH = ROOT / "tests" / "strategic_ai_baseline_kpi_report.gd"
 OUTCOME_SCENE_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.tscn"
 OUTCOME_SCRIPT_PATH = ROOT / "scenes" / "results" / "ScenarioOutcomeShell.gd"
@@ -42143,7 +42143,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
     difficulty_sweep_doc_path = ROOT / "docs" / "headless-battle-difficulty-sweep-harness-report.md"
     objective_targeting_doc_path = ROOT / "docs" / "strategic-ai-multi-scenario-objective-targeting-report.md"
     for path in (
-        ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd",
+        ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd",
         ROOT / "tests" / "headless_simulation_harness_report.gd",
         ROOT / "tests" / "headless_simulation_harness_report.tscn",
         AI_MULTI_SCENARIO_RECRUITMENT_DELIVERY_REPORT_SCRIPT_PATH,
@@ -42199,7 +42199,7 @@ def validate_headless_strategic_ai_live_turn_harness(errors: list[str]) -> None:
             "claim final combat balance",
         ):
             ensure(required_text in cli_doc_text, errors, f"Headless balance harness CLI doc is missing required text: {required_text}")
-    harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
+    harness_text = (ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
         "STRATEGIC_AI_LONG_RUN_SEED_MATRIX_SCHEMA_ID",
         "func build_strategic_ai_long_run_seed_matrix_report",
@@ -43052,7 +43052,7 @@ def validate_ai_town_retake_assault(errors: list[str]) -> None:
         AI_TOWN_RETAKE_ASSAULT_REPORT_DOC_PATH,
     ):
         ensure(path.exists(), errors, f"Missing AI town retake assault file: {path.relative_to(ROOT)}")
-    harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
+    harness_text = (ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     enemy_adventure_text = ENEMY_ADVENTURE_RULES_PATH.read_text(encoding="utf-8")
     enemy_turn_text = ENEMY_TURN_RULES_PATH.read_text(encoding="utf-8")
     for required_token in (
@@ -43218,7 +43218,7 @@ def validate_ai_raid_assault_grouping(errors: list[str]) -> None:
             errors,
             "Battle-pressure preemption must consult the near-field commitment helper exactly once.",
         )
-    harness_text = (ROOT / "scripts" / "core" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
+    harness_text = (ROOT / "tests" / "support" / "HeadlessSimulationHarnessRules.gd").read_text(encoding="utf-8")
     for required_token in (
         '"strategic_ai_live_raid_assault_grouping"',
         "func _strategic_ai_live_raid_assault_grouping",
@@ -69856,10 +69856,10 @@ def validate_generated_opening_autosave_failure_retry(errors: list[str]) -> None
 
 
 def validate_battle_autoplay_balance_diagnostics(errors: list[str]) -> None:
-    harness_path = ROOT / "scripts/core/BattleAutoplayBalanceHarnessRules.gd"
+    harness_path = ROOT / "tests/support/BattleAutoplayBalanceHarnessRules.gd"
     battle_ai_path = ROOT / "scripts/core/BattleAiRules.gd"
-    balance_rules_path = ROOT / "scripts/core/BalanceRegressionReportRules.gd"
-    headless_rules_path = ROOT / "scripts/core/HeadlessSimulationHarnessRules.gd"
+    balance_rules_path = ROOT / "tests/support/BalanceRegressionReportRules.gd"
+    headless_rules_path = ROOT / "tests/support/HeadlessSimulationHarnessRules.gd"
     balance_report_path = ROOT / "tests/balance_regression_report_suite.gd"
     headless_report_path = ROOT / "tests/headless_simulation_harness_report.gd"
     combat_balance_report_path = ROOT / "tests/battle_autoplay_combat_balance_report.gd"

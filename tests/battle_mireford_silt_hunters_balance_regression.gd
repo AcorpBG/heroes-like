@@ -1,6 +1,6 @@
 extends Node
 
-const BattleAutoplayBalanceHarnessRulesScript = preload("res://scripts/core/BattleAutoplayBalanceHarnessRules.gd")
+const BattleAutoplayBalanceHarnessRulesScript = preload("res://tests/support/BattleAutoplayBalanceHarnessRules.gd")
 const REPORT_ID := "BATTLE_MIREFORD_SILT_HUNTERS_BALANCE_REGRESSION"
 const SCENARIO_ID := "mireford-skirmish"
 const PLACEMENT_ID := "bridge_silt_hunters"
