@@ -474,6 +474,9 @@ func _ready() -> void:
 	FrontierVisualKit.apply_button(_map_level_button, "secondary", 120.0, 24.0, 11)
 	_map_view.tile_pressed.connect(_on_map_tile_pressed)
 	_map_view.tile_hovered.connect(_on_map_tile_hovered)
+	# Mouse drags and wheel pans move the camera inside the map view; keep the
+	# minimap's viewport box on the same view.
+	_map_view.camera_changed.connect(_sync_minimap_viewport)
 	_configure_scout_controls()
 	var minimap_recenter_callable := Callable(self, "_on_minimap_recenter_requested")
 	if _minimap.has_signal("recenter_requested") and not _minimap.is_connected("recenter_requested", minimap_recenter_callable):
@@ -1320,6 +1323,8 @@ func _sync_minimap_viewport() -> void:
 	_minimap.call("set_viewport_bounds", _map_visible_bounds())
 
 func _map_visible_bounds() -> Rect2i:
+	if _map_view != null and _map_view.has_method("visible_tile_bounds"):
+		return _map_view.call("visible_tile_bounds")
 	if _map_view == null or not _map_view.has_method("validation_view_metrics"):
 		return Rect2i(Vector2i.ZERO, _map_size)
 	var metrics: Dictionary = _map_view.call("validation_view_metrics")
@@ -9371,7 +9376,9 @@ func _selected_route() -> Array:
 	return route_state.get("route_tiles", []) if route_state.get("route_tiles", []) is Array else []
 
 func _selected_route_cache_for_map_view() -> Dictionary:
-	return _ensure_selected_route_state("map_view").duplicate(true)
+	# The map view only reads this state and copies what it keeps, so hand it
+	# over without a deep copy of the route and preview.
+	return _ensure_selected_route_state("map_view")
 
 func _ensure_selected_route_state(requester: String = "shell") -> Dictionary:
 	if not _viewing_hero_level():
@@ -9689,6 +9696,10 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			var next: Vector2i = current + direction
 			if not _tile_in_bounds(next):
 				continue
+			# Skip already-reached tiles before the costly blocking checks.
+			var key = _tile_key(next)
+			if visited.has(key):
+				continue
 			if debug_timing_enabled:
 				blocked_tile_lookup_count += 1
 			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
@@ -9696,9 +9707,6 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			if OverworldRules.tile_is_blocked(_session, next.x, next.y) and not (next == goal and OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
 				continue
 			if next != goal and OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
-				continue
-			var key = _tile_key(next)
-			if visited.has(key):
 				continue
 			visited[key] = true
 			came_from[key] = current
@@ -9755,23 +9763,19 @@ func _select_opening_route_target() -> bool:
 		return false
 
 	var hero_pos := OverworldRules.hero_position(_session)
-	var best := {}
+	var targets: Array = []
 	for town_value in _session.overworld.get("towns", []):
 		if not (town_value is Dictionary):
 			continue
 		var town: Dictionary = town_value
 		if String(town.get("owner", "neutral")) != "player" or not LevelRules.on_level(town, LevelRules.hero_level(_session)):
 			continue
-		best = _prefer_opening_route_candidate(
-			best,
-			_opening_route_candidate(
-				hero_pos,
-				Vector2i(int(town.get("x", -1)), int(town.get("y", -1))),
-				0,
-				"town",
-				String(town.get("placement_id", town.get("id", "")))
-			)
-		)
+		targets.append(_opening_route_target(
+			Vector2i(int(town.get("x", -1)), int(town.get("y", -1))),
+			0,
+			"town",
+			String(town.get("placement_id", town.get("id", "")))
+		))
 	for node_value in _active_resource_nodes():
 		if not (node_value is Dictionary):
 			continue
@@ -9779,32 +9783,35 @@ func _select_opening_route_target() -> bool:
 		if bool(node.get("collected", false)):
 			continue
 		var fallback := Vector2i(int(node.get("x", -1)), int(node.get("y", -1)))
-		best = _prefer_opening_route_candidate(
-			best,
-			_opening_route_candidate(
-				hero_pos,
-				_resource_node_route_tile(node, fallback),
-				1,
-				"resource",
-				String(node.get("placement_id", ""))
-			)
-		)
+		targets.append(_opening_route_target(
+			_resource_node_route_tile(node, fallback),
+			1,
+			"resource",
+			String(node.get("placement_id", ""))
+		))
 	for artifact_value in _session.overworld.get("artifact_nodes", []):
 		if not (artifact_value is Dictionary) or not LevelRules.on_level(artifact_value, LevelRules.hero_level(_session)):
 			continue
 		var artifact: Dictionary = artifact_value
 		if bool(artifact.get("collected", false)):
 			continue
-		best = _prefer_opening_route_candidate(
-			best,
-			_opening_route_candidate(
-				hero_pos,
-				Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1))),
-				2,
-				"artifact",
-				String(artifact.get("placement_id", ""))
-			)
-		)
+		targets.append(_opening_route_target(
+			Vector2i(int(artifact.get("x", -1)), int(artifact.get("y", -1))),
+			2,
+			"artifact",
+			String(artifact.get("placement_id", ""))
+		))
+
+	# One flood from the hero measures every candidate, instead of one full
+	# route search per candidate.
+	var goals: Array = []
+	for target in targets:
+		if _opening_route_target_eligible(hero_pos, target.tile):
+			goals.append(target.tile)
+	var path_lengths := _route_path_lengths(hero_pos, goals)
+	var best := {}
+	for target in targets:
+		best = _prefer_opening_route_candidate(best, _opening_route_candidate(hero_pos, target, path_lengths))
 
 	if best.is_empty():
 		return false
@@ -9813,21 +9820,84 @@ func _select_opening_route_target() -> bool:
 	_opening_route_suggestion_kind = String(best.get("kind", "")) if _opening_route_suggested else ""
 	return _opening_route_suggested
 
-func _opening_route_candidate(hero_pos: Vector2i, target: Vector2i, priority: int, kind: String, stable_id: String) -> Dictionary:
+func _opening_route_target(tile: Vector2i, priority: int, kind: String, stable_id: String) -> Dictionary:
+	return {"tile": tile, "priority": priority, "kind": kind, "stable_id": stable_id}
+
+func _opening_route_target_eligible(hero_pos: Vector2i, target: Vector2i) -> bool:
 	if target == hero_pos or not _tile_in_bounds(target):
-		return {}
-	if not OverworldRules.is_tile_visible(_session, target.x, target.y, LevelRules.view_level(_session)):
-		return {}
-	var path := _build_path(hero_pos, target)
-	if path.is_empty():
+		return false
+	return OverworldRules.is_tile_visible(_session, target.x, target.y, LevelRules.view_level(_session))
+
+func _opening_route_candidate(hero_pos: Vector2i, target_spec: Dictionary, path_lengths: Dictionary) -> Dictionary:
+	var target: Vector2i = target_spec.tile
+	if not _opening_route_target_eligible(hero_pos, target) or not path_lengths.has(target):
 		return {}
 	return {
 		"tile": target,
-		"priority": priority,
-		"path_length": path.size(),
-		"kind": kind,
-		"stable_key": "%s|%05d|%05d" % [stable_id, target.y, target.x],
+		"priority": int(target_spec.priority),
+		"path_length": int(path_lengths[target]),
+		"kind": String(target_spec.kind),
+		"stable_key": "%s|%05d|%05d" % [String(target_spec.stable_id), target.y, target.x],
 	}
+
+## Route lengths in tiles (start included) to several goals from one
+## breadth-first flood. Each length equals _build_path(start, goal).size():
+## a goal is recorded where that search would first reach it, while the flood
+## itself only crosses tiles an ordinary route may cross, so no goal changes
+## the path to another. Unreachable goals are left out.
+func _route_path_lengths(start: Vector2i, goals: Array) -> Dictionary:
+	var lengths := {}
+	if not _viewing_hero_level():
+		return lengths
+	var pending := {}
+	for goal_value in goals:
+		var goal: Vector2i = goal_value
+		if not _tile_in_bounds(goal):
+			continue
+		if goal == start:
+			lengths[goal] = 1
+		elif not OverworldRules.tile_is_blocked(_session, goal.x, goal.y) or OverworldRules.tile_is_actionable_route_destination(_session, goal.x, goal.y):
+			pending[goal] = true
+	if pending.is_empty():
+		return lengths
+	var queue: Array = [start]
+	var queue_index := 0
+	var path_sizes := {_tile_key(start): 1}
+	var transit_edges := OverworldRules.active_linked_transit_edges(_session)
+	while queue_index < queue.size() and not pending.is_empty():
+		var current: Vector2i = queue[queue_index]
+		queue_index += 1
+		var next_size := int(path_sizes[_tile_key(current)]) + 1
+		for direction in DIRECTIONS:
+			var next: Vector2i = current + direction
+			if not _tile_in_bounds(next):
+				continue
+			var key = _tile_key(next)
+			var is_pending_goal := pending.has(next)
+			if path_sizes.has(key) and not is_pending_goal:
+				continue
+			if OverworldRules.tile_step_cuts_blocked_corner(_session, current, next):
+				continue
+			var blocked := OverworldRules.tile_is_blocked(_session, next.x, next.y)
+			if is_pending_goal and (not blocked or OverworldRules.tile_is_actionable_route_destination(_session, next.x, next.y)):
+				lengths[next] = next_size
+				pending.erase(next)
+			if path_sizes.has(key) or blocked or OverworldRules.tile_has_route_interaction(_session, next.x, next.y):
+				continue
+			path_sizes[key] = next_size
+			queue.append(next)
+		for linked_next in OverworldRules.linked_transit_neighbors_from_edges(transit_edges, current):
+			if not (linked_next is Vector2i):
+				continue
+			if pending.has(linked_next):
+				lengths[linked_next] = next_size
+				pending.erase(linked_next)
+			var linked_key = _tile_key(linked_next)
+			if path_sizes.has(linked_key):
+				continue
+			path_sizes[linked_key] = next_size
+			queue.append(linked_next)
+	return lengths
 
 func _prefer_opening_route_candidate(current: Dictionary, candidate: Dictionary) -> Dictionary:
 	if candidate.is_empty():

@@ -18,6 +18,10 @@ var _current: PaintBatch
 var recording := false
 var generation := 0
 var _materials := {}
+# Materials used by the previous rebuild. A pan or refresh re-uses them instead
+# of allocating a new ShaderMaterial per sprite; anything not drawn again for a
+# whole rebuild is dropped, so the cache stays the size of the visible map.
+var _previous_materials := {}
 
 static func profile_for_asset(manifest: Dictionary, asset_id: String) -> Dictionary:
 	var profile_id := String(manifest.get("assets", {}).get(asset_id, ""))
@@ -34,7 +38,8 @@ func begin(host: Control) -> void:
 	_cursor = 0
 	_current = null
 	entries.clear()
-	_materials.clear()
+	_previous_materials = _materials
+	_materials = {}
 	recording = true
 	generation += 1
 
@@ -103,9 +108,22 @@ func paint_region(texture: Texture2D, rect: Rect2, source: Rect2, tint: Color, p
 	entries.append({"asset_id": asset_id, "tile": tile, "phase_tile": phase_tile, "level": level, "rect": rect, "profile": profile, "batch": batch})
 	_current = null
 
+## Returns the material stored under key by this or the previous rebuild, or
+## stores the one build returns. Mines and creatures cache their pose materials here.
+func cached_material(key: Array, build: Callable) -> ShaderMaterial:
+	if _materials.has(key): return _materials[key]
+	var shader_material: ShaderMaterial = _previous_materials.get(key)
+	if shader_material == null:
+		shader_material = build.call()
+	_materials[key] = shader_material
+	return shader_material
+
 func _material(texture: Texture2D, profile: Dictionary, source_region: Rect2, asset_id: String, phase_tile: Vector2i, level: int, enabled: bool, padding: Vector2) -> ShaderMaterial:
 	var key := [asset_id, phase_tile, level, source_region, padding, profile]
 	if _materials.has(key): return _materials[key]
+	if _previous_materials.has(key):
+		_materials[key] = _previous_materials[key]
+		return _materials[key]
 	var shader_material := ShaderMaterial.new()
 	shader_material.shader = SceneryShader
 	# AtlasTexture draw commands carry atlas UVs, not cell-local UVs. Keep
@@ -149,5 +167,5 @@ func finish() -> void:
 	_current = null
 
 func set_motion_enabled(enabled: bool) -> void:
-	for shader_material in _materials.values():
+	for shader_material in _materials.values() + _previous_materials.values():
 		shader_material.set_shader_parameter("motion_enabled", enabled)

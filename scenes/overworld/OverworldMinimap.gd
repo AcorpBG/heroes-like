@@ -35,6 +35,10 @@ var _selected_tile := Vector2i.ZERO
 var _keyboard_tile := Vector2i.ZERO
 var _visible_bounds := Rect2i(Vector2i.ZERO, Vector2i.ONE)
 var _last_recenter_tile := Vector2i(-1, -1)
+# One texel per tile, rebuilt only when terrain or fog changes. Pans, clicks
+# and selection redraw this texture, markers and the viewport box.
+var _terrain_texture: ImageTexture = null
+var _terrain_texture_key: Array = []
 
 
 func _ready() -> void:
@@ -44,6 +48,7 @@ func _ready() -> void:
 	tooltip_text = "World map. Click to recenter the view; arrow keys choose a tile and Enter recenters."
 	accessibility_name = "World minimap"
 	accessibility_description = "Shows explored terrain, heroes, towns, and the current map viewport. Activation recenters the view without moving a hero."
+	texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 	queue_redraw()
 
 
@@ -69,11 +74,7 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), Color("091012"), true)
 	draw_rect(field, Color("162021"), true)
 	var cell := field.size / Vector2(float(_map_size.x), float(_map_size.y))
-	for y in range(_map_size.y):
-		for x in range(_map_size.x):
-			var tile := Vector2i(x, y)
-			var tile_rect := Rect2(field.position + Vector2(x * cell.x, y * cell.y), cell + Vector2(0.35, 0.35))
-			draw_rect(tile_rect, _tile_color(tile), true)
+	draw_texture_rect(_terrain_texture_for_state(), field, false)
 	if cell.x >= 5.0 and cell.y >= 5.0:
 		for x in range(1, _map_size.x):
 			var line_x := field.position.x + x * cell.x
@@ -140,6 +141,43 @@ func _request_recenter(tile: Vector2i) -> void:
 
 func _field_rect() -> Rect2:
 	return Rect2(Vector2(5.0, 5.0), Vector2(maxf(size.x - 10.0, 1.0), maxf(size.y - 10.0, 1.0)))
+
+
+func _terrain_texture_for_state() -> ImageTexture:
+	var fog: Dictionary = OverworldRulesScript.fog_for_level(_session, _level) if _session != null else {}
+	var explored = fog.get("explored_tiles", [])
+	var visible = fog.get("visible_tiles", [])
+	# Native content hashes still catch rows revealed in place.
+	var key := [
+		_session.get_instance_id() if _session != null else 0,
+		_level,
+		_map_size,
+		hash(_map_data),
+		hash(explored),
+		0 if is_same(visible, explored) else hash(visible),
+	]
+	if _terrain_texture != null and key == _terrain_texture_key:
+		return _terrain_texture
+	_terrain_texture_key = key
+	var pixels := PackedByteArray()
+	pixels.resize(_map_size.x * _map_size.y * 4)
+	var offset := 0
+	OverworldRulesScript.begin_fog_read_scope(_session)
+	for y in range(_map_size.y):
+		for x in range(_map_size.x):
+			var color := _tile_color(Vector2i(x, y))
+			pixels[offset] = color.r8
+			pixels[offset + 1] = color.g8
+			pixels[offset + 2] = color.b8
+			pixels[offset + 3] = color.a8
+			offset += 4
+	OverworldRulesScript.end_fog_read_scope(_session)
+	var image := Image.create_from_data(_map_size.x, _map_size.y, false, Image.FORMAT_RGBA8, pixels)
+	if _terrain_texture == null or _terrain_texture.get_size() != Vector2(_map_size):
+		_terrain_texture = ImageTexture.create_from_image(image)
+	else:
+		_terrain_texture.update(image)
+	return _terrain_texture
 
 
 func _tile_color(tile: Vector2i) -> Color:

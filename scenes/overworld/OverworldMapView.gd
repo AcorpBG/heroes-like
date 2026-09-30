@@ -3,6 +3,9 @@ extends Control
 signal tile_pressed(tile: Vector2i)
 signal tile_hovered(tile: Vector2i)
 signal spell_cast_presentation_blocking_changed(blocking: bool)
+## Emitted whenever the camera centre moves (drag, wheel, keyboard or focus),
+## so the minimap viewport box can follow every pan, not only shell pans.
+signal camera_changed
 
 const HeroCommandRulesScript = preload("res://scripts/core/HeroCommandRules.gd")
 const LevelRules = preload("res://scripts/core/OverworldLevelRules.gd")
@@ -702,6 +705,15 @@ var _state_cache_reason := "uninitialized"
 var _dynamic_layer_reason := "uninitialized"
 var _frame_layer_reason := "uninitialized"
 var _object_index_signature := 0
+# Board position and visible tile bounds each camera-dependent layer was last
+# painted at. A pan that keeps the same bounds only shifts the layer (O2).
+var _layer_paint_origins: Dictionary = {}
+# Explored tiles that carry ambient life, scanned once per bounds/level/terrain/
+# fog change instead of on every animation frame.
+var _terrain_ambient_site_key: Array = []
+var _terrain_ambient_sites: Array = []
+var _placement_debug_overlay_cache_key: Array = []
+var _placement_debug_overlay_cache: Dictionary = {}
 var _scenery_index_signature := 0
 var _scenery_index_valid := false
 var _hero_index_signature := 0
@@ -879,6 +891,8 @@ func set_map_state(
 	var previous_session_static_signature := _session_static_cache_signature
 	var previous_state_signature := _state_cache_signature
 	var previous_session_present := _session != null
+	var previous_session = _session
+	var previous_hero_tile := _hero_tile
 	_session = session
 	_level = LevelRules.view_level(session)
 	_refresh_interaction_highlights()
@@ -888,6 +902,10 @@ func set_map_state(
 	var viewing_hero_level := _level == LevelRules.hero_level(session)
 	if not viewing_hero_level:
 		_hero_tile = Vector2i(-1, -1)
+	# A manual pan holds the camera only until the hero moves. Afterwards the
+	# camera follows the hero again, so a move cannot walk it off screen.
+	if is_same(previous_session, session) and previous_hero_tile.x >= 0 and _hero_tile.x >= 0 and _hero_tile != previous_hero_tile:
+		_manual_camera = false
 	_sync_hero_movement_presentation(movement_presentation if viewing_hero_level else {})
 	_sync_object_resolution_presentation(object_resolution_presentation)
 	_sync_route_blocked_presentation(route_blocked_presentation)
@@ -1430,9 +1448,9 @@ func _apply_selected_route_state(selected_route_state: Dictionary) -> bool:
 	var route_tiles := _tiles_from_payloads(selected_route_state.get("route_tiles", []))
 	if route_tiles.is_empty() and _selected_tile == _hero_tile:
 		route_tiles = [_hero_tile]
-	if route_tiles.is_empty():
-		return false
-	if route_tiles[0] != _hero_tile:
+	# An empty route in a matching state is the shell's answer that there is no
+	# route. Do not repeat a weaker search here, which also ignores transit links.
+	if not route_tiles.is_empty() and route_tiles[0] != _hero_tile:
 		return false
 	_path_tiles = route_tiles
 	var preview = selected_route_state.get("route_preview", {})
@@ -1512,8 +1530,8 @@ func _session_static_signature_for(map_data: Array, terrain_layers: Dictionary) 
 		var materialization = _session.flags.get("generated_random_map_materialization", {})
 		if materialization is Dictionary:
 			signature = _combine_cache_signature(signature, hash(str(materialization.get("materialized_map_signature", ""))))
-	for row in map_data:
-		signature = _combine_cache_signature(signature, hash(var_to_str(row)))
+	# One native hash of the rows replaces serialising every row to text.
+	signature = _combine_cache_signature(signature, hash(map_data))
 	return _combine_cache_signature(signature, _roads_cache_signature(roads))
 
 func _state_cache_signature_for(session) -> int:
@@ -1568,31 +1586,19 @@ func _fog_cache_signature(fog) -> int:
 	signature = _combine_cache_signature(signature, int(fog.get("visible_count", 0)))
 	signature = _combine_cache_signature(signature, int(fog.get("explored_count", 0)))
 	signature = _combine_cache_signature(signature, int(fog.get("total_tiles", 0)))
-	signature = _combine_cache_signature(signature, _bool_grid_cache_signature(fog.get("visible_tiles", [])))
-	return _combine_cache_signature(signature, _bool_grid_cache_signature(fog.get("explored_tiles", [])))
+	var visible_tiles = fog.get("visible_tiles", [])
+	var explored_tiles = fog.get("explored_tiles", [])
+	var explored_signature := _bool_grid_cache_signature(explored_tiles)
+	# Visible tiles alias the explored grid; hash a shared grid once.
+	signature = _combine_cache_signature(signature, explored_signature if is_same(visible_tiles, explored_tiles) else _bool_grid_cache_signature(visible_tiles))
+	return _combine_cache_signature(signature, explored_signature)
 
 func _bool_grid_cache_signature(grid) -> int:
 	if not (grid is Array):
 		return hash(typeof(grid))
-	var signature := _combine_cache_signature(CACHE_SIGNATURE_SEED, grid.size())
-	for row in grid:
-		if not (row is Array):
-			signature = _combine_cache_signature(signature, hash(typeof(row)))
-			continue
-		signature = _combine_cache_signature(signature, row.size())
-		var packed_bits := 0
-		var bit_index := 0
-		for value in row:
-			if bool(value):
-				packed_bits |= 1 << bit_index
-			bit_index += 1
-			if bit_index >= 16:
-				signature = _combine_cache_signature(signature, packed_bits)
-				packed_bits = 0
-				bit_index = 0
-		if bit_index > 0:
-			signature = _combine_cache_signature(signature, packed_bits)
-	return signature
+	# Native content hash: still sees rows changed in place, without a
+	# per-cell GDScript loop over the whole map.
+	return _combine_cache_signature(CACHE_SIGNATURE_SEED, hash(grid))
 
 func _variant_array_cache_signature(values) -> int:
 	if not (values is Array):
@@ -1946,6 +1952,8 @@ func _draw_session_static_layer() -> void:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	_record_layer_paint_origin(_session_static_layer, board_rect, visible_bounds)
+	OverworldRulesScript.begin_fog_read_scope(_session)
 	var painted_ground := not _homm3_runtime_rendering_enabled()
 	# Production terrain is one original-raster surface. Never silently return
 	# to square edge PNGs/polygon corner hints on an invalid material mapping.
@@ -1970,6 +1978,7 @@ func _draw_session_static_layer() -> void:
 			if not _road_tile_payload(tile).is_empty():
 				road_draws += 1
 			_draw_road_overlay(tile, rect)
+	OverworldRulesScript.end_fog_read_scope(_session)
 	_draw_canvas_item = previous_target
 	_profile_add("terrain_tile_draws", terrain_draws)
 	_profile_add("terrain_grain_overlay_draws", 1 if terrain_grain_drawn else 0)
@@ -2007,53 +2016,68 @@ func _overworld_terrain_ambient_seed(tile: Vector2i, profile_id: String) -> int:
 func _overworld_terrain_ambient_entries(board_rect: Rect2, visible_bounds: Rect2i, phase: float) -> Array:
 	if not _overworld_terrain_ambient_available() or board_rect.size.x <= 0.0 or board_rect.size.y <= 0.0:
 		return []
+	# Which explored tiles carry ambient life changes only with the visible
+	# bounds, level, terrain or fog. Animation frames reuse that scan and only
+	# move the glints below.
+	var site_key := [_session.get_instance_id(), visible_bounds, _level, _session_static_cache_generation, _state_cache_generation]
+	if site_key != _terrain_ambient_site_key:
+		_terrain_ambient_site_key = site_key
+		_terrain_ambient_sites = []
+		OverworldRulesScript.begin_fog_read_scope(_session)
+		for y in range(visible_bounds.position.y, visible_bounds.end.y):
+			for x in range(visible_bounds.position.x, visible_bounds.end.x):
+				var tile := Vector2i(x, y)
+				if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
+					continue
+				var profile := _overworld_terrain_ambient_profile(tile)
+				if profile.is_empty():
+					continue
+				var profile_id := String(profile.get("id", ""))
+				var seed := _overworld_terrain_ambient_seed(tile, profile_id)
+				if seed % TERRAIN_AMBIENT_DENSITY_MODULUS != 0:
+					continue
+				_terrain_ambient_sites.append([tile, profile, profile_id, seed])
+		OverworldRulesScript.end_fog_read_scope(_session)
 	var entries: Array = []
-	for y in range(visible_bounds.position.y, visible_bounds.end.y):
-		for x in range(visible_bounds.position.x, visible_bounds.end.x):
-			var tile := Vector2i(x, y)
-			if not OverworldRulesScript.is_tile_explored(_session, tile.x, tile.y, _level):
-				continue
-			var profile := _overworld_terrain_ambient_profile(tile)
-			if profile.is_empty():
-				continue
-			var profile_id := String(profile.get("id", ""))
-			var seed := _overworld_terrain_ambient_seed(tile, profile_id)
-			if seed % TERRAIN_AMBIENT_DENSITY_MODULUS != 0:
-				continue
-			var rect := _tile_rect(board_rect, tile)
-			var radius := clampf(minf(rect.size.x, rect.size.y) * float(profile.get("radius_factor", 0.02)), 0.85, 2.35)
-			var outer_radius := radius * 3.0
-			var base_normalized := Vector2(
-				0.24 + (float(seed % 37) / 36.0) * 0.52,
-				0.24 + (float((seed / 37) % 37) / 36.0) * 0.52
-			)
-			var local_phase := phase + float(seed % 101) * 0.071
-			var drift: Vector2 = profile.get("drift", Vector2.ZERO)
-			var motion_normalized := Vector2(
-				sin(local_phase) * drift.x,
-				cos((local_phase * 0.79) + float(seed % 13) * 0.19) * drift.y
-			)
-			var center := rect.position + (base_normalized + motion_normalized) * rect.size
-			var pulse := 0.76 + 0.24 * sin((local_phase * 1.17) + 0.6)
-			# Staggered glints quietly emerge and disappear; no full-map shader or
-			# texture scrolling, and every glint remains inside an explored tile.
-			if String(profile.get("kind", "")) == "water":
-				pulse = pow(maxf(0.0, sin(local_phase)), 2.0)
-			var bounds := Rect2(center - Vector2(outer_radius, outer_radius), Vector2(outer_radius * 2.0, outer_radius * 2.0))
-			entries.append({
-				"tile": tile,
-				"profile_id": profile_id,
-				"kind": String(profile.get("kind", "")),
-				"base_normalized": base_normalized,
-				"center": center,
-				"radius": radius,
-				"outer_radius": outer_radius,
-				"alpha": float(profile.get("alpha", 0.0)) * pulse,
-				"color": profile.get("color", Color.TRANSPARENT),
-				"bounds": bounds,
-				"contained": rect.encloses(bounds),
-				"explored": true,
-			})
+	for site in _terrain_ambient_sites:
+		var tile: Vector2i = site[0]
+		var profile: Dictionary = site[1]
+		var profile_id: String = site[2]
+		var seed: int = site[3]
+		var rect := _tile_rect(board_rect, tile)
+		var radius := clampf(minf(rect.size.x, rect.size.y) * float(profile.get("radius_factor", 0.02)), 0.85, 2.35)
+		var outer_radius := radius * 3.0
+		var base_normalized := Vector2(
+			0.24 + (float(seed % 37) / 36.0) * 0.52,
+			0.24 + (float((seed / 37) % 37) / 36.0) * 0.52
+		)
+		var local_phase := phase + float(seed % 101) * 0.071
+		var drift: Vector2 = profile.get("drift", Vector2.ZERO)
+		var motion_normalized := Vector2(
+			sin(local_phase) * drift.x,
+			cos((local_phase * 0.79) + float(seed % 13) * 0.19) * drift.y
+		)
+		var center := rect.position + (base_normalized + motion_normalized) * rect.size
+		var pulse := 0.76 + 0.24 * sin((local_phase * 1.17) + 0.6)
+		# Staggered glints quietly emerge and disappear; no full-map shader or
+		# texture scrolling, and every glint remains inside an explored tile.
+		if String(profile.get("kind", "")) == "water":
+			pulse = pow(maxf(0.0, sin(local_phase)), 2.0)
+		var bounds := Rect2(center - Vector2(outer_radius, outer_radius), Vector2(outer_radius * 2.0, outer_radius * 2.0))
+		entries.append({
+			"tile": tile,
+			"profile_id": profile_id,
+			"kind": String(profile.get("kind", "")),
+			"base_normalized": base_normalized,
+			"center": center,
+			"radius": radius,
+			"outer_radius": outer_radius,
+			"alpha": float(profile.get("alpha", 0.0)) * pulse,
+			"color": profile.get("color", Color.TRANSPARENT),
+			"bounds": bounds,
+			"contained": rect.encloses(bounds),
+			"explored": true,
+		})
 	return entries
 
 func _draw_overworld_terrain_ambient_entry(entry: Dictionary) -> void:
@@ -2096,6 +2120,7 @@ func _draw_terrain_ambient_layer() -> void:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect := _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	_record_layer_paint_origin(_terrain_ambient_layer, board_rect, visible_bounds)
 	var phase := TERRAIN_AMBIENT_STATIC_PHASE if SettingsService.reduced_motion_enabled() else _terrain_ambient_phase
 	var entries := _overworld_terrain_ambient_entries(board_rect, visible_bounds, phase)
 	for entry_value in entries:
@@ -2118,6 +2143,9 @@ func _draw_state_layer() -> void:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	_record_layer_paint_origin(_state_layer, board_rect, visible_bounds)
+	# About ten fog lookups per tile follow; read the level's grids once.
+	OverworldRulesScript.begin_fog_read_scope(_session)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile = Vector2i(x, y)
@@ -2142,6 +2170,7 @@ func _draw_state_layer() -> void:
 		for x in range(visible_bounds.position.x, visible_bounds.position.x + visible_bounds.size.x):
 			var tile := Vector2i(x, y)
 			_draw_tile_state_icon(tile, _tile_rect(board_rect, tile), false)
+	OverworldRulesScript.end_fog_read_scope(_session)
 	_scenery_batches.finish()
 	_draw_canvas_item = previous_target
 	_profile_add("state_tile_checks", tile_checks)
@@ -2164,6 +2193,7 @@ func _draw_dynamic_layer() -> void:
 	var viewport_rect := _map_viewport_rect()
 	var board_rect = _board_rect()
 	var visible_bounds := _visible_tile_bounds(board_rect, viewport_rect)
+	OverworldRulesScript.begin_fog_read_scope(_session)
 	_draw_route(board_rect)
 	_draw_placement_debug_overlay(board_rect, visible_bounds)
 	for y in range(visible_bounds.position.y, visible_bounds.position.y + visible_bounds.size.y):
@@ -2181,6 +2211,7 @@ func _draw_dynamic_layer() -> void:
 	_draw_object_focus_presentation(board_rect)
 	_draw_guarded_site_presentation(board_rect)
 	_draw_spell_cast_presentation(board_rect)
+	OverworldRulesScript.end_fog_read_scope(_session)
 	_draw_canvas_item = previous_target
 	_profile_add("dynamic_tile_checks", tile_checks)
 	_profile_end("draw_dynamic", profile_start, {
@@ -2191,7 +2222,12 @@ func _draw_dynamic_layer() -> void:
 func _draw_placement_debug_overlay(board_rect: Rect2, visible_bounds: Rect2i) -> void:
 	if not _placement_debug_overlay_enabled:
 		return
-	var payload := _placement_debug_overlay_payload()
+	# The whole-map payload only changes with the objects, level or map size.
+	var cache_key := [_session.get_instance_id() if _session != null else 0, _level, _map_size, _object_index_signature]
+	if cache_key != _placement_debug_overlay_cache_key:
+		_placement_debug_overlay_cache_key = cache_key
+		_placement_debug_overlay_cache = _placement_debug_overlay_payload()
+	var payload := _placement_debug_overlay_cache
 	var blocker_tiles: Array = payload.get("blocker_tiles", []) if payload.get("blocker_tiles", []) is Array else []
 	var interactable_tiles: Array = payload.get("interactable_tiles", []) if payload.get("interactable_tiles", []) is Array else []
 	for tile_payload in blocker_tiles:
@@ -3601,6 +3637,10 @@ func _route_segment_visual_profile(board_rect: Rect2, tiles: Array, line_color: 
 	}
 
 func _draw_tile_focus(tile: Vector2i, rect: Rect2) -> void:
+	# Only the hero, selected and hovered tiles draw focus; skip building a
+	# layout for every other visible tile.
+	if tile != _hero_tile and tile != _selected_tile and tile != _hover_tile:
+		return
 	var layout := _tile_focus_layout(tile, rect)
 	if tile == _hero_tile:
 		_draw_hero_command_focus_marker(layout.get("hero_command_marker_profile", {}))
@@ -4214,7 +4254,9 @@ func _draw_mine(node: Dictionary, rect: Rect2, remembered: bool, tile: Vector2i)
 	if resource.is_empty() or _draw_canvas_item != _state_layer or not _scenery_batches.recording: return false
 	var pose := _mine_art.payload(resource, rect)
 	if pose.is_empty() or pose.texture == null: return false
-	var material := MineArt.material(pose, "%s:%s:%s:%d" % [resource, node.get("placement_id", ""), tile, _level], _scenery_motion_enabled())
+	var phase_key := "%s:%s:%s:%d" % [resource, node.get("placement_id", ""), tile, _level]
+	var material := _scenery_batches.cached_material(["mine", phase_key, pose.parts_texture, pose.canvas],
+		func() -> ShaderMaterial: return MineArt.material(pose, phase_key, _scenery_motion_enabled()))
 	var draw_rect: Rect2 = pose.rect
 	var board := _board_rect()
 	var cell_size := board.size / Vector2(_map_size)
@@ -4398,7 +4440,8 @@ func _draw_encounter_creature_idle(encounter: Dictionary, rect: Rect2, remembere
 	var pose := _creature_idle.payload(unit_id, ground, extent)
 	if pose.is_empty(): return false
 	var phase_key := "%s:%s:%d:%d:%d" % [unit_id, encounter.get("placement_id", encounter.get("id", "")), tile.x, tile.y, _level]
-	var shader_material := CreatureIdle.material(pose, phase_key, _scenery_motion_enabled())
+	var shader_material := _scenery_batches.cached_material(["creature", phase_key, pose.texture, pose.rect.size],
+		func() -> ShaderMaterial: return CreatureIdle.material(pose, phase_key, _scenery_motion_enabled()))
 	var tint := OBJECT_SPRITE_MEMORY_MODULATE if remembered else OBJECT_SPRITE_VISIBLE_MODULATE
 	_scenery_batches.paint_material(pose.texture, pose.rect, _actor_color(tint), shader_material,
 		{"kind": "creature_idle", "unit_id": unit_id, "tile": tile, "level": _level, "ground": ground})
@@ -6488,9 +6531,7 @@ func _set_camera_center(center: Vector2, manual: bool) -> bool:
 	_manual_camera = manual
 	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
 	if changed:
-		_invalidate_session_static_cache("camera_pan")
-		_invalidate_state_cache("camera_pan")
-		_invalidate_dynamic_layer("camera_pan")
+		_camera_moved("camera_pan")
 	return changed
 
 func pan_tiles(delta: Vector2i) -> bool:
@@ -6506,10 +6547,53 @@ func focus_on_hero() -> bool:
 	_camera_center_ready = true
 	var changed := previous_center.distance_to(_camera_center_tile) > 0.01
 	if changed:
-		_invalidate_session_static_cache("focus_on_hero")
-		_invalidate_state_cache("focus_on_hero")
-		_invalidate_dynamic_layer("focus_on_hero")
+		_camera_moved("focus_on_hero")
 	return changed
+
+## Follows a camera move. The static, ambient and state layers are shifted by
+## the board offset when the visible tile bounds are unchanged, and repainted
+## only when new tiles scroll in. The cheap ground and dynamic layers redraw.
+func _camera_moved(reason: String) -> void:
+	var board_rect := _board_rect()
+	var visible_bounds := _visible_tile_bounds(board_rect, _map_viewport_rect())
+	if _shift_layer_to_board(_session_static_layer, board_rect, visible_bounds):
+		if _ground_background_layer != null:
+			_ground_background_layer.queue_redraw()
+	else:
+		_invalidate_session_static_cache(reason)
+	if not _shift_layer_to_board(_terrain_ambient_layer, board_rect, visible_bounds):
+		_invalidate_terrain_ambient_layer(reason)
+	if not _shift_layer_to_board(_state_layer, board_rect, visible_bounds):
+		_invalidate_state_cache(reason)
+	_invalidate_dynamic_layer(reason)
+	camera_changed.emit()
+
+func _record_layer_paint_origin(layer: Control, board_rect: Rect2, visible_bounds: Rect2i) -> void:
+	layer.position = Vector2.ZERO
+	_layer_paint_origins[layer.name] = {"board_rect": board_rect, "visible_bounds": visible_bounds, "generation": _layer_paint_generation(layer)}
+
+func _shift_layer_to_board(layer: Control, board_rect: Rect2, visible_bounds: Rect2i) -> bool:
+	if layer == null:
+		return false
+	var origin: Dictionary = _layer_paint_origins.get(layer.name, {})
+	if origin.is_empty() or origin.visible_bounds != visible_bounds or origin.board_rect.size != board_rect.size:
+		return false
+	# A repaint is already queued for another reason; it will use the new board.
+	if int(origin.generation) != _layer_paint_generation(layer):
+		return false
+	layer.position = board_rect.position - origin.board_rect.position
+	return true
+
+func _layer_paint_generation(layer: Control) -> int:
+	if layer == _session_static_layer:
+		return _session_static_cache_generation
+	if layer == _terrain_ambient_layer:
+		return _terrain_ambient_generation
+	return _state_cache_generation
+
+## The tile rectangle the map currently draws, for the minimap viewport box.
+func visible_tile_bounds() -> Rect2i:
+	return _visible_tile_bounds(_board_rect(), _map_viewport_rect())
 
 func focus_on_tile(tile: Vector2i) -> bool:
 	if tile.x < 0 or tile.y < 0 or tile.x >= _map_size.x or tile.y >= _map_size.y:
@@ -12427,29 +12511,29 @@ func _placement_debug_overlay_payload() -> Dictionary:
 	var towns = _session.overworld.get("towns", [])
 	if towns is Array:
 		for town_value in towns:
-			if town_value is Dictionary:
+			if town_value is Dictionary and LevelRules.on_level(town_value, _level):
 				_collect_town_placement_debug_tiles(town_value, blocker_index, interactable_index, records)
 	var resource_nodes = _session.overworld.get("resource_nodes", [])
 	if resource_nodes is Array:
 		for node_value in resource_nodes:
-			if node_value is Dictionary:
+			if node_value is Dictionary and LevelRules.on_level(node_value, _level):
 				_collect_resource_placement_debug_tiles(node_value, blocker_index, interactable_index, records)
 	var map_objects = _session.overworld.get("map_objects", [])
 	if map_objects is Array:
 		for object_value in map_objects:
-			if object_value is Dictionary:
+			if object_value is Dictionary and LevelRules.on_level(object_value, _level):
 				_collect_map_object_placement_debug_tiles(object_value, blocker_index, records)
 	var artifact_nodes = _session.overworld.get("artifact_nodes", [])
 	if artifact_nodes is Array:
 		for node_value in artifact_nodes:
-			if node_value is Dictionary and not bool(node_value.get("collected", false)):
+			if node_value is Dictionary and LevelRules.on_level(node_value, _level) and not bool(node_value.get("collected", false)):
 				var tile := Vector2i(int(node_value.get("x", -1)), int(node_value.get("y", -1)))
 				_add_placement_debug_tile(interactable_index, tile, "artifact_action", String(node_value.get("placement_id", "")))
 				records.append(_placement_debug_record("artifact", String(node_value.get("placement_id", "")), 0, 1))
 	var encounters = _session.overworld.get("encounters", [])
 	if encounters is Array:
 		for encounter_value in encounters:
-			if encounter_value is Dictionary and not OverworldRulesScript.is_encounter_resolved(_session, encounter_value):
+			if encounter_value is Dictionary and LevelRules.on_level(encounter_value, _level) and not OverworldRulesScript.is_encounter_resolved(_session, encounter_value):
 				var tile := Vector2i(int(encounter_value.get("x", -1)), int(encounter_value.get("y", -1)))
 				_add_placement_debug_tile(interactable_index, tile, "encounter_action", String(encounter_value.get("placement_id", encounter_value.get("id", ""))))
 				records.append(_placement_debug_record("encounter", String(encounter_value.get("placement_id", encounter_value.get("id", ""))), 0, 1))
@@ -12639,6 +12723,10 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			var next: Vector2i = current + direction
 			if next.x < 0 or next.y < 0 or next.x >= _map_size.x or next.y >= _map_size.y:
 				continue
+			# Skip already-reached tiles before the costly blocking checks.
+			var key = _tile_key(next)
+			if visited.has(key):
+				continue
 			if detail_profile_enabled:
 				blocked_tile_lookup_count += 1
 			if OverworldRulesScript.tile_step_cuts_blocked_corner(_session, current, next, _level):
@@ -12646,9 +12734,6 @@ func _build_path(start: Vector2i, goal: Vector2i) -> Array:
 			if OverworldRulesScript.tile_is_blocked(_session, next.x, next.y, _level):
 				continue
 			if next != goal and OverworldRulesScript.tile_has_route_interaction(_session, next.x, next.y, _level):
-				continue
-			var key = _tile_key(next)
-			if visited.has(key):
 				continue
 			visited[key] = true
 			came_from[key] = current
