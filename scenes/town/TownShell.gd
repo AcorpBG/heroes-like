@@ -1577,16 +1577,23 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 	_rebuild_hero_actions(view_state.get("hero_actions", []))
 	_rebuild_specialty_actions(view_state.get("specialty_actions", []))
 	if not minimal:
-		if _town_catalog_is_open() and _town_catalog_mode == "build":
+		# Only the open town dialog shows management lanes. Rebuild those after an
+		# order; opening a dialog rebuilds its own lanes from fresh rules state.
+		var open_lanes := _open_town_catalog_lanes()
+		if open_lanes.has("build"):
 			_rebuild_build_actions(view_state.get("build_actions", []))
-		_rebuild_market_actions(view_state.get("market_actions", []))
-		if _town_catalog_is_open() and _town_catalog_mode == "muster":
+		if open_lanes.has("market"):
+			_rebuild_market_actions(view_state.get("market_actions", []))
+		if open_lanes.has("recruit"):
 			_rebuild_recruit_actions(view_state.get("recruit_actions", []))
-		_rebuild_tavern_actions(view_state.get("tavern_actions", []))
-		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
-		_rebuild_response_actions(view_state.get("response_actions", []))
-		_rebuild_study_actions(view_state.get("study_actions", []))
-		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
+		if open_lanes.has("tavern"):
+			_rebuild_tavern_actions(view_state.get("tavern_actions", []))
+		if open_lanes.has("transfer"):
+			_rebuild_transfer_actions(view_state.get("transfer_actions", []))
+		if open_lanes.has("response"):
+			_rebuild_response_actions(view_state.get("response_actions", []))
+		if open_lanes.has("artifact"):
+			_rebuild_artifact_actions(view_state.get("artifact_actions", []))
 		return
 	var lanes := _current_town_tab_lanes()
 	if lanes.has("build") and _town_catalog_is_open() and _town_catalog_mode == "build":
@@ -1602,6 +1609,22 @@ func _rebuild_current_action_surfaces(view_state: Dictionary, minimal: bool) -> 
 		_rebuild_transfer_actions(view_state.get("transfer_actions", []))
 		_rebuild_response_actions(view_state.get("response_actions", []))
 		_rebuild_artifact_actions(view_state.get("artifact_actions", []))
+
+func _open_town_catalog_lanes() -> Array:
+	# Mirrors the lanes _open_town_catalog populates for each dialog mode.
+	if not _town_catalog_is_open():
+		return []
+	match _town_catalog_mode:
+		"build":
+			return ["build"]
+		"muster":
+			return ["recruit", "response"]
+		"trade":
+			return ["market", "response"]
+		"log":
+			return ["response", "artifact", "tavern", "transfer"]
+		_:
+			return []
 
 func _current_town_tab_lanes() -> Array:
 	var current_tab := _management_tabs.current_tab if _management_tabs != null else 0
@@ -2739,6 +2762,10 @@ func _town_entity_cache_signature(town: Dictionary, minimal: bool) -> String:
 	parts.append("market:%s" % _compact_local_state_signature(town.get("market_state", town.get("market", {}))))
 	parts.append("response:%s" % _compact_local_state_signature(town.get("response_state", town.get("responses", {}))))
 	parts.append("economy_context:%s" % _town_economy_context_signature())
+	# Hero-driven lanes (artifacts, transfers, spells, specialties) live in the
+	# cached state too, so same-day hero changes must miss the cache.
+	parts.append("heroes:%s" % _hero_roster_cache_signature())
+	parts.append("town_services:%s" % _signature_scalar_value(town.get("town_service_claims", {})))
 	return "|".join(parts)
 
 func _town_economy_context_signature() -> String:
@@ -2767,63 +2794,40 @@ func _town_economy_context_signature() -> String:
 	}
 	return JSON.stringify(context).sha256_text()
 
-func _active_hero_cache_signature(town: Dictionary) -> String:
-	var hero: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+func _hero_roster_cache_signature() -> String:
+	# Durable hero state only. Movement and map position change on every overworld
+	# step and must not force a rebuild when the hero walks back into town.
+	var active: Dictionary = _session.overworld.get("hero", {}) if _session.overworld.get("hero", {}) is Dictionary else {}
+	var active_id := String(_session.overworld.get("active_hero_id", active.get("id", "")))
+	var entries := ["active=%s" % _signature_token(active_id), _hero_state_cache_signature(active)]
+	var heroes_value: Variant = _session.overworld.get("player_heroes", [])
+	if heroes_value is Array:
+		var roster := []
+		for hero_value in heroes_value:
+			if hero_value is Dictionary and String(hero_value.get("id", "")) != "" and String(hero_value.get("id", "")) != String(active.get("id", "")):
+				roster.append(_hero_state_cache_signature(hero_value))
+		roster.sort()
+		entries.append_array(roster)
+	# Hashed like the economy context so a large roster keeps the key short.
+	return "|".join(entries).sha256_text()
+
+func _hero_state_cache_signature(hero: Dictionary) -> String:
 	var parts := []
-	parts.append("id=%s" % _signature_token(_session.overworld.get("active_hero_id", hero.get("id", ""))))
 	parts.append("hero=%s" % _signature_token(hero.get("id", "")))
 	parts.append("level=%d" % int(hero.get("level", 0)))
 	parts.append("xp=%d" % int(hero.get("experience", 0)))
 	parts.append("training=%s" % _string_array_signature(hero.get("town_training_claims", [])))
-	parts.append("faction_services=%s/%s" % [JSON.stringify(hero.get("town_service_claims", {})), JSON.stringify(town.get("town_service_claims", {}))])
-	parts.append("command=%s" % JSON.stringify(hero.get("command", {})))
-	var movement: Dictionary = hero.get("movement", {}) if hero.get("movement", {}) is Dictionary else {}
-	var overworld_movement: Dictionary = _session.overworld.get("movement", {}) if _session.overworld.get("movement", {}) is Dictionary else {}
-	parts.append("move=%d/%d" % [
-		int(movement.get("current", overworld_movement.get("current", 0))),
-		int(movement.get("max", overworld_movement.get("max", 0))),
-	])
-	parts.append("pos=%s" % _position_signature(hero.get("position", _session.overworld.get("hero_position", {}))))
+	parts.append("faction_services=%s" % _signature_scalar_value(hero.get("town_service_claims", {})))
+	parts.append("command=%s" % _scalar_pairs_signature(hero.get("command", {})))
 	parts.append("army=%s" % _army_state_signature(hero.get("army", {})))
 	var spellbook: Dictionary = hero.get("spellbook", {}) if hero.get("spellbook", {}) is Dictionary else {}
 	parts.append("spells=%s" % _string_array_signature(spellbook.get("known_spell_ids", [])))
+	var mana: Dictionary = spellbook.get("mana", {}) if spellbook.get("mana", {}) is Dictionary else {}
+	parts.append("mana=%d/%d" % [int(mana.get("current", 0)), int(mana.get("max", 0))])
 	parts.append("specialties=%s" % _string_array_signature(hero.get("specialties", [])))
-	parts.append("pending_specialties=%s" % _string_array_signature(hero.get("pending_specialty_choices", [])))
+	parts.append("pending_specialties=%s" % _scalar_array_signature(hero.get("pending_specialty_choices", [])))
 	parts.append("artifacts=%s" % _artifact_state_signature(hero.get("artifacts", {})))
-	parts.append("town_pos=%s" % _position_signature({"x": int(town.get("x", 0)), "y": int(town.get("y", 0))}))
 	return ",".join(parts)
-
-func _stationed_heroes_cache_signature(town: Dictionary) -> String:
-	var heroes_value: Variant = _session.overworld.get("player_heroes", [])
-	if not (heroes_value is Array):
-		return "count=0"
-	var town_x := int(town.get("x", 0))
-	var town_y := int(town.get("y", 0))
-	var stationed := []
-	var all_ids := []
-	for hero_value in heroes_value:
-		if not (hero_value is Dictionary):
-			continue
-		var hero: Dictionary = hero_value
-		var hero_id := String(hero.get("id", ""))
-		if hero_id == "":
-			continue
-		all_ids.append(_signature_token(hero_id))
-		var position: Dictionary = hero.get("position", {}) if hero.get("position", {}) is Dictionary else {}
-		if int(position.get("x", -999999)) != town_x or int(position.get("y", -999999)) != town_y:
-			continue
-		var entry := []
-		entry.append(_signature_token(hero_id))
-		entry.append("lvl%d" % int(hero.get("level", 0)))
-		entry.append(_army_state_signature(hero.get("army", {})))
-		stationed.append(":".join(entry))
-	all_ids.sort()
-	stationed.sort()
-	return "count=%d,ids=%s,local=%s" % [
-		heroes_value.size(),
-		".".join(all_ids),
-		".".join(stationed),
-	]
 
 func _town_action_recap_cache_signature() -> String:
 	var parts := []
@@ -2958,8 +2962,11 @@ func _artifact_state_signature(value: Variant) -> String:
 		var ids := []
 		for key_value in artifacts.keys():
 			var artifact_value = artifacts.get(key_value)
-			if artifact_value is Dictionary:
+			if artifact_value is Dictionary and artifact_value.has("id"):
 				ids.append("%s=%s" % [_signature_token(key_value), _signature_token(artifact_value.get("id", ""))])
+			elif artifact_value is Dictionary:
+				# Equipment maps slot ids to artifact ids.
+				ids.append("%s=%s" % [_signature_token(key_value), _scalar_pairs_signature(artifact_value)])
 			elif artifact_value is Array:
 				ids.append("%s=%s" % [_signature_token(key_value), _string_array_signature(artifact_value)])
 			else:
@@ -4119,8 +4126,9 @@ func _rebuild_market_actions(actions_override: Variant = null) -> void:
 		_market_actions.add_child(button)
 
 func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
+	var destination_summary := String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 	if _town_catalog_mode == "muster":
-		_town_catalog_subtitle_label.text = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
+		_town_catalog_subtitle_label.text = destination_summary
 	for child in _recruit_actions.get_children():
 		child.queue_free()
 
@@ -4135,6 +4143,7 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		var unit_id := String(action.get("unit_id", _unit_id_for_recruit_action(action)))
 		var portrait_path := String(action.get("portrait_path", ContentService.get_unit_art(unit_id).get("portrait", "")))
 		var portrait_texture: Variant = _unit_art_texture(portrait_path)
+		var row_tooltip := _catalog_muster_tooltip(action, destination_summary)
 		var row := PanelContainer.new()
 		row.custom_minimum_size = Vector2(190, 232)
 		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -4148,13 +4157,13 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 			portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			portrait.custom_minimum_size = Vector2(88, 112)
-			portrait.tooltip_text = _catalog_muster_tooltip(action)
+			portrait.tooltip_text = row_tooltip
 			row_box.add_child(portrait)
 		var identity_label := Label.new()
 		identity_label.text = "%s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", unit_id))]
 		identity_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		identity_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		identity_label.tooltip_text = _catalog_muster_tooltip(action)
+		identity_label.tooltip_text = row_tooltip
 		FrontierVisualKit.apply_label(identity_label, "body", 12)
 		row_box.add_child(identity_label)
 		var reserve_label := Label.new()
@@ -4165,7 +4174,7 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		]
 		reserve_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		reserve_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		reserve_label.tooltip_text = _catalog_muster_tooltip(action)
+		reserve_label.tooltip_text = row_tooltip
 		FrontierVisualKit.apply_label(reserve_label, "muted", 11)
 		row_box.add_child(reserve_label)
 		var button := Button.new()
@@ -4174,12 +4183,12 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		cost_label.text = "Total: %s" % TownRules._describe_resources(TownRules._multiply_resource_cost(action.get("unit_cost", {}), ready_count)) if ready_count > 0 else "No purchase available"
 		cost_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		cost_label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cost_label.tooltip_text = _catalog_muster_tooltip(action)
+		cost_label.tooltip_text = row_tooltip
 		FrontierVisualKit.apply_label(cost_label, "muted", 11)
 		row_box.add_child(cost_label)
 		button.text = "Recruit %s x%d" % [String(action.get("tier_label", "Tier")), ready_count] if ready_count > 0 else String(action.get("catalog_status", "Unavailable"))
 		button.disabled = bool(action.get("disabled", false))
-		button.tooltip_text = _catalog_muster_tooltip(action)
+		button.tooltip_text = row_tooltip
 		button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_style_action_button(button)
 		button.set_meta("catalog_entry_id", String(action.get("id", "")))
@@ -4188,11 +4197,13 @@ func _rebuild_recruit_actions(actions_override: Variant = null) -> void:
 		row_box.add_child(button)
 		_recruit_actions.add_child(row)
 
-func _catalog_muster_tooltip(action: Dictionary) -> String:
+func _catalog_muster_tooltip(action: Dictionary, destination_summary: String = "") -> String:
 	var unit_cost := TownRules._describe_resources(action.get("unit_cost", {}))
+	if destination_summary == "":
+		destination_summary = String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary)
 	return _join_tooltip_sections([
 		"%s • %s • %s" % [String(action.get("tier_label", "Tier")), String(action.get("name", "Unit")), String(action.get("catalog_status", "Locked"))],
-		String(HeroCommandRules.town_recruitment_destination(_session, TownRules.get_active_town(_session)).summary),
+		destination_summary,
 		"Role: %s | Cost each: %s" % [String(action.get("role", "unknown")).capitalize(), unit_cost],
 		"Reserve %d | Weekly growth +%d" % [int(action.get("available_count", 0)), int(action.get("weekly_growth", 0))],
 		String(action.get("catalog_status_detail", "")),

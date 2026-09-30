@@ -244,6 +244,10 @@ var _town_building_masks: Dictionary = {}
 var _building_hotspots: Dictionary = {}
 var _external_command_overlay := false
 var _construction_preview_id := ""
+# Plaque values come from rules queries. Compute them once per town state, not
+# on every frame the ambient light pulse redraws the stage.
+var _status_plaque_cache: Array = []
+var _status_plaque_cache_valid := false
 
 func set_construction_preview(building_id: String) -> void:
 	# A drawing-only candidate. Never add it to the town or hotspot entries.
@@ -346,6 +350,8 @@ func set_precomputed_town_state(session, state: Dictionary) -> void:
 
 func _clear_town_state(session) -> void:
 	_session = session
+	_status_plaque_cache = []
+	_status_plaque_cache_valid = false
 	_town = {}
 	_town_template = {}
 	_faction = {}
@@ -2210,10 +2216,16 @@ func _draw_district_cluster(position: Vector2, strength: int, color: Color) -> v
 		draw_rect(Rect2(house_rect.position + Vector2(5.0, 5.0), Vector2(4.0, 5.0)), WINDOW_GLOW, true)
 
 func _draw_status_plaques(scene_rect: Rect2) -> void:
-	var plaques := _status_plaque_payloads()
+	var plaques := _cached_status_plaque_payloads()
 	var plaque_rects := _status_plaque_rects(scene_rect, plaques.size())
 	for index in range(plaques.size()):
 		_draw_plaque(plaque_rects[index], plaques[index])
+
+func _cached_status_plaque_payloads() -> Array:
+	if not _status_plaque_cache_valid:
+		_status_plaque_cache = _status_plaque_payloads()
+		_status_plaque_cache_valid = true
+	return _status_plaque_cache
 
 func _status_plaque_payloads() -> Array:
 	var readiness := OverworldRulesScript.town_battle_readiness(_town, _session)

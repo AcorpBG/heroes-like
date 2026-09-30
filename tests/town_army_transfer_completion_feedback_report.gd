@@ -12,6 +12,7 @@ const DIRECTIONS := [
 ]
 const PLACEMENT_ID := "riverwatch_hold"
 const UNIT_ID := "unit_embercourt_fordhook_cadets"
+const SPARE_UNIT_ID := "unit_river_guard"
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -228,7 +229,9 @@ func _seed_transfer_fixture(session) -> void:
 	session.overworld["towns"] = towns
 	var hero: Dictionary = session.overworld.get("hero", {}).duplicate(true)
 	var army: Dictionary = hero.get("army", {}).duplicate(true) if hero.get("army", {}) is Dictionary else {}
-	army["stacks"] = [{"unit_id": UNIT_ID, "count": 4}]
+	# The spare stack keeps the hero commanded after it hands over the whole
+	# transferred stack; a hero may not give away its last troops.
+	army["stacks"] = [{"unit_id": UNIT_ID, "count": 4}, {"unit_id": SPARE_UNIT_ID, "count": 1}]
 	hero["army"] = army
 	session.overworld["hero"] = hero.duplicate(true)
 	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []

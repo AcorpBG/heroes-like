@@ -186,10 +186,13 @@ func _fixture(reserve_position: Vector2i) -> Dictionary:
 	var active_stacks: Array = active.get("army", {}).get("stacks", []) if active.get("army", {}).get("stacks", []) is Array else []
 	var unit_id := String(active_stacks[0].get("unit_id", "")) if not active_stacks.is_empty() and active_stacks[0] is Dictionary else ""
 	var reserve_id := "hero_caelen" if active_id != "hero_caelen" else "hero_mira"
+	# A commander must keep one stack, so the reserve holds a spare stack that
+	# lets it hand over the whole shared stack.
+	var spare_unit_id := "unit_river_guard" if unit_id != "unit_river_guard" else "unit_river_guard_veteran"
 	var reserve := HeroCommandRules.build_hero_from_template(
 		ContentService.get_hero(reserve_id),
 		{"x": reserve_position.x, "y": reserve_position.y},
-		{"id": "%s_field_army" % reserve_id, "name": "Reserve Army", "stacks": [{"unit_id": unit_id, "count": 4}]},
+		{"id": "%s_field_army" % reserve_id, "name": "Reserve Army", "stacks": [{"unit_id": unit_id, "count": 4}, {"unit_id": spare_unit_id, "count": 1}]},
 		session
 	)
 	var heroes: Array = session.overworld.get("player_heroes", []) if session.overworld.get("player_heroes", []) is Array else []
