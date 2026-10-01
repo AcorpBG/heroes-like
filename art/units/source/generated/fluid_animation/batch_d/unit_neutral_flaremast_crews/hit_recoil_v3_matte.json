@@ -1,0 +1,16 @@
+{
+  "original_sha256": "4ec74cb0ce539e28558ded90dfe21fcc17685dc9ede645fea2d7d7e397bf558f",
+  "rgba_sha256": "162a988b977d57bf12e25aad09f2e291bb25847b2145f667cc0125d756fdf122",
+  "protected_foreground_chroma": 249.0,
+  "palette_source": "Solid alpha>=240 eroded by 3 from registered rejected halo-bearing v1; only palette measurement, no geometry mask.",
+  "matte": {
+    "background_rgb": [
+      0.0,
+      2.0,
+      253.0
+    ],
+    "corner_median_spread": 1.0,
+    "mode": "flat_blue_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  }
+}

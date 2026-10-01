@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v1.png",
+    "sha256": "06ea6755c574d9c56701af0d0a4ccb648a51b512a14929f1bdbe5b7465cf3923"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v1.prompt.txt",
+    "sha256": "372c1b29730985c17a1c37becaafa7d7d24550f80ac32261012b19fd8ea0ca66"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v1/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-32cd9196-965f-4456-a085-7e6761d5ec3b.png",
+  "review_status": "rejected_oversized_mast"
+}

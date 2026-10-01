@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    46,
+    "6b20c83e-b990-4a4d-ac18-a3b9610fa422",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Flaremast woman in blue cap/amber goggles, teal cream-cuff jacket, brown vest, red scarf and sash, cream trousers, strapped brown boots. Exactly two arms and two legs. One brass launcher with flared barrel and red chamber, right hand at trigger and left supporting barrel. One deployed signal mast with red, orange and blue cartridges, all three tripod feet planted at screen left without any motion. Perform ONE quiet dry-trigger rehearsal with an EMPTY launcher. This is a physical practice motion, with no ammunition and no ignition. Raise launcher to shoulder level, aim right, pause briefly, squeeze and release right trigger once, make one small backward elbow/shoulder recoil motion, then lower back to original ready. Both hands keep their grips. Only the woman and held launcher move; empty surrounding space remains unchanged. No firing, flashes, flame, smoke, sparks, bullets, projectiles, effects or repetition. Locked elevated three-quarter orthographic camera, same identity and constant body/mast/launcher scale. Entire body and equipment inside 960x640. Perfectly uniform pure green RGB0,255,0 background in every frame, no floor or shadow.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100212
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "flaremast_ranged_h3_v2_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "flaremast_h3/ranged_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "flaremast_h3",
+      "create_time": 1790841704247
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "flaremast_h3\\ranged_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "6b20c83e-b990-4a4d-ac18-a3b9610fa422",
+          "timestamp": 1790841704796
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "6b20c83e-b990-4a4d-ac18-a3b9610fa422",
+          "timestamp": 1790841704804
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "6b20c83e-b990-4a4d-ac18-a3b9610fa422",
+          "timestamp": 1790842050353
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

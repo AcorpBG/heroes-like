@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100213,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil_v4_matte",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4_matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        740,
+        920
+      ],
+      "scale": 0.247,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ],
+    [
+      52,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. The mast stays deployed upright and stationary at screen left. Recoil once from an outside impact: head and shoulders tilt backward, both elbows bend, knees flex and the launcher stays lowered toward the ground throughout. Match supplied backward recoil midpoint, maintain both hand grips. Boots stay planted. Recover to ready. This is being struck, no aim, firing, flash, recoil from shooting, smoke or projectile. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure green RGB0,255,0 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 16,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      10.0
+    ]
+  }
+}

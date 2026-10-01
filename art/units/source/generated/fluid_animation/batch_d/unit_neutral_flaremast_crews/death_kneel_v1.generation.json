@@ -1,0 +1,23 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_kneel_v1.png",
+    "sha256": "6859add761801cf77bf62b984168083f33c70f55ae749b5bcd44732dce5195e9"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_kneel_v1.prompt.txt",
+    "sha256": "682650bdf51326d151e5d673904278b97e3072351d8864e061f2d093b2e2d663"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v1/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2.png",
+      "sha256": "b5883c87dd1cb455a8b35bae09a4dbc3215064b4e97bba692de074ad5b2bc769"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-7856fa76-dee8-4a8e-a9a2-be6172ba490e.png",
+  "review_status": "rejected_added_wooden_stock_and_floating_tripod"
+}

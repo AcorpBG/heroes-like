@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "dc257405cad1cc798e0bf60c8aacfe08201d5106f5f32bfee1a9007d2dc8bb5e",
+  "latent_sha256": "7de53c8cb8bcb09c8c74bd5383f1c142a48837d2e0a0532daa1cb6dbd4a16fe4",
+  "decode_workflow_sha256": "d99ad053bb17e6298c9bdb53d0b421aa0fb6136eb01defa7c333d3d407c1f036",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "flaremast_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

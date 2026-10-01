@@ -1,0 +1,26 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4.png",
+    "sha256": "724fdf684b1beba10ddfac3ed5bc57fa762961931dd91c2f0379c10643224508"
+  },
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4_matte.png",
+    "sha256": "8510aef57f369ffab17f4d49aeedb4e959bc6a28b06b3dcdbe0cf10a58029cf7"
+  },
+  "protected_foreground_chroma": 24,
+  "original_ready_green_max": 14,
+  "boundary_despill_source_pixels": 6,
+  "spill_rule": "Only green excess above measured original band14 near silhouette. Alpha and geometry unchanged.",
+  "changed_spill_pixels": 13,
+  "matte": {
+    "background_rgb": [
+      3.0,
+      248.0,
+      7.5
+    ],
+    "corner_median_spread": 0.5,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "H:/ai/envs/minimax-h3/python.exe art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/prepare_corrections.py"
+}

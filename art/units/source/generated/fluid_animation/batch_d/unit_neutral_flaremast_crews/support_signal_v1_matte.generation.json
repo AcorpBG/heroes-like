@@ -1,0 +1,27 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1_matte.png",
+    "sha256": "3ea9baae1470bd3ee7f3296e5460b10caacdae3137d9c90a63572b417a1c8ba6"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1.prompt.txt",
+    "sha256": "3e0cb94faed667e985afc2019a84ca832f183369897ed57b0daba79ca96bd295"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v1/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-ea65cb89-9360-47c3-9fa4-900d0f3f7fd1.png",
+  "review_status": "pending_h3_motion",
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1_matte.json",
+    "sha256": "bb7900acde304e8612912c5f64b7586ad136405efe59219a587ab12e9ecd4524"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1.png",
+    "sha256": "8acc0b0fce57288c3cbe394b7725d011ea2f034a223b2b49ae7e4de7d3568906"
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    16,
+    "f327e00c-256f-4c1d-9363-a4cee054bf4d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. The mast remains deployed upright at screen left, its tripod stationary. Perform one aimed launcher shot: bring both hands and barrel to shoulder level, sight toward screen right, hold aim, squeeze the right trigger once, absorb a small backward shoulder and elbow recoil, then lower to ready. The left hand remains supporting the barrel. Projectile flight and impact are separately rendered by the game; show no detached projectile, muzzle flash or smoke. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure magenta RGB255,0,255 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100112
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "flaremast_ranged_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "flaremast_h3/ranged_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "flaremast_h3",
+      "create_time": 1790837440348
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "flaremast_h3\\ranged_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "f327e00c-256f-4c1d-9363-a4cee054bf4d",
+          "timestamp": 1790837440468
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "f327e00c-256f-4c1d-9363-a4cee054bf4d",
+          "timestamp": 1790837440477
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "f327e00c-256f-4c1d-9363-a4cee054bf4d",
+          "timestamp": 1790837717971
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

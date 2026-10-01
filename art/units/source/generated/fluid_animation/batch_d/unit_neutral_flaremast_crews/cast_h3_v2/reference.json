@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            298,
+            354
+          ],
+          [
+            80,
+            354,
+            145,
+            360
+          ],
+          [
+            238,
+            354,
+            270,
+            367
+          ]
+        ],
+        "anchor": [
+          175,
+          354
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "49c68ccebbbdb30c0e6ac71c0b5c1b8017e95639856fee5285a9389457cf4b9c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "393a65006b6c54c72bb3725f6a29f03a26b55e0b63c0da3860298c43460a1a70",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "support_signal_v1_matte",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1_matte.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          740,
+          910
+        ],
+        "scale": 0.624,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3ea9baae1470bd3ee7f3296e5460b10caacdae3137d9c90a63572b417a1c8ba6",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "8c0d8cf9133cf6a99bf6ac048b81c7bb2eb6b7210c5aa8611292ed28a797f967",
+      "runtime_source_scale": 0.312
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

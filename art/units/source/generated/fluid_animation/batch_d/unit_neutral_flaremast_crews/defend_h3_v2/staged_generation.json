@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "03ceb4ea6ed60e16891c0f554ed77a647a68d6d19f952e47e9271a7b45447952",
+  "latent_sha256": "6d2fa73e3a4878f68d973169bc48b6a6414dbd412dd221bbe14eac82d9eaac48",
+  "decode_workflow_sha256": "421fe08aaee91c403eee66552ce570a7756848211fa3f9c9d4f542aae3344609",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "flaremast_h3\\defend_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

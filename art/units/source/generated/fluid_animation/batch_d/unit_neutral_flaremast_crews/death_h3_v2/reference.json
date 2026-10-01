@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            298,
+            354
+          ],
+          [
+            80,
+            354,
+            145,
+            360
+          ],
+          [
+            238,
+            354,
+            270,
+            367
+          ]
+        ],
+        "anchor": [
+          175,
+          354
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "49c68ccebbbdb30c0e6ac71c0b5c1b8017e95639856fee5285a9389457cf4b9c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "393a65006b6c54c72bb3725f6a29f03a26b55e0b63c0da3860298c43460a1a70",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "death_corpse_v2_matte",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2_matte.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          592,
+          675
+        ],
+        "scale": 0.424,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "122b3c5d49adccd05924f952f84b0e8c9afb9dea126164dfcd7071b14984528f",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "09e87f72f0b1c611ed41b7e16cea975fb6d16cb6ebdd84464f030c6504164194",
+      "runtime_source_scale": 0.212
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,30 @@
+{
+  "status": "passed",
+  "import_session": 62382,
+  "import_exit": 0,
+  "live_session": 30510,
+  "live_exit": 0,
+  "live_checks": 304,
+  "failures": [],
+  "selected_frames": {
+    "defend": 17,
+    "cast": 24,
+    "death": 31
+  },
+  "preserved_idle_frames": 8,
+  "preserved_idle_rgba_root_timing": true,
+  "preserved_legacy_clips": [
+    "move",
+    "attack",
+    "ranged",
+    "hit"
+  ],
+  "unchanged_other_catalog_rows": 231,
+  "unchanged_other_map_rows": 231,
+  "map_idle_png_sha256": "d001e94165a8cfb5341d43a36bb33b26eeb47bb9943fb8988de0ba02cd668411",
+  "map_idle_pixels_root_timing_preserved": true,
+  "map_source_metadata": "Updated from original pose atlas to published fluid atlas; delivered map PNG unchanged.",
+  "scope": "Published three authored actions: normal/fast/reduced clocks, save stability, final corpse plus unchanged legacy actual shell attack. Full unit remains incomplete.",
+  "continuous_temporal_preview": "blocked; native static phases and runtime clocks reviewed",
+  "coordinator_acceptance": "accepted_selected_clips"
+}

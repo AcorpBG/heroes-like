@@ -1,0 +1,245 @@
+{
+  "prompt": [
+    42,
+    "301fafb4-b7be-4dfc-ad8b-08727974ef6d",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. The brown lower mast shaft is telescopic. First keep the launcher in the right hand, use the left hand to close the three hinged tripod legs alongside the lower shaft, physically retract the brown lower telescoping section and lift the compact mast onto the back strap. Then restore both launcher grips. The same physically compact stowed mast is carried diagonally on her back with red, orange and blue canisters retained. Walk naturally in place through two complete reciprocal stride cycles. Each boot alternates heel contact, loading, passing and toe lift while the other leg supports the body. Body stays centered, no forward translation. Both hands carry the launcher low pointing down-right. The red sash follows the leg motion. Stop walking, use left hand to lift the same mast down, extend the brown telescoping shaft to its original deployed length, spread its tripod and place it upright at the original screen-left ground contact. Restore both launcher grips and ready stance. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure green RGB0,255,0 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100210
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "flaremast_move_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "flaremast_move_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 35,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 72,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "flaremast_h3/move_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "flaremast_h3",
+      "create_time": 1790841049493
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "flaremast_h3\\move_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "301fafb4-b7be-4dfc-ad8b-08727974ef6d",
+          "timestamp": 1790841049494
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "301fafb4-b7be-4dfc-ad8b-08727974ef6d",
+          "timestamp": 1790841049506
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "301fafb4-b7be-4dfc-ad8b-08727974ef6d",
+          "timestamp": 1790841327412
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

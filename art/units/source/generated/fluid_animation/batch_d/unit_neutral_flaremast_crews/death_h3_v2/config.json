@@ -1,0 +1,86 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100216,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_corpse_v2_matte",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2_matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        592,
+        675
+      ],
+      "scale": 0.212,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. Slow continuous physical collapse into the supplied grounded corpse. Knees buckle and lower to the ground, torso slumps to screen-left, left elbow supports the body then shoulder and hip lower directly onto the same ground, finally both legs rest. No jump or roll in midair. Keep face, cap, goggles, two arms/two legs and brass RED CHAMBER launcher unchanged. The ONE deployed mast falls RIGHTWARD with gravity, rotating rigidly about its screen-left tripod ground contact until it lies horizontally BEHIND the body, tripod LEFT and finial RIGHT as in endpoint. Its red orange blue canisters stay attached with their original size/order; no detached pieces. Mast stays full original length. End motionless on ground. Body and equipment never levitate, rise or slide sideways. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure green RGB0,255,0 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 16,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      5.0
+    ]
+  }
+}

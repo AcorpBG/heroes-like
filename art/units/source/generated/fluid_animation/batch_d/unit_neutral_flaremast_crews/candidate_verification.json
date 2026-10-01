@@ -1,0 +1,111 @@
+{
+  "status": "passed",
+  "original_takes": [
+    {
+      "take": "move_h3_v1",
+      "frames": 124,
+      "video_sha256": "fb31e5e63737f21bf93472a3b6652eacb7ae967a0b4667be90d6f57cf914a5c8",
+      "latent_exists": true
+    },
+    {
+      "take": "attack_h3_v1",
+      "frames": 124,
+      "video_sha256": "e8070eef69cc831b5735b5175f571f322a48636b57b7b4154bbd373bd6a951d7",
+      "latent_exists": true
+    },
+    {
+      "take": "ranged_h3_v1",
+      "frames": 124,
+      "video_sha256": "826cae7f43cf45ba2968c9f416955a43fc1a19d58bbdfebe2292388b74326e31",
+      "latent_exists": true
+    },
+    {
+      "take": "hit_h3_v1",
+      "frames": 124,
+      "video_sha256": "faa6cd006d8d1c8f5c143caff3f9e720ae2cff8a5faa4ab20e59215ad5e3f2dc",
+      "latent_exists": true
+    },
+    {
+      "take": "defend_h3_v1",
+      "frames": 124,
+      "video_sha256": "e49f81855681322bfb09a477cbcb800ede05271b9f00bf8b99ef78b92477fa41",
+      "latent_exists": true
+    },
+    {
+      "take": "cast_h3_v1",
+      "frames": 124,
+      "video_sha256": "20c78b4be73cb2fc4ee7a76c92f5e0f8249dce1484c9d73d1f77576d4c6a49d3",
+      "latent_exists": true
+    },
+    {
+      "take": "death_h3_v1",
+      "frames": 124,
+      "video_sha256": "100e3d6e6a92fd816cb220c40807892779bed28b1f6e204db006300b6f611386",
+      "latent_exists": true
+    },
+    {
+      "take": "move_h3_v2",
+      "frames": 124,
+      "video_sha256": "1178020fae30601715446168183ae48cc9627a494b824240634bf34088481f93",
+      "latent_exists": true
+    },
+    {
+      "take": "attack_h3_v2",
+      "frames": 124,
+      "video_sha256": "deac57d4db5490f10ff22ad3900387badd2d3eda2b7c9e08a02f30e685a3266a",
+      "latent_exists": true
+    },
+    {
+      "take": "ranged_h3_v2",
+      "frames": 124,
+      "video_sha256": "1595fe184e8a5f0e4ba582f74a66481b3ccd25126b32acbc83cbba28cd37dae4",
+      "latent_exists": true
+    },
+    {
+      "take": "hit_h3_v2",
+      "frames": 124,
+      "video_sha256": "5bd69a5b786471b218ca37ca861fd559c66e31b8d155578118d2454ae376cde7",
+      "latent_exists": true
+    },
+    {
+      "take": "defend_h3_v2",
+      "frames": 124,
+      "video_sha256": "6ecae055d2120eabcade81c048fbfb4a97890b103093aeb122ab68f055c309bf",
+      "latent_exists": true
+    },
+    {
+      "take": "cast_h3_v2",
+      "frames": 124,
+      "video_sha256": "155ec45112c6467d9a1e6fe9bdef39f61c0ad09959e58239144ad7c0567a51c5",
+      "latent_exists": true
+    },
+    {
+      "take": "death_h3_v2",
+      "frames": 124,
+      "video_sha256": "6cb89c8cc9338bb3c65952d61f9ebf4de62d1ea8fe552eb38e629972b1feb700",
+      "latent_exists": true
+    }
+  ],
+  "preserved_idle_frames": 8,
+  "preserved_idle_rgba_and_root": true,
+  "preserved_map_catalog": true,
+  "native_session": 68991,
+  "native_exit": 0,
+  "native_checks": 79,
+  "runtime_session": 96232,
+  "runtime_exit": 0,
+  "runtime_checks": 290,
+  "runtime_scope": "New defend/cast/death clocks, normal/fast/reduced, save stability, final corpse; unchanged legacy actual shell attack. Rejected move/attack/ranged/hit not validated as new actions.",
+  "continuous_temporal_preview": "blocked; no continuous playback claim",
+  "coordinator_acceptance": "pending",
+  "mirrored_session": 94103,
+  "mirrored_exit": 0,
+  "mirrored_checks": 79,
+  "mirrored_visual_review": "All80 native phases including preserved idle and72 authored phases reviewed using exact BattleBoardView reflected transform. Ground and registration coherent in both facings.",
+  "frame_counts": {
+    "defend": 17,
+    "cast": 24,
+    "death": 31
+  },
+  "handoff_sha256": "807f318626a1b59cdab29e57856903c081f53beb20f8e5df97fd2b2c17521b9f"
+}

@@ -1,0 +1,28 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4_matte.png",
+    "sha256": "8510aef57f369ffab17f4d49aeedb4e959bc6a28b06b3dcdbe0cf10a58029cf7"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4.prompt.txt",
+    "sha256": "75aad234e1b4fff031953c9d0aa4ec9ffec6f9c8d4239d5ae0b2292d3b56f525"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v3.png",
+      "sha256": "4ec74cb0ce539e28558ded90dfe21fcc17685dc9ede645fea2d7d7e397bf558f"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-5f43f215-1f36-4915-ad28-8ab0be77e69b.png",
+  "review_status": "pending_h3_motion",
+  "source_control": "Green plate reassessment because blue plate matched saturated original blue cartridge.",
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4_matte.json",
+    "sha256": "0b780c54136e880f185967c7a0359c95df1dfdf83e7e780b283ae319804bdfc1"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_recoil_v4.png",
+    "sha256": "724fdf684b1beba10ddfac3ed5bc57fa762961931dd91c2f0379c10643224508"
+  }
+}

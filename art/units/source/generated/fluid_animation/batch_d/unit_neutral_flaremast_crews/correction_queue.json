@@ -1,0 +1,29 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v2",
+    "ranged_h3_v2",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "status": "completed_terminal",
+  "rebuild": "prepare_corrections.py",
+  "rule": "First finite action correction; preserve every rejected original. No GPU side effects while preparing.",
+  "exec_session": 21064,
+  "exit_code": 0,
+  "gpu_released": true,
+  "selected_candidates": [
+    "defend_h3_v2",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "rejected_actions": [
+    "move",
+    "attack",
+    "ranged",
+    "hit"
+  ]
+}

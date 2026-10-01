@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100210,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/continuity-alpha/walk-contact.png",
+      "rects": [
+        [
+          0,
+          0,
+          1024,
+          1536
+        ]
+      ],
+      "anchor": [
+        565,
+        1355
+      ],
+      "scale": 0.164,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ],
+    [
+      72,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. The brown lower mast shaft is telescopic. First keep the launcher in the right hand, use the left hand to close the three hinged tripod legs alongside the lower shaft, physically retract the brown lower telescoping section and lift the compact mast onto the back strap. Then restore both launcher grips. The same physically compact stowed mast is carried diagonally on her back with red, orange and blue canisters retained. Walk naturally in place through two complete reciprocal stride cycles. Each boot alternates heel contact, loading, passing and toe lift while the other leg supports the body. Body stays centered, no forward translation. Both hands carry the launcher low pointing down-right. The red sash follows the leg motion. Stop walking, use left hand to lift the same mast down, extend the brown telescoping shaft to its original deployed length, spread its tripod and place it upright at the original screen-left ground contact. Restore both launcher grips and ready stance. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure green RGB0,255,0 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 16,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      11.0
+    ]
+  }
+}

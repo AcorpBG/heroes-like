@@ -1,0 +1,26 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1.png",
+    "sha256": "8acc0b0fce57288c3cbe394b7725d011ea2f034a223b2b49ae7e4de7d3568906"
+  },
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1_matte.png",
+    "sha256": "3ea9baae1470bd3ee7f3296e5460b10caacdae3137d9c90a63572b417a1c8ba6"
+  },
+  "protected_foreground_chroma": 24,
+  "original_ready_green_max": 14,
+  "boundary_despill_source_pixels": 6,
+  "spill_rule": "Only green excess above measured original band14 near silhouette. Alpha and geometry unchanged.",
+  "changed_spill_pixels": 11,
+  "matte": {
+    "background_rgb": [
+      2.0,
+      249.0,
+      3.5
+    ],
+    "corner_median_spread": 0.5,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "H:/ai/envs/minimax-h3/python.exe art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/prepare_corrections.py"
+}

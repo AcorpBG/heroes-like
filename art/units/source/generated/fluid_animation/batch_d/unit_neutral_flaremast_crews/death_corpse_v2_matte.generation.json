@@ -1,0 +1,27 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2_matte.png",
+    "sha256": "122b3c5d49adccd05924f952f84b0e8c9afb9dea126164dfcd7071b14984528f"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2.prompt.txt",
+    "sha256": "ef56fb1858da66bc6d67985ec278e7f3243226112d3ff968255e71a00093ca16"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v1.png",
+      "sha256": "06ea6755c574d9c56701af0d0a4ccb648a51b512a14929f1bdbe5b7465cf3923"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-4134c1d3-38ef-4629-b328-a4ec97c6fb37.png",
+  "review_status": "pending_h3_motion",
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2_matte.json",
+    "sha256": "d00376986a3fb30945f25fbb08677bf2764e45cc59bc491f4b4c591aad29f739"
+  },
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/death_corpse_v2.png",
+    "sha256": "b5883c87dd1cb455a8b35bae09a4dbc3215064b4e97bba692de074ad5b2bc769"
+  }
+}

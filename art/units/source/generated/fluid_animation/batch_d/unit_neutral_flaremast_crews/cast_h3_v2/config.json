@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100215,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "support_signal_v1_matte",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/support_signal_v1_matte.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        740,
+        910
+      ],
+      "scale": 0.312,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      64,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Flaremast operator, an adult woman with brown wavy hair, blue cap and amber goggles, teal jacket with cream cuffs and lapels, brown quilted vest, red neck scarf and long red waist sash, cream trousers and tall brown strapped boots. Exactly two arms and two legs. Both hands hold one long brass signal launcher with a flared muzzle and red chamber: RIGHT hand remains at its trigger, LEFT hand supports the barrel ahead of the red chamber. Preserve face, cap, goggles, launcher length and grip. One tall brass signal mast carries three red, orange and blue glass canisters and three tripod legs. The mast stays stationary at screen left. Make one practical ready signal: LEFT hand firmly supports the same brass launcher low, RIGHT hand releases its trigger grip and lifts an EMPTY OPEN palm beside the head, matching midpoint. Hold signal briefly then lower the right hand and restore its trigger grip. Do not check or remove ammunition. RED CHAMBER remains attached to launcher throughout, brass geometry unchanged, no wooden stock, no cylinder in the empty hand, no firing or magic. Fixed elevated three-quarter orthographic camera facing screen right and constant anatomical scale. Full body, long launcher and complete mast stay inside the frame. Entire background stays perfectly flat pure green RGB0,255,0 throughout: no hue cycling, shadows, floor, horizon, smoke, scenery, captions or additional people. Smooth physical joint articulation, no morphing or duplicate equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 17,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      15.0
+    ]
+  }
+}

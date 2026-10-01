@@ -1,0 +1,24 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "runtime_scale_multiplier": 0.9,
+  "uniform_output_scale": 0.45,
+  "source_anchor_adjustment": [
+    0,
+    16
+  ],
+  "uniform_source_anchor": [
+    470,
+    576
+  ],
+  "basis": {
+    "observed_decoded_frame0_bbox": [
+      284,
+      144,
+      598,
+      576
+    ],
+    "old_idle_bottom_offset": 2,
+    "equation": "Actual source_pose LANCZOS resized alpha bounds bottom261 minus round(.45*576)=259 gives +2 pixels, matching retained idle. Nominal pre-resize bbox math excludes ringing and was insufficient."
+  },
+  "rule": "Uniform scale and registration across ALL newly authored actions, never per-frame normalization."
+}
