@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    14,
+    "14aa829a-8ada-430e-9c01-3a0cb1baf9ec",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Parallax Fencer, a young adult woman duelist with warm tan skin and curly brown hair gathered into a bun, a white-and-gold diadem visor with a blue crystal emblem across her forehead, a fitted white plated jacket with gold trim and blue diamond shoulder emblems, a blue scarf, long blue sash panels hanging from a gold-buckled belt, white padded trousers and white-and-gold armored knee boots. Her forward hand toward screen right grips ONE long slender translucent blue crystal sword by its gold guard. Her rear hand at screen left grips ONE short golden flame-shaped dagger pointing down and back. Exactly two arms, two legs and two blades. Preserve the face, hair, blade lengths, both grips and the blue sash throughout. Perform a crisp duelist salute to rally allies. Raise the crystal sword so its gold guard comes up before the chest and the blade points upward, as in the middle reference, nod firmly and hold the salute briefly, then sweep the blade down and forward back to the starting ready stance. The golden dagger stays low in the rear hand. A nonmagical physical gesture only. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire fencer and both blades stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and blades attached, physical joints and stable foot contacts. No glow bursts, trails, sparks or magic effects.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100144
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_cast_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_cast_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 34,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 58,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "parallax_h3_20261001/cast_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "parallax_h3_20261001",
+      "create_time": 1790848916193
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "parallax_h3_20261001\\cast_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "14aa829a-8ada-430e-9c01-3a0cb1baf9ec",
+          "timestamp": 1790849636020
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "14aa829a-8ada-430e-9c01-3a0cb1baf9ec",
+          "timestamp": 1790849636037
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "14aa829a-8ada-430e-9c01-3a0cb1baf9ec",
+          "timestamp": 1790849802787
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

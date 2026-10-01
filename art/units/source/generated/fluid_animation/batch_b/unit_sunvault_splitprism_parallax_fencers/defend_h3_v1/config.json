@@ -1,0 +1,114 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100143,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          424,
+          512
+        ]
+      ],
+      "anchor": [
+        212,
+        492
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          0,
+          0,
+          730,
+          350
+        ],
+        [
+          0,
+          350,
+          635,
+          772
+        ]
+      ],
+      "anchor": [
+        325,
+        720
+      ],
+      "scale": 0.30625,
+      "alpha_noise_cutoff": 8,
+      "packing_scale": 0.35,
+      "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+    },
+    {
+      "name": "defend_1",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          735,
+          0,
+          1392,
+          370
+        ],
+        [
+          640,
+          370,
+          1300,
+          772
+        ]
+      ],
+      "anchor": [
+        975,
+        720
+      ],
+      "scale": 0.30625,
+      "alpha_noise_cutoff": 8,
+      "packing_scale": 0.35,
+      "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+    }
+  ],
+  "guides": [
+    [
+      36,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Parallax Fencer, a young adult woman duelist with warm tan skin and curly brown hair gathered into a bun, a white-and-gold diadem visor with a blue crystal emblem across her forehead, a fitted white plated jacket with gold trim and blue diamond shoulder emblems, a blue scarf, long blue sash panels hanging from a gold-buckled belt, white padded trousers and white-and-gold armored knee boots. Her forward hand toward screen right grips ONE long slender translucent blue crystal sword by its gold guard. Her rear hand at screen left grips ONE short golden flame-shaped dagger pointing down and back. Exactly two arms, two legs and two blades. Preserve the face, hair, blade lengths, both grips and the blue sash throughout. Raise the crystal sword into a high diagonal parry guard. Lift the sword hand to shoulder height with the blade angled up and forward across the front of the body, bend both knees and settle the weight back, keeping the golden dagger low behind as a second guard. End holding the guarded stance with both boots grounded, without returning to ready. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire fencer and both blades stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and blades attached, physical joints and stable foot contacts. No glow bursts, trails, sparks or magic effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      24.0,
+      17.0,
+      18.0
+    ]
+  }
+}

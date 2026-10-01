@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            424,
+            512
+          ]
+        ],
+        "anchor": [
+          212,
+          492
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9de4f4380160534e69c879d496a1bcace4d5b753e3a2994cb3347de34dad097c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7b70f4e563cbdc53acef7832599d7dd21ba9f2cd2c0939915b599eb5a47d70ed",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+        "rects": [
+          [
+            1395,
+            0,
+            2036,
+            370
+          ],
+          [
+            1300,
+            370,
+            2036,
+            772
+          ]
+        ],
+        "anchor": [
+          1650,
+          720
+        ],
+        "scale": 0.6125,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.35,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "2e38c22b091a5a09762c925754d33085a8ca2ad13759c05bfc33aa5809cdd589",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "40ceaae263bbe2495f2ef866f2aeb7a2d2f6f83926132dffb5a99d2ce9cdf0b3",
+      "runtime_source_scale": 0.30625
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

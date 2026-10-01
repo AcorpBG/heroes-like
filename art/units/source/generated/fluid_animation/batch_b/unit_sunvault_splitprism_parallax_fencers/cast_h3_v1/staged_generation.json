@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3ac0e992b80a59dd01a51215e6415d38d95dbfcd3722e4abe5a2e4131a9cea69",
+  "latent_sha256": "7dffeb79a271b13d3af9fb7484d5d629ed777284c6416b7a98127680c7333440",
+  "decode_workflow_sha256": "63bc78d46a72f02c361fa3981ef527b6f0b7324a3d127d5be943d5405b995a12",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "parallax_h3_20261001\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "queued_behind_shared_jobs": true,
+    "rule": "Owner directed queueing behind other jobs on the shared service; no explicit unload. ComfyUI model management loads only the VAE for this VAE-only decode job."
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

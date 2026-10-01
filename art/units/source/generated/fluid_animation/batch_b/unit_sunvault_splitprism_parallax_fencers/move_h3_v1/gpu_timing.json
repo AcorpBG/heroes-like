@@ -1,0 +1,13 @@
+{
+  "sampling": {
+    "execution_start_ms": 1790848914780,
+    "execution_success_ms": 1790849126010,
+    "execution_seconds": 211.23
+  },
+  "decode": {
+    "execution_start_ms": 1790849972366,
+    "execution_success_ms": 1790849983201,
+    "execution_seconds": 10.835
+  },
+  "rule": "Queued behind shared jobs; sampling preserves latent, separate tiled VAE-only decode; collection verifies 124 RGB frames."
+}

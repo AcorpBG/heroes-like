@@ -1,0 +1,91 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100142,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          424,
+          512
+        ]
+      ],
+      "anchor": [
+        212,
+        492
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/defense-hit.png",
+      "rects": [
+        [
+          1395,
+          0,
+          2036,
+          370
+        ],
+        [
+          1300,
+          370,
+          2036,
+          772
+        ]
+      ],
+      "anchor": [
+        1650,
+        720
+      ],
+      "scale": 0.30625,
+      "alpha_noise_cutoff": 8,
+      "packing_scale": 0.35,
+      "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      34,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Parallax Fencer, a young adult woman duelist with warm tan skin and curly brown hair gathered into a bun, a white-and-gold diadem visor with a blue crystal emblem across her forehead, a fitted white plated jacket with gold trim and blue diamond shoulder emblems, a blue scarf, long blue sash panels hanging from a gold-buckled belt, white padded trousers and white-and-gold armored knee boots. Her forward hand toward screen right grips ONE long slender translucent blue crystal sword by its gold guard. Her rear hand at screen left grips ONE short golden flame-shaped dagger pointing down and back. Exactly two arms, two legs and two blades. Preserve the face, hair, blade lengths, both grips and the blue sash throughout. Perform one sharp recoil from a blow as a solitary fencer. The head and shoulders jolt backward away from screen right, the torso leans back and both knees yield while both feet stay planted, as in the middle reference. Both blades stay in their hands. Then regain balance, straighten and return to the starting ready stance. The full scene contains only this fencer against the uniform green plate. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire fencer and both blades stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and blades attached, physical joints and stable foot contacts. No glow bursts, trails, sparks or magic effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      24.0,
+      20.0
+    ]
+  }
+}

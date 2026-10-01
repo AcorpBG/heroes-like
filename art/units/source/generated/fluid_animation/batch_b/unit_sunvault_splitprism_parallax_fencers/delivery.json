@@ -1,0 +1,22 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Reviewed every chronological original for all eight H3 takes (992 frames), enlarged gait, lunge, recoil, parry, salute and collapse details, and all 257 selected frames at actual 128px reference height with the eight retained idle poses. Accepted move v1 two-step reciprocal gait (swing leg passes under the hip, loop seam 83->16) with one cross-dissolved swing frame excluded; attack lunge with contact at source47 and shortened extended hold; hit impact jolt with one cross-dissolved frame excluded; defend high diagonal parry held; support v2 physical sword salute with the golden dagger kept in the rear hand; death v2 kneel, side topple and face-down corpse. Rejected support v1 (green/red backdrop cycling, lost dagger) and death v1 (kneel-to-prone two-frame snap). Owner reviewed animated playback preview, side-by-side comparisons and raw H3 videos before publication. Candidate 854 focused Windows Godot checks passed. No continuous in-game playback or manual playtest claim."
+  },
+  "rejected_takes": {
+    "cast_h3_v1": "All124 raw originals reviewed: backdrop cycles between green and red from frame16 onward, so no reproducible matte; the rear-hand golden dagger also disappears during the raised salute. Rejected; regenerate with static-plate wording and explicit dagger retention.",
+    "death_h3_v1": "All124 chronological frames reviewed: knee drop 24-28 is a three-frame smear, and kneel-to-prone 65-67 is a two-frame teleport at the fall guide instead of a continuous topple. Rejected; regenerate with earlier kneel guide, later side-rest guide and continuous-topple wording."
+  }
+}

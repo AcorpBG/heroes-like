@@ -1,0 +1,117 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            424,
+            512
+          ]
+        ],
+        "anchor": [
+          212,
+          492
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9de4f4380160534e69c879d496a1bcace4d5b753e3a2994cb3347de34dad097c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7b70f4e563cbdc53acef7832599d7dd21ba9f2cd2c0939915b599eb5a47d70ed",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "death_buckle",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/death-sequence.png",
+        "rects": [
+          [
+            0,
+            0,
+            663,
+            724
+          ]
+        ],
+        "anchor": [
+          325,
+          632
+        ],
+        "scale": 0.595,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.34,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "05f2044444b43544b58d859cb409b4b4bfd3d637162e715cfc3fbf4f9ca541e4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "1838d8f831e51ec4d6fb8356559120dec54dfce20695bd605374677f535d9584",
+      "runtime_source_scale": 0.2975
+    },
+    {
+      "source_frame": {
+        "name": "death_fall",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/death-sequence.png",
+        "rects": [
+          [
+            663,
+            0,
+            1415,
+            724
+          ]
+        ],
+        "anchor": [
+          1040,
+          632
+        ],
+        "scale": 0.595,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.34,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "05f2044444b43544b58d859cb409b4b4bfd3d637162e715cfc3fbf4f9ca541e4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1ba2dfa539439eebac5a67f0fb166c9b79f65d60f23d85b4fcdca1b0e41a144d",
+      "runtime_source_scale": 0.2975
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/death-sequence.png",
+        "rects": [
+          [
+            1415,
+            0,
+            2172,
+            724
+          ]
+        ],
+        "anchor": [
+          1795,
+          632
+        ],
+        "scale": 0.595,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.34,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "05f2044444b43544b58d859cb409b4b4bfd3d637162e715cfc3fbf4f9ca541e4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "65ba3a33510d1fc51330ad52fd1b0b9141caadf8a27a2c717f52c7516db5f13a",
+      "runtime_source_scale": 0.2975
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

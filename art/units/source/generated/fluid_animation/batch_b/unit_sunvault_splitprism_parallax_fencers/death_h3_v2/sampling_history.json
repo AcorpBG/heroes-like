@@ -1,0 +1,263 @@
+{
+  "prompt": [
+    24,
+    "aa0d9aee-4a95-42b7-bf24-e1db3d7a8212",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Parallax Fencer, a young adult woman duelist with warm tan skin and curly brown hair gathered into a bun, a white-and-gold diadem visor with a blue crystal emblem across her forehead, a fitted white plated jacket with gold trim and blue diamond shoulder emblems, a blue scarf, long blue sash panels hanging from a gold-buckled belt, white padded trousers and white-and-gold armored knee boots. Her forward hand toward screen right grips ONE long slender translucent blue crystal sword by its gold guard. Her rear hand at screen left grips ONE short golden flame-shaped dagger pointing down and back. Exactly two arms, two legs and two blades. Preserve the face, hair, blade lengths, both grips and the blue sash throughout. Collapse continuously, with no pause and no sudden jumps. The knees buckle and she sinks onto one knee with the head bowed and the sword tip lowering, as in the first middle reference. Without stopping, her torso keeps tipping sideways toward screen right; the forward hand and crystal sword reach down to the ground, then the hip and shoulder lower gradually until she rests on her side as in the second middle reference. Finally she settles flat, motionless, in the supplied final corpse pose with the head toward screen right. The crystal sword lies beside her forward hand and the golden dagger beside her rear hand; exactly two blades remain. Body, sash and both blades stay attached and visible throughout. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire fencer and both blades stay visible. Uniform pure saturated green RGB0,255,0 background in every frame. Keep this green plate completely static from first to last frame: it never changes color, flashes or darkens, and no light is cast on the fencer. Continuous physical joints, stable grips and stable material colors. No glow bursts, trails, sparks or magic effects.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "33",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100151
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_death_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_death_h3_v2_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_death_h3_v2_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "parallax_death_h3_v2_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 80,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "parallax_h3_20261001/death_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "parallax_h3_20261001",
+      "create_time": 1790850384471
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "parallax_h3_20261001\\death_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "aa0d9aee-4a95-42b7-bf24-e1db3d7a8212",
+          "timestamp": 1790850906231
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "aa0d9aee-4a95-42b7-bf24-e1db3d7a8212",
+          "timestamp": 1790850906265
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "aa0d9aee-4a95-42b7-bf24-e1db3d7a8212",
+          "timestamp": 1790851267342
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

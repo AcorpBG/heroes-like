@@ -5217,29 +5217,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        99.0,
+        99,
         205
       ],
       "painted_extent": 200,
-      "source_sheet": "res://art/animation/runtime/poses/unit_sunvault_splitprism_parallax_fencers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_sunvault_splitprism_parallax_fencers.png",
       "source_indices": [
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20,
-        21
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        157,
-        43,
-        361,
-        259
+        37,
+        19,
+        241,
+        235
       ],
-      "source_sha256": "d5c0d2444d78f9df0a5c091beb250d9b31b553813958c85c9abaab4b2f7a109b",
-      "source_provenance": "res://art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/provenance.json",
+      "source_sha256": "42c9ddca6274c5518755649059843f392d10673a1e696e3e215c917c7fb6e200",
+      "source_provenance": "res://art/animation/source/fluid/unit_sunvault_splitprism_parallax_fencers/provenance.json",
       "sha256": "920831ea1b159e22a76a7a747c44fd71e4c5c6f45c2869bc762503a4391528b1"
     },
     "unit_thornwake_woundroot_hearthseed_slingers": {

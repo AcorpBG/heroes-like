@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            424,
+            512
+          ]
+        ],
+        "anchor": [
+          212,
+          492
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9de4f4380160534e69c879d496a1bcace4d5b753e3a2994cb3347de34dad097c",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7b70f4e563cbdc53acef7832599d7dd21ba9f2cd2c0939915b599eb5a47d70ed",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "melee_windup",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/attack-pair.png",
+        "rects": [
+          [
+            0,
+            0,
+            825,
+            640
+          ],
+          [
+            0,
+            640,
+            690,
+            875
+          ]
+        ],
+        "anchor": [
+          410,
+          807
+        ],
+        "scale": 0.49,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.28,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "c0aed0250ed54fce516b02ec329b7a3809ae77ae23ab398dfc4b73d88f921dd4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f9ed5f1d0da3e23910e8a3700cbc1f594a289efc7553dc4493c08a6834982bf2",
+      "runtime_source_scale": 0.245
+    },
+    {
+      "source_frame": {
+        "name": "melee_thrust",
+        "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/continuity-alpha/attack-pair.png",
+        "rects": [
+          [
+            830,
+            0,
+            1798,
+            640
+          ],
+          [
+            690,
+            640,
+            1798,
+            875
+          ]
+        ],
+        "anchor": [
+          1220,
+          796
+        ],
+        "scale": 0.49,
+        "alpha_noise_cutoff": 8,
+        "packing_scale": 0.28,
+        "scale_reason": "Continuity painting matched to accepted idle-v2 body size by one shared factor 0.875 (standing head-top 197px idle vs 225.5px legacy)."
+      },
+      "source_sha256": "c0aed0250ed54fce516b02ec329b7a3809ae77ae23ab398dfc4b73d88f921dd4",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "d6e58ef2559adab00ea1eecd41708c7847ddc240a2a8ce24603cf6e38652e886",
+      "runtime_source_scale": 0.245
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

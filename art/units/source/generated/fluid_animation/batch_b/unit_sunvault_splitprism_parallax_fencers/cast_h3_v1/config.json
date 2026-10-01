@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_sunvault_splitprism_parallax_fencers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100144,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          424,
+          512
+        ]
+      ],
+      "anchor": [
+        212,
+        492
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_sunvault_splitprism_parallax_fencers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1362,
+        491
+      ],
+      "scale": 0.46,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      34,
+      1
+    ],
+    [
+      58,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Parallax Fencer, a young adult woman duelist with warm tan skin and curly brown hair gathered into a bun, a white-and-gold diadem visor with a blue crystal emblem across her forehead, a fitted white plated jacket with gold trim and blue diamond shoulder emblems, a blue scarf, long blue sash panels hanging from a gold-buckled belt, white padded trousers and white-and-gold armored knee boots. Her forward hand toward screen right grips ONE long slender translucent blue crystal sword by its gold guard. Her rear hand at screen left grips ONE short golden flame-shaped dagger pointing down and back. Exactly two arms, two legs and two blades. Preserve the face, hair, blade lengths, both grips and the blue sash throughout. Perform a crisp duelist salute to rally allies. Raise the crystal sword so its gold guard comes up before the chest and the blade points upward, as in the middle reference, nod firmly and hold the salute briefly, then sweep the blade down and forward back to the starting ready stance. The golden dagger stays low in the rear hand. A nonmagical physical gesture only. Locked elevated three-quarter orthographic camera at the reference angle, fixed anatomical scale and centered root. The entire fencer and both blades stay visible. Uniform pure saturated green RGB0,255,0 fills all surrounding pixels throughout. Keep clothing and blades attached, physical joints and stable foot contacts. No glow bursts, trails, sparks or magic effects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      24.0,
+      13.0
+    ]
+  }
+}
