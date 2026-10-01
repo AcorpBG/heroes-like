@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          211,
+          478
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0e55b799086a5420e3cdc905e0d98281c790bda4db1420458cd8c989adaeaa2b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d14cb7bc6f4726c8756592bd18ff294e5d9879ccdfab793d15ec8d39d7f0cb6c",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "loaded_pipe_anticipation",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+        "rects": [
+          [
+            0,
+            0,
+            417,
+            587
+          ]
+        ],
+        "anchor": [
+          200,
+          564
+        ],
+        "scale": 0.6983999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c8025a27d4f26fddad07408ce7e152fa94e0c425ae15a358c27ceef74dc1adca",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b1cb718a964c93d39c4c50b6e0b1435ad3ecfee38cdaeca087d3548ec3c413c5",
+      "runtime_source_scale": 0.34919999999999995
+    },
+    {
+      "source_frame": {
+        "name": "loaded_pipe_two_grip_shove",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png",
+        "rects": [
+          [
+            0,
+            0,
+            1051,
+            1496
+          ]
+        ],
+        "anchor": [
+          510,
+          1309
+        ],
+        "scale": 0.34143999999999997,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9b3976d8b00c746ab1ba50fb324d952c758a894d1ee620f3471824e552d22005",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "39a45fc500a7f29ebca0aff4917ca45082eca362d3666a1d10354be9f6fd6f8f",
+      "runtime_source_scale": 0.17071999999999998
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

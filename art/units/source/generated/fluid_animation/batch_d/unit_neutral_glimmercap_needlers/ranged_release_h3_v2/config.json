@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100815,
+  "references": [
+    {
+      "name": "ranged_loaded_aim",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          602,
+          635,
+          951,
+          900
+        ],
+        [
+          602,
+          900,
+          903,
+          985
+        ]
+      ],
+      "anchor": [
+        780,
+        965
+      ],
+      "scale": 0.6305,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "ranged_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          960,
+          630,
+          1254,
+          885
+        ],
+        [
+          930,
+          885,
+          1254,
+          990
+        ]
+      ],
+      "anchor": [
+        1095,
+        965
+      ],
+      "scale": 0.6305,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One controlled breath through the small brass-ringed wooden blowpipe. The same young teal-hooded man stays in the supplied two-handed aiming stance, rear mouthpiece at lips and left hand supporting the front. The single small cyan needle tip slips out of the muzzle once, leaving the supplied empty rigid wooden pipe. Keep the needle as small as in the reference, with no flash, beam, glow plume or trail. Hold the empty aim calmly for the rest of the clip. Two original hands remain on the same rear and front grips, both boots planted, same face, hood, armor, quiver and vials. One release only; no loading or second shot. Fixed elevated orthographic camera facing right, entire unchanged body and equipment inside960x544. Flat saturated magenta RGB255,0,255 backdrop throughout with no lighting changes or shadows.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

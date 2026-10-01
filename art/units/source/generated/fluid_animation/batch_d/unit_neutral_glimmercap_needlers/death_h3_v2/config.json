@@ -1,0 +1,102 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100816,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        211,
+        478
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          303,
+          986,
+          570,
+          1139
+        ],
+        [
+          303,
+          1139,
+          551,
+          1200
+        ],
+        [
+          303,
+          1200,
+          570,
+          1237
+        ]
+      ],
+      "anchor": [
+        444,
+        1205
+      ],
+      "scale": 0.6305,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          891,
+          1032,
+          1254,
+          1220
+        ]
+      ],
+      "anchor": [
+        1080,
+        1191
+      ],
+      "scale": 0.6305,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "A continuous physical side collapse of the supplied teal-hooded human scout. Knees buckle, body drops onto its knees, then hips and shoulders roll down toward screen right into the supplied head-right prone corpse. Both original legs and arms remain intact. The rigid wooden pipe lowers in the original right hand and rests horizontally beside the body. Same face, ragged teal cloak, bronze leather armor, quiver and cyan belt vials throughout. End with the whole body, hands, boots and pipe resting on the ground and hold completely still. Fixed elevated orthographic camera, unchanged anatomical body size and ground reference, entire creature always inside960x544. Every frame has exactly the same flat pure saturated green RGB0,255,0 background. No color cycling, floor, shadow, light effects, particles or extra objects.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

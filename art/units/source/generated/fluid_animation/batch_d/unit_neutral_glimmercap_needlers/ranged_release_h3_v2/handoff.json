@@ -1,0 +1,420 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_glimmercap_needlers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "ranged_h3_000",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "ranged_h3_001",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_001.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 1,
+          "video_time_seconds": 0.041666666666666664
+        },
+        {
+          "name": "ranged_h3_002",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "ranged_h3_003",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_003.png",
+          "rects": [
+            [
+              0,
+              0,
+              632,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 3,
+          "video_time_seconds": 0.125,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 632,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_004",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              628,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 628,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_005",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_005.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 5,
+          "video_time_seconds": 0.20833333333333334,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_006",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_007",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_007.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 7,
+          "video_time_seconds": 0.2916666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_008",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_009",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_009.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 9,
+          "video_time_seconds": 0.375,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_010",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              626,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "kind": "runtime_owned_projectile_separation",
+            "split_x": 626,
+            "reason": "Fully detached source projectile to the right of rigid empty pipe. Five-column transparent gap; all body, hands and held equipment retained. Game owns projectile flight."
+          }
+        },
+        {
+          "name": "ranged_h3_041",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "ranged_h3_123",
+          "clip": "ranged",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "ranged": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "frame_msec": 35,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 3
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/config.json",
+          "sha256": "0f3d36fbf776421e400b65b9e091b4d6b6f160564685c3b1d0a0394369ff2582"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/selection.json",
+          "sha256": "f0dfe57e6032ebae4b7e05a5155c9044908c74a5871e720f144701b28d6c1227"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/original_lossless.mkv",
+          "sha256": "51932ce33888656e419b3e4aee50e23676c7afc5e0d668abf63adc4544cbc464"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/original.json",
+          "sha256": "b15b9ad0ff0584bb8af70d952af2ac69c65a219e6c0d5a8664c5dd8eb5238fd3"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/workflow_api.json",
+          "sha256": "01f147b23a41cac3fd0390904355d58e484c276da5609728275fd52571e48dcd"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/prompt.txt",
+          "sha256": "d45b82d42df0dcbf733201bbba0f8de5d1048568059072ce03d763478a88ccfc"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/reference.json",
+          "sha256": "2ca67a9fe9131f76d677a68419edfd5e39a8e77006ba0b480e7f9173e5393125"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/matte.json",
+          "sha256": "f6d2e690563261b1b758fda7972ba885ae9889abed2397441fe04a4ea6722506"
+        },
+        "extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/extraction_settings.json",
+          "sha256": "4ee11b6e0993217632c6f036cb2a8831475f7ac68f8acb7e6fc11e86d597ecdf"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/staged_generation.json",
+          "sha256": "dbf285ba4821080f92e466686a9b22ce668d93d008481e5ae46335afe8da9eb4"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/sampling_workflow_api.json",
+          "sha256": "8d2e2a94f31d837c13e86f638634a3d435e0057cc74e47d67d1467ea84417364"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/sampling_submission.json",
+          "sha256": "6e56053827654d2e77286cb4c10668c5af8b7fc6d9b2c3dfdb5aa9e816717450"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/sampling_history.json",
+          "sha256": "3fb8c6f4e8cf3d2d723a0f24eba87ea73be5d3365c7b5e28d02ea79357a0b5cd"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/ranged_release_h3_v2/original.latent",
+          "sha256": "3192b41385a85578fe1cf9c50dd8c6ef79d0139d50146d6ae13397b36b7254aa"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "One original loaded-to-empty release0-3, stable two-handed rigid pipe/grips, held empty aim. Separate only the fully detached video-owned dart3 onward across an empty vertical gap; runtime owns flight. Full original video and matte pixels remain retained."
+      }
+    }
+  ]
+}

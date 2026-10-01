@@ -1,0 +1,326 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2",
+    "ranged_h3_v1",
+    "ranged_release_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo original-source and native-frame visual review accepted. All 11 takes reviewed chronologically with enlarged grip, limb, contact, loop and corpse detail; 285 selected action poses and retained eight articulated idle poses inspected at native 128px height in normal and actual reflected Godot draws. Reciprocal 12-pose run; physical two-handed melee raise/jab/recovery; corrected knee/chest hit recoil with stable short pipe; held crouched guard ending before unwanted firing; left spare-needle support gesture and return; corrected grounded side-collapse/final corpse. Ranged uses original loading/aim, one corrected release, then original empty-pipe lowering/reload: detached generated flight is separated only across verified empty columns because runtime owns projectile flight. Reject malformed melee settling50-52 and entire bad melee retry, unsafe orange death plate, bad original hit and repeated ranged shot. Review retained source pixels and anatomical scale; no duplicate, reversed, interpolated or warped padding. Windows Godot candidate955 and reflected955 checks passed. No continuous manual/browser playback review: local-file browser policy blocked the preview. No Linux execution or full repository suite claimed."
+  },
+  "clip_sequences": {
+    "ranged": {
+      "frames": [
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 0
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 12
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 14
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 15
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 16
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 17
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 18
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 19
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 20
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 21
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 22
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 23
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 24
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 25
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 26
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 27
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 28
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 29
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 30
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 31
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 32
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 33
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 34
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 35
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 40
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 44
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 1
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 2
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 3
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 4
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 5
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 6
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 7
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 8
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 9
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 10
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 41
+        },
+        {
+          "take": "ranged_release_h3_v2",
+          "video_frame": 123
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 80
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 81
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 82
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 83
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 84
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 85
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 86
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 87
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 88
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 89
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 90
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 91
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 92
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 93
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 94
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 95
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 96
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 97
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 98
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 99
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 100
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 101
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 102
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 103
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 104
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 105
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 106
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 107
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 108
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 109
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 110
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 111
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 112
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 113
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 114
+        },
+        {
+          "take": "ranged_h3_v1",
+          "video_frame": 115
+        }
+      ],
+      "timing": {
+        "frame_msec": 35,
+        "contact_frame": 28
+      },
+      "review_note": "Exact original loaded aim44 to the same guide in corrected release1; corrected empty terminal123 to original empty lowering80. No morph/crossfade or synthetic frame. One runtime-owned projectile."
+    }
+  }
+}

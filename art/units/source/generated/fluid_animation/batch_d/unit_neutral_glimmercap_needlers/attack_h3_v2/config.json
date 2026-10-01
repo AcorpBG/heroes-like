@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "attack",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100812,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        211,
+        478
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "loaded_pipe_anticipation",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/loaded-pipe-melee-defense-and-empty-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          417,
+          587
+        ]
+      ],
+      "anchor": [
+        200,
+        564
+      ],
+      "scale": 0.34919999999999995,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "loaded_pipe_two_grip_shove",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/continuity-alpha/two-spaced-grips-loaded-pipe-shove.png",
+      "rects": [
+        [
+          0,
+          0,
+          1051,
+          1496
+        ]
+      ],
+      "anchor": [
+        510,
+        1309
+      ],
+      "scale": 0.17071999999999998,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      48,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "Physical two-handed melee shove with a short rigid wooden tube. One original adult human Glimmercap Needler, lean young man with narrow pale face, dark hair, teal hood with small pale mushroom ornaments, teal scarf and ragged cloak, dark leather layered bronze armor, olive forearm wraps, black trousers and tall bronze-bound boots. Cyan crystal-tipped needle quiver on back and cyan glass belt vials. One straight brown blowpipe with brass rings and ONE loaded cyan needle tip at the muzzle. Right hand grips its rear, near screen left, and left hand holds spare needles in ready or supports the forward pipe during two-handed actions. Exactly two arms, two hands and two legs, same face, clothing, pipe and equipment throughout. Move the whole rigid pipe forward using both arms and a small torso lean, then retract it and lower to ready. Its brass-ringed shaft and short cyan needle point retain exactly their reference lengths throughout. The point stays attached to the wooden muzzle, never extends or emits anything. Maintain two original hands on the two spaced grips. One anticipation, one short thrust, one recovery. Fixed elevated orthographic camera, same full body size and ground root. Flat uniform magenta background RGB255,0,255 throughout, no other effects or objects.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

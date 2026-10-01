@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "workflow": "Solo local MiniMax H3 video, original extracted transparent frames; one unit fully completed before another.",
+  "new_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v2",
+    "ranged_h3_v1",
+    "ranged_release_h3_v2"
+  ],
+  "new_clip_frames": {
+    "move": 12,
+    "attack": 52,
+    "hit": 39,
+    "defend": 30,
+    "cast": 34,
+    "death": 44,
+    "ranged": 74
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo original-source and native-frame visual review accepted. All 11 takes reviewed chronologically with enlarged grip, limb, contact, loop and corpse detail; 285 selected action poses and retained eight articulated idle poses inspected at native 128px height in normal and actual reflected Godot draws. Reciprocal 12-pose run; physical two-handed melee raise/jab/recovery; corrected knee/chest hit recoil with stable short pipe; held crouched guard ending before unwanted firing; left spare-needle support gesture and return; corrected grounded side-collapse/final corpse. Ranged uses original loading/aim, one corrected release, then original empty-pipe lowering/reload: detached generated flight is separated only across verified empty columns because runtime owns projectile flight. Reject malformed melee settling50-52 and entire bad melee retry, unsafe orange death plate, bad original hit and repeated ranged shot. Review retained source pixels and anatomical scale; no duplicate, reversed, interpolated or warped padding. Windows Godot candidate955 and reflected955 checks passed. No continuous manual/browser playback review: local-file browser policy blocked the preview. No Linux execution or full repository suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 955,
+    "mirrored_checks": 955,
+    "live_checks": 969,
+    "failures": 0,
+    "imported_atlas": "exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3072,
+      3388
+    ],
+    "rgba_bytes": 41631744,
+    "new_original_action_frames": 285,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 992,
+    "retained_original_rgb_frames_including_rejected": 1364,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 197,
+    "remaining": 35,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Glimmercap Needlers seven H3 actions285 original poses plus retained8-frame idle; source/mirrored/native visual review and955/955/969 focused checks pass, exact imported atlas and all232 map visuals preserved. Roster197/232 complete,35 remaining. Broad goal remains in_progress; no subagents or full suite.",
+  "cleanup": {
+    "removed_files": 2632,
+    "recovered_bytes": 992238707.0,
+    "retained_original_rgb_frames": 1364,
+    "rebuildable": true,
+    "rule": "Original art/prompts/videos/latents/guides/workflows/provenance, selected mattes, correction inputs and caches retained; only verified task duplicates and disposable reviews removed. Removed verified inactive isolated baseline copies, import/test profiles, native renders, blocked browser preview derivatives, logs and disposable staging/cleanup helpers."
+  }
+}

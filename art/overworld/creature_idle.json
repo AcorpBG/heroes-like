@@ -3607,29 +3607,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        96.0,
+        96,
         201
       ],
       "painted_extent": 196,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_glimmercap_needlers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_glimmercap_needlers.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        160,
-        35,
-        333,
-        247
+        32,
+        23,
+        205,
+        235
       ],
-      "source_sha256": "4e4fa08b30857113fb7d95464d01aaa9fcfc1be1f63e0c162c5b83ea3a396e47",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_glimmercap_needlers/provenance.json",
+      "source_sha256": "8154f68c6afcc91f3d3d6d56480c3a30d68c6edf4784b5c2c724fbe1e06dfe5a",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_glimmercap_needlers/provenance.json",
       "sha256": "c0d37eb69403380b048872467d943412b7a1ef6c3a25c2fa5ecbc54dcf78e76f"
     },
     "unit_neutral_bogbell_mauls": {

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "031e8e527535576ea0fe127a5600be4c03c0a5d5f5986d0ea4054c9092b431a3",
+  "latent_sha256": "b99586d96952f2b0f596b978dc79d72b3919753b83932abbf233e408e2c9468e",
+  "decode_workflow_sha256": "131348d2a7546dfffc7d088e67470e20a0497b1a0e4482635425ecfcc28a965e",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "glimmercap_needler_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17604602688,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

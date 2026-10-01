@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "198765694e1d0761282a622925f53cd651dc82d71bd75f5da4fb6a1b7c18659a",
+  "latent_sha256": "b29ffdf75894f88e94b8df61dae7f2a70651f9638c9a42cd3e9df8f796c0fda8",
+  "decode_workflow_sha256": "41f7b11cc7af9da04a9eb6aaa5ea471e66b0e4877051b39aeda9c89dddb43ef6",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "glimmercap_needler_h3\\death_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

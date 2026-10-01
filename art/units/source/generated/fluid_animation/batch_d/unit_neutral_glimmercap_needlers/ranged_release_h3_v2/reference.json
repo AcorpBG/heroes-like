@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "ranged_loaded_aim",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+        "rects": [
+          [
+            602,
+            635,
+            951,
+            900
+          ],
+          [
+            602,
+            900,
+            903,
+            985
+          ]
+        ],
+        "anchor": [
+          780,
+          965
+        ],
+        "scale": 1.261,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e4d55650d8ffd1c4803ab64ff2d13525ef4ef58746e26db77c9854f23c8da1a7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "8360c6e93583471dd93af211a6bbd6c591b1b2469403baf1f0fbc60080f97d84",
+      "runtime_source_scale": 0.6305
+    },
+    {
+      "source_frame": {
+        "name": "ranged_empty_release",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+        "rects": [
+          [
+            960,
+            630,
+            1254,
+            885
+          ],
+          [
+            930,
+            885,
+            1254,
+            990
+          ]
+        ],
+        "anchor": [
+          1095,
+          965
+        ],
+        "scale": 1.261,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "e4d55650d8ffd1c4803ab64ff2d13525ef4ef58746e26db77c9854f23c8da1a7",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6e1141182ecc81eb5b5b6930e6f74c2682206d3c03892d6268dc954fd036e259",
+      "runtime_source_scale": 0.6305
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

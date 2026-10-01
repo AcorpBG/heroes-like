@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          211,
+          478
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "0e55b799086a5420e3cdc905e0d98281c790bda4db1420458cd8c989adaeaa2b",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "d14cb7bc6f4726c8756592bd18ff294e5d9879ccdfab793d15ec8d39d7f0cb6c",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

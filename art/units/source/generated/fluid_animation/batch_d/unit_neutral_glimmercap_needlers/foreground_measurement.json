@@ -1,0 +1,212 @@
+{
+  "attack_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 39767,
+        "max_magenta_chroma": 8.0,
+        "max_green_chroma": 71.0
+      },
+      {
+        "guide": "guide_2_rgba.png",
+        "opaque_pixels": 46087,
+        "max_magenta_chroma": 61.0,
+        "max_green_chroma": 62.0
+      }
+    ],
+    "protected_magenta_chroma": 63
+  },
+  "cast_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 46215,
+        "max_magenta_chroma": 3.0,
+        "max_green_chroma": 50.0
+      }
+    ],
+    "protected_magenta_chroma": 26
+  },
+  "death_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 38561,
+        "max_magenta_chroma": 5.0,
+        "max_green_chroma": 54.0
+      }
+    ],
+    "protected_magenta_chroma": 26
+  },
+  "defend_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 36332,
+        "max_magenta_chroma": 28.0,
+        "max_green_chroma": 72.0
+      }
+    ],
+    "protected_magenta_chroma": 30
+  },
+  "hit_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 43517,
+        "max_magenta_chroma": 7.0,
+        "max_green_chroma": 57.0
+      }
+    ],
+    "protected_magenta_chroma": 26
+  },
+  "move_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42448,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 36.0
+      }
+    ],
+    "protected_magenta_chroma": 26
+  },
+  "ranged_h3_v1": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_magenta_chroma": 4.0,
+        "max_green_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 52008,
+        "max_magenta_chroma": 9.0,
+        "max_green_chroma": 88.0
+      },
+      {
+        "guide": "guide_2_rgba.png",
+        "opaque_pixels": 49508,
+        "max_magenta_chroma": 11.0,
+        "max_green_chroma": 67.0
+      },
+      {
+        "guide": "guide_3_rgba.png",
+        "opaque_pixels": 49856,
+        "max_magenta_chroma": 6.0,
+        "max_green_chroma": 84.0
+      },
+      {
+        "guide": "guide_4_rgba.png",
+        "opaque_pixels": 40970,
+        "max_magenta_chroma": 7.0,
+        "max_green_chroma": 71.0
+      }
+    ],
+    "protected_magenta_chroma": 26
+  },
+  "attack_h3_v2": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_foreground_chroma": 4.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 39767,
+        "max_foreground_chroma": 8.0
+      },
+      {
+        "guide": "guide_2_rgba.png",
+        "opaque_pixels": 46087,
+        "max_foreground_chroma": 61.0
+      }
+    ],
+    "protected_foreground_chroma": 63,
+    "key_palette": "magenta",
+    "rule": "Eroded original opaque guide palette plus2; flat corner spread<=10 and background chroma>=80 remain required."
+  },
+  "ranged_release_h3_v2": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 49508,
+        "max_foreground_chroma": 11.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 49856,
+        "max_foreground_chroma": 6.0
+      }
+    ],
+    "protected_foreground_chroma": 26,
+    "key_palette": "magenta",
+    "rule": "Eroded original opaque guide palette plus2; flat corner spread<=10 and background chroma>=80 remain required."
+  },
+  "death_h3_v2": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_foreground_chroma": 64.0
+      },
+      {
+        "guide": "guide_1_rgba.png",
+        "opaque_pixels": 36202,
+        "max_foreground_chroma": 34.0
+      },
+      {
+        "guide": "guide_2_rgba.png",
+        "opaque_pixels": 38561,
+        "max_foreground_chroma": 54.0
+      }
+    ],
+    "protected_foreground_chroma": 66,
+    "key_palette": "green",
+    "rule": "Eroded original opaque guide palette plus2; flat corner spread<=10 and background chroma>=80 remain required."
+  },
+  "hit_h3_v2": {
+    "guides": [
+      {
+        "guide": "guide_0_rgba.png",
+        "opaque_pixels": 42490,
+        "max_foreground_chroma": 4.0
+      }
+    ],
+    "protected_foreground_chroma": 26,
+    "key_palette": "magenta",
+    "rule": "Eroded original opaque guide palette plus2; flat corner spread<=10 and background chroma>=80 remain required."
+  }
+}

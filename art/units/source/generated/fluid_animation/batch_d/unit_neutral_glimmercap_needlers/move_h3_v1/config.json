@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100701,
+  "references": [
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/alpha/poses.png",
+      "rects": [
+        [
+          625,
+          0,
+          944,
+          337
+        ]
+      ],
+      "anchor": [
+        813,
+        324
+      ],
+      "scale": 0.6305,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original adult human Glimmercap Needler, lean young man with narrow pale face, dark hair, teal hood with small pale mushroom ornaments, teal scarf and ragged cloak, dark leather layered bronze armor, olive forearm wraps, black trousers and tall bronze-bound boots. Cyan crystal-tipped needle quiver on back and cyan glass belt vials. One straight brown blowpipe with brass rings and ONE loaded cyan needle tip at the muzzle. Right hand grips its rear, near screen left, and left hand holds spare needles in ready or supports the forward pipe during two-handed actions. Exactly two arms, two hands and two legs, same face, clothing, pipe and equipment throughout. Two complete reciprocal running strides in place. Start with RIGHT near leg extended forward and LEFT far leg bent behind. Near leg loads and passes back as far leg comes forward; then exchange again and return to the supplied contact. BOTH original legs alternate contact, loading, passing and extension. Pipe retained low in original right hand, spare needles in original left, quiver and cloak follow real body motion. No sliding root or duplicated near-leg-only steps. Locked elevated three-quarter orthographic camera facing screen right. Full creature, needle tips, pipe, boots and cloak stay in960x544 with generous margins, same anatomical body size and centered root throughout. Uniform pure saturated magenta RGB255,0,255 background for every frame; no gradients, color cycling, floor, cast shadow, text, particles, external light, magic, extra people or objects. Anatomically articulated physical joints, no morphing equipment or extra arms.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

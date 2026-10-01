@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "hit",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100813,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        211,
+        478
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "Brief impact recoil and balance recovery of the supplied young teal-hooded human scout. Both knees bend, chest leans backward about15degrees, original left hand keeps its three short spare needles and draws them close to chest. Original right hand retains the same short rigid wooden blowpipe angled down-left beside the hip. Its brass shaft and tiny attached cyan point never change length or become a blade. Recover balance through knees and torso, return both hands and shoulders to the supplied standing ready pose, then hold ready. Two original arms, two hands, two legs, unchanged hood, face, quiver, armor and cyan belt vials. Fixed elevated orthographic camera facing right with unchanged anatomical size and centered root inside960x544. Uniform pure saturated magenta RGB255,0,255 background throughout. No firing, magical effects, color cycling, shadows, added people or objects.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

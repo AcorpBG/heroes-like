@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_glimmercap_needlers",
+  "clip": "cast",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100707,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_glimmercap_needlers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        211,
+        478
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_left_hand_raised_needle_rally",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/support_raised_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        826,
+        837
+      ],
+      "scale": 0.277,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      62,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original adult human Glimmercap Needler, lean young man with narrow pale face, dark hair, teal hood with small pale mushroom ornaments, teal scarf and ragged cloak, dark leather layered bronze armor, olive forearm wraps, black trousers and tall bronze-bound boots. Cyan crystal-tipped needle quiver on back and cyan glass belt vials. One straight brown blowpipe with brass rings and ONE loaded cyan needle tip at the muzzle. Right hand grips its rear, near screen left, and left hand holds spare needles in ready or supports the forward pipe during two-handed actions. Exactly two arms, two hands and two legs, same face, clothing, pipe and equipment throughout. One physical support signal, no casting. Keep original right hand holding pipe down toward screen left. Lift original left hand with spare cyan needles to shoulder height in a clear rally gesture, nod once, then lower left hand to original ready. Both boots stay planted. No glowing effect or released needle. Locked elevated three-quarter orthographic camera facing screen right. Full creature, needle tips, pipe, boots and cloak stay in960x544 with generous margins, same anatomical body size and centered root throughout. Uniform pure saturated magenta RGB255,0,255 background for every frame; no gradients, color cycling, floor, cast shadow, text, particles, external light, magic, extra people or objects. Anatomically articulated physical joints, no morphing equipment or extra arms.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
