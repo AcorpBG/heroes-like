@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_4",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            512,
+            384,
+            1024
+          ]
+        ],
+        "anchor": [
+          192,
+          1010
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16817b80d03cebb35a913d1a1998d3d54e809b321dbfd71f72930fedf0ec41a2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "657b0b648bcd6ef9edc96be85cada77f2bf8789d60947ad4cbbfc7a9774104d4",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            846,
+            340,
+            1022
+          ],
+          [
+            0,
+            1022,
+            318,
+            1075
+          ],
+          [
+            0,
+            1075,
+            270,
+            1208
+          ]
+        ],
+        "anchor": [
+          152,
+          1170
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f01504581ec8ac792931e295262029f0a9820ea532b34eabc9fff26c2490c7bc",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

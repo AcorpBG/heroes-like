@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5f6547d0fca8afa6678b39917690f36e27fc401317196011c4246f634a2c3cc5",
+  "latent_sha256": "637686a337729f1c73d800d9892719533b4c2b0ecd41e8a82c7ba3ef978df030",
+  "decode_workflow_sha256": "e43867c4a94c7f28b8ea12aa7d650320eebfab76b872ab8014482d919873b152",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "harbor_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

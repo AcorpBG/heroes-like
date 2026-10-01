@@ -1,0 +1,5 @@
+{
+  "protected_foreground_chroma": 68,
+  "boundary_despill_source_pixels": 4,
+  "review_note": "Enlarged source frames 22 and 26 show a narrow green rim on head, rope and cloth. Despill only the four-source-pixel boundary band without altering alpha, geometry, original videos or opaque teal costume interiors. Review all chronological final mattes and selected detail again."
+}

@@ -1,0 +1,18 @@
+{
+  "provider": "built-in image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v3.png",
+    "sha256": "62eae9993099293fd720f94a9f6dbd930db3fb36cc2ecdbb23fc85ba2a6e8752"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v3.prompt.txt",
+    "sha256": "18cd2d6e1f042296fc231fd5b4de7e0fda27ea21753e70d1010095af0e3d3fc8"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v2.png",
+    "sha256": "c440019458481749ef194cf8cfa0661286825582d3785d87024f2da95e5e4bae"
+  },
+  "transparent_background_requested": true,
+  "status": "rejected",
+  "review_note": "Background-removal edit retained diffuse glow and changed framing; rejected."
+}

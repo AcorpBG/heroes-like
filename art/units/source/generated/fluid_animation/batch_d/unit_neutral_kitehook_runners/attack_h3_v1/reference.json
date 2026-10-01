@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_4",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            512,
+            384,
+            1024
+          ]
+        ],
+        "anchor": [
+          192,
+          1010
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16817b80d03cebb35a913d1a1998d3d54e809b321dbfd71f72930fedf0ec41a2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "6274210596f4f794d8dc026252e992f1d88e40b424f6c0b9a10be6d573adb0b3",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "compact_hook_windup",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+        "rects": [
+          [
+            0,
+            0,
+            768,
+            489
+          ]
+        ],
+        "anchor": [
+          420,
+          465
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e11b9c98d92600503a2b053db6b805bf7a8eeaa4d5dba19b31fd3fea1d8dd8da",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "compact_hook_thrust",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+        "rects": [
+          [
+            768,
+            0,
+            1536,
+            489
+          ]
+        ],
+        "anchor": [
+          1040,
+          465
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "69825147ab9a6a7df1cfece820a609f019130b9609ca6a5a45de03e6d313938e",
+      "runtime_source_scale": 0.46
+    },
+    {
+      "source_frame": {
+        "name": "compact_hook_recovery",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-actions-gray.png",
+        "rects": [
+          [
+            0,
+            489,
+            768,
+            1024
+          ]
+        ],
+        "anchor": [
+          420,
+          961
+        ],
+        "scale": 0.92,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "85950120fcf78979806b3dabb29f4d379a794482f1d92c3d4ae9ce4843b859cc",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "cd611d77835076919c43d4d5805ef0ce4a75233ac33489062aa6f367a8eb2150",
+      "runtime_source_scale": 0.46
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100125,
+  "references": [
+    {
+      "name": "idle_hands_4",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        1010
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          897,
+          538,
+          1060
+        ],
+        [
+          340,
+          1060,
+          520,
+          1095
+        ],
+        [
+          265,
+          1095,
+          536,
+          1118
+        ],
+        [
+          265,
+          1118,
+          637,
+          1208
+        ]
+      ],
+      "anchor": [
+        433,
+        1180
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "compact_hook_side_collapse",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+      "rects": [
+        [
+          0,
+          0,
+          887,
+          887
+        ]
+      ],
+      "anchor": [
+        460,
+        665
+      ],
+      "scale": 0.23,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right_compact_hook",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+      "rects": [
+        [
+          887,
+          0,
+          1774,
+          887
+        ]
+      ],
+      "anchor": [
+        1335,
+        685
+      ],
+      "scale": 0.23,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      68,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. Perform one continuous defeat collapse. Knees buckle and lower onto the ground, then hips lower and the torso tips gently onto its side with the head toward screen right. Both hands retain the hook pole until it meets the ground, then it rests flat immediately beside the body. Settle into the supplied grounded side-rest corpse with exactly two arms and two legs, cloth draped over the body, one rope coil and exactly one hook pole on the ground. Finish motionless. Fixed elevated three-quarter orthographic camera, face toward screen right, original painted body scale. Keep the complete body, hook pole, rope and trailing cloth inside the frame. The background remains perfectly flat pure green RGB0,255,0 throughout: no hue changes, floor, shadows, horizon, scenery, text, other people or effects. Smooth physical joint articulation with unchanged anatomy and equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 70,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides, retaining teal cloth and corpse bruising.",
+    "per_guide_max": [
+      66,
+      42,
+      50,
+      68
+    ],
+    "separation": 185
+  },
+  "palette_preparation_note": "Observed move-v1 magenta hue cycling; coordinator authorized stronger pure-green plate before this initial take was ever submitted."
+}

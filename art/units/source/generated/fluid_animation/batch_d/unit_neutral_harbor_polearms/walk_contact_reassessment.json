@@ -1,0 +1,10 @@
+{
+  "first_contact_source": "move_h3_v2/matte/rgba_020.png",
+  "first_contact_video_frame": 20,
+  "first_contact_time_seconds": 0.8333333333333334,
+  "limb_identification": "The prominent light-tan foreground thigh runs from the visible foreground hip near x435,y445 to knee near x461,y501 and leading boot near x488,y560. The darker occluded leg ends in the trailing boot near x395,y548. The second contact at source68 repeats that same foreground thigh and leading boot.",
+  "reference_reassessment": "move_h3_v2/guide_1_rgba.png was described as far contact, but visually its broad foreground thigh leads toward screen right. move_h3_v2/guide_2_rgba.png shows the same foreground thigh in knee-passing. Thus the prior contact/passing guide assignment did not establish an opposite leading leg. This was a guide-identification error, not merely a prompt failure.",
+  "opposed_contact_required": "Foreground thigh/boot must trail toward screen left while the other, background leg extends toward screen right and plants its heel. Both hip-to-knee-to-boot chains must be separately traceable; no knee-lift-only pose or whole-figure mirror counts.",
+  "master_v3_review": "Targeted coordinate edit of source20 preserved the same foreground-leading leg and added colored backdrop glow. Rejected; not eligible for H3.",
+  "gate": "No move_h3_v3 submission or acceptance until an actual opposite-leading contact master is visually verified and coordinator grants a new GPU slot."
+}

@@ -1,0 +1,151 @@
+{
+  "tool": "builtin image_gen",
+  "generated_output_path": "C:/Users/acorp/.codex/generated_images/01a0f614-bc73-7292-a1d8-558e0a98e107/exec-a09a7946-ca31-4051-aad0-b1fc6ffcdab8.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v4.png",
+    "sha256": "144595d1b18c67cedf9dcd78837bb62dfc730f396608723c690cbbeaf8f1d09d"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v4.prompt.txt",
+    "sha256": "250055f3bdb11425070341b5c00a76fb636fd60ce8313891565dd52620f2a703"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v2/guide_0_rgba.png",
+      "sha256": "1ef3ecfa527512cbeadc307a15c12f13b64713b795ffdd3f80a8eeb679567e8b",
+      "role": "edit target"
+    }
+  ],
+  "status": "pending_visual_registration",
+  "review_reason": "Foreground broad left thigh trails toward screen left; background right-hip leg leads toward screen-right heel. Apparent opposed limb chains require anatomical scale, equipment proportions and coordinator review before registration. Previous backdrop-glow rejection was incorrect: sampled backdrop RGB has alpha zero. No H3 eligibility established.",
+  "size": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "h3_eligible": false,
+  "alpha_review": {
+    "method": "Direct RGBA pixel samples; no image modification or registration. Raw RGB preview does not prove an opaque backdrop.",
+    "alpha_at_least_8_bbox": [
+      387,
+      90,
+      1144,
+      913
+    ],
+    "backdrop_samples": [
+      {
+        "xy": [
+          1100,
+          500
+        ],
+        "rgba": [
+          8,
+          4,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1200,
+          500
+        ],
+        "rgba": [
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          300,
+          400
+        ],
+        "rgba": [
+          1,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "xy": [
+          250,
+          650
+        ],
+        "rgba": [
+          5,
+          3,
+          2,
+          0
+        ]
+      },
+      {
+        "xy": [
+          700,
+          800
+        ],
+        "rgba": [
+          42,
+          23,
+          7,
+          0
+        ]
+      },
+      {
+        "xy": [
+          760,
+          800
+        ],
+        "rgba": [
+          49,
+          28,
+          6,
+          0
+        ]
+      },
+      {
+        "xy": [
+          100,
+          500
+        ],
+        "rgba": [
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1000,
+          100
+        ],
+        "rgba": [
+          61,
+          49,
+          42,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1400,
+          500
+        ],
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "limitation": "Samples establish transparency only at sampled backdrop coordinates; full composited edge review remains pending."
+  }
+}

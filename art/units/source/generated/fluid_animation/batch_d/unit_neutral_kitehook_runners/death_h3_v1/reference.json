@@ -1,0 +1,129 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_4",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            512,
+            384,
+            1024
+          ]
+        ],
+        "anchor": [
+          192,
+          1010
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "16817b80d03cebb35a913d1a1998d3d54e809b321dbfd71f72930fedf0ec41a2",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "657b0b648bcd6ef9edc96be85cada77f2bf8789d60947ad4cbbfc7a9774104d4",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+        "rects": [
+          [
+            340,
+            897,
+            538,
+            1060
+          ],
+          [
+            340,
+            1060,
+            520,
+            1095
+          ],
+          [
+            265,
+            1095,
+            536,
+            1118
+          ],
+          [
+            265,
+            1118,
+            637,
+            1208
+          ]
+        ],
+        "anchor": [
+          433,
+          1180
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "9da3a14da4ec16f15a9346b163183151f83f0f399323e1b1fe23e5a5dc8f85d3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f8ede916720a83992dfd033b1d8f05cf88a6fad5945b645ec994a0547a06994b",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "name": "compact_hook_side_collapse",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+        "rects": [
+          [
+            0,
+            0,
+            887,
+            887
+          ]
+        ],
+        "anchor": [
+          460,
+          665
+        ],
+        "scale": 0.46,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "134838684172720ecd271dc29487182095f498085de33348355ccfa1e34961fe",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1d6f6eb0d971ad1087c908c8ab3a743de32f39964d4fa29ea7a56556ccaa35c8",
+      "runtime_source_scale": 0.23
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right_compact_hook",
+        "source": "art/animation/source/poses/unit_neutral_kitehook_runners/equipment-refinement-20260916/alpha/compact-hook-collapse-gray.png",
+        "rects": [
+          [
+            887,
+            0,
+            1774,
+            887
+          ]
+        ],
+        "anchor": [
+          1335,
+          685
+        ],
+        "scale": 0.46,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "134838684172720ecd271dc29487182095f498085de33348355ccfa1e34961fe",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "6130c6a2f55c7b27206ae24e831ed4369637b285f483c441ba53a37e02b35dff",
+      "runtime_source_scale": 0.23
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

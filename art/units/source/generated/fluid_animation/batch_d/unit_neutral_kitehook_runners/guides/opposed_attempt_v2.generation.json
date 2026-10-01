@@ -1,0 +1,18 @@
+{
+  "provider": "built-in image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v2.png",
+    "sha256": "c440019458481749ef194cf8cfa0661286825582d3785d87024f2da95e5e4bae"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v2.prompt.txt",
+    "sha256": "422646327f21ae2db426213a2d7a9bd20c2a484f48af01c2d1a6063f2a2e7a95"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v1/guide_1_rgba.png",
+    "sha256": "5e4b3badd354567bc71e12cffc5c81d98e9a0a5872c35083711a48934d2690c7"
+  },
+  "transparent_background_requested": true,
+  "status": "rejected",
+  "review_note": "Opposite visible knee arrangement but soft diffuse background glow; rejected as a guide."
+}

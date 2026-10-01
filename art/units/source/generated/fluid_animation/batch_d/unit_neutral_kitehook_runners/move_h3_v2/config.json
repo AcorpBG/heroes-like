@@ -1,0 +1,125 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "clip": "move",
+  "seed": 2026100160,
+  "references": [
+    {
+      "name": "run_extension_attempt",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          592,
+          0,
+          966,
+          258
+        ],
+        [
+          605,
+          258,
+          958,
+          447
+        ]
+      ],
+      "anchor": [
+        824,
+        418
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_4",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        1010
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_contact_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        908,
+        953
+      ],
+      "scale": 0.185,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      18,
+      1
+    ],
+    [
+      35,
+      2
+    ],
+    [
+      52,
+      1
+    ],
+    [
+      70,
+      0
+    ],
+    [
+      87,
+      1
+    ],
+    [
+      105,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. Run in place for two complete reciprocal running cycles. Begin the original near-leg-forward contact, load the contacting foot, pass through the supplied both-feet-grounded stance, then reverse to the supplied far-leg-forward contact with the near knee visibly bent back. Repeat the opposite sequence with the feet taking turns carrying body weight. Each leg moves on its own side without crossing the knees. The hips stay centered and every contacting boot stays planted during its loading phase. Both hands retain the original compact hook pole. End in exactly the first contact, creating a continuous loop with meaningful opposite contacts and passing/loading phases. Fixed elevated three-quarter orthographic camera facing right; unchanged original body scale and identity. Background perfectly flat pure green RGB0,255,0 throughout, no hue changes, floor, shadows, scenery or effects.",
+  "protected_foreground_chroma": 75,
+  "foreground_measurement": {
+    "rule": "Three-source-pixel eroded opaque green-minus-max(red,blue) maximum plus two across current fixed-scale guides.",
+    "per_guide_max": [
+      56.0,
+      66.0,
+      73.0
+    ],
+    "separation": 180
+  },
+  "correction_note": "Unsubmitted v2; original v1 immutable and rejected. Measured uniform green replaces hue-cycling magenta; movement adds explicit opposite contact and original grounded passing, with one fixed anatomical scale per painting."
+}

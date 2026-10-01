@@ -1,0 +1,34 @@
+{
+  "provider": "built-in image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v4.png",
+    "sha256": "396b01990985a38ade6201db396b23cb212c706f771ab62ab1a694f94143f83b"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v4.prompt.txt",
+    "sha256": "364824a922fd90e2edf82a8a0216cddf6d1c35c9f53765270134d212ff8026af"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v2.png",
+    "sha256": "c440019458481749ef194cf8cfa0661286825582d3785d87024f2da95e5e4bae"
+  },
+  "transparent_background_requested": false,
+  "status": "pending",
+  "review_note": "Pending fixed global anatomical scale/anchor guide review; only plate extraction, no authored transformations.",
+  "derived_rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_contact_rgba.png",
+    "sha256": "7b87bec01ff66b6cd60be189ab7d14bbf681f994bc8c5fedfc9dfb32bc28a8ba"
+  },
+  "extraction": {
+    "background_rgb": [
+      3.5,
+      249.0,
+      7.5
+    ],
+    "corner_median_spread": 1.581,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels",
+    "protected_foreground_chroma": 95,
+    "measurement": "Six-pixel eroded nonplate interior green chroma<100, bounded below by measured original costume72; no body geometry changes."
+  }
+}

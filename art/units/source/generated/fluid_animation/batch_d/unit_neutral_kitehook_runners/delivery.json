@@ -1,0 +1,54 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "takes": [
+    "attack_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "accepted_clips": [
+      "attack",
+      "defend",
+      "cast",
+      "death"
+    ],
+    "notes": "Coordinator accepted exactly attack22, defend12, noncaster physical support19 and death26 after all original124-frame chronological sequences, final matte chronology/enlarged anatomy, all87 final native phases including preserved idle8, and three actual BattleShell captures. Final unmodified focused fixture passed146 checks with no failures, Normal/Fast/reduced/contact/audio/VFX/session-save equality and shell input/finish/focus exercised. 744 original RGB frame hashes reverified. Preserve original articulated idle8 and map art/timing. Move/hit v1 rejected and excluded; entire unit is not complete. Continuous source/retimed playback route remains unavailable. Publication and published integrity/live checks belong to coordinator. Published live checks: isolated-profile import passed; unmodified full selected-unit live fixture passed160 checks with no failures. Original744 RGB hashes and published79 frame pixels/anchors verified; preserved idle8 and map pixels/timing, other231 catalog rows unchanged. Published atlas2368x3120 (29552640 RGBA bytes)."
+  },
+  "initial_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "rejected_takes": {
+    "move_h3_v1": "Original plate cycles green/orange/magenta. Opposed gait contacts remain unproven; legacy gather and extension references pin the same forward shin. Requires new original opposed-contact/grounded-passing guide and measured green regeneration.",
+    "hit_h3_v1": "Original plate alternates cyan/magenta through recoil/hold/recovery; cyan overlaps teal costume. No safe complete recoil+recovery matte. Requires measured green regeneration; preserve original recoil guide."
+  },
+  "live_validation": {
+    "isolated_profile_import_exit_code": 0,
+    "fixture": "tests/fluid_creature_animation_regression.py --live --unit unit_neutral_kitehook_runners --overview-only --render",
+    "contacts_only": false,
+    "exit_code": 0,
+    "checks": 160,
+    "failures": [],
+    "original_rgb_frames_verified": 744,
+    "published_source_frames_verified": 79,
+    "preserved_idle_frames": 8,
+    "other_catalog_rows_unchanged": 231,
+    "published_atlas_size": [
+      2368,
+      3120
+    ],
+    "rgba_bytes": 29552640,
+    "coverage": "Unmodified shared full fixture: authored timing/contacts, Normal/Fast/reduced, audio/VFX, session/save equality, actual BattleShell input/finish/focus/committed-save equality, live imported atlas dimensions, real map shader frame changes and reduced-motion pixel stability.",
+    "visual_review": "All live native phases, three actual BattleShell captures, and map-idle phases inspected. Continuous source/retimed playback unavailable; no continuous preview claim.",
+    "scope": "Exactly four new actions plus preserved original idle8; move and hit remain rejected v1 and unsubmitted corrections."
+  }
+}

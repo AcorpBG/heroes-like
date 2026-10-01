@@ -1,0 +1,31 @@
+{
+  "tool": "builtin image_gen",
+  "generated_output_path": "C:/Users/acorp/.codex/generated_images/01a0f614-bc73-7292-a1d8-558e0a98e107/exec-7e30dcd9-74fc-438c-9e95-4e49215d9fa0.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v3.png",
+    "sha256": "a1da3dcbd46720cf6e92dd64db74e5bf53f92713cd5d5ec628a0350a443acc64"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v3.prompt.txt",
+    "sha256": "b7f41d6c1072d761d55575f56b727ea700740f400357347dc4037e96972b73d1"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v2/matte/rgba_020.png",
+      "sha256": "61705783d4857b91c13ee4f2e78e409bbf68ca41f604181d2e7ba6d599fb7fce",
+      "role": "edit target"
+    }
+  ],
+  "status": "rejected",
+  "review_reason": "Same foreground leg still leads; colored backdrop glow added. Opposed-contact anatomy not achieved.",
+  "size": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "h3_eligible": false
+}

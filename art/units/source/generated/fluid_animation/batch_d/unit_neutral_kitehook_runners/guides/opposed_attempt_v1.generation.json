@@ -1,0 +1,18 @@
+{
+  "provider": "built-in image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v1.png",
+    "sha256": "6370f665ac635ca821cf3931aa64fd83b5c0d22615e6201bc00e75778dc83b73"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v1.prompt.txt",
+    "sha256": "f27f34589f6555e01fc68a0bdd3300f8feee81d47defe84825b88683e9c0e508"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v1/guide_1_rgba.png",
+    "sha256": "5e4b3badd354567bc71e12cffc5c81d98e9a0a5872c35083711a48934d2690c7"
+  },
+  "transparent_background_requested": true,
+  "status": "rejected",
+  "review_note": "Rejected: repeats initial same-leg arrangement."
+}

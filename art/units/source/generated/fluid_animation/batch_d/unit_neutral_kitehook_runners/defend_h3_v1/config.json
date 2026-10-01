@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100123,
+  "references": [
+    {
+      "name": "idle_hands_4",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        1010
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard_deep",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          971,
+          460,
+          1254,
+          722
+        ],
+        [
+          953,
+          722,
+          1254,
+          840
+        ]
+      ],
+      "anchor": [
+        1105,
+        808
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      58,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. Lower into the supplied guarded crouch by bending both knees. Lean forward, bring the hook pole low and across the body with both hands firmly on its original shaft. Both legs support the body and the head remains alert toward right. Finish holding the guarded crouch. Fixed elevated three-quarter orthographic camera, face toward screen right, original painted body scale. Keep the complete body, hook pole, rope and trailing cloth inside the frame. The background remains perfectly flat pure green RGB0,255,0 throughout: no hue changes, floor, shadows, horizon, scenery, text, other people or effects. Smooth physical joint articulation with unchanged anatomy and equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 68,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides, retaining teal cloth and corpse bruising.",
+    "per_guide_max": [
+      66,
+      41
+    ],
+    "separation": 187
+  },
+  "palette_preparation_note": "Observed move-v1 magenta hue cycling; coordinator authorized stronger pure-green plate before this initial take was ever submitted."
+}

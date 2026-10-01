@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100122,
+  "references": [
+    {
+      "name": "idle_hands_4",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          512,
+          384,
+          1024
+        ]
+      ],
+      "anchor": [
+        192,
+        1010
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          846,
+          340,
+          1022
+        ],
+        [
+          0,
+          1022,
+          318,
+          1075
+        ],
+        [
+          0,
+          1075,
+          270,
+          1208
+        ]
+      ],
+      "anchor": [
+        152,
+        1170
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      45,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. React to one impact with a short backward torso recoil. Bend both knees, rock the shoulders and head back into the supplied recoil while both hands retain the hook pole. Feet stay near their original contacts. Pause briefly and recover upright to the initial stance. Empty background stays identical. Fixed elevated three-quarter orthographic camera, face toward screen right, original painted body scale. Keep the complete body, hook pole, rope and trailing cloth inside the frame. The background remains perfectly flat pure magenta RGB255,0,255 throughout: no hue changes, floor, shadows, horizon, scenery, text, other people or effects. Smooth physical joint articulation with unchanged anatomy and equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 12,
+  "foreground_measurement": {
+    "rule": "Eroded opaque min(red,blue)-green maximum plus two across original guides.",
+    "per_guide_max": [
+      10.0,
+      7.0
+    ]
+  }
+}

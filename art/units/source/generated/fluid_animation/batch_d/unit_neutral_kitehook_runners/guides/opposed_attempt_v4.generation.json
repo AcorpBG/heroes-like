@@ -1,0 +1,18 @@
+{
+  "provider": "built-in image_gen.imagegen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v4.png",
+    "sha256": "396b01990985a38ade6201db396b23cb212c706f771ab62ab1a694f94143f83b"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v4.prompt.txt",
+    "sha256": "364824a922fd90e2edf82a8a0216cddf6d1c35c9f53765270134d212ff8026af"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/opposed_attempt_v2.png",
+    "sha256": "c440019458481749ef194cf8cfa0661286825582d3785d87024f2da95e5e4bae"
+  },
+  "transparent_background_requested": false,
+  "status": "pending",
+  "review_note": "Flat green cleanup of attempt2; pending anatomical scale registration and enlarged/native guide review, not accepted."
+}

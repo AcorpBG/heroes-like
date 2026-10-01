@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "fc3046b8b87bcb779ecf5149bcf973f170151aac411149275d16bd0af47c2032",
+  "latent_sha256": "74ae10008a008bad90bdf553f5a7555f7aff1f4110cbe00d99a05370b02f7bd1",
+  "decode_workflow_sha256": "c625a6e6c4fef6d86d2010bb1bd3b5352eb46b623d5f8468cf7c27d434d2811d",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "kitehook_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

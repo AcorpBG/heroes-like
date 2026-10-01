@@ -3448,12 +3448,12 @@
         7
       ],
       "source_crop": [
-        68,
-        34,
-        254,
-        243
+        92,
+        18,
+        278,
+        227
       ],
-      "source_sha256": "8fea821684f3f2d71435187bfb6a9f6b4b3bad353e68d3506144f7b970f340ab",
+      "source_sha256": "e5c459f89248973d98c5623b8c10bbcaff8d565d4630ec549bfc59c83a4300a4",
       "source_provenance": "res://art/animation/source/fluid/unit_neutral_harbor_polearms/provenance.json",
       "sha256": "fb8ecc40aef109009a0435753316a487f661093bc317effacefe237e821448c7"
     },
@@ -3506,25 +3506,25 @@
         215
       ],
       "painted_extent": 210,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_kitehook_runners.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_kitehook_runners.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        168,
+        60,
         21,
-        351,
+        243,
         247
       ],
-      "source_sha256": "e1656d24ce5f771405f4b9afb3fce572458c233073cc1edb034fc1201eed8ce3",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_kitehook_runners/provenance.json",
+      "source_sha256": "c2672af77a92b10d4e8b305752498c3b06794b266d93bf5e56cc67efc7013e30",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_kitehook_runners/provenance.json",
       "sha256": "999fabe1067e941df7ad18cb0e803808b7aebdcdc72537b8d3f958c5ac64f362"
     },
     "unit_neutral_ridgeflare_shots": {

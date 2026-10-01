@@ -1,0 +1,81 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100124,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        191,
+        498
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_kitehook_runners/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1344,
+        498
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. Perform a practical physical ready signal. Lift the same hook pole with both hands from waist level through the supplied chest-level pose, then substantially higher to above her head as a rally signal. Both elbows clearly lift and extend. Briefly hold the high pole around the middle of the video, then lower the pole to the original waist-level grip. Keep both feet grounded. This noncaster makes an equipment readiness gesture without magic, glow, projectiles or new equipment. Fixed elevated three-quarter orthographic camera, face toward screen right, original painted body scale. Keep the complete body, hook pole, rope and trailing cloth inside the frame. The background remains perfectly flat pure green RGB0,255,0 throughout: no hue changes, floor, shadows, horizon, scenery, text, other people or effects. Smooth physical joint articulation with unchanged anatomy and equipment.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 72,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides, retaining teal cloth and corpse bruising.",
+    "per_guide_max": [
+      70,
+      69
+    ],
+    "separation": 183
+  },
+  "palette_preparation_note": "Observed move-v1 magenta hue cycling; coordinator authorized stronger pure-green plate before this initial take was ever submitted."
+}

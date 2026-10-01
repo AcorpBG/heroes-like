@@ -1,0 +1,152 @@
+{
+  "tool": "builtin image_gen",
+  "generated_output_path": "C:/Users/acorp/.codex/generated_images/01a0f614-bc73-7292-a1d8-558e0a98e107/exec-fafcef4d-1ddd-4a24-a13d-2152544e6781.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.png",
+    "sha256": "cc26068f2dcebc134498ca8f487bcebcf4acab14e83113863625b8a41a0bd9f2"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.prompt.txt",
+    "sha256": "10e91e650263b07601dc2a95fe924f07cbfecd1e89bfbcbd96ae24a3a9f6ffba"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v4.png",
+      "sha256": "144595d1b18c67cedf9dcd78837bb62dfc730f396608723c690cbbeaf8f1d09d",
+      "role": "edit target"
+    }
+  ],
+  "status": "pending_visual_registration",
+  "review_reason": "Background-only edit of v4 retained an apparent opposed contact, but reframed and enlarged the figure. Sampled backdrop RGB has alpha zero; no opaque backdrop defect established. Anatomical scale, equipment proportions, alpha-composited edges and coordinator review remain pending. No registration or H3 submission authorized.",
+  "size": [
+    1536,
+    1024
+  ],
+  "mode": "RGBA",
+  "alpha_extrema": [
+    0,
+    254
+  ],
+  "h3_eligible": false,
+  "alpha_review": {
+    "method": "Direct RGBA pixel samples; no image modification or registration. Raw RGB preview does not prove an opaque backdrop.",
+    "alpha_at_least_8_bbox": [
+      344,
+      22,
+      1201,
+      958
+    ],
+    "backdrop_samples": [
+      {
+        "xy": [
+          1100,
+          500
+        ],
+        "rgba": [
+          15,
+          9,
+          6,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1200,
+          500
+        ],
+        "rgba": [
+          1,
+          0,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          300,
+          400
+        ],
+        "rgba": [
+          2,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          250,
+          650
+        ],
+        "rgba": [
+          16,
+          12,
+          9,
+          0
+        ]
+      },
+      {
+        "xy": [
+          700,
+          800
+        ],
+        "rgba": [
+          58,
+          31,
+          8,
+          0
+        ]
+      },
+      {
+        "xy": [
+          760,
+          800
+        ],
+        "rgba": [
+          69,
+          40,
+          8,
+          0
+        ]
+      },
+      {
+        "xy": [
+          100,
+          500
+        ],
+        "rgba": [
+          1,
+          1,
+          1,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1000,
+          100
+        ],
+        "rgba": [
+          83,
+          63,
+          49,
+          0
+        ]
+      },
+      {
+        "xy": [
+          1400,
+          500
+        ],
+        "rgba": [
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ],
+    "limitation": "Samples establish transparency only at sampled backdrop coordinates; full composited edge review remains pending."
+  },
+  "edit_outcome": "Background-only intent did not preserve exact figure framing: alpha>=8 bounds changed from v4 [387,90,1144,913] to v5 [344,22,1201,958]. Original master retained without registration."
+}

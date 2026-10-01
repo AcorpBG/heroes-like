@@ -4,15 +4,16 @@
     "hit_h3_v1",
     "defend_h3_v1",
     "cast_h3_v1",
-    "death_h3_v1"
+    "death_h3_v1",
+    "attack_h3_v2"
   ],
   "preserved_accepted_clips": [
     "idle"
   ],
   "visual_review": {
     "status": "accepted_selected_clips",
-    "accepted_clips": ["hit", "defend", "cast", "death"],
-    "notes": "Coordinator accepted only hit, defend, cast, and death after all 744 chronological originals, enlarged identity/contact/collapse phases, all 130 selected native phases in both facings including retained idle, and actual battle board/shell captures were reviewed. Idle pixels and timing preserved exactly. Hit hook turns physically edge-on briefly; its point, continuous shaft, and both grips remain, then hook face returns. Defend retains grounded boots, two grips, and buckler during stable brace. Cast is two physical rally raises with complete pole and recovery. Death settles with intact body, buckler, and grounded pole; corpse is last death frame. Move and attack remain unaccepted with named original defects; source-backed v2 corrections await shared GPU rotation. Whole unit remains incomplete. Continuous playback route unavailable; no continuous video playback or manual game claim."
+    "accepted_clips": ["hit", "defend", "cast", "death", "attack"],
+    "notes": "Coordinator accepted attack_h3_v2 after all 124 chronological originals, enlarged hands/hook/shaft/stance phases, all 38 native phases in both facings, three actual BattleShell captures, and the unmodified full shared fixture were reviewed. Direct horizontal preparation, two-handed thrust, retraction, and diagonal ready retain continuous rigid pole, both grips, attached buckler, and hook on the correct end. Earlier accepted hit, defend, cast, and death remain intact with eight exact retained idle frames. Move_h3_v2 is rejected for repeating the same foreground hip/knee/boot contact sequence in both halves; movement and whole unit remain incomplete. All eight takes' 992 original RGB frames are preserved. Continuous playback route unavailable; no continuous video playback or manual game claim."
   },
   "initial_takes": [
     "move_h3_v1",
@@ -22,19 +23,33 @@
     "cast_h3_v1",
     "death_h3_v1"
   ],
-  "pending_correction_takes": [
-    "move_h3_v2",
-    "attack_h3_v2"
-  ],
+  "pending_correction_takes": [],
   "unaccepted_clips": [
-    "move",
-    "attack"
+    "move"
   ],
   "rejected_takes": {
     "move_h3_v1": "All 124 chronological originals and enlarged knees/boots reviewed. Repeated near-knee lift; opposite far-leg forward extension/contact insufficiently clear. Do not treat 124 frames as reciprocal gait acceptance.",
-    "attack_h3_v1": "All 124 originals reviewed. Hook migrates screen-left at frames 15-18 and becomes bare/morphing shaft through overhead frames 21-27. Full thrust later coherent but damaged windup disqualifies full action."
+    "attack_h3_v1": "All 124 originals reviewed. Hook migrates screen-left at frames 15-18 and becomes bare/morphing shaft through overhead frames 21-27. Full thrust later coherent but damaged windup disqualifies full action.",
+    "move_h3_v2": "Both halves repeat the same foreground hip/knee/boot sequence at frames 12-36 and 58-80, despite the source-backed contact/passing guides. No reciprocal opposite-leg contact/load."
   },
-  "candidate_validation": {
+  "selected_five_validation": {
+    "original_rgb_frames_verified": 992,
+    "selected_source_frames_exact": 160,
+    "retained_idle_frames_exact": 8,
+    "retained_idle_timing_exact": true,
+    "atlas_size": [3960, 3840],
+    "rgba_bytes": 60825600,
+    "candidate_full_shared_checks": 227,
+    "mirrored_checks": 218,
+    "live_full_shared_checks": 241,
+    "failures": [],
+    "live_import_exit": 0,
+    "fixture": "tests/fluid_creature_animation_regression.py (unmodified)",
+    "live_command": "H:/ai/envs/minimax-h3/python.exe tests/fluid_creature_animation_regression.py --godot D:/Games/godot/Godot_v4.6.2-stable_win64_console.exe --live --unit unit_neutral_harbor_polearms --overview-only --render --output .artifacts/harbor_h3/live_attack_v2",
+    "scope": "Actual imported atlas, retained map idle motion/reduced freeze, Normal/Fast/reduced motion, authored attack duration/contact/audio/VFX/recovery, unchanged saved simulation, and actual BattleShell input/focus/queue/instant interruption with every one of 38 attack poses observed. All 38 attack native phases visually reviewed in both facings. Movement remains unaccepted.",
+    "known_engine_messages": ["Windows root certificate store error", "Compatibility renderer 2D MSAA warning"]
+  },
+  "initial_four_validation": {
     "original_rgb_frames_verified": 744,
     "native_phase_checks": 131,
     "native_phase_failures": [],
