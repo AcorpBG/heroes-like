@@ -2556,7 +2556,14 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Coordinator accepted hit_h3_v2 nineteen original-video frames after all124 chronological originals/final mattes, enlarged torso/neck/grips/boots/cloth recoil and full recovery, all19 native phases in both facings and full106-frame candidate review. Unmodified shared fixture167 checks passed;992 original RGB frames verified. Previous four accepted actions and original8 idle remain intact. Movev2 stays rejected for discontinuous stop/sprint poses and unproven reciprocal leg loading. Entire creature remains incomplete. Native mirror is a reviewed capture derivative, not a separate runtime test. Continuous playback unavailable; no manual game or continuous temporal claim."
+        "accepted_clips": [
+          "attack",
+          "defend",
+          "cast",
+          "death",
+          "hit"
+        ],
+        "notes": "Coordinator accepted new hit19 after all124 original/final matte chronological frames, enlarged anatomy, all19 native hit phases and mirrored native capture. Existing attack22/defend12/physical support19/death26 remain unchanged and accepted; original articulated idle8 preserved. Movement v1/v2 excluded because reciprocal near/far knee and boot loading/passing remains unproven. Continuous source/retimed playback remains unavailable. No further generation authorized this run."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/attack_h3_v1/matte/rgba_024.png": 0.5,
@@ -2659,14 +2666,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/hit_h3_v2/matte/rgba_075.png": 0.5
       },
       "preserved_accepted_clips": [
-        "idle"
-      ],
-      "accepted_clips": [
-        "attack",
-        "defend",
-        "cast",
-        "death",
-        "hit",
         "idle"
       ]
     }

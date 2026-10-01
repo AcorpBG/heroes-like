@@ -1,0 +1,59 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "finite_pair": [
+    "move_h3_v2",
+    "hit_h3_v2"
+  ],
+  "candidate_clips": [
+    "hit"
+  ],
+  "preserved_published_clips": [
+    "attack",
+    "defend",
+    "cast",
+    "death"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "rejected_takes": {
+    "move_h3_v2": "Stable green plate with all124 matte frames intact, but repeated upright ready holds13-21/47-55/79-86/113-120 and abrupt ready-to-run22/56/87 and raised-knee-to-opposed contact33/65; enlarged35/36\u219237-40 and65-70 does not establish reciprocal near/far armored-knee/boot support reliably. Continuous weight transfer, stance-to-swing and passing identity remain unproven. No more retries this run."
+  },
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "accepted_clips": [
+      "attack",
+      "defend",
+      "cast",
+      "death",
+      "hit"
+    ],
+    "notes": "Coordinator accepted new hit19 after all124 original/final matte chronological frames, enlarged anatomy, all19 native hit phases and mirrored native capture. Existing attack22/defend12/physical support19/death26 remain unchanged and accepted; original articulated idle8 preserved. Movement v1/v2 excluded because reciprocal near/far knee and boot loading/passing remains unproven. Continuous source/retimed playback remains unavailable. No further generation authorized this run."
+  },
+  "validation": {
+    "candidate_report": {
+      "checks": 167,
+      "failures": []
+    },
+    "live_report": {
+      "checks": 181,
+      "failures": []
+    },
+    "candidate_exit_code": 0,
+    "live_exit_code": 0,
+    "isolated_profile_import_exit_code": 0,
+    "fixture": "tests/fluid_creature_animation_regression.py --live --unit unit_neutral_kitehook_runners --overview-only --render",
+    "contacts_only": false,
+    "original_rgb_frames_verified": 992,
+    "published_source_frames_verified": 98,
+    "preserved_idle_frames": 8,
+    "other_catalog_rows_unchanged": 231,
+    "published_atlas_size": [
+      2960,
+      2860
+    ],
+    "rgba_bytes": 33862400,
+    "coverage": "Unmodified shared full fixture: Normal/Fast/reduced, authored attack contacts and recovery, audio/VFX, session/save equality, actual BattleShell input/finish/focus and committed-save equality, live import dimensions, actual map shader frame changes and reduced-motion stability.",
+    "visual_review": "All106 live native phases, three actual BattleShell captures and map idle phases inspected. Mirrored candidate image is a review derivative of the actual native phase capture."
+  }
+}

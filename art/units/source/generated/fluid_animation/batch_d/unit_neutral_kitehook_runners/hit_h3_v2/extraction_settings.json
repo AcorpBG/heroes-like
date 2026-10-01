@@ -1,0 +1,5 @@
+{
+  "protected_foreground_chroma": 68,
+  "boundary_despill_source_pixels": 4,
+  "review_note": "Enlarged transition frames20/22 show a narrow green rim on hair, rope and cloth during physical motion blur. Apply the already reviewed four-source-pixel boundary-only despill recipe without alpha/geometry changes; retain genuine opaque teal and re-review all124 final matte frames."
+}

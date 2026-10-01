@@ -1,0 +1,279 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. Run in place for two complete reciprocal running cycles. Begin the original near-leg-forward contact, load the contacting foot, pass through the supplied both-feet-grounded stance, then reverse to the supplied far-leg-forward contact with the near knee visibly bent back. Repeat the opposite sequence with the feet taking turns carrying body weight. Each leg moves on its own side without crossing the knees. The hips stay centered and every contacting boot stays planted during its loading phase. Both hands retain the original compact hook pole. End in exactly the first contact, creating a continuous loop with meaningful opposite contacts and passing/loading phases. Fixed elevated three-quarter orthographic camera facing right; unchanged original body scale and identity. Background perfectly flat pure green RGB0,255,0 throughout, no hue changes, floor, shadows, scenery or effects.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026100160
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kitehook_move_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kitehook_move_h3_v2_guide_1.png"
+    }
+  },
+  "32": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kitehook_move_h3_v2_guide_2.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 18,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 35,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 52,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "43": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "42",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 70,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "44": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "43",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 87,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "45": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "44",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 105,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "32",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "45",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "kitehook_h3/move_h3_v2/sampled"
+    }
+  }
+}

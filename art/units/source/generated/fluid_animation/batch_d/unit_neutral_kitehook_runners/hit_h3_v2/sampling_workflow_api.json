@@ -1,0 +1,185 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing. React to one impact with a short backward torso recoil. Bend both knees, rock the shoulders and head back into the supplied recoil while both hands retain the hook pole. Feet stay near their original contacts. Pause briefly and recover upright to the initial stance. Empty background stays identical. Fixed elevated three-quarter orthographic camera, face toward screen right, original painted body scale. Keep the complete body, hook pole, rope and trailing cloth inside the frame. The background remains perfectly flat pure green RGB0,255,0 throughout: no hue changes, floor, shadows, horizon, scenery, text, other people or effects. Smooth physical joint articulation with unchanged anatomy and equipment.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026100161
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kitehook_hit_h3_v2_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "kitehook_hit_h3_v2_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 28,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 45,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "kitehook_h3/hit_h3_v2/sampled"
+    }
+  }
+}

@@ -38,7 +38,7 @@ def originals():
             assert p.sha(p.ROOT/guide['source_frame']['source']) == guide['source_sha256']
     print('Original RGB frames verified:', count)
 
-def published(baseline_dir):
+def published(baseline_dir, handoff_path=None):
     before = read(baseline_dir/'baseline_manifest.json')['items']
     after = read(p.ROOT/'content/unit_animation_manifest.json')['items']
     assert [r for r in before if r['unit_id'] != UID] == [r for r in after if r['unit_id'] != UID]
@@ -54,7 +54,7 @@ def published(baseline_dir):
         same_pose(old_pose(old_sheet,old,a),old_pose(new_sheet,new,b))
     for key in ['frame_msec','loop','static_frame']:
         assert old['pose_clips']['idle'][key] == new['pose_clips']['idle'][key]
-    entry = read(p.SOURCE_DIR/'handoff.json')['units'][0]
+    entry = read(handoff_path or p.SOURCE_DIR/'handoff.json')['units'][0]
     selected = 0
     for name,spec in entry['clips'].items():
         live = clip_indices(new['pose_clips'][name], new['pose_columns'])
@@ -80,7 +80,8 @@ def published(baseline_dir):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--baseline-dir', type=Path)
+    parser.add_argument('--handoff', type=Path, help='Check a reviewed correction candidate in addition to existing source clips')
     args = parser.parse_args()
     originals()
     if args.baseline_dir:
-        published(args.baseline_dir)
+        published(args.baseline_dir,args.handoff)
