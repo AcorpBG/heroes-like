@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "takes": [
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "accepted_clips": ["hit", "defend", "cast", "death"],
+    "notes": "Coordinator accepted only hit, defend, cast, and death after all 744 chronological originals, enlarged identity/contact/collapse phases, all 130 selected native phases in both facings including retained idle, and actual battle board/shell captures were reviewed. Idle pixels and timing preserved exactly. Hit hook turns physically edge-on briefly; its point, continuous shaft, and both grips remain, then hook face returns. Defend retains grounded boots, two grips, and buckler during stable brace. Cast is two physical rally raises with complete pole and recovery. Death settles with intact body, buckler, and grounded pole; corpse is last death frame. Move and attack remain unaccepted with named original defects; source-backed v2 corrections await shared GPU rotation. Whole unit remains incomplete. Continuous playback route unavailable; no continuous video playback or manual game claim."
+  },
+  "initial_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "pending_correction_takes": [
+    "move_h3_v2",
+    "attack_h3_v2"
+  ],
+  "unaccepted_clips": [
+    "move",
+    "attack"
+  ],
+  "rejected_takes": {
+    "move_h3_v1": "All 124 chronological originals and enlarged knees/boots reviewed. Repeated near-knee lift; opposite far-leg forward extension/contact insufficiently clear. Do not treat 124 frames as reciprocal gait acceptance.",
+    "attack_h3_v1": "All 124 originals reviewed. Hook migrates screen-left at frames 15-18 and becomes bare/morphing shaft through overhead frames 21-27. Full thrust later coherent but damaged windup disqualifies full action."
+  },
+  "candidate_validation": {
+    "original_rgb_frames_verified": 744,
+    "native_phase_checks": 131,
+    "native_phase_failures": [],
+    "packed_selected_frames_exact": 122,
+    "retained_idle_frames_exact": 8,
+    "retained_idle_timing_exact": true,
+    "atlas_size": [3120, 3584],
+    "corpse_is_last_death_frame": true,
+    "partial_runtime_checks": 460,
+    "partial_runtime_failures": [],
+    "runtime_scope": "Task-local wrapper tests new hit, defend, cast, and death in Normal/Fast/reduced motion, presentation durations, selected frames, reduced static poses, saved state, finish clocks, and settled corpse. Actual BattleShell verifies unchanged legacy attack input lock, saved state, focus, queue finish, all three legacy poses, and instant interruption. The shared authored-attack block is omitted as inapplicable to unchanged legacy attack; the unmodified full fixture must run after corrected attack is included.",
+    "runtime_fixture": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/run_partial_runtime.py",
+    "runtime_output": ".artifacts/harbor_h3/candidate_runtime_direct",
+    "live_runtime_checks": 474,
+    "live_runtime_failures": [],
+    "live_import_exit": 0,
+    "live_runtime_output": ".artifacts/harbor_h3/live_runtime_direct",
+    "live_runtime_command": "H:/ai/envs/minimax-h3/python.exe art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/run_partial_runtime.py --godot D:/Games/godot/Godot_v4.6.2-stable_win64_console.exe --live --unit unit_neutral_harbor_polearms --overview-only --render --output .artifacts/harbor_h3/live_runtime_direct",
+    "mirrored_native_phase_checks": 131,
+    "mirrored_native_phase_failures": [],
+    "mirrored_native_frames_reviewed": 130,
+    "known_engine_messages": ["Windows root certificate store error", "Compatibility renderer 2D MSAA warning"]
+  }
+}

@@ -3436,25 +3436,25 @@
         198
       ],
       "painted_extent": 193,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_harbor_polearms.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_harbor_polearms.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        168,
-        38,
-        354,
-        247
+        68,
+        34,
+        254,
+        243
       ],
-      "source_sha256": "76ea6db25eaf0b91fbea8a4f3169493d81dc912be4565491b7c51c41260bdae1",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_harbor_polearms/provenance.json",
+      "source_sha256": "8fea821684f3f2d71435187bfb6a9f6b4b3bad353e68d3506144f7b970f340ab",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_harbor_polearms/provenance.json",
       "sha256": "fb8ecc40aef109009a0435753316a487f661093bc317effacefe237e821448c7"
     },
     "unit_neutral_flaremast_crews": {

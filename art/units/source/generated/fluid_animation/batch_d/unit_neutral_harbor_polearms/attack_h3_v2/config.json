@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100101,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          395,
+          512
+        ]
+      ],
+      "anchor": [
+        205,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "polearm_recovery",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          714,
+          0,
+          1224,
+          246
+        ],
+        [
+          576,
+          246,
+          1224,
+          596
+        ]
+      ],
+      "anchor": [
+        914,
+        574
+      ],
+      "scale": 0.3466666666666667,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "full_polearm_thrust",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          713,
+          247
+        ],
+        [
+          0,
+          247,
+          575,
+          585
+        ]
+      ],
+      "anchor": [
+        335,
+        543
+      ],
+      "scale": 0.3466666666666667,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      48,
+      2
+    ],
+    [
+      65,
+      2
+    ],
+    [
+      88,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip. Perform one controlled two-handed pole thrust without overhead rotation. From the diagonal ready carry, lower the silver hook slightly toward screen right while lifting only the rear butt to chest height, yielding the supplied horizontal preparation at24. Keep the silver hook at the screen-right shaft end throughout. Push the single continuous rigid shaft toward screen right with both hands, forward left elbow extending and rear right hand driving, to the supplied full thrust at48. Briefly brace at65, then retract both arms to the horizontal recovery at88, shift weight back and return to diagonal ready. No overhead swing, pole inversion, hand release, spin, weapon bending, flash, projectile or extra tip.  Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 44,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      6.0,
+      16.0,
+      42.0
+    ]
+  },
+  "guide_scale_reason": "One factor13/15 across all legacy action sheets, bringing their old ready221px extent toward the reviewed idle191px while retaining crouch/fall proportions. Accepted idle source0.44 unchanged. No individual-pose normalization."
+}

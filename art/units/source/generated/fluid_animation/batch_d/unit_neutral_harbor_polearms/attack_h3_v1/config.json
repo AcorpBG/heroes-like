@@ -1,0 +1,121 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026094001,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          395,
+          512
+        ]
+      ],
+      "anchor": [
+        205,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "polearm_windup",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          369,
+          415,
+          397
+        ],
+        [
+          415,
+          392,
+          692,
+          724
+        ],
+        [
+          376,
+          397,
+          415,
+          724
+        ]
+      ],
+      "anchor": [
+        509,
+        694
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "full_polearm_thrust",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/continuity-alpha/full-polearm-thrust-recovery-guard-and-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          713,
+          247
+        ],
+        [
+          0,
+          247,
+          575,
+          585
+        ]
+      ],
+      "anchor": [
+        335,
+        543
+      ],
+      "scale": 0.3466666666666667,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      52,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip. Perform one deliberate boarding-pole melee attack. Raise both elbows and the pole into the supplied overhead windup, then lower the shaft to chest height and thrust its silver hooked point toward screen right, extending the forward left arm and driving with the rear right arm. Brace the legs and lean into the thrust. Retract both arms, shift weight back and recover the starting diagonal ready stance. The pole stays a single solid continuous shaft held in both hands, never thrown or fired. Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 44,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      6.0,
+      16.0,
+      42.0
+    ]
+  },
+  "guide_scale_reason": "One factor13/15 across all legacy action sheets, bringing their old ready221px extent toward the reviewed idle191px while retaining crouch/fall proportions. Accepted idle source0.44 unchanged. No individual-pose normalization."
+}

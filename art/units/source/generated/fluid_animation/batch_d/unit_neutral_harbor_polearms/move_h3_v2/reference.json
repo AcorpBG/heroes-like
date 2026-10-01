@@ -1,0 +1,106 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            395,
+            512
+          ]
+        ],
+        "anchor": [
+          205,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c65a9ac6c93ced80d3b21da1d6d0d616d2c5ed2943182b39e8205a64c25275de",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02cbdd08d6ffb66165abd2e33457cd0a1e3a09745b93508d5952b4d8d31b5dec",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_attempt",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+        "rects": [
+          [
+            739,
+            0,
+            1097,
+            200
+          ],
+          [
+            710,
+            200,
+            1000,
+            270
+          ],
+          [
+            760,
+            270,
+            975,
+            375
+          ]
+        ],
+        "anchor": [
+          850,
+          349
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "f4938bf973898317d4898c7c26047dc2f3f552796ba8fd172c208da9a757608b",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "observed_near_knee_passing_068",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v1/matte/rgba_068.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          420,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "video_frame": 68,
+        "video_time_seconds": 2.8333333333333335,
+        "guide_lineage": {
+          "original_video": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v1/original_lossless.mkv",
+          "original_sha256": "a2672c29bca3993a4fd5a7258ff1f983ee636d576a34e24970d8d46f94b35efc",
+          "matte_sha256": "656cf0647b185ff2258db10d6aaa5ecdbca0e1eb69bd68f0b412f86ce4ad3717"
+        }
+      },
+      "source_sha256": "656cf0647b185ff2258db10d6aaa5ecdbca0e1eb69bd68f0b412f86ce4ad3717",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "7688f44544ab8718bf6be84b38bfe9cfb423e2ed1f4ef08ae39ad56e3192b9d1",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

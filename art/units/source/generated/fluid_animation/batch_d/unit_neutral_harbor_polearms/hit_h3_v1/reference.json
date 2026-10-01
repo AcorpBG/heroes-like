@@ -1,0 +1,81 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            395,
+            512
+          ]
+        ],
+        "anchor": [
+          205,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c65a9ac6c93ced80d3b21da1d6d0d616d2c5ed2943182b39e8205a64c25275de",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02cbdd08d6ffb66165abd2e33457cd0a1e3a09745b93508d5952b4d8d31b5dec",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            730,
+            160,
+            747
+          ],
+          [
+            0,
+            747,
+            354,
+            930
+          ],
+          [
+            0,
+            930,
+            279,
+            1000
+          ],
+          [
+            0,
+            1000,
+            298,
+            1064
+          ]
+        ],
+        "anchor": [
+          163,
+          1032
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "e3ec2de969d02428e356ef915fa80cdf399bcc2eb961cdf26a14a34a7a2a912d",
+      "runtime_source_scale": 0.52
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

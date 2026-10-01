@@ -1,0 +1,195 @@
+{
+  "prompt": [
+    0,
+    "5338610f-e648-4d6e-931e-462f51e05fc8",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip. Walk briskly in place for two complete reciprocal stride cycles. Alternate LEFT and RIGHT legs through forward heel contact, weight bearing, passing and rear toe lift; bend each knee in turn. Keep pelvis centered while the legs alternate. Carry the pole diagonally across the body with both hands, hook pointing up and right; elbows and coat respond subtly to the steps. Return to the original planted stance. Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026094000
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "harbor_move_h3_v1_guide_0.png"
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "5",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "harbor_h3/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "harbor_h3",
+      "create_time": 1790835137016
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "harbor_h3\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "5338610f-e648-4d6e-931e-462f51e05fc8",
+          "timestamp": 1790835137017
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "5338610f-e648-4d6e-931e-462f51e05fc8",
+          "timestamp": 1790835137024
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "5338610f-e648-4d6e-931e-462f51e05fc8",
+          "timestamp": 1790835406468
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

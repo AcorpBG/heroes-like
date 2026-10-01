@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            395,
+            512
+          ]
+        ],
+        "anchor": [
+          205,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c65a9ac6c93ced80d3b21da1d6d0d616d2c5ed2943182b39e8205a64c25275de",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02cbdd08d6ffb66165abd2e33457cd0a1e3a09745b93508d5952b4d8d31b5dec",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,141 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            395,
+            512
+          ]
+        ],
+        "anchor": [
+          205,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c65a9ac6c93ced80d3b21da1d6d0d616d2c5ed2943182b39e8205a64c25275de",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02cbdd08d6ffb66165abd2e33457cd0a1e3a09745b93508d5952b4d8d31b5dec",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+        "rects": [
+          [
+            375,
+            760,
+            588,
+            932
+          ],
+          [
+            280,
+            932,
+            598,
+            950
+          ],
+          [
+            312,
+            950,
+            590,
+            993
+          ],
+          [
+            312,
+            993,
+            662,
+            1011
+          ],
+          [
+            540,
+            1011,
+            662,
+            1046
+          ]
+        ],
+        "anchor": [
+          478,
+          1024
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "27f12fe4c4e6ebda21210e2987e7ebcabfd65948040dccb8821c406e26d8a4f0",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "death_fall_head_right",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+        "rects": [
+          [
+            593,
+            839,
+            1008,
+            986
+          ],
+          [
+            675,
+            986,
+            1008,
+            1047
+          ]
+        ],
+        "anchor": [
+          818,
+          1020
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "122401a606659882ec857ae21d2207dc47afbec3d8b7f8c743fec3d6453a1dc3",
+      "runtime_source_scale": 0.52
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_right",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+        "rects": [
+          [
+            1009,
+            879,
+            1448,
+            1049
+          ]
+        ],
+        "anchor": [
+          1230,
+          1020
+        ],
+        "scale": 1.04,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a6e22ece71b5a5e105411d0bf98a02d9e2683ee13d72e89d08132f1f9f7337d",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "43dc77405ac51ef26f3ee0af8b0bf5e7397e412c985f1a779ef4ba6225c4d0ab",
+      "runtime_source_scale": 0.52
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

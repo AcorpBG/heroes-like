@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026094005,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          395,
+          512
+        ]
+      ],
+      "anchor": [
+        205,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          760,
+          588,
+          932
+        ],
+        [
+          280,
+          932,
+          598,
+          950
+        ],
+        [
+          312,
+          950,
+          590,
+          993
+        ],
+        [
+          312,
+          993,
+          662,
+          1011
+        ],
+        [
+          540,
+          1011,
+          662,
+          1046
+        ]
+      ],
+      "anchor": [
+        478,
+        1024
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_fall_head_right",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          593,
+          839,
+          1008,
+          986
+        ],
+        [
+          675,
+          986,
+          1008,
+          1047
+        ]
+      ],
+      "anchor": [
+        818,
+        1020
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_right",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          1009,
+          879,
+          1448,
+          1049
+        ]
+      ],
+      "anchor": [
+        1230,
+        1020
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      35,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip. Perform one continuous defeat collapse. Knees buckle; lower onto one knee, lean down and lower the hip toward the ground. Place the boarding pole along the ground with its hook to the right as the body rolls onto its side and then settles on the back, head toward screen right and boots toward screen left. The same left forearm buckler settles over the chest. The single straight pole lies fully grounded beside the hands. Keep the full coat, boots and two legs intact, ending motionless in the supplied corpse pose. Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      6.0,
+      8.0,
+      6.0,
+      6.0
+    ]
+  },
+  "guide_scale_reason": "One factor13/15 across all legacy action sheets, bringing their old ready221px extent toward the reviewed idle191px while retaining crouch/fall proportions. Accepted idle source0.44 unchanged. No individual-pose normalization."
+}

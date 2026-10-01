@@ -1,0 +1,96 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026094004,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          395,
+          512
+        ]
+      ],
+      "anchor": [
+        205,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "polearm_windup",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/alpha/poses.png",
+      "rects": [
+        [
+          340,
+          369,
+          415,
+          397
+        ],
+        [
+          415,
+          392,
+          692,
+          724
+        ],
+        [
+          376,
+          397,
+          415,
+          724
+        ]
+      ],
+      "anchor": [
+        509,
+        694
+      ],
+      "scale": 0.52,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      48,
+      1
+    ],
+    [
+      65,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip. Perform a physical rally salute with the boarding pole. Both hands lift the pole from its diagonal carry to the supplied overhead horizontal salute. Extend the elbows upward, briefly hold the pole above his cap while looking toward the right, then lower it smoothly back into the starting two-handed grip. Boots stay planted and the forearm buckler follows the left arm. This is a deliberate support signal, not an attack, spell or projectile; no glow or new equipment. Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 18,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across original guides.",
+    "per_guide_max": [
+      6.0,
+      16.0
+    ]
+  },
+  "guide_scale_reason": "One factor13/15 across all legacy action sheets, bringing their old ready221px extent toward the reviewed idle191px while retaining crouch/fall proportions. Accepted idle source0.44 unchanged. No individual-pose normalization."
+}

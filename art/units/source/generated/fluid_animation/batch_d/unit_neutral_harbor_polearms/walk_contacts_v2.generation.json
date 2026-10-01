@@ -1,0 +1,19 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_contacts_v2.png",
+    "sha256": "e9facd0b2c25272cf6955f11d2a088fedd2efd7636f87887386cc30bc0bfc6d6"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_contacts_v2.prompt.txt",
+    "sha256": "ce817651ce1ad962b0b237b35d50e01a26f611cc0f13730686bb75f740081fad"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_contacts_v1.png",
+      "sha256": "7abffe2e1decc8f4b1c703e9b52711b753abd24bfeb49944aa28195df1de793c"
+    }
+  ],
+  "tool": "built-in imagegen",
+  "status": "rejected",
+  "reason": "Both figures repeat same-side heel contact; required opposite contact not produced. Preserve failed master, do not use for motion."
+}
