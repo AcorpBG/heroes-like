@@ -4750,7 +4750,7 @@
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Coordinator reviewed all124 chronological original mattes,40 selected poses enlarged, full reciprocal two-leg cycle13..91, grounded loop seam, fixed scale and two-handed pole continuity. Native and mirrored full BattleShell fixtures each passed690checks. Publish40 original movement frames at50ms alongside160 unchanged accepted action frames; preserve8 idle poses and map pixels/timing. No manual game or continuous playback claim."
+        "notes": "Coordinator reviewed all124 original chronological mattes, all40 selected poses enlarged, both registered contacts, full two-step cycle, loop13/91 and native128px normal/mirrored renders. Near broad thigh leads around20; far leg leads around65 with near boot trailing. Stable two limbs, both hands on one rigid shaft, forearm buckler, cap/coat/belt props, fixed original scale/root and grounded stance. Source13..91 every2 at50ms is one complete2000ms gait, with no duplicated/pingpong/generated interpolation. Actual full BattleShell candidate fixtures690checks each passed normal/mirrored; no manual game or continuous playback claim. Five existing accepted actions retain160 exact original selected frames/timing; eight legacy idle poses and map pixels/timing retained."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/matte/rgba_000.png": 0.5,
@@ -4955,15 +4955,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_091.png": 0.5
       },
       "preserved_accepted_clips": [
-        "idle"
-      ],
-      "accepted_clips": [
-        "hit",
-        "defend",
-        "cast",
-        "death",
-        "attack",
-        "move",
         "idle"
       ]
     }

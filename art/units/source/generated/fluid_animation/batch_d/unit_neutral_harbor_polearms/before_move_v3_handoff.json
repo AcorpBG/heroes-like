@@ -3365,846 +3365,6 @@
           "alpha_noise_cutoff": 0,
           "video_frame": 112,
           "video_time_seconds": 4.666666666666667
-        },
-        {
-          "name": "move_h3_013",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_013.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 13,
-          "video_time_seconds": 0.5416666666666666
-        },
-        {
-          "name": "move_h3_015",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_015.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 15,
-          "video_time_seconds": 0.625
-        },
-        {
-          "name": "move_h3_017",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_017.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 17,
-          "video_time_seconds": 0.7083333333333334
-        },
-        {
-          "name": "move_h3_019",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_019.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 19,
-          "video_time_seconds": 0.7916666666666666
-        },
-        {
-          "name": "move_h3_021",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_021.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 21,
-          "video_time_seconds": 0.875
-        },
-        {
-          "name": "move_h3_023",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_023.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 23,
-          "video_time_seconds": 0.9583333333333334
-        },
-        {
-          "name": "move_h3_025",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_025.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 25,
-          "video_time_seconds": 1.0416666666666667
-        },
-        {
-          "name": "move_h3_027",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_027.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 27,
-          "video_time_seconds": 1.125
-        },
-        {
-          "name": "move_h3_029",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_029.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 29,
-          "video_time_seconds": 1.2083333333333333
-        },
-        {
-          "name": "move_h3_031",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_031.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 31,
-          "video_time_seconds": 1.2916666666666667
-        },
-        {
-          "name": "move_h3_033",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_033.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 33,
-          "video_time_seconds": 1.375
-        },
-        {
-          "name": "move_h3_035",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_035.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 35,
-          "video_time_seconds": 1.4583333333333333
-        },
-        {
-          "name": "move_h3_037",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_037.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 37,
-          "video_time_seconds": 1.5416666666666667
-        },
-        {
-          "name": "move_h3_039",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_039.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 39,
-          "video_time_seconds": 1.625
-        },
-        {
-          "name": "move_h3_041",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_041.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 41,
-          "video_time_seconds": 1.7083333333333333
-        },
-        {
-          "name": "move_h3_043",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_043.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 43,
-          "video_time_seconds": 1.7916666666666667
-        },
-        {
-          "name": "move_h3_045",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_045.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 45,
-          "video_time_seconds": 1.875
-        },
-        {
-          "name": "move_h3_047",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_047.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 47,
-          "video_time_seconds": 1.9583333333333333
-        },
-        {
-          "name": "move_h3_049",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_049.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 49,
-          "video_time_seconds": 2.0416666666666665
-        },
-        {
-          "name": "move_h3_051",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_051.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 51,
-          "video_time_seconds": 2.125
-        },
-        {
-          "name": "move_h3_053",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_053.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 53,
-          "video_time_seconds": 2.2083333333333335
-        },
-        {
-          "name": "move_h3_055",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_055.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 55,
-          "video_time_seconds": 2.2916666666666665
-        },
-        {
-          "name": "move_h3_057",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_057.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 57,
-          "video_time_seconds": 2.375
-        },
-        {
-          "name": "move_h3_059",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_059.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 59,
-          "video_time_seconds": 2.4583333333333335
-        },
-        {
-          "name": "move_h3_061",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_061.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 61,
-          "video_time_seconds": 2.5416666666666665
-        },
-        {
-          "name": "move_h3_063",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_063.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 63,
-          "video_time_seconds": 2.625
-        },
-        {
-          "name": "move_h3_065",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_065.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 65,
-          "video_time_seconds": 2.7083333333333335
-        },
-        {
-          "name": "move_h3_067",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_067.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 67,
-          "video_time_seconds": 2.7916666666666665
-        },
-        {
-          "name": "move_h3_069",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_069.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 69,
-          "video_time_seconds": 2.875
-        },
-        {
-          "name": "move_h3_071",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_071.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 71,
-          "video_time_seconds": 2.9583333333333335
-        },
-        {
-          "name": "move_h3_073",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_073.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 73,
-          "video_time_seconds": 3.0416666666666665
-        },
-        {
-          "name": "move_h3_075",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_075.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 75,
-          "video_time_seconds": 3.125
-        },
-        {
-          "name": "move_h3_077",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_077.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 77,
-          "video_time_seconds": 3.2083333333333335
-        },
-        {
-          "name": "move_h3_079",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_079.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 79,
-          "video_time_seconds": 3.2916666666666665
-        },
-        {
-          "name": "move_h3_081",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_081.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 81,
-          "video_time_seconds": 3.375
-        },
-        {
-          "name": "move_h3_083",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_083.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 83,
-          "video_time_seconds": 3.4583333333333335
-        },
-        {
-          "name": "move_h3_085",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_085.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 85,
-          "video_time_seconds": 3.5416666666666665
-        },
-        {
-          "name": "move_h3_087",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_087.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 87,
-          "video_time_seconds": 3.625
-        },
-        {
-          "name": "move_h3_089",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_089.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 89,
-          "video_time_seconds": 3.7083333333333335
-        },
-        {
-          "name": "move_h3_091",
-          "clip": "move",
-          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_091.png",
-          "rects": [
-            [
-              0,
-              0,
-              960,
-              640
-            ]
-          ],
-          "anchor": [
-            420,
-            560
-          ],
-          "scale": 0.5,
-          "alpha_noise_cutoff": 0,
-          "video_frame": 91,
-          "video_time_seconds": 3.7916666666666665
         }
       ],
       "clips": {
@@ -4403,354 +3563,243 @@
           "loop": false,
           "static_frame": 0,
           "contact_frame": 21
-        },
-        "move": {
-          "indices": [
-            160,
-            161,
-            162,
-            163,
-            164,
-            165,
-            166,
-            167,
-            168,
-            169,
-            170,
-            171,
-            172,
-            173,
-            174,
-            175,
-            176,
-            177,
-            178,
-            179,
-            180,
-            181,
-            182,
-            183,
-            184,
-            185,
-            186,
-            187,
-            188,
-            189,
-            190,
-            191,
-            192,
-            193,
-            194,
-            195,
-            196,
-            197,
-            198,
-            199
-          ],
-          "frame_msec": 50,
-          "loop": true,
-          "static_frame": 0
         }
       },
       "alpha_noise_cutoff": 0,
       "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
       "provenance": {
-        "original_lossless.mkv": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/original_lossless.mkv",
-          "sha256": "8e8f1a13852ca4e2bed323ba09da065d877e749b23348480150fd2379dd91da8"
-        },
-        "original.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/original.json",
-          "sha256": "e2552ef214fc76656cf3e0c3bbd1bcde7eaf3d4b84de506375124b079b3f4aa6"
-        },
-        "workflow_api.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/workflow_api.json",
-          "sha256": "f96895bcbe9612a90613a99eaab02091eaac5e14c76d7b309e9c4295c6624d68"
-        },
-        "prompt.txt": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/prompt.txt",
-          "sha256": "8203608503cd4041227faae1d843ce7fb8298411f5596f8896a4d05fb754f345"
-        },
-        "reference.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/reference.json",
-          "sha256": "19dd67a2b8bdbe1321d6ad966b728b3c21118947f1144e4f66f395ce488584db"
-        },
-        "matte.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte.json",
-          "sha256": "8037cf843f3cdabb0947305522ed212589ec3addfa50a47b4ce9976c97d88434"
-        },
-        "runtime_profile.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/runtime_profile.json",
-          "sha256": "55cc91dc0c97cb322ee78e807a6ca1ba059f9fa5af209cb0dc0278c70917f875"
-        },
-        "staged_generation.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/staged_generation.json",
-          "sha256": "3d55bc44899f02c7ed7de9539a36a048c3cf2bc2195259de9b476da74673fe72"
-        },
-        "sampling_workflow_api.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/sampling_workflow_api.json",
-          "sha256": "f10ed27c2461336ca3de1725e38112bed185ded1e7f22162b8df6ec6b8c05541"
-        },
-        "sampling_submission.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/sampling_submission.json",
-          "sha256": "86a8f2ccd55d1e8980be351d60833ba1ed4f148c01d832d4d5145dcd066804a2"
-        },
-        "sampling_history.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/sampling_history.json",
-          "sha256": "037e866e025faca6e2d3d8203eb16cf267b30bdaf54b642373ce460e93316709"
-        },
-        "original.latent": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/original.latent",
-          "sha256": "6245b7c41e9f0314520ad9d15c641678967d618d5c822c7013f6f838589f2bdd"
-        },
-        "guide_image_walk_opposed_contact_v5.png": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.png",
-          "sha256": "cc26068f2dcebc134498ca8f487bcebcf4acab14e83113863625b8a41a0bd9f2"
-        },
-        "guide_prompt_walk_opposed_contact_v5.prompt.txt": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.prompt.txt",
-          "sha256": "10e91e650263b07601dc2a95fe924f07cbfecd1e89bfbcbd96ae24a3a9f6ffba"
-        },
-        "guide_generation_walk_opposed_contact_v5.generation.json": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.generation.json",
-          "sha256": "2805d199f310c0ef39458909d11505d7b98a44189f9098ce2f2841afcb4d8b66"
-        },
-        "previous_hit_h3_v1_original_lossless.mkv": {
+        "hit_h3_v1_original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/original_lossless.mkv",
           "sha256": "9e4be3dc776217d1a1f9de36799160edf3547773f613c1c4078d9a769edd2ce5"
         },
-        "previous_hit_h3_v1_original.json": {
+        "hit_h3_v1_original.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/original.json",
           "sha256": "c1792c37c8b2ab08714e4d4a86bc0fb123607aae2575242dfaf7ce4f55ecc089"
         },
-        "previous_hit_h3_v1_workflow_api.json": {
+        "hit_h3_v1_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/workflow_api.json",
           "sha256": "4ed35d77ad48c719c173ef24de2abe1a3cd1d6bdf559211256ce364b67608b12"
         },
-        "previous_hit_h3_v1_prompt.txt": {
+        "hit_h3_v1_prompt.txt": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/prompt.txt",
           "sha256": "e4faa0d95b4281498763e31f21912c6c212aceefcd1af24ff9055f9210ab514c"
         },
-        "previous_hit_h3_v1_reference.json": {
+        "hit_h3_v1_reference.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/reference.json",
           "sha256": "694ed80e0aa1c7960e4d6097ef057a9a11b88d427f8138571a70d9b95b7f33b1"
         },
-        "previous_hit_h3_v1_matte.json": {
+        "hit_h3_v1_matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/matte.json",
           "sha256": "3082120c9de95c2bdfb3015469a6fdc560525a7200207ee4977921c59cd89717"
         },
-        "previous_hit_h3_v1_staged_generation.json": {
+        "hit_h3_v1_staged_generation.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/staged_generation.json",
           "sha256": "6d2178385db34b69c4abe1c571ebf6b2d111134205e75c2d5469df1280d5c575"
         },
-        "previous_hit_h3_v1_sampling_workflow_api.json": {
+        "hit_h3_v1_sampling_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/sampling_workflow_api.json",
           "sha256": "ea49ed9dc22a5d547042763d108c8872d78b0fdcc2d51519a6b5791a76ecddef"
         },
-        "previous_hit_h3_v1_sampling_submission.json": {
+        "hit_h3_v1_sampling_submission.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/sampling_submission.json",
           "sha256": "af128b9273ba98a7b36d498a520292f6febef62d066e71d77627b4a3662dbbe1"
         },
-        "previous_hit_h3_v1_sampling_history.json": {
+        "hit_h3_v1_sampling_history.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/sampling_history.json",
           "sha256": "4f6a08fdb31dc61f21f078a093e1ad57f32c336a78a6ec4968fab78094fe622f"
         },
-        "previous_hit_h3_v1_original.latent": {
+        "hit_h3_v1_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/original.latent",
           "sha256": "78a1b4c93e51d8f07ac1c722ca199fdd820c59a9133d4bbcb0883638cb133494"
         },
-        "previous_defend_h3_v1_original_lossless.mkv": {
+        "defend_h3_v1_original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/original_lossless.mkv",
           "sha256": "5a0b054e79d6702aa7e07590a88a03003f0ea770e522b7c410c69b2382ee07b4"
         },
-        "previous_defend_h3_v1_original.json": {
+        "defend_h3_v1_original.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/original.json",
           "sha256": "92856793f55b64455d15fa3184bbac9244da03a86449e0b766b505526702568d"
         },
-        "previous_defend_h3_v1_workflow_api.json": {
+        "defend_h3_v1_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/workflow_api.json",
           "sha256": "67ac37ce12b4eec02d23719116dc60d31df5f3c6285a8d7e98795ef16298e8b8"
         },
-        "previous_defend_h3_v1_prompt.txt": {
+        "defend_h3_v1_prompt.txt": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/prompt.txt",
           "sha256": "1c89e6f93e08ea3561a36d28ca18f5faa0a43c65ab0c666fa602ad194dbc3641"
         },
-        "previous_defend_h3_v1_reference.json": {
+        "defend_h3_v1_reference.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/reference.json",
           "sha256": "58e00e92c87521ba95599c575511165f096a1b5fa776d0beb246c32ca94e7f30"
         },
-        "previous_defend_h3_v1_matte.json": {
+        "defend_h3_v1_matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/matte.json",
           "sha256": "439233e4de1d9595b4b965564853f1f58aed911f5c124aafe8d6f0aaf7e906f0"
         },
-        "previous_defend_h3_v1_staged_generation.json": {
+        "defend_h3_v1_staged_generation.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/staged_generation.json",
           "sha256": "ab4f602fae7d7cf7d078cc1e3926fb2499451e4cfee312c752ed630192f7fa61"
         },
-        "previous_defend_h3_v1_sampling_workflow_api.json": {
+        "defend_h3_v1_sampling_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/sampling_workflow_api.json",
           "sha256": "096d437de2b8698dd4378ff99ac3f5c50c557d0b0c247b6458ad86c86031957c"
         },
-        "previous_defend_h3_v1_sampling_submission.json": {
+        "defend_h3_v1_sampling_submission.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/sampling_submission.json",
           "sha256": "4ddeb042f244a33c65242e0c65ff1bc9776755e63253b91bd2cf349abf8515b4"
         },
-        "previous_defend_h3_v1_sampling_history.json": {
+        "defend_h3_v1_sampling_history.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/sampling_history.json",
           "sha256": "8721172b83ed948468c3faf5616cd8ea45fb1eba3228ac24cb8e3c3507ecbd9d"
         },
-        "previous_defend_h3_v1_original.latent": {
+        "defend_h3_v1_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/defend_h3_v1/original.latent",
           "sha256": "f82ca61c55fe5d56a1d1c0dd1b48e10fa2b9a8eb646ab7049d138f5ef0211d69"
         },
-        "previous_cast_h3_v1_original_lossless.mkv": {
+        "cast_h3_v1_original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/original_lossless.mkv",
           "sha256": "0cf62986127c5ef533c6f5255894b09013f09e71231c3310d5f51a55fd1f174c"
         },
-        "previous_cast_h3_v1_original.json": {
+        "cast_h3_v1_original.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/original.json",
           "sha256": "e997f26ea254a22bec1d2c042694bae109ae7bef1aef227420734ee7eda0206b"
         },
-        "previous_cast_h3_v1_workflow_api.json": {
+        "cast_h3_v1_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/workflow_api.json",
           "sha256": "d5635c8a4d2848f645c3fc3123d4ad499bc9b1eefef1b5a14696dc7145463970"
         },
-        "previous_cast_h3_v1_prompt.txt": {
+        "cast_h3_v1_prompt.txt": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/prompt.txt",
           "sha256": "1b5b6fca0522407f60cf4657f671cfe04eec1f9acf22776abfb0bd0a9fb0298d"
         },
-        "previous_cast_h3_v1_reference.json": {
+        "cast_h3_v1_reference.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/reference.json",
           "sha256": "fb170aa836706a4c4762e5a087ae0312db5af0f85fdb84d23fe5d01d30c45150"
         },
-        "previous_cast_h3_v1_matte.json": {
+        "cast_h3_v1_matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/matte.json",
           "sha256": "0e64e23109b82b3fb93d831d4abbc47ca3e9b6cb24aa94d1b1294622111fb323"
         },
-        "previous_cast_h3_v1_staged_generation.json": {
+        "cast_h3_v1_staged_generation.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/staged_generation.json",
           "sha256": "600aa5695fb3b7230c86002231c95bf81aa669b04564f4c0a94c56bc9b3a58a3"
         },
-        "previous_cast_h3_v1_sampling_workflow_api.json": {
+        "cast_h3_v1_sampling_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/sampling_workflow_api.json",
           "sha256": "584699918d4256092c43aa276e5032ab44e7e530725c765b0126ede541556fa4"
         },
-        "previous_cast_h3_v1_sampling_submission.json": {
+        "cast_h3_v1_sampling_submission.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/sampling_submission.json",
           "sha256": "46c3e7a3710bf8ba885c5d78461d7e38742a31ca4a29bcae7ff1a53db5e975e1"
         },
-        "previous_cast_h3_v1_sampling_history.json": {
+        "cast_h3_v1_sampling_history.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/sampling_history.json",
           "sha256": "3a54c443f0c439ae32d33c49b3f7467d011ebc08889d5d614b1276132bdbb878"
         },
-        "previous_cast_h3_v1_original.latent": {
+        "cast_h3_v1_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/cast_h3_v1/original.latent",
           "sha256": "5994f556d7aa20c6dba517ad42503761e8d3c772d27c235df8cffd1f488bd8ea"
         },
-        "previous_death_h3_v1_original_lossless.mkv": {
+        "death_h3_v1_original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/original_lossless.mkv",
           "sha256": "efc2727c45ed9611e8ba297529e1a8b9f43ad7574abaffd646260694036fd44d"
         },
-        "previous_death_h3_v1_original.json": {
+        "death_h3_v1_original.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/original.json",
           "sha256": "c6c3dfc34b323c1fcaf717a0fd81adbf36351b0ea2be5e17d2f12f1c6e8dc128"
         },
-        "previous_death_h3_v1_workflow_api.json": {
+        "death_h3_v1_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/workflow_api.json",
           "sha256": "8e46eb766fa51b715c4767ced628a4f7f319d837439d7813dbac781ad16b9bf8"
         },
-        "previous_death_h3_v1_prompt.txt": {
+        "death_h3_v1_prompt.txt": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/prompt.txt",
           "sha256": "c457a3a1c98e9458f238ef9d2243dacdf737e4cc7f8a4c490f59ac81120e1497"
         },
-        "previous_death_h3_v1_reference.json": {
+        "death_h3_v1_reference.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/reference.json",
           "sha256": "01442f3240e401bb3b037b3e986d147d11f5c9ac43a94a61cb888f982ffc433c"
         },
-        "previous_death_h3_v1_matte.json": {
+        "death_h3_v1_matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/matte.json",
           "sha256": "146b9e064639ebd757768a92df722487c49a3d231f4a3c633871bc06ada0d199"
         },
-        "previous_death_h3_v1_staged_generation.json": {
+        "death_h3_v1_staged_generation.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/staged_generation.json",
           "sha256": "f8fdb11a5b99451e52d756ea762364338765a8cdf90cce2244047772ae948411"
         },
-        "previous_death_h3_v1_sampling_workflow_api.json": {
+        "death_h3_v1_sampling_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/sampling_workflow_api.json",
           "sha256": "d2fe5bec86f27b31014307bb45c4bb8c66ae636ad82e9475f37deb8cc459c00b"
         },
-        "previous_death_h3_v1_sampling_submission.json": {
+        "death_h3_v1_sampling_submission.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/sampling_submission.json",
           "sha256": "a2ecdf1c38a70c9d7ba69bd8961d04497cbd33cc7a0f77c8337bc2aae421fccf"
         },
-        "previous_death_h3_v1_sampling_history.json": {
+        "death_h3_v1_sampling_history.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/sampling_history.json",
           "sha256": "96f7daa2c4760413f4c82c787d7866c311050b0cb32ead7956b627007301ce99"
         },
-        "previous_death_h3_v1_original.latent": {
+        "death_h3_v1_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/death_h3_v1/original.latent",
           "sha256": "9652af2bbfac9845c719925a133c0d089e40f21a97c93d5d257bd9421999f562"
         },
-        "previous_attack_h3_v2_original_lossless.mkv": {
+        "attack_h3_v2_original_lossless.mkv": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/original_lossless.mkv",
           "sha256": "4dcd49f104d2ae022832bfe5cae072ebb64bb52627d12c23609147c0a8610f81"
         },
-        "previous_attack_h3_v2_original.json": {
+        "attack_h3_v2_original.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/original.json",
           "sha256": "ec6ac9bf25e786a87fb96a600f670de7d3c9332a77dd26de63574b60ba4b2916"
         },
-        "previous_attack_h3_v2_workflow_api.json": {
+        "attack_h3_v2_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/workflow_api.json",
           "sha256": "fe5a8818bd675e1e3dda72d96b26157f4bc4ca9e1274ead8fac8071d0b43c5ff"
         },
-        "previous_attack_h3_v2_prompt.txt": {
+        "attack_h3_v2_prompt.txt": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/prompt.txt",
           "sha256": "64c7aa96957b8cc097be4b7ab6fe76a30cc8e01424873c4656b4cec9a8f75518"
         },
-        "previous_attack_h3_v2_reference.json": {
+        "attack_h3_v2_reference.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/reference.json",
           "sha256": "17bd4145f0f8385db9ea955da5b7b6f52bb199ff453c05080ccc067030d47e21"
         },
-        "previous_attack_h3_v2_matte.json": {
+        "attack_h3_v2_matte.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte.json",
           "sha256": "4954d09acebdced2120e15404d2435805832015d1506ca16134fd4fad488206b"
         },
-        "previous_attack_h3_v2_runtime_profile.json": {
+        "attack_h3_v2_runtime_profile.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/runtime_profile.json",
           "sha256": "db99cb2eb3a6e6dcca6ce0aff621d454a6e05a69fc12a61aa7be04a9638b0fe1"
         },
-        "previous_attack_h3_v2_staged_generation.json": {
+        "attack_h3_v2_staged_generation.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/staged_generation.json",
           "sha256": "19ce0c05b997b3029a7ab21f9a8eee093c9aae4c2e2f09b8f46095414dfe750b"
         },
-        "previous_attack_h3_v2_sampling_workflow_api.json": {
+        "attack_h3_v2_sampling_workflow_api.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/sampling_workflow_api.json",
           "sha256": "ba5a704a0cf2ea4c6a51e1bbee55b146b4e3d1158a5404e7d724da12ca67ad20"
         },
-        "previous_attack_h3_v2_sampling_submission.json": {
+        "attack_h3_v2_sampling_submission.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/sampling_submission.json",
           "sha256": "79902d80949a42bd1530d1e0e3bb21555d3ad5bfbb05fb6378c0fe0266384edb"
         },
-        "previous_attack_h3_v2_sampling_history.json": {
+        "attack_h3_v2_sampling_history.json": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/sampling_history.json",
           "sha256": "c05bdab0576257ca84d3061838b812acee0121ae8fb865de624040f4a4ef69cd"
         },
-        "previous_attack_h3_v2_original.latent": {
+        "attack_h3_v2_original.latent": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/original.latent",
           "sha256": "006ede72fe0c9d37e683ee437fedd3917eef33f200fef562031c939f11467251"
         },
-        "previous_runtime_profile": {
+        "runtime_profile": {
           "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/runtime_profile.json",
           "sha256": "da40266b6d1bac8a1183be8d969b9069bcd23fae44d1e8d37fce109e5e589e94"
-        },
-        "retained_reviewed_handoff": {
-          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/before_move_v3_handoff.json",
-          "sha256": "b4cadd88f2bb62081ebe3191de5ac12afa101763a5b4d4304c6ec67f94b83ca4"
         }
       },
       "visual_review": {
         "status": "accepted_selected_clips",
-        "notes": "Coordinator reviewed all124 chronological original mattes,40 selected poses enlarged, full reciprocal two-leg cycle13..91, grounded loop seam, fixed scale and two-handed pole continuity. Native and mirrored full BattleShell fixtures each passed690checks. Publish40 original movement frames at50ms alongside160 unchanged accepted action frames; preserve8 idle poses and map pixels/timing. No manual game or continuous playback claim."
+        "notes": "Coordinator accepted corrected direct horizontal preparation, two-handed thrust and retraction after enlarged equipment/anatomy review, all38 native attack phases and actualBattleShell captures; hook stays right and shaft/grips/buckler remain intact. Full unmodified authoredattack fixture passed227 checks and mirrored phase fixture218. Preserve initial122 hit/defend/support/death sourceframes and exact8idle/map pixels. Movev1/v2 remain rejected for repeated same-leg contact, awaiting actual opposed-contact guide; wholeunit incomplete. No continuous video preview or manual playtest claimed."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/hit_h3_v1/matte/rgba_000.png": 0.5,
@@ -4912,47 +3961,7 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte/rgba_106.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte/rgba_107.png": 0.5,
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte/rgba_108.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte/rgba_112.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_013.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_015.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_017.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_019.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_021.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_023.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_025.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_027.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_029.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_031.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_033.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_035.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_037.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_039.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_041.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_043.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_045.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_047.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_049.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_051.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_053.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_055.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_057.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_059.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_061.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_063.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_065.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_067.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_069.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_071.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_073.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_075.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_077.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_079.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_081.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_083.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_085.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_087.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_089.png": 0.5,
-        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v3/matte/rgba_091.png": 0.5
+        "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/attack_h3_v2/matte/rgba_112.png": 0.5
       },
       "preserved_accepted_clips": [
         "idle"
@@ -4963,7 +3972,6 @@
         "cast",
         "death",
         "attack",
-        "move",
         "idle"
       ]
     }

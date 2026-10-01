@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "f10ed27c2461336ca3de1725e38112bed185ded1e7f22162b8df6ec6b8c05541",
+  "latent_sha256": "6245b7c41e9f0314520ad9d15c641678967d618d5c822c7013f6f838589f2bdd",
+  "decode_workflow_sha256": "f96895bcbe9612a90613a99eaab02091eaac5e14c76d7b309e9c4295c6624d68",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "harbor_h3\\move_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19588344128,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

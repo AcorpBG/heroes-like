@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            395,
+            512
+          ]
+        ],
+        "anchor": [
+          205,
+          481
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "c65a9ac6c93ced80d3b21da1d6d0d616d2c5ed2943182b39e8205a64c25275de",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "02cbdd08d6ffb66165abd2e33457cd0a1e3a09745b93508d5952b4d8d31b5dec",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "observed_foreground_leading_contact_020",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v2/matte/rgba_020.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          420,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "video_frame": 20,
+        "video_time_seconds": 0.8333333333333334
+      },
+      "source_sha256": "61705783d4857b91c13ee4f2e78e409bbf68ca41f604181d2e7ba6d599fb7fce",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "18f8ed1de2b9d7ea977f98e4f8888d2f6a677a789ae379b1848be23e85a6f2f6",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "name": "reviewed_opposite_foreground_trailing_contact_v5",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          785,
+          956
+        ],
+        "scale": 0.408,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "cc26068f2dcebc134498ca8f487bcebcf4acab14e83113863625b8a41a0bd9f2",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "7dcc0d7c47ae2cffad84f0a44dd4f759ac117204f9c5d2fa82653687662673c2",
+      "runtime_source_scale": 0.204
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    420,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

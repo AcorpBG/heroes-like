@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_harbor_polearms",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    420,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100230,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_harbor_polearms/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          395,
+          512
+        ]
+      ],
+      "anchor": [
+        205,
+        481
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "observed_foreground_leading_contact_020",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/move_h3_v2/matte/rgba_020.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        420,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0,
+      "video_frame": 20,
+      "video_time_seconds": 0.8333333333333334
+    },
+    {
+      "name": "reviewed_opposite_foreground_trailing_contact_v5",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_harbor_polearms/walk_opposed_contact_v5.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        785,
+        956
+      ],
+      "scale": 0.204,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      40,
+      0
+    ],
+    [
+      65,
+      2
+    ],
+    [
+      90,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Harbor Polearms infantryman: adult human man, tan skin, brown beard and mustache, navy maritime cap with round brass badge and small pale gold feather, navy long coat with gold trim, white open collar, brown crossed straps over chest mail, beige trousers, tall brown folded boots and brown gloves. Exactly two arms, two hands and two legs. Both hands hold ONE long straight brown boarding pole, with a silver hook and point at its screen-right end and small metal butt at its screen-left end. His LEFT hand on viewer-right grips the forward shaft toward the hook. His RIGHT hand on viewer-left grips the rear shaft. A small round navy-and-wood brass-rimmed buckler stays strapped to his LEFT forearm. Preserve the full continuous pole length, silver hook shape and both separate grips. One brass belt lantern and a coil of rope hang at his hip.  Perform one continuous walking-in-place cycle with TWO opposite leg contacts. At20 the foreground near hip-to-knee-to-boot chain leads toward screen right; the background far leg trails. Load the near heel, flex the far knee and pass through the two-foot ready stance at40. Next the foreground near leg swings BACK toward screen left while the background far leg swings FORWARD toward screen right, to the exact supplied opposite contact at65. Load the far heel, keep its boot grounded as the near knee passes forward, then return through double support at90 and finish in the original ready stance. Knees and ankles trace continuous arcs between these contacts, never swap or teleport. Keep the pelvis centered, body proportions unchanged, and the full rigid boarding pole in its original two separate grips. The foreground broad tan trouser leg must trail at65, unlike its forward-leading contact at20.  Locked elevated three-quarter orthographic camera and consistent original body scale. All boots, pole tips, buckler and fallen equipment remain fully inside the image. Perfectly flat pure green RGB0,255,0 background in every frame, with no scenery, floor, horizon, shadow, text, other figures, color changes or effects. Physical joint motion; stable face and clothing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "per_guide_max": [
+      6.0,
+      8.0,
+      4.0
+    ],
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two across all three guides."
+  },
+  "guide_scale_reason": "Generated full-body master .204 uniformly registers its cap-to-ground span to the retained191px idle, with torso/buckler/shaft sizes reviewed at native scale. Original accepted idle .44 and observed video .5 unchanged. Fixed root785,956 places both legitimate opposing contact boots on the same plane. No per-frame normalization.",
+  "guide_registration_review": {
+    "status": "approved_for_H3_reference_only",
+    "master_sha256": "cc26068f2dcebc134498ca8f487bcebcf4acab14e83113863625b8a41a0bd9f2",
+    "source_scale": 0.204,
+    "source_anchor": [
+      785,
+      956
+    ],
+    "findings": "Exactly two traceable legs: broad foreground thigh extends to trailing screen-left boot; occluded background thigh extends to screen-right leading boot. Both hands keep the single rigid pole; forearm buckler, cap, coat, belt lantern and rope intact. Raw backdrop RGB has alpha0 and is composited away. Native light/dark alpha and accepted-body scale reviewed. Video motion remains pending."
+  }
+}
