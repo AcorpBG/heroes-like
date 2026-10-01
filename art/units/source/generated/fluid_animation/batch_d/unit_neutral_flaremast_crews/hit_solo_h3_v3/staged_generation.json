@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "5445f5f1da66c0db973a77d925ee64b38a1489a84b71c47ae124ab2c0be45328",
+  "latent_sha256": "02f371cb16e2468ee571ebf432ac7f7710a25f4b5949fe9914e7cb56aa15a6b2",
+  "decode_workflow_sha256": "053bafdab2a5880b005ed9db5333c0bcccd447c08604ee093df20a6bab01ba61",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "flaremast_h3\\hit_solo_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19815163200,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

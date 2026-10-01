@@ -1,0 +1,206 @@
+{
+  "clips": {
+    "move": {
+      "take": "move_solo_h3_v4",
+      "selection": {
+        "source_frames": [
+          64,
+          66,
+          68,
+          70,
+          72,
+          74,
+          76,
+          78,
+          80,
+          82,
+          84,
+          86,
+          88,
+          90,
+          92,
+          94,
+          96,
+          98,
+          100,
+          102,
+          104,
+          106,
+          108,
+          110,
+          112,
+          114,
+          116,
+          118,
+          120,
+          122
+        ],
+        "frame_msec": 35,
+        "review_note": "Accepted after native review. All124 source/matte phases and30 enlarged selected poses reviewed. One reciprocal gait cycle64..122step2; far contact64, near contact96 with near thigh crossing forward under sash and far thigh trailing, independent knee/ankle paths and loading/passing/toe-off. Stowed single mast/three canisters stays compact, two hands hold launcher throughout. Matching far contact122→64 loop. Fixed .45/[470,576] native registration; 1050ms gameplay loop retimes2.42second source without reversals, interpolation, stabilization or duplicate padding. No continuous/manual playback claim."
+      }
+    },
+    "attack": {
+      "take": "attack_solo_h3_v4",
+      "selection": {
+        "source_frames": [
+          16,
+          18,
+          20,
+          22,
+          24,
+          26,
+          28,
+          30,
+          32,
+          34,
+          36,
+          38,
+          40,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52
+        ],
+        "frame_msec": 40,
+        "frame_durations_msec": [
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          50,
+          45,
+          45,
+          45,
+          45,
+          45
+        ],
+        "contact_frame": 7,
+        "review_note": "Accepted after native review. All124 chronological source/matte phases and21 enlarged first-event poses inspected. Select one complete leg-driven kick16..52 before the second repetition beginning79: weight shift16..26, front knee/boot extension28..30 (contact30), original contact hold32..42, retract44..46 and grounded ready48..52. Two anatomically linked hands retain passive brass launcher; single tripod mast/three canisters remain. No muzzle fire/projectile or inferred hidden event. Second full kick79..114 excluded as an extra event, not repaired/concatenated. Fixed .45/[470,576] registration;19 original frames retimed895ms without synthesis/duplicates. No continuous/manual playback claim. Native walk/kick phase overview inspected; lengthened active kick holds50ms after real shell missed two30ms contact poses under simultaneous H3 GPU workload. Final idle-GPU replay passed all authored kick poses."
+      }
+    },
+    "ranged": {
+      "take": "ranged_solo_h3_v3",
+      "selection": {
+        "source_frames": [
+          16,
+          18,
+          20,
+          22,
+          24,
+          28,
+          32,
+          36,
+          40,
+          44,
+          45,
+          50,
+          52,
+          56,
+          60,
+          64,
+          68,
+          72,
+          76,
+          78,
+          80,
+          82,
+          84,
+          86,
+          88
+        ],
+        "frame_msec": 45,
+        "frame_durations_msec": [
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          35,
+          35,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45
+        ],
+        "contact_frame": 9,
+        "runtime_projectile_separation": {
+          "50": {
+            "split_x": 658,
+            "review": "Entire creature/equipment ends642; detached emitted fragments begin672 or later. Empty original five-column gap646..669; game owns flight, retain full original matte."
+          },
+          "52": {
+            "split_x": 750,
+            "review": "Creature/equipment ends634; detached original projectile begins876. Empty original five-column gap. Game owns flight; retain full original matte."
+          }
+        },
+        "review_note": "Accepted after native review. All124 chronological matte phases and16 enlarged release/recoil phases reviewed. One original raise/aim/release/recovery16..88. Keep real attached muzzle flash44/45 and contact44; unselected46..49 contain an overlarge attached flare extending outside source canvas and are not cropped or synthesized. The selected next original recoil50 retains complete body/two grips/launcher/mast, and its fully detached flight fragments are separated across verified empty alpha gap658; same for52 at750. Thus actual firing is preserved, not omitted to claim a clean body-only take. Stable anatomy between45 and50; source jump209ms retimed across original45/50 with no interpolation. Aim holds and shoulder recoil recover through78..88. Fixed .45/[470,576] scale/root;25 original frames1105ms. Full originals and mattes retained; no continuous/manual playback claim."
+      }
+    },
+    "hit": {
+      "take": "hit_solo_h3_v4",
+      "selection": {
+        "source_frames": [
+          26,
+          28,
+          29,
+          30,
+          31,
+          34,
+          38,
+          42,
+          44,
+          46,
+          48,
+          50,
+          52
+        ],
+        "frame_msec": 45,
+        "frame_durations_msec": [
+          35,
+          35,
+          35,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45,
+          45
+        ],
+        "review_note": "Accepted after native review. All124 chronological matte phases and13 enlarged selected phases inspected. One sharp shoulder/torso recoil followed by articulated recovery26..52. Head lowers26..29, original impulse30 rotates torso and both elbows/held launcher down-left without emission; recoil holds31..42, then head/torso/knees and both wrists recover44..52 to grounded ready. The original29-to30 recoil is deliberately sharp (not a smooth ease), followed by distinct recovery; no interpolated transition. Two hands/arms remain linked with original rear/front grips, one long red-chamber brass launcher and complete stationary three-canister tripod mast; no flash/projectile or clipped body. Fixed .45/[470,576] scale/root;13 original frames555ms. No continuous/manual playback claim."
+      }
+    }
+  },
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo full Flaremast closure. Original chronological source/matte phases, enlarged selected anatomy/grips/edges, native battle128/map64 phase views and full native/mirrored action overviews reviewed. Reciprocal30-frame gait with matching far-contact seam and mast stowed;19-frame single physical kick through grounded recovery;25-frame ranged aim/release/recovery retaining actual brief original muzzle flash44/45 and separating only fully detached flight layers50/52 across proven empty gaps;13-frame sharp original hit impulse followed by torso/elbow/launcher recovery without emissions. Same .45/[470,576] anatomical scale/registration; no per-frame normalization, reversals/interpolation/duplicate padding. Existing accepted idle/defend/support/death/corpse and overworld artwork retained. Candidate240 checks and mirrored240 checks pass: real shell observes all19 kick poses, Normal/Fast/reduced-motion/timing/focus/input/saved simulation unchanged. No continuous/manual playback or Linux execution claim. Live254 focused checks and exact imported3456x3360 RGBA atlas verification passed; source preservation proved87 new poses,81 retained published poses,496 original accepted-take RGB frames, all232 overworld visuals/timing and other231 battle rows. Source crop changes only by the packed cell-height delta(-16px), with identical idle pixels."
+  }
+}

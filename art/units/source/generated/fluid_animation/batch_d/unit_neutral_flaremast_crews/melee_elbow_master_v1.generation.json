@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_master_v1.png",
+    "sha256": "c50ce4b676b490b0fc40e8dd714411b5cfd5ff10b5969f3e66b5b55e91efeacd"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_master_v1.prompt.txt",
+    "sha256": "e09825e73317578b86d835f8bdcad656ef6ffc20004304dfdea845938200a1ad"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v2/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c9a53c9f-9190-4779-8e29-c6caad607dc5.png",
+  "review_status": "rejected_background_halo_mast_registration"
+}

@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_kick_body_v1.png",
+    "sha256": "111c60f4b8076f2a23becd43514ad82ed45d2b3d6f6b77212b0fe3c024b02c4f"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_kick_body_v1.prompt.txt",
+    "sha256": "ba25c8e7220a0340774beeae54c8e1034bd314281ed3f804612f58d7e0001380"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v2/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-858062a0-48ee-4dfe-b5e1-c30b871dcfb3.png",
+  "review_status": "pending_H3_kick_control"
+}

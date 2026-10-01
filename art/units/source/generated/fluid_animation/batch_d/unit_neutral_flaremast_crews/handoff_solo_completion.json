@@ -4258,8 +4258,8 @@
         }
       },
       "visual_review": {
-        "status": "accepted_selected_clips",
-        "notes": "Solo native/mirrored review accepted reciprocal walk, passive-launcher kick, original muzzle-flash release with only detached flight layers separated, and sharp hit recoil/recovery; all equipment/two grips and anatomical scale retained; existing accepted actions/idle/map pixels preserved. Candidate and mirrored240 checks each pass; original chronological phases reviewed, no manual/continuous/Linux claim."
+        "status": "accepted",
+        "notes": "Solo full Flaremast closure. Original chronological source/matte phases, enlarged selected anatomy/grips/edges, native battle128/map64 phase views and full native/mirrored action overviews reviewed. Reciprocal30-frame gait with matching far-contact seam and mast stowed;19-frame single physical kick through grounded recovery;25-frame ranged aim/release/recovery retaining actual brief original muzzle flash44/45 and separating only fully detached flight layers50/52 across proven empty gaps;13-frame sharp original hit impulse followed by torso/elbow/launcher recovery without emissions. Same .45/[470,576] anatomical scale/registration; no per-frame normalization, reversals/interpolation/duplicate padding. Existing accepted idle/defend/support/death/corpse and overworld artwork retained. Candidate240 checks and mirrored240 checks pass: real shell observes all19 kick poses, Normal/Fast/reduced-motion/timing/focus/input/saved simulation unchanged. No continuous/manual playback or Linux execution claim. Live254 focused checks and exact imported3456x3360 RGBA atlas verification passed; source preservation proved87 new poses,81 retained published poses,496 original accepted-take RGB frames, all232 overworld visuals/timing and other231 battle rows. Source crop changes only by the packed cell-height delta(-16px), with identical idle pixels."
       },
       "source_scale_by_image": {
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/defend_h3_v2/matte/rgba_000.png": 0.45,
@@ -4423,16 +4423,6 @@
         "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_solo_h3_v4/matte/rgba_052.png": 0.45
       },
       "preserved_accepted_clips": [
-        "idle"
-      ],
-      "accepted_clips": [
-        "defend",
-        "cast",
-        "death",
-        "move",
-        "attack",
-        "ranged",
-        "hit",
         "idle"
       ]
     }

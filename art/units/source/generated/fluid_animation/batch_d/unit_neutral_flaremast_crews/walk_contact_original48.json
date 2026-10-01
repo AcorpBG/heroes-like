@@ -1,0 +1,23 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v2/original_lossless.mkv",
+    "sha256": "1178020fae30601715446168183ae48cc9627a494b824240634bf34088481f93"
+  },
+  "video_frame": 48,
+  "video_time_seconds": 2.0,
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_contact_original48.png",
+    "sha256": "2f891f3b56aac060be24a829275eee2360269ebff65d0c402409906f8518a98e"
+  },
+  "matte": {
+    "background_rgb": [
+      2.0,
+      245.0,
+      0.0
+    ],
+    "corner_median_spread": 0.0,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "prepare_solo_completion.py"
+}

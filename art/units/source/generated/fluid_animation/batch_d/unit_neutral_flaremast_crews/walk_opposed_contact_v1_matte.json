@@ -1,0 +1,21 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1.png",
+    "sha256": "ff2a50e4e3a0e2b23d33d83ce937947284736cf17f7d010c84abbbb72a41b43d"
+  },
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1_matte.png",
+    "sha256": "a18f36186baab0fdcd16b3cc5ed00df4f1730e8ea443aa7b99ba33a3a22ccfbc"
+  },
+  "matte": {
+    "background_rgb": [
+      3.5,
+      248.0,
+      6.0
+    ],
+    "corner_median_spread": 1.118,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "prepare_solo_walk_correction.py"
+}

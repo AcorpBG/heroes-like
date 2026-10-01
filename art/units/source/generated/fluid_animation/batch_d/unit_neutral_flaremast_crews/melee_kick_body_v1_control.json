@@ -1,0 +1,36 @@
+{
+  "source": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_kick_body_v1.png",
+    "sha256": "111c60f4b8076f2a23becd43514ad82ed45d2b3d6f6b77212b0fe3c024b02c4f"
+  },
+  "fixed_anatomical_factor": 0.535,
+  "source_anchor": [
+    500,
+    888
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "body_position": [
+    202,
+    85
+  ],
+  "mast_source": "hit_h3_v2 original frame35 connected component at [325,250]",
+  "matte": {
+    "background_rgb": [
+      3.0,
+      249.0,
+      4.0
+    ],
+    "corner_median_spread": 2.0,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Fixed original-pixel key-pose composition; neither morphing nor authored animation.",
+  "rebuild": "prepare_solo_completion.py"
+}

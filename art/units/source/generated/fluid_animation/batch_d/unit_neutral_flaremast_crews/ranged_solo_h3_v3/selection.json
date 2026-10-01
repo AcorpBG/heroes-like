@@ -1,0 +1,69 @@
+{
+  "source_frames": [
+    16,
+    18,
+    20,
+    22,
+    24,
+    28,
+    32,
+    36,
+    40,
+    44,
+    45,
+    50,
+    52,
+    56,
+    60,
+    64,
+    68,
+    72,
+    76,
+    78,
+    80,
+    82,
+    84,
+    86,
+    88
+  ],
+  "frame_msec": 45,
+  "frame_durations_msec": [
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    35,
+    35,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45,
+    45
+  ],
+  "contact_frame": 9,
+  "runtime_projectile_separation": {
+    "50": {
+      "split_x": 658,
+      "review": "Entire creature/equipment ends642; detached emitted fragments begin672 or later. Empty original five-column gap646..669; game owns flight, retain full original matte."
+    },
+    "52": {
+      "split_x": 750,
+      "review": "Creature/equipment ends634; detached original projectile begins876. Empty original five-column gap. Game owns flight; retain full original matte."
+    }
+  },
+  "review_note": "Accepted after native review. All124 chronological matte phases and16 enlarged release/recoil phases reviewed. One original raise/aim/release/recovery16..88. Keep real attached muzzle flash44/45 and contact44; unselected46..49 contain an overlarge attached flare extending outside source canvas and are not cropped or synthesized. The selected next original recoil50 retains complete body/two grips/launcher/mast, and its fully detached flight fragments are separated across verified empty alpha gap658; same for52 at750. Thus actual firing is preserved, not omitted to claim a clean body-only take. Stable anatomy between45 and50; source jump209ms retimed across original45/50 with no interpolation. Aim holds and shoulder recoil recover through78..88. Fixed .45/[470,576] scale/root;25 original frames1105ms. Full originals and mattes retained; no continuous/manual playback claim."
+}

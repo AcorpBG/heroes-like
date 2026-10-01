@@ -1,0 +1,23 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_h3_v2/original_lossless.mkv",
+    "sha256": "1595fe184e8a5f0e4ba582f74a66481b3ccd25126b32acbc83cbba28cd37dae4"
+  },
+  "video_frame": 36,
+  "video_time_seconds": 1.5,
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_aim_original36.png",
+    "sha256": "d308ef57aa1aae3f0097098ce62b95c45996326686ab653b074a9793c7dae91d"
+  },
+  "matte": {
+    "background_rgb": [
+      4.5,
+      246.0,
+      0.0
+    ],
+    "corner_median_spread": 0.5,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "prepare_solo_completion.py"
+}

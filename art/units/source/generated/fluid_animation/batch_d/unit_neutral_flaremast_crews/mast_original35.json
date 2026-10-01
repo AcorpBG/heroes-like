@@ -1,0 +1,23 @@
+{
+  "original": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_h3_v2/original_lossless.mkv",
+    "sha256": "5bd69a5b786471b218ca37ca861fd559c66e31b8d155578118d2454ae376cde7"
+  },
+  "video_frame": 35,
+  "video_time_seconds": 1.4583333333333333,
+  "rgba": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/mast_original35.png",
+    "sha256": "69f3f908ef98331f045a0b0f7a0a220839f40f0bbd9d4c8fbffeccbcd2d17f24"
+  },
+  "matte": {
+    "background_rgb": [
+      2.5,
+      248.0,
+      0.0
+    ],
+    "corner_median_spread": 1.118,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rebuild": "prepare_solo_completion.py"
+}

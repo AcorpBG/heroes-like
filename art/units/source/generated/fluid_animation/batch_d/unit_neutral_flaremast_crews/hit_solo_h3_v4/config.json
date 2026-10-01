@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100371,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_tucked_body_v2_control",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_tucked_body_v2_control.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [
+    [
+      8,
+      0
+    ],
+    [
+      30,
+      1
+    ],
+    [
+      70,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "A single painted woman performs one quick physical shoulder flinch and recovers. Begin in first ready pose. Briefly lower her chin, bend both knees, tilt head and shoulders backward toward screen left, tuck both elbows across her waist and rotate the held brass instrument DOWN LEFT to match the second guide at frame30. Immediately straighten through her knees and torso back to the first ready posture by frame70, then settle. Both boots remain planted; no traveling step. Exactly two arms, two hands, two legs. Right hand retains rear grip and left hand supports front tube at all times. Keep the long brass tube, red chamber and flared dark opening rigid and closed to activity. The adjacent brass mast remains stationary on all three tripod legs, with the same red, orange and blue canisters. Preserve blue cap and amber goggles, brown hair, teal cream-cuff jacket, closed brown quilted vest, red scarf/sash, cream trousers and strapped brown boots. Only physical joint motion of this woman and held equipment. Constant size, locked elevated three-quarter orthographic camera facing right. All anatomy and equipment inside960x640. Uniform empty pure green RGB0,255,0 background throughout. No additional elements, effects or background changes.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      10.0
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_original48",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_contact_original48.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "2f891f3b56aac060be24a829275eee2360269ebff65d0c402409906f8518a98e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "9db2a618d331582d219ec66c39d77a3089aa2a0bdaf5af7570d75d117210be88",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "name": "walk_opposed_contact_v1",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1_matte.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          780,
+          888
+        ],
+        "scale": 0.625,
+        "alpha_noise_cutoff": 0
+      },
+      "source_sha256": "a18f36186baab0fdcd16b3cc5ed00df4f1730e8ea443aa7b99ba33a3a22ccfbc",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "bc56e9ae0622b1eb2cde08ef9436fe6050dc54c548fa7be6176abbe9cce6188c",
+      "runtime_source_scale": 0.3125
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

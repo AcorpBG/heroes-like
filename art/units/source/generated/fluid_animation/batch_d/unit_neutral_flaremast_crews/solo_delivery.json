@@ -1,0 +1,64 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "new_takes": [
+    "move_solo_h3_v4",
+    "attack_solo_h3_v4",
+    "ranged_solo_h3_v3",
+    "hit_solo_h3_v4"
+  ],
+  "new_clips": [
+    "move",
+    "attack",
+    "ranged",
+    "hit"
+  ],
+  "preserved_published_clips": [
+    "idle",
+    "defend",
+    "cast",
+    "death",
+    "dead"
+  ],
+  "selection_source": "solo_selections.json",
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo full Flaremast closure. Original chronological source/matte phases, enlarged selected anatomy/grips/edges, native battle128/map64 phase views and full native/mirrored action overviews reviewed. Reciprocal30-frame gait with matching far-contact seam and mast stowed;19-frame single physical kick through grounded recovery;25-frame ranged aim/release/recovery retaining actual brief original muzzle flash44/45 and separating only fully detached flight layers50/52 across proven empty gaps;13-frame sharp original hit impulse followed by torso/elbow/launcher recovery without emissions. Same .45/[470,576] anatomical scale/registration; no per-frame normalization, reversals/interpolation/duplicate padding. Existing accepted idle/defend/support/death/corpse and overworld artwork retained. Candidate240 checks and mirrored240 checks pass: real shell observes all19 kick poses, Normal/Fast/reduced-motion/timing/focus/input/saved simulation unchanged. No continuous/manual playback or Linux execution claim. Live254 focused checks and exact imported3456x3360 RGBA atlas verification passed; source preservation proved87 new poses,81 retained published poses,496 original accepted-take RGB frames, all232 overworld visuals/timing and other231 battle rows. Source crop changes only by the packed cell-height delta(-16px), with identical idle pixels."
+  },
+  "runtime_scale": 0.45,
+  "ground_anchor": [
+    470,
+    576
+  ],
+  "rule": "Solo full-unit closure; every selected frame is original H3 output, no synthesis or per-frame normalization.",
+  "validation": {
+    "candidate_checks": 240,
+    "mirrored_checks": 240,
+    "live_checks": 254,
+    "failures": 0,
+    "imported_atlas": "exact RGBA pixels after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3456,
+      3360
+    ],
+    "rgba_bytes": 46448640,
+    "published_original_action_frames": 87,
+    "preserved_action_dead_frames": 81,
+    "verified_accepted_take_original_rgb_frames": 496,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen; no Linux or manual playtest claim",
+    "full_suite_run": false
+  },
+  "roster_after": {
+    "complete": 194,
+    "remaining": 38,
+    "total": 232
+  },
+  "cleanup": {
+    "removed_files": 1692,
+    "recovered_bytes": 661646630,
+    "kept": "All original masters, seven H3 lossless RGB originals868 frames, original MP4s/sampled latents, exact prompts/workflows/seeds/guides/provenance,87 selected mattes, caches/saves/unrelated files",
+    "removed": "Task reviews/profiles/logs/baseline copies,682 unselected rebuildable derived mattes, hash/RGB-verified Comfy output/input duplicates",
+    "rebuildable": true
+  }
+}

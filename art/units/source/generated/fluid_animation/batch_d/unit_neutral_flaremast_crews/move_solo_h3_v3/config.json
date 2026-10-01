@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100310,
+  "references": [
+    {
+      "name": "walk_contact_original48",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_contact_original48.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    },
+    {
+      "name": "walk_contact_original61",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_contact_original61.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      60,
+      0
+    ],
+    [
+      90,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Flaremast woman, same brown hair, blue cap/amber goggles, teal cream-cuff jacket, brown quilted vest covering waist, red scarf and sash, cream trousers, brown strapped boots. Exactly TWO arms/hands and TWO legs. Same long brass flared tube with red chamber, right hand at rear grip and left supporting barrel. Same brass signal mast with red/orange/blue canisters and three tripod legs. The signal mast is ALREADY compactly stowed on the back strap, three hinged legs closed and all original canisters attached. It stays stowed for the ENTIRE video, never unpacked. Both hands carry the same long brass tube low pointing down-right. Walk continuously IN PLACE through two complete reciprocal stride cycles. Alternate near/far boot contacts, loading, passing and toe-off; opposite legs support each other, knees and ankles articulate independently. No start/stop, setup, equipment handling or translation; keep body centered. Red sash and coat follow gait. Match first contact at frame0/60/123 and opposite contact30/90. Locked elevated three-quarter orthographic camera facing right, constant body and equipment scale, planted feet/root. Every detail inside canvas960x640. Perfectly uniform flat pure green RGB0,255,0 plate throughout, unchanged empty surroundings, no floor/shadow/gradient/hue changes/text/additional people. Smooth articulated physical joints, rigid equipment and stable grips.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      10.0
+    ]
+  }
+}

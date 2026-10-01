@@ -1,0 +1,36 @@
+{
+  "source": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_body_v2.png",
+    "sha256": "94489c5f41a72440ddce7a39c247b4371f436b1c9c600e3cd4f9ad6956f0ed00"
+  },
+  "fixed_anatomical_factor": 0.49,
+  "source_anchor": [
+    855,
+    935
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "body_position": [
+    51,
+    102
+  ],
+  "mast_source": "hit_h3_v2 original frame35 connected component at [325,250]",
+  "matte": {
+    "background_rgb": [
+      5.0,
+      248.0,
+      10.5
+    ],
+    "corner_median_spread": 1.5,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Fixed original-pixel key-pose composition; neither morphing nor authored animation.",
+  "rebuild": "prepare_solo_completion.py"
+}

@@ -1,0 +1,36 @@
+{
+  "source": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v2.png",
+    "sha256": "23df890fa6fc328179d7723a8ea5e5a15c8ba395316c3a44fbda7f975b163f2f"
+  },
+  "fixed_anatomical_factor": 0.583,
+  "source_anchor": [
+    768,
+    863
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "body_position": [
+    22,
+    57
+  ],
+  "mast_source": "hit_h3_v2 original frame35 connected component at [325,250]",
+  "matte": {
+    "background_rgb": [
+      2.0,
+      248.0,
+      7.0
+    ],
+    "corner_median_spread": 1.0,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Fixed original-pixel key-pose composition; neither morphing nor authored animation.",
+  "rebuild": "prepare_solo_completion.py"
+}

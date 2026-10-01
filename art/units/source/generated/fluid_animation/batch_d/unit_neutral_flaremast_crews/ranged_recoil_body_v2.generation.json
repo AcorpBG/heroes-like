@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v2.png",
+    "sha256": "23df890fa6fc328179d7723a8ea5e5a15c8ba395316c3a44fbda7f975b163f2f"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v2.prompt.txt",
+    "sha256": "4ccc89608aed17562487ceedc8bca217c66d96c649cd8e71f8941e4fd5ee3cca"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v1.png",
+      "sha256": "eb6a316b8af5f89d17f69a56fa5cc6706afd0991dde6286753dab2107918ec83"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-33346be5-8c44-400d-8c8e-135635ddb403.png",
+  "review_status": "pending_control_guide"
+}

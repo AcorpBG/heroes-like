@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v1.png",
+    "sha256": "eb6a316b8af5f89d17f69a56fa5cc6706afd0991dde6286753dab2107918ec83"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_recoil_body_v1.prompt.txt",
+    "sha256": "358b22e1e656b7bd6a71e127d97f50fbb2af28389c3ef0ac12a77b8c26878219"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/ranged_aim_original36.png",
+      "sha256": "d308ef57aa1aae3f0097098ce62b95c45996326686ab653b074a9793c7dae91d"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-94c19777-9b2d-433f-b4e1-3087f7a8de3c.png",
+  "review_status": "rejected_exposed_midriff"
+}

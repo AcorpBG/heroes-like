@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_tucked_body_v1.png",
+    "sha256": "50817b8367e8dc7f35c2a9dd76fb0d18d0ccf58d42b87a0c7da6e78fb792a2e2"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_tucked_body_v1.prompt.txt",
+    "sha256": "d6f5be5d97bec2a8d455a5ee1ac2459d7e6f455fa19794e6f9139bcb2057deb7"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_h3_v2/guide_0_rgba.png",
+      "sha256": "85e76c40ffe81df37e858749eb244eba423e65426423db24f61e5b6160818494"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b28b5370-1f1e-4a80-afa5-9710e94ce247.png",
+  "review_status": "rejected_extra_hand"
+}

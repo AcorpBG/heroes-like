@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_body_v2.png",
+    "sha256": "94489c5f41a72440ddce7a39c247b4371f436b1c9c600e3cd4f9ad6956f0ed00"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_body_v2.prompt.txt",
+    "sha256": "b60a29f70ddbc1cdd5f4ad368a5fdc51df298a9ea8fd49c08db6c4200e746e70"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_elbow_master_v1.png",
+      "sha256": "c50ce4b676b490b0fc40e8dd714411b5cfd5ff10b5969f3e66b5b55e91efeacd"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-7d24755c-234b-4c3e-adb5-b52f0e2556b1.png",
+  "review_status": "pending_control_guide"
+}

@@ -1,0 +1,27 @@
+{
+  "tool": "built_in_image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1_matte.png",
+    "sha256": "a18f36186baab0fdcd16b3cc5ed00df4f1730e8ea443aa7b99ba33a3a22ccfbc"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1.prompt.txt",
+    "sha256": "98f0d955b83c6c64c6bef6fff74aeec6e54f53ce0f31c147d4c17732eee7397c"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/move_solo_h3_v3/guide_0_rgba.png",
+      "sha256": "2f891f3b56aac060be24a829275eee2360269ebff65d0c402409906f8518a98e"
+    }
+  ],
+  "tool_output_path": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-615ece6a-0e65-41e0-b864-ea1128b9805c.png",
+  "review_status": "pending_H3_opposed_contact_control",
+  "original_image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1.png",
+    "sha256": "ff2a50e4e3a0e2b23d33d83ce937947284736cf17f7d010c84abbbb72a41b43d"
+  },
+  "matte_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/walk_opposed_contact_v1_matte.json",
+    "sha256": "4bc6eb012134daead627a889eed34e18892f46807b491b8f262b8c15b3bee47e"
+  }
+}

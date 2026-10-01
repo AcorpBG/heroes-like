@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_flaremast_crews",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100361,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_flaremast_crews/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          298,
+          354
+        ],
+        [
+          80,
+          354,
+          145,
+          360
+        ],
+        [
+          238,
+          354,
+          270,
+          367
+        ]
+      ],
+      "anchor": [
+        175,
+        354
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "melee_kick_body_v1_control",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/melee_kick_body_v1_control.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 0
+    }
+  ],
+  "guides": [
+    [
+      10,
+      0
+    ],
+    [
+      40,
+      1
+    ],
+    [
+      80,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Flaremast woman, brown hair, blue cap/amber goggles, teal cream-cuff jacket, brown quilted vest, red scarf/sash, cream trousers and tall brown strapped boots. Exactly two arms/hands and two legs. Both hands hold the same passive long brass flared tube with red chamber LOW across waist pointing DOWN RIGHT throughout. Same standing brass mast/red-orange-blue canisters/tripod is motionless at screen left. Perform ONE FRONT BOOT KICK toward screen right: transfer weight onto the far boot at its original screen-right ground contact, raise the near knee from the screen-left hip beneath red sash, extend that boot forward to the supplied kick contact, retract knee then ground both boots back in original ready stance. Torso counterbalances smoothly, elbows/hands and tube stay passive and low; no lifting or operation of held equipment. A continuous leg-driven physical action, one knee lift, one kick, one recovery, no repetition. Locked elevated three-quarter orthographic camera facing right, same anatomical scale and equipment geometry. Full body/held tube/mast/kicking boot inside960x640, no extra limbs. Perfectly uniform flat pure green RGB0,255,0 background, unchanged empty surroundings, no floor/shadow/gradient/hue cycling/text/particles/emissions/flame/smoke/detached objects.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 26,
+  "foreground_measurement": {
+    "rule": "Original green-minus-max(red,blue) eroded opaque maximum plus two.",
+    "per_guide_max": [
+      14.0,
+      10.0
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "source": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_flaremast_crews/hit_tucked_body_v2.png",
+    "sha256": "a8fe7053f9714fff0c1a6f4a9b053f24ee92aa4cb274e700b75b06e80c0c516e"
+  },
+  "fixed_anatomical_factor": 0.49,
+  "source_anchor": [
+    820,
+    900
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "body_position": [
+    68,
+    119
+  ],
+  "mast_source": "hit_h3_v2 original frame35 connected component at [325,250]",
+  "matte": {
+    "background_rgb": [
+      2.5,
+      248.0,
+      4.0
+    ],
+    "corner_median_spread": 1.5,
+    "mode": "flat_green_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Fixed original-pixel key-pose composition; neither morphing nor authored animation.",
+  "rebuild": "prepare_solo_completion.py"
+}

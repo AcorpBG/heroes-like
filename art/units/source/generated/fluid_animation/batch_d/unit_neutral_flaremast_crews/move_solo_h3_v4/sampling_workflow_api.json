@@ -1,0 +1,207 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Flaremast woman, same brown hair, blue cap/amber goggles, teal cream-cuff jacket, brown quilted vest covering waist, red scarf and sash, cream trousers, brown strapped boots. Exactly TWO arms/hands and TWO legs. Same long brass flared tube with red chamber, right hand at rear grip and left supporting barrel. Same brass signal mast with red/orange/blue canisters and three tripod legs. The signal mast is ALREADY compactly stowed on the back strap, three hinged legs closed and all original canisters attached. It stays stowed for the ENTIRE video, never unpacked. Both hands carry the same long brass tube low pointing down-right. Walk continuously IN PLACE through two complete reciprocal stride cycles. Alternate near/far boot contacts, loading, passing and toe-off; opposite legs support each other, knees and ankles articulate independently. No start/stop, setup, equipment handling or translation; keep body centered. Red sash and coat follow gait. Match first contact at frame0/64/123 and opposite contact32/96. Locked elevated three-quarter orthographic camera facing right, constant body and equipment scale, planted feet/root. Every detail inside canvas960x640. Perfectly uniform flat pure green RGB0,255,0 plate throughout, unchanged empty surroundings, no floor/shadow/gradient/hue changes/text/additional people. Smooth articulated physical joints, rigid equipment and stable grips. NEAR thigh begins under red sash at screen-left hip: on its forward stride it crosses in front of the FAR thigh and the near boot reaches ahead to screen RIGHT, exactly as supplied opposite guide32/96. FAR thigh starts below screen-right pouch and on this phase extends BACK left. Both leg chains remain anatomically distinct through the crossover and passing phases. Neither leg may always remain behind or always be the forward leg.",
+      "width": 960,
+      "height": 640,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026100351
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "flaremast_move_solo_h3_v4_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "flaremast_move_solo_h3_v4_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 64,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "42": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "41",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 96,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "42",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "flaremast_h3/move_solo_h3_v4/sampled"
+    }
+  }
+}
