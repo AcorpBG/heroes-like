@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "method": "alpha>=240, three-pixel interior erosion; min(red,blue)-green",
+  "guides": {
+    "attack": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0,
+        3.0,
+        3.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "hit": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0,
+        2.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "defend": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0,
+        3.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "cast": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "death": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0,
+        4.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "move": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        3.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "move_h3_v2": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        26.0,
+        26.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    },
+    "cast_h3_v2": {
+      "opaque_eroded_interior_magenta_chroma_max": [
+        1.0,
+        4.0
+      ],
+      "protected_band": 26,
+      "background_chroma": 255
+    }
+  },
+  "cast_h3_v3": [
+    {
+      "guide": 0,
+      "opaque_pixels": 60040,
+      "max_blue_chroma": 2.0,
+      "protected_blue_chroma": 8
+    },
+    {
+      "guide": 1,
+      "opaque_pixels": 72425,
+      "max_blue_chroma": 4.0,
+      "protected_blue_chroma": 8
+    }
+  ]
+}

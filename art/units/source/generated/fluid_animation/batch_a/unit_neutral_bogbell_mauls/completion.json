@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "workflow": "Solo local MiniMax H3 video, original extracted transparent frames; one unit fully completed before another.",
+  "new_takes": [
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v3",
+    "death_h3_v1",
+    "move_h3_v2"
+  ],
+  "new_clip_frames": {
+    "attack": 35,
+    "hit": 28,
+    "defend": 13,
+    "cast": 31,
+    "death": 32,
+    "move": 32
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo visual review of all six original124-frame chronologies and enlarged action transitions, preserved eight articulated idle poses, actual Godot128px reference scale and reflected facing. Alternating grounded stride; two-handed maul windup/downstroke/recovery; recoil with original left-hand release and regrip; held low maul guard; physical overhead rally/return; continuous side collapse with released maul settling beside held corpse. Original limb count, body scale and equipment remain readable, clean alpha on light/dark backgrounds. Condensed source holds and deliberately retimed selected original frames; no reverse, duplicate or interpolation padding. Candidate and mirrored native fixtures each passed246 focused checks, including complete authored attack playback, Normal/Fast/reduced-motion and simulation/save preservation. No continuous manual game playback or Linux run claimed."
+  },
+  "validation": {
+    "candidate_checks": 246,
+    "mirrored_checks": 246,
+    "live_checks": 260,
+    "failures": 0,
+    "imported_atlas": "exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3640,
+      3920
+    ],
+    "rgba_bytes": 57075200,
+    "new_original_action_frames": 171,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 744,
+    "retained_original_rgb_frames_including_rejected": 1116,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 196,
+    "remaining": 36,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Bogbell Mauls six H3 actions171 original poses plus retained8-frame idle; source/mirrored/native visual review and246/246/260 focused checks pass, exact imported atlas and all232 map visuals preserved. Roster196/232 complete,36 remaining. Broad goal remains in_progress; no subagents or full suite.",
+  "cleanup": {
+    "removed_files": 1872,
+    "recovered_bytes": 835049640,
+    "rebuildable": true,
+    "rule": "Preserved original art/prompts,1116 original video frames, MP4s/sampler latents, guides/workflows/seeds/provenance, selected mattes, correction inputs and caches. Removed only unselected rebuildable mattes, verified task-owned Comfy duplicates and chronological/anatomy previews. Removed verified isolated task baseline copies, profiles, native previews, logs and disposable staging/cleanup helpers."
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_attempt",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+        "rects": [
+          [
+            618,
+            0,
+            932,
+            438
+          ]
+        ],
+        "anchor": [
+          774,
+          418
+        ],
+        "scale": 1.034,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae7c4ccb7c5295f0c9e2dc6277215645aae9f30f2a1b29c0fbe902fdc5557eaa",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "5e6b4c69c6b193303843de89edf0558140bcca01a87abe3719930f218b8540aa",
+      "runtime_source_scale": 0.517
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

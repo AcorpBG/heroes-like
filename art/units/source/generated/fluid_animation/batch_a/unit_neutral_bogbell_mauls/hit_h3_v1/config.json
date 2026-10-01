@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "clip": "hit",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100501,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          391,
+          512
+        ]
+      ],
+      "anchor": [
+        180,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "hit_recoil",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          835,
+          317,
+          1193
+        ]
+      ],
+      "anchor": [
+        153,
+        1160
+      ],
+      "scale": 0.517,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Bogbell Maul: stocky broad bearded human with mossy brown hood, muddy layered hide armor, olive trousers, wrapped heavy boots, bronze chest bell and small dangling bronze bells on belt and maul. Exactly two arms, two hands and two legs. One thick long wooden-shaft maul with ONE barrel-shaped dark wooden head and bronze bands, retained in a two-handed grip. Right hand grips the rear/lower shaft near screen left; left hand grips forward near barrel head at screen right in ready. Keep the same hands on the same shaft positions as the weapon rotates. One sharp physical backward torso/shoulder recoil, knees flex, hooded head tilts back briefly. Keep both hands on the same maul and maintain its complete barrel and shaft. Regain balance and return smoothly to ready; no fall, travel or unrelated attack. Locked elevated three-quarter orthographic camera facing screen right. Full creature and full maul stay within 960x544, same body/equipment size throughout, anatomical root centered. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, particles, external light, magic, additional people or objects. Articulated physical joints and stable grips, no prop/anatomy morphing.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

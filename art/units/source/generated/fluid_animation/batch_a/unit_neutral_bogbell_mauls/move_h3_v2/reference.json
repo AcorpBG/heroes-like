@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_000.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          470,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "name": "original_contact_0"
+      },
+      "source_sha256": "f19578e587e15673fe03e607ebaaaf2dce78ea80b28343da782fcb0935add467",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "e535b57b5dd9f75ed3e478e6e9834a8f8a9a96a5b8d414acec335d48e7d1c6eb",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_024.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            544
+          ]
+        ],
+        "anchor": [
+          470,
+          480
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 0,
+        "name": "original_contact_24"
+      },
+      "source_sha256": "d554dfdbcb6d22b1f92db2d5e049c82fb21a89637a0efc69217289de8a9185bf",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6ff8dd035977393cb3c277f5406c6c856dc7d61adf278015bf24112406eaa23b",
+      "runtime_source_scale": 0.5
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

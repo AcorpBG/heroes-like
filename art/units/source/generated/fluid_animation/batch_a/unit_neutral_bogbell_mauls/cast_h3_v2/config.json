@@ -1,0 +1,80 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100616,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          391,
+          512
+        ]
+      ],
+      "anchor": [
+        180,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "original_raised_maul_rally",
+      "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/rally_raised_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1659,
+          948
+        ]
+      ],
+      "anchor": [
+        825,
+        860
+      ],
+      "scale": 0.29,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      40,
+      1
+    ],
+    [
+      64,
+      1
+    ],
+    [
+      88,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Bogbell Maul: stocky broad bearded human with mossy brown hood, muddy layered hide armor, olive trousers, wrapped heavy boots, bronze chest bell and small dangling bronze bells on belt and maul. Exactly two arms, two hands and two legs. One thick long wooden-shaft maul with ONE barrel-shaped dark wooden head and bronze bands, retained in a two-handed grip. Right hand grips the rear/lower shaft near screen left; left hand grips forward near barrel head at screen right in ready. Keep the same hands on the same shaft positions as the weapon rotates. One physical support signal to companions. Stand firmly on both boots, lift the SAME two-handed maul horizontally from waist to ABOVE the hood in the supplied raised-maul rally pose while elbows bend outward, hooded head nods once to companions, then lower it smoothly to original ready. Keep both original hands gripping the same shaft and the same barrel head at screen right. This is a deliberate rally gesture, no spellcasting, magic, glowing bell or strike. Locked elevated three-quarter orthographic camera facing screen right. Full creature and full maul stay within 960x640, same body/equipment size throughout, anatomical root centered. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, particles, external light, magic, additional people or objects. Articulated physical joints and stable grips, no prop/anatomy morphing. Hold the complete rigid maul in FRONT/ABOVE the hood, no resting it behind the neck. Maintain exact saturated magenta guide background between every guide, no fading or recoloring.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

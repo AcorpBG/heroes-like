@@ -1,0 +1,825 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_bogbell_mauls",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_052",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "move_h3_054",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "move_h3_056",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "move_h3_058",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "move_h3_060",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "move_h3_062",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "move_h3_064",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "move_h3_066",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "move_h3_068",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "move_h3_070",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "move_h3_072",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "move_h3_074",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "move_h3_076",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "move_h3_078",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "move_h3_080",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "move_h3_082",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "move_h3_084",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "move_h3_086",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "move_h3_088",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "move_h3_090",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "move_h3_092",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "move_h3_094",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte/rgba_094.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 94,
+          "video_time_seconds": 3.9166666666666665
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ],
+          "frame_msec": 45,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/config.json",
+          "sha256": "b2c80803d6c5449c3aa828808a5b9e6d10224b6fa445422fbf605d9a312a55a7"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/selection.json",
+          "sha256": "f18bbbc411ab239562b09fd8216c6f54a4c4fa14d7e125666f0fd89de43875ac"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/original_lossless.mkv",
+          "sha256": "d0abee04a051e296c22ec296a86fd03de0f64793cc12584210822eba874cf569"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/original.json",
+          "sha256": "8043d44ed45d9f9b47a9981415e29cd2658e6704e584085af079af1de3eba110"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/workflow_api.json",
+          "sha256": "3905c1ce52cf23f806cc827d730acd3c720cc082396c78a60355684261adacc9"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/prompt.txt",
+          "sha256": "88825740125afb86cd1ee06c0c6842f2550e15e94a73ff5a67adedebda31a23d"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/reference.json",
+          "sha256": "4b4ba3a20904ff2610e6d9fd83b59c33040eca2fbb62fe9ea80e59031ab3e28d"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/matte.json",
+          "sha256": "18346c6e62bc42ac81713b7e8873e676ef7d07a730369f18882af1ec4ae26bc2"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/staged_generation.json",
+          "sha256": "63fa653b591477cb311fad726bd24e6487dfda77f70f4c7db5a284a3182febb7"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "e7f3f09b53d558ebdb077f6d215cbfd0d344773a2bf3c648902d1ef5c6757bdc"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/sampling_submission.json",
+          "sha256": "56cddb56006c078f94954e1445ed9d01fd232d14630d52f5a6198602f8721f37"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/sampling_history.json",
+          "sha256": "072df35e74dc37381f56e1f574eabdfd7fec8b8f55d2e622e814a15bfb37dbf8"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v2/original.latent",
+          "sha256": "e70d109428d6ec43c6d1729ebec9acfebf8ed566e2f73d376de4f6ae469b2c5c"
+        },
+        "guide_image_rgba_000.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_000.png",
+          "sha256": "f19578e587e15673fe03e607ebaaaf2dce78ea80b28343da782fcb0935add467"
+        },
+        "guide_prompt_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/prompt.txt",
+          "sha256": "7a9ab3009074161f7b7721f260e197391b0f38b9f862cb05f272e4c7993ed0a5"
+        },
+        "guide_generation_rgba_000.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_000.generation.json",
+          "sha256": "abb8eb960024ed5ef9278ace559c3142dfa7a344f4417df7c6757f32bd23d9f5"
+        },
+        "guide_reference_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/original_lossless.mkv",
+          "sha256": "3f23c9ca39f80c7d817b4efb2aca690181303cbaf428b2db192c1c4885d8cedc"
+        },
+        "guide_reference_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/original.json",
+          "sha256": "6d3499d90faac71fda65841f667484228494f28ce8166b6a40ac6ef657e0d9a3"
+        },
+        "guide_reference_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte.json",
+          "sha256": "a17a9ade4fdc1b954bd361060583964216b2b91f18582727ed5749f2f5ca7f8c"
+        },
+        "guide_reference_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/config.json",
+          "sha256": "9f31ac18bdd89f66ef7135418d826ffed0754e718de4f72bfe1683f63c2a8f40"
+        },
+        "guide_reference_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "c05320c0f89af9808dbb7d58c70c3ddd97d76f82067d42a3f886a1bd7ffb4e81"
+        },
+        "guide_image_rgba_024.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_024.png",
+          "sha256": "d554dfdbcb6d22b1f92db2d5e049c82fb21a89637a0efc69217289de8a9185bf"
+        },
+        "guide_generation_rgba_024.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_024.generation.json",
+          "sha256": "51520d1a20de206f459fdbc3dbc4887775982cbfc88d9cbfd7cbe7f237a74fe4"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Corrected full124-frame chronology and enlarged opposed contacts/passing/seam inspected. Original contacts0/24 from safe first-take footage guide near/far boot alternation; fixed root and maul grips. One complete original middle cycle32..94 selected, 94->32 matching contact seam. Retimed original2-frame samples to45ms for readable heavy walking, no reversed/duplicated/interpolated frames. Background remains safely separated. Native review pending."
+      }
+    }
+  ]
+}

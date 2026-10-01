@@ -1,0 +1,105 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            391,
+            512
+          ]
+        ],
+        "anchor": [
+          180,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "09479e7d5491395a6f74ae391726a4d789bcbff2d7041def67b2572e9fc11124",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "845982302ae0a345b3eefb75739437035575e7a5d8ed722a3c7a482401cf6a11",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "maul_windup",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+        "rects": [
+          [
+            350,
+            416,
+            612,
+            520
+          ],
+          [
+            310,
+            520,
+            612,
+            835
+          ]
+        ],
+        "anchor": [
+          470,
+          807
+        ],
+        "scale": 1.034,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae7c4ccb7c5295f0c9e2dc6277215645aae9f30f2a1b29c0fbe902fdc5557eaa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dd846d8ea1a5f990c9e5c9cbc8fb575ee2bd9cdd54d09e5964afd3bcae6ea9ea",
+      "runtime_source_scale": 0.517
+    },
+    {
+      "source_frame": {
+        "name": "maul_downward_strike",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+        "rects": [
+          [
+            610,
+            492,
+            938,
+            700
+          ],
+          [
+            610,
+            700,
+            950,
+            715
+          ],
+          [
+            610,
+            715,
+            959,
+            835
+          ]
+        ],
+        "anchor": [
+          755,
+          807
+        ],
+        "scale": 1.034,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae7c4ccb7c5295f0c9e2dc6277215645aae9f30f2a1b29c0fbe902fdc5557eaa",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "c4ed9ed96b15c60317826d1e61d5ff38b2cc28054b1ee9d21c57ed8cb1126c08",
+      "runtime_source_scale": 0.517
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

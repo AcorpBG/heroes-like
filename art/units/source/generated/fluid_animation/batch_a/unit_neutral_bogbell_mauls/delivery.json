@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v3",
+    "death_h3_v1",
+    "move_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo visual review of all six original124-frame chronologies and enlarged action transitions, preserved eight articulated idle poses, actual Godot128px reference scale and reflected facing. Alternating grounded stride; two-handed maul windup/downstroke/recovery; recoil with original left-hand release and regrip; held low maul guard; physical overhead rally/return; continuous side collapse with released maul settling beside held corpse. Original limb count, body scale and equipment remain readable, clean alpha on light/dark backgrounds. Condensed source holds and deliberately retimed selected original frames; no reverse, duplicate or interpolation padding. Candidate and mirrored native fixtures each passed246 focused checks, including complete authored attack playback, Normal/Fast/reduced-motion and simulation/save preservation. No continuous manual game playback or Linux run claimed."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "legacy_action_family_scale": 0.94,
+  "reason": "Legacy action family has about206px standing body versus195px retained articulated idle. One family conversion preserves relative crouch/fall geometry, while idle-ready guides retain original scale. No per-frame normalization.",
+  "support_registration": {
+    "canvas": [
+      960,
+      640
+    ],
+    "ground_anchor": [
+      470,
+      576
+    ],
+    "output_scale": 0.5,
+    "original_raised_guide_scale": 0.29,
+    "original_guide_anchor": [
+      825,
+      860
+    ],
+    "reason": "Same195px anatomical body, extra overhead envelope for raised maul. All support frames use one fixed origin; no normalization or crop to fit."
+  }
+}

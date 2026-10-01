@@ -1,0 +1,267 @@
+{
+  "prompt": [
+    115,
+    "a0cfe1d7-da4d-4bb9-be5e-bd697178005f",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Bogbell Maul: stocky broad bearded human with mossy brown hood, muddy layered hide armor, olive trousers, wrapped heavy boots, bronze chest bell and small dangling bronze bells on belt and maul. Exactly two arms, two hands and two legs. One thick long wooden-shaft maul with ONE barrel-shaped dark wooden head and bronze bands, retained in a two-handed grip. Right hand grips the rear/lower shaft near screen left; left hand grips forward near barrel head at screen right in ready. Keep the same hands on the same shaft positions as the weapon rotates. One physical support signal to companions. Stand firmly on both boots, lift the SAME two-handed maul horizontally from waist to ABOVE the hood in the supplied raised-maul rally pose while elbows bend outward, hooded head nods once to companions, then lower it smoothly to original ready. Keep both original hands gripping the same shaft and the same barrel head at screen right. This is a deliberate rally gesture, no spellcasting, magic, glowing bell or strike. Locked elevated three-quarter orthographic camera facing screen right. Full creature and full maul stay within 960x640, same body/equipment size throughout, anatomical root centered. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, particles, external light, magic, additional people or objects. Articulated physical joints and stable grips, no prop/anatomy morphing. Hold the complete rigid maul in FRONT/ABOVE the hood, no resting it behind the neck. Maintain exact saturated magenta guide background between every guide, no fading or recoloring.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100616
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "bogbell_maul_cast_h3_v2_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "bogbell_maul_cast_h3_v2_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 40,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 64,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 88,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "42",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "bogbell_maul_h3/cast_h3_v2/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "bogbell_maul_h3",
+      "create_time": 1790890294993
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "bogbell_maul_h3\\cast_h3_v2",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "a0cfe1d7-da4d-4bb9-be5e-bd697178005f",
+          "timestamp": 1790890295562
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "a0cfe1d7-da4d-4bb9-be5e-bd697178005f",
+          "timestamp": 1790890295579
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "a0cfe1d7-da4d-4bb9-be5e-bd697178005f",
+          "timestamp": 1790890495287
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

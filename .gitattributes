@@ -348,3 +348,8 @@ art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/*.txt -
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/**/*.txt -text
 art/animation/source/fluid/unit_neutral_tunnel_lanterns/*.json -text
+
+# Preserve Bogbell Mauls original prompt/workflow provenance bytes.
+art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/**/*.json -text
+art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/**/*.txt -text
+art/animation/source/fluid/unit_neutral_bogbell_mauls/*.json -text

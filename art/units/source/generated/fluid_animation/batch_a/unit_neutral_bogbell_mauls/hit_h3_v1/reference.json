@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            391,
+            512
+          ]
+        ],
+        "anchor": [
+          180,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "09479e7d5491395a6f74ae391726a4d789bcbff2d7041def67b2572e9fc11124",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "845982302ae0a345b3eefb75739437035575e7a5d8ed722a3c7a482401cf6a11",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            835,
+            317,
+            1193
+          ]
+        ],
+        "anchor": [
+          153,
+          1160
+        ],
+        "scale": 1.034,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ae7c4ccb7c5295f0c9e2dc6277215645aae9f30f2a1b29c0fbe902fdc5557eaa",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "dd9cdfefd61af2d3c0a6ed0cf3dc59cdf2b0f54c4f7a22bb097d0807be9dabbc",
+      "runtime_source_scale": 0.517
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

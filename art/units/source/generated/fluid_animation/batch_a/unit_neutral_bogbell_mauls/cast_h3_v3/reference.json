@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            391,
+            512
+          ]
+        ],
+        "anchor": [
+          180,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "09479e7d5491395a6f74ae391726a4d789bcbff2d7041def67b2572e9fc11124",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "ee95d9e77ac854c57b46814e258cc2444ca5eb4b0cf73155429fbeaec5b7bd33",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "original_raised_maul_rally",
+        "source": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/rally_raised_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1659,
+            948
+          ]
+        ],
+        "anchor": [
+          825,
+          860
+        ],
+        "scale": 0.58,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7c3e9ad4042a832a2952314a5a5affee7873cac18afc59aed7e8045a1b919889",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "640af184dcbed198472b0e722f0a3fdc7529e6cd88af26d672b19b5afe6d21ce",
+      "runtime_source_scale": 0.29
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

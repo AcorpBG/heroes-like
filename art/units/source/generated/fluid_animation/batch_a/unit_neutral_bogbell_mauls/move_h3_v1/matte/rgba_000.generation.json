@@ -1,0 +1,35 @@
+{
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte/rgba_000.png",
+    "sha256": "f19578e587e15673fe03e607ebaaaf2dce78ea80b28343da782fcb0935add467"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/prompt.txt",
+    "sha256": "7a9ab3009074161f7b7721f260e197391b0f38b9f862cb05f272e4c7993ed0a5"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/original_lossless.mkv",
+      "sha256": "3f23c9ca39f80c7d817b4efb2aca690181303cbaf428b2db192c1c4885d8cedc"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/original.json",
+      "sha256": "6d3499d90faac71fda65841f667484228494f28ce8166b6a40ac6ef657e0d9a3"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/matte.json",
+      "sha256": "a17a9ade4fdc1b954bd361060583964216b2b91f18582727ed5749f2f5ca7f8c"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/config.json",
+      "sha256": "9f31ac18bdd89f66ef7135418d826ffed0754e718de4f72bfe1683f63c2a8f40"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_a/unit_neutral_bogbell_mauls/move_h3_v1/sampling_workflow_api.json",
+      "sha256": "c05320c0f89af9808dbb7d58c70c3ddd97d76f82067d42a3f886a1bd7ffb4e81"
+    }
+  ],
+  "source_frame": 0,
+  "source_time_seconds": 0.0,
+  "rule": "Original observed gait pose; reproducible safe-plate matte, no repainting, warping or normalization."
+}

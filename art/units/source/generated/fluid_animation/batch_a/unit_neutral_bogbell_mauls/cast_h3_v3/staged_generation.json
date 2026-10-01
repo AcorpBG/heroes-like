@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "4185f030f2ef9b8cac8d9ed8f0440659151c953c132e7845252e069fb605dfae",
+  "latent_sha256": "bac6373511fcce7ddc31fb28c8ca2f5f98283d737f58a0dc89f833becd31d472",
+  "decode_workflow_sha256": "fe44ec2659775b8dc8c00634bcf685b8d3fed526e695eabc7a449be427380192",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "bogbell_maul_h3\\cast_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18650988352,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

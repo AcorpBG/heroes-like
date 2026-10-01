@@ -3646,25 +3646,25 @@
         204
       ],
       "painted_extent": 199,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_bogbell_mauls.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_bogbell_mauls.png",
       "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        177,
-        32,
-        357,
-        247
+        61,
+        52,
+        241,
+        267
       ],
-      "source_sha256": "e6c4034d4c910ea88190b64d52119c9c40547b476900ad60c5c69f13b5a935cc",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_bogbell_mauls/provenance.json",
+      "source_sha256": "6c744532500fa53fb6c88865bf43869627923a9f68d31f58eacc9ffdb2f9f99f",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_bogbell_mauls/provenance.json",
       "sha256": "576aa5c1baea767a5464f2718cf96cab2133c68d570686e2ba3c8452aaab1ff3"
     },
     "unit_neutral_peatflare_jarriers": {

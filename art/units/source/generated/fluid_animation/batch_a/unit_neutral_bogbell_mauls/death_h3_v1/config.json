@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_bogbell_mauls",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100504,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          391,
+          512
+        ]
+      ],
+      "anchor": [
+        180,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_bogbell_mauls/alpha/poses.png",
+      "rects": [
+        [
+          886,
+          965,
+          1254,
+          1219
+        ]
+      ],
+      "anchor": [
+        1082,
+        1183
+      ],
+      "scale": 0.517,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Bogbell Maul: stocky broad bearded human with mossy brown hood, muddy layered hide armor, olive trousers, wrapped heavy boots, bronze chest bell and small dangling bronze bells on belt and maul. Exactly two arms, two hands and two legs. One thick long wooden-shaft maul with ONE barrel-shaped dark wooden head and bronze bands, retained in a two-handed grip. Right hand grips the rear/lower shaft near screen left; left hand grips forward near barrel head at screen right in ready. Keep the same hands on the same shaft positions as the weapon rotates. One continuous heavy collapse from supplied standing ready to supplied head-left horizontal corpse. Knees gradually buckle, hips sink, torso tilts and falls sideways toward screen left. Left elbow and hip contact ground before shoulder and hood settle. Maul lowers WITH the hands and may slip out only when it lands in front of the fallen body; one complete shaft and barrel rest on ground. Boots and head remain attached, final body fully still. No jump between standing/kneeling/lying poses, no new props, no repeated fall or stand-up. Locked elevated three-quarter orthographic camera facing screen right. Full creature and full maul stay within 960x544, same body/equipment size throughout, anatomical root centered. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, particles, external light, magic, additional people or objects. Articulated physical joints and stable grips, no prop/anatomy morphing.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}
