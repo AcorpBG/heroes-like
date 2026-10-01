@@ -1,0 +1,17 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "source": "guides/opposed_contact_plate_v1.png",
+  "source_sha256": "e3026bf905f6afe8fa58be592243392787fb63b0c6faab2b85aed3ff35ce72c7",
+  "output_sha256": "f808a7460378c884aecda68575187aeb723610072165388cc17957275bf666c3",
+  "matte": {
+    "background_rgb": [
+      0.0,
+      2.0,
+      253.0
+    ],
+    "corner_median_spread": 0.0,
+    "mode": "flat_blue_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Plate extraction only; exact generated anatomy retained. Fixed source scale .215 and anchor [768,1000] register shoulder mantle/head and hind contact to original .6-scale reference, not changing opaque bounds."
+}

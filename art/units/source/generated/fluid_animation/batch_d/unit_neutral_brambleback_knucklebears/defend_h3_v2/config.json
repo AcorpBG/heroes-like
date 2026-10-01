@@ -1,0 +1,83 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "clip": "defend",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100193,
+  "references": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          365,
+          374
+        ]
+      ],
+      "anchor": [
+        200,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          1090,
+          374,
+          1448,
+          665
+        ],
+        [
+          1125,
+          665,
+          1448,
+          715
+        ]
+      ],
+      "anchor": [
+        1286,
+        743
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      58,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Brambleback Knucklebear, a massive brown-furred bear with two huge front arms and clawed paws, two shorter muscular hind legs and smaller hind paws, one bear head, rounded ears, broad muzzle and amber eyes. Layered rough brown bark and twisted vines armor both forearms, shoulders and back. Small muted olive-green leaves grow among its woody thorns. Preserve the original narrow amber-orange cracks in the bark without adding lights or effects. Exactly two front arms and two hind legs throughout. The near front arm is the large foreground limb toward lower center; the far front arm is beyond the chest toward screen right. Hind legs remain attached beneath the rear torso toward screen left. Keep original proportions, claw arrangement, face, fur, vine and bark structure. No equipment or clothing. Lower the shoulders and bend the hind knees. Bring both bark-armored forearms across the chest and face into the original closed brace. Both front paws remain distinct and the hind legs support the weight. Finish holding the compact defensive brace with the head alert toward screen right. Locked elevated three-quarter orthographic camera, facing screen right. Keep the anatomical scale and root position fixed, the complete body and every claw inside the image. The background is one flat solid saturated green studio plate and remains exactly unchanged throughout the entire shot. No floor, shadows, scenery, text or other subjects. Articulated physical joints and unchanged anatomy. No magic, projectiles or additional glow.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 8,
+  "foreground_measurement": {
+    "rule": "Original guide eroded-opaque green-minus-max(red,blue) max4 plus4.",
+    "separation": 247
+  },
+  "retry_reason": "Dedicated brace footage retained but yellow backdrop overlaps amber foreground; same physical original guides, safe green plate to preserve anatomy."
+}

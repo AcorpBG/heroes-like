@@ -1,0 +1,70 @@
+{
+  "prompt_id": "b6fc0875-89de-4f29-b81a-97f9ac9b44e2",
+  "rule": "Actual periodic service observations; sampled peaks only, not an instrumented CUDA allocation maximum.",
+  "observations": [
+    {
+      "observed_unix": 1790859073.786061,
+      "elapsed_seconds": 0.014013290405273438,
+      "ram_free": 32794124288,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 17649450816,
+          "torch_vram_total": 21005074432,
+          "torch_vram_free": 6404521792
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790859083.81946,
+      "elapsed_seconds": 10.047412157058716,
+      "ram_free": 55010369536,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 32216449024,
+          "torch_vram_total": 67108864,
+          "torch_vram_free": 33554432
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790859093.8766007,
+      "elapsed_seconds": 20.10455298423767,
+      "ram_free": 56929234944,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 3690987520,
+          "torch_vram_free": 861771540
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790859103.922352,
+      "elapsed_seconds": 30.150304317474365,
+      "ram_free": 57219772416,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ]
+    }
+  ]
+}

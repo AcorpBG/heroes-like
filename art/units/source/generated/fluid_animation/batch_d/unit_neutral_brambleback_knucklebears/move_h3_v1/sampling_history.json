@@ -1,0 +1,295 @@
+{
+  "prompt": [
+    0,
+    "d780e7c3-603a-42d6-995a-0b9afabeb680",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Brambleback Knucklebear, a massive brown-furred bear with two huge front arms and clawed paws, two shorter muscular hind legs and smaller hind paws, one bear head, rounded ears, broad muzzle and amber eyes. Layered rough brown bark and twisted vines armor both forearms, shoulders and back. Small muted olive-green leaves grow among its woody thorns. Preserve the original narrow amber-orange cracks in the bark without adding lights or effects. Exactly two front arms and two hind legs throughout. The near front arm is the large foreground limb toward lower center; the far front arm is beyond the chest toward screen right. Hind legs remain attached beneath the rear torso toward screen left. Keep original proportions, claw arrangement, face, fur, vine and bark structure. No equipment or clothing. Perform one slow complete reciprocal knucklewalk cycle in place. Begin with the near front knuckles forward and loaded while the far front paw supports the opposite phase. Unload and lift the far front paw, swing it forward and plant its knuckles; transfer the chest weight onto that far front arm. Then lift the near front paw, swing it forward and plant it in the initial contact. The two hind paws alternate planted loading, lift, passing and forward contact behind the front limbs. Maintain at least a front paw and opposite hind paw grounded through each transition; no jumping or sprinting. Show separate elbows, wrists, front knuckles and hind ankles moving coherently. Planted contacts stay registered until they unload. End at the exact initial loaded contact. Locked elevated three-quarter orthographic camera, facing screen right. Keep the anatomical scale and root position fixed, the complete body and every claw inside the image. The background stays perfectly uniform pure blue RGB 0,0,255 from first to last frame, with no color cycling, floor, shadows, scenery, text or other subjects. Articulated physical joints and unchanged anatomy. No magic, projectiles or additional glow.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100180
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "knucklebear_move_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "knucklebear_move_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "knucklebear_move_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 22,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 43,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 66,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 90,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "knucklebear_h3_20261001/move_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "knucklebear_h3_20261001",
+      "create_time": 1790847246898
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "knucklebear_h3_20261001\\move_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "d780e7c3-603a-42d6-995a-0b9afabeb680",
+          "timestamp": 1790847246900
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "d780e7c3-603a-42d6-995a-0b9afabeb680",
+          "timestamp": 1790847246935
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "d780e7c3-603a-42d6-995a-0b9afabeb680",
+          "timestamp": 1790847458912
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

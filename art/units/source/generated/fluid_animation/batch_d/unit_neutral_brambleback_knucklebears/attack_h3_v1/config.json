@@ -1,0 +1,109 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026100181,
+  "references": [
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          365,
+          374
+        ]
+      ],
+      "anchor": [
+        200,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "windup",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          375,
+          374,
+          710,
+          730
+        ]
+      ],
+      "anchor": [
+        562,
+        743
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "swipe",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          386,
+          1090,
+          675
+        ],
+        [
+          710,
+          675,
+          1125,
+          740
+        ]
+      ],
+      "anchor": [
+        924,
+        743
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      55,
+      2
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Brambleback Knucklebear, a massive brown-furred bear with two huge front arms and clawed paws, two shorter muscular hind legs and smaller hind paws, one bear head, rounded ears, broad muzzle and amber eyes. Layered rough brown bark and twisted vines armor both forearms, shoulders and back. Small muted olive-green leaves grow among its woody thorns. Preserve the original narrow amber-orange cracks in the bark without adding lights or effects. Exactly two front arms and two hind legs throughout. The near front arm is the large foreground limb toward lower center; the far front arm is beyond the chest toward screen right. Hind legs remain attached beneath the rear torso toward screen left. Keep original proportions, claw arrangement, face, fur, vine and bark structure. No equipment or clothing. Perform one melee claw sweep. Shift weight onto the far front arm and both hind paws, lift the near front arm into the original raised windup, then make one forceful forward-down claw sweep toward screen right. Keep the other front arm supporting the chest throughout. Retract the sweeping arm and return its knuckles to the original ready contact. One windup, one sweep, complete recovery; no second strike. Locked elevated three-quarter orthographic camera, facing screen right. Keep the anatomical scale and root position fixed, the complete body and every claw inside the image. The background stays perfectly uniform pure blue RGB 0,0,255 from first to last frame, with no color cycling, floor, shadows, scenery, text or other subjects. Articulated physical joints and unchanged anatomy. No magic, projectiles or additional glow.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 8,
+  "foreground_measurement": {
+    "rule": "Eroded opaque blue-minus-max(red,green) maximum plus two across original guides.",
+    "per_guide_max": [
+      1.0,
+      6.0,
+      0.0
+    ],
+    "separation": 247
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "generator": "built-in image_gen image edit",
+  "image": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.png",
+  "image_sha256": "2a1a692483a1a77e78e42890c4bbb25f34c41bb8a67b006ad4bb0b85bb1a1ce4",
+  "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.prompt.txt",
+  "prompt_sha256": "25f29525a6b1fb8c2f51e729aba0469f80ed782ac4f9394ba00699c844d3b9bf",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0f615-67c7-7ef1-ac53-345d29d5700f/exec-bc221ea9-e419-4b5e-abe8-182be108caaa.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/move_h3_v1/guide_1_chroma.png",
+      "sha256": "51a3f245aad91b2eda6684c4d87c945341cefd5dfd2e2fcc320787fa938e362b"
+    }
+  ],
+  "review": "Two original front arms with distinct grounded paws; near hind hip/knee bent and paw visibly unloaded/advanced, far hind foot planted beneath rear torso. Original camera/torso proportions retained on a 1536x1024 canvas; one source-wide .3125 scale maps the 1.6x guide resolution without bounds normalization."
+}

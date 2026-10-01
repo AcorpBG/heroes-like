@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            710,
+            0,
+            1074,
+            374
+          ]
+        ],
+        "anchor": [
+          924,
+          378
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0421029e8e76159ed58638f12b58a49d0ee84d359e0552adb665ca2656bf4ea6",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            365,
+            374
+          ]
+        ],
+        "anchor": [
+          200,
+          378
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "51a3f245aad91b2eda6684c4d87c945341cefd5dfd2e2fcc320787fa938e362b",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "opposed_loaded_contact",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          768,
+          1000
+        ],
+        "scale": 0.43,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f808a7460378c884aecda68575187aeb723610072165388cc17957275bf666c3",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "da70696092798a9509bbe77be17a3cef22045cbe75ea3cc1322eccf73cedd15c",
+      "runtime_source_scale": 0.215
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,69 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            365,
+            374
+          ]
+        ],
+        "anchor": [
+          200,
+          378
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "51a3f245aad91b2eda6684c4d87c945341cefd5dfd2e2fcc320787fa938e362b",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "guard",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            1090,
+            374,
+            1448,
+            665
+          ],
+          [
+            1125,
+            665,
+            1448,
+            715
+          ]
+        ],
+        "anchor": [
+          1286,
+          743
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "b37686620414685f6d22e4475934b7cf6f7131f9643319c153acc580a9ab14b5",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

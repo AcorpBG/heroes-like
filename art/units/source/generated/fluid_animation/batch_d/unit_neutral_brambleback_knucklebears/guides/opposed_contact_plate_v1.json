@@ -1,0 +1,16 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "generator": "built-in image_gen image edit",
+  "image": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_plate_v1.png",
+  "image_sha256": "e3026bf905f6afe8fa58be592243392787fb63b0c6faab2b85aed3ff35ce72c7",
+  "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_plate_v1.prompt.txt",
+  "prompt_sha256": "599e64de5d69f2502f3485d684d4e115c9ef88b45622b2d338434c0eb071199e",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0f615-67c7-7ef1-ac53-345d29d5700f/exec-1b3f2d34-f902-48e4-b8fe-7706bbcf242c.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.png",
+      "sha256": "972419e75ef87b76bcf0f9378297e4fe8cb896cb0dfe69d8fbdcfbe68df55d53"
+    }
+  ],
+  "review": "Blue plate corrected; pose retains two front arms and two hind legs. Near foreground forepaw bends unloaded below chest; far forepaw extends forward and bears weight. Near hind paw planted, far hind paw toe-off. Changed framing uses one fixed whole-painting registration; no body warp or per-pose normalization."
+}

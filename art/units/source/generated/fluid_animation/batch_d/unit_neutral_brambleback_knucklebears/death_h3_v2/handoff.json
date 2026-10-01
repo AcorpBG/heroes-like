@@ -1,0 +1,959 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_brambleback_knucklebears",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_008",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_012",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_016",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_020",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_024",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_028",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_044",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_049",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_049.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 49,
+          "video_time_seconds": 2.0416666666666665
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_100",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "death": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36
+          ],
+          "frame_msec": 45,
+          "loop": false,
+          "static_frame": 36
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/original_lossless.mkv",
+          "sha256": "56c329df34884daa53c90f7a94e312e785643e9671a545e391be0ae9b5c56728"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/original.json",
+          "sha256": "e46b1221b8402679afa31f715f9b2324cbb1af537b55613e0f22460d3b723404"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/workflow_api.json",
+          "sha256": "192c4b3202402e2b0b851e13941e922bd03eb054e9ea0806bb429ca76993ebd2"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/prompt.txt",
+          "sha256": "b3c95d697e83ad0d17fcb4adbbe66fa1a54b873b2b445629fe1990550c7456ed"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/reference.json",
+          "sha256": "ff2dc177b212bc3252840f8dae11e3778da16b03d63cd4b13cd15d4ab4ae5348"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/matte.json",
+          "sha256": "9576f1c71cc9a5061c5f1c0e747923fb2f699dd0e585bc964cf5a51b1911bf6d"
+        },
+        "runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/runtime_profile.json",
+          "sha256": "3b04080753d66ea1ff3ee7f440e000f49359b599e41d344175a9bfb26760b58b"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/staged_generation.json",
+          "sha256": "3554b22fbec594fa1a4a14657a27cf3609d7d41831c5d6b1ea282520343946c1"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/sampling_workflow_api.json",
+          "sha256": "e8fbe10f4fe83977f04776bfaafe951c69eae8cc43222e49f9d2592d3252888a"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/sampling_submission.json",
+          "sha256": "406a49001d8ffc103942c5c91321b243097c6a4dddb76f45830834c9badde294"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/sampling_history.json",
+          "sha256": "60966878a8df59c8ad17c3f35bccd4b33a73290a89fdaccf9796196a710532b7"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/original.latent",
+          "sha256": "7d9f491fa591dc232d0dd04950bcfa215a38cc8de711bfe1862f3a18e62ebae8"
+        },
+        "sampling_memory_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/sampling_memory_observations.json",
+          "sha256": "43a2fc1a5f118fe130717424732d9608a0a396f03e6304849a21cf4183bb316b"
+        },
+        "decode_memory_observations.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/decode_memory_observations.json",
+          "sha256": "b53cfdb0f1d78f7cb184db3513c1813eab10ca475f9c062d9e133f7bd38eb3ae"
+        },
+        "service_log_window.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/death_h3_v2/service_log_window.json",
+          "sha256": "3b8aa7174db01dc10379f2bbb761cc5d8c18fad23119dbc6367846e46ecfa92b"
+        },
+        "guide_lineage_opposed_contact_plate_v1.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_plate_v1.json",
+          "sha256": "17710c8fb926f2c4775902fb4c311ae8e32afc0e1825ee2aa2485950a46a21c2"
+        },
+        "guide_lineage_opposed_contact_plate_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_plate_v1.png",
+          "sha256": "e3026bf905f6afe8fa58be592243392787fb63b0c6faab2b85aed3ff35ce72c7"
+        },
+        "guide_lineage_opposed_contact_plate_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_plate_v1.prompt.txt",
+          "sha256": "599e64de5d69f2502f3485d684d4e115c9ef88b45622b2d338434c0eb071199e"
+        },
+        "guide_lineage_opposed_contact_rgba.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_rgba.json",
+          "sha256": "4615a4f6b44a90c9cfd46379a069e0f67da64ef8859082416fb08c9402a40f9b"
+        },
+        "guide_lineage_opposed_contact_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_rgba.png",
+          "sha256": "f808a7460378c884aecda68575187aeb723610072165388cc17957275bf666c3"
+        },
+        "guide_lineage_opposed_contact_v1.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.json",
+          "sha256": "6eb81b1890a77d8fcb2454bd39093540428a5d0e73c91a0e7b06379ad4e5812e"
+        },
+        "guide_lineage_opposed_contact_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.png",
+          "sha256": "972419e75ef87b76bcf0f9378297e4fe8cb896cb0dfe69d8fbdcfbe68df55d53"
+        },
+        "guide_lineage_opposed_contact_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.prompt.txt",
+          "sha256": "97a02943042f90fe38ade23d3aaabc5efe04f785929b2667516c26b3e48c4bcd"
+        },
+        "guide_lineage_passing_near_hind_rgba.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_rgba.json",
+          "sha256": "ce0e3f37ef227fc50fb34392945242310487526f27f555ea4196dce2491fafaa"
+        },
+        "guide_lineage_passing_near_hind_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_rgba.png",
+          "sha256": "3f2bac6e0a60cd3b2234b3d9b6c8466622675e4aa2db5d7cbf1e452a5ea6f70f"
+        },
+        "guide_lineage_passing_near_hind_v1.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.json",
+          "sha256": "18d0932af3fd1e5484a455150bc3307d89e58010057899fab2435d5ddf2df8ac"
+        },
+        "guide_lineage_passing_near_hind_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.png",
+          "sha256": "2a1a692483a1a77e78e42890c4bbb25f34c41bb8a67b006ad4bb0b85bb1a1ce4"
+        },
+        "guide_lineage_passing_near_hind_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.prompt.txt",
+          "sha256": "25f29525a6b1fb8c2f51e729aba0469f80ed782ac4f9394ba00699c844d3b9bf"
+        },
+        "guide_lineage_register.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/register.py",
+          "sha256": "17a284494050abae2ed16c48a1d5262fd3d6abb7ad9bc1316ed4771b43021871"
+        }
+      },
+      "visual_review": {
+        "status": "accepted",
+        "notes": "Solo all124 transparent chronology and enlarged every49..64 inspected. Elbows/knees buckle8..30; hip lowers and shoulder/head descent49..55 is continuous, with cheek contact54 and folded hind-paw settling55..64. Four limbs remain attached/traceable, original body scale fixed and grounded corpse123 held. v1 raised65 guide removed; no abrupt seated-to-corpse swap. Every original fall49..64 retained, near-static holds reduced. No frame invention or reverse motion. Native normal and mirrored128px phase render reviewed; focused checks passed."
+      }
+    }
+  ]
+}

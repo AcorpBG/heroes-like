@@ -1,0 +1,70 @@
+{
+  "prompt_id": "af507b5f-40d1-4b15-940a-3439c732ce6c",
+  "rule": "Actual periodic service observations; sampled peaks only, not an instrumented CUDA allocation maximum.",
+  "observations": [
+    {
+      "observed_unix": 1790857803.370406,
+      "elapsed_seconds": 0.013011693954467773,
+      "ram_free": 20947238912,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 18268350784,
+          "torch_vram_total": 21005074432,
+          "torch_vram_free": 7023421760
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790857813.3978448,
+      "elapsed_seconds": 10.04045057296753,
+      "ram_free": 45533675520,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 32216449024,
+          "torch_vram_total": 67108864,
+          "torch_vram_free": 33554432
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790857823.4429839,
+      "elapsed_seconds": 20.08558964729309,
+      "ram_free": 45773369344,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 3791650816,
+          "torch_vram_free": 962434836
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790857833.4576476,
+      "elapsed_seconds": 30.100253343582153,
+      "ram_free": 45842632704,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ]
+    }
+  ]
+}

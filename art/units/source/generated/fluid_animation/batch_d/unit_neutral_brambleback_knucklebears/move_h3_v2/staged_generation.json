@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e3e70c110e00a2e8783900b0c52c69aaae1e1b9a85c50e126084221eb58efdb2",
+  "latent_sha256": "b05eb982f5242a3dd4813c89453e5a2030aa600aee095e4d573959056467bb59",
+  "decode_workflow_sha256": "d7b6ef1a32c64737ce73c8848e357b17651de2ed78c0b54fec7d35660cc646c6",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "knucklebear_h3_20261001\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19198887744,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

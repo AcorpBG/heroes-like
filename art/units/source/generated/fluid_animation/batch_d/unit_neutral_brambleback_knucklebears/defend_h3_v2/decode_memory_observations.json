@@ -1,0 +1,70 @@
+{
+  "prompt_id": "28cceb2a-e410-4a0f-834f-db1899f5d448",
+  "rule": "Actual periodic service observations; sampled peaks only, not an instrumented CUDA allocation maximum.",
+  "observations": [
+    {
+      "observed_unix": 1790858824.371979,
+      "elapsed_seconds": 0.014013528823852539,
+      "ram_free": 32419631104,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 18036810048,
+          "torch_vram_total": 21005074432,
+          "torch_vram_free": 6791881024
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790858834.4043677,
+      "elapsed_seconds": 10.046402215957642,
+      "ram_free": 58245521408,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 32216449024,
+          "torch_vram_total": 67108864,
+          "torch_vram_free": 33554432
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790858844.4583876,
+      "elapsed_seconds": 20.100422143936157,
+      "ram_free": 57326825472,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 3758096384,
+          "torch_vram_free": 928880404
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790858854.5014856,
+      "elapsed_seconds": 30.14352011680603,
+      "ram_free": 57036595200,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ]
+    }
+  ]
+}

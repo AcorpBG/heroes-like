@@ -1,0 +1,20 @@
+{
+  "protected_foreground_chroma": 5,
+  "blue_chroma_axis": "blue_minus_red",
+  "boundary_despill_source_pixels": 2,
+  "measurements": {
+    "blue_minus_red": [
+      1.0,
+      1.0,
+      0.0,
+      1.0
+    ],
+    "cyan_minus_red": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "review_note": "Raw all124 reviewed. Backdrop varies continuously within blue/cyan, remains uniform spatially. Blue-minus-red separates every original opaque guide by >=80; protect eroded guide maximum plus4. Boundary-only cyan spill removal. No subject geometry changes."
+}

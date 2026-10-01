@@ -4272,29 +4272,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        112.0,
+        112,
         218
       ],
       "painted_extent": 213,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_brambleback_knucklebears.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_brambleback_knucklebears.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        144,
-        30,
-        373,
-        258
+        60,
+        34,
+        289,
+        262
       ],
-      "source_sha256": "85ae1326aa2b40a98a9b305ca1507b7fc20e4c61c37e19e7e67cdd48179ab9e5",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_brambleback_knucklebears/provenance.json",
+      "source_sha256": "955061eb1efe46063d68ae608701878af00b50150af7be53133d72aaa001c061",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_brambleback_knucklebears/provenance.json",
       "sha256": "d51da5fb71d1505afda9d330064b55d51f302a92b11d43bf0790b5ec2ba552f9"
     },
     "unit_neutral_mireglass_belltoads": {

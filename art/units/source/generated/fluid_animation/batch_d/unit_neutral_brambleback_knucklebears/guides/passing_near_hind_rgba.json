@@ -1,0 +1,17 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_v1.png",
+  "source_sha256": "2a1a692483a1a77e78e42890c4bbb25f34c41bb8a67b006ad4bb0b85bb1a1ce4",
+  "output_sha256": "3f2bac6e0a60cd3b2234b3d9b6c8466622675e4aa2db5d7cbf1e452a5ea6f70f",
+  "matte": {
+    "background_rgb": [
+      0.0,
+      3.0,
+      253.0
+    ],
+    "corner_median_spread": 1.0,
+    "mode": "flat_blue_chroma_unmix",
+    "component_rule": "alpha>=8 components retained only when they contain alpha>=128 source pixels"
+  },
+  "rule": "Flat plate extraction only, original anatomy unmodified. Fixed source-wide .3125 scale and [752,896] anchor map 1536x1024 to original 960x640 guide."
+}

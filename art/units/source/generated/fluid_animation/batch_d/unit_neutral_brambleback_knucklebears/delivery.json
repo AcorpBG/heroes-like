@@ -1,0 +1,41 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "takes": [
+    "move_h3_v2",
+    "attack_h3_v1",
+    "hit_h3_v2",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v2"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Root solo reviewed all original124-frame chronology for six selected takes (movementv2,attackv1,hitv2,defendv2,physical supportv1,deathv2), enlarged action/limb transitions and native128px normal/mirrored phase renders. Reciprocal four-limb knucklewalk, near-arm anticipation/sweep/contact55/recovery, grounded recoil, two-forearm held guard, physical noncaster roar, continuous knee/shoulder/head collapse with grounded final corpse. Brief attack48 wrist occlusion under foreshortened elbow retained honestly; no erased/invented articulation. Preserve existing8-frame articulated idle and exact overworld pixels/timing. Candidate770 and mirrored761 focused checks pass. Original and live preservation proof to follow; no continuous browser playback or manual game playtest claimed."
+  },
+  "rejected_takes": [
+    "move_h3_v1",
+    "defend_h3_v1",
+    "death_h3_v1"
+  ],
+  "interrupted_takes": [
+    "hit_h3_v1"
+  ],
+  "validation": {
+    "candidate_checks": 770,
+    "mirrored_checks": 761,
+    "live_checks": 784,
+    "original_rgb_frames_verified": 1116,
+    "selected_runtime_frames": 226,
+    "legacy_idle_frames_preserved": 8,
+    "atlas_size": [
+      3260,
+      3556
+    ],
+    "atlas_rgba_bytes": 46370240,
+    "scope": "Selected unit offscreen Windows Godot; Normal/Fast/reduced-motion/contact and save/audio focused fixture checks only. No full repository suite or manual game playtest.",
+    "preservation": "Other231 manifest/map entries and exact idle pixels/timing verified against refreshed baseline."
+  }
+}

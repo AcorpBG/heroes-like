@@ -1,0 +1,132 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026100190,
+  "references": [
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          0,
+          1074,
+          374
+        ]
+      ],
+      "anchor": [
+        924,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "near_hind_passing_load_transfer",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/passing_near_hind_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        752,
+        896
+      ],
+      "scale": 0.3125,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "opposed_loaded_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1000
+      ],
+      "scale": 0.215,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          365,
+          374
+        ]
+      ],
+      "anchor": [
+        200,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      25,
+      1
+    ],
+    [
+      55,
+      2
+    ],
+    [
+      85,
+      3
+    ],
+    [
+      110,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Brambleback Knucklebear, a massive brown-furred bear with two huge front arms and clawed paws, two shorter muscular hind legs and smaller hind paws, one bear head, rounded ears, broad muzzle and amber eyes. Layered rough brown bark and twisted vines armor both forearms, shoulders and back. Small muted olive-green leaves grow among its woody thorns. Preserve the original narrow amber-orange cracks in the bark without adding lights or effects. Exactly two front arms and two hind legs throughout. The near front arm is the large foreground limb toward lower center; the far front arm is beyond the chest toward screen right. Hind legs remain attached beneath the rear torso toward screen left. Keep original proportions, claw arrangement, face, fur, vine and bark structure. No equipment or clothing. One continuous slow reciprocal knucklewalk cycle in place, with no abrupt contact pose changes or static repeated blocks. Begin with near front knuckles loaded. Gradually shift chest weight while both front paws stay traceable shoulder to elbow to wrist. At the first passing guide, visibly lift and advance the near hind paw by flexing its hip and knee; the far hind foot stays planted, and both front paws briefly share load. Then plant that advancing near hind paw, lift the far front paw, swing it low forward and plant its knuckles, transferring chest load to the far front arm as the near front paw bends and unloads. Next lift and pass the far hind paw under the hip while the near hind and near front contacts take weight. Swing the near front knuckles low forward, plant them and return smoothly to the initial near loaded contact. All four limbs must articulate through loading, lift, low passing and contact; no hind paw remains fixed through the complete cycle. Keep three paw contacts during slow load transfer whenever possible, never float or hop. Maintain one constant torso/head size and bark/fur design between every guide. No cutting or teleporting at keyframes. Locked elevated three-quarter orthographic camera, facing screen right. Keep the anatomical scale and root position fixed, the complete body and every claw inside the image. The background stays perfectly uniform pure blue RGB 0,0,255 from first to last frame, with no color cycling, floor, shadows, scenery, text or other subjects. Articulated physical joints and unchanged anatomy. No magic, projectiles or additional glow.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "per_guide_max": [
+      0.0,
+      0.0,
+      7.0,
+      1.0
+    ],
+    "separation": 246,
+    "rule": "Eroded opaque blue-minus-max(red,green) maximum plus two across original/opposed/passing guides."
+  },
+  "registration_note": "Original paintings .6; opposed-contact master .215/[768,1000]; passing master .3125/[752,896] from known 1.6x output canvas mapping. Fixed source-wide scales register torso/head anatomy, never each pose bounds.",
+  "correction_reason": "V1 retained/rejected: abrupt front contact swaps and stationary near hind paw. One targeted correction adds explicitly unloaded advancing near hind limb with far hind support."
+}

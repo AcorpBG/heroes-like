@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "2910f2d5c2718f80a8d4d36d0dc6901573ab80d9836652c347d65b09b1edd7d9",
+  "latent_sha256": "d8cd3565bcb8409c7244c7d852e9041b3f4de1a3c2b55062d4f16da2f0f05888",
+  "decode_workflow_sha256": "219ad72dadad8a3ee32cbbf86e5b81923f648479b769cecc44e3a2458c336678",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "knucklebear_h3_20261001\\cast_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

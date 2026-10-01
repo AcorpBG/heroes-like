@@ -1,0 +1,123 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            365,
+            374
+          ]
+        ],
+        "anchor": [
+          200,
+          378
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "51a3f245aad91b2eda6684c4d87c945341cefd5dfd2e2fcc320787fa938e362b",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "collapse",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            365,
+            750,
+            690,
+            920
+          ],
+          [
+            365,
+            920,
+            718,
+            1086
+          ]
+        ],
+        "anchor": [
+          562,
+          1080
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "631ab77c999838c97d1935fe0db7467e798f45ca23483b41318fc1bcd0f16ba1",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "landing",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            690,
+            790,
+            1043,
+            920
+          ],
+          [
+            718,
+            920,
+            1043,
+            1060
+          ]
+        ],
+        "anchor": [
+          924,
+          1080
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "b68ad916aa670052962d50bf4a146404b451e6d4566750659834b223cec27a67",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "dead",
+        "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+        "rects": [
+          [
+            1043,
+            805,
+            1448,
+            1060
+          ]
+        ],
+        "anchor": [
+          1286,
+          1080
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f2b9cffe19f0e384ca1e56f42ac052e056e58375a9174d41a998d77680d28d09",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "f56b838661782553450e988fec572bdb630e49aa0b366762843cab7ef68d58fb",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

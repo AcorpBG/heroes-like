@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    0,
+    255
+  ],
+  "seed": 2026100180,
+  "references": [
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          710,
+          0,
+          1074,
+          374
+        ]
+      ],
+      "anchor": [
+        924,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle",
+      "source": "art/animation/source/poses/unit_neutral_brambleback_knucklebears/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          365,
+          374
+        ]
+      ],
+      "anchor": [
+        200,
+        378
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "opposed_loaded_contact",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        768,
+        1000
+      ],
+      "scale": 0.215,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      43,
+      2
+    ],
+    [
+      66,
+      1
+    ],
+    [
+      90,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Brambleback Knucklebear, a massive brown-furred bear with two huge front arms and clawed paws, two shorter muscular hind legs and smaller hind paws, one bear head, rounded ears, broad muzzle and amber eyes. Layered rough brown bark and twisted vines armor both forearms, shoulders and back. Small muted olive-green leaves grow among its woody thorns. Preserve the original narrow amber-orange cracks in the bark without adding lights or effects. Exactly two front arms and two hind legs throughout. The near front arm is the large foreground limb toward lower center; the far front arm is beyond the chest toward screen right. Hind legs remain attached beneath the rear torso toward screen left. Keep original proportions, claw arrangement, face, fur, vine and bark structure. No equipment or clothing. Perform one slow complete reciprocal knucklewalk cycle in place. Begin with the near front knuckles forward and loaded while the far front paw supports the opposite phase. Unload and lift the far front paw, swing it forward and plant its knuckles; transfer the chest weight onto that far front arm. Then lift the near front paw, swing it forward and plant it in the initial contact. The two hind paws alternate planted loading, lift, passing and forward contact behind the front limbs. Maintain at least a front paw and opposite hind paw grounded through each transition; no jumping or sprinting. Show separate elbows, wrists, front knuckles and hind ankles moving coherently. Planted contacts stay registered until they unload. End at the exact initial loaded contact. Locked elevated three-quarter orthographic camera, facing screen right. Keep the anatomical scale and root position fixed, the complete body and every claw inside the image. The background stays perfectly uniform pure blue RGB 0,0,255 from first to last frame, with no color cycling, floor, shadows, scenery, text or other subjects. Articulated physical joints and unchanged anatomy. No magic, projectiles or additional glow.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "per_guide_max": [
+      0.0,
+      1.0,
+      7.0
+    ],
+    "separation": 246,
+    "rule": "Eroded opaque blue-minus-max(red,green) maximum plus two across original and generated opposite guides."
+  },
+  "registration_note": "Original paintings retain .6 runtime scale. Generated opposed-contact master uses fixed .215 runtime scale (.43 magnification into video) and [768,1000] source anchor, matching torso/bark/head anatomy and contact depth; no per-frame bounds scaling."
+}

@@ -1,0 +1,70 @@
+{
+  "prompt_id": "6405df9b-156a-4b59-87f0-50f892e51779",
+  "rule": "Actual periodic service observations; sampled peaks only, not an instrumented CUDA allocation maximum.",
+  "observations": [
+    {
+      "observed_unix": 1790847470.3964102,
+      "elapsed_seconds": 0.012011528015136719,
+      "ram_free": 28711952384,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 18967881024,
+          "torch_vram_total": 21005074432,
+          "torch_vram_free": 7720854848
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790847480.4118395,
+      "elapsed_seconds": 10.027440786361694,
+      "ram_free": 54023938048,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 31409334272,
+          "torch_vram_total": 905969664,
+          "torch_vram_free": 63203328
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790847490.4268851,
+      "elapsed_seconds": 20.042486429214478,
+      "ram_free": 54178234368,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29422884628,
+          "torch_vram_total": 3758096384,
+          "torch_vram_free": 928880404
+        }
+      ]
+    },
+    {
+      "observed_unix": 1790847500.4564583,
+      "elapsed_seconds": 30.072059631347656,
+      "ram_free": 54237270016,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29422884628,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "generator": "built-in image_gen image edit",
+  "image": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.png",
+  "image_sha256": "972419e75ef87b76bcf0f9378297e4fe8cb896cb0dfe69d8fbdcfbe68df55d53",
+  "prompt": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/guides/opposed_contact_v1.prompt.txt",
+  "prompt_sha256": "97a02943042f90fe38ade23d3aaabc5efe04f785929b2667516c26b3e48c4bcd",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0f615-67c7-7ef1-ac53-345d29d5700f/exec-68c71412-7bea-4afb-b006-a19862d1bdc9.png",
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_brambleback_knucklebears/move_h3_v1/guide_0_rgba.png",
+      "sha256": "6c683de284edb67dd9856af2d23d68f753448dc0f531fc7124b87e9c8ad3d997"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_brambleback_knucklebears.png",
+      "sha256": "65e799e768c11ad91b12fa5a95d17d6a436f7c42d29b6a581bd7d16b5fc9cff4"
+    }
+  ],
+  "review": "Four limbs and opposed front contact are readable, but generated brown diffuse halo violates requested transparency. Excluded as direct video input; retained original master."
+}

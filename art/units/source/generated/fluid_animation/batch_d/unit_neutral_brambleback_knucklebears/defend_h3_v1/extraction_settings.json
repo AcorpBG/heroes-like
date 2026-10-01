@@ -1,0 +1,53 @@
+{
+  "protected_foreground_chroma": 8,
+  "reviewed_key_ranges": [
+    {
+      "start": 20,
+      "end": 35,
+      "key_rgb": [
+        0,
+        255,
+        0
+      ],
+      "protected_foreground_chroma": 8
+    },
+    {
+      "start": 36,
+      "end": 49,
+      "key_rgb": [
+        255,
+        255,
+        0
+      ],
+      "protected_foreground_chroma": 188
+    }
+  ],
+  "measurements": {
+    "green": {
+      "guide_maxima": [
+        4.0,
+        1.0
+      ],
+      "protected": 8,
+      "separation": 247
+    },
+    "yellow": {
+      "guide_maxima": [
+        184.0,
+        183.0
+      ],
+      "protected": 188,
+      "separation": 67
+    },
+    "blue": {
+      "guide_maxima": [
+        1.0,
+        4.0
+      ],
+      "protected": 8,
+      "separation": 247
+    }
+  },
+  "boundary_despill_source_pixels": 2,
+  "review_note": "Raw all124 inspected; exclude red/pastel/cyan/magenta cycles. Only uniform original blue0..5,green20..35,yellow36..49,blue57..62/121..123 retained for matte review. No geometry alterations."
+}

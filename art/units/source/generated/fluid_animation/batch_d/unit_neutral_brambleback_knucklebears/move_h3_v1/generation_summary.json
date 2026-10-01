@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_brambleback_knucklebears",
+  "take": "move_h3_v1",
+  "observed_at_utc": "2026-10-01T09:39:30.541400+00:00",
+  "stages": {
+    "sampling": {
+      "prompt_id": "d780e7c3-603a-42d6-995a-0b9afabeb680",
+      "submitted_unix": 1790847246.8850894,
+      "execution_start_unix": 1790847246.9,
+      "execution_success_unix": 1790847458.912,
+      "execution_seconds": 212.012,
+      "sampled_peak_device_used_bytes": 26130789500,
+      "sampled_peak_torch_reserved_bytes": 25534922752,
+      "minimum_sampled_host_ram_free_bytes": 18045218816,
+      "status": "success",
+      "execution_errors": [],
+      "memory_note": "Periodic actual service readings; sampled peaks, not a CUDA-instrumented true allocation maximum."
+    },
+    "decode": {
+      "prompt_id": "6405df9b-156a-4b59-87f0-50f892e51779",
+      "submitted_unix": 1790847470.363873,
+      "execution_start_unix": 1790847478.321,
+      "execution_success_unix": 1790847492.839,
+      "execution_seconds": 14.518,
+      "sampled_peak_device_used_bytes": 15222577856,
+      "sampled_peak_torch_reserved_bytes": 21005074432,
+      "minimum_sampled_host_ram_free_bytes": 28711952384,
+      "status": "success",
+      "execution_errors": [],
+      "memory_note": "Periodic actual service readings; sampled peaks, not a CUDA-instrumented true allocation maximum."
+    }
+  },
+  "service_argv": [
+    "main.py",
+    "--listen",
+    "127.0.0.1",
+    "--port",
+    "8189",
+    "--reserve-vram",
+    "4",
+    "--disable-api-nodes",
+    "--disable-dynamic-vram"
+  ],
+  "loader_observation_source": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "relevant_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3TEModel_",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 26014.80 MB usable, 14960.20 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 10896.61 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 21786.66 MB usable, 19996.14 MB loaded, full load: True",
+    "100%|##########| 20/20 [02:37<00:00,  7.81s/it]",
+    "100%|##########| 20/20 [02:37<00:00,  7.89s/it]",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 212.01 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 14.52 seconds\u001b[0m"
+  ],
+  "loader_note": "Actual active service log observed during the exclusive first movement take. Full loader residency is evidenced by loaded-completely/full-load-True lines; periodic memory readings alone do not establish residency.",
+  "original_rgb_frames_verified": 124
+}
