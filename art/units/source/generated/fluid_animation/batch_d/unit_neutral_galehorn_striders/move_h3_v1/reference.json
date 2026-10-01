@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_galehorn_striders",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "walk_contact_a_v1",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_a_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          900,
+          988
+        ],
+        "scale": 0.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d9a93969e8f5442af328c038fa20db44ba9810fb20419189fade44680aad9d1e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "2152dcb25720d2ae53b0c1b3f938f92213b6f99b870c65adc7b061feb27a555e",
+      "runtime_source_scale": 0.22
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_b_v2",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_b_v2.png",
+        "rects": [
+          [
+            0,
+            0,
+            1536,
+            1024
+          ]
+        ],
+        "anchor": [
+          900,
+          988
+        ],
+        "scale": 0.44,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "59748618b68fac10ee93948f1b3bb03a7694147297d8b5a26d944aa0b974308d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "42e2c96163b32f3ba14801e0964d0edf5d2d430c0b106c1329bd6d4cc646b6a7",
+      "runtime_source_scale": 0.22
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

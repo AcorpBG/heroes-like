@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a49e64248c9029cff6967121f8e3185d640f9eb3fc0e650399d20fdf8d3e9602",
+  "latent_sha256": "d9829cfbaf2d31498ea1d621e0b1d7aa87017d34999179c388f4f27d56871642",
+  "decode_workflow_sha256": "c907c2cf3cf7fca80a3c72d64a68b5eaed344531ac7a520ca57fba520455d476",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "galehorn_h3_20261001\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

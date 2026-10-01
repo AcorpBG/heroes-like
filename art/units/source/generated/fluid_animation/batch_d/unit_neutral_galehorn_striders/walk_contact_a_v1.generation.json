@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-eef484f3-af21-421f-8a67-8b26d38daa71.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_a_v1.png",
+    "sha256": "d9a93969e8f5442af328c038fa20db44ba9810fb20419189fade44680aad9d1e"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_a_v1.prompt.txt",
+    "sha256": "c1305d1fc233b63ac6abd06e321e44fc08d661b5f16afc9442b7a854ad628985"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "sha256": "e824c794910a267b4149d43efe5fde00c3c4645b126e7f4cf8247eab9d606588"
+    }
+  ],
+  "visual_review": {
+    "status": "reviewed_reference",
+    "note": "Four complete limb chains; contact A near foreforward/hindback, contact B near foreback/hindforward. Same source canvas and fixed .22 scale, no per-pose fitting."
+  }
+}

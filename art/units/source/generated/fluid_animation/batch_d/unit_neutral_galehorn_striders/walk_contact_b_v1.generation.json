@@ -1,0 +1,26 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-12a7e3b1-52d0-4018-8613-bc7d9ad0593c.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_b_v1.png",
+    "sha256": "bf194610445d913b5a415c8795e94310817a4acddaa117498e13bc35736c671e"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_b_v1.prompt.txt",
+    "sha256": "d63cab1caa05c3f3c4093da5e6a696259f2a4bb8edb5bc29de50afa4a07ed59a"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "sha256": "e824c794910a267b4149d43efe5fde00c3c4645b126e7f4cf8247eab9d606588"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/walk_contact_a_v1.png",
+      "sha256": "d9a93969e8f5442af328c038fa20db44ba9810fb20419189fade44680aad9d1e"
+    }
+  ],
+  "visual_review": {
+    "status": "rejected_reference",
+    "reason": "Near hindleg changes but pale near foreleg remains forward, so opposite gait identity is incomplete. Do not feed contradictory contact guide."
+  }
+}

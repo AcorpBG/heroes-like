@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "ee291568a458ac059a78e05cccd187200d8f245ca0f688409f89473613a704b4",
+  "latent_sha256": "fcd33bc4af92dbf0d68f590d63720b041eb0493a01b813dff30d8153be278ad2",
+  "decode_workflow_sha256": "2d61e49d1b22ddf2283381171f5384c287a2fa300fcffc21ab5c5d7120d33fec",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "galehorn_h3_20261001\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

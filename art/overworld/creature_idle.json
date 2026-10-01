@@ -4335,19 +4335,34 @@
     "unit_neutral_galehorn_striders": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_galehorn_striders.png",
       "frame_size": [
-        271,
-        232
+        326,
+        236
       ],
-      "frames": 8,
-      "frame_msec": 260,
+      "frames": 41,
+      "frame_msec": 83,
       "static_frame": 0,
       "ground_anchor": [
-        151.0,
-        221
+        184,
+        224
       ],
-      "painted_extent": 255,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_galehorn_striders.png",
+      "painted_extent": 310,
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_galehorn_striders.png",
       "source_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
         16,
         17,
         18,
@@ -4355,17 +4370,35 @@
         20,
         21,
         22,
-        23
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
       ],
       "source_crop": [
-        105,
-        27,
-        376,
-        259
+        20,
+        0,
+        346,
+        236
       ],
-      "source_sha256": "b511d55cff51d9dcfe532d0ba289ca0974eed0b42218048384d48e7decaaad31",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_galehorn_striders/provenance.json",
-      "sha256": "a741f1c50f86e690326739e0be15703ee6a1818190985298cd450b679561ba7a"
+      "source_sha256": "e6d32782d2662b3f5f1c36a658cb5f06c2b7bf5e3aa16b1dbc45e5ed80b161f8",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_galehorn_striders/provenance.json",
+      "sha256": "46feea346308a6e899956d6963e3bf381269e115a0ed3064d9bc2a1d9abc8c76"
     },
     "unit_neutral_sunscale_lanternmoths": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_sunscale_lanternmoths.png",

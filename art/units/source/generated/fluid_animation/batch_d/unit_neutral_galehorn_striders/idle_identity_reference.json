@@ -1,0 +1,13 @@
+{
+  "source": "art/animation/source/poses/unit_neutral_galehorn_striders/idle-v2/hands-alpha.png",
+  "source_sha256": "3a960ab4b18f7aa7e8ec75453b8a3897fb0f4e76593f83db426dbe65ae8ccda4",
+  "crop": [
+    0,
+    0,
+    384,
+    512
+  ],
+  "output": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/idle_identity_reference.png",
+  "output_sha256": "547cf9dd54dc56fa48ca358dadc97859a89935f5b44c895568f0d6a6d2c359a9",
+  "note": "Exact original idle16 pixels, preserved including legacy extra fifth belly leg; anatomy repair reference only."
+}

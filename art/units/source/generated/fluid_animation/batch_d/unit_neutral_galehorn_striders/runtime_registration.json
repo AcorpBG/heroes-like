@@ -1,0 +1,66 @@
+{
+  "new_runtime_scale": 0.5,
+  "new_runtime_anchor": [
+    470,
+    560
+  ],
+  "original_keypose_scale": 0.22,
+  "original_keypose_anchor": [
+    900,
+    988
+  ],
+  "source_canvas": [
+    1536,
+    1024
+  ],
+  "video_canvas": [
+    960,
+    640
+  ],
+  "basis": {
+    "legacy_idle_size": [
+      247,
+      214
+    ],
+    "legacy_idle_offset": [
+      -135,
+      -211
+    ],
+    "corrected_ready_size": [
+      290,
+      219
+    ],
+    "corrected_ready_offset": [
+      -172,
+      -215
+    ],
+    "rule": "One fixed anatomical scale and pelvis/foot root for all guides and H3 frames. Actual source_pose resized alpha bounds measured; no per-pose fitting. Legacy idle will be replaced because it has five legs."
+  },
+  "original_master_ground_contacts": {
+    "ready_fourlegs_v1": [
+      900,
+      988
+    ],
+    "walk_contact_a_v1": [
+      900,
+      988
+    ],
+    "walk_contact_b_v2": [
+      900,
+      988
+    ],
+    "horn_brace_v1": [
+      900,
+      937
+    ],
+    "horn_contact_v1": [
+      900,
+      950
+    ],
+    "death_corpse_v2": [
+      900,
+      796
+    ]
+  },
+  "keypose_ground_rule": "Different original paintings were placed at different source canvas heights. One documented anchor per master follows actual planted hoof or fallen body contact; all composited guides and every decoded frame share fixed root[470,560] and scale.5. Never shift individual generated frames."
+}

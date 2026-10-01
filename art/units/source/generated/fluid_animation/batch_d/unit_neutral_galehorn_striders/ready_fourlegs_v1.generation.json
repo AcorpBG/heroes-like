@@ -1,0 +1,32 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-406aa61e-cf99-4c95-a1e7-210fcaaabdd5.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+    "sha256": "e824c794910a267b4149d43efe5fde00c3c4645b126e7f4cf8247eab9d606588"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.prompt.txt",
+    "sha256": "19ad9cc4b39d35880506d3d9044d0d322a6fd402638e98705b595b8df08f3cd5"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/idle_identity_reference.png",
+      "sha256": "547cf9dd54dc56fa48ca358dadc97859a89935f5b44c895568f0d6a6d2c359a9"
+    }
+  ],
+  "review": {
+    "status": "reviewed_reference",
+    "anatomy": "Exactly four leg chains: two hind from pelvis, two fore from chest. Extra middle leg repaired. Paired long curled horns, original torso proportions/palette/mane/tail retained.",
+    "alpha": "RGBA observed, transparent background clear on light/dark composites; no painted halo",
+    "publication": "Reference guide only; no runtime acceptance"
+  },
+  "original_image": {
+    "path": "art/animation/source/poses/unit_neutral_galehorn_striders/idle-v2/hands-alpha.png",
+    "sha256": "3a960ab4b18f7aa7e8ec75453b8a3897fb0f4e76593f83db426dbe65ae8ccda4"
+  },
+  "crop_recipe": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/idle_identity_reference.json",
+    "sha256": "80dc73fed904b1fbab0fc934d5468fca23d3b9d7351b31883c2a00c3b81af188"
+  }
+}

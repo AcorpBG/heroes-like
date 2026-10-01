@@ -1,0 +1,44 @@
+{
+  "unit_id": "unit_neutral_galehorn_striders",
+  "takes": [
+    "move_h3_v1",
+    "idle_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [],
+  "replaced_defective_clips": [
+    "idle"
+  ],
+  "identity_defect": "Legacy ready, movement and all eight idle sources have five hoof/leg chains. Owner coordinator authorized corrected four-leg idle and map refresh; immutable original sources and baseline preserved.",
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo autonomous chronological review of all992 original H3 frames, enlarged anatomy/alpha and every selected native Godot phase. Four-leg corrected identity replaces defective five-leg idle. Dedicated idle41,reciprocalmove30,one horn ram47(contact26/source38),hit23,heldbrace31,physical rally35,continuous groundeddeath30; dead final death66. Originalscale/root retained, thin horns/tail/hoof alpha clean on light/dark. Candidate and mirrored780 checks each pass, both native facings inspected. Repeated attackv1 rejected; complete attackv2 interval12..58 selected before later second dip. No continuous-playback/manual-playtest or full-suite claim."
+  },
+  "rejected_takes": [
+    "attack_h3_v1"
+  ],
+  "validation": {
+    "candidate_checks": 780,
+    "mirrored_checks": 780,
+    "live_checks": 784,
+    "original_rgb_frames_verified": 992,
+    "published_source_frames_verified": 237,
+    "other_catalog_rows_preserved": 231,
+    "atlas_size": [
+      4096,
+      4036
+    ],
+    "texture_bytes_rgba": 66125824,
+    "map_strip_size": [
+      13366,
+      236
+    ],
+    "map_frames": 41,
+    "source_verifier": "verify_delivery.py",
+    "scope": "Focused Windows Godot offscreen native/mirrored/live map shader and source integrity only; no full suite or manual playtest."
+  }
+}

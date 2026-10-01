@@ -1,0 +1,22 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-74d15f01-84f3-4207-a08b-025cdfae6694.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/death_corpse_v1.png",
+    "sha256": "055ac2c5311ac30919cabc9387545a31545f66f592b91c5c10f517122520b648"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/death_corpse_v1.prompt.txt",
+    "sha256": "41427710d20de1b2a323d1912ded2d3251c0edb6e77466fa3742e335f48bf13d"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "sha256": "e824c794910a267b4149d43efe5fde00c3c4645b126e7f4cf8247eab9d606588"
+    }
+  ],
+  "visual_review": {
+    "status": "rejected_reference",
+    "reason": "Far foreleg/hoof insufficiently readable; replaced by v2 with all four chains visible. Original preserved."
+  }
+}

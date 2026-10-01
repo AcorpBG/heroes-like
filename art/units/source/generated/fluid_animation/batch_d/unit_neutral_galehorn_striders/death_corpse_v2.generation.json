@@ -1,0 +1,26 @@
+{
+  "tool": "built-in image_gen",
+  "output_path": "C:/Users/acorp/.codex/generated_images/01a0f615-12f8-7b30-9f1c-efd795ebd397/exec-8c79d598-7531-4ed6-9581-2b1d8661007a.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/death_corpse_v2.png",
+    "sha256": "6a9023e4518ff4d966859958069de867c3fd6d49ed56a79f81bee2f582ae4b33"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/death_corpse_v2.prompt.txt",
+    "sha256": "350f5a1de150b6724add337d71aea054382c74eff9b9b351afd759ba0209f203"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "sha256": "e824c794910a267b4149d43efe5fde00c3c4645b126e7f4cf8247eab9d606588"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/death_corpse_v1.png",
+      "sha256": "055ac2c5311ac30919cabc9387545a31545f66f592b91c5c10f517122520b648"
+    }
+  ],
+  "visual_review": {
+    "status": "reviewed_reference",
+    "note": "Four connected fore/hind leg chains, two long horns, original fur/body identity. Light/dark alpha clean. Ground anchor follows observed planted hoof or side-body contact in this master, not changing image bounds. Fixed .22 scale across all masters."
+  }
+}

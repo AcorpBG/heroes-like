@@ -1,0 +1,55 @@
+{
+  "unit_id": "unit_neutral_galehorn_striders",
+  "clip": "idle",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100311,
+  "references": [
+    {
+      "name": "ready_fourlegs_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        900,
+        988
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original Galehorn Strider, a silvery blue and ivory fantasy antelope with layered fur, copper fur tips, golden eye, narrow face, long flowing mane and feathered tail. Exactly FOUR slender antelope legs: two forelegs attached to the chest, two hindlegs attached to the pelvis, each with one dark cloven hoof. Count complete joint and ankle chains, never add a middle belly leg. Exactly TWO long swept curled ribbed horns attached to the head; retain full horn length and curvature. No equipment, wings, extra limbs or magic. Remain calmly standing on four supporting hooves. Make a gentle articulated breathing cycle: ribcage expands, neck and head turn slightly, ears twitch and tail sweeps softly, then return to the exact ready stance. Feet remain at their original contacts, knees and hocks retain their four-leg identity. Visible neck, ear and tail motion, no whole-body bobbing or extra limbs.Locked elevated three-quarter orthographic camera, facing screen right, fixed body size and root. Full horns, tail and all four hooves stay inside the image. Every background pixel stays perfectly flat pure green RGB 0,255,0 from first to last frame, with no hue cycling, floor, shadow, horizon, scenery, particles, glow, text or other creatures. Articulated physical joint motion, stable anatomy, no morphing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green minus max(red,blue) foreground maximum plus two, measured over every guide.",
+    "per_guide_max": [
+      7.0
+    ]
+  }
+}

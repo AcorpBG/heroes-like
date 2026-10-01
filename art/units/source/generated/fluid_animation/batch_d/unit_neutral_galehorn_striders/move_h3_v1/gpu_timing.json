@@ -1,0 +1,43 @@
+{
+  "sample_wall_seconds": 210.54331493377686,
+  "decode_collect_wall_seconds": 34.38860487937927,
+  "total_wall_seconds": 250.05903220176697,
+  "reserve_vram_gb": 4,
+  "actual_loader_and_sampler_lines": [
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 14960.20 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 10850.61 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 21740.66 MB usable, 19996.14 MB loaded, full load: True",
+    "  0%|          | 0/20 [00:00<?, ?it/s]",
+    "  5%|5         | 1/20 [00:07<02:17,  7.22s/it]",
+    " 10%|#         | 2/20 [00:14<02:10,  7.23s/it]",
+    " 15%|#5        | 3/20 [00:21<02:03,  7.28s/it]",
+    " 20%|##        | 4/20 [00:29<01:56,  7.28s/it]",
+    " 25%|##5       | 5/20 [00:36<01:49,  7.33s/it]",
+    " 30%|###       | 6/20 [00:43<01:42,  7.30s/it]",
+    " 35%|###5      | 7/20 [00:51<01:35,  7.31s/it]",
+    " 40%|####      | 8/20 [00:58<01:27,  7.33s/it]",
+    " 45%|####5     | 9/20 [01:05<01:20,  7.33s/it]",
+    " 50%|#####     | 10/20 [01:13<01:13,  7.35s/it]",
+    " 55%|#####5    | 11/20 [01:20<01:06,  7.41s/it]",
+    " 60%|######    | 12/20 [01:28<00:59,  7.41s/it]",
+    " 65%|######5   | 13/20 [01:35<00:52,  7.46s/it]",
+    " 70%|#######   | 14/20 [01:43<00:44,  7.43s/it]",
+    " 75%|#######5  | 15/20 [01:50<00:37,  7.41s/it]",
+    " 80%|########  | 16/20 [01:57<00:29,  7.43s/it]",
+    " 85%|########5 | 17/20 [02:05<00:22,  7.46s/it]",
+    " 90%|######### | 18/20 [02:12<00:14,  7.44s/it]",
+    " 95%|#########5| 19/20 [02:20<00:07,  7.44s/it]",
+    "100%|##########| 20/20 [02:27<00:00,  7.44s/it]",
+    "100%|##########| 20/20 [02:27<00:00,  7.38s/it]",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 204.72 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 14.08 seconds\u001b[0m"
+  ],
+  "release": {
+    "free_vram_bytes": 32088225556,
+    "required_free_vram_bytes": 17179869184
+  },
+  "terminal_queue_running": 0,
+  "terminal_queue_pending": 0,
+  "rule": "Sampling preserves latent; grouped release precedes separate tiled VAE-only decode; collection verifies124 RGB, then GPU released before CPU review."
+}

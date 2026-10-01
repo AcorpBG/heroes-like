@@ -1,0 +1,106 @@
+{
+  "unit_id": "unit_neutral_galehorn_striders",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100317,
+  "references": [
+    {
+      "name": "ready_fourlegs_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/ready_fourlegs_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        900,
+        988
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "horn_brace_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/horn_brace_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        900,
+        937
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "horn_contact_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/horn_contact_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1536,
+          1024
+        ]
+      ],
+      "anchor": [
+        900,
+        950
+      ],
+      "scale": 0.22,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      42,
+      2
+    ],
+    [
+      66,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Galehorn Strider, a silvery blue and ivory fantasy antelope with layered fur, copper fur tips, golden eye, narrow face, long flowing mane and feathered tail. Exactly FOUR slender antelope legs: two forelegs attached to the chest, two hindlegs attached to the pelvis, each with one dark cloven hoof. Count complete joint and ankle chains, never add a middle belly leg. Exactly TWO long swept curled ribbed horns attached to the head; retain full horn length and curvature. No equipment, wings, extra limbs or magic. Perform one short single horn ram, then stop. Stand ready at the beginning. During frames12..24 flex foreknees and lower head into anticipation. From24..42 drive neck and chest forward once toward screen right for a grounded horn contact, while hind hooves support the body. From42..66 retract head and chest and straighten forelegs back into the original ready posture. From66 through123 remain calmly standing ready: no second lunge, no second head dip, no repeated crouch or repeated attack; only breathing. All four hoof chains remain distinct. One anticipation, one contact, one complete recovery. Do not jump, rear or lift all supporting feet. Locked elevated three-quarter orthographic camera, facing screen right, fixed body size and root. Full horns, tail and all four hooves stay inside the image. Every background pixel stays perfectly flat pure green RGB 0,255,0 from first to last frame, with no hue cycling, floor, shadow, horizon, scenery, particles, glow, text or other creatures. Articulated physical joint motion, stable anatomy, no morphing.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 9,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green minus max(red,blue) foreground maximum plus two, measured over every guide.",
+    "per_guide_max": [
+      7.0,
+      7.0,
+      6.0
+    ]
+  }
+}
