@@ -1,0 +1,23 @@
+{
+  "tool": "built_in_image_gen",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-b08aaa38-bc92-4822-82e6-b091e2382477.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/guard_half_brace_v1.png",
+    "sha256": "2c2d159ab11804b02f0d03dcb692a9ef98d5c65c7c84bd228699821529e3b839"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/guard_half_brace_v1.prompt.txt",
+    "sha256": "983d9b934492445179519bbd51f391c6171f0c496281f27cc27fabc0135abfcb"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/defend_h3_v1/guide_0_rgba.png",
+      "sha256": "557bc1e5dba36ded84f2e7cf06b6ca5f95ee2ff92b46d203b94de4cf73bf8bd0"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/defend_h3_v1/guide_1_rgba.png",
+      "sha256": "afe060374ad01adc015eb0a3394741b66b7e068d7168a5f103ee88485ee98003"
+    }
+  ],
+  "review": "One original intermediate brace, short spear held by right elbow near hip; original body/camera/left lantern-shield retained. Fixed scale .28, anatomical anchor850/815, no pose normalization."
+}

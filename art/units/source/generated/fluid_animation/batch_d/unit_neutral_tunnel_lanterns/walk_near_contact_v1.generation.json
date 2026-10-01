@@ -1,0 +1,19 @@
+{
+  "tool": "built_in_image_gen",
+  "original_tool_output": "C:\\Users\\acorp\\.codex\\generated_images\\01a0965d-a98e-7560-8e9d-802269b3760b\\exec-4de8fb1b-11b1-4cbb-9656-1cd190789d41.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/walk_near_contact_v1.png",
+    "sha256": "da51f4102ed8efa9a64e81844e381b2fa6fd7857af43f722bcc8ad165cb29250"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/walk_near_contact_v1.prompt.txt",
+    "sha256": "3e184b25eb18a4973a7740a369845386fb3cdf5de0f14bef72c2e07f2d334eeb"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/move_h3_v1/guide_0_rgba.png",
+      "sha256": "ba5569a2d5a8ca97b9ee0f4eb6c7f9b6f4e0e9f0cf6c652f0b0e3fb147f7336f"
+    }
+  ],
+  "review": "Original opposite contact: near/right thigh originates screen-left hip and crosses forward, far/left thigh trails backward; complete shield-lantern and short spear grip retained. One original key pose, not synthesized animation."
+}

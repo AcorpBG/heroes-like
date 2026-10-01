@@ -1,0 +1,4 @@
+{
+  "status": "rejected",
+  "reason": "Source16->17,38->39 and71->72 still cut between guide-driven phases. Inspected installed MiniMaxH3AddGuide/packed keyframe conditioning and owned VAE tiling: outer tiling is delegated and not independently breaking chunks. Reassess multi-guide conditioning; next take uses only trained first/last FL2VA endpoint route, no arbitrary intermediate pins."
+}

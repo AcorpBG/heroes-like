@@ -1,0 +1,17 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v3"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo visual review: original 124-frame chronologies plus enlarged key phases for all six selected actions, preserved eight articulated idle poses, actual Godot 128px reference scale and mirrored facing. Grounded stride, short-spear windup/thrust/recovery, recoil, low shield brace, physical lantern support gesture, continuous endpoint-conditioned side collapse and dim held corpse. Same character scale and original equipment; no duplicated, interpolated or reversed padding. Candidate and mirrored native fixtures each passed 196 focused checks. No continuous manual game playback or Linux run claimed."
+  }
+}

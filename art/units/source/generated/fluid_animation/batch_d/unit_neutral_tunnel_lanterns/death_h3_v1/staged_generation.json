@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "31a3023e50175a2a79ec3950a380a894831493f0e35202228c3da4e5673143f9",
+  "latent_sha256": "8934cce366b56d1f91ea5fab4dc7af66df518601a6b8852234c6e643c4f47e9a",
+  "decode_workflow_sha256": "0d2b97c567dfc518eee8e5f7a3f1f6b89a05bf52b38ecd373e5cf35ba66ceff2",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "tunnel_lantern_h3\\death_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19640966464,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

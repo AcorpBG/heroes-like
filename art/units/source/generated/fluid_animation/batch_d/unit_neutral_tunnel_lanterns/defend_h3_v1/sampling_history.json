@@ -1,0 +1,223 @@
+{
+  "prompt": [
+    89,
+    "7706aca7-43cd-4e14-a09c-5eae1cf8283e",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. Raise left-arm lantern shield forward into supplied low defensive brace. Bend both knees and tuck torso behind the shield; right hand keeps spear low with complete point. Shield protects chest, face still visible above rim. Reach guard by the middle and HOLD that grounded stance through last frame; do not return to idle. Lantern remains on shield front; no external light blast or weapon release. Locked elevated three-quarter orthographic camera facing screen right, same body/equipment size throughout and anatomical root centered. All body, shield, spear tip and butt inside960x544. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, extra people, new objects or external particles. Lantern flame remains INSIDE its original cage. Rigid original spear and shield; physical articulated joints, stable grips.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "31",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100412
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tunnel_lantern_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "tunnel_lantern_defend_h3_v1_guide_1.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 55,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "40",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "tunnel_lantern_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "tunnel_lantern_h3",
+      "create_time": 1790884273633
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "tunnel_lantern_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "7706aca7-43cd-4e14-a09c-5eae1cf8283e",
+          "timestamp": 1790884273842
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "7706aca7-43cd-4e14-a09c-5eae1cf8283e",
+          "timestamp": 1790884273863
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "7706aca7-43cd-4e14-a09c-5eae1cf8283e",
+          "timestamp": 1790884593872
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

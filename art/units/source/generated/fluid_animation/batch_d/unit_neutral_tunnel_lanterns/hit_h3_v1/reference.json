@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            317,
+            420
+          ]
+        ],
+        "anchor": [
+          169,
+          396
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f9e1bc615ef538eacefaf27a5ff8d7e1a9086e772aadfadbd6876378d911c235",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            803,
+            319,
+            1185
+          ]
+        ],
+        "anchor": [
+          161,
+          1160
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "85be331fc9f365947932d0aa3839c80673669fb82ca3ee5a14ab369a02021c5d",
+      "runtime_source_scale": 0.522
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

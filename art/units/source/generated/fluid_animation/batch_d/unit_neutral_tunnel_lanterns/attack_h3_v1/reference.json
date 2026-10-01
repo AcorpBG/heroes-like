@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            317,
+            420
+          ]
+        ],
+        "anchor": [
+          169,
+          396
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f9e1bc615ef538eacefaf27a5ff8d7e1a9086e772aadfadbd6876378d911c235",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "short_spear_windup",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+        "rects": [
+          [
+            0,
+            0,
+            537,
+            685
+          ]
+        ],
+        "anchor": [
+          270,
+          650
+        ],
+        "scale": 0.609,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2754769e4322cc800c15d98cb2bd1df19d1a27520444f7f656f369173e840662",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ccb72f63b94162164ed5331fd0e83ac934f6bc16f007a39e0404ee534c6228f9",
+      "runtime_source_scale": 0.3045
+    },
+    {
+      "source_frame": {
+        "name": "short_spear_thrust",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+        "rects": [
+          [
+            538,
+            0,
+            1086,
+            685
+          ]
+        ],
+        "anchor": [
+          790,
+          650
+        ],
+        "scale": 0.609,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2754769e4322cc800c15d98cb2bd1df19d1a27520444f7f656f369173e840662",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "abb6e5d7b5a9ffda89b1fdf799e49d05dc335bc3a10b7128c723a12968e2545b",
+      "runtime_source_scale": 0.3045
+    },
+    {
+      "source_frame": {
+        "name": "short_spear_recovery",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+        "rects": [
+          [
+            0,
+            687,
+            540,
+            1448
+          ]
+        ],
+        "anchor": [
+          270,
+          1341
+        ],
+        "scale": 0.609,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2754769e4322cc800c15d98cb2bd1df19d1a27520444f7f656f369173e840662",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "60462d8a20d8ac87673f88d3f4e44cac164b7a74da9bd7ea004850f97b0efca7",
+      "runtime_source_scale": 0.3045
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100422,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          420
+        ]
+      ],
+      "anchor": [
+        169,
+        396
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          923,
+          955,
+          1254,
+          1200
+        ]
+      ],
+      "anchor": [
+        1094,
+        1149
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. One continuous natural heavy collapse, occurring smoothly in the first half of the video. Knees buckle, hips lower, torso tips sideways toward screen left. Right forearm supports the fall while loosely keeping the same short spear; left-arm lantern shield tilts with the body and comes to rest on its side. Head and shoulder lower toward the ground through real articulated intermediate positions, then body settles into the supplied head-left horizontal corpse. Both original legs and boots fold naturally behind torso. One intact spear lies beside the relaxed right hand, one intact shield and its caged lamp rest with the body. The lamp dims INSIDE its cage. Remain completely dead for the second half. Locked elevated three-quarter orthographic camera and same anatomical body/equipment scale, root in place. Exactly two arms and legs. Uniform pure magenta RGB255,0,255 background, no floor, shadow, text, new objects or external effects. Smooth continuous bodily lowering, no pose cuts, instant transformation, stiff freeze, standing up or repeated collapse.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

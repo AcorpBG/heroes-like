@@ -1,0 +1,98 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100415,
+  "references": [
+    {
+      "name": "walk_contact_attempt",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          638,
+          0,
+          920,
+          420
+        ]
+      ],
+      "anchor": [
+        776,
+        398
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_near_contact_v1",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/walk_near_contact_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        870,
+        856
+      ],
+      "scale": 0.23125,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "walk_passing",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          543,
+          699,
+          1086,
+          1448
+        ]
+      ],
+      "anchor": [
+        783,
+        1341
+      ],
+      "scale": 0.3045,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      64,
+      0
+    ],
+    [
+      96,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. Walk in place with reciprocal armored strides. Starting contact has far leg forward/near leg trailing; near/right leg starts at screen-left hip under spear arm and swings forward toward screen right from its own hip through bent-knee passing, contacts ahead, takes weight, and moves behind as far leg passes forward. Alternate BOTH boots through contact, loading, passing and toe-off. Left arm carries lantern shield and right hand holds same short spear low; no grip/equipment swaps. No translation, camera drift or marching the same leg repeatedly. Locked elevated three-quarter orthographic camera facing screen right, same body/equipment size throughout and anatomical root centered. All body, shield, spear tip and butt inside960x544. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, extra people, new objects or external particles. Lantern flame remains INSIDE its original cage. Rigid original spear and shield; physical articulated joints, stable grips.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

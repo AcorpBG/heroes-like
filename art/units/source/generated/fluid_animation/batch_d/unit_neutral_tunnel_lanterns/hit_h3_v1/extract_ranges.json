@@ -1,0 +1,9 @@
+{
+  "inclusive_ranges": [
+    [
+      0,
+      64
+    ]
+  ],
+  "reason": "Entire physical recoil and recovered ready stance occur before64. Source changes its plate much later during unused idle footage; do not key/reuse the unsafe transition. All124 original RGB frames preserved."
+}

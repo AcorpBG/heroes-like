@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            317,
+            420
+          ]
+        ],
+        "anchor": [
+          169,
+          396
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f9e1bc615ef538eacefaf27a5ff8d7e1a9086e772aadfadbd6876378d911c235",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            320,
+            830,
+            620,
+            1190
+          ]
+        ],
+        "anchor": [
+          471,
+          1157
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6de760c842cbcaa541e0b2c3d3414e191e6965a1ed4949d0607cb0de95135c0a",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "death_low_fall",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            620,
+            875,
+            922,
+            1190
+          ]
+        ],
+        "anchor": [
+          780,
+          1157
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "426e36616b46a4411b59b688b3c93b14fd92408fcafc92fe6659943986563752",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "dead_head_left",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            923,
+            955,
+            1254,
+            1200
+          ]
+        ],
+        "anchor": [
+          1094,
+          1149
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "198fa4c667de6b1815b27a7507050a91f4b18b694259dec0a8ffa9e84deae4e0",
+      "runtime_source_scale": 0.522
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

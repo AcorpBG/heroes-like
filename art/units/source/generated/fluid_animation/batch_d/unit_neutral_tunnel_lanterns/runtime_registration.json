@@ -1,0 +1,11 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "legacy_family_scale": 0.87,
+  "reason": "One legacy source-family body conversion215px standing to187px existing articulated idle; source-specific old recipe scales retained before this global conversion. Idle drawings/timing are preserved. No per-frame normalization."
+}

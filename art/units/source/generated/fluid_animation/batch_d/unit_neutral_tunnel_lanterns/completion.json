@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "workflow": "Solo local MiniMax H3 video, original extracted transparent frames; one unit fully completed before another.",
+  "new_takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v2",
+    "cast_h3_v1",
+    "death_h3_v3"
+  ],
+  "new_clip_frames": {
+    "move": 16,
+    "attack": 28,
+    "hit": 16,
+    "defend": 13,
+    "cast": 19,
+    "death": 29
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo visual review: original 124-frame chronologies plus enlarged key phases for all six selected actions, preserved eight articulated idle poses, actual Godot 128px reference scale and mirrored facing. Grounded stride, short-spear windup/thrust/recovery, recoil, low shield brace, physical lantern support gesture, continuous endpoint-conditioned side collapse and dim held corpse. Same character scale and original equipment; no duplicated, interpolated or reversed padding. Candidate and mirrored native fixtures each passed 196 focused checks. No continuous manual game playback or Linux run claimed."
+  },
+  "validation": {
+    "candidate_checks": 196,
+    "mirrored_checks": 196,
+    "live_checks": 210,
+    "failures": 0,
+    "imported_atlas": "exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3120,
+      2760
+    ],
+    "rgba_bytes": 34444800,
+    "new_original_action_frames": 121,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 744,
+    "retained_original_rgb_frames_including_rejected": 1116,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 195,
+    "remaining": 37,
+    "total": 232
+  },
+  "progress_note": "2026-10-01 SOLO COMPLETE: Tunnel Lanterns six H3 actions 121 original poses plus retained 8-frame idle; source/mirrored/native visual review and 196/196/210 focused checks pass, exact imported atlas and all232 map visuals preserved. Roster195/232 complete,37 remaining. Broad goal remains in_progress; no subagents or full suite.",
+  "cleanup": {
+    "removed_files": 2205,
+    "recovered_bytes": 790295415,
+    "rule": "Preserved all original images/prompts,1116 original video frames, original MP4s/sampler latents, guides/workflows/seeds/provenance, selected source mattes and caches. Removed only unselected rebuildable mattes and verified task-owned Comfy duplicates/reviews. Also removed the verified isolated task baseline copies, profiles, logs and disposable staging/cleanup probes.",
+    "rebuildable": true
+  }
+}

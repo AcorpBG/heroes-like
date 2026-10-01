@@ -1,0 +1,51 @@
+{
+  "rule": "Measured min(red,blue)-green over three-source-pixel-eroded alpha>=240 original guides; every maximum <=26. Background RGB255,0,255 separated by229 chroma units.",
+  "protected_foreground_chroma": 26,
+  "per_action_guide_maxima": {
+    "attack_h3_v1": [
+      2.0,
+      7.0,
+      15.0,
+      6.0
+    ],
+    "cast_h3_v1": [
+      2.0,
+      4.0
+    ],
+    "death_h3_v1": [
+      2.0,
+      2.0,
+      4.0,
+      3.0
+    ],
+    "defend_h3_v1": [
+      2.0,
+      4.0
+    ],
+    "hit_h3_v1": [
+      2.0,
+      5.0
+    ],
+    "move_h3_v1": [
+      5.0,
+      4.0,
+      6.0
+    ],
+    "defend_h3_v2": [
+      2.0,
+      3.0,
+      4.0
+    ],
+    "death_h3_v2": [
+      2.0,
+      2.0,
+      4.0,
+      4.0,
+      3.0
+    ],
+    "death_h3_v3": [
+      2.0,
+      3.0
+    ]
+  }
+}

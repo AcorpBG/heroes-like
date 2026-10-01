@@ -1,0 +1,76 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "clip": "cast",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100413,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          420
+        ]
+      ],
+      "anchor": [
+        169,
+        396
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_3",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          1152,
+          0,
+          1536,
+          512
+        ]
+      ],
+      "anchor": [
+        1324,
+        480
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      52,
+      1
+    ],
+    [
+      96,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. One physical lantern-shield signal to companions: lift left elbow/forearm so attached shield and lantern rise to the supplied upright cue pose, tilt shield outward briefly, head looks ahead, then lower left forearm and settle back to ready. Right fist keeps short spear safely low and moves naturally with shoulder. Both boots stay planted. No magical invocation or released light; amber lamp stays inside cage. Locked elevated three-quarter orthographic camera facing screen right, same body/equipment size throughout and anatomical root centered. All body, shield, spear tip and butt inside960x544. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, extra people, new objects or external particles. Lantern flame remains INSIDE its original cage. Rigid original spear and shield; physical articulated joints, stable grips.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

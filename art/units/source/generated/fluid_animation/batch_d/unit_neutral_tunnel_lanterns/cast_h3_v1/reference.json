@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_a",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            0,
+            317,
+            420
+          ]
+        ],
+        "anchor": [
+          169,
+          396
+        ],
+        "scale": 1.044,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6f41743e3aeee90d2086989247a29a251edc9f7e2e86330636d67e95832a9c03",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f9e1bc615ef538eacefaf27a5ff8d7e1a9086e772aadfadbd6876378d911c235",
+      "runtime_source_scale": 0.522
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_3",
+        "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            1152,
+            0,
+            1536,
+            512
+          ]
+        ],
+        "anchor": [
+          1324,
+          480
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2a378e01e0c24d334fed4f583aa3536fc9662d51476ac40b38a29dc112fd56c3",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "49fe6c73963c752f9453b7d763d2dd9e3c38cd1b2aad7b7d73c9fc3e44dd0d2a",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

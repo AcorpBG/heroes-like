@@ -1,0 +1,112 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100414,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          420
+        ]
+      ],
+      "anchor": [
+        169,
+        396
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          320,
+          830,
+          620,
+          1190
+        ]
+      ],
+      "anchor": [
+        471,
+        1157
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_low_fall",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          620,
+          875,
+          922,
+          1190
+        ]
+      ],
+      "anchor": [
+        780,
+        1157
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "dead_head_left",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          923,
+          955,
+          1254,
+          1200
+        ]
+      ],
+      "anchor": [
+        1094,
+        1149
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      28,
+      1
+    ],
+    [
+      59,
+      2
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. One continuous heavy armored collapse. Knees buckle, torso sinks into supplied kneel; left shield tilts downward and touches ground. Lower hip and shoulder into the side fall, then relax fully into supplied horizontal head-left corpse. Final body, boots, own spear and lantern shield rest on ground; spear may leave relaxed right fingers only as it lands beside body. Preserve exactly one complete spear and one complete shield/lantern throughout. Flame dims naturally inside cage as corpse settles. No stand-up or repeated fall, no upright props at end. Locked elevated three-quarter orthographic camera facing screen right, same body/equipment size throughout and anatomical root centered. All body, shield, spear tip and butt inside960x544. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, extra people, new objects or external particles. Lantern flame remains INSIDE its original cage. Rigid original spear and shield; physical articulated joints, stable grips.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

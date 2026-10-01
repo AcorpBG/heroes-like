@@ -1,0 +1,23 @@
+{
+  "tool": "built_in_image_gen",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ec366d0a-449a-4065-b27d-d16726b91b93.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/side_fall_v2.png",
+    "sha256": "5279dbc046e1e664657d659e58f7cf6daadf9af86bcdac2ab44267179a65c70c"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/side_fall_v2.prompt.txt",
+    "sha256": "94ee0204f7e807efff52ad85395a86358d2ac7b65aba81049a2151f013ac9753"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/death_h3_v1/guide_2_rgba.png",
+      "sha256": "e6ed5c916a11ac8caca28f0fb8f43be7eb432fdf31f183701f4df4627d19b477"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/death_h3_v1/guide_3_rgba.png",
+      "sha256": "64a1ec8bc368af9c5fa6f2a2d063cb0ff5374ea91097ed0d1b93cf4159b8a394"
+    }
+  ],
+  "review": "Original diagonal side-fall, pelvis/legs grounded, right supporting forearm retains spear and left arm retains leaning shield. Native registration pending."
+}

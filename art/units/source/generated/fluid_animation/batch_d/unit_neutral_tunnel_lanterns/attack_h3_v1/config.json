@@ -1,0 +1,116 @@
+{
+  "unit_id": "unit_neutral_tunnel_lanterns",
+  "clip": "attack",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100410,
+  "references": [
+    {
+      "name": "idle_a",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/alpha/poses.png",
+      "rects": [
+        [
+          0,
+          0,
+          317,
+          420
+        ]
+      ],
+      "anchor": [
+        169,
+        396
+      ],
+      "scale": 0.522,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "short_spear_windup",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          0,
+          537,
+          685
+        ]
+      ],
+      "anchor": [
+        270,
+        650
+      ],
+      "scale": 0.3045,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "short_spear_thrust",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          538,
+          0,
+          1086,
+          685
+        ]
+      ],
+      "anchor": [
+        790,
+        650
+      ],
+      "scale": 0.3045,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "short_spear_recovery",
+      "source": "art/animation/source/poses/unit_neutral_tunnel_lanterns/continuity-alpha/short-spear-actions-and-passing-step.png",
+      "rects": [
+        [
+          0,
+          687,
+          540,
+          1448
+        ]
+      ],
+      "anchor": [
+        270,
+        1341
+      ],
+      "scale": 0.3045,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      27,
+      1
+    ],
+    [
+      55,
+      2
+    ],
+    [
+      84,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Tunnel Lantern guard: stocky stern stubbled man, charcoal hood with bronze arrow badge, dark iron armor with bronze rivets/edges, olive tabard, rope and leather pouches, heavy armored boots. Exactly two arms/hands and two legs. RIGHT hand retains one short wooden-shaft spear with complete dark silver pointed head. LEFT arm retains one tall oval dark wood bronze-rimmed shield, with one caged amber lantern fixed to its FRONT. One short-spear thrust. Lift right fist beside right shoulder into supplied windup with the spear tip pointed toward screen right, shield remains on left arm. Drive right shoulder/elbow forward, extend the short spear horizontally to screen right in supplied contact pose. The right hand stays around the SAME shaft position; keep full point and rear butt. Recoil through elbow and shoulder, lower spear back to ready. One anticipation/thrust/recovery, no extra strike. Both boots remain grounded at contact, torso twists locally. No released spear or magic. Locked elevated three-quarter orthographic camera facing screen right, same body/equipment size throughout and anatomical root centered. All body, shield, spear tip and butt inside960x544. Uniform pure magenta RGB255,0,255 background throughout; no floor, cast shadow, text, extra people, new objects or external particles. Lantern flame remains INSIDE its original cage. Rigid original spear and shield; physical articulated joints, stable grips.",
+  "protected_foreground_chroma": 26,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

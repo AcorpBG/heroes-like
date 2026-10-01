@@ -3576,25 +3576,25 @@
         199
       ],
       "painted_extent": 193,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_tunnel_lanterns.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_tunnel_lanterns.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        171,
-        37,
-        349,
-        246
+        35,
+        45,
+        213,
+        254
       ],
-      "source_sha256": "be1da78eaeed1991ab86aa283c8f11a8899b2479a3f08ef8e8eb9c22d11d8615",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_tunnel_lanterns/provenance.json",
+      "source_sha256": "1a2d7cf356b90fcb3dff085dcfbc6147bf92ffd3306b6458df38e553bd65a1e4",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_tunnel_lanterns/provenance.json",
       "sha256": "c4a4b524cb658dc13d809e0a87747b87d7d7e96508312bfadf8630d98eaa8a26"
     },
     "unit_neutral_glimmercap_needlers": {

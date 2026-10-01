@@ -1,0 +1,23 @@
+{
+  "tool": "built_in_image_gen",
+  "original_tool_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-c9c88266-1598-417b-9662-cb5ddbb5a648.png",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/side_fall_v1.png",
+    "sha256": "b8a2ab9f1bfa38e75841aa36fd7f21ec8f623cabf2fad9fbc0bb58e9275221fd"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/side_fall_v1.prompt.txt",
+    "sha256": "1d7c0dfb68483e71b4e0649f37fa6492f55c630efd26c70ac191e23b7ccca38d"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/death_h3_v1/guide_2_rgba.png",
+      "sha256": "e6ed5c916a11ac8caca28f0fb8f43be7eb432fdf31f183701f4df4627d19b477"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_tunnel_lanterns/death_h3_v1/guide_3_rgba.png",
+      "sha256": "64a1ec8bc368af9c5fa6f2a2d063cb0ff5374ea91097ed0d1b93cf4159b8a394"
+    }
+  ],
+  "review": "Rejected: copied prone pose and both hands on spear."
+}
