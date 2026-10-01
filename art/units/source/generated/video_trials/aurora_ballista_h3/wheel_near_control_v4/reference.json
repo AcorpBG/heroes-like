@@ -1,0 +1,13 @@
+{
+  "source": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v4/guide_0_rgba.png",
+  "source_sha256": "2905b9407f63202ac5f6d9890e1e19a70cf77ad8d03b551a3e8b830dc8c9cfac",
+  "crop_rect": [
+    419,
+    336,
+    549,
+    524
+  ],
+  "image": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/reference.png",
+  "sha256": "77282d18fa76e1b35e71f5f25bccee58d75130e1a3fbf31fb6d87f95e2aba661",
+  "rule": "Exact source-pixel near-wheel crop; no resizing, rotation or other editing. New controlled phase guide pending."
+}

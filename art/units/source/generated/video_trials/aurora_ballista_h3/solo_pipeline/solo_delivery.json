@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "baseline_commit": "167d3616405056af9841761a47b273741b816fd5",
+  "new_takes": [
+    "move_rigid_phase_v6"
+  ],
+  "new_clips": [
+    "move"
+  ],
+  "preserved_published_clips": [
+    "idle",
+    "attack",
+    "ranged",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "dead"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo coordinator accepted Aurora Ballista original rolling16 (source32..47,42ms,672ms cycle) after all124 original RGB/matte frames viewed chronologically, near-wheel intermediates enlarged and both selected wheel faces inspected. Straight gold spokes visibly progress about fixed hubs and tires; rigid chassis, bow/strings/rail/rear housing and folded supports remain coherent. Native overview of all152 action poses and16 new mirrored rolling poses plus three actual BattleShell captures reviewed; candidate227 and mirrored227 checks pass. Preserve accepted idle8/attack25/ranged24/hit17/defend14/mechanical support22/death26+final dead and exact map idle. Brief original rolling blur retained, no wheel warps, artificial interpolation/reversal, padding or normalization. Continuous video playback/manual playtest unclaimed. Windows focused checks only, no full suite."
+  },
+  "source_indices": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+  ],
+  "runtime_frame_msec": 42,
+  "reassessment": "Five unsuccessful rigid-spoke attempts were reassessed. Isolated authored half-spoke phase supported two consistent full-carriage guide phases pinned every8frames; all original intermediates independently reviewed. Solo work; no agents.",
+  "validation": {
+    "candidate_checks": 227,
+    "mirrored_checks": 227,
+    "failures": [],
+    "platform": "Windows10 Godot4.6.2 GLES3",
+    "scope": "Selected creature fixture: normal/fast/reduced action playback, save/resume, static defend, final corpse, native phase contacts; no full suite or manual playtest",
+    "live_checks": 241,
+    "imported_atlas_exact_after_alpha_border_processing": true,
+    "preserved_action_dead_poses": 137,
+    "atlas_size": [
+      3432,
+      3752
+    ],
+    "texture_bytes_rgba": 51507456,
+    "roster_complete": 193,
+    "roster_remaining": 39
+  },
+  "cleanup": {
+    "files_removed": 324,
+    "bytes_recovered": 198581096,
+    "scope": "Task-owned temporary validation/contact sheets/profiles; hash-verified duplicate Comfy frames/video/latent/inputs and108 unused derived mattes. All original guides/takes/latent/provenance and16 selected mattes retained. Caches and unrelated files preserved.",
+    "rebuildable": true
+  }
+}

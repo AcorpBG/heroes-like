@@ -1,0 +1,23 @@
+{
+  "image": {
+    "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_original.png",
+    "sha256": "1707be387dfb642ad82399b4c0983d4d4498a4ed5eb16ede90e5034e6586fbf0"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_prompt.txt",
+    "sha256": "4b40df39569b34f6bba1c3493f80b2bf5096f46a7b3e30db4991a8b9d8a32c83"
+  },
+  "provider": "builtin imagegen",
+  "references": [
+    {
+      "path": "art/units/source/generated/video_trials/aurora_ballista_h3/move_v4/guide_0_rgba.png",
+      "sha256": "2905b9407f63202ac5f6d9890e1e19a70cf77ad8d03b551a3e8b830dc8c9cfac"
+    },
+    {
+      "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/original.png",
+      "sha256": "6a2f836703168c93357873017f85fcc228882dc493d2d5efe041e25e93d3d555"
+    }
+  ],
+  "review": "Eight-spoke phases A/B visibly differ; fixed hub/rim, folded supports and carriage identity consistent. Guide only, motion not accepted.",
+  "provider_original": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-1b5eab3b-fda8-455c-b2e8-fe08c10edd23.png"
+}

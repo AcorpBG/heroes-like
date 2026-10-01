@@ -131,7 +131,23 @@
     "res://art/units/source/generated/video_trials/aurora_ballista_h3/death_v1/matte/rgba_076.png": "1cac99dec9122bccb075c3aae5335cc27d25c4150e7a6cbad15bd2d0ca2bdefe",
     "res://art/units/source/generated/video_trials/aurora_ballista_h3/death_v1/matte/rgba_082.png": "c007d63f02227b19e9d2e77c2a7a79bb22ba383eed6e9d90179305a7c88c0e3e",
     "res://art/units/source/generated/video_trials/aurora_ballista_h3/death_v1/matte/rgba_090.png": "683cbcc48ecd8e00f814d20264ae2e85b65d5e4d0b5d54aee8bb81ee4c2c9b1b",
-    "res://art/units/source/generated/video_trials/aurora_ballista_h3/death_v1/matte/rgba_108.png": "afe33994412fdff1a034cf462c18780657161e30261d9da5f2d0f59c8afa1fb4"
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/death_v1/matte/rgba_108.png": "afe33994412fdff1a034cf462c18780657161e30261d9da5f2d0f59c8afa1fb4",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_032.png": "0ccd0cb30d22c9b131dde45a2675beca181904861f8839c24f62c45663779d4a",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_033.png": "6a22a49d3103aee4943559f9c6b202c5b68b3ed6f63ff6b50696622393bebe10",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_034.png": "64b14141ad5d94baef3caf4663b63f0ed88cdc16b3a3a54783a657098070f4e6",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_035.png": "172da59f884c29aaab46b2985e4fca2f60fedeeaaab1fa717e19bdf05dbd8f69",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_036.png": "3e5a76d065aa5f698c4480267810ca85572f7dec2f07eab2adbcc8d93cb1b792",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_037.png": "23756e82f048b419ff6456fcc1b555d7dc6dbf0487bc4d8ec8ab117cac7bd0c1",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_038.png": "cb9951e0115adeca4efb29c0940f349d4df2cecb2fb0a11b74981e55cf4b50aa",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_039.png": "013e71e4113d2d0ad546f9bff7592dfa34dfdeeb750b63f27eba13138af04a68",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_040.png": "83f9d71405bcd0bae8a91eda3158e64297df48977dd8abd4cf110b7e3bcd996b",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_041.png": "5ef5de82142687481e471e804100f0f50f134e3c3877bf436f8c8e95c73f7c79",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_042.png": "7a719a007cb61af6e9a01f770d6bbd10b84f4a68f6f23ba990018d3eecb2cafc",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_043.png": "991056803b0598232fc1d52f6c60c2198c1deb9c087296b2093a4fffb20ac913",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_044.png": "d851cc365856eaecf6dbc03a74cca9ab81e91abb90fc618e433b4b6774c1e7c2",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_045.png": "a73895afef0646c49260ee7afd03b2db8288108547cd1e97537313f8e8d27fac",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_046.png": "1a16fadae94cb633517cecb24abeafa334a274b8d7a8864e5d6a5506f4a1c8ce",
+    "res://art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_047.png": "b7c00d6765a510a8657b4b8016ffaf67905307c10bcffd082f8b47d611aa9a42"
   },
   "accepted_clips": [
     "attack",
@@ -140,16 +156,17 @@
     "hit",
     "cast",
     "death",
+    "move",
     "idle"
   ],
   "review": {
     "status": "accepted_selected_clips",
-    "notes": "Autonomous review of all chronological original frames, enlarged mechanical joints, bow/string, wheel and lens geometry, alpha edges and native Godot battle-scale phases. Six selected mechanical actions preserve eight accepted articulated idle poses. Movement remains unaccepted after three rejected takes: spoke rotation is not coherent enough. No continuous video playback or manual game playtest claimed."
+    "notes": "Solo coordinator accepted Aurora Ballista original rolling16 (source32..47,42ms,672ms cycle) after all124 original RGB/matte frames viewed chronologically, near-wheel intermediates enlarged and both selected wheel faces inspected. Straight gold spokes visibly progress about fixed hubs and tires; rigid chassis, bow/strings/rail/rear housing and folded supports remain coherent. Native overview of all152 action poses and16 new mirrored rolling poses plus three actual BattleShell captures reviewed; candidate227 and mirrored227 checks pass. Preserve accepted idle8/attack25/ranged24/hit17/defend14/mechanical support22/death26+final dead and exact map idle. Brief original rolling blur retained, no wheel warps, artificial interpolation/reversal, padding or normalization. Continuous video playback/manual playtest unclaimed. Windows focused checks only, no full suite."
   },
   "preserved_accepted_clips": [
     "idle"
   ],
   "baseline_atlas_sha256": "2313102ee6985f5966309ebb38e1fa9e469341960f620899ca6d38e8ccfe66a1",
-  "atlas_sha256": "9910dc9481156c662f3747ec972e038a6726d478a12096bd8356f0b774458e8d",
-  "texture_bytes_rgba": 47828352
+  "atlas_sha256": "def11d86177a78e37842c75ef9ef37cff591b0188650fa3a78a2fecc3cd24a37",
+  "texture_bytes_rgba": 51507456
 }

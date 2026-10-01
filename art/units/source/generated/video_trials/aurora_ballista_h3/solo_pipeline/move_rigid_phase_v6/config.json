@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    520
+  ],
+  "scale": 0.425,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100196,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/phase_a_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1665,
+          944
+        ]
+      ],
+      "anchor": [
+        837,
+        915
+      ],
+      "scale": 0.238,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_original.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        837,
+        915
+      ],
+      "scale": 0.238,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      8,
+      1
+    ],
+    [
+      16,
+      0
+    ],
+    [
+      24,
+      1
+    ],
+    [
+      32,
+      0
+    ],
+    [
+      40,
+      1
+    ],
+    [
+      48,
+      0
+    ],
+    [
+      56,
+      1
+    ],
+    [
+      64,
+      0
+    ],
+    [
+      72,
+      1
+    ],
+    [
+      80,
+      0
+    ],
+    [
+      88,
+      1
+    ],
+    [
+      96,
+      0
+    ],
+    [
+      104,
+      1
+    ],
+    [
+      112,
+      0
+    ],
+    [
+      120,
+      1
+    ]
+  ],
+  "last": 0,
+  "protected_foreground_chroma": 0,
+  "reassessment": "Five prior takes lacked rigid spoke phase change. Independently authored same-carriage eight-spoke phase A/B show top-spoke versus top-gap; constrain every eight frames and require intermediate rigid motion at unchanged hub/rim, never accept rocking or star morphing.",
+  "prompt": "An original compact unmanned fantasy crystal ballista carriage with exactly two visible blue wheels, navy and ivory chassis, fine gold trim, iridescent blue white and purple crossbow limbs, straight weapon rail, taut gold strings, and a tall pointed rear crystal lens housing. The provided carriage ROLLS continuously in place on a treadmill. Each of the two GOLD EIGHT-SPOKE WHEELS rotates CLOCKWISE around its FIXED HUB. The blue wheel disk and rigid gold eight-spoke star rotate together; each straight gold spoke travels smoothly around the center through successive angular positions, never bends or changes length. After each 22.5 degree clockwise turn the next provided phase has a blue gap replacing a top gold spoke; continue clockwise to the next identical eightfold phase and repeat. Do not rock or reverse. The round gold outer ring, tire outline, wheel ellipse, hub center and axle remain fixed in size and position. Both original folded outrigger arms remain fully tucked and motionless against the original chassis. All body panels, crystal bow, strings, rail and rear tower remain firmly attached and rigid, with only subtle axle suspension. No firing, no new spokes, no unfolding arms, no people or extra parts. Locked elevated three-quarter orthographic camera facing screen right; unchanged scale, orientation and ground plane, no camera motion or root translation. Uniform pure green RGB0,255,0 background stays completely empty, no floor, shadow, dust, particles or magic. Continuous visible rolling through intermediate wheel phases, return to the original first wheel phase."
+}

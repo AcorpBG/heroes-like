@@ -1,0 +1,61 @@
+{
+  "unit_id": "unit_aurora_ballista",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/phase_a_original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1665,
+            944
+          ]
+        ],
+        "anchor": [
+          837,
+          915
+        ],
+        "scale": 0.5599999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "a15dba0dfd38a8cc7f3791be94194295a9f986b815a0bd3d030b42adb1b661ba",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "7b83b0b3411905730e07085ad00af35e6a7a1e0d35764dad569abfcb8b30a374",
+      "runtime_source_scale": 0.238
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_original.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          837,
+          915
+        ],
+        "scale": 0.5599999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "1707be387dfb642ad82399b4c0983d4d4498a4ed5eb16ede90e5034e6586fbf0",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "6d8c6b7cc40ca2edd73a9297a053c95c192ee28a98fe936153eda954934f6266",
+      "runtime_source_scale": 0.238
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    520
+  ],
+  "output_scale": 0.425,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

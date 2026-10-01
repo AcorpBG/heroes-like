@@ -42,17 +42,19 @@ are used, never the full repository suite.
 | Hit | hit_v1 | 17 | 680ms | Recoil then recovery |
 | Support | cast_v1 | 22 | 1320ms | 420ms lens peak |
 | Death | death_v1 | 26 | 1430ms | Held final wreck |
+| Movement | solo_pipeline/move_rigid_phase_v6 | 16 | 672ms | Continuous rolling loop |
 
-128 selected original poses. Eight accepted articulated idle poses are retained.
+144 selected original H3 poses. Eight accepted articulated idle poses are retained.
 The ranged selection omits source56-60 around unwanted projectile residue;
 release55 and recovery61 contain the clean mechanism. Runtime owns the projectile.
 
-Movement remains unaccepted. move_v1 unfolds supports and grows stray rods;
+Movement is now accepted from the solo phase-controlled take; the five earlier
+movement takes remain rejected. move_v1 unfolds supports and grows stray rods;
 move_v2 preserves the body but barely turns its spokes; move_v3 uses a newly
 authored wheel-phase guide yet still changes spoke topology without convincing
 continuous rotation. Two corrections have failed, so no equivalent prompt retry
-is queued. The remaining work needs clear, physically coherent wheel phases at
-stable axle centers. Existing movement is preserved without claiming acceptance.
+was queued. The solo reassessment supplied visibly different eight-spoke phases
+at stable axle centers before submitting another take.
 The wheel_guide original, exact image-generation prompt and hashes are retained
 as source/provenance, not a completed movement animation.
 
@@ -64,14 +66,34 @@ the same scale; the wheels still slide instead of rolling. All124 frames
 of each and enlarged registered wheel phases were inspected. No movement
 frames were selected or published. Originals and guide-placement provenance
 are retained. Further equivalent prompt retries are not justified without
-reliable wheel-phase control.
+reliable wheel-phase control. These failed originals remain intact.
 
-Focused Windows Godot validation:196 candidate and210 live checks passed,
+Focused Windows Godot validation:227 candidate,227 mirrored and241 live checks passed,
 including Normal/Fast/reduced-motion and presentation/simulation checks.
-Native phase review passed for the six selected actions. Atlas3432x3484,
-47,828,352 decoded RGBA bytes. Candidate/live atlas hashes match. All other
-unit rows, all eight idle poses and offsets/timing, existing move poses and
-offsets/timing, and the overworld PNG were verified unchanged. No Linux run
-is claimed. Live roster:112 complete,1 partial,120 remaining of232.
+Native phase review passed, including the new rolling cycle in both facings.
+Atlas3432x3752,51,507,456 decoded RGBA bytes. All other231 unit rows and all232
+overworld visuals/timing remain unchanged;137 retained action/dead poses were
+verified pixel/anchor-exact. A stale Godot texture cache was caught in live
+screenshots, refreshed, and checked against the lossless source with Godot's
+configured alpha-border processing before repeating live rendering. No Linux
+run or manual playtest is claimed. Live roster:193 complete,39 remaining of232.
 
-Further guide repair (2026-09-28): wheel_phase_guides_v2 requested three distinct spoke angles; v3 supplied an enlarged original-wheel reference and explicitly requested a half-spoke turn. Both generated paintings retained essentially the original spoke orientation. They are rejected guides, not animation frames, and were not sent to H3. Original masters, prompts, reference crop and hashes remain preserved. Reliable rigid spoke-phase control at fixed axle centers is still missing; existing accepted actions remain untouched.
+Further guide repair (2026-09-28): wheel_phase_guides_v2 requested three distinct spoke angles; v3 supplied an enlarged original-wheel reference and explicitly requested a half-spoke turn. Both generated paintings retained essentially the original spoke orientation. They remain rejected guides and were not sent to H3. Original masters, prompts, reference crop and hashes remain preserved.
+
+The 2026-10-01 solo reassessment authored an isolated alternate wheel angle in
+wheel_near_control_v4, then two consistent complete carriage phase guides.
+solo_pipeline pins those original phases every8frames. It preserves the original
+sampler latent before releasing large models and decoding;124 original RGB
+frames are losslessly preserved and hash-verified. Selected32..47 are consecutive,
+with no wheel warps, padding, interpolation, reversal or per-frame registration.
+42ms retains source24fps timing; source48 provides the matching loop phase.
+
+Rebuild the new matte with solo_pipeline/produce.py process move_rigid_phase_v6,
+prepare the pending candidate with solo_pipeline/select_solo_move.py, then run
+the focused creature fixture and inspect original/native phases before accepting.
+Publish only move through tools/publish_fluid_creature_animation.py. Refresh
+Godot imports after repacking, run solo_pipeline/verify_imported_atlas.gd, and
+run solo_pipeline/verify_solo_move.py --baseline-dir with snapshots of the
+prepublication manifest,map,atlas and idle strip. Disposable previews and
+validation profiles are rebuilt; original guides,takes,selected mattes and
+provenance are retained. Work was completed without subagents.

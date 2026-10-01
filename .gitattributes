@@ -339,3 +339,7 @@ art/animation/source/fluid/unit_neutral_brambleback_knucklebears/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_galehorn_striders/**/*.txt -text
 art/animation/source/fluid/unit_neutral_galehorn_striders/*.json -text
+
+# Preserve solo Aurora guide/review provenance bytes.
+art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/*.txt -text
+art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/*.txt -text

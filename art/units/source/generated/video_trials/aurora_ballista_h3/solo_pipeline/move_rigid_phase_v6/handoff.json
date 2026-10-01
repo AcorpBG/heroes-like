@@ -1,0 +1,449 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_aurora_ballista",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_033",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_035",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_037",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_039",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_041",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_043",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_045",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_045.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 45,
+          "video_time_seconds": 1.875
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_047",
+          "clip": "move",
+          "source": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte/rgba_047.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            520
+          ],
+          "scale": 0.425,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 47,
+          "video_time_seconds": 1.9583333333333333
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/original_lossless.mkv",
+          "sha256": "0934656ca5cef9bd1437c1c08d0755c6e2a84886ca97cc50667f1dc1662be001"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/original.json",
+          "sha256": "a9a4ed1e710c6257559385bf4251c3f97a8b9aa479829afbf6d259112e42471f"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/workflow_api.json",
+          "sha256": "9b2e9e7c4352e9aaba4d3c38a872ba65b155b9f3459a557833680cafee6326bd"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/prompt.txt",
+          "sha256": "6642287d5691b93d961686c5985ace786425ec12d391b3264b0e663e5d21a888"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/reference.json",
+          "sha256": "736d22856e9bf0c89552eba7669137da29f6241c865a68400dc5c2742a9ac45e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/matte.json",
+          "sha256": "5d7214ae0a6b24fc3d4ae4bef5b594724b35d921bf1ffc2d6fe4b9ffcb040444"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/staged_generation.json",
+          "sha256": "9867bd63592f51b7237aebdd4d51a2bfe017d39daba46f14fb475ba99d386277"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/sampling_workflow_api.json",
+          "sha256": "72c174eaf634a3b9fbd9c6ae0f44de1cb4eaf29276abde94001933cbe4ea7e52"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/sampling_submission.json",
+          "sha256": "d551ee28385c34be3dec19976146570b894980e87e7cbb802ae615b0a50282cf"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/sampling_history.json",
+          "sha256": "4193053d665f8080d1224be8121bbb54bfa5b101038e56b835bdb67eb3ac0481"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/solo_pipeline/move_rigid_phase_v6/original.latent",
+          "sha256": "c98b5c33b289d181893442a900ea4ab78f187f6ef4f1a5fe233fbec3486455fa"
+        },
+        "guide_image_phase_a_original.png": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/phase_a_original.png",
+          "sha256": "a15dba0dfd38a8cc7f3791be94194295a9f986b815a0bd3d030b42adb1b661ba"
+        },
+        "guide_prompt_phase_a_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/phase_a_prompt.txt",
+          "sha256": "2e8b226fea743b78c8ee0632e13357120d386ed591fbf03b4c53d5d7cb206d89"
+        },
+        "guide_generation_phase_a_original.generation.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/phase_a_original.generation.json",
+          "sha256": "a23d34ec89fa3ea98abcf5f69bfc3527af81c04fcafcc11338a9310756b14d26"
+        },
+        "guide_image_full_carriage_original.png": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_original.png",
+          "sha256": "1707be387dfb642ad82399b4c0983d4d4498a4ed5eb16ede90e5034e6586fbf0"
+        },
+        "guide_prompt_full_carriage_prompt.txt": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_prompt.txt",
+          "sha256": "4b40df39569b34f6bba1c3493f80b2bf5096f46a7b3e30db4991a8b9d8a32c83"
+        },
+        "guide_generation_full_carriage_original.generation.json": {
+          "path": "art/units/source/generated/video_trials/aurora_ballista_h3/wheel_near_control_v4/full_carriage_original.generation.json",
+          "sha256": "dde8ff6d8a1489ce16cd5807e605704288eb3aa5c00f92b3f5e00b60772fbe4e"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Solo coordinator accepted Aurora Ballista original rolling16 (source32..47,42ms,672ms cycle) after all124 original RGB/matte frames viewed chronologically, near-wheel intermediates enlarged and both selected wheel faces inspected. Straight gold spokes visibly progress about fixed hubs and tires; rigid chassis, bow/strings/rail/rear housing and folded supports remain coherent. Native overview of all152 action poses and16 new mirrored rolling poses plus three actual BattleShell captures reviewed; candidate227 and mirrored227 checks pass. Preserve accepted idle8/attack25/ranged24/hit17/defend14/mechanical support22/death26+final dead and exact map idle. Brief original rolling blur retained, no wheel warps, artificial interpolation/reversal, padding or normalization. Continuous video playback/manual playtest unclaimed. Windows focused checks only, no full suite."
+      }
+    }
+  ]
+}
