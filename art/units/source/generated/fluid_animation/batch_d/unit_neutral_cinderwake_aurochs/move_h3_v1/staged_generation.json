@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "1f59a9ebf0905533a0ae45fdec9779102fdfaaa2a3f3b8c9c6d2a4acb5db1c8e",
+  "latent_sha256": "e9760c4608b479e95c186881f4cbe30c892e02996692d52b130609cf0ceb2d07",
+  "decode_workflow_sha256": "52d2393c70f5d588f1b5c9837d7a72ccf400e8d718a6ae5a9af39e0bc4b830f3",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "aurochs_h3_20261001\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17676644352,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

@@ -1,0 +1,214 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            387,
+            510
+          ]
+        ],
+        "anchor": [
+          179,
+          452
+        ],
+        "scale": 1.3252,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          0
+        ]
+      },
+      "source_sha256": "718774b341c99c18f1ca266d49d7bcadab26475e6bda86b59a425c45553e5748",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0d4afa6a518090dc3c0f3c122bb56c2a99dbfc370a1ba6a0fd2a103fe4d7ceae",
+      "runtime_source_scale": 0.6626,
+      "original_crops": [
+        {
+          "rect": [
+            0,
+            0,
+            387,
+            510
+          ],
+          "decoded_rgba_sha256": "52125315ed6eb1f50d1f532784a084ea78d7b25fa8ceaf98c470e9ee7d2e47af"
+        }
+      ],
+      "registered_guide_rgba_sha256": "2400b945eba03911e2ec357fbfc6bed5ec404dbfb2d585b88864bd1d04b9228a",
+      "opaque_bbox": [
+        208,
+        234,
+        705,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_a",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+        "rects": [
+          [
+            761,
+            120,
+            1095,
+            370
+          ]
+        ],
+        "anchor": [
+          944,
+          375
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          20
+        ]
+      },
+      "source_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "99156923236ba855d8cf28e95c3a64251c17d0f8ad69ea5a431cb106e9d156cf",
+      "runtime_source_scale": 0.66,
+      "original_crops": [
+        {
+          "rect": [
+            761,
+            120,
+            1095,
+            370
+          ],
+          "decoded_rgba_sha256": "2654a488eef816e78557c02990ed707115d7ed1569b5d7eb6bfd8d1e69371687"
+        }
+      ],
+      "registered_guide_rgba_sha256": "60d93192e8eebe74fe95d0b83ce6bef408a61eecb660ab90cdc079fab2b40310",
+      "opaque_bbox": [
+        196,
+        256,
+        629,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "name": "walk_pass",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+        "rects": [
+          [
+            5,
+            430,
+            370,
+            510
+          ],
+          [
+            5,
+            510,
+            390,
+            700
+          ]
+        ],
+        "anchor": [
+          220,
+          710
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          39
+        ]
+      },
+      "source_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "79e2f3ef14904945b1994ec14d7dd43e6e826e615034e38d211a00b31f9406db",
+      "runtime_source_scale": 0.66,
+      "original_crops": [
+        {
+          "rect": [
+            5,
+            430,
+            370,
+            510
+          ],
+          "decoded_rgba_sha256": "c30aba0de6f8bb739c2d496abc67743f733ce193541c457f0ab4877de6525d4c"
+        },
+        {
+          "rect": [
+            5,
+            510,
+            390,
+            700
+          ],
+          "decoded_rgba_sha256": "bfe324cd20dd7d556f6938b5de93230d34cd9b0b60787498f93e39d69358ce61"
+        }
+      ],
+      "registered_guide_rgba_sha256": "c500a3512029c867e1794e9fdc52a08871512a63d72484a2aa5dd49f5eaa61d8",
+      "opaque_bbox": [
+        160,
+        237,
+        648,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact_b",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+        "rects": [
+          [
+            1095,
+            120,
+            1448,
+            370
+          ]
+        ],
+        "anchor": [
+          1306,
+          375
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          23
+        ]
+      },
+      "source_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "9b2ce50d3d4c8d36f783ecd41f1d0c575561d3838b2c2df258d32aa55812b3e6",
+      "runtime_source_scale": 0.66,
+      "original_crops": [
+        {
+          "rect": [
+            1095,
+            120,
+            1448,
+            370
+          ],
+          "decoded_rgba_sha256": "33f3d13890cd5466d0c1700ae30bf43b5ee7fa3702b18039c7ab713793a10b61"
+        }
+      ],
+      "registered_guide_rgba_sha256": "ad0cae42872cbad46bd19a4b2e0b032ddbb34c533347aa742b7e024c509d61fb",
+      "opaque_bbox": [
+        151,
+        258,
+        612,
+        560
+      ]
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

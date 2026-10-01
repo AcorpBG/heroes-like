@@ -1,0 +1,121 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "status": "pending_full_set_review",
+  "selected_source_frames": [
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+  ],
+  "frame_msec": 42,
+  "duration_msec": 1050,
+  "source_fps": 24,
+  "inspected": {
+    "chronological_rgb_frames": 124,
+    "chronological_matte_frames": 124,
+    "enlarged_phases": [
+      0,
+      8,
+      12,
+      16,
+      20,
+      24,
+      28,
+      32,
+      36,
+      40,
+      44,
+      48,
+      52,
+      56,
+      60,
+      64,
+      66,
+      68,
+      72,
+      76,
+      80,
+      84,
+      88,
+      92,
+      96,
+      100,
+      112,
+      123
+    ],
+    "boundary_phases": [
+      31,
+      32,
+      54,
+      55,
+      56,
+      57
+    ],
+    "native_selected_phases": 25,
+    "mirrored_native_selected_phases": 25,
+    "continuous_playback": "Not inspected: previous continuous video preview route unavailable; full chronological originals plus enlarged and native phases reviewed, no playback claim."
+  },
+  "visual_findings": [
+    "Two original curled horns, four separate attached hooved legs, original lava plates, head and tail retained throughout. No new prop/projectile or fire blast.",
+    "Near/far forehoof contacts exchange with opposite hind supports. Source31..36 far forehoof carries front support while near foreleg flexes; source44..48 near forehoof advances and loads with opposite hind support; source52..55 returns to opposite fore support.",
+    "Forehead horn bands/medallion, muzzle and shoulder plates stay coherent in fixed-pixel comparisons. Lowered neck and flexed support change the envelope, without clear global anatomical shrink. Fixed original .66/.6626 scales retained, no corrective normalization.",
+    "Boundary55->31 has the same support phase progression as55->56; small tail/head settling differences remain original observed pixels and are subtle at128px reference scale. No crossfade or synthetic seam frames.",
+    "Green matte edges checked on dark/light grounds; split hoof silhouettes, horn tips, tail and attached lava accents retained."
+  ],
+  "candidate_checks": {
+    "normal_contacts_only": {
+      "checks": 28,
+      "failures": [],
+      "exec_session": 14333,
+      "exit_code": 0
+    },
+    "mirrored_contacts_only": {
+      "checks": 28,
+      "failures": [],
+      "exec_session": 39922,
+      "exit_code": 0
+    },
+    "integrity": {
+      "original_rgb_frames": 124,
+      "selected_exact_source_frames": 25,
+      "retained_idle_frames": 8,
+      "retained_idle_timing": true,
+      "atlas_size": [
+        1248,
+        2552
+      ],
+      "rgba_bytes": 12739584
+    },
+    "scope": "Phase-only pending movement candidate; no full authoredattack/runtime, no publication or full-unit acceptance."
+  },
+  "remaining_actions": [
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "dead"
+  ],
+  "gpu_status": "Released after movement original collection; no further submission until coordinator GO."
+}

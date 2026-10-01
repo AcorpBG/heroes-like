@@ -1,0 +1,17 @@
+{
+  "exec_session": 23362,
+  "exit_code": 1,
+  "phase": "before pair2 release_models",
+  "reason": "Unrelated jobs present; protective queue-empty assertion stopped batch without freeing or interrupting jobs.",
+  "own_completed_takes": [
+    "attack_h3_v1",
+    "hit_h3_v1"
+  ],
+  "remaining_unsubmitted_takes": [
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "coordinator_informed": true,
+  "resume_rule": "Wait explicit coordinator GO after queue ownership resolution; do not re-submit completed pair."
+}

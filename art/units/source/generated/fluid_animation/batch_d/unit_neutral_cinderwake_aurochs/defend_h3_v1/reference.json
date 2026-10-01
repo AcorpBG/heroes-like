@@ -1,0 +1,103 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            387,
+            510
+          ]
+        ],
+        "anchor": [
+          179,
+          452
+        ],
+        "scale": 1.3252,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "718774b341c99c18f1ca266d49d7bcadab26475e6bda86b59a425c45553e5748",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0d4afa6a518090dc3c0f3c122bb56c2a99dbfc370a1ba6a0fd2a103fe4d7ceae",
+      "runtime_source_scale": 0.6626,
+      "original_crops": [
+        {
+          "rect": [
+            0,
+            0,
+            387,
+            510
+          ],
+          "decoded_rgba_sha256": "52125315ed6eb1f50d1f532784a084ea78d7b25fa8ceaf98c470e9ee7d2e47af"
+        }
+      ],
+      "registered_guide_rgba_sha256": "2400b945eba03911e2ec357fbfc6bed5ec404dbfb2d585b88864bd1d04b9228a",
+      "opaque_bbox": [
+        208,
+        234,
+        705,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "name": "guard",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+        "rects": [
+          [
+            1132,
+            470,
+            1448,
+            700
+          ]
+        ],
+        "anchor": [
+          1306,
+          710
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          47
+        ]
+      },
+      "source_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "931255d523e3b2cf9685528ea2fdf394f475ed9c988b965d479ca1bd6c866b7b",
+      "runtime_source_scale": 0.66,
+      "original_crops": [
+        {
+          "rect": [
+            1132,
+            470,
+            1448,
+            700
+          ],
+          "decoded_rgba_sha256": "c038aa91856feee9850824f479bb8f90de8d4335f9c8c2a3096ca4ee9c275261"
+        }
+      ],
+      "registered_guide_rgba_sha256": "ddeef608f0d7613f517c24ce875fc87d7279bd97490c8a10f182403a1ba42581",
+      "opaque_bbox": [
+        207,
+        306,
+        606,
+        560
+      ]
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

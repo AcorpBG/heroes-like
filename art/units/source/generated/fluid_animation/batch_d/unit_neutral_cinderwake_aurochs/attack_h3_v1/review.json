@@ -1,0 +1,95 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "status": "rejected",
+  "inspected_chronological_rgb_frames": 124,
+  "reason": "Forbidden fire breath from muzzle appears29..41. Physical melee bull must not emit fire blasts/projectiles. The blast crosses canvas edge and causes spatial corner plate failure, but changing matting would not repair wrong action semantics.",
+  "rejected_source_frames": [
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41
+  ],
+  "correction_required": "Muzzle stays closed, same two horns drive one physical neck/headbutt attack; no emitted flame, mouth glow pulse or invented effect. Original entire take/latent/RGB hashes retained.",
+  "no_selected_action": true,
+  "provenance": {
+    "prompt.txt": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/prompt.txt",
+      "sha256": "9a9a8a6ebbcfff4cdb4c53dc68f0ed7831a1d2eeea49703140080215d43155c0"
+    },
+    "config.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/config.json",
+      "sha256": "e3fc2b41088ad9145ac3441423d25c4a4fc5ce755af1f4dded4aeff15f5f3077"
+    },
+    "reference.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/reference.json",
+      "sha256": "8f4739867ac2a8094152f164635d2905caa58a65b0f6941956da4a6028c49a39"
+    },
+    "sampling_workflow_api.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/sampling_workflow_api.json",
+      "sha256": "fe33351f6cc046ca55c9999cea754633e00e45a0378dd964e028d94b0b173640"
+    },
+    "sampling_submission.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/sampling_submission.json",
+      "sha256": "2023078a637153568fe8b7fcc17bf94477b3b0de44fd48b8a5b121e300617931"
+    },
+    "sampling_history.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/sampling_history.json",
+      "sha256": "634b6c3758c57c7dbd05b7bb36a2568ad30048034544dc22730072769ec07970"
+    },
+    "original.latent": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/original.latent",
+      "sha256": "bee2c2b2c1f267e6ce6515b85fcaad7118ceedbd48c17a664faf66307e17c654"
+    },
+    "workflow_api.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/workflow_api.json",
+      "sha256": "b9ae6ee3e34cff94e0a177fd3389e31f022093efd1e4ed8dd7d4cae0c650033c"
+    },
+    "decode_submission.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/decode_submission.json",
+      "sha256": "0830e043c8ba78d2a76ed9adb24e02c079e3b1b0e771d008f59b5a03d2856faf"
+    },
+    "generation_history.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/generation_history.json",
+      "sha256": "751081a638a9f8863f6ee663db1e91319bf96b5ff8d30c24eaa34274df5134af"
+    },
+    "original.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/original.json",
+      "sha256": "3f2f306e53ec7a828396870c05cc4c98f5af756877a5d65a0b92d4212a66c0a8"
+    },
+    "original_lossless.mkv": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/original_lossless.mkv",
+      "sha256": "0310cf78b98270131f20bb2281f7054cd00028dc65474f5d07883a4146f2a383"
+    },
+    "runtime_profile.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/runtime_profile.json",
+      "sha256": "3a9c8fbb4ee34779f1cea1eac85bed5d20edf22d658b0ca9958715e20998a1f5"
+    },
+    "timing.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/timing.json",
+      "sha256": "cecf41e45f4f98430fe1235655e6c0b6f3b7901beda024db8431e0ef338634b4"
+    },
+    "sampling_residency.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/sampling_residency.json",
+      "sha256": "0f771520dbbf263b55e198812bccc81ecc1ebfe442fd17bba2ad004522bb7eb4"
+    },
+    "decode_residency.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/decode_residency.json",
+      "sha256": "506b663c2d227960f7b50f7e1fe051075ec740f032bdfefc8a0c3ffd8202fd98"
+    },
+    "extraction_failure.json": {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/attack_h3_v1/extraction_failure.json",
+      "sha256": "40d4e91eb43e6a5c3f8a770f5f4f1bfc873ac22cb7f69361c80e520a5231e02e"
+    }
+  },
+  "failure_is_semantic_not_matte_only": true,
+  "forbidden_effect": "Muzzle-origin fire stream travels toward screen right29..41; not existing attached back flame accents."
+}

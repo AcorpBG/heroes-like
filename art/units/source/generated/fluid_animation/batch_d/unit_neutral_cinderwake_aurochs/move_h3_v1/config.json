@@ -1,0 +1,152 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100200,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          510
+        ]
+      ],
+      "anchor": [
+        179,
+        452
+      ],
+      "scale": 0.6626,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        0
+      ]
+    },
+    {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          761,
+          120,
+          1095,
+          370
+        ]
+      ],
+      "anchor": [
+        944,
+        375
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        20
+      ]
+    },
+    {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          5,
+          430,
+          370,
+          510
+        ],
+        [
+          5,
+          510,
+          390,
+          700
+        ]
+      ],
+      "anchor": [
+        220,
+        710
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        39
+      ]
+    },
+    {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          1095,
+          120,
+          1448,
+          370
+        ]
+      ],
+      "anchor": [
+        1306,
+        375
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        23
+      ]
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      44,
+      2
+    ],
+    [
+      66,
+      3
+    ],
+    [
+      92,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Cinderwake Aurochs: massive dark charcoal lava-armored bull, exactly FOUR separate short muscular legs ending in split cloven hooves, exactly TWO curled bronze-edged horns, broad black muzzle, orange beard, overlapping angular dark back plates, molten orange seams, bronze-gold flecks and one long flexible tail with a stone tuft. Preserve the original four-legged anatomy, two horn curves, plate pattern and painterly surface. Only existing attached lava seams and small back flame accents; no new effects. Perform one deliberate complete reciprocal four-legged walking cycle in place. The near foreground front leg and opposite far hind leg extend forward and bear weight, while the other diagonal pair trails; then pass the hooves under the body and exchange support, advancing the far front leg and near hind leg. Each of the FOUR hooves separately lifts, travels, plants and loads through the cycle. Distinct opposite front-leg contacts must appear; do not repeat the same leading leg, hop, skate or slide the body. Keep planted hooves supporting the heavy body and torso centered. Head and tail respond subtly; return to the starting ready stance. Locked elevated three-quarter orthographic camera facing screen right, unchanged torso scale and centered body root. Entire tail, horns, all hooves and body remain inside frame. Perfectly flat pure green RGB0,255,0 background, no scenery, floor, horizon, shadow, smoke, other figure, text, props, projectile, magic or fire blast.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque original guide green-minus-max(red,blue) maximum plus two.",
+    "per_guide_max": [
+      8.0,
+      3.0,
+      7.0,
+      2.0
+    ]
+  },
+  "ground_registration": "Idle foremost hoof y560; legacy contact A/B and passing foremost supporting hooves translated +20/+23/+39 video pixels to the same y560 ground. Fixed .66 legacy / .6626 accepted source scales, .5 extraction; no per-pose size normalization."
+}

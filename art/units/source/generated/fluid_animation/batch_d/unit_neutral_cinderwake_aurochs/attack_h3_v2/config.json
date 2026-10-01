@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "clip": "attack",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100291,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          510
+        ]
+      ],
+      "anchor": [
+        179,
+        452
+      ],
+      "scale": 0.6626,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "windup",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          370,
+          410,
+          724,
+          480
+        ],
+        [
+          410,
+          480,
+          724,
+          570
+        ],
+        [
+          390,
+          570,
+          755,
+          705
+        ]
+      ],
+      "anchor": [
+        582,
+        710
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        43
+      ]
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        845,
+        884
+      ],
+      "scale": 0.204,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      27,
+      1
+    ],
+    [
+      52,
+      2
+    ],
+    [
+      64,
+      2
+    ],
+    [
+      94,
+      0
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Cinderwake Aurochs, massive dark charcoal armored bull with exactly four muscular legs and four split hooves, two bronze-edged curled horns, one stone-tufted tail, angular dark back plates, attached orange chin beard and glowing orange seams within the body. Keep the lip line sealed and jaw closed throughout. Perform one forceful physical horn ram: bend the neck and lower the two horns, plant the rear hooves, push shoulders and horns forward to the supplied closed-jaw contact, then retract and recover the starting ready stance. Four hooves visibly support the weight. Only the bull body moves; all surrounding pixels stay uniform saturated green RGB0,255,0. Locked elevated three-quarter orthographic camera, unchanged anatomical torso scale and centered root. Entire body, horns, hooves and tail remain visible. The dark muzzle stays closed and its short beard stays attached under the chin throughout the strike.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 12,
+  "foreground_measurement": {
+    "rule": "Eroded opaque green-minus-max(red,blue) maximum plus two.",
+    "per_guide_max": [
+      8.0,
+      3.0,
+      10.0
+    ]
+  },
+  "ground_registration": "Guide Y registration follows observed supporting foremost hoof or grounded corpse contact to y560; original source scales .66/.6626 fixed for whole paintings; extraction .5. No per-pose resizing.",
+  "residency_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log"
+}

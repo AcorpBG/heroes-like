@@ -1,0 +1,34 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "original_sources": [
+    {
+      "path": "art/units/source/curated/unit_neutral_cinderwake_aurochs.png",
+      "sha256": "3b8525b7f40345295e4a74de88f8f46a51490adbeb70ab93fc66412d545aff0e"
+    },
+    {
+      "path": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/packing.json",
+      "sha256": "575ebd7e54c3893dfb6ff2c4b8e1e448360bd1e61dedf8b58f63256c433d41fb"
+    },
+    {
+      "path": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a"
+    },
+    {
+      "path": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+      "sha256": "718774b341c99c18f1ca266d49d7bcadab26475e6bda86b59a425c45553e5748"
+    }
+  ],
+  "preserved_idle_indices": [
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "preserved_idle_frame_msec": 260,
+  "anatomical_comparison": "Accepted idle crop252\u00d7169 native versus legacy contact crops219\u00d7157 and233\u00d7157; fixed legacy .66 and idle .6626 source scales retained. Torso profile and head/horns stay original. Width differences reflect pose, not normalization.",
+  "limb_identification": "Near foreground foreleg is broad leg under screen-left shoulder (guide0 hoof~470,550); far foreleg is behind head on screen-right (guide0 hoof~552,524). Contact A extends near foreleg while far foreleg is occluded; Contact B brings far forehoof right of near forehoof. Guide passing lifts near hind/front joints; generated cycle must independently verify all four contacts and opposed support."
+}

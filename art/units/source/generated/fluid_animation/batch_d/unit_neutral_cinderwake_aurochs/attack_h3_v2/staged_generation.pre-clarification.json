@@ -1,0 +1,16 @@
+{
+  "sampling_workflow_sha256": "1035ed7e16760290d6e2afc51cb667c19ac034e66ac353413c7cc1b26cdc192f",
+  "latent_sha256": "06e95fcc82808978a41b91016ad30fb5d3288154e3d458190774022b6be6aa00",
+  "decode_workflow_sha256": "ef8d691688aa04e9f09690fb28924e2488fcebbbd1d2c75a14a4c1c178f70cac",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "aurochs_h3_20261001\\attack_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "shared_queue": true,
+    "explicit_unload": false,
+    "rule": "Separate original-latent VAE-only job appended behind shared jobs; ComfyUI manages model residency without explicit unload."
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

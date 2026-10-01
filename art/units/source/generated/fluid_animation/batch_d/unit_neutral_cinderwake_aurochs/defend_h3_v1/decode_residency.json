@@ -1,0 +1,12 @@
+{
+  "prompt_id": "4b71809d-ecb2-4718-b680-10b361a0b060",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 42569,
+  "byte_end": 42715,
+  "observed_segment_sha256": "0b1400ba81dfa12e2375afe168875fe2f1178b79a11d9a83e8e7cb610ba41929",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 16.03 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 14.67 seconds\u001b[0m"
+  ],
+  "scope": "Actual server-log snapshot from submission to observed terminal; shared clients may also appear. Job history establishes execution timing; these log lines alone do not attribute model residency to a queued job."
+}

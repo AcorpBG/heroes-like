@@ -4206,25 +4206,25 @@
         175
       ],
       "painted_extent": 262,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_cinderwake_aurochs.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_cinderwake_aurochs.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        126,
-        73,
-        404,
-        259
+        54,
+        9,
+        332,
+        195
       ],
-      "source_sha256": "565be2227ff202c07b7839da6c7e1e0ac06e5615b03616413ecd34496c582bf1",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_cinderwake_aurochs/provenance.json",
+      "source_sha256": "6fbe728d7753e74bc3d992e0ec460c5cf5ee6e6fc26c327768589425575002d1",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_cinderwake_aurochs/provenance.json",
       "sha256": "918b3512fad44b33f48691ad0b353b4301dc0027398b52dd7a74241b4b726ab7"
     },
     "unit_neutral_tideglass_skyrays": {

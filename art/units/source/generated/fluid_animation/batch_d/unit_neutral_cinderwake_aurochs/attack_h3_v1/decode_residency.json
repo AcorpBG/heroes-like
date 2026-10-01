@@ -1,0 +1,13 @@
+{
+  "prompt_id": "379cb6a1-a683-4cca-a301-0191229bee10",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 20713,
+  "byte_end": 21279,
+  "observed_segment_sha256": "66da6898577e9e8e0e0a180568a2d6e5551a083dcbde4363bd40bf54e2909c94",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 13.90 seconds\u001b[0m"
+  ],
+  "scope": "Actual loader/residency lines from authorized own-job interval, not an inference from free VRAM."
+}

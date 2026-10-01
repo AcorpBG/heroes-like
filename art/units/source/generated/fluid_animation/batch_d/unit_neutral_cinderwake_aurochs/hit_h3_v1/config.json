@@ -1,0 +1,89 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "clip": "hit",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100202,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          510
+        ]
+      ],
+      "anchor": [
+        179,
+        452
+      ],
+      "scale": 0.6626,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          5,
+          715,
+          365,
+          995
+        ]
+      ],
+      "anchor": [
+        220,
+        1040
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        77
+      ]
+    }
+  ],
+  "guides": [
+    [
+      24,
+      1
+    ],
+    [
+      40,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Cinderwake Aurochs: massive dark charcoal lava-armored bull, exactly FOUR separate short muscular legs ending in split cloven hooves, exactly TWO curled bronze-edged horns, broad black muzzle, orange beard, overlapping angular dark back plates, molten orange seams, bronze-gold flecks and one long flexible tail with a stone tuft. Preserve the original four-legged anatomy, two horn curves, plate pattern and painterly surface. Only existing attached lava seams and small back flame accents; no new effects. One physical backward chest and neck recoil, front knees flex and head tilts back briefly in the supplied recoil. All FOUR legs and both horns remain attached and unchanged. Rear hooves support weight; lower front hooves and recover the original ready stance. No incoming object or effect. Locked elevated three-quarter orthographic camera facing screen right, unchanged torso scale and centered body root. Entire tail, horns, all hooves and body remain inside frame. Perfectly flat pure green RGB0,255,0 background, no scenery, floor, horizon, shadow, smoke, other figure, text, props, projectile, magic or fire blast.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 10,
+  "foreground_measurement": {
+    "rule": "Eroded opaque original guide green-minus-max(red,blue) maximum plus two.",
+    "per_guide_max": [
+      8.0,
+      2.0
+    ]
+  },
+  "ground_registration": "Guide Y registration follows observed supporting foremost hoof or grounded corpse contact to y560; original source scales .66/.6626 fixed for whole paintings; extraction .5. No per-pose resizing.",
+  "residency_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log"
+}

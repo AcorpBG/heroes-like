@@ -1,0 +1,576 @@
+{
+  "prompt_id": "481dcd4c-d7e3-405a-93b4-f9e6ef125633",
+  "observations": [
+    {
+      "recorded_unix": 1790851750.6493998,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29420787476,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851760.6882155,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 14653274892,
+          "torch_vram_total": 17616076800,
+          "torch_vram_free": 19348236
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851770.7070363,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 18458605276,
+          "torch_vram_total": 20333985792,
+          "torch_vram_free": 6542587612
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851780.7290137,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 24658853888,
+          "torch_vram_total": 7650410496,
+          "torch_vram_free": 59260928
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851790.7471437,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 11802913280,
+          "torch_vram_total": 20468203520,
+          "torch_vram_free": 21113344
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851800.7635682,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7865877240,
+          "torch_vram_total": 25232932864,
+          "torch_vram_free": 2961822456
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851810.7799177,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7834786756,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821572
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851820.7970202,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7786770884,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810820
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851830.8118594,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7823401372,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810780
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851840.8288414,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9043825019,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851850.8442159,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7823401372,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810780
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851860.8590097,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7828392860,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851870.876279,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7819207068,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810780
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851880.8931515,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7823422876,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002832284
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851890.9101968,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9039630715,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851900.9263895,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7815023516,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851910.9413226,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7815023516,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851920.957626,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9044611451,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851930.974867,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7731837852,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851941.0023353,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7446863260,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 2623286684
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851951.0192647,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7826387356,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810780
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851961.0355353,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7826408860,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002832284
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851971.054585,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9046811003,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851981.0706215,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7839756700,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002810780
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790851991.0868444,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7830592412,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852001.1036966,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9051005307,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852011.1228323,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7830592412,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852021.13958,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 8115251612,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3287480732
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852031.174461,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9051005307,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852041.1915648,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7839767452,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852051.208545,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7830592412,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852061.2439551,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9051005307,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852071.2827504,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7830592412,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852081.3119936,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 8115251612,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3287480732
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852091.328106,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 8111057308,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3287480732
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852101.3448672,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 7835573148,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 3002821532
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852111.3614364,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 9015349627,
+          "torch_vram_total": 25300041728,
+          "torch_vram_free": 4223234427
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790852121.3788402,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 11248949504,
+          "torch_vram_total": 21005074432,
+          "torch_vram_free": 4020480
+        }
+      ],
+      "job_terminal": true
+    }
+  ],
+  "scope": "Actual periodic VRAM snapshots; model residency/offload must be established separately from server log, not inferred from free memory."
+}

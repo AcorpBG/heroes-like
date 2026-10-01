@@ -1,0 +1,18 @@
+{
+  "prompt_id": "d64c3b7f-f86a-44e9-964c-8b3bad84c6b6",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 33338,
+  "byte_end": 36292,
+  "observed_segment_sha256": "b76a6882edef6f0018c76bb23def988fbba68a3a73bae6b939385463c947f0cc",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3TEModel_",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 14960.20 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 10850.61 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 21740.66 MB usable, 19996.14 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 234.93 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3TEModel_"
+  ],
+  "scope": "Actual server-log snapshot from submission to observed terminal; shared clients may also appear. Job history establishes execution timing; these log lines alone do not attribute model residency to a queued job."
+}

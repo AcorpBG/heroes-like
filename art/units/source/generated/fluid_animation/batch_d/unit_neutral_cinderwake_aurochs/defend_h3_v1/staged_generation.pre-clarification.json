@@ -1,0 +1,16 @@
+{
+  "sampling_workflow_sha256": "be7f1f122de664f92878a4c615bdde208c348b72a71fd7319a6b9b7f32cfca16",
+  "latent_sha256": "bdba28fa63071eba3afe4cabf4c43912219f4dfc5a4f64cf4ca5b245f172c79f",
+  "decode_workflow_sha256": "179669a7365687b04c798a74acf006c77728eb73298df3f153717124a0362e2a",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "aurochs_h3_20261001\\defend_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "shared_queue": true,
+    "explicit_unload": false,
+    "rule": "Separate original-latent VAE-only job appended behind shared jobs; ComfyUI manages model residency without explicit unload."
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

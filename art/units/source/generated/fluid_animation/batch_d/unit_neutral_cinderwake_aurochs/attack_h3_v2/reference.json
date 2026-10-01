@@ -1,0 +1,174 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            387,
+            510
+          ]
+        ],
+        "anchor": [
+          179,
+          452
+        ],
+        "scale": 1.3252,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "718774b341c99c18f1ca266d49d7bcadab26475e6bda86b59a425c45553e5748",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0d4afa6a518090dc3c0f3c122bb56c2a99dbfc370a1ba6a0fd2a103fe4d7ceae",
+      "runtime_source_scale": 0.6626,
+      "original_crops": [
+        {
+          "rect": [
+            0,
+            0,
+            387,
+            510
+          ],
+          "decoded_rgba_sha256": "52125315ed6eb1f50d1f532784a084ea78d7b25fa8ceaf98c470e9ee7d2e47af"
+        }
+      ],
+      "registered_guide_rgba_sha256": "2400b945eba03911e2ec357fbfc6bed5ec404dbfb2d585b88864bd1d04b9228a",
+      "opaque_bbox": [
+        208,
+        234,
+        705,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "name": "windup",
+        "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+        "rects": [
+          [
+            370,
+            410,
+            724,
+            480
+          ],
+          [
+            410,
+            480,
+            724,
+            570
+          ],
+          [
+            390,
+            570,
+            755,
+            705
+          ]
+        ],
+        "anchor": [
+          582,
+          710
+        ],
+        "scale": 1.32,
+        "alpha_noise_cutoff": 8,
+        "guide_offset": [
+          0,
+          43
+        ]
+      },
+      "source_sha256": "8f1c3b035e77cb69c5e03fe44c92125c967c941972aa3d7c74d7844f0546c39a",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "4b0e6e1748875362512dabf1931e24a068d651995c1e98fe68335cbad73ab09d",
+      "runtime_source_scale": 0.66,
+      "original_crops": [
+        {
+          "rect": [
+            370,
+            410,
+            724,
+            480
+          ],
+          "decoded_rgba_sha256": "8f8763d36353e5eaf81e20edad47a4f8d6ebe246291d286e43c51c9e19be49f5"
+        },
+        {
+          "rect": [
+            410,
+            480,
+            724,
+            570
+          ],
+          "decoded_rgba_sha256": "8763820f95a1024d14414bf44acde5dcacddfdfa11978d9186798b3c57132c58"
+        },
+        {
+          "rect": [
+            390,
+            570,
+            755,
+            705
+          ],
+          "decoded_rgba_sha256": "1994a20ecd9d8c0fe2b216e80f6a15e0ef2ad7ece62e039cfe5d4b435c19eb9d"
+        }
+      ],
+      "registered_guide_rgba_sha256": "37a0869e5d8648e522ffa2c41e4aed5688424ca6112805428645c2b43b7fa113",
+      "opaque_bbox": [
+        159,
+        230,
+        649,
+        560
+      ]
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1537,
+            1023
+          ]
+        ],
+        "anchor": [
+          845,
+          884
+        ],
+        "scale": 0.408,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "4d7d55d4354bcd61f064a0af447d25af46aae5bf6453165de90493c33a699dfc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "88502fd0b92c2b79c644985d9a64de354f7f5392c8c3d367c345fe9850909c95",
+      "runtime_source_scale": 0.204,
+      "original_crops": [
+        {
+          "rect": [
+            0,
+            0,
+            1537,
+            1023
+          ],
+          "decoded_rgba_sha256": "5f6fea41338089bb13918bcf1ac84a474f3c79048c8978e05462b54bff6cfa28"
+        }
+      ],
+      "registered_guide_rgba_sha256": "e2f4f059d8d3a582a142b06f4380a9d8e1a767d58b2bf02e460af05ec528ddfc",
+      "opaque_bbox": [
+        129,
+        283,
+        654,
+        560
+      ]
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    430,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

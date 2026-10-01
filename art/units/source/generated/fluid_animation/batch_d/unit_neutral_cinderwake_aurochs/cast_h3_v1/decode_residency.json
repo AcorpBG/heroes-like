@@ -1,0 +1,13 @@
+{
+  "prompt_id": "a4fc49c6-827b-41cf-92aa-fec8e82d62ac",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 45081,
+  "byte_end": 45312,
+  "observed_segment_sha256": "ee218668afa900ec069bc1ce632d9d1ec5d0c958a3cbe3f8b4b3c07e093ce30e",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25808.80 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 17.03 seconds\u001b[0m"
+  ],
+  "scope": "Actual server-log snapshot from submission to observed terminal; shared clients may also appear. Job history establishes execution timing; these log lines alone do not attribute model residency to a queued job."
+}

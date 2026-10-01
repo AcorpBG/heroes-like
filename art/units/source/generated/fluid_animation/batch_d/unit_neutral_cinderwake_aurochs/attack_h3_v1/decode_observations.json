@@ -1,0 +1,66 @@
+{
+  "prompt_id": "379cb6a1-a683-4cca-a301-0191229bee10",
+  "observations": [
+    {
+      "recorded_unix": 1790848861.972738,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 18659355456,
+          "torch_vram_total": 21038628864,
+          "torch_vram_free": 7445883712
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790848872.0232465,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 30837237760,
+          "torch_vram_total": 1476395008,
+          "torch_vram_free": 61532160
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790848882.04019,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29422884628,
+          "torch_vram_total": 3791650816,
+          "torch_vram_free": 962434836
+        }
+      ],
+      "job_terminal": false
+    },
+    {
+      "recorded_unix": 1790848892.0817595,
+      "devices": [
+        {
+          "name": "cuda:0 NVIDIA GeForce RTX 5090 : cudaMallocAsync",
+          "type": "cuda",
+          "index": 0,
+          "vram_total": 34190458880,
+          "vram_free": 29422884628,
+          "torch_vram_total": 2885681152,
+          "torch_vram_free": 56465172
+        }
+      ],
+      "job_terminal": true
+    }
+  ],
+  "scope": "Actual periodic VRAM snapshots; model residency/offload must be established separately from server log, not inferred from free memory."
+}

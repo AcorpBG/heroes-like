@@ -1,0 +1,24 @@
+{
+  "status": "accepted_guide",
+  "source": {
+    "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/horn_contact_closedjaw_v1.png",
+    "rects": [
+      [
+        0,
+        0,
+        1537,
+        1023
+      ]
+    ],
+    "anchor": [
+      845,
+      884
+    ],
+    "scale": 0.204,
+    "alpha_noise_cutoff": 8
+  },
+  "decoded_scale": 0.5,
+  "rule": "One anatomical scale for the entire original painting; same contact torso registration, no per-frame fitting.",
+  "correction": "Closed lip line and attached short chin beard; four leg chains and original identity retained.",
+  "review": "Root compared ready, original contact and corrected contact at uniform native.5 preview; body proportions/root/contact stance stable, jaw sealed and beard attached."
+}

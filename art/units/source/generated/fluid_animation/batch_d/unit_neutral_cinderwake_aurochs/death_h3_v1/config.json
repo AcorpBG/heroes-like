@@ -1,0 +1,151 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    430,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100205,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          387,
+          510
+        ]
+      ],
+      "anchor": [
+        179,
+        452
+      ],
+      "scale": 0.6626,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "collapse",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          378,
+          750,
+          750,
+          920
+        ],
+        [
+          378,
+          920,
+          735,
+          995
+        ]
+      ],
+      "anchor": [
+        582,
+        1040
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        80
+      ]
+    },
+    {
+      "name": "landing",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          760,
+          805,
+          1092,
+          935
+        ],
+        [
+          735,
+          935,
+          1092,
+          1010
+        ]
+      ],
+      "anchor": [
+        944,
+        1040
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        64
+      ]
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_cinderwake_aurochs/alpha/poses.png",
+      "rects": [
+        [
+          1092,
+          840,
+          1448,
+          1010
+        ]
+      ],
+      "anchor": [
+        1306,
+        1040
+      ],
+      "scale": 0.66,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        0,
+        68
+      ]
+    }
+  ],
+  "guides": [
+    [
+      32,
+      1
+    ],
+    [
+      65,
+      2
+    ],
+    [
+      98,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "One original Cinderwake Aurochs: massive dark charcoal lava-armored bull, exactly FOUR separate short muscular legs ending in split cloven hooves, exactly TWO curled bronze-edged horns, broad black muzzle, orange beard, overlapping angular dark back plates, molten orange seams, bronze-gold flecks and one long flexible tail with a stone tuft. Preserve the original four-legged anatomy, two horn curves, plate pattern and painterly surface. Only existing attached lava seams and small back flame accents; no new effects. One continuous grounded defeat collapse. Front knees buckle, lower the chest, bend rear legs and ease the heavy torso down onto its side, then settle the head, curled horns, four folded legs and tail along the ground into the supplied corpse. No rolling upright, disappearing legs, detached horn or new effect. Finish fully grounded and motionless in the supplied corpse pose. Locked elevated three-quarter orthographic camera facing screen right, unchanged torso scale and centered body root. Entire tail, horns, all hooves and body remain inside frame. Perfectly flat pure green RGB0,255,0 background, no scenery, floor, horizon, shadow, smoke, other figure, text, props, projectile, magic or fire blast.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "protected_foreground_chroma": 17,
+  "foreground_measurement": {
+    "rule": "Eroded opaque original guide green-minus-max(red,blue) maximum plus two.",
+    "per_guide_max": [
+      8.0,
+      10.0,
+      15.0,
+      1.0
+    ]
+  },
+  "ground_registration": "Guide Y registration follows observed supporting foremost hoof or grounded corpse contact to y560; original source scales .66/.6626 fixed for whole paintings; extraction .5. No per-pose resizing.",
+  "residency_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log"
+}

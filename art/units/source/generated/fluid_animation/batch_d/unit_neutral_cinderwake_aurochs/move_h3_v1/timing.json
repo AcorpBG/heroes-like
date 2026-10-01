@@ -1,0 +1,20 @@
+{
+  "sampling": {
+    "prompt_id": "ba04877c-f471-44ef-82d2-046cb7b23414",
+    "service_elapsed_seconds": 351.022,
+    "started_unix": 1790846516.0722437
+  },
+  "decode": {
+    "prompt_id": "132f6e18-744a-4ce4-b311-6698d08d3314",
+    "service_elapsed_seconds": 14.033,
+    "started_unix": 1790846877.3139026
+  },
+  "exec_session": 18928,
+  "terminal_exit_code": 0,
+  "collected_original_frames": 124,
+  "gpu_released_unix": 1790846962.3018289,
+  "queue_after_release": {
+    "queue_running": [],
+    "queue_pending": []
+  }
+}

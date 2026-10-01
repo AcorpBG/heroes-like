@@ -1,0 +1,11 @@
+{
+  "prompt_id": "f11aa0f7-d868-4593-b77e-09b8deb70434",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 21279,
+  "byte_end": 21365,
+  "observed_segment_sha256": "f08e6abc0e3f7e3a333c96285bac9cd33f4c63bb53979a572da7c2b6a4ba05a4",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 9.13 seconds\u001b[0m"
+  ],
+  "scope": "Actual loader/residency lines from authorized own-job interval, not an inference from free VRAM."
+}

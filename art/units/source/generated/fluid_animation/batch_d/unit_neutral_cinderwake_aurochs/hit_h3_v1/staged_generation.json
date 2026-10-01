@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "14fcfb72eca179a3ab4b0ccae693cce4e0726b9226f34d41ce18b880fa54fe13",
+  "latent_sha256": "a275ea7bece5a406e8846775f4276f242d5bcf58f5b7f8db2851bb4446ce28c9",
+  "decode_workflow_sha256": "192b90350de8dde81858b5fa9f4de90343b9d19f3f82d2a5fbafb111c5cb1861",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "aurochs_h3_20261001\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

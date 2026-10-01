@@ -1,0 +1,22 @@
+{
+  "prompt_id": "095b65d1-b0cf-46f0-830f-4733e8e9875a",
+  "server_log": ".artifacts/creature_sets_20261001/server-reserve4-stderr.log",
+  "byte_start": 37338,
+  "byte_end": 39972,
+  "observed_segment_sha256": "12e28b371ce95bda54a1ed9baedc871401968e5999ade1add98ca22f6e7e3a0d",
+  "observed_loader_lines": [
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 363.65 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3TEModel_",
+    "\u001b[32m[INFO]\u001b[0m Unloaded partially: 11647.68 MB freed, 8348.50 MB remains loaded, 918.83 MB buffer reserved, lowvram patches: 0",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 17462.31 MB usable, 14960.20 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m Unloaded partially: 2611.19 MB freed, 5737.30 MB remains loaded, 918.83 MB buffer reserved, lowvram patches: 0",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 5113.31 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 21740.66 MB usable, 19996.14 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 361.11 seconds\u001b[0m",
+    "\u001b[32m[INFO]\u001b[0m Requested to load MiniMaxH3VideoVAE",
+    "\u001b[32m[INFO]\u001b[0m loaded completely; 25810.80 MB usable, 2665.86 MB loaded, full load: True",
+    "\u001b[32m[INFO]\u001b[0m \u001b[32mPrompt executed in 16.87 seconds\u001b[0m"
+  ],
+  "scope": "Actual loader/residency lines from authorized own-job interval, not an inference from free VRAM."
+}

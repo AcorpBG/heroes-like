@@ -1,0 +1,45 @@
+{
+  "unit_id": "unit_neutral_cinderwake_aurochs",
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "planned_takes": [
+    "move_h3_v1",
+    "attack_h3_v2",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo review: all 124 original frames per selected video, chronological alpha on light/dark, enlarged identity/action phases, actual 128px normal and mirrored native phase overviews, and BattleShell strike captures inspected. Walk25 reciprocal; attack38 closed-jaw horn ram with short forward bound and source36 contact (index16); hit26 recoil/recovery; defend26 knee-flex horn guard held at source123; support39 gradual physical rally; death43 continuous four-limb collapse to clean source123 corpse. Brief transient muzzle flecks retained from original death footage. No per-frame size normalization or invented articulation. Idle8 and map pixels/timing preserved exactly. Normal candidate270 and mirrored261 focused checks passed; 868 lossless RGB originals and197 candidate frames verified. This is chronological frame/native review, not continuous playback or a manual playtest. Rejected fire-breath attack_v1 retained as original provenance and never published."
+  },
+  "move_validation": {
+    "frames": 25,
+    "original_rgb_frames": 124,
+    "phase_checks_normal": 28,
+    "phase_checks_mirrored": 28,
+    "preserved_idle_frames": 8,
+    "review_path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_cinderwake_aurochs/move_h3_v1/review.json"
+  },
+  "rejected_takes": [
+    "attack_h3_v1"
+  ],
+  "focused_validation": {
+    "candidate_checks": 270,
+    "mirrored_phase_checks": 261,
+    "original_rgb_frames": 868,
+    "selected_frames": 197,
+    "published_live_checks": 284
+  },
+  "completion_status": "complete_unit; roster goal remains in_progress"
+}
