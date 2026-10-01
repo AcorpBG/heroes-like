@@ -1,0 +1,139 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "clip": "move",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    470,
+    560
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100172,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  },
+  "references": [
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v2/guide_0_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v2/guide_2_rgba.png",
+      "rects": [
+        [
+          0,
+          0,
+          960,
+          640
+        ]
+      ],
+      "anchor": [
+        470,
+        560
+      ],
+      "scale": 0.5,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1537,
+          1023
+        ]
+      ],
+      "anchor": [
+        785,
+        902
+      ],
+      "scale": 0.27,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1538,
+          1023
+        ]
+      ],
+      "anchor": [
+        826,
+        961
+      ],
+      "scale": 0.2,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      15,
+      2
+    ],
+    [
+      31,
+      1
+    ],
+    [
+      47,
+      3
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      78,
+      2
+    ],
+    [
+      93,
+      1
+    ],
+    [
+      109,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing.  Continuous forward jogging IN PLACE through TWO uninterrupted complete gait cycles. Her torso retains the same forward inclination, fixed pelvis position and body size throughout. Begin with the NEAR armored leg reaching forward into contact while the far leg trails behind; the near boot accepts weight and retracts under the hip, while the FAR knee lifts forward with heel tucked, reaching the first supplied passing pose. The far boot then extends into forward ground contact while the near heel lifts and trails. The far leg accepts weight, while the NEAR knee lifts forward and passes in front of it, matching the second distinct passing pose. Continue into the original near-leg-forward contact and repeat. Each thigh keeps its original hip attachment; each round knee guard and boot stays with its own leg. Smooth support, loading, toe-off and swinging feet through all intermediate frames, with both soles taking turns contacting the same invisible ground plane. Never pause in a standing ready pose. Exactly two arms keep both original grips on the compact hook pole with the one rope loop and two curved silver hooks unchanged; slight natural elbow movement, cloth and ponytail follow gait. End in the identical first stride contact. Locked elevated three-quarter orthographic camera facing right, no body turning, no camera movement or root translation, no extra legs or hands. Perfectly uniform pure green RGB0,255,0 background throughout; no floor, shadows, scenery, particles, magic or hue cycling.",
+  "reassessment": "Previous v1/v2 standing interrupts and ambiguous support: replace standing ready guide with independently reviewed opposed near/far loading/passing paintings. Four coherent gait phases guided twice at equal intervals. Keep the accepted six other actions and map idle byte/pixel-exact. No synthetic interpolation/warps/frame-normalization.",
+  "protected_foreground_chroma": 75,
+  "foreground_measurement": {
+    "rule": "Three-pixel-eroded opaque green chroma maximum across fixed-scale guides plus2.",
+    "per_guide_max": [
+      56.0,
+      73.0,
+      32.0,
+      50.0
+    ],
+    "separation": 180
+  }
+}

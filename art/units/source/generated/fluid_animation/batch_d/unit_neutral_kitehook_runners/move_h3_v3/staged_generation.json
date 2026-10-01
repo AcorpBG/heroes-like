@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3f055e9fd72462a57c97537e437afebeae479a874292c862068360f8f53b92c2",
+  "latent_sha256": "5009364df8a08ce4176fc68bab2e41ce267d10c34dae3e04af1325050bb367a1",
+  "decode_workflow_sha256": "ee0c7e3336687b409fdf82af36d9554f875c294cc0be10c3b5fc3865359d45b0",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "kitehook_h3\\move_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 19429901120,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

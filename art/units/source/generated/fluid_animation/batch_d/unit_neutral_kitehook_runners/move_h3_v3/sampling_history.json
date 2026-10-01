@@ -1,0 +1,367 @@
+{
+  "prompt": [
+    65,
+    "8aa3272b-1baa-4048-8f55-7da3b42ba077",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Kitehook Runner, an athletic adult woman with fair skin and brown tied-back hair, a teal headband, yellow neck scarf, ivory rolled sleeves, brown leather vest and belts, brown trousers, round steel knee guards, brown leather boots with yellow bindings. Teal and yellow cloth streamers trail from her shoulders and belt. One coiled rope hangs on her left hip. Exactly two arms and two legs. Both hands grip one compact wooden hook pole horizontally across her waist: the forward hand near the silver twin-curved hook head on screen right, the rear hand toward the rope-loop butt on screen left. Preserve one pole, its length, metal hook shape, both grips, face, rope and clothing.  Continuous forward jogging IN PLACE through TWO uninterrupted complete gait cycles. Her torso retains the same forward inclination, fixed pelvis position and body size throughout. Begin with the NEAR armored leg reaching forward into contact while the far leg trails behind; the near boot accepts weight and retracts under the hip, while the FAR knee lifts forward with heel tucked, reaching the first supplied passing pose. The far boot then extends into forward ground contact while the near heel lifts and trails. The far leg accepts weight, while the NEAR knee lifts forward and passes in front of it, matching the second distinct passing pose. Continue into the original near-leg-forward contact and repeat. Each thigh keeps its original hip attachment; each round knee guard and boot stays with its own leg. Smooth support, loading, toe-off and swinging feet through all intermediate frames, with both soles taking turns contacting the same invisible ground plane. Never pause in a standing ready pose. Exactly two arms keep both original grips on the compact hook pole with the one rope loop and two curved silver hooks unchanged; slight natural elbow movement, cloth and ponytail follow gait. End in the identical first stride contact. Locked elevated three-quarter orthographic camera facing right, no body turning, no camera movement or root translation, no extra legs or hands. Perfectly uniform pure green RGB0,255,0 background throughout; no floor, shadows, scenery, particles, magic or hue cycling.",
+          "width": 960,
+          "height": 640,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100172
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kitehook_move_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kitehook_move_h3_v3_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kitehook_move_h3_v3_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "kitehook_move_h3_v3_guide_3.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 15,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 31,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 47,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 62,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "30",
+            0
+          ]
+        }
+      },
+      "44": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "43",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 78,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "45": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "44",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 93,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "46": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "45",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 109,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "46",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "kitehook_h3/move_h3_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "kitehook_h3",
+      "create_time": 1790866052214
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "kitehook_h3\\move_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "8aa3272b-1baa-4048-8f55-7da3b42ba077",
+          "timestamp": 1790866052215
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "8aa3272b-1baa-4048-8f55-7da3b42ba077",
+          "timestamp": 1790866052246
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "8aa3272b-1baa-4048-8f55-7da3b42ba077",
+          "timestamp": 1790866289046
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

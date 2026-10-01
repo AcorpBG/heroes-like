@@ -1,0 +1,120 @@
+{
+  "source_frames": [
+    61,
+    63,
+    65,
+    67,
+    69,
+    71,
+    73,
+    75,
+    77,
+    79,
+    81,
+    83,
+    85,
+    87,
+    89,
+    91,
+    93,
+    95,
+    97,
+    99,
+    101,
+    103,
+    105,
+    107,
+    109,
+    111,
+    113,
+    115,
+    117,
+    119,
+    121
+  ],
+  "frame_msec": 35,
+  "original_pixel_exclusions": {
+    "61": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "63": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "65": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "67": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "69": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "71": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "73": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "75": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    },
+    "121": {
+      "background_rect": [
+        232,
+        388,
+        248,
+        406
+      ],
+      "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+    }
+  },
+  "review_note": "Solo coordinator accepted corrected reciprocal H3 movement31 from original61..121 step2 at35ms (1085ms complete cycle). Both legs have independent hip/knee-guard/shin/boot identity and alternating contacts, loading and passing; no upright ready interruption. Exactly two arms retain both grips on one compact twin-hook pole; face, torso scale, cloth and rope remain coherent. All124 original RGB/matte frames viewed chronologically and all31 selected frames enlarged on dark/light, loop121-to61 inspected. Nine disconnected68-75pixel pale fragments inherited from legacy guide excluded with explicit source crop, no character pixels modified; full originals/mattes retained. All137 native phases reviewed in normal and reflected facings, three actual BattleShell candidate captures inspected; candidate204 and mirrored204 checks pass. Preserve accepted idle8/attack22/hit19/defend12/physical support19/death26+final dead and exact map idle. Continuous video playback/manual playtest unclaimed; Windows focused checks only, no full suite."
+}

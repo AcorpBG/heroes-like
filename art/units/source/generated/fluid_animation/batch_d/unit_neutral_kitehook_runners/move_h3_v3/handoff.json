@@ -1,0 +1,1035 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_kitehook_runners",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_061",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_063",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_065",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_067",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_069",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_071",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_073",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_075",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_075.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 75,
+          "video_time_seconds": 3.125,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        },
+        {
+          "name": "move_h3_077",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_077.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 77,
+          "video_time_seconds": 3.2083333333333335
+        },
+        {
+          "name": "move_h3_079",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_079.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 79,
+          "video_time_seconds": 3.2916666666666665
+        },
+        {
+          "name": "move_h3_081",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_081.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 81,
+          "video_time_seconds": 3.375
+        },
+        {
+          "name": "move_h3_083",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_083.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 83,
+          "video_time_seconds": 3.4583333333333335
+        },
+        {
+          "name": "move_h3_085",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_085.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 85,
+          "video_time_seconds": 3.5416666666666665
+        },
+        {
+          "name": "move_h3_087",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_087.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 87,
+          "video_time_seconds": 3.625
+        },
+        {
+          "name": "move_h3_089",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_089.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 89,
+          "video_time_seconds": 3.7083333333333335
+        },
+        {
+          "name": "move_h3_091",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_091.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 91,
+          "video_time_seconds": 3.7916666666666665
+        },
+        {
+          "name": "move_h3_093",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_093.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 93,
+          "video_time_seconds": 3.875
+        },
+        {
+          "name": "move_h3_095",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_095.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 95,
+          "video_time_seconds": 3.9583333333333335
+        },
+        {
+          "name": "move_h3_097",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_097.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 97,
+          "video_time_seconds": 4.041666666666667
+        },
+        {
+          "name": "move_h3_099",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_099.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 99,
+          "video_time_seconds": 4.125
+        },
+        {
+          "name": "move_h3_101",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_101.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 101,
+          "video_time_seconds": 4.208333333333333
+        },
+        {
+          "name": "move_h3_103",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_103.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 103,
+          "video_time_seconds": 4.291666666666667
+        },
+        {
+          "name": "move_h3_105",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_105.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 105,
+          "video_time_seconds": 4.375
+        },
+        {
+          "name": "move_h3_107",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_107.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 107,
+          "video_time_seconds": 4.458333333333333
+        },
+        {
+          "name": "move_h3_109",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_109.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 109,
+          "video_time_seconds": 4.541666666666667
+        },
+        {
+          "name": "move_h3_111",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_111.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 111,
+          "video_time_seconds": 4.625
+        },
+        {
+          "name": "move_h3_113",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_113.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 113,
+          "video_time_seconds": 4.708333333333333
+        },
+        {
+          "name": "move_h3_115",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_115.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 115,
+          "video_time_seconds": 4.791666666666667
+        },
+        {
+          "name": "move_h3_117",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_117.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 117,
+          "video_time_seconds": 4.875
+        },
+        {
+          "name": "move_h3_119",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_119.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 119,
+          "video_time_seconds": 4.958333333333333
+        },
+        {
+          "name": "move_h3_121",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte/rgba_121.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              388
+            ],
+            [
+              0,
+              388,
+              232,
+              406
+            ],
+            [
+              248,
+              388,
+              960,
+              406
+            ],
+            [
+              0,
+              406,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            470,
+            560
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 121,
+          "video_time_seconds": 5.041666666666667,
+          "crop_recipe": {
+            "tool": "produce.py build",
+            "background_rect": [
+              232,
+              388,
+              248,
+              406
+            ],
+            "reason": "Disconnected68-75pixel pale fragment inherited from legacy run-guide crop, left of all cloth/body/rope; explicit original-pixel boundary excludes only this noncharacter fragment. All original matte/video retained."
+          }
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30
+          ],
+          "frame_msec": 35,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/original_lossless.mkv",
+          "sha256": "43b717a22fd589cba78152cf1950a3b7aa239687b9675a5f859c489f4b03e059"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/original.json",
+          "sha256": "43e15baafe7e6e34e5042c705787dff3e76c28a9503bf0bcdf2dd65d6764732d"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/workflow_api.json",
+          "sha256": "ee0c7e3336687b409fdf82af36d9554f875c294cc0be10c3b5fc3865359d45b0"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/prompt.txt",
+          "sha256": "69a3d3c05d2044365b618c8a4ed417798f53fee9f664017867f0732d9e2f46cc"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/reference.json",
+          "sha256": "192b4d1c3998d2c4a8652d07ec95275215712426ed7ebe3ea7c806a00d44b3ce"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/matte.json",
+          "sha256": "0f4cfbab038c2068fdaaf75a342ba580556c08a753200e8af00a77d36a19e2b6"
+        },
+        "runtime_profile.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/runtime_profile.json",
+          "sha256": "c66418c1777b0a5fa0c87d0f35635ccd1da5dbff847afc3576d3c7aa447b85e5"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/staged_generation.json",
+          "sha256": "3e3b901ecd32fb26ffb52b378d423e091e1cae6b4f229b0db6aee0e06b7a726c"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/sampling_workflow_api.json",
+          "sha256": "3f055e9fd72462a57c97537e437afebeae479a874292c862068360f8f53b92c2"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/sampling_submission.json",
+          "sha256": "a0c08528a107f6eadd9f9c9dab2b8d937dd9ddaf96870277aeb82d9ae4969489"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/sampling_history.json",
+          "sha256": "a011d791d77d34919e1b37198a381f3449018f0271cacef56de9c9193b1441c3"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v3/original.latent",
+          "sha256": "5009364df8a08ce4176fc68bab2e41ce267d10c34dae3e04af1325050bb367a1"
+        },
+        "guide_image_passing_near_loaded_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.png",
+          "sha256": "97d4e1aca2a6ea91de2631947e9828eb29786ffdf5c2449494a5af5774bf2ddc"
+        },
+        "guide_prompt_passing_near_loaded_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.prompt.txt",
+          "sha256": "1a4b4df8dac52df3a8b9df1bbc5bfbde6b934372e303fb014d769f880b4ec680"
+        },
+        "guide_generation_passing_near_loaded_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.generation.json",
+          "sha256": "7ebe6c4658e9416abed2d8c978ad246d9df7acf586ad0dcd883034b69b60e317"
+        },
+        "guide_image_passing_far_loaded_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.png",
+          "sha256": "6ed8ce39e8bf63f33d10cf943096c052365aa626475fa26fb1a11f37d9c23ec4"
+        },
+        "guide_prompt_passing_far_loaded_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.prompt.txt",
+          "sha256": "a2a9198dad5ef7809836008f321dd79764afe083acc0413b821ac24ffea75e4f"
+        },
+        "guide_generation_passing_far_loaded_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.generation.json",
+          "sha256": "c5dfacba931aa06b8aaf26a62d76f7bac16bfcc55397ff2abc92e0c825ac017f"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Solo coordinator accepted corrected reciprocal H3 movement31 from original61..121 step2 at35ms (1085ms complete cycle). Both legs have independent hip/knee-guard/shin/boot identity and alternating contacts, loading and passing; no upright ready interruption. Exactly two arms retain both grips on one compact twin-hook pole; face, torso scale, cloth and rope remain coherent. All124 original RGB/matte frames viewed chronologically and all31 selected frames enlarged on dark/light, loop121-to61 inspected. Nine disconnected68-75pixel pale fragments inherited from legacy guide excluded with explicit source crop, no character pixels modified; full originals/mattes retained. All137 native phases reviewed in normal and reflected facings, three actual BattleShell candidate captures inspected; candidate204 and mirrored204 checks pass. Preserve accepted idle8/attack22/hit19/defend12/physical support19/death26+final dead and exact map idle. Continuous video playback/manual playtest unclaimed; Windows focused checks only, no full suite."
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "provider": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.png",
+    "sha256": "6ed8ce39e8bf63f33d10cf943096c052365aa626475fa26fb1a11f37d9c23ec4"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.prompt.txt",
+    "sha256": "a2a9198dad5ef7809836008f321dd79764afe083acc0413b821ac24ffea75e4f"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.png",
+    "sha256": "97d4e1aca2a6ea91de2631947e9828eb29786ffdf5c2449494a5af5774bf2ddc"
+  },
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-dd2d49b8-2b76-439d-bf4d-f1d5a05465a2.png",
+  "transparent_background_requested": true,
+  "review": {
+    "status": "accepted_reference_only",
+    "findings": "Near lifted thigh/knee/boot overlaps far vertically planted supporting leg. Both grips, one twin hook, two arms/two legs preserved. Master larger than first passing pose; fixed anatomical scale must match torso dimensions, no per-frame resizing.",
+    "registration": "Fixed torso-based master scales .27/.20, pelvis matched to existing stride contacts; root anchors785,902 and826,961. Near/far thighs retain separate independent knees/shins/boots, no standing ready guide. Registered native-scale4-guide overview inspected."
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "guides": [
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v2/guide_0_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "5e4b3badd354567bc71e12cffc5c81d98e9a0a5872c35083711a48934d2690c7",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "26290ee7e877dc34a6144a366c1163ae4f04baef8f23368433ab6bbcdfd41f7e",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v2/guide_2_rgba.png",
+        "rects": [
+          [
+            0,
+            0,
+            960,
+            640
+          ]
+        ],
+        "anchor": [
+          470,
+          560
+        ],
+        "scale": 1.0,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "7e9e892a4b32bb3422c0ce4726b93fb6bd02995646843cceefa13ce22c734fab",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "76eb335898d35479fbb277c9abca70f6d5bf6332804b39eb545b7d40174a7e52",
+      "runtime_source_scale": 0.5
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1537,
+            1023
+          ]
+        ],
+        "anchor": [
+          785,
+          902
+        ],
+        "scale": 0.54,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "97d4e1aca2a6ea91de2631947e9828eb29786ffdf5c2449494a5af5774bf2ddc",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "55077737a89857c5dfec45ef4d344b708edeecde23e10b7ab2321fa46727cba5",
+      "runtime_source_scale": 0.27
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_far_loaded_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1538,
+            1023
+          ]
+        ],
+        "anchor": [
+          826,
+          961
+        ],
+        "scale": 0.4,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6ed8ce39e8bf63f33d10cf943096c052365aa626475fa26fb1a11f37d9c23ec4",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "ba7d2e8015ac835289e73529adf93c5e776b4a98175f8800b6e758c044e7ab1a",
+      "runtime_source_scale": 0.2
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    470,
+    560
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

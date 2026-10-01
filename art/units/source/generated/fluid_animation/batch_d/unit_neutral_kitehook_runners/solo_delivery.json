@@ -1,0 +1,92 @@
+{
+  "unit_id": "unit_neutral_kitehook_runners",
+  "baseline_commit": "bb92e54f9bea9856fa20cb3e44a0b5b8eafd1aad",
+  "new_takes": [
+    "move_h3_v3"
+  ],
+  "new_clips": [
+    "move"
+  ],
+  "preserved_published_clips": [
+    "idle",
+    "attack",
+    "hit",
+    "defend",
+    "cast",
+    "death",
+    "dead"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo coordinator accepted corrected reciprocal H3 movement31 from original61..121 step2 at35ms (1085ms complete cycle). Both legs have independent hip/knee-guard/shin/boot identity and alternating contacts, loading and passing; no upright ready interruption. Exactly two arms retain both grips on one compact twin-hook pole; face, torso scale, cloth and rope remain coherent. All124 original RGB/matte frames viewed chronologically and all31 selected frames enlarged on dark/light, loop121-to61 inspected. Nine disconnected68-75pixel pale fragments inherited from legacy guide excluded with explicit source crop, no character pixels modified; full originals/mattes retained. All137 native phases reviewed in normal and reflected facings, three actual BattleShell candidate captures inspected; candidate204 and mirrored204 checks pass. Preserve accepted idle8/attack22/hit19/defend12/physical support19/death26+final dead and exact map idle. Continuous video playback/manual playtest unclaimed; Windows focused checks only, no full suite."
+  },
+  "source_indices": [
+    61,
+    63,
+    65,
+    67,
+    69,
+    71,
+    73,
+    75,
+    77,
+    79,
+    81,
+    83,
+    85,
+    87,
+    89,
+    91,
+    93,
+    95,
+    97,
+    99,
+    101,
+    103,
+    105,
+    107,
+    109,
+    111,
+    113,
+    115,
+    117,
+    119,
+    121
+  ],
+  "runtime_frame_msec": 35,
+  "reassessment": "Two previous failed gait attempts had upright ready holds. New matched near/far passing guides and opposed contacts maintain continuous gait with four phase guides twice. No agents used.",
+  "validation": {
+    "candidate": {
+      "checks": 204,
+      "failures": []
+    },
+    "mirrored": {
+      "checks": 204,
+      "failures": []
+    },
+    "live": {
+      "checks": 218,
+      "failures": []
+    },
+    "import_exit_code": 0,
+    "new_original_rgb_frames_verified": 124,
+    "published_gait_frames_verified": 31,
+    "preserved_action_dead_poses_verified": 107,
+    "other_battle_rows_preserved": 231,
+    "map_visual_rows_preserved": 232,
+    "map_metadata_change": "Only selected source_sha256 updates to current newly packed battle atlas; image pixels, file hash, frame geometry/timing and root unchanged.",
+    "published_atlas_size": [
+      2960,
+      3640
+    ],
+    "texture_bytes_rgba": 43097600,
+    "scope": "Windows offscreen focused selected-unit fixture, both native facings, exact pixels/anchors/timing/source lineage, map shader animation and reduced motion. No full suite, continuous video playback, manual playtest or Linux-run claim."
+  },
+  "completion": "All7 required actions accepted: preserved articulated idle8, H3move31, attack22, hit19, defend12, physical support19, death26 and final grounded dead. Only move authored/replaced in this solo pass.",
+  "cleanup": {
+    "files_removed": 270,
+    "bytes_recovered": 126059287,
+    "rebuildable": true,
+    "scope": "Only new solo temporary review/validation files, unselected derived mattes, RGB/MP4/latent duplicates verified against immutable source. Original videos/latents/guides/prompts/provenance/failed takes, caches and unrelated work retained. Queueempty and no own producer/Godot/Git process before deletion."
+  }
+}

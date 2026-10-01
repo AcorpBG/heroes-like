@@ -1,0 +1,22 @@
+{
+  "provider": "built-in image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.png",
+    "sha256": "97d4e1aca2a6ea91de2631947e9828eb29786ffdf5c2449494a5af5774bf2ddc"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/guides/passing_near_loaded_v1.prompt.txt",
+    "sha256": "1a4b4df8dac52df3a8b9df1bbc5bfbde6b934372e303fb014d769f880b4ec680"
+  },
+  "reference": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_kitehook_runners/move_h3_v2/guide_0_rgba.png",
+    "sha256": "5e4b3badd354567bc71e12cffc5c81d98e9a0a5872c35083711a48934d2690c7"
+  },
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-d9178181-bd89-41c1-a332-505e1ecf40ac.png",
+  "transparent_background_requested": true,
+  "review": {
+    "status": "accepted_reference_only",
+    "findings": "Exactly two arms maintaining both grips and two legs; near vertical planted knee supports weight while far knee lifts forward with boot tucked behind. Same face, camera, cloth, compact twin-hook pole. Actual alpha0..255.",
+    "registration": "Fixed torso-based master scales .27/.20, pelvis matched to existing stride contacts; root anchors785,902 and826,961. Near/far thighs retain separate independent knees/shins/boots, no standing ready guide. Registered native-scale4-guide overview inspected."
+  }
+}
