@@ -1,0 +1,66 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "workflow": "Solo original MiniMax H3 action videos, observed transparent frames and self-review.",
+  "new_clip_frames": {
+    "move": 17,
+    "attack": 55,
+    "hit": 32,
+    "defend": 15,
+    "cast": 33,
+    "death": 57
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo review: all744 chronological frames from six original H3 videos inspected. Selected move17, attack55, hit32, defend15, physical rally cast33 and death57:209 new poses. Two original arms and legs, right-hand short boarding hook and left-forearm keel shield retained. The hook turns briefly edge-on during wrist rotation at source34-35, then returns to its crescent profile. Reciprocal gait, distinct windup/contact/recovery, knee/shield brace and raised-hook rally reviewed. Death retains the whole descent and side roll: the attached left forearm supports the shield, then relaxes to a grounded head-left corpse; no collapse interval removed. Matching extended attack and raised rally stationary holds shortened; original timestamps preserved. Attack contact source42/index30; rally source37/index13. Runtime move50ms, attack/hit/death33ms, defend/rally42ms. Every native and mirrored phase inspected at actual128px reference height, with actual battle-clock captures covering strike contact and recovery. Candidate and mirrored focused checks pass, including all55 attack poses observed, Normal/Fast and reduced-motion paths. Eight existing articulated idle phases retained. No continuous browser movie review, manual gameplay, Linux run or full repository suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 719,
+    "mirrored_checks": 719,
+    "live_checks": 733,
+    "failures": 0,
+    "new_original_action_frames": 209,
+    "preserved_idle_frames": 8,
+    "retained_original_rgb_frames_including_rejected": 744,
+    "atlas_dimensions": [
+      2940,
+      3108
+    ],
+    "rgba_bytes": 36550080,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 205,
+    "remaining": 27,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Gloamkeel Bulwarks six original H3 actions,209 new poses plus eight preserved articulated idle phases. Original right-hand short hook and left-arm keel shield, reciprocal gait, dedicated melee/recoil/brace/rally and grounded corpse reviewed. Focused candidate/mirrored/live checks 719/719/733 pass; original frame/atlas import verification,all232 map visuals/timing and other231 battle rows preserved. Roster205/232 complete,27 remaining. Broad goal remains in_progress; solo,no full suite.",
+  "model_release": {
+    "free_vram_bytes": 31245078676,
+    "required_free_vram_bytes": 17179869184
+  },
+  "cleanup": {
+    "removed_verified_duplicate_and_unused_files": 1308,
+    "removed_duplicate_bytes": 488737953,
+    "temporary_files_to_remove": 114,
+    "temporary_bytes_to_remove": 113149579,
+    "recovered_bytes": 601887532,
+    "rebuildable": true,
+    "retained_original_rgb_frames": 744,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "temporary_directories": [
+      ".artifacts/gloamkeel_solo",
+      ".artifacts/gloamkeel_bulwark_h3"
+    ],
+    "temporary_files_removed": 114,
+    "temporary_bytes_removed": 113149579
+  }
+}

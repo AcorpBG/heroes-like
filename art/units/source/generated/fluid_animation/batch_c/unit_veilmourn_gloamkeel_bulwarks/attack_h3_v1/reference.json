@@ -1,0 +1,111 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          186,
+          484
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "18d25ac0da2a9e212dc7a009cb7183821efe2f1a132de6d47d779b7728b4773e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "29537e2ffff2be805026fd5920d1f7484c5194299c53235db31274a332077ac5",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "attack_windup",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png",
+        "rects": [
+          [
+            362,
+            374,
+            724,
+            725
+          ]
+        ],
+        "anchor": [
+          548,
+          713
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ac0c263796b35ca33e4c033d9b27b5ee2a5abb630526ffe74495352132d10f28",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "9929ebd61f6ff051b05953d61c2f47c89168853b93d3e23ab1a782ab523e5816",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "attack_hook_thrust",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png",
+        "rects": [
+          [
+            724,
+            374,
+            1100,
+            725
+          ]
+        ],
+        "anchor": [
+          883,
+          712
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ac0c263796b35ca33e4c033d9b27b5ee2a5abb630526ffe74495352132d10f28",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "1e10667ab36cefa5b6440a2885b8cab023e55c53f041b022e5adaf69702ddb0e",
+      "runtime_source_scale": 0.6
+    },
+    {
+      "source_frame": {
+        "name": "attack_recover",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png",
+        "rects": [
+          [
+            0,
+            600,
+            666,
+            1182
+          ]
+        ],
+        "anchor": [
+          370,
+          1129
+        ],
+        "scale": 0.78,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6295a6c6411722dec0907e33311823bc9faf4d985890d30ce34b7e066c0e8746",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "36798db0b3137b2edbb4bf6f11d62abdbb364bf4b9c1ced6dfaa1f61c6bdee4a",
+      "runtime_source_scale": 0.39
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

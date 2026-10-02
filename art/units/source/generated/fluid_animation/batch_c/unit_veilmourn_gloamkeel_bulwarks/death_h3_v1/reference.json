@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          186,
+          484
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "18d25ac0da2a9e212dc7a009cb7183821efe2f1a132de6d47d779b7728b4773e",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "29537e2ffff2be805026fd5920d1f7484c5194299c53235db31274a332077ac5",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "dead_equipped",
+        "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png",
+        "rects": [
+          [
+            1085,
+            797,
+            1448,
+            1086
+          ]
+        ],
+        "anchor": [
+          1283,
+          1020
+        ],
+        "scale": 1.2,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "ac0c263796b35ca33e4c033d9b27b5ee2a5abb630526ffe74495352132d10f28",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d72cf19117db2ecde16664cb1ba677f533c38feb1060b02391a0bac3977be915",
+      "runtime_source_scale": 0.6
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,12 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "source_family_scaling": "Original .6/.39/.182/.44 scales retained unchanged.",
+  "measured_reference_height": 207,
+  "reason": "Reviewed articulated idle207-208px. Legacy ready216px, reciprocal gait216-225px, hook strike194px, brace204px and corpse105px use inherited anatomical registration; no per-pose size normalization."
+}

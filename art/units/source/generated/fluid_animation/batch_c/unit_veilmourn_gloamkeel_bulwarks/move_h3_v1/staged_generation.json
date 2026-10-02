@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "8d0e58b61df3d71421b46391c26ba15ee111dd3a5c27e587d79122eeafdb7523",
+  "latent_sha256": "3d97fd9c70e3d8948f4ac7cfa21f72a8c7c5dedca3dff0d5dbbe9edbefa8361a",
+  "decode_workflow_sha256": "5d0da155824537d9b766f040b7b877dd89ffa22e72a8306a5e6e0a5c8b0e4d45",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gloamkeel_bulwark_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18092156736,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

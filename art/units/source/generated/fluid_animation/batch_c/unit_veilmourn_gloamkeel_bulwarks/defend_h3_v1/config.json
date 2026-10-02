@@ -1,0 +1,72 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102404,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        186,
+        484
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "defend_brace",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png",
+      "rects": [
+        [
+          666,
+          603,
+          1330,
+          1182
+        ]
+      ],
+      "anchor": [
+        1000,
+        1130
+      ],
+      "scale": 0.39,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      42,
+      1
+    ]
+  ],
+  "last": 1,
+  "prompt": "One original Gloamkeel Bulwark, adult bearded human man wearing a weathered white-grey hood, navy scarf, dark blue-black scale armor and chainmail, broad steel shoulder plates, torn white-blue coat and cape, leather armored boots, original rope belt and small pale oval belt tokens. Exactly TWO arms and TWO legs. SCREEN LEFT anatomical RIGHT hand grips ONE short dark metal boarding hook: a short straight leather-wrapped grip, single crescent steel hook at its end and short hanging cord; never a spear, sword, axe or sickle on a long pole. SCREEN RIGHT anatomical LEFT forearm carries ONE tall pointed ship-keel shield of dark grey-blue wood, original white branching cross mark, black steel rim, one small bronze bell attached near its top outside edge and dark blue cloth strip. Shield remains on the same LEFT arm, hook remains in RIGHT hand. Preserve original bearded face, hood, hook curve, shield proportions, surface texture and equipment throughout. One controlled SHIELD BRACE. Sink hips into a broad supported knee bend, bring original LEFT forearm ship-keel shield before the torso42. RIGHT hand keeps short boarding hook low beside right thigh throughout. HOLD the final supported defensive stance; bell and cloth settle gently. Do not return to ready, swing hook, resize shield, lose white branching mark or add limbs. Locked original elevated three-quarter orthographic camera facing screen right. Full body and every hook/shield tip stays in960x544, generous margins, fixed original anatomical scale and root centered. Uniform saturated GREEN RGB0,255,0 background. No floor, ground shadow, other figures, scenery, letters, sparks, fog, spells, trails or baked action arcs. No camera movement, body resizing, extra limbs, limb swaps or root translation.",
+  "protected_foreground_chroma": 7,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

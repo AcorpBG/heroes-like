@@ -1,0 +1,138 @@
+{
+  "unit_id": "unit_veilmourn_gloamkeel_bulwarks",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102401,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        186,
+        484
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "contact_original",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/poses.png",
+      "rects": [
+        [
+          725,
+          0,
+          1100,
+          374
+        ]
+      ],
+      "anchor": [
+        899,
+        358
+      ],
+      "scale": 0.6,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "passing_near_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png",
+      "rects": [
+        [
+          0,
+          0,
+          666,
+          596
+        ]
+      ],
+      "anchor": [
+        440,
+        577
+      ],
+      "scale": 0.39,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "contact_planted",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/contact-guide.png",
+      "rects": [
+        [
+          0,
+          0,
+          1206,
+          1304
+        ]
+      ],
+      "anchor": [
+        688,
+        1215
+      ],
+      "scale": 0.182,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "passing_rear_lift",
+      "source": "art/animation/source/poses/unit_veilmourn_gloamkeel_bulwarks/continuity-alpha/passing-and-recovery.png",
+      "rects": [
+        [
+          666,
+          0,
+          1330,
+          600
+        ]
+      ],
+      "anchor": [
+        988,
+        581
+      ],
+      "scale": 0.39,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      20,
+      1
+    ],
+    [
+      38,
+      2
+    ],
+    [
+      64,
+      3
+    ],
+    [
+      84,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Gloamkeel Bulwark, adult bearded human man wearing a weathered white-grey hood, navy scarf, dark blue-black scale armor and chainmail, broad steel shoulder plates, torn white-blue coat and cape, leather armored boots, original rope belt and small pale oval belt tokens. Exactly TWO arms and TWO legs. SCREEN LEFT anatomical RIGHT hand grips ONE short dark metal boarding hook: a short straight leather-wrapped grip, single crescent steel hook at its end and short hanging cord; never a spear, sword, axe or sickle on a long pole. SCREEN RIGHT anatomical LEFT forearm carries ONE tall pointed ship-keel shield of dark grey-blue wood, original white branching cross mark, black steel rim, one small bronze bell attached near its top outside edge and dark blue cloth strip. Shield remains on the same LEFT arm, hook remains in RIGHT hand. Preserve original bearded face, hood, hook curve, shield proportions, surface texture and equipment throughout. One reciprocal WALK IN PLACE. Alternate BOTH original boots through planted contact, supported weight loading, opposite knee lift and passing phases. RIGHT hook hand on SCREEN LEFT stays low, LEFT shield arm on SCREEN RIGHT carries the keel shield steady. Small knee/hip/elbow flex absorbs the gait; coat tails and bell move gently. Complete both leg phases and settle into original ready. No sliding feet, one-leg repeated march, hopping or attack. Locked original elevated three-quarter orthographic camera facing screen right. Full body and every hook/shield tip stays in960x544, generous margins, fixed original anatomical scale and root centered. Uniform saturated GREEN RGB0,255,0 background. No floor, ground shadow, other figures, scenery, letters, sparks, fog, spells, trails or baked action arcs. No camera movement, body resizing, extra limbs, limb swaps or root translation.",
+  "protected_foreground_chroma": 12,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

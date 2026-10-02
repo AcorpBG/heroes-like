@@ -1,0 +1,185 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "MiniMaxH3ImageToVideo",
+    "inputs": {
+      "clip": [
+        "2",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ],
+      "prompt": "One original Gloamkeel Bulwark, adult bearded human man wearing a weathered white-grey hood, navy scarf, dark blue-black scale armor and chainmail, broad steel shoulder plates, torn white-blue coat and cape, leather armored boots, original rope belt and small pale oval belt tokens. Exactly TWO arms and TWO legs. SCREEN LEFT anatomical RIGHT hand grips ONE short dark metal boarding hook: a short straight leather-wrapped grip, single crescent steel hook at its end and short hanging cord; never a spear, sword, axe or sickle on a long pole. SCREEN RIGHT anatomical LEFT forearm carries ONE tall pointed ship-keel shield of dark grey-blue wood, original white branching cross mark, black steel rim, one small bronze bell attached near its top outside edge and dark blue cloth strip. Shield remains on the same LEFT arm, hook remains in RIGHT hand. Preserve original bearded face, hood, hook curve, shield proportions, surface texture and equipment throughout. One backward RECOIL with recovery. Both knees flex and bearded head/chest lean back32, RIGHT hand still grips original short hook, LEFT forearm retains keel shield. Supported boots, unchanged torso length; recover progressively through hips, shoulders, elbows and knees88 into original ready. No death, incoming objects or effect. Locked original elevated three-quarter orthographic camera facing screen right. Full body and every hook/shield tip stays in960x544, generous margins, fixed original anatomical scale and root centered. Uniform saturated GREEN RGB0,255,0 background. No floor, ground shadow, other figures, scenery, letters, sparks, fog, spells, trails or baked action arcs. No camera movement, body resizing, extra limbs, limb swaps or root translation.",
+      "width": 960,
+      "height": 544,
+      "length": 124,
+      "first_frame": [
+        "30",
+        0
+      ],
+      "last_frame": [
+        "30",
+        0
+      ]
+    }
+  },
+  "7": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 2026102403
+    }
+  },
+  "8": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "res_multistep"
+    }
+  },
+  "9": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "scheduler": "simple",
+      "steps": 20,
+      "denoise": 1.0
+    }
+  },
+  "10": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "7",
+        0
+      ],
+      "guider": [
+        "6",
+        0
+      ],
+      "sampler": [
+        "8",
+        0
+      ],
+      "sigmas": [
+        "9",
+        0
+      ],
+      "latent_image": [
+        "5",
+        1
+      ]
+    }
+  },
+  "30": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gloamkeel_bulwark_hit_h3_v1_guide_0.png"
+    }
+  },
+  "31": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "gloamkeel_bulwark_hit_h3_v1_guide_1.png"
+    }
+  },
+  "40": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "5",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 32,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "31",
+        0
+      ]
+    }
+  },
+  "41": {
+    "class_type": "MiniMaxH3AddGuide",
+    "inputs": {
+      "positive": [
+        "40",
+        0
+      ],
+      "latent": [
+        "5",
+        1
+      ],
+      "frame_idx": 88,
+      "vae": [
+        "3",
+        0
+      ],
+      "image": [
+        "30",
+        0
+      ]
+    }
+  },
+  "6": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "conditioning": [
+        "41",
+        0
+      ]
+    }
+  },
+  "17": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": [
+        "10",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "SaveLatent",
+    "inputs": {
+      "samples": [
+        "17",
+        0
+      ],
+      "filename_prefix": "gloamkeel_bulwark_h3/hit_h3_v1/sampled"
+    }
+  }
+}

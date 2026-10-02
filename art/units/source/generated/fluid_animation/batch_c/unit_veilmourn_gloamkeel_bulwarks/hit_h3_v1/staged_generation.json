@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "a7f66965a4e3d1752bb9c083d0cab699fd7a0eb85909c3f6606c7dd2a1869949",
+  "latent_sha256": "0e2609223f80b25f31ee119a7e1afaa2cddd451da009a420f2880af0566cfbe9",
+  "decode_workflow_sha256": "efe5f598ae32fc98889ad68f643f8af2dff1c04b37290239abb400c06f4d850c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "gloamkeel_bulwark_h3\\hit_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}
