@@ -1,0 +1,100 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102104,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          389,
+          512
+        ]
+      ],
+      "anchor": [
+        179,
+        486
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "maul_ready_guard",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png",
+      "rects": [
+        [
+          670,
+          0,
+          1340,
+          786
+        ]
+      ],
+      "anchor": [
+        962,
+        736
+      ],
+      "scale": 0.2914,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "maul_deep_guard",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+      "rects": [
+        [
+          1060,
+          438,
+          1426,
+          620
+        ],
+        [
+          1092,
+          620,
+          1426,
+          739
+        ]
+      ],
+      "anchor": [
+        1253,
+        728
+      ],
+      "scale": 0.5357999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      46,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original Charcoal Maul: stocky muscular adult human man, black beard and hair, red headband and neck scarf, dark studded metal shoulder and leg plates, dirty cream apron with black rune motifs, red sleeves and leg wraps, brown gloves and boots, leather belt with small coal basket on screen right hip. Exactly TWO arms and TWO legs. ONE long two-handed dark metal maul, thick straight shaft with red wrapping and ring at butt, large rectangular double-faced dark steel hammer head with a narrow orange-red metal seam. Screen-left gloved hand grips lower shaft, screen-right gloved hand grips upper shaft, BOTH real hands stay on this SAME original shaft throughout. No extra weapon, duplicate head, changing hammer material, loose hands or extra fingers. Original face, clothes, armor, maul, grips and body proportions remain stable. One dedicated defensive BRACE. Raise the same maul shaft across upper chest22 with BOTH hands still on original lower and upper grip. Bend both knees and elbows into supplied low guarding crouch46, hold hammer head toward screen right and shaft across chest. HOLD final crouched guard through end with planted boots, no return to ready, no shield or new weapon. Locked original elevated three-quarter orthographic camera facing screen right, full body and entire maul inside960x544 with generous margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background every frame, no floor or ground shadow. No other characters, text, incoming objects, lines, trails, energy, glow, particles, smoke or impact flash. Genuine limb and joint articulation, not whole-sprite warping.",
+  "protected_foreground_chroma": 16,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

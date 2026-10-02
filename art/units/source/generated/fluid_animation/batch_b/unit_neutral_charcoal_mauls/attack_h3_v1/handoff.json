@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_charcoal_mauls",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "attack_h3_027",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_029",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            480,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        }
+      ],
+      "clips": {
+        "attack": {
+          "indices": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/config.json",
+          "sha256": "9d08e4175637a1cc9daafeffcee617e479121d3bada395b08c70f48b1f94e565"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/selection.json",
+          "sha256": "a2b72297b15511f95d1a9e671a8bd8b82c8632e13b444c29d3da6febb30c8e8a"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/original_lossless.mkv",
+          "sha256": "e20eb527641f3dde7ca66cacf1283d5db2974d6ef36381a6878d9b8dbadcff7b"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/original.json",
+          "sha256": "95328a049c8adcda42026fd681a75b2d2cb91c5b3004c53907b37e603bc5bbf8"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/workflow_api.json",
+          "sha256": "6afadb8deb7d8c95e7f8a919835f70443926548388093f4c7bc8e1170c1346d8"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/prompt.txt",
+          "sha256": "5f455ec362931d0fb1fae8270b3e8e562610fe62f2a052c963bc2bc66557ef1b"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/reference.json",
+          "sha256": "fde8678a705f0695f1ae2a6351ea3b6a79d7727577e9d83f6d2d169cc4ae4d7e"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/matte.json",
+          "sha256": "b07651f7ed78ba8d996b1188cb9a25cae1a84f3dbe20db42aea3d5116294304d"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/staged_generation.json",
+          "sha256": "ff5aa2bb0e070e151dbcc6ba9fc7aeb2cfbf60f784e200a7ccea80ea1e01aaab"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "3f87a9524e823be80cf5c0632b69ffb095b8f63b5a0ffcdfd30cdf3b2c0ceaff"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/sampling_submission.json",
+          "sha256": "afaa6f2a08337cb4869be4b4986a02b82c533412910db730fa2b0ac61bc3b314"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/sampling_history.json",
+          "sha256": "93247ff82118b0570a476b128ee3b5ee2cc7a8dcb54f059029adb9bdb8ad6f04"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/attack_h3_v1/original.latent",
+          "sha256": "af3ad566c6c8afc33e6686f4c32e07e6e4791286bf31446e108bffa96a32a8bc"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "Only original27-30 is selected: intact original rectangular hammer head rotates from overhead behind to forward above the hands. The original ghosted initial lift is excluded. Join to corrected overhead32 and corrected mid-downstroke36 without interpolation, reversal or per-pose registration changes. Native seam review pending."
+      }
+    }
+  ]
+}

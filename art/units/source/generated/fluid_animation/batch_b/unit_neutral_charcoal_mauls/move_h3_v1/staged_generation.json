@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "e706d8982e881cd88f8c569cd19fd9af2665dfbf9cbbdd027cc50de8576db6fd",
+  "latent_sha256": "35e6281d2a90866dd42c7404427f4311640f834a7e22ba12d29cfc8bb09e9ffe",
+  "decode_workflow_sha256": "11bc8123c9a3913bb3be78035cf679626767026f5df7755122a31506a64da5c1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "charcoal_maul_h3\\move_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 17636867904,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

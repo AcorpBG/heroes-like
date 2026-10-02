@@ -3843,40 +3843,40 @@
       "sha256": "59f4cfdac0a5bc3fe97bac27afb3109eea3c79655822e4e2c9eb64fb1204be7e"
     },
     "unit_neutral_charcoal_mauls": {
-      "path": "res://art/overworld/runtime/creature_idle/unit_neutral_charcoal_mauls.png",
-      "frame_size": [
-        184,
-        222
-      ],
-      "frames": 8,
-      "frame_msec": 260,
-      "static_frame": 0,
-      "ground_anchor": [
-        79.0,
-        212
-      ],
-      "painted_extent": 206,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_charcoal_mauls.png",
-      "source_indices": [
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
-      "source_crop": [
-        177,
-        24,
-        361,
-        246
-      ],
-      "source_sha256": "60890c3297194e1e0124c4a4680ad39faee6e513111e54b682daa8420d0e3448",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_charcoal_mauls/provenance.json",
-      "sha256": "3438d6596683d8b12514ceed1a98d6ef7cc7984bb6fc5a045bac5ad0dc05834a"
-    },
+  "path": "res://art/overworld/runtime/creature_idle/unit_neutral_charcoal_mauls.png",
+  "frame_size": [
+    184,
+    222
+  ],
+  "frames": 8,
+  "frame_msec": 260,
+  "static_frame": 0,
+  "ground_anchor": [
+    79,
+    212
+  ],
+  "painted_extent": 206,
+  "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_charcoal_mauls.png",
+  "source_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "source_crop": [
+    49,
+    32,
+    233,
+    254
+  ],
+  "source_sha256": "4208bfa9247d3bd30834988c2f29bd3cd1815aacb8fc23616e3613fb31ef7b25",
+  "source_provenance": "res://art/animation/source/fluid/unit_neutral_charcoal_mauls/provenance.json",
+  "sha256": "3438d6596683d8b12514ceed1a98d6ef7cc7984bb6fc5a045bac5ad0dc05834a"
+},
     "unit_neutral_emberpack_lobbers": {
       "path": "res://art/overworld/runtime/creature_idle/unit_neutral_emberpack_lobbers.png",
       "frame_size": [

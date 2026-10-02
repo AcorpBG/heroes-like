@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            389,
+            512
+          ]
+        ],
+        "anchor": [
+          179,
+          486
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "217a5d70549b5b8ffbc1637a918246a5f2b844c1c67c757c86caac5300f8ca93",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a7b55ff025254a7ace16edf1154f92e022a09449070eb449c38f9641446eb2ee",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "early_diagonal_lift",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/action_guides.png",
+        "rects": [
+          [
+            0,
+            0,
+            640,
+            724
+          ]
+        ],
+        "anchor": [
+          280,
+          674
+        ],
+        "scale": 0.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d6e84f0d9fc11a46ac3a83484d6c72d3d538589f51e7396a6e00d08506cf4c31",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "557aaa1f3c87df1274e3e02ec25f8979dad61fdb12efb949321101dedfab4771",
+      "runtime_source_scale": 0.33
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

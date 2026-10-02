@@ -1,0 +1,183 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            389,
+            512
+          ]
+        ],
+        "anchor": [
+          179,
+          486
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "217a5d70549b5b8ffbc1637a918246a5f2b844c1c67c757c86caac5300f8ca93",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a7b55ff025254a7ace16edf1154f92e022a09449070eb449c38f9641446eb2ee",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "early_diagonal_lift",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/action_guides.png",
+        "rects": [
+          [
+            0,
+            0,
+            640,
+            724
+          ]
+        ],
+        "anchor": [
+          280,
+          674
+        ],
+        "scale": 0.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d6e84f0d9fc11a46ac3a83484d6c72d3d538589f51e7396a6e00d08506cf4c31",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "557aaa1f3c87df1274e3e02ec25f8979dad61fdb12efb949321101dedfab4771",
+      "runtime_source_scale": 0.33
+    },
+    {
+      "source_frame": {
+        "name": "maul_overhead_windup",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+        "rects": [
+          [
+            530,
+            379,
+            553,
+            384
+          ],
+          [
+            514,
+            384,
+            570,
+            395
+          ],
+          [
+            459,
+            395,
+            616,
+            403
+          ],
+          [
+            367,
+            403,
+            671,
+            755
+          ]
+        ],
+        "anchor": [
+          533,
+          745
+        ],
+        "scale": 1.0715999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "e8d5b4c7ba71706116f4bfd579331be1fc4414beca1fdba2c676b9b609b5fe25",
+      "runtime_source_scale": 0.5357999999999999
+    },
+    {
+      "source_frame": {
+        "name": "intermediate_downstroke",
+        "source": "art/units/source/generated/fluid_animation/batch_b/unit_neutral_charcoal_mauls/action_guides.png",
+        "rects": [
+          [
+            650,
+            0,
+            1370,
+            724
+          ]
+        ],
+        "anchor": [
+          945,
+          672
+        ],
+        "scale": 0.66,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "d6e84f0d9fc11a46ac3a83484d6c72d3d538589f51e7396a6e00d08506cf4c31",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "8b4a40a1d9d6dd4a188763bba4965b0efcea6eeeb9c0d573ed8b8a81e8db2448",
+      "runtime_source_scale": 0.33
+    },
+    {
+      "source_frame": {
+        "name": "maul_downward_strike",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+        "rects": [
+          [
+            704,
+            447,
+            1038,
+            643
+          ],
+          [
+            704,
+            643,
+            1080,
+            754
+          ]
+        ],
+        "anchor": [
+          886,
+          745
+        ],
+        "scale": 1.0715999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "45c19c28af537ee6fd9ca1cdbdcde10e148c4f6eee0deaa1f3a79206f2a6c226",
+      "runtime_source_scale": 0.5357999999999999
+    },
+    {
+      "source_frame": {
+        "name": "maul_recovery",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png",
+        "rects": [
+          [
+            0,
+            0,
+            670,
+            786
+          ]
+        ],
+        "anchor": [
+          299,
+          736
+        ],
+        "scale": 0.5828,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95e9aa892af997cb3d5b9d19eee02265e99f93253bb9a9a3f1cfb5ee87f67e9b",
+      "input_file": "guide_5_chroma.png",
+      "input_sha256": "3c5d63b225b24e72f6a151fd42c8f9b5cd03b0b0d1ff3c4c6713329fd06de2bc",
+      "runtime_source_scale": 0.2914
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

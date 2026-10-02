@@ -1,0 +1,16 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "fixed_source_family_multipliers": {
+    "legacy_alpha_and_continuity": 0.94,
+    "idle-v2/hands-alpha.png": 1,
+    "action_guides.png": 0.33
+  },
+  "reason": "Accepted articulated idle204px body; original ready216px and passing220px. Fixed .94 factor for original legacy action paintings, no crouch/death normalization; preserve idle and map pixels.",
+  "correction_reason": "Three original intermediate key paintings prevent ghosted lifting hands, camera-facing oversized maul and abrupt knee/side-fall transitions. Fixed .330 master scale for all three new paintings, no posture normalization."
+}

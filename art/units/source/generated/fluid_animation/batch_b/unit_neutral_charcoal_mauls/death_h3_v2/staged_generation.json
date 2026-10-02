@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "3335522ae300a4aaa864cf88db6e59dd3df28f8d7fd48e7ed1025cc0bac9febf",
+  "latent_sha256": "ee3a5751c5ac318c8d9707b417da435b0b67dcc5a1b6f6c6e15cf20784d19868",
+  "decode_workflow_sha256": "74498de3832bfd90b1d1bb688c6c75a6494bcd992cd97a10f666f7e990df211c",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "charcoal_maul_h3\\death_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

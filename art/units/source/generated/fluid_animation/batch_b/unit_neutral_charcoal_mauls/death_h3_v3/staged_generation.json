@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "6ff2d36b4ca1d69ae6d8bf93a79b47d057fa1166a9a4875d3c4aa72e2c1c2cc0",
+  "latent_sha256": "2be305f4e39489c036f97dcef9b75dfa4c5ff6adcb20d461048dc6b82514b386",
+  "decode_workflow_sha256": "cc99d705f3cb70042dbf58a44b9dca1f31c216c0febf2108e72c117ac8a82bbf",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "charcoal_maul_h3\\death_h3_v3",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18796848448,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

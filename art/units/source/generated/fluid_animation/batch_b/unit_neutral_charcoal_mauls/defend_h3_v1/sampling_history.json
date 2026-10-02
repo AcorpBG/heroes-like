@@ -1,0 +1,257 @@
+{
+  "prompt": [
+    226,
+    "17455144-93ed-44df-a649-833115a62f65",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original Charcoal Maul: stocky muscular adult human man, black beard and hair, red headband and neck scarf, dark studded metal shoulder and leg plates, dirty cream apron with black rune motifs, red sleeves and leg wraps, brown gloves and boots, leather belt with small coal basket on screen right hip. Exactly TWO arms and TWO legs. ONE long two-handed dark metal maul, thick straight shaft with red wrapping and ring at butt, large rectangular double-faced dark steel hammer head with a narrow orange-red metal seam. Screen-left gloved hand grips lower shaft, screen-right gloved hand grips upper shaft, BOTH real hands stay on this SAME original shaft throughout. No extra weapon, duplicate head, changing hammer material, loose hands or extra fingers. Original face, clothes, armor, maul, grips and body proportions remain stable. One dedicated defensive BRACE. Raise the same maul shaft across upper chest22 with BOTH hands still on original lower and upper grip. Bend both knees and elbows into supplied low guarding crouch46, hold hammer head toward screen right and shaft across chest. HOLD final crouched guard through end with planted boots, no return to ready, no shield or new weapon. Locked original elevated three-quarter orthographic camera facing screen right, full body and entire maul inside960x544 with generous margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background every frame, no floor or ground shadow. No other characters, text, incoming objects, lines, trails, energy, glow, particles, smoke or impact flash. Genuine limb and joint articulation, not whole-sprite warping.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026102104
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "charcoal_maul_defend_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "charcoal_maul_defend_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "charcoal_maul_defend_h3_v1_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 22,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 46,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "charcoal_maul_h3/defend_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "charcoal_maul_h3",
+      "create_time": 1790914063957
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "charcoal_maul_h3\\defend_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "17455144-93ed-44df-a649-833115a62f65",
+          "timestamp": 1790914063958
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "17455144-93ed-44df-a649-833115a62f65",
+          "timestamp": 1790914063981
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "17455144-93ed-44df-a649-833115a62f65",
+          "timestamp": 1790914194649
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "clip": "cast",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    480,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026102105,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          389,
+          512
+        ]
+      ],
+      "anchor": [
+        179,
+        486
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "maul_overhead_windup",
+      "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+      "rects": [
+        [
+          530,
+          379,
+          553,
+          384
+        ],
+        [
+          514,
+          384,
+          570,
+          395
+        ],
+        [
+          459,
+          395,
+          616,
+          403
+        ],
+        [
+          367,
+          403,
+          671,
+          755
+        ]
+      ],
+      "anchor": [
+        533,
+        745
+      ],
+      "scale": 0.5357999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      44,
+      1
+    ],
+    [
+      66,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original Charcoal Maul: stocky muscular adult human man, black beard and hair, red headband and neck scarf, dark studded metal shoulder and leg plates, dirty cream apron with black rune motifs, red sleeves and leg wraps, brown gloves and boots, leather belt with small coal basket on screen right hip. Exactly TWO arms and TWO legs. ONE long two-handed dark metal maul, thick straight shaft with red wrapping and ring at butt, large rectangular double-faced dark steel hammer head with a narrow orange-red metal seam. Screen-left gloved hand grips lower shaft, screen-right gloved hand grips upper shaft, BOTH real hands stay on this SAME original shaft throughout. No extra weapon, duplicate head, changing hammer material, loose hands or extra fingers. Original face, clothes, armor, maul, grips and body proportions remain stable. One physical rally SALUTE, not magic. Raise BOTH arms with same original maul overhead44, both hands remain on original shaft, hammer head toward screen left as in supplied overhead guide. HOLD raised maul briefly44-66, no downstroke, strike or throw. Then lower it carefully to waist while keeping both grips and return to original ready. Planted boots, visible elbow/wrist/shoulder articulation, no sparks, magic or particles. Share original overhead key painting with hammer exercise, but perform a distinct held salute and controlled lowering. Locked original elevated three-quarter orthographic camera facing screen right, full body and entire maul inside960x544 with generous margins, fixed anatomical scale and centered root. Uniform saturated GREEN RGB0,255,0 background every frame, no floor or ground shadow. No other characters, text, incoming objects, lines, trails, energy, glow, particles, smoke or impact flash. Genuine limb and joint articulation, not whole-sprite warping.",
+  "protected_foreground_chroma": 11,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

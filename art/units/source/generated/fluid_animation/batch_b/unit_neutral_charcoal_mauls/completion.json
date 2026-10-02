@@ -1,0 +1,74 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "workflow": "Solo local MiniMax H3 original video and extracted transparent frames; one unit fully completed.",
+  "new_takes": [
+    "attack_h3_v1",
+    "attack_h3_v2",
+    "cast_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v1",
+    "death_h3_v2",
+    "death_h3_v3",
+    "defend_h3_v1",
+    "hit_h3_v1",
+    "move_h3_v1"
+  ],
+  "new_clip_frames": {
+    "move": 35,
+    "hit": 35,
+    "defend": 22,
+    "cast": 28,
+    "death": 68,
+    "attack": 51
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo reviewed all124 chronological original frames in each of ten original H3 takes, enlarged hands/hammer/legs/collapse and every selected native128px pose in normal and mirrored rendering. Accepted reciprocal two-leg walk, two-handed hammer anticipation/contact/recovery, backward recoil, dedicated maul guard, diagonal shoulder-height physical rally salute and gradual grounded collapse with persistent corpse. Initial attack ghosted lifting hands are excluded; corrected windup and recovery retain original pixels. Corrected attack34/35 lose the hammer head and are excluded; first-take27-30 supply the physically matching overhead-to-forward release, with both grips and head intact. Native joins preserve posture, scale, camera and weapon arc. Initial salute enlarged/clipped the hammer and is rejected. Both intermediate-guided collapses held then jumped between postures and are rejected; endpoint-only third collapse supplies continuous knee descent, side roll and original weapon settling on the ground. Selected active motion runs42ms per observed original frame; shorten unchanged holds only. No synthetic interpolation, reversal, duplicate padding, sprite warping or per-pose normalization. 807 candidate and807 reflected focused checks pass, including actual shell clock showing all51 strike poses and simulation/save invariance. Preserve eight accepted articulated idle poses and all overworld pixels/timing. Review used chronological stills, enlarged details and native clock-driven captures; no claim of continuous manual movie playback or manual game playtest. No full suite."
+  },
+  "validation": {
+    "candidate_checks": 807,
+    "mirrored_checks": 807,
+    "live_checks": 821,
+    "failures": 0,
+    "imported_atlas": "Exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      2236,
+      4044
+    ],
+    "rgba_bytes": 36169536,
+    "new_original_action_frames": 239,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 868,
+    "retained_original_rgb_frames_including_rejected": 1240,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 202,
+    "remaining": 30,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Charcoal Mauls six H3 actions, 239 original poses plus retained eight-frame idle; reciprocal two-leg walk, original two-handed hammer stroke/recovery, clean recoil, maul guard, diagonal shoulder-height rally salute and grounded corpse reviewed. 807/807/821 candidate/mirrored/live focused checks pass; exact imported atlas, all232 map pixels/timing and other231 battle rows preserved. Roster202/232 complete,30 remaining. Broad goal stays in_progress; solo, no full suite.",
+  "cleanup": {
+    "deleted_verified_duplicate_or_unselected_files": 2295,
+    "deleted_verified_duplicate_or_unselected_bytes": 707660855,
+    "ephemeral_review_test_files": 117,
+    "ephemeral_review_test_bytes": 111655593,
+    "recovered_bytes_total": 819316448,
+    "rebuildable": true,
+    "original_rgb_frames_retained": 1240,
+    "preserved": "All original art/video/latents, prompts, workflows, guides, source and provenance; unrelated files/caches/saves/backups and RMG material untouched.",
+    "temporary_directories_to_remove": [
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\charcoal_solo",
+      "D:\\Games\\godot\\heroes-like\\.artifacts\\charcoal_maul_h3"
+    ]
+  }
+}

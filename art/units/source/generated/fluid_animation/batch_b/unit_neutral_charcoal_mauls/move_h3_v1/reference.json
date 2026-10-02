@@ -1,0 +1,99 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            389,
+            512
+          ]
+        ],
+        "anchor": [
+          179,
+          486
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "217a5d70549b5b8ffbc1637a918246a5f2b844c1c67c757c86caac5300f8ca93",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a7b55ff025254a7ace16edf1154f92e022a09449070eb449c38f9641446eb2ee",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "walk_contact",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+        "rects": [
+          [
+            46,
+            398,
+            365,
+            731
+          ],
+          [
+            46,
+            731,
+            96,
+            746
+          ],
+          [
+            216,
+            731,
+            365,
+            746
+          ]
+        ],
+        "anchor": [
+          182,
+          740
+        ],
+        "scale": 1.0715999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "ae81ab093c8444b69f67658f8566c4dc735ad11d43de5c4636cfe2698d7048c8",
+      "runtime_source_scale": 0.5357999999999999
+    },
+    {
+      "source_frame": {
+        "name": "guided_passing",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/guided-planted-passing-step.png",
+        "rects": [
+          [
+            0,
+            0,
+            1221,
+            1289
+          ]
+        ],
+        "anchor": [
+          602,
+          1247
+        ],
+        "scale": 0.3384,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "6da4a730018aef9efc7c428e819c4c4014d308f402d4ff45b19dc7b93617ef9f",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "88c6eab964f8edd209e22619c0bfe64c509813236363954c3a0d95fe29546bb2",
+      "runtime_source_scale": 0.1692
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

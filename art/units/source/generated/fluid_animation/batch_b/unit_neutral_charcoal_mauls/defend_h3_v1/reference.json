@@ -1,0 +1,93 @@
+{
+  "unit_id": "unit_neutral_charcoal_mauls",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            389,
+            512
+          ]
+        ],
+        "anchor": [
+          179,
+          486
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "217a5d70549b5b8ffbc1637a918246a5f2b844c1c67c757c86caac5300f8ca93",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a7b55ff025254a7ace16edf1154f92e022a09449070eb449c38f9641446eb2ee",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "maul_ready_guard",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/continuity-alpha/maul-recovery-ready-and-passing.png",
+        "rects": [
+          [
+            670,
+            0,
+            1340,
+            786
+          ]
+        ],
+        "anchor": [
+          962,
+          736
+        ],
+        "scale": 0.5828,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "95e9aa892af997cb3d5b9d19eee02265e99f93253bb9a9a3f1cfb5ee87f67e9b",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "028d3f30257b7e062a27175f6475369cb1d20781c273f91836bc43208be77812",
+      "runtime_source_scale": 0.2914
+    },
+    {
+      "source_frame": {
+        "name": "maul_deep_guard",
+        "source": "art/animation/source/poses/unit_neutral_charcoal_mauls/alpha/poses.png",
+        "rects": [
+          [
+            1060,
+            438,
+            1426,
+            620
+          ],
+          [
+            1092,
+            620,
+            1426,
+            739
+          ]
+        ],
+        "anchor": [
+          1253,
+          728
+        ],
+        "scale": 1.0715999999999999,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "2405ed14950563ebc07a14baf83e30f239ef306d2f023ede3a7de7ff68a77114",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "bea44d305edd5f5d4a8cd839eda1162ef1f5ff4e062a57f8aac1facefb982d5f",
+      "runtime_source_scale": 0.5357999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    480,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}
