@@ -1,0 +1,127 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "clip": "death",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108206,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        174,
+        438
+      ],
+      "scale": 0.70588,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          370,
+          695,
+          740,
+          980
+        ]
+      ],
+      "anchor": [
+        619,
+        971
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          740,
+          730,
+          1110,
+          980
+        ]
+      ],
+      "anchor": [
+        1003,
+        970
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          1110,
+          790,
+          1536,
+          980
+        ]
+      ],
+      "anchor": [
+        1387,
+        963
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      70,
+      2
+    ],
+    [
+      96,
+      3
+    ]
+  ],
+  "last": 3,
+  "prompt": "Original QUENCHBELL IRONBACK from the supplied painted references. One massive armored rhinoceros-like quadruped facing SCREEN RIGHT, exactly FOUR stout hoofed legs: two front and two rear, near and far limbs partially occluding naturally. Gray-brown shaggy fur under overlapping dark steel dorsal plates with brass edging, original red/orange pressure seams and circular red gauges on shoulder/back. One original long curved brass bell horn on the nose and original smaller head horns; keep length, placement and metal shape unchanged. Original red eyes, muzzle, armored leg cuffs and short tufted tail. No human arms/hands, extra feet, rider, weapons, muzzle transformation or new lights. Preserve original weathered painted fantasy artwork, three-quarter camera, body proportions and anatomical scale. One slow grounded collapse: foreleg knees buckle, head/horn lower, original heavy shoulder sinks onto one side while rear legs fold, followed by body/plates settling into original side-rest corpse. Remain supported by a hoof/knee/body contact throughout, no jumping or upward roll. Four attached legs rest beside the torso. Original horn/muzzle/fur and gauges remain recognizable, red seams settle dimly without new effects. Last second motionless in original corpse, no shrink/disintegration or standing back up. Entire background flat magenta RGB255,0,255 throughout; no scenery, floor texture, shadow, dust, shockwaves, speed lines, projectiles, particles or floating props. Fixed orthographic camera, no zoom, pan or cut. Keep all horns, hoof tips and tail within generous margins. Ground contact plane y576; moving feet lift legitimately while at least other feet support the mass. Planted hooves do not skate; no root travel during gait.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

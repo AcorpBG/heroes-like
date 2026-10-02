@@ -1,0 +1,135 @@
+{
+  "original_curated": {
+    "path": "art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+    "sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27",
+    "opaque_green_max": 3,
+    "opaque_magenta_max": 11
+  },
+  "registered_ready_guide": {
+    "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/guide_0_rgba.png",
+    "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+    "opaque_green_max": 6,
+    "opaque_magenta_max": 9
+  },
+  "edge_excess_threshold": 24,
+  "boundary_original_pixels": 2,
+  "rule": "Measured original foreground never reaches edge-despill threshold. Exact alpha and every interior RGB pixel preserved.",
+  "all_original_guides": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/guide_1_rgba.png",
+      "sha256": "1fd4136c8352fe8cfccc4622989ccc54f071d63f97c7ffb6a5832ffc301f3ece",
+      "opaque_green_max": 11,
+      "opaque_magenta_max": 13
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/guide_2_rgba.png",
+      "sha256": "ea68604e0ccefd378885ba6eba2dfda36f58c77322a0f11364a7626d264fa02b",
+      "opaque_green_max": 7,
+      "opaque_magenta_max": 10
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v1/guide_1_rgba.png",
+      "sha256": "7baf5d2bb6a4587e658861892ac60da5fd5053b687c3e13c362b53501610fa97",
+      "opaque_green_max": 3,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/guide_1_rgba.png",
+      "sha256": "7baf5d2bb6a4587e658861892ac60da5fd5053b687c3e13c362b53501610fa97",
+      "opaque_green_max": 3,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/guide_1_rgba.png",
+      "sha256": "dc77053e9d66d2da6877733f963f146fc896619da708189ff0411705e5d0b511",
+      "opaque_green_max": 4,
+      "opaque_magenta_max": 12
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/guide_2_rgba.png",
+      "sha256": "a5a4452dabd9b233730d39ed284c76b3eedb47bc08a8944ee707587eb79b2148",
+      "opaque_green_max": 5,
+      "opaque_magenta_max": 11
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/guide_3_rgba.png",
+      "sha256": "45a99c9634241d8978d63f764ee576370f18f1198daa73a8292bb1a8ba85fc1d",
+      "opaque_green_max": 3,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/guide_1_rgba.png",
+      "sha256": "3d217167d12d6eab70482ce015af91abcc81d3e98a0fbad47d57740835856ffd",
+      "opaque_green_max": 7,
+      "opaque_magenta_max": 16
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/guide_1_rgba.png",
+      "sha256": "4e48e2bb87d9b85eb60258ec847ebc55b62d0f21d326b0ffa0e9f5123aecded4",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 12
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/guide_0_rgba.png",
+      "sha256": "3739d6436c608fab3da6fb8ba6b543d40d4c9a0b9086d546a0954fcad75ced73",
+      "opaque_green_max": 6,
+      "opaque_magenta_max": 9
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/guide_1_rgba.png",
+      "sha256": "740b2a004d3a5e0ff78f707a9f0204f789a3fd76697e5d3c417a6111b500ebd0",
+      "opaque_green_max": 5,
+      "opaque_magenta_max": 14
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/guide_2_rgba.png",
+      "sha256": "26fc76d7b9ed62e3067d153563ced503d8f4399dfd00aa244508450bc37e48e3",
+      "opaque_green_max": 12,
+      "opaque_magenta_max": 13
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/guide_3_rgba.png",
+      "sha256": "e3a81de7583ba64ec1da8b3543575f30a9d3e0524076dc94536a3733f5339c7c",
+      "opaque_green_max": 5,
+      "opaque_magenta_max": 19
+    }
+  ],
+  "all_guide_green_max": 12,
+  "all_guide_magenta_max": 19
+}

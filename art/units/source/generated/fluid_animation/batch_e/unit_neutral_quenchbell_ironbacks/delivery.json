@@ -1,0 +1,20 @@
+{
+  "takes": [
+    "move_h3_v1",
+    "attack_h3_v1",
+    "hit_h3_v1",
+    "defend_h3_v1",
+    "cast_h3_v2",
+    "death_h3_v1"
+  ],
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted_selected_clips",
+    "notes": "Solo personal review of all124 original RGB and extracted frames of each of seven takes, critical enlarged limb/horn/body transitions and every211 normal/reflected native128px pose on actual Godot pages. Preserve four hooved legs, original large brass bellhorn, steel/brass dorsal plates, red gauges and fixed anatomical scale/ground anchors. Original reciprocal quadruped gait; hind-hoof-supported rearing windup to downward/forward horn ram and recovery; recoil; widened hoof/knee brace ending in held guard; physical forehoof paw and head bow with planted recovery; continuous supported side-rest death ending grounded. Reject support v1 final snap; support v2 recovered naturally by original ready guides. All868 original RGB frames retained, including rejected v1. Eight normal candidate and eight mirrored-run actual shell-clock ram captures personally inspected; galleries are reflected, shell captures stay normal-facing. Enlarged soft edges and original shading read at native scale without background boxes or missing horn/hooves. Existing eight idle poses and260ms battle/map timing retained. Candidate checks699 plus mirrored699, no failures. Continuous video playback, manual game and Linux not performed; live/imported review pending."
+  },
+  "rejected_takes": [
+    "cast_h3_v1"
+  ]
+}

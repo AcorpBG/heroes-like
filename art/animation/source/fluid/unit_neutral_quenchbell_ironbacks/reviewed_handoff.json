@@ -1,0 +1,5170 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_quenchbell_ironbacks",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "move_h3_032",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "move_h3_034",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "move_h3_036",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "move_h3_038",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "move_h3_040",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "move_h3_042",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "move_h3_044",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "move_h3_046",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "move_h3_048",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "move_h3_050",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "move_h3_051",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "attack_h3_000",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "attack_h3_010",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "attack_h3_014",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "attack_h3_016",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "attack_h3_018",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "attack_h3_020",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "attack_h3_022",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "attack_h3_024",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "attack_h3_026",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "attack_h3_028",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "attack_h3_030",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "attack_h3_031",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_031.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 31,
+          "video_time_seconds": 1.2916666666666667
+        },
+        {
+          "name": "attack_h3_032",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "attack_h3_033",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_033.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 33,
+          "video_time_seconds": 1.375
+        },
+        {
+          "name": "attack_h3_034",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "attack_h3_035",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_035.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 35,
+          "video_time_seconds": 1.4583333333333333
+        },
+        {
+          "name": "attack_h3_036",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "attack_h3_037",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_037.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 37,
+          "video_time_seconds": 1.5416666666666667
+        },
+        {
+          "name": "attack_h3_038",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "attack_h3_039",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_039.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 39,
+          "video_time_seconds": 1.625
+        },
+        {
+          "name": "attack_h3_040",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_040.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 40,
+          "video_time_seconds": 1.6666666666666667
+        },
+        {
+          "name": "attack_h3_041",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_041.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 41,
+          "video_time_seconds": 1.7083333333333333
+        },
+        {
+          "name": "attack_h3_042",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "attack_h3_043",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_043.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 43,
+          "video_time_seconds": 1.7916666666666667
+        },
+        {
+          "name": "attack_h3_044",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_044.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 44,
+          "video_time_seconds": 1.8333333333333333
+        },
+        {
+          "name": "attack_h3_048",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "attack_h3_056",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "attack_h3_064",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "attack_h3_072",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "attack_h3_076",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "attack_h3_078",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "attack_h3_080",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "attack_h3_082",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "attack_h3_084",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "attack_h3_086",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "attack_h3_088",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "attack_h3_090",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "attack_h3_092",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "attack_h3_100",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "attack_h3_112",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "attack_h3_123",
+          "clip": "attack",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "hit_h3_000",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "hit_h3_006",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "hit_h3_008",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "hit_h3_010",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "hit_h3_011",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_011.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 11,
+          "video_time_seconds": 0.4583333333333333
+        },
+        {
+          "name": "hit_h3_012",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "hit_h3_013",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_013.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 13,
+          "video_time_seconds": 0.5416666666666666
+        },
+        {
+          "name": "hit_h3_014",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "hit_h3_015",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_015.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 15,
+          "video_time_seconds": 0.625
+        },
+        {
+          "name": "hit_h3_016",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "hit_h3_017",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_017.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 17,
+          "video_time_seconds": 0.7083333333333334
+        },
+        {
+          "name": "hit_h3_018",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "hit_h3_020",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "hit_h3_026",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "hit_h3_042",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "hit_h3_062",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "hit_h3_064",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "hit_h3_065",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_065.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 65,
+          "video_time_seconds": 2.7083333333333335
+        },
+        {
+          "name": "hit_h3_066",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "hit_h3_067",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_067.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 67,
+          "video_time_seconds": 2.7916666666666665
+        },
+        {
+          "name": "hit_h3_068",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "hit_h3_069",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_069.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 69,
+          "video_time_seconds": 2.875
+        },
+        {
+          "name": "hit_h3_070",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "hit_h3_071",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_071.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 71,
+          "video_time_seconds": 2.9583333333333335
+        },
+        {
+          "name": "hit_h3_072",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "hit_h3_073",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_073.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 73,
+          "video_time_seconds": 3.0416666666666665
+        },
+        {
+          "name": "hit_h3_074",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "hit_h3_076",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "hit_h3_082",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "hit_h3_092",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "hit_h3_108",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_108.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 108,
+          "video_time_seconds": 4.5
+        },
+        {
+          "name": "hit_h3_123",
+          "clip": "hit",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "defend_h3_000",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "defend_h3_006",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "defend_h3_010",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "defend_h3_012",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "defend_h3_014",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "defend_h3_016",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "defend_h3_018",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "defend_h3_020",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "defend_h3_022",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "defend_h3_024",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "defend_h3_025",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_025.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 25,
+          "video_time_seconds": 1.0416666666666667
+        },
+        {
+          "name": "defend_h3_026",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "defend_h3_027",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_027.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 27,
+          "video_time_seconds": 1.125
+        },
+        {
+          "name": "defend_h3_028",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "defend_h3_029",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_029.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 29,
+          "video_time_seconds": 1.2083333333333333
+        },
+        {
+          "name": "defend_h3_030",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "defend_h3_032",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_032.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 32,
+          "video_time_seconds": 1.3333333333333333
+        },
+        {
+          "name": "defend_h3_036",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_036.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 36,
+          "video_time_seconds": 1.5
+        },
+        {
+          "name": "defend_h3_042",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "defend_h3_056",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "defend_h3_080",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "defend_h3_100",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_100.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 100,
+          "video_time_seconds": 4.166666666666667
+        },
+        {
+          "name": "defend_h3_123",
+          "clip": "defend",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "cast_h3_000",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "cast_h3_004",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "cast_h3_006",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "cast_h3_008",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "cast_h3_010",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "cast_h3_012",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "cast_h3_014",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "cast_h3_016",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "cast_h3_018",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "cast_h3_020",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "cast_h3_022",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "cast_h3_024",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "cast_h3_026",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "cast_h3_028",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "cast_h3_030",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "cast_h3_034",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "cast_h3_038",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "cast_h3_042",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "cast_h3_046",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "cast_h3_048",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "cast_h3_050",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "cast_h3_052",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "cast_h3_054",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "cast_h3_056",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "cast_h3_058",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "cast_h3_060",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "cast_h3_062",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "cast_h3_064",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "cast_h3_068",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "cast_h3_072",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "cast_h3_076",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "cast_h3_088",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "cast_h3_104",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "cast_h3_123",
+          "clip": "cast",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        },
+        {
+          "name": "death_h3_000",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "death_h3_006",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "death_h3_010",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "death_h3_014",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "death_h3_018",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "death_h3_022",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "death_h3_026",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "death_h3_030",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        },
+        {
+          "name": "death_h3_034",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_034.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 34,
+          "video_time_seconds": 1.4166666666666667
+        },
+        {
+          "name": "death_h3_038",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_038.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 38,
+          "video_time_seconds": 1.5833333333333333
+        },
+        {
+          "name": "death_h3_042",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_042.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 42,
+          "video_time_seconds": 1.75
+        },
+        {
+          "name": "death_h3_046",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_046.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 46,
+          "video_time_seconds": 1.9166666666666667
+        },
+        {
+          "name": "death_h3_048",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_048.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 48,
+          "video_time_seconds": 2.0
+        },
+        {
+          "name": "death_h3_050",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_050.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 50,
+          "video_time_seconds": 2.0833333333333335
+        },
+        {
+          "name": "death_h3_051",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_051.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 51,
+          "video_time_seconds": 2.125
+        },
+        {
+          "name": "death_h3_052",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_052.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 52,
+          "video_time_seconds": 2.1666666666666665
+        },
+        {
+          "name": "death_h3_053",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_053.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 53,
+          "video_time_seconds": 2.2083333333333335
+        },
+        {
+          "name": "death_h3_054",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_054.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 54,
+          "video_time_seconds": 2.25
+        },
+        {
+          "name": "death_h3_055",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_055.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 55,
+          "video_time_seconds": 2.2916666666666665
+        },
+        {
+          "name": "death_h3_056",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_056.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 56,
+          "video_time_seconds": 2.3333333333333335
+        },
+        {
+          "name": "death_h3_057",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_057.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 57,
+          "video_time_seconds": 2.375
+        },
+        {
+          "name": "death_h3_058",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_058.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 58,
+          "video_time_seconds": 2.4166666666666665
+        },
+        {
+          "name": "death_h3_059",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_059.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 59,
+          "video_time_seconds": 2.4583333333333335
+        },
+        {
+          "name": "death_h3_060",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_060.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 60,
+          "video_time_seconds": 2.5
+        },
+        {
+          "name": "death_h3_061",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_061.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 61,
+          "video_time_seconds": 2.5416666666666665
+        },
+        {
+          "name": "death_h3_062",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_062.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 62,
+          "video_time_seconds": 2.5833333333333335
+        },
+        {
+          "name": "death_h3_063",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_063.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 63,
+          "video_time_seconds": 2.625
+        },
+        {
+          "name": "death_h3_064",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_064.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 64,
+          "video_time_seconds": 2.6666666666666665
+        },
+        {
+          "name": "death_h3_066",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_066.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 66,
+          "video_time_seconds": 2.75
+        },
+        {
+          "name": "death_h3_068",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_068.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 68,
+          "video_time_seconds": 2.8333333333333335
+        },
+        {
+          "name": "death_h3_070",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_070.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 70,
+          "video_time_seconds": 2.9166666666666665
+        },
+        {
+          "name": "death_h3_072",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_072.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 72,
+          "video_time_seconds": 3.0
+        },
+        {
+          "name": "death_h3_074",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_074.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 74,
+          "video_time_seconds": 3.0833333333333335
+        },
+        {
+          "name": "death_h3_076",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_076.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 76,
+          "video_time_seconds": 3.1666666666666665
+        },
+        {
+          "name": "death_h3_078",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_078.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 78,
+          "video_time_seconds": 3.25
+        },
+        {
+          "name": "death_h3_080",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_080.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 80,
+          "video_time_seconds": 3.3333333333333335
+        },
+        {
+          "name": "death_h3_082",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_082.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 82,
+          "video_time_seconds": 3.4166666666666665
+        },
+        {
+          "name": "death_h3_084",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_084.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 84,
+          "video_time_seconds": 3.5
+        },
+        {
+          "name": "death_h3_086",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_086.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 86,
+          "video_time_seconds": 3.5833333333333335
+        },
+        {
+          "name": "death_h3_088",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_088.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 88,
+          "video_time_seconds": 3.6666666666666665
+        },
+        {
+          "name": "death_h3_090",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_090.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 90,
+          "video_time_seconds": 3.75
+        },
+        {
+          "name": "death_h3_092",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_092.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 92,
+          "video_time_seconds": 3.8333333333333335
+        },
+        {
+          "name": "death_h3_096",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_096.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 96,
+          "video_time_seconds": 4.0
+        },
+        {
+          "name": "death_h3_104",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_104.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 104,
+          "video_time_seconds": 4.333333333333333
+        },
+        {
+          "name": "death_h3_112",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_112.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 112,
+          "video_time_seconds": 4.666666666666667
+        },
+        {
+          "name": "death_h3_123",
+          "clip": "death",
+          "source": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_123.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              640
+            ]
+          ],
+          "anchor": [
+            480,
+            576
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 123,
+          "video_time_seconds": 5.125
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26
+          ],
+          "frame_msec": 83,
+          "loop": true,
+          "static_frame": 0,
+          "frame_durations_msec": [
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            83,
+            42,
+            42
+          ]
+        },
+        "attack": {
+          "indices": [
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39,
+            40,
+            41,
+            42,
+            43,
+            44,
+            45,
+            46,
+            47,
+            48,
+            49,
+            50,
+            51,
+            52,
+            53,
+            54,
+            55,
+            56,
+            57,
+            58,
+            59,
+            60,
+            61,
+            62,
+            63,
+            64,
+            65,
+            66,
+            67
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 16
+        },
+        "hit": {
+          "indices": [
+            68,
+            69,
+            70,
+            71,
+            72,
+            73,
+            74,
+            75,
+            76,
+            77,
+            78,
+            79,
+            80,
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87,
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94,
+            95,
+            96,
+            97,
+            98,
+            99
+          ],
+          "frame_msec": 30,
+          "loop": false,
+          "static_frame": 0,
+          "contact_frame": 10
+        },
+        "defend": {
+          "indices": [
+            100,
+            101,
+            102,
+            103,
+            104,
+            105,
+            106,
+            107,
+            108,
+            109,
+            110,
+            111,
+            112,
+            113,
+            114,
+            115,
+            116,
+            117,
+            118,
+            119,
+            120,
+            121,
+            122
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 22
+        },
+        "cast": {
+          "indices": [
+            123,
+            124,
+            125,
+            126,
+            127,
+            128,
+            129,
+            130,
+            131,
+            132,
+            133,
+            134,
+            135,
+            136,
+            137,
+            138,
+            139,
+            140,
+            141,
+            142,
+            143,
+            144,
+            145,
+            146,
+            147,
+            148,
+            149,
+            150,
+            151,
+            152,
+            153,
+            154,
+            155,
+            156
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 0
+        },
+        "death": {
+          "indices": [
+            157,
+            158,
+            159,
+            160,
+            161,
+            162,
+            163,
+            164,
+            165,
+            166,
+            167,
+            168,
+            169,
+            170,
+            171,
+            172,
+            173,
+            174,
+            175,
+            176,
+            177,
+            178,
+            179,
+            180,
+            181,
+            182,
+            183,
+            184,
+            185,
+            186,
+            187,
+            188,
+            189,
+            190,
+            191,
+            192,
+            193,
+            194,
+            195,
+            196,
+            197,
+            198,
+            199,
+            200,
+            201,
+            202
+          ],
+          "frame_msec": 42,
+          "loop": false,
+          "static_frame": 45
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "Reviewed source-resolution registration; one anatomical scale per original image.",
+      "provenance": {
+        "move_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/config.json",
+          "sha256": "6bed7a3bf844cd6e9fc4f384884a8ffbe7b13be16814911a5858e1b5cc703616"
+        },
+        "move_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/selection.json",
+          "sha256": "546906b323f47f3c219e237d002ab0c7ede1280e7280a0710ec9669126b5ac68"
+        },
+        "move_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/original_lossless.mkv",
+          "sha256": "817c4d417354a7b5820805aa52b3c7fe9b7f3f4419844478fdb4ae38fa247e8f"
+        },
+        "move_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/original.json",
+          "sha256": "7c6777f62bfa49c958e48145fa1f2936d0c7435930eebe1c2bf281b9268425e6"
+        },
+        "move_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/workflow_api.json",
+          "sha256": "70ba311506c1ec5c38feb4efd7aee6d3417c4f1e6a817f6178acb9de3c949203"
+        },
+        "move_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/prompt.txt",
+          "sha256": "80783b58c43b5483507c60c9483fe727bd1cd52960c7810d25abf85ea74d6073"
+        },
+        "move_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/reference.json",
+          "sha256": "0da8e0e247694305cdbe6b2747d795bae019b09953c95062771096fcd4da164c"
+        },
+        "move_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/matte.json",
+          "sha256": "ab787d9c5d598ff1d3339d83f4748eb3101594d2fb6e14ccdd7364f5522d7e50"
+        },
+        "move_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte.json",
+          "sha256": "89968f699c622dd15f0694f9e2ff241870879c7fb8ea8da4c495620cc6d9cc63"
+        },
+        "move_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "move_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/staged_generation.json",
+          "sha256": "a6afba87b66e3e1d96a47af7ab84976bf0e1e0358281799b2160d088085048a6"
+        },
+        "move_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/sampling_workflow_api.json",
+          "sha256": "0ee1294bd88bbf3bb0bbd756898fec958c655d590e5c38a19b88ea3e66111d14"
+        },
+        "move_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/sampling_submission.json",
+          "sha256": "cb238424f42ac2639953760bc79caa2cf1d8c1ea0907c20a2e31ceb304d2e47f"
+        },
+        "move_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/sampling_history.json",
+          "sha256": "7ae4d641163e110a3ed1ad3c2b5ac123191ced2415fe5419eb3aed1423e08023"
+        },
+        "move_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/original.latent",
+          "sha256": "485f78f794997fe2d0fe4f4277b811718a5b1a5d152e67f087bfc79b6fa83c5b"
+        },
+        "attack_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/config.json",
+          "sha256": "a57e2f4b216ee44cc1ce56a178847298d7e95e7381bdc0efce2668ee534da9ce"
+        },
+        "attack_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/selection.json",
+          "sha256": "5da74db30c573471f187a0c04bd1f2cc56f44dd71d3b30cfd1ad5ac9617ebd2b"
+        },
+        "attack_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/original_lossless.mkv",
+          "sha256": "b25b62b99ab034e92723289c42ffbae26a4288d9c862e9bbf6eaa7e396169db4"
+        },
+        "attack_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/original.json",
+          "sha256": "ddcb4eb500bdcc8d77bc848f20692089256eeb8a03ab707d0827066a8e9ba71f"
+        },
+        "attack_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/workflow_api.json",
+          "sha256": "c9b47692b1f40a29a51a63f8a907a06397b390ffb62757779a0191f42baf2573"
+        },
+        "attack_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/prompt.txt",
+          "sha256": "6b10b78420384c2607575e0802fc9a46da68341f0837af061952fdd1188f3568"
+        },
+        "attack_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/reference.json",
+          "sha256": "c482eb45b3e5673648cfac05dc8c204be826a5df231546f771122f4e4203fb3a"
+        },
+        "attack_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/matte.json",
+          "sha256": "f797dcf0f03eb39bf53b7c1842cc544fc58ebdee948d79fd6e32f06b3547f80c"
+        },
+        "attack_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte.json",
+          "sha256": "00016e6b5cb468ca5d261a922ab440d0d55bee5b47435408367ad7b7759615b8"
+        },
+        "attack_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "attack_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/staged_generation.json",
+          "sha256": "d1824f307336a890345f1b1c259c249f07f198f16dc9057ca1276a1c4f53a9dd"
+        },
+        "attack_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/sampling_workflow_api.json",
+          "sha256": "185fb4787946316a05c8dd9ceebb4a97e471926c9412b6902f3a82040371e305"
+        },
+        "attack_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/sampling_submission.json",
+          "sha256": "158f6ef90f2b1152cea978b311296063954157a01da7904682306c8f2bbb3390"
+        },
+        "attack_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/sampling_history.json",
+          "sha256": "c70b292d9da8a2b97b90543aa6580a51f1086fe4caa087e104dd47debe042807"
+        },
+        "attack_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/original.latent",
+          "sha256": "ddab3cc2c140ff8d716300e9829d0aac3212488a145f46fae5ff32d96375f30d"
+        },
+        "hit_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/config.json",
+          "sha256": "a52625e6994933310fec170e06d0a6c9d4683e75ce031813e6bf06322182a2de"
+        },
+        "hit_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/selection.json",
+          "sha256": "57b27a48e1e0e84e496fdbca0a94084afbdce3e685e99aebed47cfad463adf03"
+        },
+        "hit_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/original_lossless.mkv",
+          "sha256": "8e98ab19d0099b774dff4bf1442478a4779d4d1443b3fd8da48f6f1b7bc69aef"
+        },
+        "hit_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/original.json",
+          "sha256": "72c8dcd37c297c29c34e214a90d32b4c562761ad006cf97ec0ec3cdf64155bb9"
+        },
+        "hit_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/workflow_api.json",
+          "sha256": "c8164590dd72bf90e5fffaaafb8f565d28ad1af9fcd205d017952fb64e7803a9"
+        },
+        "hit_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/prompt.txt",
+          "sha256": "8de69ec0d59d071e9b145ba7ab44cb68f5685f1f426aaddb4ab84e230a13092b"
+        },
+        "hit_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/reference.json",
+          "sha256": "130a92d0b992b248e0f89524de97d9b8496c10ead1f84f63f3a7e5def01fedff"
+        },
+        "hit_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/matte.json",
+          "sha256": "6fb47db28a4ed397ee6a1b68ea3f5359bf74d16fff0fc02dfc7f9765a9d7de9b"
+        },
+        "hit_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte.json",
+          "sha256": "9acc333bfd82b97a9922fe8362fb9b33fb755e31e5b8dc495635c825d7eefab4"
+        },
+        "hit_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "hit_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/staged_generation.json",
+          "sha256": "eecc2cf0e8cdd715820aec162b8cee8d8c4cdffbac6115cb683a41d65481eac0"
+        },
+        "hit_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/sampling_workflow_api.json",
+          "sha256": "d6f0926b105d600f0b77efb853f4b323dcd7cfd48ca18dcf30981e38b165ebbc"
+        },
+        "hit_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/sampling_submission.json",
+          "sha256": "0c08dfa0cb24a04cb875d4cc9b32184ad8ad17da1b8fcfcb938a33545e3b3d74"
+        },
+        "hit_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/sampling_history.json",
+          "sha256": "30d36235a54ecb2c0e9cae9c895e9b8df989f7867afecde68fd41088ba157cb5"
+        },
+        "hit_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/original.latent",
+          "sha256": "7328861f40cab6979155ea57d2360137ee64849e9ffa953c2dbc31c480bbeb39"
+        },
+        "defend_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/config.json",
+          "sha256": "882814636e685eabebcdf924294c1941fc4e16853d1cd92512f50b266ca481bd"
+        },
+        "defend_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/selection.json",
+          "sha256": "60230cbf0a1732c80932286c984cf85eac064bfc1820027dcf4fc4adb61256a7"
+        },
+        "defend_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/original_lossless.mkv",
+          "sha256": "0cfef73735196df391bf76407101f28a5a6728842a766e3a58397c520146f420"
+        },
+        "defend_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/original.json",
+          "sha256": "de8f6b3d98bf53d4565e32283f401ceaa8d41d7046db5ad364d0a2ba3b14884b"
+        },
+        "defend_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/workflow_api.json",
+          "sha256": "1d1d9dad6e67949309831b452c921b010ba94ee7ee24348fb17956e120735114"
+        },
+        "defend_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/prompt.txt",
+          "sha256": "6611741bf35aa5dc4612227f03f6dc83d38752d726fac8f36a7a9864fd3b9d88"
+        },
+        "defend_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/reference.json",
+          "sha256": "72b65f4e103473c277bf0601ec2f4ba2abba4d2f51ed1058f40d5c057aa0170d"
+        },
+        "defend_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/matte.json",
+          "sha256": "9bc859ab358d3cddad84df695062dcec9eb8a48cbc5c4a7a6bfbea2733b37d8f"
+        },
+        "defend_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte.json",
+          "sha256": "c35b939bbc8880b580becc8721c1adc22474fcd1f54942f98f2f95082ab03024"
+        },
+        "defend_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "defend_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/staged_generation.json",
+          "sha256": "3e2ff30db0f3d014c672a244704a1782d48e7dce0f1a875622c0b054fd081924"
+        },
+        "defend_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/sampling_workflow_api.json",
+          "sha256": "2f58ce19d17d464ac415a64b086fe60d23da6fbb8c301884f6be3c4c6803f014"
+        },
+        "defend_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/sampling_submission.json",
+          "sha256": "90d46a1205153791f7dbef77d8f10d4d867b88ae6a91560b5027ddceedf6a26c"
+        },
+        "defend_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/sampling_history.json",
+          "sha256": "2b9f3dcae58207807bdcfca4ce1ccfc8cf7b2c44d42f8179ff5a951c8c982f15"
+        },
+        "defend_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/original.latent",
+          "sha256": "2053152908da427d9238f20703f4ebf5b04caf6aafda74682f4b73af6e7c78b5"
+        },
+        "cast_h3_v2_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/config.json",
+          "sha256": "8316b0e4fe7c3c56f421f8643b09b581f552a546f7b7105ba795ebb7dfab7842"
+        },
+        "cast_h3_v2_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/selection.json",
+          "sha256": "b12e93bee9fa7557038474dd9c52179c07543200c5fd7290948ec7f4bd820a25"
+        },
+        "cast_h3_v2_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/original_lossless.mkv",
+          "sha256": "4ad158188b08f20158ccb6bb19cfe4886b1e42db267d3b8316f7d50b0cad9b82"
+        },
+        "cast_h3_v2_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/original.json",
+          "sha256": "f236a94961b0e86ffd5f4ff547b184445da7852e6912005e06e5afb9ed68bdbc"
+        },
+        "cast_h3_v2_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/workflow_api.json",
+          "sha256": "4288f283cbbdd077fae3f4731a14bb2b3fbd218ca01354b56d5260a99b96f6b5"
+        },
+        "cast_h3_v2_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/prompt.txt",
+          "sha256": "a9d0fb05ee9fae0a38119f34438173c7517901d787c0bcfeeab2a196f0e90b2c"
+        },
+        "cast_h3_v2_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/reference.json",
+          "sha256": "fcb9b7dc599b31582455741cec2353883438adf46d2d93114d3d3c70d913c9dc"
+        },
+        "cast_h3_v2_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/matte.json",
+          "sha256": "153f92fe5d3df638c8a108a397ad85b67d57ea7145010bc856970100abfd093e"
+        },
+        "cast_h3_v2_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte.json",
+          "sha256": "6554e736b1b874140161f268b0dabe129f7fd2e63594c1902bc672d3f56bfa46"
+        },
+        "cast_h3_v2_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "cast_h3_v2_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/staged_generation.json",
+          "sha256": "b7411f2f6ffd456d266d5a295049fef0cb7b1183a1242dae03461824260c0366"
+        },
+        "cast_h3_v2_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/sampling_workflow_api.json",
+          "sha256": "40a346bcac70303d1295cc12e82822b28bc1c3cae9a8b75e694acc6aea9a7f94"
+        },
+        "cast_h3_v2_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/sampling_submission.json",
+          "sha256": "0b5740c797e64425e5bff086d242ae64a0893bb4efa49794cc10ba9272bfef72"
+        },
+        "cast_h3_v2_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/sampling_history.json",
+          "sha256": "4e042b34458c360c67a90d151ba6aafd3f86fbc310a655ce6740df2611986203"
+        },
+        "cast_h3_v2_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/original.latent",
+          "sha256": "d11837d28d44e0f370a75285b6ccc0686a8157fa519bf6f63ed9226bebab8470"
+        },
+        "death_h3_v1_config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/config.json",
+          "sha256": "b4c512dc4de1f855514a353845e09ae9346be3453f1c980404f846af95d810ea"
+        },
+        "death_h3_v1_selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/selection.json",
+          "sha256": "8c9b74da874dc22c9158fa6061d05efec977ee4c0b399a7fb73a33f3d6cc5149"
+        },
+        "death_h3_v1_original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/original_lossless.mkv",
+          "sha256": "7bd41baf86dccebb061f648649744c4c861c6e16f3bbac6a2c4835bea318b719"
+        },
+        "death_h3_v1_original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/original.json",
+          "sha256": "0e171021177258f67e896f39b51c13da94384d06e53c22702d91456608ff6257"
+        },
+        "death_h3_v1_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/workflow_api.json",
+          "sha256": "2d19882375397507c0887b4cc50d10e6642f170e5bc6d19c473606571468f4b1"
+        },
+        "death_h3_v1_prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/prompt.txt",
+          "sha256": "36e02c6022940914de6750ec8c27a8c04ade7c75bfab6c4bb949559c4ba5ad22"
+        },
+        "death_h3_v1_reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/reference.json",
+          "sha256": "3bbc594046851541b3a8ab4784a1758af972cdcecc65178ab009fcac9ecfec4f"
+        },
+        "death_h3_v1_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/matte.json",
+          "sha256": "46781f2c694c75907ab1ccb6eb645b8efbb5ff7f8fd82f3ff074a64e841a7c4c"
+        },
+        "death_h3_v1_edge_matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte.json",
+          "sha256": "bfcccecff9baea6e36f65512319c227eed8f2053cccce8769c4fc496994b10a9"
+        },
+        "death_h3_v1_segmentation_recipe.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/segmentation_recipe.json",
+          "sha256": "1e314f99b91759844293bc5152f9e213dabee5c423ee4f5f4ae4322c7746482a"
+        },
+        "death_h3_v1_staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/staged_generation.json",
+          "sha256": "972458e8ca8eecc797bad5cb7168d35efeaa305ac0934b6f51d0aa0916319379"
+        },
+        "death_h3_v1_sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/sampling_workflow_api.json",
+          "sha256": "de86fef725977a787ad6e412c3b8b8a02cfb7eccf9ee52290eee886cc112d0c8"
+        },
+        "death_h3_v1_sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/sampling_submission.json",
+          "sha256": "1fed788d9aa009f852ee3314dab1deb872c5aa6e2d8988be66b801314bd0b903"
+        },
+        "death_h3_v1_sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/sampling_history.json",
+          "sha256": "1a03535c2ffeca8b9f081a912fbd358aa6abaf12a24d25d2dfc79076e163a502"
+        },
+        "death_h3_v1_original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/original.latent",
+          "sha256": "f9be070b5d6f2a902a8d1eca14d949feead47b0023d6d34b5b2a8dbd77aa70a6"
+        },
+        "runtime_registration": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/runtime_registration.json",
+          "sha256": "6d8de4d5ff1e5bed5179e9b35b68bcfbe7113e64ff0ff5b37bdb8e34a4df74dc"
+        },
+        "runtime_profile": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/runtime_profile.json",
+          "sha256": "4879a9030e10664288227a0c5c098c9347db55d2a1a7562175fa77ada07dc8e6"
+        },
+        "foreground_measurement.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/foreground_measurement.json",
+          "sha256": "f6ca06d535b0f954759bc529fe7f69b3fefd0e327808980365202dbfc0134871"
+        },
+        "delivery.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/delivery.json",
+          "sha256": "cbf48d0931e5f6a63267d9a2da00a98d57fb4f05d4c0e8a66be429cf91a23d89"
+        },
+        "segment.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/segment.py",
+          "sha256": "5e7668b2dd057886731ad1704acc2d4cf4b3e5346c581e037a8db2c82a68ed87"
+        },
+        "edge_despill.py": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/edge_despill.py",
+          "sha256": "be5d6bdc0f691402e8914121ab80abfa5a44585d2a0cf5eafebee1e5d477967c"
+        },
+        "matting_model.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/matting_model.json",
+          "sha256": "03f0257fbccbfec2fd9ffa4bb3d27398665ea9db710ce65920387148ab179922"
+        },
+        "original_curated_identity": {
+          "path": "art/units/source/curated/unit_neutral_quenchbell_ironbacks.png",
+          "sha256": "1f3e29b5de84bb6057c68d87756abe80a945f466fe79a8a61ca93e860c751b27"
+        }
+      },
+      "visual_review": {
+        "status": "accepted_selected_clips",
+        "notes": "Solo personal review of all124 original RGB and extracted frames of each of seven takes, critical enlarged limb/horn/body transitions and every211 normal/reflected native128px pose on actual Godot pages. Preserve four hooved legs, original large brass bellhorn, steel/brass dorsal plates, red gauges and fixed anatomical scale/ground anchors. Original reciprocal quadruped gait; hind-hoof-supported rearing windup to downward/forward horn ram and recovery; recoil; widened hoof/knee brace ending in held guard; physical forehoof paw and head bow with planted recovery; continuous supported side-rest death ending grounded. Reject support v1 final snap; support v2 recovered naturally by original ready guides. All868 original RGB frames retained, including rejected v1. Eight normal candidate and eight mirrored-run actual shell-clock ram captures personally inspected; galleries are reflected, shell captures stay normal-facing. Enlarged soft edges and original shading read at native scale without background boxes or missing horn/hooves. Existing eight idle poses and260ms battle/map timing retained. Candidate checks699 plus mirrored699, no failures. Continuous video playback, manual game and Linux not performed; live/imported review pending."
+      },
+      "source_scale_by_image": {
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_002.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/move_h3_v1/edge_matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_031.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_033.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_035.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_037.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_039.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_040.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_041.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_043.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_044.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/attack_h3_v1/edge_matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_011.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_013.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_015.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_017.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_065.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_067.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_069.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_071.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_073.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_108.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/hit_h3_v1/edge_matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_025.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_027.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_029.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_032.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_036.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_100.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/defend_h3_v1/edge_matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_004.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_008.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_012.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_016.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_020.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_024.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_028.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/cast_h3_v2/edge_matte/rgba_123.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_000.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_006.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_010.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_014.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_018.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_022.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_026.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_030.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_034.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_038.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_042.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_046.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_048.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_050.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_051.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_052.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_053.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_054.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_055.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_056.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_057.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_058.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_059.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_060.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_061.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_062.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_063.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_064.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_066.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_068.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_070.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_072.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_074.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_076.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_078.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_080.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_082.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_084.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_086.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_088.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_090.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_092.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_096.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_104.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_112.png": 0.5,
+        "art/units/source/generated/fluid_animation/batch_e/unit_neutral_quenchbell_ironbacks/death_h3_v1/edge_matte/rgba_123.png": 0.5
+      },
+      "preserved_accepted_clips": [
+        "idle"
+      ],
+      "accepted_clips": [
+        "move",
+        "attack",
+        "hit",
+        "defend",
+        "cast",
+        "death",
+        "idle"
+      ]
+    }
+  ]
+}

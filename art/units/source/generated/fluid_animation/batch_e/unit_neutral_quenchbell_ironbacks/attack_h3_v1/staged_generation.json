@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "185fb4787946316a05c8dd9ceebb4a97e471926c9412b6902f3a82040371e305",
+  "latent_sha256": "ddab3cc2c140ff8d716300e9829d0aac3212488a145f46fae5ff32d96375f30d",
+  "decode_workflow_sha256": "c9b47692b1f40a29a51a63f8a907a06397b390ffb62757779a0191f42baf2573",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "quenchbell_ironback_h3\\attack_h3_v1",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18242657600,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

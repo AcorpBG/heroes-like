@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "clip": "cast",
+  "canvas": [
+    960,
+    640
+  ],
+  "anchor": [
+    480,
+    576
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026108205,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          498
+        ]
+      ],
+      "anchor": [
+        174,
+        438
+      ],
+      "scale": 0.70588,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "idle_hands_5",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          384,
+          498,
+          768,
+          1024
+        ]
+      ],
+      "anchor": [
+        564,
+        914
+      ],
+      "scale": 0.70588,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      50,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "Original QUENCHBELL IRONBACK from the supplied painted references. One massive armored rhinoceros-like quadruped facing SCREEN RIGHT, exactly FOUR stout hoofed legs: two front and two rear, near and far limbs partially occluding naturally. Gray-brown shaggy fur under overlapping dark steel dorsal plates with brass edging, original red/orange pressure seams and circular red gauges on shoulder/back. One original long curved brass bell horn on the nose and original smaller head horns; keep length, placement and metal shape unchanged. Original red eyes, muzzle, armored leg cuffs and short tufted tail. No human arms/hands, extra feet, rider, weapons, muzzle transformation or new lights. Preserve original weathered painted fantasy artwork, three-quarter camera, body proportions and anatomical scale. One physical non-magical support gesture: bow the original horn/head deliberately, lift the near FRONT hoof slightly with a clear knee/fetlock flex, paw downward once and plant that same hoof, then raise head to exact ready. Other three legs support the mass throughout. Original red gauges remain part of armor; no magical effects, human gestures or new limbs. Entire background flat magenta RGB255,0,255 throughout; no scenery, floor texture, shadow, dust, shockwaves, speed lines, projectiles, particles or floating props. Fixed orthographic camera, no zoom, pan or cut. Keep all horns, hoof tips and tail within generous margins. Ground contact plane y576; moving feet lift legitimately while at least other feet support the mass. Planted hooves do not skate; no root travel during gait.",
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

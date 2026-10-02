@@ -1,0 +1,264 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "reference_height": 256,
+  "output_scale": 0.5,
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "ready_guide": {
+    "name": "idle_hands_0",
+    "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+    "rects": [
+      [
+        0,
+        0,
+        384,
+        498
+      ]
+    ],
+    "anchor": [
+      174,
+      438
+    ],
+    "scale": 0.70588,
+    "alpha_noise_cutoff": 8
+  },
+  "ground_registered_guides": {
+    "2": {
+      "name": "walk_contact_a",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          770,
+          0,
+          1155,
+          340
+        ]
+      ],
+      "anchor": [
+        1003,
+        337
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "3": {
+      "name": "walk_contact_b",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          1155,
+          0,
+          1536,
+          340
+        ]
+      ],
+      "anchor": [
+        1387,
+        339
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "4": {
+      "name": "walk_pass",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          0,
+          350,
+          380,
+          648
+        ]
+      ],
+      "anchor": [
+        235,
+        648
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "5": {
+      "name": "attack_windup",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          380,
+          340,
+          738,
+          675
+        ]
+      ],
+      "anchor": [
+        619,
+        665
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "6": {
+      "name": "attack_ram",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          738,
+          380,
+          1157,
+          675
+        ]
+      ],
+      "anchor": [
+        1003,
+        668
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "7": {
+      "name": "guard",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          1157,
+          375,
+          1536,
+          680
+        ]
+      ],
+      "anchor": [
+        1387,
+        661
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "8": {
+      "name": "recoil",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          0,
+          680,
+          370,
+          980
+        ],
+        [
+          260,
+          648,
+          345,
+          680
+        ]
+      ],
+      "anchor": [
+        235,
+        967
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "9": {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          370,
+          695,
+          740,
+          980
+        ]
+      ],
+      "anchor": [
+        619,
+        971
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "10": {
+      "name": "death_fall",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          740,
+          730,
+          1110,
+          980
+        ]
+      ],
+      "anchor": [
+        1003,
+        970
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    },
+    "11": {
+      "name": "dead",
+      "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/poses.png",
+      "rects": [
+        [
+          1110,
+          790,
+          1536,
+          980
+        ]
+      ],
+      "anchor": [
+        1387,
+        963
+      ],
+      "scale": 0.72,
+      "alpha_noise_cutoff": 8,
+      "guide_offset": [
+        94,
+        0
+      ]
+    }
+  },
+  "legacy_sheet_guide_offset": [
+    94,
+    0
+  ],
+  "reason": "Preserve original guide scales; one rigid legacy-sheet translation aligns its original largest shoulder gauge with accepted ready12. Register actual guide hoof/knee/body contacts once; never per-video-frame stabilization or normalization."
+}

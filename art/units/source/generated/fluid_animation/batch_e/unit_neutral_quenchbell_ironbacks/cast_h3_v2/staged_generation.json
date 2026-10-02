@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "40a346bcac70303d1295cc12e82822b28bc1c3cae9a8b75e694acc6aea9a7f94",
+  "latent_sha256": "d11837d28d44e0f370a75285b6ccc0686a8157fa519bf6f63ed9226bebab8470",
+  "decode_workflow_sha256": "4288f283cbbdd077fae3f4731a14bb2b3fbd218ca01354b56d5260a99b96f6b5",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "quenchbell_ironback_h3\\cast_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

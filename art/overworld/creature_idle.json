@@ -5110,29 +5110,29 @@
       "frame_msec": 260,
       "static_frame": 0,
       "ground_anchor": [
-        144.0,
+        144,
         218
       ],
       "painted_extent": 284,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_quenchbell_ironbacks.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_quenchbell_ironbacks.png",
       "source_indices": [
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        112,
-        30,
-        412,
-        260
+        60,
+        26,
+        360,
+        256
       ],
-      "source_sha256": "6cb5cfa26146cb54d44511678e6a15a41bc7c589e78cae62fc5e648ce63722e6",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_quenchbell_ironbacks/provenance.json",
+      "source_sha256": "75f4ebc26d8cd2f02006fe8933ecd1e4cc4bad3de1a13a071086809f512209e8",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_quenchbell_ironbacks/provenance.json",
       "sha256": "b931cb4f79ae81e47f718e22e33bbf987028af94247a73c4b39c5378300e3da4"
     },
     "unit_neutral_saltwake_bellwhales": {

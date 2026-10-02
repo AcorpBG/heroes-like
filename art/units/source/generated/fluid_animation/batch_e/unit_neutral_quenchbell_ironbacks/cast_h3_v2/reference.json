@@ -1,0 +1,63 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            498
+          ]
+        ],
+        "anchor": [
+          174,
+          438
+        ],
+        "scale": 1.41176,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2d881b5ab23d1721cb11b5f1393f7085132231954a753ed2fc3c843a272089d",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "3dc31884dc574ed0dfdaa590b40d214289dd925bc3561e0cb1e696a34eab1d52",
+      "runtime_source_scale": 0.70588
+    },
+    {
+      "source_frame": {
+        "name": "idle_hands_5",
+        "source": "art/animation/source/poses/unit_neutral_quenchbell_ironbacks/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            384,
+            498,
+            768,
+            1024
+          ]
+        ],
+        "anchor": [
+          564,
+          914
+        ],
+        "scale": 1.41176,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b2d881b5ab23d1721cb11b5f1393f7085132231954a753ed2fc3c843a272089d",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "00f711132d2fb6df3f0435e4cfff36767720e7727dc518cdd6d9af7fc9574915",
+      "runtime_source_scale": 0.70588
+    }
+  ],
+  "canvas": [
+    960,
+    640
+  ],
+  "ground_anchor": [
+    480,
+    576
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

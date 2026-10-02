@@ -1,0 +1,880 @@
+{
+  "frames": 124,
+  "fps": 24,
+  "rgba_sha256": [
+    "62764f59f6ca603c262d2dc4684c68af16b1eb3e722893d48de2f2dd1774507b",
+    "4a69b8c3df9f5d1cdfff3e95791eaa4c05ddfc41aaf462f4a53120bd5088a01b",
+    "85593f9cba73aec01c32ceb0c242b9edb1ddb215d98fa1f215b7323a0a2bb874",
+    "aba0fe2f7091fbbc9f30011819ced89656509681d1a547ba4113f54ea65c46ff",
+    "54d5b41c0c92ad7356213ca3469cf7be8660937d74bbbd1bb649083ab7256563",
+    "b420db8e0046bf78033f4a900ae46c9733521baa331c89b750e31dd20e0b5f8e",
+    "80eb7f40ed491397f877905398a41d133eaef66f63d38054eb186fa2119270ce",
+    "a7c84c1a1da051e28e7ed8a796c0c440aea9a400c52f95c6600a7e892a591e4b",
+    "80bb800c5b84c6813bf61ffc7d7e80865506c678a475037d264df615de7d9609",
+    "fd56ff260cbe3311f210a3f61f695547a569007c688b9b78aa91ad1458c47752",
+    "55ebfa14100265e3d66e0a938d5219dd7d1adb4713480c9d2792dc8aa2bce10e",
+    "bf4195b4260f90ac506954d0bba1d002953f0c7ca75d5f65bc1ec7854f4a269b",
+    "85965b3deef95bdf4617367973476256454c4ccc684d6fe7d0703a924a980613",
+    "eff29488a701ce47fab4efd3375a140799e8580c0437a540f806706a6f2bcfcc",
+    "38a30d4465ded11a9677261612b572b505134b1c56ab5aa8eafbde7062b06d98",
+    "b06648c94c6770124c5068ad9f8024b259c3503a3f934c130ecda1955456d108",
+    "08c252830ff390a6cfaa3bf214b2ff35d7e0cf79c69d3db994edddba5edf4348",
+    "8c81aab1ca95b65ad6531e8cfe4744b928640c96810399ce4cb7876d68663b25",
+    "f55652331d3fce5ade7d1d403cc0e2f23f0560bc140a343366596034e1e650e7",
+    "65f838762795688e81dd2b1fa5ca526c1ba8cbee68970535e7644be3683954f7",
+    "dc19953e2a183708ccd93f221167d5ebabc99b9c29fbd7249f126a1363088e4e",
+    "90869423574cedefe2f5e4ac957dbdb465e8241c9b1a9a27b9f1ad47cb0e9eb8",
+    "8826ab422cccb14e5746cf29fc9f83de9bce39365db6755f1f5cb15fa32d45ab",
+    "9bda6e3d3a89b1b84e58c4df846339b764d51ba888f2ee291b76e6b8961afb4d",
+    "2706236c3fea337a3a7ea005aa9d82827fa376c7ee61f9bed4f7b0fb2fed8d26",
+    "be7601d65be6c231cba6fc695946b3b7d088b0b4fe04f13ba2eea0dd589ab5ec",
+    "0e85ae81a88102ef33e53c51b7beaec48ef3111944f6288ed3a03611b8c19ee0",
+    "7f3b4e9596843792fcb7ac4f3a037fcef083258e05953c487f32b69f5f801880",
+    "4006febf908aff59a141fa4ee91e753b0a8d1eb1e2f9afe0400109474f1295b3",
+    "8b4372cb69dbfe64dd52a0ac136003438828dfcd433632384574dab32c46b9c6",
+    "f15b9c2b97f764d16961506a35e65d824ca7e4dd292eb4f38ca205622ac7d25f",
+    "34f2cb11247c28a408961d7edce68685fe741a1123c939362cd4f06dbbe8de67",
+    "8062b986349e438431549a57bb65a1bdc03f70838f0bfcb8aff5110899e73b92",
+    "762e6b0cddcc8397f7ea0c2dbb66fa4fdf4f17c43b6a99f7b3ec5eb66141cb43",
+    "3c206f5fa325250849d62fcb48ba01e3dadfc62eec32df3a811bdad0f2141a26",
+    "95350cdf94ba411a08d4908747ff909800cd23d60afa6b902e839a096af92036",
+    "fe421b957dc45891d938072ea0120939e56040af47304315b1fb47531c2f5836",
+    "c566aee4bd2059ad0aba32a61d3bac2fe0466725ae81b431aaca1a9f94e7f9ae",
+    "cfe53a9db0e2f47a93d2e2ad529cad3341d5070c7105b95fe0b3b36aeed93c78",
+    "8fddefd2020bab962e6475ec58ad3b7aac19a027a285ddd24519a18ee2203934",
+    "5148e24e8307abc92775b96f45c2cc62e982d23b17b44015026ff8ce6fc000a0",
+    "8842c0026d8e8fda8b6571bb44f4a5e921d3026b29c3b62f8f93aa0c71d08491",
+    "7cb1c7114c64956a9313d6abf660032428c6658ab23c1f8b8830fa7dcf30c046",
+    "5c751f148efee30c313aed5dc391528c89d93c58acb6eed4464e9c2768c672be",
+    "7d9cb506ce5960abc8d50f9b2da53e25f2e5e0f6ac4a3155c03d23bdf0e6c37e",
+    "4a44586af0a536d8196d83be89c90bccb4d7561c4bca176680c28f8be3566183",
+    "d395eba139641ad925eaea5f2594919614a42ac6ce5fc4b127f2e13cc5859d4c",
+    "32a5f65c54db537ebd40b207b9ec4f2386cf3ea51413721d707f1760804eb258",
+    "4146f1e5cb301c70daa519d51485f901815c107ee49c7e8fc7113215362f113b",
+    "fdd8baa1ff9b331ab57c3c44915672ce8e7a07f5d6cb4d86ce4319244d30d832",
+    "c2cb1fe35b6afecb3643337213672ea96d9baaed268ad843539c942fcd8261d7",
+    "4ca30a08de050adab1b1a7dcb0dc9af355fcd90cddb1552aa387a2e6e7ae9298",
+    "49050098e268a1f903f8e81fe3fe48ef790c0bbdb8b1cde9cb11ca6b71340b5d",
+    "dd1dcf0d2dc4cc7d59a46dff1f59852c7dccead091189b0a7615cc7782116df2",
+    "1eff39abdfd0deaf65366ae5914a37075b5ccc56c42279c0603c07e18ccb1eeb",
+    "bf2ce5a82a8f3160dcaa1d88a973e46cf86f5571e4d11e35c85d360adf9f5bf3",
+    "877f9bb48e04078f9d0c3515268fcec23b0482f77edf38935d48a4808b061c6c",
+    "420a685f2d958a5ac9cf3c9692e21c3059d52c68d9b3ecd8c6f12e1d2774e699",
+    "8edf40732544b92f9bab8add785ad43cedcc2e6490380d5be3f506bf11ded226",
+    "b17464025681b6eb2e64fdb2749909b9acad2a156e60c2fac7888926b9180b31",
+    "0862faf8568fabc7766861f5b7b4af269b77e17f671aab820dcbda9ca43e8442",
+    "19fabbbfd9b944703fafac34934e274742fe31e0b672241281bde66f5febd41b",
+    "93eaf69aae71fe40e968fc08edb799d50f7c825ed87461f32ddaab204cf90726",
+    "17a19f7f0bf4a50cd65cb6962d87039bda0c60aa09cfcea7b4ac9325900abb96",
+    "a20039299eb1e0fbde15838961c0efab88ec47dfa6f46a171a2e044407514686",
+    "0a80c21ce8fc4a26b4699a25b0c9339d130c6d5e86c0d1b0a0bc3bf72933f9e1",
+    "82606bf5c8811e6019640bfb5e3662ca4a98305350e9e1a0dee33fd3455a5a41",
+    "cef0f1eee339f5b095e0a28b95716adbc1c9d94ddfe136365398ba88bc56bbcb",
+    "7486265ac22baae2efc072d9ed9dacd3aed5201cb5269469e98a598054f26af6",
+    "e733bcbb55669e8fb2d7260b2be87b59fd6c4a4fea19cf02f8bd1a58b0f116d0",
+    "18205a5e4b5d9e3edf7b8a239f8b6de76591a5d57425cf3c19b88cd84aa7b0ea",
+    "728c6205ade4d3f1f26a65f17093b41d089d9db20d6b1fa085e3abe0dee0617b",
+    "3b2ea0c7001a2a59f152cc94196aaa772e3b930930b993d20973d9085f5bf165",
+    "bf674a8f992237a10399a48e0e5cdf3741bc6a1487558ccb73b1dc8ea5c0622f",
+    "0bc6dd3195d2974fa31956adbb5af7f9977685b51ff91c234c94cca0d7a7993b",
+    "967ae32d0b80fb489f40fb407d881070ca9e9fab24c264aa4e8a82d719e5427e",
+    "b1fd7ef56d8d594424cd02bb3b5bd3efd3363489758433eefea853e6d6e76cbb",
+    "964d38b5e1a393224f23a82ff2f8ce3e209c92aeae3413a67fadef91b0933d82",
+    "0a0446bdd8a4054f01d5c363e869a38a1e1495144cc6e648dc4be4521b0130f0",
+    "bf066037ed1b0ac549376cc2a390fbe5e3dc3c9c5e0aa53b0b8cdd5b82a14f3b",
+    "a49165b41cbf124358575020389cc2356b3da59bd2dffbcb870f142a7d06aea6",
+    "645a492721be5594b5c308b1ff9f84769cbf9e4871119232d8758c6313a61306",
+    "fa87fb2984472b627e3d2c0943c56e7e3270a5b709131b40d0dea014dc252f7e",
+    "9680acdc6108064f67fa1df3a559e4376b22110a49572d5384e9e9fbd3cc6bfc",
+    "acdc19520a83983f44ec25532813e4980dcea6549fcc485688a3c1159bec47fe",
+    "50159608e7ee818d8e85e426a3cffb3673c12bc5a5e5cf5a50a572e157918a78",
+    "d50636b6182e6edaf3efba86f7aab7722a1d5184c699e71ffe6c2a61ebbe4e82",
+    "e81445c6f8903a7e86b196d8186d646340a73959c6f4b29eb94504de9211ffc5",
+    "8cb11183bac94ec9c0ddc76ca37a7499a9904a5f26f90a1112b788063d8a0be8",
+    "fb606ada8fa898bcba1f2f8446a8ad263faffe0baaf8659e71a3e190e2bfe08e",
+    "ede6a33a9f605827e35bc296c8852cba76b5a561df496721fc3a733cce4112af",
+    "8f10e48079ad917ece04d27f2b53979868cbefbf74860c9217b7a9a2aece743e",
+    "f7e6f051339711ddb06213266b7ca6803ede8f4614be9b82df5c00118f909600",
+    "270a2445a5d075138186eb6f0e7017cb2044f26cc2b2cb2e44c87be6e2e051be",
+    "5337e5cb78437bf1e3ce03f2367a878cc3878f23a4558861afdd400a2490823b",
+    "9fb787141a8de39378254229b4437a6399aef2dbe17a6eecf99c4b9a529005ee",
+    "d022aa671d22f908bfc82d9e94727be63528a468cb216272363af553f755b8e2",
+    "1530f4e744d1a177067f9a4985faac1ab8ed0d107ea2d211320da0cda6b73cf4",
+    "44b2c43dd811e1f6de394356d01d13769e7a32287066d5a63f7fc92a8167c91e",
+    "32226ccf47674ff4b887cd6e7b134d9d5b19cd630cf230c4d7773c47212ccfea",
+    "89bd3e529e685223442331687b785d8e2d63abb4742b9fbb291afe7bfa980b02",
+    "db2a20645f4bbbb0df4fe748bae662746fd6185457b7f5a222f9676b8089fe65",
+    "fd98ca09e33ea03e12f1aa0135d9243be5369447857b88053866a3d52abc0e16",
+    "d47175efa5d32a7378a7baf35c604c87b46473672743d5f41513dea66038eb89",
+    "c0c575a9ca9986a017849cbf18a2b24a12df1659f726e5ab5b24b32cd7d4d987",
+    "0c01e0161ee5884f86bb0dd573f49175beebbd00039c4e26f89d50703e50d1c6",
+    "bec2b48817229e4b1846245efa00448260d530de5c144ba32704e5c278e74a19",
+    "872fd152dcc416c05af4a28be42f97bac966a875c22f440d41c781016a5c0b01",
+    "c792e69c0cb05d942ac1a837f5606a71c7e59135d40c0f3d4e3fc780a221b873",
+    "29a64076bb795b4a5422cf0832c2520135d670577ddcb834337122be7f8ffa52",
+    "5ceeef4c0484d9991e56bae5e805e2e83ea968d702ae3b46d6487330328a6690",
+    "a2872b3c80e535471bfabd7740e424e0e778e0840aba57633336f5ab30a73ba2",
+    "0106c74a908290b38dcd6d00df6c9cd628ce53104060b6d9548735a241f4bf31",
+    "643727de33d3ea153bfd5ccce6212cd6844522cccf3351bf0eb3d969eefa9481",
+    "5be8f0c9a65eada9a7765760b0681e8d5148881da6a4548047943b7f59284713",
+    "38feafe916e933916f88977c5a705dece9e12400568f39e80b27c6fdb40960ee",
+    "ced6b5c62a4bbd62328bd081d8676d5d21cd6b9ce3b0af2272c866e38940fc99",
+    "65687abee0acb3d4ed7044f282335ec9163240e2740496ef8e956846780c08e3",
+    "404f227e04909e6822b3a8f5b6c5b321effdf32136d95acef1de0df5f5b5af05",
+    "795bc41c3ec81df235d3f06ee9236d4770fe7a01bd3a6435e5c26d9654aabf53",
+    "a7f9648ad7193445cd900d61cbe6bc498ec201b0eb3a141d0b3a528d25b76731",
+    "098777f0c6c5f4ed598dc6846968489878f0fe32b631d07b8455b8d3edb9d258",
+    "ac1599c6ec3d5465f365fb96484aa0f0add8f1cf48edae1b6e234998e8d9b6d9",
+    "3fb1a1661d9f293924f59325a9df08f69f60317baac1b1ecc95c9a40eed27bec"
+  ],
+  "source_matte_sha256": "6fb47db28a4ed397ee6a1b68ea3f5359bf74d16fff0fc02dfc7f9765a9d7de9b",
+  "source_tool_sha256": "5e7668b2dd057886731ad1704acc2d4cf4b3e5346c581e037a8db2c82a68ed87",
+  "tool_sha256": "be5d6bdc0f691402e8914121ab80abfa5a44585d2a0cf5eafebee1e5d477967c",
+  "recipe": "Only within two original pixels of alpha>=8 boundary: green excess g-max(r,b)>24 is neutralized to max(r,b); magenta excess min(r,b)-g>24 is subtracted equally from r,b. Preserve exact alpha/geometry and every interior source RGB pixel; original red gauges/brass untouched. No painted anatomy, stabilization or interpolation.",
+  "frame_details": [
+    {
+      "green_pixels": 1286,
+      "magenta_pixels": 2599,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1351,
+      "magenta_pixels": 2538,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1359,
+      "magenta_pixels": 2575,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1370,
+      "magenta_pixels": 2564,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1370,
+      "magenta_pixels": 2526,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 2311,
+      "magenta_pixels": 1193,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 31,
+      "magenta_pixels": 4646,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 32,
+      "magenta_pixels": 4341,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 46,
+      "magenta_pixels": 4307,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 77,
+      "magenta_pixels": 3976,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 89,
+      "magenta_pixels": 3807,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 55,
+      "magenta_pixels": 3844,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 73,
+      "magenta_pixels": 4137,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 102,
+      "magenta_pixels": 4038,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 81,
+      "magenta_pixels": 4385,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 61,
+      "magenta_pixels": 4368,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 85,
+      "magenta_pixels": 4329,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 182,
+      "magenta_pixels": 3942,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 79,
+      "magenta_pixels": 4231,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 120,
+      "magenta_pixels": 4167,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 149,
+      "magenta_pixels": 4208,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 116,
+      "magenta_pixels": 4178,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 109,
+      "magenta_pixels": 4259,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 112,
+      "magenta_pixels": 4163,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 110,
+      "magenta_pixels": 4207,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 82,
+      "magenta_pixels": 4205,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 122,
+      "magenta_pixels": 4219,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 127,
+      "magenta_pixels": 4140,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 133,
+      "magenta_pixels": 4168,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 127,
+      "magenta_pixels": 4150,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 107,
+      "magenta_pixels": 4236,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 118,
+      "magenta_pixels": 4138,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 127,
+      "magenta_pixels": 4198,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 92,
+      "magenta_pixels": 4212,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 251,
+      "magenta_pixels": 3879,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 107,
+      "magenta_pixels": 4236,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 171,
+      "magenta_pixels": 4182,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 134,
+      "magenta_pixels": 4180,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 138,
+      "magenta_pixels": 4188,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 101,
+      "magenta_pixels": 4431,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 107,
+      "magenta_pixels": 4400,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 112,
+      "magenta_pixels": 4475,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1207,
+      "magenta_pixels": 2197,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1225,
+      "magenta_pixels": 2103,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1757,
+      "magenta_pixels": 1752,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 2437,
+      "magenta_pixels": 1152,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 169,
+      "magenta_pixels": 4197,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 159,
+      "magenta_pixels": 4016,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 193,
+      "magenta_pixels": 4119,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 193,
+      "magenta_pixels": 4113,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 167,
+      "magenta_pixels": 4009,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 273,
+      "magenta_pixels": 3919,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 136,
+      "magenta_pixels": 4137,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 164,
+      "magenta_pixels": 4179,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 147,
+      "magenta_pixels": 4124,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 107,
+      "magenta_pixels": 4136,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 213,
+      "magenta_pixels": 3938,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 248,
+      "magenta_pixels": 3898,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 194,
+      "magenta_pixels": 3962,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 222,
+      "magenta_pixels": 3977,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 117,
+      "magenta_pixels": 4148,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 72,
+      "magenta_pixels": 4169,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 69,
+      "magenta_pixels": 4230,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 180,
+      "magenta_pixels": 4045,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 127,
+      "magenta_pixels": 4079,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 128,
+      "magenta_pixels": 4148,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 123,
+      "magenta_pixels": 4208,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 144,
+      "magenta_pixels": 4309,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 273,
+      "magenta_pixels": 3964,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 187,
+      "magenta_pixels": 4112,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 166,
+      "magenta_pixels": 4086,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 189,
+      "magenta_pixels": 4067,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 202,
+      "magenta_pixels": 4045,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 222,
+      "magenta_pixels": 4014,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 285,
+      "magenta_pixels": 3922,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 257,
+      "magenta_pixels": 4001,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 284,
+      "magenta_pixels": 3939,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 240,
+      "magenta_pixels": 3966,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 287,
+      "magenta_pixels": 3915,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 251,
+      "magenta_pixels": 3935,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 290,
+      "magenta_pixels": 3860,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 255,
+      "magenta_pixels": 3879,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 290,
+      "magenta_pixels": 3828,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 264,
+      "magenta_pixels": 3899,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 304,
+      "magenta_pixels": 3850,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 317,
+      "magenta_pixels": 3832,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 225,
+      "magenta_pixels": 4305,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 895,
+      "magenta_pixels": 2343,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 895,
+      "magenta_pixels": 2595,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1135,
+      "magenta_pixels": 2266,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1212,
+      "magenta_pixels": 1802,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1413,
+      "magenta_pixels": 1561,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 66,
+      "magenta_pixels": 4565,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 100,
+      "magenta_pixels": 4438,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 365,
+      "magenta_pixels": 3896,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 402,
+      "magenta_pixels": 3854,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 345,
+      "magenta_pixels": 3904,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 387,
+      "magenta_pixels": 3856,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 342,
+      "magenta_pixels": 3882,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 381,
+      "magenta_pixels": 3824,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 353,
+      "magenta_pixels": 3870,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 380,
+      "magenta_pixels": 3832,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 338,
+      "magenta_pixels": 3904,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 306,
+      "magenta_pixels": 3907,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 357,
+      "magenta_pixels": 3860,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 333,
+      "magenta_pixels": 3864,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 334,
+      "magenta_pixels": 3877,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 298,
+      "magenta_pixels": 3932,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 333,
+      "magenta_pixels": 3890,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 307,
+      "magenta_pixels": 3916,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 333,
+      "magenta_pixels": 3892,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 323,
+      "magenta_pixels": 3894,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 343,
+      "magenta_pixels": 3865,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 329,
+      "magenta_pixels": 3883,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 338,
+      "magenta_pixels": 3860,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 145,
+      "magenta_pixels": 4247,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 196,
+      "magenta_pixels": 4141,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 140,
+      "magenta_pixels": 4307,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 2082,
+      "magenta_pixels": 1220,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1181,
+      "magenta_pixels": 2469,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1256,
+      "magenta_pixels": 2455,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1282,
+      "magenta_pixels": 2497,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1326,
+      "magenta_pixels": 2444,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    },
+    {
+      "green_pixels": 1382,
+      "magenta_pixels": 2383,
+      "alpha_and_geometry_unchanged": true,
+      "interior_rgb_unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "unit_id": "unit_neutral_quenchbell_ironbacks",
+  "status": "complete_selected_unit",
+  "date": "2026-10-02",
+  "solo": true,
+  "source_method": "MiniMax H3 original video with pinned local BiRefNet soft matting",
+  "clips": {
+    "move": 27,
+    "attack": 41,
+    "hit": 32,
+    "defend": 23,
+    "cast": 34,
+    "death": 46,
+    "idle": 8
+  },
+  "new_selected_poses": 203,
+  "preserved_idle_poses": 8,
+  "battle_atlas_size": [
+    3392,
+    3696
+  ],
+  "battle_texture_rgba_bytes": 50147328,
+  "original_selected_rgb_frames_reviewed": 744,
+  "preserved_original_rgb_frames": 868,
+  "provenance_digests": 98,
+  "validation": {
+    "checks": {
+      "candidate": 699,
+      "mirrored": 699,
+      "live": 713
+    },
+    "total": 2111,
+    "failures": [],
+    "source_pixel_and_ground_anchor_equality": true,
+    "other231_battle_and_map_rows_preserved": true,
+    "imported_atlas_exact_rgba": true,
+    "preserved_battle_and_overworld_idle_exact": true,
+    "visual_review": {
+      "status": "accepted_selected_unit",
+      "unit_id": "unit_neutral_quenchbell_ironbacks",
+      "solo": true,
+      "all124_original_frames_each_selected_take_inspected": true,
+      "all_original_takes_reviewed": 7,
+      "original_frames_reviewed": 868,
+      "selected_original_frames_reviewed": 744,
+      "new_selected_poses": 203,
+      "preserved_idle_poses": 8,
+      "native_candidate_all211_poses_reviewed": true,
+      "mirrored_candidate_all211_poses_reviewed": true,
+      "live_native_all211_poses_reviewed": true,
+      "actual_candidate_melee_captures_reviewed": 8,
+      "actual_mirrored_run_melee_captures_reviewed": 8,
+      "actual_live_melee_captures_reviewed": 8,
+      "actual_melee_capture_facing": "normal",
+      "live_overworld_idle_frames_reviewed": [
+        0,
+        3
+      ],
+      "imported_atlas_exact_rgba": true,
+      "all_selected_source_pixels_and_anchors_verified": true,
+      "other231_battle_and_map_rows_preserved": true,
+      "existing_idle_map_pixels_and_timing_exact": true,
+      "review_note": "Solo personal review of all124 original RGB and extracted frames of each of seven takes, critical enlarged limb/horn/body transitions and every211 normal/reflected native128px pose on actual Godot pages. Preserve four hooved legs, original large brass bellhorn, steel/brass dorsal plates, red gauges and fixed anatomical scale/ground anchors. Original reciprocal quadruped gait; hind-hoof-supported rearing windup to downward/forward horn ram and recovery; recoil; widened hoof/knee brace ending in held guard; physical forehoof paw and head bow with planted recovery; continuous supported side-rest death ending grounded. Reject support v1 final snap; support v2 recovered naturally by original ready guides. All868 original RGB frames retained, including rejected v1. Eight normal candidate and eight mirrored-run actual shell-clock ram captures personally inspected; galleries are reflected, shell captures stay normal-facing. Enlarged soft edges and original shading read at native scale without background boxes or missing horn/hooves. Existing eight idle poses and260ms battle/map timing retained. Candidate checks699 plus mirrored699, no failures. Continuous video playback, manual game and Linux not performed; All211 imported/live poses, eight actual live ram captures and map idle phases0/3 personally inspected; exact imported RGBA/source/anchor/map checks passed.",
+      "continuous_video_playback": false,
+      "manual_game_session": false,
+      "linux_run": false,
+      "full_suite_run": false
+    },
+    "full_suite_run": false,
+    "linux_run": false,
+    "manual_game_session": false,
+    "continuous_video_playback": false
+  },
+  "roster": {
+    "complete": 213,
+    "total": 232,
+    "remaining": 19
+  },
+  "broad_goal_status": "in_progress",
+  "cleanup": {
+    "files_removed_by_kind": {
+      "unselected_rebuildable_matte": 1533,
+      "verified_comfy_duplicate": 882,
+      "verified_uploaded_duplicate": 19,
+      "disposable_review": 180,
+      "disposable_review_helper": 4
+    },
+    "bytes_removed_by_kind": {
+      "unselected_rebuildable_matte": 533906641,
+      "verified_comfy_duplicate": 623980607,
+      "verified_uploaded_duplicate": 5496149,
+      "disposable_review": 264150757,
+      "disposable_review_helper": 6380
+    },
+    "recovered_bytes": 1427540534,
+    "retained_original_rgb_frames": 868,
+    "original_videos_latents_guides_prompts_and_provenance_preserved": true,
+    "caches_preserved": true,
+    "rebuildable": true
+  }
+}
