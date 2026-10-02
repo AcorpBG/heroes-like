@@ -1,0 +1,153 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          206,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "807eb319f6b39bffd25f76b8d911830a67000f8b5f3123a5407548a0e9f9f267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f63ba1f700a1d9fbfd50f4c969b3776817551730f7d2d223f444a34cac32ced0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "draw_jar",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            304,
+            625,
+            609,
+            937
+          ]
+        ],
+        "anchor": [
+          455,
+          932
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "102e900f117fe13194d87dbbe3ec534a038e13b639e7b04cd8065030cf6750fb",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "throw_jar_aim",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            612,
+            625,
+            940,
+            794
+          ],
+          [
+            612,
+            794,
+            922,
+            924
+          ],
+          [
+            612,
+            924,
+            910,
+            940
+          ]
+        ],
+        "anchor": [
+          758,
+          934
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "a00912aba41db857b11017ab45cebc86d2bb42c2006dc4e6008a7263c4ce4226",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "throw_empty_release",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            938,
+            626,
+            1254,
+            940
+          ]
+        ],
+        "anchor": [
+          1077,
+          932
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "e5d6243af606a22928a2cd295dfa523ddbbcfbfefa77d20ad7c023f1376857be",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "empty_hand_recovery",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            105,
+            923,
+            182,
+            941
+          ],
+          [
+            0,
+            941,
+            275,
+            1234
+          ]
+        ],
+        "anchor": [
+          151,
+          1225
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "3d0fa3fdb879fd78c6dca2576818357ac1bf6fd4329fdb5295fd0de349bf3053",
+      "runtime_source_scale": 0.6649999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

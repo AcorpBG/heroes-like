@@ -358,3 +358,8 @@ art/animation/source/fluid/unit_neutral_bogbell_mauls/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/**/*.json -text
 art/units/source/generated/fluid_animation/batch_d/unit_neutral_glimmercap_needlers/**/*.txt -text
 art/animation/source/fluid/unit_neutral_glimmercap_needlers/*.json -text
+
+# Preserve Peatflare Jarriers original prompt/workflow provenance bytes.
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/**/*.json -text
+art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/**/*.txt -text
+art/animation/source/fluid/unit_neutral_peatflare_jarriers/*.json -text

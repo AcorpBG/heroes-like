@@ -1,0 +1,19 @@
+{
+  "tool": "built-in image_gen edit",
+  "image": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.png",
+  "image_sha256": "f538499abae571dfd925516b8bbd93e2d55f83c8e69ab46875f230fab081eff4",
+  "prompt_file": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.prompt.txt",
+  "prompt_sha256": "ee5779acf7de3d7f30abd556fd5ed0ccc8ffd49d22d988d4de8780455604d8e0",
+  "original_output": "C:/Users/acorp/.codex/generated_images/01a0965d-a98e-7560-8e9d-802269b3760b/exec-ec6b3937-2915-4da7-acea-133c384a571e.png",
+  "references": [
+    {
+      "path": "art/units/source/curated/unit_neutral_peatflare_jarriers.png",
+      "sha256": "8d04392a2b9abece6a2e991395976f67e44b2492c2b2c6e424cc930e78fd6ff5"
+    },
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v1/guide_0_rgba.png",
+      "sha256": "b1e8afe4737af8d6cb180178f875a5fcddd98477f404d8a6fd3e7cd51dabfef4"
+    }
+  ],
+  "review": "New right-near foreleg contact key, more prominent wrapped near boot and thigh forward under near hip; retain right jar hand and original head/torso/cloak. Temporal H3 gait still pending, do not accept from this guide alone."
+}

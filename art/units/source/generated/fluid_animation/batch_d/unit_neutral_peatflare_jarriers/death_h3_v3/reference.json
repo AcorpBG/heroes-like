@@ -1,0 +1,87 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          206,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "807eb319f6b39bffd25f76b8d911830a67000f8b5f3123a5407548a0e9f9f267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0a07ddc6f743248880c624fd585a0f5d884b55864e545e067d0f02c6c4dbfad4",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "death_kneel",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            299,
+            943,
+            548,
+            1220
+          ]
+        ],
+        "anchor": [
+          425,
+          1198
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "5741140ff914d634f486fa86e8056b3b3374e2ea3148cac8feb7ace26a4d8617",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "gripped_round_jar_corpse",
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/gripped_dead_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          800,
+          863
+        ],
+        "scale": 0.36,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "b45ea1cb2cb5cb215a2191ddcf8d47ded89e2c6f35f8d70945e90aa3522788db",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "5d1072a24928290bc13ddec4afb24731227d3b91129dc17d51cf84d4ca9713a2",
+      "runtime_source_scale": 0.18
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

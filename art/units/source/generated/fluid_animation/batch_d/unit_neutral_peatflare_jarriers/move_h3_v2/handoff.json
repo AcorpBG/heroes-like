@@ -1,0 +1,457 @@
+{
+  "schema_version": 1,
+  "units": [
+    {
+      "unit_id": "unit_neutral_peatflare_jarriers",
+      "reference_height": 256,
+      "source_facing": "right",
+      "frames": [
+        {
+          "name": "move_h3_000",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_000.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 0,
+          "video_time_seconds": 0.0
+        },
+        {
+          "name": "move_h3_002",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_002.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 2,
+          "video_time_seconds": 0.08333333333333333
+        },
+        {
+          "name": "move_h3_004",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_004.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 4,
+          "video_time_seconds": 0.16666666666666666
+        },
+        {
+          "name": "move_h3_006",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_006.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 6,
+          "video_time_seconds": 0.25
+        },
+        {
+          "name": "move_h3_008",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_008.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 8,
+          "video_time_seconds": 0.3333333333333333
+        },
+        {
+          "name": "move_h3_010",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_010.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 10,
+          "video_time_seconds": 0.4166666666666667
+        },
+        {
+          "name": "move_h3_012",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_012.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 12,
+          "video_time_seconds": 0.5
+        },
+        {
+          "name": "move_h3_014",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_014.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 14,
+          "video_time_seconds": 0.5833333333333334
+        },
+        {
+          "name": "move_h3_016",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_016.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 16,
+          "video_time_seconds": 0.6666666666666666
+        },
+        {
+          "name": "move_h3_018",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_018.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 18,
+          "video_time_seconds": 0.75
+        },
+        {
+          "name": "move_h3_020",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_020.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 20,
+          "video_time_seconds": 0.8333333333333334
+        },
+        {
+          "name": "move_h3_022",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_022.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 22,
+          "video_time_seconds": 0.9166666666666666
+        },
+        {
+          "name": "move_h3_024",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_024.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 24,
+          "video_time_seconds": 1.0
+        },
+        {
+          "name": "move_h3_026",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_026.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 26,
+          "video_time_seconds": 1.0833333333333333
+        },
+        {
+          "name": "move_h3_028",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_028.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 28,
+          "video_time_seconds": 1.1666666666666667
+        },
+        {
+          "name": "move_h3_030",
+          "clip": "move",
+          "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte/rgba_030.png",
+          "rects": [
+            [
+              0,
+              0,
+              960,
+              544
+            ]
+          ],
+          "anchor": [
+            470,
+            480
+          ],
+          "scale": 0.5,
+          "alpha_noise_cutoff": 0,
+          "video_frame": 30,
+          "video_time_seconds": 1.25
+        }
+      ],
+      "clips": {
+        "move": {
+          "indices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "frame_msec": 42,
+          "loop": true,
+          "static_frame": 0
+        }
+      },
+      "alpha_noise_cutoff": 0,
+      "source_scale_reason": "One original anatomical scale per guide divided by fixed extraction scale; no frame normalization.",
+      "provenance": {
+        "config.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/config.json",
+          "sha256": "ad2523cbbc45e332f3171da465319e46f57da072d726edc88bfbb35dd8402a67"
+        },
+        "selection.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/selection.json",
+          "sha256": "eab7116329ea7a97ebc518d9af76ea53fff3420f2819c73c5e204ce7410bce85"
+        },
+        "original_lossless.mkv": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/original_lossless.mkv",
+          "sha256": "4b00693b7a01d379c1b91b057ef797f5c58471c13d7e332d7338da7ae51eb954"
+        },
+        "original.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/original.json",
+          "sha256": "2c3255fbc4113c58d2df9ef3ebb3b37ee211c2600df416af0151ffca81538e96"
+        },
+        "workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/workflow_api.json",
+          "sha256": "dd52d0047b0890175e9639c3ce6b29b31a593f395409350b4c8c0b76ad16f400"
+        },
+        "prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/prompt.txt",
+          "sha256": "5571cce5d06e433b0cc257874ad3e7763245902e3cc924d5fc7fb254061b10e6"
+        },
+        "reference.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/reference.json",
+          "sha256": "6539b469ed0b6c1aa460d81b84716bae52a8972b50a43d27e641a5a1b70b6f15"
+        },
+        "matte.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/matte.json",
+          "sha256": "6a9393b8af0b1beadd69693957369558040a0c45a1b967204cc130669ba1e6f8"
+        },
+        "extraction_settings.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/extraction_settings.json",
+          "sha256": "e70fd08c0646835c72d37bceb89a83171b83e581fb7c9df0d59e159412dbe009"
+        },
+        "staged_generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/staged_generation.json",
+          "sha256": "8b3d3f07c7129f9698205e7507fcf292635fb3ec536320a426cc9287718986eb"
+        },
+        "sampling_workflow_api.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/sampling_workflow_api.json",
+          "sha256": "289664f57cee058bf9a793d99a78af3dd5e1615344b0f407b491cad05d1b1ff6"
+        },
+        "sampling_submission.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/sampling_submission.json",
+          "sha256": "824fd6489f21ebbe03802d8aad8eb8cf57f2056a92daf5dfbc13979cec4c795b"
+        },
+        "sampling_history.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/sampling_history.json",
+          "sha256": "130e8f21f69eba5868ae7e0e57edf1252e3c442a2b532623b62c11f221405996"
+        },
+        "original.latent": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v2/original.latent",
+          "sha256": "0e91e33f4d39dd030c12316b3245a5afcdb3f894762393a2c1dc78f6c31cd975"
+        },
+        "guide_image_opposed_contact_v1.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.png",
+          "sha256": "f538499abae571dfd925516b8bbd93e2d55f83c8e69ab46875f230fab081eff4"
+        },
+        "guide_prompt_opposed_contact_v1.prompt.txt": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.prompt.txt",
+          "sha256": "ee5779acf7de3d7f30abd556fd5ed0ccc8ffd49d22d988d4de8780455604d8e0"
+        },
+        "guide_generation_opposed_contact_v1.generation.json": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.generation.json",
+          "sha256": "29429fc1c34fb2d0f26d5a1f831e6594528d005fa2ee9839b394de7021acf5b9"
+        },
+        "guide_reference_unit_neutral_peatflare_jarriers.png": {
+          "path": "art/units/source/curated/unit_neutral_peatflare_jarriers.png",
+          "sha256": "8d04392a2b9abece6a2e991395976f67e44b2492c2b2c6e424cc930e78fd6ff5"
+        },
+        "guide_reference_guide_0_rgba.png": {
+          "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/move_h3_v1/guide_0_rgba.png",
+          "sha256": "b1e8afe4737af8d6cb180178f875a5fcddd98477f404d8a6fd3e7cd51dabfef4"
+        }
+      },
+      "visual_review": {
+        "status": "pending",
+        "notes": "All124 original frames and enlarged0/8/16/24 contacts reviewed. Original near thigh moves from rear support0 through crossing8 to front extension16; original far leg exchanges oppositely. Fixed centered run, compact right jar retained, left empty arm swings. Sixteen original poses span one complete reciprocal gait; end30 to0 same support phase. No duplicates/interpolation or frame normalization; native review required."
+      }
+    }
+  ]
+}

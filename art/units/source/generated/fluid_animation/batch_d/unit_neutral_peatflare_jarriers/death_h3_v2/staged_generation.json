@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "09b19484629a039fb03b1a1514744c30209b59eee4ab49d9765f963b3cd05b22",
+  "latent_sha256": "9c6eaf2f8987048a89fdefa53fbf18c71395189b8903a1c4b13df2c8d40150b7",
+  "decode_workflow_sha256": "30366c82c75f22bd87ff2b5dd72e7d430fe2506087af4d82b66fa03787ad3ea1",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "peatflare_jarrier_h3\\death_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "reused_decoding_session": true,
+    "rule": "All sampling finished and models released before the grouped VAE-only decode pass"
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

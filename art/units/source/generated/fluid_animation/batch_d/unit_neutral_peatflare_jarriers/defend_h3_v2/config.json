@@ -1,0 +1,67 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100813,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        206,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_fists_crouch",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          941,
+          320,
+          1254,
+          616
+        ]
+      ],
+      "anchor": [
+        1095,
+        588
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 1,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. One slow continuous brace transition. Right hand first stows its compact jar at belt, then closes into protective fist; left hand also closes into protective fist. Both forearms lift to forehead, BOTH knees gradually flex, hips lower into supplied crouch. Hold the guarded crouch to final frame. Continuous anatomical crouch, same two boots on ground, same torso size, no abrupt pose cut or return to ready. Entire background stays perfectly uniform saturated green RGB0,255,0 throughout, including every corner. Locked original three-quarter orthographic camera facing right, full body inside960x544 at original constant scale/root. Only the original man and equipment are visible. No color changes, cast shadow, floor or camera movement.",
+  "protected_foreground_chroma": 45,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

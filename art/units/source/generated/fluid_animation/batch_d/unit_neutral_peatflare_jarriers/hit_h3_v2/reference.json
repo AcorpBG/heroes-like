@@ -1,0 +1,39 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          206,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "807eb319f6b39bffd25f76b8d911830a67000f8b5f3123a5407548a0e9f9f267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "0a07ddc6f743248880c624fd585a0f5d884b55864e545e067d0f02c6c4dbfad4",
+      "runtime_source_scale": 0.44
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,15 @@
+{
+  "sampling_workflow_sha256": "289664f57cee058bf9a793d99a78af3dd5e1615344b0f407b491cad05d1b1ff6",
+  "latent_sha256": "0e91e33f4d39dd030c12316b3245a5afcdb3f894762393a2c1dc78f6c31cd975",
+  "decode_workflow_sha256": "dd52d0047b0890175e9639c3ce6b29b31a593f395409350b4c8c0b76ad16f400",
+  "latent_output": {
+    "filename": "sampled_00001_.latent",
+    "subfolder": "peatflare_jarrier_h3\\move_h3_v2",
+    "type": "output"
+  },
+  "model_release": {
+    "free_vram_bytes": 18648891200,
+    "required_free_vram_bytes": 17179869184
+  },
+  "rule": "Save original sampler latent, release encoder and denoiser plus execution cache, then decode only the original latent with VAE. No new motion, resizing or interpolation."
+}

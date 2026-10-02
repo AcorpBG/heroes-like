@@ -1,0 +1,18 @@
+{
+  "tool": "image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/gripped_dead_v1.png",
+    "sha256": "b45ea1cb2cb5cb215a2191ddcf8d47ded89e2c6f35f8d70945e90aa3522788db"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/gripped_dead_v1.prompt.txt",
+    "sha256": "1521e094df35a831d884aac0b084327f9e6d1fa05408c3e02007da626eda683f"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/grounded_dead_v1.png",
+      "sha256": "78bd4363ff7305137228a76b4b11ce2bdc4988fea8e9e89c579833b5c78ffe58"
+    }
+  ],
+  "purpose": "Original corpse guide retains the round jar in original right hand against chest; left hand empty and grounded."
+}

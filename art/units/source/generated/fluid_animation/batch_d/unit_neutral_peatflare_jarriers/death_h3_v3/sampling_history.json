@@ -1,0 +1,251 @@
+{
+  "prompt": [
+    165,
+    "f5c41f73-ad0e-4096-90fc-d853cbb990e3",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars.  One continuous physical knee buckle and side collapse. Maintain original RIGHT hand wrapped securely around the compact round corked jar from first frame through final corpse. Bend knees and descend into kneel, hips lower, torso tips toward screen right, LEFT empty hand reaches ground to brace and body rolls into supplied side-prone corpse with head at screen right. RIGHT hand brings the same original round jar against CHEST and KEEPS HOLDING it with fingers wrapped around jar through final frame. Three original belt jars remain attached. Both knees, boots, forearms, face and cloak finish grounded. Preserve exactly two arms, hands and legs. Original jar remains gripped against chest: never release, toss, float or fly any jar, no loose objects anywhere, no changing jar shape or size. End still and grounded; no standing recovery. Locked elevated three-quarter orthographic camera, unchanged anatomical body size and fixed root. Whole creature fully within960x544 generous margins. Uniform GREEN RGB0,255,0 background in every frame, no floor, shadows, gradients, background color changes, effects, other people or text.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "32",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100816
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_death_h3_v3_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_death_h3_v3_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_death_h3_v3_guide_2.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 30,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 65,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "41",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "peatflare_jarrier_h3/death_h3_v3/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "peatflare_jarrier_h3",
+      "create_time": 1790900128524
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "peatflare_jarrier_h3\\death_h3_v3",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "f5c41f73-ad0e-4096-90fc-d853cbb990e3",
+          "timestamp": 1790900129072
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [],
+          "prompt_id": "f5c41f73-ad0e-4096-90fc-d853cbb990e3",
+          "timestamp": 1790900129095
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "f5c41f73-ad0e-4096-90fc-d853cbb990e3",
+          "timestamp": 1790900292589
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

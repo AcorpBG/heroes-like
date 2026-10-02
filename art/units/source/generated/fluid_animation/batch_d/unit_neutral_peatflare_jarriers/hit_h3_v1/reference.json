@@ -1,0 +1,75 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          206,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "807eb319f6b39bffd25f76b8d911830a67000f8b5f3123a5407548a0e9f9f267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f63ba1f700a1d9fbfd50f4c969b3776817551730f7d2d223f444a34cac32ced0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "hit_recoil",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            0,
+            621,
+            291,
+            924
+          ],
+          [
+            0,
+            924,
+            108,
+            933
+          ],
+          [
+            205,
+            924,
+            291,
+            933
+          ]
+        ],
+        "anchor": [
+          159,
+          930
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "3285db9c35ac0693f674a9388e4b25c5bdde3eec5753c38574fb109d24cf58d7",
+      "runtime_source_scale": 0.6649999999999999
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

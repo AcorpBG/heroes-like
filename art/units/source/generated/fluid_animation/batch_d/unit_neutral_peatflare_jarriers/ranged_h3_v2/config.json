@@ -1,0 +1,134 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100814,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        206,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "throw_jar_aim",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          612,
+          625,
+          940,
+          794
+        ],
+        [
+          612,
+          794,
+          922,
+          924
+        ],
+        [
+          612,
+          924,
+          910,
+          940
+        ]
+      ],
+      "anchor": [
+        758,
+        934
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "throw_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          938,
+          626,
+          1254,
+          940
+        ]
+      ],
+      "anchor": [
+        1077,
+        932
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_hand_recovery",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          105,
+          923,
+          182,
+          941
+        ],
+        [
+          0,
+          941,
+          275,
+          1234
+        ]
+      ],
+      "anchor": [
+        151,
+        1225
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      38,
+      1
+    ],
+    [
+      66,
+      2
+    ],
+    [
+      90,
+      3
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. A single physical overarm throw. Right hand carries its compact corked jar up behind shoulder while LEFT empty arm points forward. Right shoulder and elbow extend ONCE toward right, fingers open once and right hand becomes empty; then lower empty hand, draw another belt jar and return to ready. Orange cracks stay confined INSIDE the held jar. The empty left palm never emits anything. No visible effects or flight outside hands; background remains plain and empty. Both arm chains, hands, jar size, face and boots stay consistent. Entire background stays perfectly uniform saturated green RGB0,255,0 throughout, including every corner. Locked original three-quarter orthographic camera facing right, full body inside960x544 at original constant scale/root. Only the original man and equipment are visible. No color changes, cast shadow, floor or camera movement.",
+  "protected_foreground_chroma": 45,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

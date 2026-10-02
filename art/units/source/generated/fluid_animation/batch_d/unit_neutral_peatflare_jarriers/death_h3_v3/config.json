@@ -1,0 +1,94 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "death",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100816,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        206,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "death_kneel",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          299,
+          943,
+          548,
+          1220
+        ]
+      ],
+      "anchor": [
+        425,
+        1198
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "gripped_round_jar_corpse",
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/gripped_dead_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        800,
+        863
+      ],
+      "scale": 0.18,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      65,
+      2
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars.  One continuous physical knee buckle and side collapse. Maintain original RIGHT hand wrapped securely around the compact round corked jar from first frame through final corpse. Bend knees and descend into kneel, hips lower, torso tips toward screen right, LEFT empty hand reaches ground to brace and body rolls into supplied side-prone corpse with head at screen right. RIGHT hand brings the same original round jar against CHEST and KEEPS HOLDING it with fingers wrapped around jar through final frame. Three original belt jars remain attached. Both knees, boots, forearms, face and cloak finish grounded. Preserve exactly two arms, hands and legs. Original jar remains gripped against chest: never release, toss, float or fly any jar, no loose objects anywhere, no changing jar shape or size. End still and grounded; no standing recovery. Locked elevated three-quarter orthographic camera, unchanged anatomical body size and fixed root. Whole creature fully within960x544 generous margins. Uniform GREEN RGB0,255,0 background in every frame, no floor, shadows, gradients, background color changes, effects, other people or text.",
+  "protected_foreground_chroma": 35,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

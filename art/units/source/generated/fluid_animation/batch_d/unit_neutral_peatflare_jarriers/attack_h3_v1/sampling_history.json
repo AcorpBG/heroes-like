@@ -1,0 +1,313 @@
+{
+  "prompt": [
+    142,
+    "be5a7020-f2d0-444e-94c7-325d5db4a550",
+    {
+      "1": {
+        "class_type": "UNETLoader",
+        "inputs": {
+          "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        }
+      },
+      "2": {
+        "class_type": "CLIPLoader",
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        }
+      },
+      "3": {
+        "class_type": "VAELoader",
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_int8_convrot.safetensors"
+        }
+      },
+      "5": {
+        "class_type": "MiniMaxH3ImageToVideo",
+        "inputs": {
+          "clip": [
+            "2",
+            0
+          ],
+          "vae": [
+            "3",
+            0
+          ],
+          "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. One physical RIGHT fist punch and recovery. First put held jar securely into the belt, showing both empty hands, left fist protects chest while right fist winds back near shoulder; drive right forearm and clenched right fist toward screen right with planted lead boot, retract same right fist to ribs and recover guard. Retrieve the original compact jar into right ready hand at the end. No jar strike or throw, no weapon or third hand. Preserve three belt jars. Locked elevated three-quarter orthographic camera facing screen right. Full creature, hands, boots, jars and cloak within960x544 generous margins; unchanged anatomical size and centered root. Uniform saturated magenta RGB255,0,255 background in EVERY frame, no floor, gradients, shadow, color changes, text, particles, magic, other people or props. Real articulated joints, stable hand count and prop size.",
+          "width": 960,
+          "height": 544,
+          "length": 124,
+          "first_frame": [
+            "30",
+            0
+          ],
+          "last_frame": [
+            "30",
+            0
+          ]
+        }
+      },
+      "7": {
+        "class_type": "RandomNoise",
+        "inputs": {
+          "noise_seed": 2026100802
+        }
+      },
+      "8": {
+        "class_type": "KSamplerSelect",
+        "inputs": {
+          "sampler_name": "res_multistep"
+        }
+      },
+      "9": {
+        "class_type": "BasicScheduler",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "scheduler": "simple",
+          "steps": 20,
+          "denoise": 1.0
+        }
+      },
+      "10": {
+        "class_type": "SamplerCustomAdvanced",
+        "inputs": {
+          "noise": [
+            "7",
+            0
+          ],
+          "guider": [
+            "6",
+            0
+          ],
+          "sampler": [
+            "8",
+            0
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "5",
+            1
+          ]
+        }
+      },
+      "30": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_attack_h3_v1_guide_0.png"
+        }
+      },
+      "31": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_attack_h3_v1_guide_1.png"
+        }
+      },
+      "32": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_attack_h3_v1_guide_2.png"
+        }
+      },
+      "33": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_attack_h3_v1_guide_3.png"
+        }
+      },
+      "34": {
+        "class_type": "LoadImage",
+        "inputs": {
+          "image": "peatflare_jarrier_attack_h3_v1_guide_4.png"
+        }
+      },
+      "40": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "5",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 22,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "31",
+            0
+          ]
+        }
+      },
+      "41": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "40",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 40,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "32",
+            0
+          ]
+        }
+      },
+      "42": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "41",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 60,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "33",
+            0
+          ]
+        }
+      },
+      "43": {
+        "class_type": "MiniMaxH3AddGuide",
+        "inputs": {
+          "positive": [
+            "42",
+            0
+          ],
+          "latent": [
+            "5",
+            1
+          ],
+          "frame_idx": 82,
+          "vae": [
+            "3",
+            0
+          ],
+          "image": [
+            "34",
+            0
+          ]
+        }
+      },
+      "6": {
+        "class_type": "BasicGuider",
+        "inputs": {
+          "model": [
+            "1",
+            0
+          ],
+          "conditioning": [
+            "43",
+            0
+          ]
+        }
+      },
+      "17": {
+        "class_type": "LTXVSeparateAVLatent",
+        "inputs": {
+          "av_latent": [
+            "10",
+            0
+          ]
+        }
+      },
+      "16": {
+        "class_type": "SaveLatent",
+        "inputs": {
+          "samples": [
+            "17",
+            0
+          ],
+          "filename_prefix": "peatflare_jarrier_h3/attack_h3_v1/sampled"
+        }
+      }
+    },
+    {
+      "client_id": "peatflare_jarrier_h3",
+      "create_time": 1790897416010
+    },
+    [
+      "16"
+    ]
+  ],
+  "outputs": {
+    "16": {
+      "latents": [
+        {
+          "filename": "sampled_00001_.latent",
+          "subfolder": "peatflare_jarrier_h3\\attack_h3_v1",
+          "type": "output"
+        }
+      ]
+    }
+  },
+  "status": {
+    "status_str": "success",
+    "completed": true,
+    "messages": [
+      [
+        "execution_start",
+        {
+          "prompt_id": "be5a7020-f2d0-444e-94c7-325d5db4a550",
+          "timestamp": 1790897416011
+        }
+      ],
+      [
+        "execution_cached",
+        {
+          "nodes": [
+            "1",
+            "2",
+            "3",
+            "8",
+            "9"
+          ],
+          "prompt_id": "be5a7020-f2d0-444e-94c7-325d5db4a550",
+          "timestamp": 1790897416047
+        }
+      ],
+      [
+        "execution_success",
+        {
+          "prompt_id": "be5a7020-f2d0-444e-94c7-325d5db4a550",
+          "timestamp": 1790897556763
+        }
+      ]
+    ]
+  },
+  "meta": {
+    "16": {
+      "node_id": "16",
+      "display_node": "16",
+      "parent_node": null,
+      "real_node_id": "16"
+    }
+  }
+}

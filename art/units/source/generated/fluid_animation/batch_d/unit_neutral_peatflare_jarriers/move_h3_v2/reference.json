@@ -1,0 +1,62 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "run_contact",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            616,
+            0,
+            935,
+            318
+          ]
+        ],
+        "anchor": [
+          765,
+          307
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "a6315be4f33cc67ac29323a252f69a249f0efbde94e224b0340e6890fad30cc9",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.png",
+        "rects": [
+          [
+            0,
+            0,
+            1666,
+            944
+          ]
+        ],
+        "anchor": [
+          945,
+          883
+        ],
+        "scale": 0.512,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "f538499abae571dfd925516b8bbd93e2d55f83c8e69ab46875f230fab081eff4",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "529192e4c8981535102f933c6a0824c1d8875c0e8f12f6cc0d063689f068f3fd",
+      "runtime_source_scale": 0.256
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

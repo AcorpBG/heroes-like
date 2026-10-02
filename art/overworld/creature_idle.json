@@ -3677,29 +3677,29 @@
       "frame_msec": 240,
       "static_frame": 0,
       "ground_anchor": [
-        89.0,
+        89,
         213
       ],
       "painted_extent": 208,
-      "source_sheet": "res://art/animation/runtime/poses/unit_neutral_peatflare_jarriers.png",
+      "source_sheet": "res://art/animation/runtime/fluid/unit_neutral_peatflare_jarriers.png",
       "source_indices": [
-        17,
-        18,
-        19,
-        20,
-        21,
-        22,
-        23,
-        24
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
       ],
       "source_crop": [
-        167,
-        23,
-        333,
-        247
+        51,
+        27,
+        217,
+        251
       ],
-      "source_sha256": "ef2fff188fae470a43b12df652b2d139cd2c46c89a03e2eda289e7f99c885d70",
-      "source_provenance": "res://art/animation/source/poses/unit_neutral_peatflare_jarriers/provenance.json",
+      "source_sha256": "dc8a559408e419c29162113c6f57d1919f1bffa95b589e9a51dfe8cfa131c9a9",
+      "source_provenance": "res://art/animation/source/fluid/unit_neutral_peatflare_jarriers/provenance.json",
       "sha256": "458695c81a1441bc2fff20143d67e94acb39a058863f05254fd2815a83ed2cd3"
     },
     "unit_neutral_milestone_bucklers": {

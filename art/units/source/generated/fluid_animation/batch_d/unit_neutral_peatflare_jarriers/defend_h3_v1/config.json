@@ -1,0 +1,90 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "defend",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100804,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        206,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_fists_ready",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+      "rects": [
+        [
+          660,
+          0,
+          1290,
+          793
+        ]
+      ],
+      "anchor": [
+        998,
+        750
+      ],
+      "scale": 0.28025,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_fists_crouch",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          941,
+          320,
+          1254,
+          616
+        ]
+      ],
+      "anchor": [
+        1095,
+        588
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ]
+  ],
+  "last": 2,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. One defense transition. Stow held right-hand jar securely at belt before raising TWO empty fists in front of forehead and chest; flex knees into supplied low crouched guard and HOLD through final frame. Both original hands remain closed and protective, all original belt jars intact. No throwing, releasing, return to idle or extra hands. Locked elevated three-quarter orthographic camera facing screen right. Full creature, hands, boots, jars and cloak within960x544 generous margins; unchanged anatomical size and centered root. Uniform saturated magenta RGB255,0,255 background in EVERY frame, no floor, gradients, shadow, color changes, text, particles, magic, other people or props. Real articulated joints, stable hand count and prop size.",
+  "protected_foreground_chroma": 35,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "ranged",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100805,
+  "references": [
+    {
+      "name": "idle_hands_0",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+      "rects": [
+        [
+          0,
+          0,
+          384,
+          512
+        ]
+      ],
+      "anchor": [
+        206,
+        499
+      ],
+      "scale": 0.44,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "draw_jar",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          304,
+          625,
+          609,
+          937
+        ]
+      ],
+      "anchor": [
+        455,
+        932
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "throw_jar_aim",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          612,
+          625,
+          940,
+          794
+        ],
+        [
+          612,
+          794,
+          922,
+          924
+        ],
+        [
+          612,
+          924,
+          910,
+          940
+        ]
+      ],
+      "anchor": [
+        758,
+        934
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "throw_empty_release",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          938,
+          626,
+          1254,
+          940
+        ]
+      ],
+      "anchor": [
+        1077,
+        932
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "name": "empty_hand_recovery",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          105,
+          923,
+          182,
+          941
+        ],
+        [
+          0,
+          941,
+          275,
+          1234
+        ]
+      ],
+      "anchor": [
+        151,
+        1225
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      22,
+      1
+    ],
+    [
+      44,
+      2
+    ],
+    [
+      60,
+      3
+    ],
+    [
+      82,
+      4
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. ONE overarm jar throw and recovery. Original RIGHT hand draws compact corked round peat jar, cocks it behind shoulder with bent elbow, LEFT empty arm aims forward. Throw with RIGHT arm extending toward screen right, original fingers open ONCE and hand becomes empty. Then retract empty right arm and retrieve next original jar from belt to return to ready. Game owns projectile flight: do not draw a flying jar, stream, explosion or smoke outside hand. No repeated throw, magical beam, change of jar size, extra arm or hand swap. Locked elevated three-quarter orthographic camera facing screen right. Full creature, hands, boots, jars and cloak within960x544 generous margins; unchanged anatomical size and centered root. Uniform saturated magenta RGB255,0,255 background in EVERY frame, no floor, gradients, shadow, color changes, text, particles, magic, other people or props. Real articulated joints, stable hand count and prop size.",
+  "protected_foreground_chroma": 35,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

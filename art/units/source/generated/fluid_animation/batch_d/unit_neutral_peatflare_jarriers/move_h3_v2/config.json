@@ -1,0 +1,79 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    0,
+    255,
+    0
+  ],
+  "seed": 2026100811,
+  "references": [
+    {
+      "name": "run_contact",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          935,
+          318
+        ]
+      ],
+      "anchor": [
+        765,
+        307
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    },
+    {
+      "source": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/opposed_contact_v1.png",
+      "rects": [
+        [
+          0,
+          0,
+          1666,
+          944
+        ]
+      ],
+      "anchor": [
+        945,
+        883
+      ],
+      "scale": 0.256,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [
+    [
+      30,
+      1
+    ],
+    [
+      62,
+      0
+    ],
+    [
+      94,
+      1
+    ]
+  ],
+  "last": 0,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. Reciprocal run in place using BOTH legs. Start with FAR left leg forward and NEAR right leg back. Then near right hip brings its thigh, knee and boot across IN FRONT of the tunic to the supplied opposite contact, while far left leg goes backward BEHIND the near thigh. Return far leg forward/near leg back, exchange again, then match first pose. Each leg alternates front and back; knees pass in between, no same-leg hopping. Original right jar hand fixed against ribs, left empty arm swings; cloak follows stride. Entire background stays perfectly uniform saturated green RGB0,255,0 throughout, including every corner. Locked original three-quarter orthographic camera facing right, full body inside960x544 at original constant scale/root. Only the original man and equipment are visible. No color changes, cast shadow, floor or camera movement.",
+  "protected_foreground_chroma": 45,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

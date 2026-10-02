@@ -1,0 +1,135 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "guides": [
+    {
+      "source_frame": {
+        "name": "idle_hands_0",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/idle-v2/hands-alpha.png",
+        "rects": [
+          [
+            0,
+            0,
+            384,
+            512
+          ]
+        ],
+        "anchor": [
+          206,
+          499
+        ],
+        "scale": 0.88,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "807eb319f6b39bffd25f76b8d911830a67000f8b5f3123a5407548a0e9f9f267",
+      "input_file": "guide_0_chroma.png",
+      "input_sha256": "f63ba1f700a1d9fbfd50f4c969b3776817551730f7d2d223f444a34cac32ced0",
+      "runtime_source_scale": 0.44
+    },
+    {
+      "source_frame": {
+        "name": "empty_fists_ready",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+        "rects": [
+          [
+            660,
+            0,
+            1290,
+            793
+          ]
+        ],
+        "anchor": [
+          998,
+          750
+        ],
+        "scale": 0.5605,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3a649e00fa9817b93355c8d6c450aa7ca7cb81f966ccecdf556bdc5e461f2a24",
+      "input_file": "guide_1_chroma.png",
+      "input_sha256": "d7020a2b855e8824ca9114aa41c3e11c840c3b2489b21b3f218306c161aebe16",
+      "runtime_source_scale": 0.28025
+    },
+    {
+      "source_frame": {
+        "name": "right_fist_windup",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            316,
+            318,
+            607,
+            625
+          ]
+        ],
+        "anchor": [
+          454,
+          619
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_2_chroma.png",
+      "input_sha256": "53f502e919a2dde2f2a77eaaf0e5e14c46e5350f0b1ee0fe39715d525b5c02d8",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "right_fist_strike",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+        "rects": [
+          [
+            608,
+            319,
+            936,
+            625
+          ]
+        ],
+        "anchor": [
+          762,
+          619
+        ],
+        "scale": 1.3299999999999998,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "92ac8d692c37f39f92d8bcecfce64cdaa20e7f1108bfcefb8b3a29eeb2c12a04",
+      "input_file": "guide_3_chroma.png",
+      "input_sha256": "b2d913687eb77b7784dded6780675a96d6ea4d40a56c57064ed8f806b417c001",
+      "runtime_source_scale": 0.6649999999999999
+    },
+    {
+      "source_frame": {
+        "name": "right_fist_recovery",
+        "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/continuity-alpha/fist-recovery-ready-and-passing-step.png",
+        "rects": [
+          [
+            0,
+            0,
+            660,
+            793
+          ]
+        ],
+        "anchor": [
+          357,
+          750
+        ],
+        "scale": 0.5605,
+        "alpha_noise_cutoff": 8
+      },
+      "source_sha256": "3a649e00fa9817b93355c8d6c450aa7ca7cb81f966ccecdf556bdc5e461f2a24",
+      "input_file": "guide_4_chroma.png",
+      "input_sha256": "c46db2b30554bae64cd081173189afb43504867c9db467be25d94516d3bc4c1a",
+      "runtime_source_scale": 0.28025
+    }
+  ],
+  "canvas": [
+    960,
+    544
+  ],
+  "ground_anchor": [
+    470,
+    480
+  ],
+  "output_scale": 0.5,
+  "rule": "One original anatomical scale per painting divided by fixed extraction scale; no per-frame normalization."
+}

@@ -1,0 +1,71 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "workflow": "Solo local MiniMax H3 video, original extracted transparent frames; one unit fully completed before another.",
+  "new_takes": [
+    "attack_h3_v1",
+    "cast_h3_v1",
+    "death_h3_v1",
+    "death_h3_v2",
+    "death_h3_v3",
+    "defend_h3_v1",
+    "defend_h3_v2",
+    "hit_h3_v1",
+    "hit_h3_v2",
+    "move_h3_v1",
+    "move_h3_v2",
+    "ranged_h3_v1",
+    "ranged_h3_v2"
+  ],
+  "new_clip_frames": {
+    "move": 16,
+    "attack": 62,
+    "hit": 34,
+    "defend": 51,
+    "cast": 36,
+    "death": 43,
+    "ranged": 49
+  },
+  "preserved_accepted_clips": [
+    "idle"
+  ],
+  "visual_review": {
+    "status": "accepted",
+    "notes": "Solo review accepted seven H3 actions and preserved eight articulated idle poses. All13 original takes reviewed chronologically, with enlarged limb/grip/contact/loop/corpse details. All291 new action poses and retained8 idle poses inspected at native128px reference height, normal and actual reflected Godot draws. Reciprocal16-pose run;62-pose physical right-fist punch with jar stow/retrieval;34-pose knee/chest recoil retaining jar;51-pose smooth crouched guard;36-pose empty-left-palm rally and return;43-pose side collapse with original round jar retained against chest and persistent grounded corpse;49-pose single right-overarm throw, empty follow-through and reload. Runtime owns projectile flight: original detached jar55 separated above a verified empty5-row gap, jar56 beyond an empty5-column gap; complete original videos/mattes retained and full character components protected. Support excludes spatially varying4-6 and color-cycling47-73 during unchanged ready/held gesture; remaining source plates pass unchanged uniformity/separation gates with original-guide measured palette bands. Reject v1 hopping gait, invented hit projectile/jar loss, abrupt defense cut, empty-left-hand ranged effects, barrel-morphing v1 death and orbiting loose-jar v2 death. No duplicated, reversed, interpolated, warped or per-frame normalized padding. Windows Godot candidate971 and mirrored971 checks pass. Review used original chronological frames and native clock/phase renders; no continuous browser/manual playback, manual playtest, Linux execution or full repository suite claimed."
+  },
+  "validation": {
+    "candidate_checks": 971,
+    "mirrored_checks": 971,
+    "live_checks": 985,
+    "failures": 0,
+    "imported_atlas": "exact RGBA after Godot alpha-border processing",
+    "atlas_dimensions": [
+      3456,
+      3336
+    ],
+    "rgba_bytes": 46116864,
+    "new_original_action_frames": 291,
+    "preserved_idle_frames": 8,
+    "verified_accepted_take_rgb_frames": 868,
+    "retained_original_rgb_frames_including_rejected": 1612,
+    "overworld_visuals_preserved": 232,
+    "other_battle_rows_preserved": 231,
+    "platform": "Windows Godot4.6.2 offscreen",
+    "full_suite_run": false,
+    "manual_playtest": false,
+    "continuous_browser_playback_review": false,
+    "linux_run": false
+  },
+  "roster_after": {
+    "complete": 198,
+    "remaining": 34,
+    "total": 232
+  },
+  "progress_note": "2026-10-02 SOLO COMPLETE: Peatflare Jarriers seven H3 actions291 original poses plus retained8-frame idle; source/mirrored/native visual review and971/971/985 focused checks pass, exact imported atlas and all232 map visuals preserved. Roster198/232 complete,34 remaining. Broad goal remains in_progress; no subagents or full suite.",
+  "cleanup": {
+    "removed_files": 2889,
+    "recovered_bytes": 1081560468.0,
+    "retained_original_rgb_frames": 1612,
+    "rebuildable": true,
+    "rule": "Original art/prompts/videos/latents/guides/workflows/provenance, selected mattes, correction inputs and caches retained; only verified task duplicates and disposable reviews removed. Removed verified inactive isolated baseline copies, import/test profiles, native renders, logs and disposable staging/cleanup helpers."
+  }
+}

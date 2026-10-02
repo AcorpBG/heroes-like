@@ -1,0 +1,49 @@
+{
+  "unit_id": "unit_neutral_peatflare_jarriers",
+  "clip": "move",
+  "canvas": [
+    960,
+    544
+  ],
+  "anchor": [
+    470,
+    480
+  ],
+  "scale": 0.5,
+  "key_rgb": [
+    255,
+    0,
+    255
+  ],
+  "seed": 2026100801,
+  "references": [
+    {
+      "name": "run_contact",
+      "source": "art/animation/source/poses/unit_neutral_peatflare_jarriers/alpha/poses.png",
+      "rects": [
+        [
+          616,
+          0,
+          935,
+          318
+        ]
+      ],
+      "anchor": [
+        765,
+        307
+      ],
+      "scale": 0.6649999999999999,
+      "alpha_noise_cutoff": 8
+    }
+  ],
+  "guides": [],
+  "last": 0,
+  "prompt": "One original adult human Peatflare Jarrier, lean pale man with dark brown hair tied into a small bun, narrow angular face and green neck scarf. Ragged dark green-blue cloak, battered brown leather jerkin with crossed chest straps, dark trousers, wrapped brown forearms and tall leather boots. Three dark round corked peat jars with small orange glowing cracks at the belt; original RIGHT hand on screen left holds one compact orange-glowing round dark jar in ready, and original LEFT hand screen right is empty. Exactly two arms, two hands and two legs, unchanged face, clothes, three belt jars and held jar. No weapons, staffs, bottles elongated into swords or extra jars. Two complete reciprocal running strides in place. Both original legs alternate contact, loading, passing and extension; leg currently forward passes back while the other advances, then exchange again and return to exact supplied contact. Right hand retains compact jar low near ribs, left empty hand swings naturally; cloak and belt follow gait. No sliding root, repeated same-leg step, floating boots or released jars. Locked elevated three-quarter orthographic camera facing screen right. Full creature, hands, boots, jars and cloak within960x544 generous margins; unchanged anatomical size and centered root. Uniform saturated magenta RGB255,0,255 background in EVERY frame, no floor, gradients, shadow, color changes, text, particles, magic, other people or props. Real articulated joints, stable hand count and prop size.",
+  "protected_foreground_chroma": 35,
+  "tiled_decode": {
+    "tile_size": 512,
+    "overlap": 64,
+    "temporal_size": 16,
+    "temporal_overlap": 4
+  }
+}

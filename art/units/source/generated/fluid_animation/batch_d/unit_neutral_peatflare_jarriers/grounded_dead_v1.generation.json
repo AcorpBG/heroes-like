@@ -1,0 +1,22 @@
+{
+  "tool": "image_gen",
+  "image": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/grounded_dead_v1.png",
+    "sha256": "78bd4363ff7305137228a76b4b11ce2bdc4988fea8e9e89c579833b5c78ffe58"
+  },
+  "prompt": {
+    "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/grounded_dead_v1.prompt.txt",
+    "sha256": "987497290b74d08f20dea904651feef6565f4f359658f90e63c213897c13a20f"
+  },
+  "references": [
+    {
+      "path": "art/units/source/generated/fluid_animation/batch_d/unit_neutral_peatflare_jarriers/death_h3_v1/matte/rgba_123.png",
+      "sha256": "0e585969cae607d18e29469670f8379e581e082f8f4f4164c393e37e0b08d71e"
+    },
+    {
+      "path": "art/units/source/curated/unit_neutral_peatflare_jarriers.png",
+      "sha256": "8d04392a2b9abece6a2e991395976f67e44b2492c2b2c6e424cc930e78fd6ff5"
+    }
+  ],
+  "purpose": "Original corpse pose correction: compact round corked jar replaces cylindrical loose barrel; full grounded anatomy."
+}
